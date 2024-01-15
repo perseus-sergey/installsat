@@ -1,0 +1,30 @@
+.container {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  padding: 10px 20px;
+  font-size: 1rem;
+  color: #b9dbf2;
+
+  .item {
+    list-style: none;
+    transition: all 0.3s;
+
+    &:hover {
+      text-decoration: underline;
+      font-weight: bold;
+    }
+  }
+
+  .activeItem {
+    color: #ddf2ff;
+  }
+
+  .firstItem {
+    color: #84bef8;
+  }
+
+  .separator {
+    color: #7c85b9;
+  }
+}

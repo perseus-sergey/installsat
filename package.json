@@ -11,7 +11,7 @@
     "prepare": "husky install"
   },
   "lint-staged": {
-    "./{app, components, libs}/**/!(*test).{tsx, ts, js, jsx}": "eslint --fix"
+    "./{app, components, libs}/**/!(*test).{tsx, ts, js, jsx}": "next lint --fix"
   },
   "dependencies": {
     "mysql2": "^3.7.0",

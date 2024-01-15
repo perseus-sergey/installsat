@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "precommit": "lint-staged",
+    "precommit": "lint-staged --concurrent false",
     "prepare": "husky install"
   },
   "lint-staged": {

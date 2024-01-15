@@ -29,7 +29,7 @@
     "prettier/prettier": ["error", { "endOfLine": "auto" }],
     "import/extensions": "off",
     "import/prefer-default-export": "off",
-    "import/no-anonymous-default-export": [2, {"allowArrowFunction": true}],
+    "import/no-anonymous-default-export": [2, { "allowArrowFunction": true }],
     "@typescript-eslint/interface-name-prefix": "off",
     "@typescript-eslint/ban-ts-comment": "error",
     "@typescript-eslint/no-non-null-assertion": "off",
@@ -39,5 +39,6 @@
     "@typescript-eslint/no-var-requires": "off",
     "react/jsx-uses-react": "off",
     "react/react-in-jsx-scope": "off"
-  }
+  },
+  "ignorePatterns": ["dist/", "node_modules/", ".husky"]
 }

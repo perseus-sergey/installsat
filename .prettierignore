@@ -1,4 +1,2 @@
-*.test.*
-*config*
 node_modules
 .next

@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.scss';
 import Image from 'next/image';
+import BreadCrumbs from '@/components/BreadCrumbs/BreadCrumbs';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -28,7 +29,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             height={37}
             priority
           />
-          <BreadCrum homeElement={'Home'} isCapitalizeLinks />
+          <BreadCrumbs homeElement={'Home'} isCapitalizeLinks />
 
           {children}
         </main>

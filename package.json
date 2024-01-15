@@ -11,8 +11,8 @@
     "prepare": "husky install"
   },
   "lint-staged": {
-    "*!(*test).{tsx, ts, js, jsx, html, css}": "prettier --write",
-    "*!(*test).{js,ts, tsx, ts}": "eslint --fix"
+    "./{app, components, libs}/**/!(*test).{tsx, ts, js, jsx, html, css}": "prettier --write",
+    "./{app, components, libs}/**/!(*test).{js,ts, tsx, ts}": "lint --fix"
   },
   "dependencies": {
     "mysql2": "^3.7.0",

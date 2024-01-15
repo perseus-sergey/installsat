@@ -3,15 +3,14 @@ import { Inter } from 'next/font/google';
 import './globals.scss';
 import Image from 'next/image';
 import BreadCrumbs from '@/components/BreadCrumbs/BreadCrumbs';
-import { SITE_BASE_URL } from '@/models/main.model';
 
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_BASE_URL),
-  // title: metaMap.get(EPageTitles.MAIN)?.[EMetaTypes.TITLE][ELang.en],
-  // description: metaMap.get(EPageTitles.MAIN)?.[EMetaTypes.DESCRIPTION][ELang.en],
-  // keywords: metaMap.get(EPageTitles.MAIN)?.[EMetaTypes.KEYWORDS][ELang.en],
+  title: metaMap.get(EPageTitles.MAIN)?.[EMetaTypes.TITLE][ELang.en],
+  description: metaMap.get(EPageTitles.MAIN)?.[EMetaTypes.DESCRIPTION][ELang.en],
+  keywords: metaMap.get(EPageTitles.MAIN)?.[EMetaTypes.KEYWORDS][ELang.en],
   alternates: {
     canonical: '/',
   },

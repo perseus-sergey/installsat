@@ -9,11 +9,18 @@
     "format": "prettier --write .",
     "lint": "next lint",
     "precommit": "lint-staged",
+    "type-check": "tsc --project tsconfig.json --pretty --noEmit && echo ",
     "prepare": "husky install"
   },
   "lint-staged": {
-    "./**/*.{tsx, ts, js, jsx, html, css}": "format",
-    "./**/*.{tsx, ts, js, jsx}": "lint --fix"
+    ".": [
+      "prettier --write",
+      "eslint",
+      "type-check"
+    ],
+    "./*.md": [
+      "prettier --write"
+    ]
   },
   "dependencies": {
     "mysql2": "^3.7.0",

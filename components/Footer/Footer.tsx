@@ -1,7 +1,7 @@
 import styles from './Footer.module.scss';
 import Link from 'next/link';
 
-// interface IFooterProps {}
+interface IFooterProps {}
 
 const menuList = [
   {

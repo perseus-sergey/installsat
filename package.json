@@ -7,12 +7,12 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "precommit": "lint-staged --concurrent false",
+    "precommit": "lint-staged",
     "prepare": "husky install"
   },
   "lint-staged": {
     "./{app, components, libs}/**/!(*test).{tsx, ts, js, jsx, html, css}": "prettier --write",
-    "./{app, components, libs}/**/!(*test).{tsx, ts, js, jsx}": "lint --fix"
+    "./{app, components, libs}/**/!(*test).{tsx, ts, js, jsx}": "eslint --fix"
   },
   "dependencies": {
     "mysql2": "^3.7.0",

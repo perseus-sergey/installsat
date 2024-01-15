@@ -29,7 +29,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             height={37}
             priority
           />
-          <BreadCrumbs homeElement={'Home'} isCapitalizeLinks />
+          <Bread homeElement={'Home'} isCapitalizeLinks />
 
           {children}
         </main>

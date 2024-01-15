@@ -5,7 +5,7 @@ interface Props extends React.HTMLAttributes<HTMLElement> {
 }
 
 export const Title = ({ name, className, ...attributes }: Props) => (
-  <h1 className={`${styles.sectionTitle}${className ? ` ${className}` : ''}`} {...attributes}>
+  <h1 classNam={`${styles.sectionTitle}${className ? ` ${className}` : ''}`} {...attributes}>
     {name}
   </h1>
 );

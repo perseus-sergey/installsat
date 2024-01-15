@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(SITE_BASE_URL),
   title: metaMap.get(EPageTitles.MAIN)?.[EMetaTypes.TITLE][ELang.en],
   description: metaMap.get(EPageTitles.MAIN)?.[EMetaTypes.DESCRIPTION][ELang.en],
-  keywords: metaMap.get(EPageTitles.MAIN)?.[EMetaTypes.KEYWORDS][ELang.en],
+  keywords: metaMaps.get(EPageTitles.MAIN)?.[EMetaTypes.KEYWORDS][ELang.en],
   alternates: {
     canonical: '/',
   },

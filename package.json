@@ -13,9 +13,9 @@
     "prepare": "husky install"
   },
   "lint-staged": {
-    "**": [
+    "**/": [
       "prettier --write",
-      "eslint",
+      "lint",
       "type-check"
     ],
     "./*.md": [

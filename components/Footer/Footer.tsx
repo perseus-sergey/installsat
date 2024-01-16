@@ -43,7 +43,7 @@ const Footer = () => (
 
     <nav className={styles.footerNav}>
       <ul className={styles.menuList}>
-        {menuList.map((item, it) => {
+        {menuList.map((item, i) => {
           return (
             <Link href={item.href} className={styles.navLink} key={i}>
               {item.title}

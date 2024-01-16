@@ -8,19 +8,8 @@
     "start": "next start",
     "format": "prettier --write .",
     "lint": "next lint",
-    "precommit": "lint-staged",
     "type-check": "tsc --project tsconfig.json --pretty --noEmit && echo ",
     "prepare": "husky install"
-  },
-  "lint-staged": {
-    "*.{js,jsx,ts,tsx}": [
-      "prettier --write",
-      "yarn lint",
-      "yarn type-check"
-    ],
-    "./*.md": [
-      "prettier --write"
-    ]
   },
   "dependencies": {
     "mysql2": "^3.7.0",

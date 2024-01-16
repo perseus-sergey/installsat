@@ -17,7 +17,7 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-  const a: any = 30;
+  const a: anyy = 30;
 
   return (
     <html lang="en">

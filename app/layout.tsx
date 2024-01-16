@@ -7,17 +7,17 @@ import BreadCrumbs from '@/components/BreadCrumbs/BreadCrumbs';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(SITE_BASE_URL),
-  title: metaMap.get(EPageTitles.MAIN)?.[EMetaTypes.TITLE][ELang.en],
-  description: metaMap.get(EPageTitles.MAIN)?.[EMetaTypes.DESCRIPTION][ELang.en],
-  keywords: metaMaps.get(EPageTitles.MAIN)?.[EMetaTypes.KEYWORDS][ELang.en],
+  // metadataBase: new URL(SITE_BASE_URL),
+  // title: metaMap.get(EPageTitles.MAIN)?.[EMetaTypes.TITLE][ELang.en],
+  // description: metaMap.get(EPageTitles.MAIN)?.[EMetaTypes.DESCRIPTION][ELang.en],
+  // keywords: metaMaps.get(EPageTitles.MAIN)?.[EMetaTypes.KEYWORDS][ELang.en],
   alternates: {
     canonical: '/',
   },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-  const a = 30;
+  // const am = 30;
 
   return (
     <html lang="en">

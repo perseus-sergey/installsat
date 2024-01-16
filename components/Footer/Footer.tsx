@@ -1,8 +1,6 @@
 import styles from './Footer.module.scss';
 import Link from 'next/link';
 
-interface IFooterProps {}
-
 const menuList = [
   {
     title: `Как установить спутниковую антенну`,

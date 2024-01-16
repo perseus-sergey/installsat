@@ -5,7 +5,7 @@ export const arrayShift = <T>(array: T[][]): T[][] => {
   return rest;
 };
 
-export const uniqueArray = <T>(array: T[]): T[] => [...new Set(array)];
+// export const uniqueArray = <T>(array: T[]): T[] => [...new Set(array)];
 
 export const isUniqDeepArray = <T>(arr: T[][]): boolean =>
   new Set(arr.map((item) => item.join('|'))).size === arr.length;

@@ -1,18 +1,18 @@
-const path = require('path');
+// const path = require('path');
 
-const buildPrettierCommand = (filenames) =>
-  `prettier --write --file ${filenames
-    .map((f) => path.relative(process.cwd(), f))
-    .join(' --file ')}`;
+// const buildPrettierCommand = (filenames) =>
+//   `prettier --write --file ${filenames
+//     .map((f) => path.relative(process.cwd(), f))
+//     .join(' --file ')}`;
 
-const buildEslintCommand = (filenames) =>
-  `next lint --fix --file ${filenames
-    .map((f) => path.relative(process.cwd(), f))
-    .join(' --file ')}`;
+// const buildEslintCommand = (filenames) =>
+//   `next lint --fix --file ${filenames
+//     .map((f) => path.relative(process.cwd(), f))
+//     .join(' --file ')}`;
 
-module.exports = {
-  '*.{js,jsx,ts,tsx}': [buildEslintCommand],
-};
+// module.exports = {
+//   '*.{js,jsx,ts,tsx}': [buildPrettierCommand, buildEslintCommand],
+// };
 
 // "precommit": "lint-staged",
 //     "type-check": "tsc --project tsconfig.json --pretty --noEmit && echo ",
@@ -29,17 +29,15 @@ module.exports = {
 //     ]
 //   },
 
-// module.exports = {
-//   // this will check Typescript files
-//   '**/*.(ts|tsx)': () => 'yarn tsc --noEmit',
+module.exports = {
+  // this will check Typescript files
+  '*.{ts,tsx}': () => 'yarn tsc --noEmit',
 
-//   // This will lint and format TypeScript and                                             //JavaScript files
-//   '**/*.(ts|tsx|js)': (filenames) => [
-//     `yarn eslint --fix ${filenames.join(' ')}`,
-//     `yarn prettier --write ${filenames.join(' ')}`,
-//   ],
+  // This will lint and format TypeScript and                                             //JavaScript files
+  '*.{js,jsx,ts,tsx}': (filenames) => [
+    `yarn prettier --write ${filenames.join(' ')}`,
+  ],
 
-//   // this will Format MarkDown and JSON
-//   '**/*.(md|json)': (filenames) =>
-//     `yarn prettier --write ${filenames.join(' ')}`,
-// }
+  // this will Format MarkDown and JSON
+  '**/*.(md|json)': (filenames) => `yarn prettier --write ${filenames.join(' ')}`,
+};

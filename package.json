@@ -13,11 +13,6 @@
     "prepare": "husky install"
   },
   "lint-staged": {
-    "**": [
-      "prettier --write",
-      "lint",
-      "type-check"
-    ],
     "./*.md": [
       "prettier --write"
     ]

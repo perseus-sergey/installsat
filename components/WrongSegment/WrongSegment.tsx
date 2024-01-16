@@ -8,7 +8,11 @@ type TWrongSegmentProps = {
   btnTitle: string;
 };
 
-const WrongSegment = ({ wrongMessage, redirectPath, btnTitle }: TWrongSegmentProps) => (
+const WrongSegment = ({
+  wrongMessage,
+  redirectPath,
+  btnTitle,
+}: TWrongSegmentProps) => (
   <>
     <h1>{wrongMessage}</h1>
     <Link href={redirectPath}>

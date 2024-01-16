@@ -15,7 +15,12 @@
   border: none;
   border-radius: 1em;
   background-color: blue;
-  background-image: linear-gradient(#bdd7fa, #5d66b1 35.71%, #010767 38.24%, #40def7);
+  background-image: linear-gradient(
+    #bdd7fa,
+    #5d66b1 35.71%,
+    #010767 38.24%,
+    #40def7
+  );
   box-shadow: 0px 1px 11px #0e6b87;
 
   @media screen and (orientation: portrait) {
@@ -24,7 +29,12 @@
   }
 
   &:hover {
-    background-image: linear-gradient(#bdd7fa, #5d66b1 35.71%, #3b3f85 38.24%, #40def7);
+    background-image: linear-gradient(
+      #bdd7fa,
+      #5d66b1 35.71%,
+      #3b3f85 38.24%,
+      #40def7
+    );
   }
 
   &:active {

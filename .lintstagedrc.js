@@ -32,12 +32,15 @@ const path = require('path');
 module.exports = {
   '**/*.(ts|tsx)': () => 'yarn tsc --noEmit',
 
-  '**/*.(ts|tsx|js|scss|css)': (filenames) => [`yarn prettier --write ${filenames.join(' ')}`],
+  '**/*.(ts|tsx|js|scss|css)': (filenames) => [
+    `yarn prettier --write ${filenames.join(' ')}`,
+  ],
 
   '**/*.(ts|tsx|js)': (filenames) =>
     `next lint --fix --file ${filenames
       .map((f) => path.relative(process.cwd(), f))
       .join(' --file ')}`,
 
-  '**/*.(md|json)': (filenames) => `yarn prettier --write ${filenames.join(' ')}`,
+  '**/*.(md|json)': (filenames) =>
+    `yarn prettier --write ${filenames.join(' ')}`,
 };

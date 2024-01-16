@@ -37,6 +37,7 @@
     "react/prop-types": "off",
     "react/display-name": "off",
     "@typescript-eslint/explicit-function-return-type": "off",
+    "prettier/prettier": ["error", { "endOfLine": "auto" }],
     "import/extensions": "off",
     "import/prefer-default-export": "off",
     "import/no-anonymous-default-export": [2, { "allowArrowFunction": true }],

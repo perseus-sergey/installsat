@@ -35,8 +35,9 @@ const menuList = [
 const Footer = () => (
   <>
     <div className={styles.Footer}>
-      Copyright &copy; 2009 - {new Date().getFullYear()} Авторские права принадлежат компании
-      Installsat. При копировании, ссылка на сайт обязательнa.
+      Copyright &copy; 2009 - {new Date().getFullYear()} Авторские права
+      принадлежат компании Installsat. При копировании, ссылка на сайт
+      обязательнa.
     </div>
 
     <nav className={styles.footerNav}>

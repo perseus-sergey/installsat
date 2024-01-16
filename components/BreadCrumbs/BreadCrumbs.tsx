@@ -22,8 +22,8 @@ const BreadCrumb = ({
 }: IBreadCrumbProps) => {
   const paths = usePathname();
   const pathNames = paths.split('/').filter((path) => path);
-  
-return (
+
+  return (
     <nav
       aria-label="Breadcrumb"
       className={
@@ -49,8 +49,8 @@ return (
               ? `${styles.item} ${styles.activeItem}`
               : styles.item;
           const itemLink = isCapitalizeLinks ? capitalizedWord(link) : link;
-          
-return (
+
+          return (
             <React.Fragment key={index}>
               <li className={itemClassName} style={itemStyle}>
                 <Link href={href}>{itemLink}</Link>

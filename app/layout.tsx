@@ -3,14 +3,29 @@ import { Inter } from 'next/font/google';
 import './globals.scss';
 import Image from 'next/image';
 import BreadCrumbs from '@/components/BreadCrumbs/BreadCrumbs';
+import Footer from '@/components/Footer/Footer';
+import { executeQuery } from '@/libs/db/mysqldb';
+import { IChannel } from '@/models/channel.model';
+import { SITE_BASE_URL } from '@/models/main.model';
+import { META_TRANS_NEWS_SINGLE } from '@/models/meta.model';
 
 const inter = Inter({ subsets: ['latin'] });
 
+// const res = await executeQuery<IChannel>(
+//   'SELECT * FROM `tbl_digest` WHERE `date`="2022-01-05"',
+//   []
+// );
+
+const res = await executeQuery<IChannel>(
+  'SELECT * FROM `tbl_channals` LIMIT 1',
+  []
+);
+
 export const metadata: Metadata = {
-  // metadataBase: new URL(SITE_BASE_URL),
-  // title: metaMap.get(EPageTitles.MAIN)?.[EMetaTypes.TITLE][ELang.en],
-  // description: metaMap.get(EPageTitles.MAIN)?.[EMetaTypes.DESCRIPTION][ELang.en],
-  // keywords: metaMaps.get(EPageTitles.MAIN)?.[EMetaTypes.KEYWORDS][ELang.en],
+  metadataBase: new URL(SITE_BASE_URL),
+  title: META_TRANS_NEWS_SINGLE.getTitle('2022-01-05'),
+  description: META_TRANS_NEWS_SINGLE.getDescription('2022-01-05'),
+  keywords: META_TRANS_NEWS_SINGLE.getKeywords('2022-01-05'),
   alternates: {
     canonical: '/',
   },
@@ -36,6 +51,8 @@ export default function RootLayout({
           <BreadCrumbs homeElement={'Home'} isCapitalizeLinks />
 
           {children}
+          <p>{res[0].title}</p>
+          <Footer />
         </main>
       </body>
     </html>

@@ -4,8 +4,8 @@ import './globals.scss';
 import Image from 'next/image';
 import BreadCrumbs from '@/components/BreadCrumbs/BreadCrumbs';
 import Footer from '@/components/Footer/Footer';
-import { executeQuery } from '@/libs/db/mysqldb';
-import { IChannel } from '@/models/channel.model';
+// import { executeQuery } from '@/libs/db/mysqldb';
+// import { IChannel } from '@/models/channel.model';
 import { SITE_BASE_URL } from '@/models/main.model';
 import { META_TRANS_NEWS_SINGLE } from '@/models/meta.model';
 
@@ -16,10 +16,10 @@ const inter = Inter({ subsets: ['latin'] });
 //   []
 // );
 
-const res = await executeQuery<IChannel>(
-  'SELECT * FROM `tbl_channals` LIMIT 1',
-  []
-);
+// const res = await executeQuery<IChannel>(
+//   'SELECT * FROM `tbl_channals` LIMIT 1',
+//   []
+// );
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_BASE_URL),
@@ -51,7 +51,7 @@ export default function RootLayout({
           <BreadCrumbs homeElement={'Home'} isCapitalizeLinks />
 
           {children}
-          <p>{res[0].title}</p>
+          {/* <p>{res[0].title}</p> */}
           <Footer />
         </main>
       </body>

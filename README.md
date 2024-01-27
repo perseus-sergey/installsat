@@ -278,13 +278,17 @@ server {
 ```
 
 - Enable Virtual Host or Create Symbolic Link of Virtual Host File
-  Syntax:- ```sh
-  sudo ln -s /etc/nginx/sites-available/virtual_host_file /etc/nginx/sites-enabled/virtual_host_file
+  Syntax:
 
-````
-Example:-  ```sh
-sudo ln -s /etc/nginx/sites-available/sonamkumari.com /etc/nginx/sites-enabled/sonamkumari.com
-````
+  ```sh
+  sudo ln -s /etc/nginx/sites-available/virtual_host_file /etc/nginx/sites-enabled/virtual_host_file
+  ```
+
+  Example:
+
+  ```sh
+  sudo ln -s /etc/nginx/sites-available/sonamkumari.com /etc/nginx/sites-enabled/sonamkumari.com
+  ```
 
 - Check Configuration is Correct or Not
 
@@ -381,16 +385,21 @@ npm run build
 pm2 reload app_name/id
 ```
 
-Example:- ```sh
-pm2 reload 0
+Example:
 
-````
+```sh
+pm2 reload 0
+```
+
 ##
+
 ### How to Automate NextJS Project Deployment using Github Action
+
 - On Your Local Machine, Open Your Project using VS Code or any Editor
 - Create A Folder named .scripts inside your root project folder e.g. .scripts
 - Inside .scripts folder Create A file with .sh extension e.g. .scripts/deploy.sh
 - Write below script inside the created .sh file
+
 ```sh
 #!/bin/bash
 set -e
@@ -411,7 +420,7 @@ echo "PM2 Reload"
 pm2 reload 0
 
 echo "Deployment Finished!"
-````
+```
 
 - Set File Permission for .sh File
 
@@ -483,13 +492,17 @@ whoami
 cd ~/.ssh
 ```
 
-Syntax:- ```sh
-ssh-keygen -f key_path -t ed25519 -C "your_email@example.com"
+Syntax:
 
-````
-Example:- ```sh
+```sh
+ssh-keygen -f key_path -t ed25519 -C "your_email@example.com"
+```
+
+Example:
+
+```sh
 ssh-keygen -f gitaction_ed25519 -t ed25519 -C "gitactionautodep"
-````
+```
 
 - Open Newly Created Public SSH Keys then copy the key
 
@@ -517,25 +530,31 @@ Secret: Private_SSH_KEY_Generated_On_Server
 
 - Commit and Push the change to Your Github Repo
 - Get Access to Remote Server via SSH
+  Syntax:
 
-```sh
-Syntax:- ssh -p PORT USERNAME@HOSTIP
-Example:- ssh -p 22 raj@216.32.44.12
-```
+  ```sh
+  ssh -p PORT USERNAME@HOSTIP
+  ```
+
+  Example:
+
+  ```sh
+  ssh -p 22 raj@216.32.44.12
+  ```
 
 - [Github actions err: bash: line 3: npm: command not found](https://stackoverflow.com/a/67923563/22835451)
 
-```sh
-sudo ln -s "$NVM_DIR/versions/node/$(nvm version)/bin/node" "/usr/local/bin/node"
-sudo ln -s "$NVM_DIR/versions/node/$(nvm version)/bin/npm" "/usr/local/bin/npm"
-sudo ln -s "$NVM_DIR/versions/node/$(nvm version)/bin/pm2" "/usr/local/bin/pm2"
-sudo ln -s "$NVM_DIR/versions/node/$(nvm version)/bin/yarn" "/usr/local/bin/yarn"
-```
+  ```sh
+  sudo ln -s "$NVM_DIR/versions/node/$(nvm version)/bin/node" "/usr/local/bin/node"
+  sudo ln -s "$NVM_DIR/versions/node/$(nvm version)/bin/npm" "/usr/local/bin/npm"
+  sudo ln -s "$NVM_DIR/versions/node/$(nvm version)/bin/pm2" "/usr/local/bin/pm2"
+  sudo ln -s "$NVM_DIR/versions/node/$(nvm version)/bin/yarn" "/usr/local/bin/yarn"
+  ```
 
-```sh
-cd /usr/local/bin
-ls -l
-```
+  ```sh
+  cd /usr/local/bin
+  ls -l
+  ```
 
 - Pull the changes from github just once this time.
 
@@ -546,18 +565,18 @@ git pull
 
 - Git Actions Error: bash: line 1: ./.scripts/deploy.sh: Permission denied
 
-```sh
-cd ~/installsat
-rm -rf .scripts
-```
+  ```sh
+  cd ~/installsat
+  rm -rf .scripts
+  ```
 
-```sh
-git pull
-```
+  ```sh
+  git pull
+  ```
 
-```sh
-chmod +x .scripts/deploy.sh
-```
+  ```sh
+  chmod +x .scripts/deploy.sh
+  ```
 
 - Your Deployment should become automate.
 - On Local Machine make some changes in Your Project then Commit and Push to Github Repo It will automatically deployed on Live Server

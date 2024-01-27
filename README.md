@@ -94,7 +94,61 @@
 
 - [YARN Server](https://phoenixnap.com/kb/how-to-install-yarn-ubuntu)
 
+---
+
 ## Do all accordingly this instruction: [PHPMYADMIN install](https://www.digitalocean.com/community/tutorials/how-to-install-and-secure-phpmyadmin-with-nginx-on-an-ubuntu-20-04-server)
+
+- **Nginx: 413 – Request Entity Too Large Error and Solution**
+
+  ```sh
+  sudo nano /etc/nginx/nginx.conf
+  ```
+
+  - Add the following line to http or server or location context to increase the size limit in nginx.conf, enter:
+
+    ```sh
+    # set client body size to 100 MB #
+    client_max_body_size 100M;
+    ```
+
+  ```sh
+  service nginx reload
+  ```
+
+- **Phpmyadmin: No data was received to import. Either no file name was submitted, or the file size exceeded the maximum size permitted by your PHP configuration.**
+
+  ```sh
+  cd ~
+  ```
+
+  ```sh
+  locate php.ini
+  ```
+
+  In all founded php.ini files
+  make change to:
+
+  ```
+  post_max_size = 500M
+  upload_max_filesize = 500M
+  max_execution_time = 6000
+  max_input_time = 6000
+  memory_limit = 300M
+  ```
+
+  then:
+
+  ```sh
+  systemctl restart php8.1-fpm
+  ```
+
+  ```sh
+  systemctl restart nginx
+  ```
+
+---
+
+## Base setup
 
 - Get Access to Remote Server via SSH
 

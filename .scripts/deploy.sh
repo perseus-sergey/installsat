@@ -8,10 +8,10 @@ git pull origin main
 echo "New changes copied to server !"
 
 echo "Installing Dependencies..."
-yarn --yes
+npm install --yes
 
 echo "Creating Production Build..."
-yarn build
+npm run build
 
 echo "PM2 Reload"
 pm2 reload 0

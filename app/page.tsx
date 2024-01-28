@@ -13,7 +13,7 @@ export default function Home() {
   return (
     <>
       <Title name="Deployed Home Page" />
-      <Link href="/sputnikovye-novosti/2022-01-05">Sat News!</Link>
+      <Link href="sputnikovye-novosti-2022-01-05">Sat News!</Link>
 
       {res.length > 0 && (
         <ul>

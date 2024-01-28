@@ -6,14 +6,11 @@ export const executeQuery = async <T>(
 ): Promise<T[]> => {
   // try {
   const connection = await mysql.createConnection({
-    host: '62.72.32.225',
-    // host: process.env.DB_HOST,
-    user: 'tvefir',
-    // user: process.env.DB_USER,
-    database: 'installsat',
-    // database: process.env.DB_NAME,
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    database: process.env.DB_NAME,
     port: 8889,
-    password: 'Fir-2805004557',
+    password: process.env.DB_PASS,
   });
   const [result] = await connection.execute(query, data);
   await connection.end();

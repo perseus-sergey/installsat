@@ -6,7 +6,7 @@ export const executeQuery = async <T>(
 ): Promise<T[]> => {
   // try {
   const connection = await mysql.createConnection({
-    host: 'localhost',
+    host: '62.72.32.225',
     // host: process.env.DB_HOST,
     user: 'tvefir',
     // user: process.env.DB_USER,

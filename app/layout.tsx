@@ -8,11 +8,12 @@ import Footer from '@/components/Footer/Footer';
 // import { IChannel } from '@/models/channel.model';
 import { SITE_BASE_URL } from '@/models/main.model';
 import { META_TRANS_NEWS_SINGLE } from '@/models/meta.model';
+import React from 'react';
 
 const inter = Inter({ subsets: ['latin'] });
 
 // const res = await executeQuery<IChannel>(
-//   'SELECT * FROM `tbl_digest` WHERE `date`="2022-01-05"',
+//   'SELECT * FROM `tbl_digest` LIMIT 10',
 //   []
 // );
 
@@ -51,7 +52,7 @@ export default function RootLayout({
           <BreadCrumbs homeElement={'Home'} isCapitalizeLinks />
 
           {children}
-          {/* <p>{res[0].title}</p> */}
+
           <Footer />
         </main>
       </body>

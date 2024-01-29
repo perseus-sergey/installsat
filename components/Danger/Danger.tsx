@@ -6,10 +6,7 @@ interface IDangerProps {
 }
 
 const Danger = ({ text }: IDangerProps) => (
-  <div
-    dangerouslySetInnerHTML={{ __html: text }}
-    className={styles.Danger}
-  ></div>
+  <ul dangerouslySetInnerHTML={{ __html: text }} className={styles.Danger}></ul>
 );
 
 export default Danger;

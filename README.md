@@ -98,6 +98,27 @@
 
 ## Do all accordingly this instruction: [PHPMYADMIN install](https://www.digitalocean.com/community/tutorials/how-to-install-and-secure-phpmyadmin-with-nginx-on-an-ubuntu-20-04-server)
 
+- **Env setup**
+
+  - go to app Directory
+
+    ```sh
+    cd project_folder_name
+    ```
+
+  - make env file
+    ```sh
+    touch .env.local
+    nano .env.local
+    ```
+  - Write credential
+    ```sh
+    DB_HOST="localhost"
+    DB_NAME="db_name"
+    DB_PASS="user_password"
+    DB_USER="user_name"
+    ```
+
 - **Nginx: 413 – Request Entity Too Large Error and Solution**
 
   ```sh
@@ -111,9 +132,11 @@
     client_max_body_size 100M;
     ```
 
-  ```sh
-  service nginx reload
-  ```
+    - Reload Nginx
+
+    ```sh
+    service nginx reload
+    ```
 
 - **Phpmyadmin: No data was received to import. Either no file name was submitted, or the file size exceeded the maximum size permitted by your PHP configuration.**
 

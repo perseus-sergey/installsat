@@ -4,29 +4,17 @@ import './globals.scss';
 import Image from 'next/image';
 import BreadCrumbs from '@/components/BreadCrumbs/BreadCrumbs';
 import Footer from '@/components/Footer/Footer';
-// import { executeQuery } from '@/libs/db/mysqldb';
-// import { IChannel } from '@/models/channel.model';
 import { SITE_BASE_URL } from '@/models/main.model';
-import { META_TRANS_NEWS_SINGLE } from '@/models/meta.model';
+import { META_TRANS_NEWS_LIST } from '@/models/meta.model';
 import React from 'react';
 
 const inter = Inter({ subsets: ['latin'] });
 
-// const res = await executeQuery<IChannel>(
-//   'SELECT * FROM `tbl_digest` LIMIT 10',
-//   []
-// );
-
-// const res = await executeQuery<IChannel>(
-//   'SELECT * FROM `tbl_channals` LIMIT 1',
-//   []
-// );
-
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_BASE_URL),
-  title: META_TRANS_NEWS_SINGLE.getTitle('2022-01-05'),
-  description: META_TRANS_NEWS_SINGLE.getDescription('2022-01-05'),
-  keywords: META_TRANS_NEWS_SINGLE.getKeywords('2022-01-05'),
+  title: META_TRANS_NEWS_LIST.getTitle(),
+  description: META_TRANS_NEWS_LIST.getDescription(),
+  keywords: META_TRANS_NEWS_LIST.getKeywords(),
   alternates: {
     canonical: '/',
   },

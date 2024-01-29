@@ -1,7 +1,8 @@
-import Danger from '@/components/Danger/Danger';
+import DangerHtmlUl from '@/components/DangerHtmlUl/DangerHtmlUl';
 import { Title } from '@/components/Title/Title';
 import { executeQuery } from '@/libs/db/mysqldb';
 import { IChannel } from '@/models/channel.model';
+import { META_TRANS_NEWS_LIST } from '@/models/meta.model';
 import Link from 'next/link';
 
 const q = `
@@ -22,9 +23,9 @@ const allNews = res.reduce((acc, curr) => curr.text + acc, '');
 export default function Home() {
   return (
     <>
-      <Title name="Deployed Home Page" />
+      <Title name={META_TRANS_NEWS_LIST.getH1()} />
       <Link href="/sputnikovye-novosti/2022-01-05">Sat News!</Link>
-      {res.length > 0 && <Danger text={allNews} />}
+      {res.length > 0 && <DangerHtmlUl text={allNews} />}
     </>
   );
 }

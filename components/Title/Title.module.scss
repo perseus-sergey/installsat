@@ -1,7 +1,7 @@
 .sectionTitle {
   display: flex;
   justify-content: center;
-  color: rgba(var(--color-title-h1));
+  color: var(--color-title-h1);
   padding: 1vh;
   font-weight: bold;
   text-align: center;
@@ -32,7 +32,7 @@
       transform: scale(0);
     }
     50% {
-      transform: scale(1.5);
+      transform: scale(1.1);
     }
     100% {
       transform: scale(1);

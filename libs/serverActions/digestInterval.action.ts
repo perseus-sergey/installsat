@@ -30,7 +30,8 @@ const digestIntervalAction = async (
         if (+timeInterval !== new Date().getFullYear())
           tblName = `tbl_digest_${timeInterval}`;
       } else {
-        where = `WHERE date >= CURDATE() - INTERVAL ${timeInterval} DAY`;
+        where = `WHERE date >= CURDATE() - INTERVAL ${LAST_NEWS_INTERVAL} DAY`;
+        // where = `WHERE date >= CURDATE() - INTERVAL ${timeInterval} DAY`;
       }
     }
     if (selectSats && selectSats.length && selectSats[0]) {
@@ -50,6 +51,7 @@ const digestIntervalAction = async (
     ${inSatList}
     ${orderBy}
   `;
+  // console.log('🚀 ~ newsSql:', newsSql);
 
   try {
     const newsIntervalResult = await executeQuery<TSatDigest>(newsSql, []);

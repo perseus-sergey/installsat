@@ -1,18 +1,17 @@
 import SatNews from '@/components/SatNews/SatNews';
 import { executeQuery } from '@/libs/db/mysqldb';
-import { ISat, satSql } from '@/models/sat.model';
+import { TSatModel, satSql } from '@/models/sat.model';
 import {
-  ISatDigest,
-  LAST_NEWS_INTERVAL,
   TSatDigest,
+  LAST_NEWS_INTERVAL,
   newsSql,
 } from '@/models/satDigest.model';
 import React from 'react';
 
-const newsResult = await executeQuery<ISatDigest>(newsSql, [
+const newsResult = await executeQuery<TSatDigest>(newsSql, [
   `${LAST_NEWS_INTERVAL}`,
 ]);
-const satResult = await executeQuery<ISat>(satSql);
+const satResult = await executeQuery<TSatModel>(satSql);
 
 const groupedNewsByDateMap = (news: TSatDigest[]) =>
   news.reduce((acc, currObj) => {
@@ -26,7 +25,7 @@ const groupedNewsByDateMap = (news: TSatDigest[]) =>
 export type TGroupedNewsByDateMap = typeof groupedNewsByDateMap;
 
 const satellites = satResult.reduce(
-  (acc: ISat[][], curr) => {
+  (acc: TSatModel[][], curr) => {
     curr.grade > 0 ? acc[0].push(curr) : acc[1].push(curr);
 
     return acc;

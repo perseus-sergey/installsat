@@ -1,20 +1,5 @@
 export const LAST_NEWS_INTERVAL = 370;
 
-export interface ISatDigest {
-  id: number;
-  date: Date;
-  update: number;
-  text: string;
-  sat: number;
-  sat_name: string;
-  country: string;
-  satParent: string;
-  satTitle: string;
-  satLogo: string;
-  satGrade: string;
-  satPosition: string;
-}
-
 export const newsSql = `
 SELECT d.id, d.date, d.text,
 sat.parent AS satParent,
@@ -45,15 +30,20 @@ export const rawSatDigest = {
 
 export type TSatDigest = typeof rawSatDigest;
 
-export const digestIntervals = [
-  { value: '7', text: 'Последние 7 дней' },
-  { value: '30', text: 'Последние 30 дней' },
-  { value: '90', text: 'Последние 90 дней' },
-  { value: '180', text: 'Последние полгода' },
-  { value: '2020', text: '2020 год' },
-  { value: '2019', text: '2019 год' },
-  { value: '2018', text: '2018 год' },
-  { value: '2017', text: '2017 год' },
-  { value: '2016', text: '2016 год' },
-  { value: '2015', text: '2015 год' },
+export interface StateOption {
+  readonly value: number;
+  readonly label: string;
+}
+
+export const digestIntervals: readonly StateOption[] = [
+  { value: 7, label: 'Останні 7 днів' },
+  { value: 30, label: 'Останні 30 днів' },
+  { value: 90, label: 'Останні 90 днів' },
+  { value: 180, label: 'Останні півроку' },
+  { value: 2020, label: '2020 рік' },
+  { value: 2019, label: '2019 рік' },
+  { value: 2018, label: '2018 рік' },
+  { value: 2017, label: '2017 рік' },
+  { value: 2016, label: '2016 рік' },
+  { value: 2015, label: '2015 рік' },
 ];

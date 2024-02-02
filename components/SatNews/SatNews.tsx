@@ -5,11 +5,11 @@ import React, { useEffect, useState } from 'react';
 import { Title } from '../Title/Title';
 import { META_TRANS_NEWS_LIST, getDate } from '@/models/meta.model';
 import { IChannel } from '@/models/channel.model';
-import { ISatDigest, TSatDigest } from '@/models/satDigest.model';
+import { TSatDigest } from '@/models/satDigest.model';
 import { getFormattedDateStr } from '@/libs/utils';
 import Link from 'next/link';
 import DangerHtmlUl from '../DangerHtmlUl/DangerHtmlUl';
-import { ISat } from '@/models/sat.model';
+import { TSatModel } from '@/models/sat.model';
 import FormDigestInterval from '../FormDigestInterval/FormDigestInterval';
 import { Loader } from '../loaders/Loader';
 
@@ -26,12 +26,12 @@ const dailyNews = (newsArray: IChannel[]) =>
   newsArray.reduce((acc, curr) => curr.text + acc, '');
 
 interface ISatNewsProps {
-  satellites: ISat[][];
-  newsResult: ISatDigest[];
+  satellites: TSatModel[][];
+  newsResult: TSatDigest[];
 }
 
 const SatNews = ({ satellites, newsResult }: ISatNewsProps) => {
-  const [newsResults, setNewsResults] = useState<ISatDigest[]>([]);
+  const [newsResults, setNewsResults] = useState<TSatDigest[]>([]);
 
   useEffect(() => {
     setNewsResults(newsResult);
@@ -63,7 +63,7 @@ const SatNews = ({ satellites, newsResult }: ISatNewsProps) => {
                   <Link
                     href={`/sputnikovye-novosti/${getFormattedDateStr(news[1][0].date)}`}
                   >
-                    Транспондерные новости за{' '}
+                    Транспондерні новини за{' '}
                     <span style={{ color: '#EE0000' }}>
                       {getDate(news[1][0].date)}
                     </span>

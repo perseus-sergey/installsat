@@ -12,7 +12,9 @@ import { TSatModel } from '@/models/sat.model';
 import FormDigestInterval from '../FormDigestInterval/FormDigestInterval';
 import { Loader } from '../loaders/Loader';
 
-const setGroupedNewsByDateMap = (news: TSatDigest[]) =>
+const setGroupedNewsByDateMap = (
+  news: TSatDigest[]
+): Map<string, TSatDigest[]> =>
   news.reduce((acc, currObj) => {
     const strCurrDate = `${currObj.date}`;
     const date = acc.get(strCurrDate) || [];
@@ -39,14 +41,16 @@ interface ISatNewsProps {
 }
 
 const SatNews = ({ satellites, newsResult }: ISatNewsProps) => {
-  const [newsResults, setNewsResults] = useState<TSatDigest[]>([]);
+  const [newsArray, setNewsResults] = useState<[string, TSatDigest[]][]>([]);
 
   useEffect(() => {
-    setNewsResults(newsResult);
+    const map = setGroupedNewsByDateMap(newsResult);
+    console.log('🚀 ~ useEffect ~ map:', map);
+    setNewsResults(Array.from(map));
   }, []);
 
   const intervalSubmitHandler = (data: TSatDigest[]) => {
-    setNewsResults(data);
+    setNewsResults(Array.from(setGroupedNewsByDateMap(data)));
   };
 
   return (
@@ -56,12 +60,12 @@ const SatNews = ({ satellites, newsResult }: ISatNewsProps) => {
         <FormDigestInterval
           satellites={satellites}
           intervalSubmitHandler={intervalSubmitHandler}
-          newsResults={newsResults}
+          newsResults={newsResult}
         />
       </section>
       <article>
-        {newsResults.length > 0 && newsResults[0].satTitle !== '' ? (
-          [...setGroupedNewsByDateMap(newsResults)].map((news) => {
+        {newsArray.length > 0 && newsArray[0][1][0].satTitle !== '' ? (
+          newsArray.map((news) => {
             return (
               <React.Fragment key={news[0]}>
                 <h2

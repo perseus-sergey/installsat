@@ -5,6 +5,7 @@ export const executeQuery = async <T>(
   values: string[] = []
 ): Promise<T[]> => {
   const port = process.env.DB_PORT ? +process.env.DB_PORT : 0;
+  // TODO:
   // try {
   const connection = port
     ? await mysql.createConnection({

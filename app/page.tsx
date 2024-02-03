@@ -4,11 +4,11 @@ import { TSatModel, satSql } from '@/models/sat.model';
 import {
   TSatDigest,
   LAST_NEWS_INTERVAL,
-  newsSql,
+  initNewsSql,
 } from '@/models/satDigest.model';
 import React from 'react';
 
-const newsResult = await executeQuery<TSatDigest>(newsSql, [
+const newsResult = await executeQuery<TSatDigest>(initNewsSql, [
   `${LAST_NEWS_INTERVAL}`,
 ]);
 const satResult = await executeQuery<TSatModel>(satSql);

@@ -5,20 +5,6 @@ WHERE title!=''
 ORDER BY grade
 `;
 
-// export interface ISat {
-//   id: number;
-//   parent: number;
-//   title: number;
-//   cpu: string;
-//   description: string;
-//   position: string;
-//   grade: number;
-//   map_img: string;
-//   logo: string;
-//   view: number;
-//   fill: number;
-// }
-
 export const initSat = {
   id: -1,
   parent: -1,

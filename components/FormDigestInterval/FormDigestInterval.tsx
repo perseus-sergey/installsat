@@ -21,9 +21,18 @@ interface IFormDigestIntervalProps {
   newsResults: TSatDigest[];
 }
 
-const ControlComponent = (props: ControlProps<ISatelliteOption, true>) => (
+const ControlComponentSat = (props: ControlProps<ISatelliteOption, true>) => (
   <div className={`${styles.selectHeader} ${styles.satSelectHeader}`}>
     <p>Оберіть супутники</p>
+    <components.Control {...props} />
+  </div>
+);
+
+const ControlComponentInterval = (
+  props: ControlProps<ISatelliteOption, false>
+) => (
+  <div className={`${styles.selectHeader} ${styles.satSelectHeader}`}>
+    <p>Оберіть період</p>
     <components.Control {...props} />
   </div>
 );
@@ -68,7 +77,6 @@ const FormDigestInterval = ({
   );
 
   useEffect(() => {
-    // makeNewNewsList();
     intervalSubmitHandler(formState.newsIntervalResult);
   }, [formState]);
 
@@ -97,9 +105,10 @@ const FormDigestInterval = ({
               id="selectSats"
               name="selectSats"
               isMulti
+              closeMenuOnSelect={false}
               defaultValue={groupedSats[0].options[0]}
               options={groupedSats}
-              components={{ Group, Control: ControlComponent }}
+              components={{ Group, Control: ControlComponentSat }}
               formatGroupLabel={formatGroupSatLabel}
             />
           ) : (
@@ -116,6 +125,7 @@ const FormDigestInterval = ({
               defaultValue={digestIntervals[1]}
               options={digestIntervals}
               components={{
+                Control: ControlComponentInterval,
                 Input: (props) => (
                   <components.Input
                     {...props}

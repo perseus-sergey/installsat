@@ -4,7 +4,6 @@ import React, { useEffect, useState } from 'react';
 // import styles from './SatNews.module.scss';
 import { Title } from '../Title/Title';
 import { META_TRANS_NEWS_LIST, getDate } from '@/models/meta.model';
-import { IChannel } from '@/models/channel.model';
 import { TSatDigest } from '@/models/satDigest.model';
 import { getFormattedDateStr } from '@/libs/utils';
 import Link from 'next/link';
@@ -13,7 +12,7 @@ import { TSatModel } from '@/models/sat.model';
 import FormDigestInterval from '../FormDigestInterval/FormDigestInterval';
 import { Loader } from '../loaders/Loader';
 
-const groupedNewsByDateMap = (news: TSatDigest[]) =>
+const setGroupedNewsByDateMap = (news: TSatDigest[]) =>
   news.reduce((acc, currObj) => {
     const strCurrDate = `${currObj.date}`;
     const date = acc.get(strCurrDate) || [];
@@ -22,7 +21,16 @@ const groupedNewsByDateMap = (news: TSatDigest[]) =>
     return acc;
   }, new Map());
 
-const dailyNews = (newsArray: IChannel[]) =>
+// const setGroupedNewsBySatMap = (news: TSatDigest[]) =>
+//   news.reduce((acc, currObj) => {
+//     const strCurrDate = `${currObj.date}`;
+//     const date = acc.get(strCurrDate) || [];
+//     acc.set(strCurrDate, [...date, currObj]);
+
+//     return acc;
+//   }, new Map());
+
+const getDailyNews = (newsArray: TSatDigest[]) =>
   newsArray.reduce((acc, curr) => curr.text + acc, '');
 
 interface ISatNewsProps {
@@ -53,7 +61,7 @@ const SatNews = ({ satellites, newsResult }: ISatNewsProps) => {
       </section>
       <article>
         {newsResults.length > 0 && newsResults[0].satTitle !== '' ? (
-          [...groupedNewsByDateMap(newsResults)].map((news) => {
+          [...setGroupedNewsByDateMap(newsResults)].map((news) => {
             return (
               <React.Fragment key={news[0]}>
                 <h2
@@ -69,7 +77,7 @@ const SatNews = ({ satellites, newsResult }: ISatNewsProps) => {
                     </span>
                   </Link>
                 </h2>
-                <DangerHtmlUl text={dailyNews(news[1])} />
+                <DangerHtmlUl text={getDailyNews(news[1])} />
               </React.Fragment>
             );
           })

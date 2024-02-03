@@ -1,15 +1,5 @@
-import { getFormattedDateStr } from '@/libs/utils';
+import { getDate, getFormattedDateStr } from '@/libs/utils';
 import { LAST_NEWS_INTERVAL } from './satDigest.model';
-
-export const getDate = (date: string | Date, lang?: string) => {
-  const currDate = date instanceof Date ? date : new Date(date);
-
-  return currDate.toLocaleDateString(lang, {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  });
-};
 
 export const META_TRANS_NEWS_LIST = {
   getH1() {

@@ -1,20 +1,19 @@
-const getDate = (date: string, lang?: string) => {
-  return new Date(date).toLocaleDateString(lang, {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  });
-};
+import { getDate, getFormattedDateStr } from '@/libs/utils';
+import { LAST_NEWS_INTERVAL } from './satDigest.model';
 
 export const META_TRANS_NEWS_LIST = {
   getH1() {
-    return 'Транспондерные новости популярных спутников';
+    const currDate = new Date();
+    let startDate = new Date();
+    startDate.setDate(currDate.getDate() - LAST_NEWS_INTERVAL);
+
+    return `Транспондерні новини популярних супутників з ${getFormattedDateStr(currDate)} по ${getFormattedDateStr(startDate)}`;
   },
   getTitle() {
-    return 'Транспондерные новости. Спутниковые новости.';
+    return 'Транспондері новини. Супутникові новини.';
   },
   getKeywords() {
-    return `новости спутникового телевидения на ${new Date().toLocaleDateString('en-GB')}, спутниковые транспондеры частоты каналы пакета без абонплаты эфирные`;
+    return `новини супутникового телебачення станом на ${new Date().toLocaleDateString('en-GB')}, супутникові транспондери частоти канали пакета без абонплати ефірні`;
   },
   getDescription() {
     return `${this.getH1().slice(0, 190)} ${new Date().getFullYear()}`;
@@ -23,15 +22,15 @@ export const META_TRANS_NEWS_LIST = {
 
 export const META_TRANS_NEWS_SINGLE = {
   getH1() {
-    return 'Транспондерные новости популярных спутников';
+    return 'Транспондерні новини популярних супутників';
   },
   getTitle(date: string, lang?: string) {
-    return `Installsat - транспондерные новости за ${getDate(date, lang)}`;
+    return `Installsat - транспондерні новини за ${getDate(date, lang)}`;
   },
   getKeywords(date: string, lang?: string) {
-    return `транспондерные спутниковые новости ${getDate(date, lang)}`;
+    return `транспондерні супутникові новини ${getDate(date, lang)}`;
   },
   getDescription(date: string, lang?: string) {
-    return `Спутниковые новости за ${getDate(date, lang)}`;
+    return `Супутникові новини за ${getDate(date, lang)}`;
   },
 };

@@ -6,10 +6,10 @@
   cursor: pointer;
   position: relative;
   width: fit-content;
-  padding: 2vh 7vh;
+  padding: 0.2vh 5vh;
   font: inherit;
   font-weight: bold;
-  font-size: 4vh;
+  font-size: 3vh;
   text-shadow: -1px -1px 0px black;
   color: white;
   border: none;
@@ -24,8 +24,8 @@
   box-shadow: 0px 1px 11px #0e6b87;
 
   @media screen and (orientation: portrait) {
-    font-size: 3.5vw;
-    padding: 3vw 9vw;
+    font-size: 2.5vw;
+    padding: 1vw 7vw;
   }
 
   &:hover {

@@ -6,6 +6,29 @@ export const arrayShift = <T>(array: T[][]): T[][] => {
   return rest;
 };
 
+export const getDate = (date: string | Date = new Date(), lang?: string) => {
+  const currDate = date instanceof Date ? date : new Date(date);
+
+  return currDate.toLocaleDateString(lang, {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
+};
+
+export const getFormattedDateStr = (
+  date: string | Date = new Date(),
+  isYearFirst = true
+) => {
+  const currDate = date instanceof Date ? date : new Date(date);
+
+  const year = currDate.getFullYear();
+  const month = String(currDate.getMonth() + 1).padStart(2, '0');
+  const day = String(currDate.getDate()).padStart(2, '0');
+
+  return isYearFirst ? `${year}-${month}-${day}` : `${day}-${month}-${year}`;
+};
+
 // export const uniqueArray = <T>(array: T[]): T[] => [...new Set(array)];
 
 export const isUniqDeepArray = <T>(arr: T[][]): boolean =>

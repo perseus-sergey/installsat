@@ -11,7 +11,7 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --color-title-h1: #000000;
+    --color-title-h1: #929292;
     --foreground-rgb: 255, 255, 255;
     --background-start-rgb: 0, 0, 0;
     --background-end-rgb: 0, 0, 0;
@@ -25,16 +25,45 @@
 }
 
 body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+  font-family: 'Times New Roman', Times, serif;
+  color: #5a5a5a;
+  // color: rgb(var(--foreground-rgb));
+  // background: linear-gradient(
+  //     to bottom,
+  //     transparent,
+  //     rgb(var(--background-end-rgb))
+  //   )
+  //   rgb(var(--background-start-rgb));
+  background: url('/images/black00001.gif');
 }
 
 a {
   color: inherit;
   text-decoration: none;
+}
+
+.main {
+  background-color: #cbdafa;
+}
+
+.grey_text {
+  color: black;
+  font-weight: bold;
+  text-shadow:
+    0 0 1px rgba(255, 255, 255, 1),
+    0 0 3px rgba(180, 180, 180, 0.7);
+}
+
+.left_chan {
+  color: #a81246;
+  text-shadow:
+    0 0 1px rgba(255, 255, 255, 1),
+    0 0 2px rgba(255, 20, 75, 0.3);
+}
+
+.add_chan {
+  color: #2e8b57;
+  text-shadow:
+    0 0 1px rgba(255, 255, 255, 1),
+    0 0 3px rgba(20, 255, 20, 0.5);
 }

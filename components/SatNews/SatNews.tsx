@@ -133,7 +133,7 @@ const SatNews = ({ satellites, newsResult }: ISatNewsProps) => {
                     return (
                       <React.Fragment key={satNews[0]}>
                         <h3 className={styles.groupSubTitle}>
-                          {`${getDate(satNews[0])} ....`}
+                          {`${getDate(satNews[0])} ...`}
                         </h3>
                         <div className={styles.newsList}>
                           <DangerHtmlUl text={getDailyNews(satNews[1])} />

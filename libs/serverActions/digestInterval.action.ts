@@ -26,14 +26,10 @@ const digestIntervalAction = async (
   if (submitBtn === 'Submit') {
     if (timeInterval) {
       orderBy = 'ORDER BY satGrade, satTitle, d.date DESC';
-      // TODO:
-      // if (+timeInterval > 180) {
-      if (+timeInterval > 580) {
+      if (+timeInterval > 180) {
         if (+timeInterval !== new Date().getFullYear())
           tblName = `tbl_digest_${timeInterval}`;
       } else {
-        // where = `WHERE date >= CURDATE() - INTERVAL ${LAST_NEWS_INTERVAL} DAY`;
-        // TODO:
         where = `WHERE date >= CURDATE() - INTERVAL ${timeInterval} DAY`;
       }
     }

@@ -5,7 +5,7 @@ import test, { describe } from 'node:test';
 
 describe('<TemplateName />', () => {
   test('it should mount', () => {
-    render(<TemplateName />);
+    render(<TemplateName>TemplateName</TemplateName>);
 
     const templateName = screen.getByTestId('TemplateName');
 

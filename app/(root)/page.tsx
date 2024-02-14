@@ -1,3 +1,4 @@
+import BreadCrumbs from '@/components/BreadCrumbs/BreadCrumbs';
 import SatNews from '@/components/SatNews/SatNews';
 import { executeQuery } from '@/libs/db/mysqldb';
 import { TSatModel, satSql } from '@/models/sat.model';
@@ -34,5 +35,10 @@ const satellites = satResult.reduce(
 );
 
 export default function SatNewsPage() {
-  return <SatNews satellites={satellites} newsResult={newsResult} />;
+  return (
+    <main className="main flex min-h-screen flex-col items-center justify-between p-24">
+      <BreadCrumbs homeElement={'Home'} isCapitalizeLinks />
+      <SatNews satellites={satellites} newsResult={newsResult} />)
+    </main>
+  );
 }

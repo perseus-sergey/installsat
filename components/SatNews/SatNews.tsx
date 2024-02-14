@@ -12,6 +12,7 @@ import { TSatModel } from '@/models/sat.model';
 import FormDigestInterval from '../FormDigestInterval/FormDigestInterval';
 import { Loader } from '../loaders/Loader';
 import Image from 'next/image';
+import { EUrlPath } from '@/models/url.model';
 
 type TGroupedNews = [string, Map<string, TSatDigest[]>][];
 
@@ -87,7 +88,7 @@ const SatNews = ({ satellites, newsResult }: ISatNewsProps) => {
                 <div className={styles.newsBlock} key={news[0]}>
                   <h2 className={`${styles.groupTitle} ${styles.alignCenter}`}>
                     <Link
-                      href={`/sputnikovye-novosti/${getFormattedDateStr(news[0])}`}
+                      href={`/${EUrlPath.TRANSPONDER_NEWS}/${getFormattedDateStr(news[0])}`}
                     >
                       Транспондерні новини за{' '}
                       <span className={styles.groupTitleDate}>

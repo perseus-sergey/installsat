@@ -6,9 +6,13 @@
   "cssPreprocessor": "scss",
   "component": {
     "default": {
+      "customTemplates": {
+        "component": "templates/component/TemplateName.tsx",
+        "test": "templates/component/TemplateName.test.tsx"
+      },
       "path": "components",
       "withStyle": true,
-      "withTest": false,
+      "withTest": true,
       "withStory": false,
       "withLazy": false
     }

@@ -1,4 +1,71 @@
-### ERRORS BUGS PROBLEMS
+# 🐞 ERRORS BUGS PROBLEMS
+
+## ---=== CLIENT ===---
+
+### [🔗 Jest Testing Set Up](https://nextjs.org/docs/pages/building-your-application/testing/jest)
+
+- [🔗 First, we'll uninstall jest-dom and install a 4.x version:](https://github.com/testing-library/jest-dom/issues/546#issuecomment-1939151181)
+
+  ```sh
+  yarn remove @testing-library/jest-dom
+  yarn add -D @testing-library/jest-dom@^4.2.4
+  ```
+
+- Then, add this to src/setupTests.ts:
+
+  ```sh
+  import '@testing-library/jest-dom/extend-expect';
+  ```
+
+- Add to "compilerOptions" section:
+
+  ```sh
+  "types": ["node", "jest"],
+  ```
+
+- Then:
+
+  ```sh
+  yarn add -D @types/jest
+  ```
+
+- CMD + SHIFT + P:
+
+```
+TypeScript: Restart TS Server
+```
+
+- If it's need remove node-modules adn yarn.lock
+  Then:
+
+  ```sh
+  yarn
+  ```
+
+- Add scripts to package.jsone
+
+  ```sh
+  "test": "jest",
+  "test:watch": "jest --watchAll"
+  ```
+
+---
+
+### [🔗 'React' refers to a UMD global](https://www.totaltypescript.com/react-refers-to-a-umd-global)
+
+- Should change jsx to react-jsx in your tsconfig.json.
+
+  ```
+  {
+    "compilerOptions": {
+      "jsx": "react-jsx"
+    }
+  }
+  ```
+
+---
+
+## ---=== DEPLOY ===---
 
 - **Nginx: 413 – Request Entity Too Large Error and Solution**
 

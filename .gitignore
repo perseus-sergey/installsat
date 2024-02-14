@@ -9,6 +9,9 @@
 # testing
 /coverage
 
+# generate-react-cli
+/templates
+
 # next.js
 /.next/
 /out/

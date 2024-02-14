@@ -51,6 +51,20 @@ TypeScript: Restart TS Server
 
 ---
 
+### [🔗 'React' refers to a UMD global](https://www.totaltypescript.com/react-refers-to-a-umd-global)
+
+- Should change jsx to react-jsx in your tsconfig.json.
+
+  ```
+  {
+    "compilerOptions": {
+      "jsx": "react-jsx"
+    }
+  }
+  ```
+
+---
+
 ## ---=== DEPLOY ===---
 
 - **Nginx: 413 – Request Entity Too Large Error and Solution**

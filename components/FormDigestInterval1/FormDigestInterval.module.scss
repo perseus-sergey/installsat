@@ -1,0 +1,71 @@
+.FormDigestInterval {
+}
+
+.fieldset {
+  border: 1px solid darkgray;
+  border-radius: 0.5rem;
+  padding: 1rem 1.5rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 3vh;
+
+  .legend {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    color: rgb(169, 169, 169);
+    font-size: 0.9rem;
+  }
+
+  .selectsBlock {
+    color: #999999;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 2vh;
+  }
+}
+
+.selectHeader {
+  height: fit-content;
+  border: 1px solid #616161;
+  padding: 5px;
+  background: #0060a9;
+  color: white;
+  text-align: center;
+  border-radius: 5px;
+
+  &.satSelectHeader {
+    width: 19rem;
+  }
+}
+
+.groupBadgeStyles {
+  background-color: #ebecf0;
+  border-radius: 2em;
+  color: #172b4d;
+  display: inline-block;
+  font-size: 0.8rem;
+  font-weight: normal;
+  line-height: 1;
+  min-width: 1;
+  padding: 0.17em 0.5em;
+  text-align: center;
+}
+
+.groupHeading {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  widows: 100%;
+  color: white;
+  background-color: #1b64a3;
+  border-radius: 5px;
+  padding: 5px 0;
+  text-align: center;
+}
+
+.groupStyles {
+  border: 2px dotted #00b8d9;
+  border-radius: 5px;
+  background: #f2fcff;
+}

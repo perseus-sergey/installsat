@@ -7,7 +7,7 @@ export const META_TRANS_NEWS_LIST = {
     let startDate = new Date();
     startDate.setDate(currDate.getDate() - LAST_NEWS_INTERVAL);
 
-    return `Транспондерні новини популярних супутників з ${getFormattedDateStr(currDate)} по ${getFormattedDateStr(startDate)}`;
+    return `Транспондерні новини популярних супутників з ${getFormattedDateStr(startDate)} по ${getFormattedDateStr(currDate)}`;
   },
   getTitle() {
     return 'Транспондері новини. Супутникові новини.';

@@ -1,29 +1,35 @@
 import BreadCrumbs from '@/components/BreadCrumbs/BreadCrumbs';
+import FormDigestInterval from '@/components/FormDigestInterval1/FormDigestInterval';
 import SatNews from '@/components/SatNews/SatNews';
+import { Title } from '@/components/Title/Title';
 import { executeQuery } from '@/libs/db/mysqldb';
+import { META_TRANS_NEWS_LIST } from '@/models/meta.model';
 import { TSatModel, satSql } from '@/models/sat.model';
 import {
   TSatDigest,
   LAST_NEWS_INTERVAL,
   initNewsSql,
 } from '@/models/satDigest.model';
-import React from 'react';
+
+interface IProps {
+  searchParams: { [key: string]: string | string[] | undefined };
+}
 
 const newsResult = await executeQuery<TSatDigest>(initNewsSql, [
   `${LAST_NEWS_INTERVAL}`,
 ]);
 const satResult = await executeQuery<TSatModel>(satSql);
 
-const groupedNewsByDateMap = (news: TSatDigest[]) =>
-  news.reduce((acc, currObj) => {
-    const strCurrDate = `${currObj.date}`;
-    const date = acc.get(strCurrDate) || [];
-    acc.set(strCurrDate, [...date, currObj]);
+// const groupedNewsByDateMap = (news: TSatDigest[]) =>
+//   news.reduce((acc, currObj) => {
+//     const strCurrDate = `${currObj.date}`;
+//     const date = acc.get(strCurrDate) || [];
+//     acc.set(strCurrDate, [...date, currObj]);
 
-    return acc;
-  }, new Map());
+//     return acc;
+//   }, new Map());
 
-export type TGroupedNewsByDateMap = typeof groupedNewsByDateMap;
+// export type TGroupedNewsByDateMap = typeof groupedNewsByDateMap;
 
 const satellites = satResult.reduce(
   (acc: TSatModel[][], curr) => {
@@ -34,11 +40,27 @@ const satellites = satResult.reduce(
   [[], []]
 );
 
-export default function SatNewsPage() {
+export default function SatNewsPage({ searchParams }: IProps) {
   return (
     <main className="main flex min-h-screen flex-col items-center justify-between p-24">
+      <Title>
+        {searchParams && Object.keys(searchParams).length
+          ? JSON.stringify(searchParams)
+          : META_TRANS_NEWS_LIST.getH1()}
+      </Title>
       <BreadCrumbs homeElement={'Home'} isCapitalizeLinks />
-      <SatNews satellites={satellites} newsResult={newsResult} />)
+      <section>
+        <FormDigestInterval
+          satellites={satellites}
+          // intervalSubmitHandler={intervalSubmitHandler}
+          newsResults={newsResult}
+        />
+      </section>
+      <SatNews
+        // satellites={satellites}
+        // newsResult={newsResult}
+        urlParams={searchParams}
+      />
     </main>
   );
 }

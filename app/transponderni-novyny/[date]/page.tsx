@@ -22,7 +22,7 @@ export const dynamicParams = false;
 export default function SatNewsDatePage({ params }: ISatNewsDatePageParams) {
   return (
     <>
-      <Title name={`Page for ${params.date}`} />
+      <Title>`Page for ${params.date}</Title>
     </>
   );
 }

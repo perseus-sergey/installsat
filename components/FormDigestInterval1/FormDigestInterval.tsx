@@ -11,13 +11,13 @@ import {
 // import { useFormState, useFormStatus } from 'react-dom';
 // import digestIntervalAction from '@/libs/serverActions/digestInterval.action';
 import { Loader } from '../loaders/Loader';
-import { BASE_URL } from '@/models/url.model';
 import { redirect } from 'next/navigation';
 import {
   ReactSelectInterval,
   ReactSelectSat,
 } from '../ReactSelect/ReactSelect';
 import { Suspense } from 'react';
+import { EUrlPath } from '@/models/url.model';
 // import { useCallback, useEffect, useState } from 'react';
 
 interface IFormDigestIntervalProps {
@@ -60,11 +60,12 @@ const FormDigestInterval = ({
     const selectSats = formData.getAll('selectSats') as string[] | null;
     const timeInterval = formData.get('timeInterval') || LAST_NEWS_INTERVAL;
 
-    const url = new URL(BASE_URL);
-    url.searchParams.set('interval', `${timeInterval}`);
-    selectSats?.forEach((sat) => url.searchParams.append('sat', `${sat}`));
+    const urlSePar = new URLSearchParams();
+    if (timeInterval) urlSePar.set('interval', `${timeInterval}`);
+    if (selectSats && selectSats[0])
+      selectSats.forEach((sat) => urlSePar.append('sat', `${sat}`));
 
-    redirect(url.toString());
+    redirect(`${EUrlPath.BASE_PATH}?${urlSePar.toString()}`);
   }
 
   // const getGroupedSatOptions = useCallback(

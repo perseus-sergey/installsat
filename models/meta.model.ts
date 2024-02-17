@@ -26,8 +26,8 @@ export const META_TRANS_NEWS_LIST = {
 };
 
 export const META_TRANS_NEWS_SINGLE = {
-  getH1() {
-    return 'Транспондерні новини популярних супутників';
+  getH1(date: string, lang?: string) {
+    return `Транспондерні новини за ${getDate(date, lang)}`;
   },
   getTitle(date: string, lang?: string) {
     return `Installsat - транспондерні новини за ${getDate(date, lang)}`;

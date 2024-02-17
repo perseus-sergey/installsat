@@ -5,31 +5,7 @@ import { getDate, getFormattedDateStr } from '@/libs/utils';
 import React from 'react';
 import DangerHtmlUl from '../DangerHtmlUl/DangerHtmlUl';
 import { getDailyNews } from '../SatNewsList/SatNewsList';
-import {
-  LAST_NEWS_INTERVAL,
-  TSatDigest,
-  initNewsSql,
-} from '@/models/satDigest.model';
-import { TGroupedNews } from '../SatNews/SatNews';
-import { executeQuery } from '@/libs/db/mysqldb';
-
-const setGroupedNewsByDateMap = async (): Promise<TGroupedNews> => {
-  const newsResult = await executeQuery<TSatDigest>(initNewsSql, [
-    `${LAST_NEWS_INTERVAL}`,
-  ]);
-
-  return Array.from(
-    newsResult.reduce((acc, currObj) => {
-      const strCurrDate = `Date ${currObj.date}`;
-      const mapCurrDate = acc.get(strCurrDate) || new Map();
-      const newsArrForCurrSat = mapCurrDate.get(currObj.satTitle) || [];
-      mapCurrDate.set(currObj.satTitle, [...newsArrForCurrSat, currObj]);
-      acc.set(strCurrDate, mapCurrDate);
-
-      return acc;
-    }, new Map())
-  );
-};
+import { setGroupedNewsByDateMap } from '@/controllers/satDigest.controller';
 
 const DateNewsList = async () => {
   const newsArray = await setGroupedNewsByDateMap();

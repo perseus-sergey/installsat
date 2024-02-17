@@ -1,4 +1,3 @@
-import BreadCrumbs from '@/components/BreadCrumbs/BreadCrumbs';
 import FormDigestInterval from '@/components/FormDigestInterval1/FormDigestInterval';
 import SatNews from '@/components/SatNews/SatNews';
 import { Title } from '@/components/Title/Title';
@@ -50,9 +49,8 @@ export default function SatNewsPage({ searchParams }: IProps) {
       : LAST_NEWS_INTERVAL;
 
   return (
-    <main className="main flex min-h-screen flex-col items-center justify-between p-24">
+    <>
       <Title>{META_TRANS_NEWS_LIST.getH1(intervalDays)}</Title>
-      <BreadCrumbs homeElement={'Home'} isCapitalizeLinks />
       <nav>
         <Suspense>
           <FormDigestInterval searchParams={searchParams} />
@@ -61,6 +59,6 @@ export default function SatNewsPage({ searchParams }: IProps) {
       <Suspense>
         <SatNews searchParams={searchParams} />
       </Suspense>
-    </main>
+    </>
   );
 }

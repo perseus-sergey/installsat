@@ -1,28 +1,32 @@
-import { Title } from '@/components/Title/Title';
-import { executeQuery } from '@/libs/db/mysqldb';
-import { getFormattedDateStr } from '@/libs/utils';
-import { TSatDigest, LAST_NEWS_INTERVAL } from '@/models/satDigest.model';
+import TransNewsSingle from '@/components/TransNewsSingle/TransNewsSingle';
+import {
+  getTransNewsForSingleDay,
+  singleDaySql,
+} from '@/controllers/satDigest.controller';
+import { META_TRANS_NEWS_SINGLE } from '@/models/meta.model';
 
 interface ISatNewsDatePageParams {
   params: { date: string };
 }
 
-const q = `
-SELECT DISTINCT date
-FROM tbl_digest
-WHERE date >= CURDATE() - INTERVAL ? DAY
-`;
-const res = await executeQuery<TSatDigest>(q, [`${LAST_NEWS_INTERVAL}`]);
+export const generateMetadata = async ({
+  params: { date },
+}: ISatNewsDatePageParams) => ({
+  // metadataBase: new URL(SITE_BASE_URL),
+  title: META_TRANS_NEWS_SINGLE.getTitle(date),
+  description: META_TRANS_NEWS_SINGLE.getDescription(date),
+  keywords: META_TRANS_NEWS_SINGLE.getKeywords(date),
+});
 
-export const generateStaticParams = () =>
-  res.map((news) => ({ date: getFormattedDateStr(news.date) }));
+export default async function SatNewsDatePage({
+  params,
+}: ISatNewsDatePageParams) {
+  const newsArray = await getTransNewsForSingleDay(params.date, singleDaySql);
 
-export const dynamicParams = false;
-
-export default function SatNewsDatePage({ params }: ISatNewsDatePageParams) {
   return (
-    <>
-      <Title>`Page for ${params.date}</Title>
-    </>
+    <TransNewsSingle
+      title={META_TRANS_NEWS_SINGLE.getH1(params.date)}
+      newsArray={newsArray}
+    />
   );
 }

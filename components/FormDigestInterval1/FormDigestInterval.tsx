@@ -1,8 +1,4 @@
-import {
-  TSatModel,
-  getGroupedSatelliteOptions,
-  satSql,
-} from '@/models/sat.model';
+import { getGroupedSatelliteOptions } from '@/models/sat.model';
 import TextButton from '../TextButton/TextButton';
 import styles from './FormDigestInterval.module.scss';
 import { LAST_NEWS_INTERVAL, digestIntervals } from '@/models/satDigest.model';
@@ -13,36 +9,16 @@ import {
   ReactSelectSat,
 } from '../ReactSelect/ReactSelect';
 import { EUrlParam } from '@/models/url.model';
-import { executeQuery } from '@/libs/db/mysqldb';
+import { getSatsForForm } from '@/controllers/satDigest.controller';
 
 interface IFormDigestIntervalProps {
   searchParams: { [key: string]: string | string[] | undefined };
 }
 
-const satResult = await executeQuery<TSatModel>(satSql);
-
-// const groupedNewsByDateMap = (news: TSatDigest[]) =>
-//   news.reduce((acc, currObj) => {
-//     const strCurrDate = `${currObj.date}`;
-//     const date = acc.get(strCurrDate) || [];
-//     acc.set(strCurrDate, [...date, currObj]);
-
-//     return acc;
-//   }, new Map());
-
-// export type TGroupedNewsByDateMap = typeof groupedNewsByDateMap;
-
-const satellites = satResult.reduce(
-  (acc: TSatModel[][], curr) => {
-    curr.grade > 0 ? acc[0].push(curr) : acc[1].push(curr);
-
-    return acc;
-  },
-  [[], []]
-);
-
-const FormDigestInterval = ({ searchParams }: IFormDigestIntervalProps) => {
-  const groupedSats = getGroupedSatelliteOptions(satellites);
+const FormDigestInterval = async ({
+  searchParams,
+}: IFormDigestIntervalProps) => {
+  const groupedSats = getGroupedSatelliteOptions(await getSatsForForm());
 
   async function formAction(formData: FormData) {
     'use server';

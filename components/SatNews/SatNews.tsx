@@ -10,14 +10,11 @@ interface ISatNewsProps {
   searchParams: { [key: string]: string | string[] | undefined };
 }
 
-const SatNews = ({ searchParams }: ISatNewsProps) => (
-  <article>
-    {searchParams && Object.keys(searchParams).length ? (
-      <SatNewsList searchParams={searchParams} />
-    ) : (
-      <DateNewsList />
-    )}
-  </article>
-);
+const SatNews = ({ searchParams }: ISatNewsProps) =>
+  searchParams && Object.keys(searchParams).length ? (
+    <SatNewsList searchParams={searchParams} />
+  ) : (
+    <DateNewsList />
+  );
 
 export default SatNews;

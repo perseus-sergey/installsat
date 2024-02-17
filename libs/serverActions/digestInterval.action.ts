@@ -4,10 +4,10 @@ import {
   TSatDigest,
   LAST_NEWS_INTERVAL,
   rawSatDigest,
-  makeDigestSql,
 } from '@/models/satDigest.model';
 import { executeQuery } from '../db/mysqldb';
 import { revalidatePath } from 'next/cache';
+import { makeDigestSql } from '@/controllers/satDigest.controller';
 
 const digestIntervalAction = async (
   _prevState: {

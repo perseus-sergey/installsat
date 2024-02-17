@@ -2,14 +2,11 @@ import React from 'react';
 import styles from './SatNewsList.module.scss';
 import DangerHtmlUl from '../DangerHtmlUl/DangerHtmlUl';
 import { getDate } from '@/libs/utils';
-import {
-  LAST_NEWS_INTERVAL,
-  TSatDigest,
-  makeDigestSql,
-} from '@/models/satDigest.model';
+import { LAST_NEWS_INTERVAL, TSatDigest } from '@/models/satDigest.model';
 import { TGroupedNews } from '../SatNews/SatNews';
 import Image from 'next/image';
 import { executeQuery } from '@/libs/db/mysqldb';
+import { makeDigestSql } from '@/controllers/satDigest.controller';
 
 interface ISatNewsListProps {
   searchParams: { [key: string]: string | string[] | undefined };

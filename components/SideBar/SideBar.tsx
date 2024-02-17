@@ -5,9 +5,9 @@ interface ISideBarProps {
 }
 
 const SideBar = ({ children = 'SideBar' }: ISideBarProps) => (
-  <div className={styles.SideBar} data-testid="SideBar">
+  <aside className={styles.SideBar} data-testid="SideBar">
     <h2>{children}</h2>
-  </div>
+  </aside>
 );
 
 export default SideBar;

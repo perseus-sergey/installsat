@@ -50,14 +50,14 @@ export const getGroupedSatelliteOptions = ([
     label: 'Західний напрямок',
     options: westSats.map((sat) => ({
       value: sat.grade,
-      label: `${sat.position}..... ${sat.title}`,
+      label: `${sat.position} ..... ${sat.title}`,
     })),
   },
   {
     label: 'Східний напрямок',
     options: eastSats.map((sat) => ({
       value: sat.grade,
-      label: `${sat.position}..... ${sat.title}`,
+      label: `${sat.position} ..... ${sat.title}`,
     })),
   },
 ];

@@ -12,7 +12,7 @@ import Image from 'next/image';
 import { executeQuery } from '@/libs/db/mysqldb';
 
 interface ISatNewsListProps {
-  urlParams: { [key: string]: string | string[] | undefined };
+  searchParams: { [key: string]: string | string[] | undefined };
 }
 
 const getSatLogoName = (map: Map<string, TSatDigest[]>): string => {
@@ -40,12 +40,9 @@ const setGroupedNewsBySatMap = (news: TSatDigest[]): TGroupedNews =>
 export const getDailyNews = (newsArray: TSatDigest[]) =>
   newsArray.reduce((acc, curr) => curr.text + acc, '');
 
-const SatNewsList = async ({ urlParams }: ISatNewsListProps) => {
-  const selectSats = urlParams.sat as string[];
-  // const selectSats = formData.getAll('selectSats') as string[] | null;
-  const timeInterval = urlParams.interval || LAST_NEWS_INTERVAL;
-  // const timeInterval = formData.get('timeInterval') || LAST_NEWS_INTERVAL;
-  // const submitBtn = formData.get('submitBtn');
+const SatNewsList = async ({ searchParams }: ISatNewsListProps) => {
+  const selectSats = searchParams.sat as string[];
+  const timeInterval = searchParams.interval || LAST_NEWS_INTERVAL;
   let orderBy = '';
   let inSatList = '';
   let tblName = 'tbl_digest';
@@ -67,8 +64,6 @@ const SatNewsList = async ({ urlParams }: ISatNewsListProps) => {
   }
 
   const newsSql = makeDigestSql(tblName, where, inSatList, orderBy);
-  // console.log('🚀 ~ newsSql:', newsSql);
-
   const newsIntervalResult = await executeQuery<TSatDigest>(newsSql, []);
 
   const newsArray = setGroupedNewsBySatMap(newsIntervalResult);

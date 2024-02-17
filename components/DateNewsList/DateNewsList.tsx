@@ -1,6 +1,6 @@
 import Link from 'next/link';
-import styles from './DateNewsList.module.scss';
-import { EUrlPath } from '@/models/url.model';
+import styles from '../SatNewsList/SatNewsList.module.scss';
+import { EUrlParam } from '@/models/url.model';
 import { getDate, getFormattedDateStr } from '@/libs/utils';
 import React from 'react';
 import DangerHtmlUl from '../DangerHtmlUl/DangerHtmlUl';
@@ -39,7 +39,7 @@ const DateNewsList = async () => {
       <div className={styles.newsBlock} key={news[0]}>
         <h2 className={`${styles.groupTitle} ${styles.alignCenter}`}>
           <Link
-            href={`/${EUrlPath.TRANSPONDER_NEWS}/${getFormattedDateStr(news[0])}`}
+            href={`/${EUrlParam.TRANSPONDER_NEWS}/${getFormattedDateStr(news[0])}`}
           >
             Транспондерні новини за{' '}
             <span className={styles.groupTitleDate}>{getDate(news[0])}</span>

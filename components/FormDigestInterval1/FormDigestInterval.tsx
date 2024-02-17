@@ -1,57 +1,47 @@
-// 'use client';
-
-import { TSatModel, getGroupedSatelliteOptions } from '@/models/sat.model';
+import {
+  TSatModel,
+  getGroupedSatelliteOptions,
+  satSql,
+} from '@/models/sat.model';
 import TextButton from '../TextButton/TextButton';
 import styles from './FormDigestInterval.module.scss';
-import {
-  LAST_NEWS_INTERVAL,
-  TSatDigest,
-  digestIntervals,
-} from '@/models/satDigest.model';
-// import { useFormState, useFormStatus } from 'react-dom';
-// import digestIntervalAction from '@/libs/serverActions/digestInterval.action';
+import { LAST_NEWS_INTERVAL, digestIntervals } from '@/models/satDigest.model';
 import { Loader } from '../loaders/Loader';
 import { redirect } from 'next/navigation';
 import {
   ReactSelectInterval,
   ReactSelectSat,
 } from '../ReactSelect/ReactSelect';
-import { Suspense } from 'react';
-import { EUrlPath } from '@/models/url.model';
-// import { useCallback, useEffect, useState } from 'react';
+import { EUrlParam } from '@/models/url.model';
+import { executeQuery } from '@/libs/db/mysqldb';
 
 interface IFormDigestIntervalProps {
-  satellites: TSatModel[][];
-  // intervalSubmitHandler: (data: TSatDigest[]) => void;
-  newsResults: TSatDigest[];
+  searchParams: { [key: string]: string | string[] | undefined };
 }
 
-// const formatGroupSatLabel = (group: IGroupedSatelliteOption) => (
-//   <div className={styles.groupHeading}>
-//     <span>{group.label}</span>
-//     <span className={styles.groupBadgeStyles}>{group.options.length}</span>
-//   </div>
-// );
+const satResult = await executeQuery<TSatModel>(satSql);
 
-const FormDigestInterval = ({
-  satellites,
-  // intervalSubmitHandler,
-  // newsResults,
-}: IFormDigestIntervalProps) => {
-  // const [groupedSats, setGroupedSats] = useState<
-  //   readonly IGroupedSatelliteOption[]
-  // >([]);
+// const groupedNewsByDateMap = (news: TSatDigest[]) =>
+//   news.reduce((acc, currObj) => {
+//     const strCurrDate = `${currObj.date}`;
+//     const date = acc.get(strCurrDate) || [];
+//     acc.set(strCurrDate, [...date, currObj]);
 
-  // const initialState = {
-  //   message: '',
-  //   newsIntervalResult: newsResults,
-  // };
+//     return acc;
+//   }, new Map());
 
-  // const [formState, formAction] = useFormState(
-  //   digestIntervalAction,
-  //   initialState
-  // );
+// export type TGroupedNewsByDateMap = typeof groupedNewsByDateMap;
 
+const satellites = satResult.reduce(
+  (acc: TSatModel[][], curr) => {
+    curr.grade > 0 ? acc[0].push(curr) : acc[1].push(curr);
+
+    return acc;
+  },
+  [[], []]
+);
+
+const FormDigestInterval = ({ searchParams }: IFormDigestIntervalProps) => {
   const groupedSats = getGroupedSatelliteOptions(satellites);
 
   async function formAction(formData: FormData) {
@@ -61,27 +51,16 @@ const FormDigestInterval = ({
     const timeInterval = formData.get('timeInterval') || LAST_NEWS_INTERVAL;
 
     const urlSePar = new URLSearchParams();
-    if (timeInterval) urlSePar.set('interval', `${timeInterval}`);
+    if (timeInterval)
+      urlSePar.set(EUrlParam.SEARCH_PARAM_INTERVAL, `${timeInterval}`);
     if (selectSats && selectSats[0])
-      selectSats.forEach((sat) => urlSePar.append('sat', `${sat}`));
+      selectSats.forEach((sat) =>
+        urlSePar.append(EUrlParam.SEARCH_PARAM_SAT, `${sat}`)
+      );
 
-    redirect(`${EUrlPath.BASE_PATH}?${urlSePar.toString()}`);
+    // revalidatePath('/');
+    redirect(`${EUrlParam.BASE_PATH}?${urlSePar.toString()}`);
   }
-
-  // const getGroupedSatOptions = useCallback(
-  //   () => getGroupedSatelliteOptions(satellites),
-  //   [satellites]
-  // );
-
-  // useEffect(() => {
-  //   intervalSubmitHandler(formState.newsIntervalResult);
-  // }, [formState]);
-
-  // useEffect(() => {
-  //   setGroupedSats(getGroupedSatOptions());
-  // }, [getGroupedSatOptions]);
-
-  // const { pending } = useFormStatus();
 
   return (
     <form
@@ -96,18 +75,27 @@ const FormDigestInterval = ({
         </legend>
 
         <div className={styles.selectsBlock}>
-          <Suspense>
-            {groupedSats[1] ? (
-              <ReactSelectSat groupedSats={groupedSats} />
-            ) : (
-              <h2>
-                <Loader /> Loading...
-              </h2>
-            )}
-          </Suspense>
+          {groupedSats[1] ? (
+            <ReactSelectSat
+              defValue={groupedSats[0].options[0]}
+              groupedSats={groupedSats}
+            />
+          ) : (
+            <h2>
+              <Loader /> Loading...
+            </h2>
+          )}
 
           {digestIntervals[0] ? (
-            <ReactSelectInterval />
+            <ReactSelectInterval
+              defValue={
+                digestIntervals.find(
+                  (interv) =>
+                    `${interv.value}` ===
+                    searchParams[EUrlParam.SEARCH_PARAM_INTERVAL]
+                ) || digestIntervals[1]
+              }
+            />
           ) : (
             <h2>
               <Loader /> Loading...
@@ -125,12 +113,6 @@ const FormDigestInterval = ({
           Submit
         </TextButton>
       </fieldset>
-      {/* {pending ? (
-        <h2>
-          <Loader /> Loading...
-        </h2>
-      ) : null}
-      {formState.message ? <h3>{formState.message}</h3> : null} */}
     </form>
   );
 };

@@ -5,7 +5,7 @@ import test, { describe } from 'node:test';
 
 describe('<SatNewsList />', () => {
   test('it should mount', () => {
-    render(<SatNewsList urlParams={{ sat: '30' }} />);
+    render(<SatNewsList searchParams={{ sat: '30' }} />);
 
     const satNewsList = screen.getByTestId('SatNewsList');
 

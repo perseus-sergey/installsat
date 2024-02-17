@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
-import { SITE_BASE_URL } from '@/models/main.model';
 import { META_TRANS_NEWS_LIST } from '@/models/meta.model';
 import React from 'react';
 import SideBar from '@/components/SideBar/SideBar';
+import { SITE_BASE_URL } from '@/models/url.model';
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_BASE_URL),

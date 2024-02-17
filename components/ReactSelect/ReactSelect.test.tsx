@@ -5,7 +5,7 @@ import test, { describe } from 'node:test';
 
 describe('<ReactSelect />', () => {
   test('it should mount', () => {
-    render(<ReactSelect name={ESelectType.SELECT_SATS} />);
+    render(<ReactSelect selectName={ESelectType.SELECT_SATS} />);
 
     const reactSelect = screen.getByTestId('ReactSelect');
 

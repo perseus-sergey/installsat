@@ -19,7 +19,7 @@ export enum ESelectType {
 }
 
 interface IReactSelectProps {
-  name: ESelectType;
+  selectName: ESelectType;
 }
 
 const ControlComponentSat = (props: ControlProps<ISatelliteOption, true>) => (
@@ -51,25 +51,30 @@ export const ReactSelect = <
   IsMulti extends boolean = false,
   Group extends GroupBase<Option> = GroupBase<Option>,
 >({
-  name,
+  selectName,
   ...rest
 }: Props<Option, IsMulti, Group> & IReactSelectProps) => {
   return (
     <Select
       className={styles.ReactSelect}
-      instanceId={name}
-      id={name}
-      name={name}
+      instanceId={`inst-${selectName}`}
+      id={selectName}
+      name={selectName}
       data-testid="ReactSelect"
       {...rest}
     />
   );
 };
 
-export const ReactSelectInterval = () => (
+export const ReactSelectInterval = ({
+  defValue,
+}: {
+  defValue: ISatelliteOption;
+}) => (
   <ReactSelect
-    name={ESelectType.SELECT_TIME_INTERVAL}
-    defaultValue={digestIntervals[1]}
+    selectName={ESelectType.SELECT_TIME_INTERVAL}
+    defaultValue={defValue}
+    // defaultValue={digestIntervals[1]}
     options={digestIntervals}
     components={{
       Control: ControlComponentInterval,
@@ -87,18 +92,66 @@ const formatGroupSatLabel = (group: IGroupedSatelliteOption) => (
   </div>
 );
 
-export const ReactSelectSat = ({
-  groupedSats,
-}: {
+interface IReactSelectSat {
   groupedSats: readonly IGroupedSatelliteOption[];
-}) => (
+  defValue?: ISatelliteOption;
+}
+
+export const ReactSelectSat = ({ groupedSats, defValue }: IReactSelectSat) => (
   <ReactSelect
-    name={ESelectType.SELECT_SATS}
+    selectName={ESelectType.SELECT_SATS}
     isMulti
     closeMenuOnSelect={false}
-    defaultValue={groupedSats[0].options[0]}
+    defaultValue={defValue}
+    // defaultValue={groupedSats[0].options[0]}
     options={groupedSats}
-    components={{ Group, Control: ControlComponentSat }}
+    components={{
+      Group,
+      Control: ControlComponentSat,
+      Input: (props) => (
+        <components.Input {...props} aria-activedescendant={undefined} />
+      ),
+    }}
     formatGroupLabel={formatGroupSatLabel}
   />
 );
+
+// export const ReactSelectInterval = ({
+//   defValue,
+// }: {
+//   defValue: ISatelliteOption;
+// }) => {
+//   const searchParams = useSearchParams();
+
+//   const getInterval = () => {
+//     const spInterval = searchParams.get(EUrlParam.SEARCH_PARAM_INTERVAL);
+//     return (
+//       digestIntervals.find((interv) => `${interv.value}` === spInterval) ||
+//       digestIntervals[1]
+//     );
+//   };
+
+//   const [value, setValue] =
+//     useState<SingleValue<ISatelliteOption>>(getInterval());
+//   const changeValue = (currentValue: SingleValue<ISatelliteOption>) => {
+//     setValue(currentValue);
+//   };
+
+//   return (
+//     <ReactSelect
+//       selectName={ESelectType.SELECT_TIME_INTERVAL}
+//       // defaultValue={getInterval()}
+//       // defaultValue={defValue}
+//       value={value}
+//       onChange={changeValue}
+//       // defaultValue={digestIntervals[1]}
+//       options={digestIntervals}
+//       components={{
+//         Control: ControlComponentInterval,
+//         Input: (props) => (
+//           <components.Input {...props} aria-activedescendant={undefined} />
+//         ),
+//       }}
+//     />
+//   );
+// };

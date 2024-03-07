@@ -6,9 +6,13 @@ import React from 'react';
 import DangerHtmlUl from '../DangerHtmlUl/DangerHtmlUl';
 import { getDailyNews } from '../SatNewsList/SatNewsList';
 import { setGroupedNewsByDateMap } from '@/controllers/satDigest.controller';
+import EmptyData from '../EmptyData/EmptyData';
 
 const DateNewsList = async () => {
   const newsArray = await setGroupedNewsByDateMap();
+
+  if (newsArray instanceof Error)
+    return <EmptyData description={newsArray.message} />;
 
   return newsArray.map((news) => {
     return (

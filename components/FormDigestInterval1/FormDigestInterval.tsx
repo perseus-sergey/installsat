@@ -10,6 +10,7 @@ import {
 } from '../ReactSelect/ReactSelect';
 import { EUrlParam } from '@/models/url.model';
 import { getSatsForForm } from '@/controllers/satDigest.controller';
+import EmptyData from '../EmptyData/EmptyData';
 
 interface IFormDigestIntervalProps {
   searchParams: { [key: string]: string | string[] | undefined };
@@ -18,7 +19,12 @@ interface IFormDigestIntervalProps {
 const FormDigestInterval = async ({
   searchParams,
 }: IFormDigestIntervalProps) => {
-  const groupedSats = getGroupedSatelliteOptions(await getSatsForForm());
+  const satsForForm = await getSatsForForm();
+
+  if (satsForForm instanceof Error)
+    return <EmptyData description={satsForForm.message} />;
+
+  const groupedSats = getGroupedSatelliteOptions(satsForForm);
 
   async function formAction(formData: FormData) {
     'use server';

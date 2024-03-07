@@ -45,6 +45,8 @@ export const initNewsSql = makeDigestSql(
 export const getSatsForForm = async () => {
   const satResult = await executeQuery<TSatModel>(satSql);
 
+  if (satResult instanceof Error) return satResult;
+
   return satResult.reduce(
     (acc: TSatModel[][], curr) => {
       curr.grade > 0 ? acc[0].push(curr) : acc[1].push(curr);
@@ -58,8 +60,10 @@ export const getSatsForForm = async () => {
 export const getTransNewsForSingleDay = async (
   date: string,
   singleDaySql: string
-): Promise<[string, TSatDigest[]][]> => {
+): Promise<[string, TSatDigest[]][] | Error> => {
   const newsResult = await executeQuery<TSatDigest>(singleDaySql, [date]);
+
+  if (newsResult instanceof Error) return newsResult;
 
   return Array.from(
     newsResult.reduce((acc, currObj) => {
@@ -72,10 +76,14 @@ export const getTransNewsForSingleDay = async (
   );
 };
 
-export const setGroupedNewsByDateMap = async (): Promise<TGroupedNews> => {
+export const setGroupedNewsByDateMap = async (): Promise<
+  TGroupedNews | Error
+> => {
   const newsResult = await executeQuery<TSatDigest>(initNewsSql, [
     `${LAST_NEWS_INTERVAL}`,
   ]);
+
+  if (newsResult instanceof Error) return newsResult;
 
   return Array.from(
     newsResult.reduce((acc, currObj) => {

@@ -1,4 +1,11 @@
-export const footerMenuList = [
+import { ILang } from './ui.model';
+
+interface IFooterMenu {
+  title: ILang;
+  href: string;
+}
+
+export const footerMenuList: IFooterMenu[] = [
   {
     title: {
       ua: 'Як встановити супутникову антену',

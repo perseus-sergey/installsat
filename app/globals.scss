@@ -4,6 +4,7 @@
 
 :root {
   --color-title-h1: #ffffff;
+  --background-color: #cbdafa;
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
   --background-end-rgb: 255, 255, 255;
@@ -43,7 +44,10 @@ a {
 }
 
 .article {
-  background-color: #cbdafa;
+  background-color: var(--background-color);
+  width: 100%;
+  min-height: 70vh;
+  padding: 1rem;
 }
 
 .grey_text {

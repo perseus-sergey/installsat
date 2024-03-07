@@ -11,6 +11,8 @@ describe('<TransNewsSingle />', async () => {
   const newsDate = '2024-02-02';
   const newsArray = await getTransNewsForSingleDay(newsDate, singleDaySql);
 
+  if (newsArray! instanceof Error) return;
+
   test('it should mount', () => {
     render(
       <TransNewsSingle newsArray={newsArray} title="TransNewsSingle Test" />

@@ -1,8 +1,6 @@
-### How to Point Domain and Deploy NextJS Project using Github on Nginx Remote Server or VPS
+### 🚀 How to Point Domain and Deploy NextJS Project using Github on Nginx Remote Server or VPS
 
-#### [Original](https://github.com/geekyshow1/GeekyShowsNotes/blob/main/nginx/Deploy_NextJS_Nginx.md)
-
-#### [Video](https://youtu.be/MJ1AtNdvCtY?si=mWZhD63p0_rhbQtR)
+#### 🔗[Original tutorial from](https://github.com/geekyshow1/GeekyShowsNotes/blob/main/nginx/Deploy_NextJS_Nginx.md) 🔗[this Video (Indian)](https://youtu.be/MJ1AtNdvCtY?si=mWZhD63p0_rhbQtR)
 
 - Ubuntu Main command
 
@@ -134,9 +132,9 @@
 
     - Reload Nginx
 
-    ```sh
-    service nginx reload
-    ```
+      ```sh
+      service nginx reload
+      ```
 
 - **Phpmyadmin: No data was received to import. Either no file name was submitted, or the file size exceeded the maximum size permitted by your PHP configuration.**
 
@@ -175,10 +173,14 @@
 
 - Get Access to Remote Server via SSH
 
-  ```
-  Syntax:- ssh -p PORT USERNAME@HOSTIP
-  Example:- ssh -p 1034 raj@216.32.44.12
-  ```
+  - **Syntax**
+    ```sh
+    ssh -p PORT USERNAME@HOSTIP
+    ```
+  - **Example**
+    ```sh
+    ssh -p 1034 raj@216.32.44.12
+    ```
 
 - Verify that all required softwares are installed
 
@@ -241,41 +243,66 @@
   | AAAA |    www    | Your Remote Server IPv6 |
 
 - Copy Project from Local Machine to Remote Server or VPS. There are two ways to do it:-
+
   1. Using Command Prompt
+
      - On Local Machine Make Your Project Folder a Zip File
      - Copy Zip File from Mac to Linux Remote Server
-       ```
-       Syntax:- scp -P Remote_Server_Port Source_File_Path Destination_Path
-       Example:- scp -P 1034 miniblog.zip raj@216.32.44.12:
-       ```
+       - **Syntax:**
+         ```sh
+         scp -P Remote_Server_Port Source_File_Path Destination_Path
+         ```
+       - **Example:**
+         ```sh
+         scp -P 1034 miniblog.zip raj@216.32.44.12:
+         ```
      - Copied Successfully
      - Get Access to Remote Server via SSH
-       ```
-       Syntax:- ssh -p PORT USERNAME@HOSTIP
-       Example:- ssh -p 1034 raj@216.32.44.12
-       ```
+       - **Syntax:**
+         ```sh
+         ssh -p PORT USERNAME@HOSTIP
+         ```
+       - **Example:**
+         ```sh
+         ssh -p 1034 raj@216.32.44.12
+         ```
      - Install Unzip into Ubuntu
        ```sh
        sudo apt-get install unzip
        ```
      - Unzip the Copied Project Zip File
-       ```sh
-       Syntax:- unzip zip_file_name
-       Example:- unzip miniblog.zip
-       ```
+
+       - **Syntax:**
+
+         ```sh
+         unzip zip_file_name
+         ```
+
+       - **Example:**
+
+         ```sh
+         unzip miniblog.zip
+         ```
+
   2. Using Github
+
      - Open Project on VS Code then add .gitignore file (If needed)
-     - Push your Poject to Your Github Account as Private Repo
+     - Push your Project to Your Github Account as Private Repo
      - Make Connection between Remote Server and Github Repo via SSH Key
      - Generate SSH Keys
-       ```sh
-       Syntax:- ssh-keygen -t ed25519 -C "your_email@example.com"
-       ```
+       - **Syntax:**
+         ```sh
+         ssh-keygen -t ed25519 -C "your_email@example.com"
+         ```
      - If Permission Denied then Own .ssh then try again to Generate SSH Keys
-       ```sh
-       Syntax:- sudo chown -R user_name .ssh
-       Example:- sudo chown -R raj .ssh
-       ```
+       - **Syntax:**
+         ```sh
+         sudo chown -R user_name .ssh
+         ```
+       - **Example:**
+         ```sh
+         sudo chown -R raj .ssh
+         ```
      - Open Public SSH Keys then copy the key
        ```sh
        cat ~/.ssh/id_ed25519.pub
@@ -285,23 +312,32 @@
      - Click on Deploy Keys option from sidebar
      - Click on Add Deploy Key Button and Paste Remote Server's Copied SSH Public Key then Click on Add Key
      - Clone Project from your github Repo using SSH Path It requires to setup SSH Key on Github
-       ```sh
-       Syntax:- git clone ssh_repo_path
-       Example:- git clone git@github.com:geekyshow1/miniblog.git
-       ```
+
+       - **Syntax**
+
+         ```sh
+         git clone ssh_repo_path
+         ```
+
+       - **Example**
+
+         ```sh
+         git clone git@github.com:geekyshow1/miniblog.git
+         ```
+
 - Create Virtual Host File
 
-  Syntax:
+  - **Syntax:**
 
-  ```sh
-  sudo nano /etc/nginx/sites-available/your_domain
-  ```
+    ```sh
+    sudo nano /etc/nginx/sites-available/your_domain
+    ```
 
-  Example:
+  - **Example:**
 
-  ```sh
-  sudo nano /etc/nginx/sites-available/sonamkumari.com
-  ```
+    ```sh
+    sudo nano /etc/nginx/sites-available/sonamkumari.com
+    ```
 
 - Write following Code in Virtual Host File
 
@@ -368,17 +404,17 @@
 
 - Enable Virtual Host or Create Symbolic Link of Virtual Host File
 
-  **Syntax:**
+  - **Syntax:**
 
-  ```sh
-  sudo ln -s /etc/nginx/sites-available/virtual_host_file /etc/nginx/sites-enabled/virtual_host_file
-  ```
+    ```sh
+    sudo ln -s /etc/nginx/sites-available/virtual_host_file /etc/nginx/sites-enabled/virtual_host_file
+    ```
 
-  **Example:**
+  - **Example:**
 
-  ```sh
-  sudo ln -s /etc/nginx/sites-available/sonamkumari.com /etc/nginx/sites-enabled/sonamkumari.com
-  ```
+    ```sh
+    sudo ln -s /etc/nginx/sites-available/sonamkumari.com /etc/nginx/sites-enabled/sonamkumari.com
+    ```
 
 - Check Configuration is Correct or Not
 
@@ -471,7 +507,7 @@
   pm2 reload app_name/id
   ```
 
-  Example:
+  **Example:**
 
   ```sh
   pm2 reload 0
@@ -578,17 +614,17 @@
   cd ~/.ssh
   ```
 
-  Syntax:
+  - **Syntax:**
 
-  ```sh
-  ssh-keygen -f key_path -t ed25519 -C "your_email@example.com"
-  ```
+    ```sh
+    ssh-keygen -f key_path -t ed25519 -C "your_email@example.com"
+    ```
 
-  Example:
+  - **Example:**
 
-  ```sh
-  ssh-keygen -f gitaction_ed25519 -t ed25519 -C "gitactionautodep"
-  ```
+    ```sh
+    ssh-keygen -f gitaction_ed25519 -t ed25519 -C "gitactionautodep"
+    ```
 
 - Open Newly Created Public SSH Keys then copy the key
 
@@ -617,17 +653,17 @@
 - Commit and Push the change to Your Github Repo
 - Get Access to Remote Server via SSH
 
-  Syntax:
+  - **Syntax:**
 
-  ```sh
-  ssh -p PORT USERNAME@HOSTIP
-  ```
+    ```sh
+    ssh -p PORT USERNAME@HOSTIP
+    ```
 
-  Example:
+  - **Example:**
 
-  ```sh
-  ssh -p 22 raj@216.32.44.12
-  ```
+    ```sh
+    ssh -p 22 raj@216.32.44.12
+    ```
 
 - [Github actions err: bash: line 3: npm: command not found](https://stackoverflow.com/a/67923563/22835451)
 

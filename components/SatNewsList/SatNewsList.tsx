@@ -7,6 +7,7 @@ import { TGroupedNews } from '../SatNews/SatNews';
 import Image from 'next/image';
 import { executeQuery } from '@/libs/db/mysqldb';
 import { makeDigestSql } from '@/controllers/satDigest.controller';
+import EmptyData from '../EmptyData/EmptyData';
 
 interface ISatNewsListProps {
   searchParams: { [key: string]: string | string[] | undefined };
@@ -62,6 +63,9 @@ const SatNewsList = async ({ searchParams }: ISatNewsListProps) => {
 
   const newsSql = makeDigestSql(tblName, where, inSatList, orderBy);
   const newsIntervalResult = await executeQuery<TSatDigest>(newsSql, []);
+
+  if (newsIntervalResult instanceof Error)
+    return <EmptyData description={newsIntervalResult.message} />;
 
   const newsArray = setGroupedNewsBySatMap(newsIntervalResult);
 

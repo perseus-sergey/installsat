@@ -1,5 +1,3 @@
-import { getDate } from '@/libs/utils';
-
 export const META_TRANS_NEWS_LIST = {
   getH1(interval: number) {
     let addStr = '';
@@ -26,16 +24,17 @@ export const META_TRANS_NEWS_LIST = {
 };
 
 export const META_TRANS_NEWS_SINGLE = {
-  getH1(date: string, lang?: string) {
-    return `Транспондерні новини за ${getDate(date, lang)}`;
+  getH1(dateStr: string) {
+    return `Транспондерні новини за ${dateStr}`;
+    // return `Транспондерні новини за ${getDate(date, lang)}`;
   },
-  getTitle(date: string, lang?: string) {
-    return `Installsat - транспондерні новини за ${getDate(date, lang)}`;
+  getTitle(dateStr: string) {
+    return `Installsat - транспондерні новини за ${dateStr}`;
   },
-  getKeywords(date: string, lang?: string) {
-    return `транспондерні супутникові новини ${getDate(date, lang)}`;
+  getKeywords(dateStr: string) {
+    return `транспондерні супутникові новини ${dateStr}`;
   },
-  getDescription(date: string, lang?: string) {
-    return `Супутникові новини за ${getDate(date, lang)}`;
+  getDescription(dateStr: string) {
+    return `Супутникові новини за ${dateStr}`;
   },
 };

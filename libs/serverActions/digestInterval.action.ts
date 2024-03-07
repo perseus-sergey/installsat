@@ -43,6 +43,12 @@ const digestIntervalAction = async (
   try {
     const newsIntervalResult = await executeQuery<TSatDigest>(newsSql, []);
 
+    if (newsIntervalResult instanceof Error)
+      return {
+        message: `Failed to fetch data. Error: ${newsIntervalResult.message}`,
+        newsIntervalResult: [rawSatDigest],
+      };
+
     revalidatePath('/');
 
     return { message: '', newsIntervalResult };

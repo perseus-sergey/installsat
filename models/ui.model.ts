@@ -1,3 +1,4 @@
+export const IS_PRODUCTION = true;
 export interface ILang {
   ua: string;
   en: string;

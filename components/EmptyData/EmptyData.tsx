@@ -1,6 +1,6 @@
 // import styles from './EmptyData.module.scss';
 
-import { EUITitles, MUITitles } from '@/models/ui.model';
+import { EUITitles, IS_PRODUCTION, MUITitles } from '@/models/ui.model';
 
 interface IEmptyDataProps {
   description?: string;
@@ -9,7 +9,7 @@ interface IEmptyDataProps {
 const EmptyData = ({ description }: IEmptyDataProps) => (
   <h3 className="p-5 font-bold text-purple-600" data-testid="EmptyData">
     {MUITitles.get(EUITitles.ERROR_EMPTY_DATA)?.ua}
-    {description ? <span>: {description}</span> : null}
+    {description && !IS_PRODUCTION ? <span>: {description}</span> : null}
   </h3>
 );
 

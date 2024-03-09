@@ -8,6 +8,8 @@ export const arrayShift = <T>(array: T[][]): T[][] => {
 
 export const getDate = (date: string | Date = new Date(), lang?: string) => {
   const currDate = date instanceof Date ? date : new Date(date);
+  if (currDate.toString() === 'Invalid Date') return '';
+  // if (currDate.toString() === 'Invalid Date') currDate = new Date('1900-01-01');
 
   return currDate.toLocaleDateString(lang, {
     year: 'numeric',
@@ -21,6 +23,7 @@ export const getFormattedDateStr = (
   isYearFirst = true
 ) => {
   const currDate = date instanceof Date ? date : new Date(date);
+  if (currDate.toString() === 'Invalid Date') return '';
 
   const year = currDate.getFullYear();
   const month = String(currDate.getMonth() + 1).padStart(2, '0');

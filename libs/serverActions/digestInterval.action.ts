@@ -4,10 +4,10 @@ import {
   TSatDigest,
   LAST_NEWS_INTERVAL,
   rawSatDigest,
-  makeDigestSql,
 } from '@/models/satDigest.model';
 import { executeQuery } from '../db/mysqldb';
 import { revalidatePath } from 'next/cache';
+import { makeDigestSql } from '@/controllers/satDigest.controller';
 
 const digestIntervalAction = async (
   _prevState: {
@@ -42,6 +42,12 @@ const digestIntervalAction = async (
 
   try {
     const newsIntervalResult = await executeQuery<TSatDigest>(newsSql, []);
+
+    if (newsIntervalResult instanceof Error)
+      return {
+        message: `Failed to fetch data. Error: ${newsIntervalResult.message}`,
+        newsIntervalResult: [rawSatDigest],
+      };
 
     revalidatePath('/');
 

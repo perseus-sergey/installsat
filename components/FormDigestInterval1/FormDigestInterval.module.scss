@@ -1,0 +1,27 @@
+$fieldsetColor: rgb(119 119 119);
+.FormDigestInterval {
+}
+
+.fieldset {
+  border: 1px solid $fieldsetColor;
+  border-radius: 0.5rem;
+  padding: 1rem 1.5rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 3vh;
+
+  .legend {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    color: $fieldsetColor;
+    font-size: 0.9rem;
+  }
+
+  .selectsBlock {
+    color: $fieldsetColor;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 2vh;
+  }
+}

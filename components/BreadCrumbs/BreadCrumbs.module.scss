@@ -1,0 +1,34 @@
+$defaultColor: #0169a9;
+$firstItemColor: #000099;
+$activeItemColor: #5c6469;
+$separatorColor: #4a4d5d;
+
+.container {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  padding: 10px 20px;
+  font-size: 1rem;
+  color: $defaultColor;
+
+  .item {
+    list-style: none;
+    transition: all 0.3s;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  .activeItem {
+    color: $activeItemColor;
+  }
+
+  .firstItem {
+    color: $firstItemColor;
+  }
+
+  .separator {
+    color: $separatorColor;
+  }
+}

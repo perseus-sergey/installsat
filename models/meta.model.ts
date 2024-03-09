@@ -1,13 +1,16 @@
-import { getDate, getFormattedDateStr } from '@/libs/utils';
-import { LAST_NEWS_INTERVAL } from './satDigest.model';
-
 export const META_TRANS_NEWS_LIST = {
-  getH1() {
-    const currDate = new Date();
-    let startDate = new Date();
-    startDate.setDate(currDate.getDate() - LAST_NEWS_INTERVAL);
+  getH1(interval: number) {
+    let addStr = '';
+    if (interval > 180) addStr = `${interval} рік`;
+    else {
+      const currDate = new Date();
+      let startDate = new Date();
+      startDate.setDate(currDate.getDate() - interval);
+      addStr = `останні ${interval} днів`;
+      // addStr = `останні ${interval} днів (з ${getFormattedDateStr(startDate)} по ${getFormattedDateStr(currDate)})`;
+    }
 
-    return `Транспондерні новини популярних супутників з ${getFormattedDateStr(currDate)} по ${getFormattedDateStr(startDate)}`;
+    return `Транспондерні новини популярних супутників за ${addStr}`;
   },
   getTitle() {
     return 'Транспондері новини. Супутникові новини.';
@@ -16,21 +19,22 @@ export const META_TRANS_NEWS_LIST = {
     return `новини супутникового телебачення станом на ${new Date().toLocaleDateString('en-GB')}, супутникові транспондери частоти канали пакета без абонплати ефірні`;
   },
   getDescription() {
-    return `${this.getH1().slice(0, 190)} ${new Date().getFullYear()}`;
+    return 'Транспондерні новини популярних супутників за обраний період часу';
   },
 };
 
 export const META_TRANS_NEWS_SINGLE = {
-  getH1() {
-    return 'Транспондерні новини популярних супутників';
+  getH1(dateStr: string) {
+    return `Транспондерні новини за ${dateStr}`;
+    // return `Транспондерні новини за ${getDate(date, lang)}`;
   },
-  getTitle(date: string, lang?: string) {
-    return `Installsat - транспондерні новини за ${getDate(date, lang)}`;
+  getTitle(dateStr: string) {
+    return `Installsat - транспондерні новини за ${dateStr}`;
   },
-  getKeywords(date: string, lang?: string) {
-    return `транспондерні супутникові новини ${getDate(date, lang)}`;
+  getKeywords(dateStr: string) {
+    return `транспондерні супутникові новини ${dateStr}`;
   },
-  getDescription(date: string, lang?: string) {
-    return `Супутникові новини за ${getDate(date, lang)}`;
+  getDescription(dateStr: string) {
+    return `Супутникові новини за ${dateStr}`;
   },
 };

@@ -1,12 +1,12 @@
-import styles from './TemplateName.module.css';
+import styles from './TemplateName.module.scss';
 
 interface ITemplateNameProps {
-  title?: string;
+  children?: React.ReactNode;
 }
 
-const TemplateName = ({ title }: ITemplateNameProps) => (
+const TemplateName = ({ children }: ITemplateNameProps) => (
   <div className={styles.TemplateName} data-testid="TemplateName">
-    <h1>{title}</h1>
+    <h1>{children}</h1>
   </div>
 );
 

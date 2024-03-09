@@ -1,10 +1,15 @@
+$defaultColor: #0169a9;
+$firstItemColor: #000099;
+$activeItemColor: #5c6469;
+$separatorColor: #4a4d5d;
+
 .container {
   display: flex;
   gap: 0.5rem;
   flex-wrap: wrap;
   padding: 10px 20px;
   font-size: 1rem;
-  color: #b9dbf2;
+  color: $defaultColor;
 
   .item {
     list-style: none;
@@ -12,19 +17,18 @@
 
     &:hover {
       text-decoration: underline;
-      font-weight: bold;
     }
   }
 
   .activeItem {
-    color: #ddf2ff;
+    color: $activeItemColor;
   }
 
   .firstItem {
-    color: #84bef8;
+    color: $firstItemColor;
   }
 
   .separator {
-    color: #7c85b9;
+    color: $separatorColor;
   }
 }

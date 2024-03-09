@@ -1,31 +1,5 @@
 export const LAST_NEWS_INTERVAL = 30;
 
-export const makeDigestSql = (
-  tblName: string,
-  where: string,
-  inSatList: string,
-  orderBy: string
-) => `
-  SELECT d.id, d.date, d.text,
-  sat.parent AS satParent,
-  sat.title AS satTitle,
-  sat.logo AS satLogo,
-  sat.grade AS satGrade,
-  sat.position AS satPosition
-  FROM ${tblName} AS d
-  LEFT JOIN tbl_chan_sat AS sat ON d.sat = sat.id
-  ${where}
-  ${inSatList}
-  ${orderBy}
-`;
-
-export const initNewsSql = makeDigestSql(
-  'tbl_digest',
-  'WHERE d.date >= CURDATE() - INTERVAL ? DAY',
-  '',
-  'ORDER BY d.date DESC, satGrade, satTitle'
-);
-
 export const rawSatDigest = {
   id: -1,
   date: new Date('1970-01-01'),

@@ -7,6 +7,11 @@ const nextConfig = {
         destination: '/',
         permanent: true,
       },
+      {
+        source: '/transponderni-novyny',
+        destination: '/',
+        permanent: true,
+      },
     ];
   },
 };

@@ -1,14 +1,15 @@
+import React from 'react';
 import styles from './Title.module.scss';
 
 interface Props extends React.HTMLAttributes<HTMLElement> {
-  name: string;
+  children: React.ReactNode;
 }
 
-export const Title = ({ name, className, ...attributes }: Props) => (
+export const Title = ({ children, className, ...attributes }: Props) => (
   <h1
     className={`${styles.sectionTitle}${className ? ` ${className}` : ''}`}
     {...attributes}
   >
-    {name}
+    {children}
   </h1>
 );

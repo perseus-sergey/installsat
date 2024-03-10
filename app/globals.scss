@@ -53,16 +53,15 @@ a {
   border: thin groove #cccccc;
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   min-height: 70vh;
 }
 
 .article {
-  width: 67.5%;
+  flex-grow: 3;
+  // width: 67.5%;
   border-radius: 10px;
   border: thick inset #cccccc;
-  float: right;
-  margin-right: 2px;
   background-color: var(--background-color);
   min-height: 75vh;
   padding: 0.7rem;

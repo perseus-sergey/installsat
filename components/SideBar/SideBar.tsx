@@ -1,3 +1,4 @@
+import Accordion from '../Accordion/Accordion';
 import styles from './SideBar.module.scss';
 
 interface ISideBarProps {
@@ -7,6 +8,7 @@ interface ISideBarProps {
 const SideBar = ({ children = 'SideBar' }: ISideBarProps) => (
   <aside className={styles.SideBar} data-testid="SideBar">
     <h2>{children}</h2>
+    <Accordion />
   </aside>
 );
 

@@ -44,11 +44,28 @@ a {
   text-decoration: none;
 }
 
-.article {
-  background-color: var(--background-color);
-  width: 100%;
+.main {
+  width: 95%;
+  margin: 0 auto;
+  overflow: auto;
+  background-color: #03182d;
+  border-radius: 10px;
+  border: thin groove #cccccc;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   min-height: 70vh;
-  padding: 1rem;
+}
+
+.article {
+  width: 67.5%;
+  border-radius: 10px;
+  border: thick inset #cccccc;
+  float: right;
+  margin-right: 2px;
+  background-color: var(--background-color);
+  min-height: 75vh;
+  padding: 0.7rem;
 }
 
 .grey_text {

@@ -1,13 +1,10 @@
 import Accordion from '../Accordion/Accordion';
+import WidgetLastNews from '../WidgetLastNews/WidgetLastNews';
 import styles from './SideBar.module.scss';
 
-interface ISideBarProps {
-  children?: React.ReactNode;
-}
-
-const SideBar = ({ children = 'SideBar' }: ISideBarProps) => (
+const SideBar = () => (
   <aside className={styles.SideBar} data-testid="SideBar">
-    <h2>{children}</h2>
+    <WidgetLastNews />
     <Accordion />
   </aside>
 );

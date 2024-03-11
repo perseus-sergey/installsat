@@ -1,4 +1,6 @@
 export const IS_PRODUCTION = true;
+
+export const NUMBER_OF_LAST_NEWS_WIDGET = 5;
 export interface ILang {
   ua: string;
   en: string;

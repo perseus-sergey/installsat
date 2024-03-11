@@ -5,7 +5,7 @@ import test, { describe } from 'node:test';
 
 describe('<SideBar />', () => {
   test('it should mount', () => {
-    render(<SideBar>SideBar</SideBar>);
+    render(<SideBar />);
 
     const sideBar = screen.getByTestId('SideBar');
 

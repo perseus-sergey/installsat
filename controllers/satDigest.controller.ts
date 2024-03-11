@@ -1,6 +1,6 @@
 import { TGroupedNews } from '@/components/SatNews/SatNews';
 import { executeQuery } from '@/libs/db/mysqldb';
-import { TSatModel, satSql } from '@/models/sat.model';
+import { IGroupedSatelliteOption, TSatModel } from '@/models/tblSat.model';
 import { LAST_NEWS_INTERVAL, TSatDigest } from '@/models/satDigest.model';
 
 export const singleDaySql = `
@@ -33,6 +33,13 @@ export const makeDigestSql = (
   ${where}
   ${inSatList}
   ${orderBy}
+`;
+
+export const satSql = `
+  SELECT title, id, position, grade
+  FROM tbl_chan_sat
+  WHERE title!=''
+  ORDER BY grade
 `;
 
 export const initNewsSql = makeDigestSql(
@@ -97,3 +104,32 @@ export const setGroupedNewsByDateMap = async (): Promise<
     }, new Map())
   );
 };
+
+export const getGroupedSatelliteOptions = ([
+  eastSats,
+  westSats,
+]: TSatModel[][]): readonly IGroupedSatelliteOption[] => [
+  {
+    label: '--= Всі Супутники =--',
+    options: [
+      {
+        value: '',
+        label: '--= Всі Супутники =--',
+      },
+    ],
+  },
+  {
+    label: 'Західний напрямок',
+    options: westSats.map((sat) => ({
+      value: sat.grade,
+      label: `${sat.position} ..... ${sat.title}`,
+    })),
+  },
+  {
+    label: 'Східний напрямок',
+    options: eastSats.map((sat) => ({
+      value: sat.grade,
+      label: `${sat.position} ..... ${sat.title}`,
+    })),
+  },
+];

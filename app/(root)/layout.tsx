@@ -21,7 +21,6 @@ export default function RootLayout({
 }) {
   return (
     <main className="main">
-      {/* <input type="checkbox" id="toggle-sidebar" hidden /> */}
       <SideBar />
       <article className="article">{children}</article>
     </main>

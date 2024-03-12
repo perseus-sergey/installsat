@@ -75,10 +75,10 @@ a {
 .sidebar {
   flex: 1;
   padding: 0.5rem;
-  background-color: #051549;
   transition: all 0.3s linear;
 
   @media (max-width: $widthScreenForBurgerMenu) {
+    background-color: #051549;
     position: fixed;
     left: -100%;
     top: 0;
@@ -107,6 +107,22 @@ a {
   border: none;
   background-color: #03182d41;
   z-index: 1;
+}
+
+.sidebar-widget {
+  color: #cccccc;
+  padding: 10px;
+  border-radius: 3px;
+  border: 1px solid #999999;
+  margin: 3px auto;
+  text-shadow: 1px 1px 1px black;
+  overflow: hidden;
+  background: linear-gradient(
+    to bottom,
+    rgba(3, 18, 69, 1) 20%,
+    rgba(12, 30, 86, 1) 50%,
+    rgba(8, 14, 102, 1) 80%
+  );
 }
 
 .grey_text {

@@ -3,9 +3,13 @@ import styles from './Header.module.scss';
 import Image from 'next/image';
 import Link from 'next/link';
 import { EUrlParam } from '@/models/url.model';
+import ToggleSidebarLabel from '../ToggleSidebarLabel/ToggleSidebarLabel';
 
 const Header = () => (
   <header className={styles.Header} data-testid="Header">
+    <ToggleSidebarLabel className={styles.ToggleSidebarLabel}>
+      ☰
+    </ToggleSidebarLabel>
     <Link
       href={EUrlParam.BASE_PATH}
       title="To Home Page"

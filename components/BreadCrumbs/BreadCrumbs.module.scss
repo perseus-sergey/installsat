@@ -3,6 +3,10 @@ $firstItemColor: #000099;
 $activeItemColor: #5c6469;
 $separatorColor: #4a4d5d;
 
+.BreadCrumb {
+  border-bottom: 2px groove;
+}
+
 .container {
   display: flex;
   gap: 0.5rem;

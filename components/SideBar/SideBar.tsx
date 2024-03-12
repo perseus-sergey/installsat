@@ -1,12 +1,17 @@
+import Accordion from '../Accordion/Accordion';
+import ToggleSidebarLabel from '../ToggleSidebarLabel/ToggleSidebarLabel';
+import WidgetArticleCategories from '../WidgetArticleCategories/WidgetArticleCategories';
+import WidgetLastNews from '../WidgetLastNews/WidgetLastNews';
 import styles from './SideBar.module.scss';
 
-interface ISideBarProps {
-  children?: React.ReactNode;
-}
-
-const SideBar = ({ children = 'SideBar' }: ISideBarProps) => (
-  <aside className={styles.SideBar} data-testid="SideBar">
-    <h2>{children}</h2>
+const SideBar = () => (
+  <aside className="sidebar" data-testid="SideBar">
+    <ToggleSidebarLabel className={styles.ToggleSidebarLabel}>
+      ⚔
+    </ToggleSidebarLabel>
+    <WidgetLastNews />
+    <Accordion />
+    <WidgetArticleCategories />
   </aside>
 );
 

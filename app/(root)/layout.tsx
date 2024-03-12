@@ -20,7 +20,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <main className="main flex min-h-screen flex-col items-center justify-between p-24">
+    <main className="main">
       <SideBar />
       <article className="article">{children}</article>
     </main>

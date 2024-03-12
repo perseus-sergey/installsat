@@ -11,7 +11,8 @@
   border-radius: 5px;
 
   &.satSelectHeader {
-    width: 19rem;
+    min-width: 12rem;
+    // width: 19rem;
   }
 }
 

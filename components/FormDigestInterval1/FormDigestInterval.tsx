@@ -1,4 +1,3 @@
-import { getGroupedSatelliteOptions } from '@/models/sat.model';
 import TextButton from '../TextButton/TextButton';
 import styles from './FormDigestInterval.module.scss';
 import { LAST_NEWS_INTERVAL, digestIntervals } from '@/models/satDigest.model';
@@ -9,7 +8,10 @@ import {
   ReactSelectSat,
 } from '../ReactSelect/ReactSelect';
 import { EUrlParam } from '@/models/url.model';
-import { getSatsForForm } from '@/controllers/satDigest.controller';
+import {
+  getGroupedSatelliteOptions,
+  getSatsForForm,
+} from '@/controllers/satDigest.controller';
 import EmptyData from '../EmptyData/EmptyData';
 
 interface IFormDigestIntervalProps {

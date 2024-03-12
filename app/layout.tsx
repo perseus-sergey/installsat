@@ -10,6 +10,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body suppressHydrationWarning={true}>
+        <input type="checkbox" id="toggle-sidebar" hidden />
         <Header />
         {children}
         <Footer />

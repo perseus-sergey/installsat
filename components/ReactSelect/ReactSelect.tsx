@@ -10,7 +10,10 @@ import Select, {
   Props,
   components,
 } from 'react-select';
-import { IGroupedSatelliteOption, ISatelliteOption } from '@/models/sat.model';
+import {
+  IGroupedSatelliteOption,
+  ISatelliteOption,
+} from '@/models/tblSat.model';
 import { digestIntervals } from '@/models/satDigest.model';
 
 export enum ESelectType {

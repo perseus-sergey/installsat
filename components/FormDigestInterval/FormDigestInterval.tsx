@@ -4,8 +4,7 @@ import {
   IGroupedSatelliteOption,
   ISatelliteOption,
   TSatModel,
-  getGroupedSatelliteOptions,
-} from '@/models/sat.model';
+} from '@/models/tblSat.model';
 import TextButton from '../TextButton/TextButton';
 import styles from './FormDigestInterval.module.scss';
 import Select, { components, GroupProps, ControlProps } from 'react-select';
@@ -14,6 +13,7 @@ import { useFormState, useFormStatus } from 'react-dom';
 import digestIntervalAction from '@/libs/serverActions/digestInterval.action';
 import { Loader } from '../loaders/Loader';
 import { useCallback, useEffect, useState } from 'react';
+import { getGroupedSatelliteOptions } from '@/controllers/satDigest.controller';
 
 interface IFormDigestIntervalProps {
   satellites: TSatModel[][];

@@ -1,3 +1,5 @@
+import { ILang } from './ui.model';
+
 export const META_TRANS_NEWS_LIST = {
   getH1(interval: number) {
     let addStr = '';
@@ -36,5 +38,27 @@ export const META_TRANS_NEWS_SINGLE = {
   },
   getDescription(dateStr: string) {
     return `Супутникові новини за ${dateStr}`;
+  },
+};
+
+export const META_SAT_CHANNEL_LIST = {
+  getH1(dateStr: string) {
+    return `Транспондерні новини за ${dateStr}`;
+    // return `Транспондерні новини за ${getDate(date, lang)}`;
+  },
+  getTitle() {
+    return {
+      ua: 'Список каналів супутника',
+      en: 'List of satellite channels',
+    };
+  },
+  getKeywords(lang: keyof ILang) {
+    return `${this.getTitle()[lang]} ${this.getDescription()[lang]}`;
+  },
+  getDescription() {
+    return {
+      ua: 'Список доступних некодованих каналів, які ведуть мовлення з супутника',
+      en: 'List of available unencrypted channels broadcast from satellite',
+    };
   },
 };

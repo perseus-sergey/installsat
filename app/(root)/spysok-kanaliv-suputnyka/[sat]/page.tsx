@@ -1,8 +1,5 @@
 import { Title } from '@/components/Title/Title';
-
-interface ISatChannelListParams {
-  params: { sat: string };
-}
+import { ISatChannelListParams } from './layout';
 
 // export const generateMetadata = async ({
 //   params: { sat },

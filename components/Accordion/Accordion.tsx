@@ -1,30 +1,23 @@
-import { executeQuery } from '@/libs/db/mysqldb';
 import EmptyData from '../EmptyData/EmptyData';
 import styles from './Accordion.module.scss';
-import { TUsefulArticlesSqlModel } from '@/models/tblUseful.model';
 import {
-  channelCatsSql,
-  channelSatsSql,
-  installationsSql,
-  usefulArticlesSql,
+  getChannelCatList,
+  getChannelSatList,
+  getInstallationsList,
+  getUsefulArticleList,
 } from '@/controllers/sidebar.controller';
-import { TSatModel } from '@/models/tblSat.model';
 import Link from 'next/link';
-import { TInstallationsModel } from '@/models/tblInstallations.model';
-import { TChannelCatsModel } from '@/models/tblChannelCateg.model';
 import { AccordionMenuItem } from '../AccordionMenuItem/AccordionMenuItem';
 import { MENU_ACCORDION } from '@/models/menuAccordion.model';
 
 const Accordion = async () => {
-  const installationsList =
-    await executeQuery<TInstallationsModel>(installationsSql);
+  const installationsList = await getInstallationsList();
 
-  const channelCatList = await executeQuery<TChannelCatsModel>(channelCatsSql);
+  const channelCatList = await getChannelCatList();
 
-  const channelSatList = await executeQuery<TSatModel>(channelSatsSql);
+  const channelSatList = await getChannelSatList();
 
-  const usefulArticleList =
-    await executeQuery<TUsefulArticlesSqlModel>(usefulArticlesSql);
+  const usefulArticleList = await getUsefulArticleList();
 
   if (
     installationsList instanceof Error ||

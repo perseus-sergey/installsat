@@ -7,12 +7,12 @@ import {
   ReactSelectInterval,
   ReactSelectSat,
 } from '../ReactSelect/ReactSelect';
-import { EUrlParam } from '@/models/url.model';
 import {
   getGroupedSatelliteOptions,
   getSatsForForm,
 } from '@/controllers/satDigest.controller';
 import EmptyData from '../EmptyData/EmptyData';
+import { EUrlBaseParam, EUrlSearchParam } from '@/models/url.model';
 
 interface IFormDigestIntervalProps {
   searchParams: { [key: string]: string | string[] | undefined };
@@ -35,15 +35,14 @@ const FormDigestInterval = async ({
     const timeInterval = formData.get('timeInterval') || LAST_NEWS_INTERVAL;
 
     const urlSePar = new URLSearchParams();
-    if (timeInterval)
-      urlSePar.set(EUrlParam.SEARCH_PARAM_INTERVAL, `${timeInterval}`);
+    if (timeInterval) urlSePar.set(EUrlSearchParam.INTERVAL, `${timeInterval}`);
     if (selectSats && selectSats[0])
       selectSats.forEach((sat) =>
-        urlSePar.append(EUrlParam.SEARCH_PARAM_SAT, `${sat}`)
+        urlSePar.append(EUrlSearchParam.SAT, `${sat}`)
       );
 
     // revalidatePath('/');
-    redirect(`${EUrlParam.BASE_PATH}?${urlSePar.toString()}`);
+    redirect(`${EUrlBaseParam.BASE_PATH}?${urlSePar.toString()}`);
   }
 
   return (
@@ -75,8 +74,7 @@ const FormDigestInterval = async ({
               defValue={
                 digestIntervals.find(
                   (interv) =>
-                    `${interv.value}` ===
-                    searchParams[EUrlParam.SEARCH_PARAM_INTERVAL]
+                    `${interv.value}` === searchParams[EUrlSearchParam.INTERVAL]
                 ) || digestIntervals[1]
               }
             />

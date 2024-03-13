@@ -1,13 +1,15 @@
 import { ILang } from './ui.model';
-import { EUrlParam } from './url.model';
+import { EUrlBaseParam } from './url.model';
 
-type IBreadCrumbs = Map<EUrlParam, ILang>;
+type IBreadCrumbs = Map<EUrlBaseParam, ILang>;
+
+export const BREAD_SEPARATOR = '჻';
 
 export const BREAD_CRUMBS_HOME: ILang = { ua: 'Дім', en: 'Home' };
 
 export const MBreadCrumbs: IBreadCrumbs = new Map([
   [
-    EUrlParam.TRANSPONDER_NEWS,
+    EUrlBaseParam.TRANSPONDER_NEWS,
     { ua: 'Транспондерні новини', en: 'Transponder news' },
   ],
 ]);

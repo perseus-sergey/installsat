@@ -1,6 +1,5 @@
 import { ILang } from './ui.model';
-
-export const NUMBER_OF_LAST_NEWS_WIDGET = 5;
+import { EUrlBaseParam } from './url.model';
 
 export interface IAccordionItemOptions {
   name: string;
@@ -11,10 +10,11 @@ export interface IAccordionItemOptions {
     alt: ILang;
   };
   title: ILang;
-  href?: string;
+  titleHref?: string;
+  baseHrefOfList?: string;
 }
 
-export const accordionTitles: { [key: string]: IAccordionItemOptions } = {
+export const MENU_ACCORDION: { [key: string]: IAccordionItemOptions } = {
   SATELLITE_TV: {
     name: 'SATELLITE_TV',
     img: {
@@ -27,7 +27,7 @@ export const accordionTitles: { [key: string]: IAccordionItemOptions } = {
       },
     },
     title: { ua: 'Цифрове телебачення', en: 'Digital TV' },
-    href: '/statja/sputnikovoe-televidenie/',
+    titleHref: `/${EUrlBaseParam.ARTICLE}/sputnikovoe-televidenie`,
   },
   INSTALLATIONS: {
     name: 'INSTALLATIONS',
@@ -41,6 +41,7 @@ export const accordionTitles: { [key: string]: IAccordionItemOptions } = {
       },
     },
     title: { ua: 'Варіанти встановлення', en: 'Installing options' },
+    baseHrefOfList: `/${EUrlBaseParam.INSTALLATION_OPTIONS}`,
   },
   SATELLITES: {
     name: 'SATELLITES',
@@ -54,6 +55,7 @@ export const accordionTitles: { [key: string]: IAccordionItemOptions } = {
       },
     },
     title: { ua: 'Канали на супутниках', en: 'Channels on satellites' },
+    baseHrefOfList: `/${EUrlBaseParam.SAT_CHANNEL_LIST}`,
   },
   PACKAGES: {
     name: 'PACKAGES',
@@ -67,6 +69,7 @@ export const accordionTitles: { [key: string]: IAccordionItemOptions } = {
       },
     },
     title: { ua: 'Пакети каналів', en: 'Channel packages' },
+    baseHrefOfList: `/${EUrlBaseParam.PACKAGE_CHANNEL_LIST}`,
   },
   USEFUL: {
     name: 'USEFUL',
@@ -80,6 +83,7 @@ export const accordionTitles: { [key: string]: IAccordionItemOptions } = {
       },
     },
     title: { ua: 'Корисні статті', en: 'Useful articles' },
+    baseHrefOfList: `/${EUrlBaseParam.ARTICLE}`,
   },
   ONLINE_TV: {
     name: 'ONLINE_TV',
@@ -93,6 +97,7 @@ export const accordionTitles: { [key: string]: IAccordionItemOptions } = {
       },
     },
     title: { ua: 'Онлайн ТБ', en: 'Online TV' },
-    href: '/spisok-online-kanalov/vse-tv/',
+    titleHref: `/${EUrlBaseParam.ONLINE_CHANNEL_LIST}`,
+    // titleHref: '/spisok-online-kanalov/vse-tv/',
   },
 };

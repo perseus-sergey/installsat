@@ -1,4 +1,4 @@
-import { NUMBER_OF_LAST_NEWS_WIDGET } from '@/models/sideBar.model';
+import { NUMBER_OF_LAST_NEWS_WIDGET } from '@/models/widget.model';
 
 export const installationsSql = `
 SELECT title, cpu, id FROM tbl_installations WHERE id NOT IN (8,9)

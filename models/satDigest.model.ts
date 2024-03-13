@@ -17,6 +17,11 @@ export const rawSatDigest = {
 
 export type TSatDigest = typeof rawSatDigest;
 
+export const DATE_NEWS_LIST_TITLE = {
+  ua: 'Транспондерні новини за ',
+  en: 'Transponder news for ',
+};
+
 export interface StateOption {
   readonly value: number;
   readonly label: string;

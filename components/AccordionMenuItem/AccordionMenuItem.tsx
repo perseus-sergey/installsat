@@ -1,10 +1,10 @@
 import { ILang } from '@/models/ui.model';
 import styles from '../Accordion/Accordion.module.scss';
 
-import { IAccordionItemOptions } from '@/models/sideBar.model';
 import { ReactNode } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { IAccordionItemOptions } from '@/models/menuAccordion.model';
 
 interface IAccordionMenuItem {
   language: keyof ILang;
@@ -17,7 +17,7 @@ export const AccordionMenuItem = ({
   options,
   children,
 }: IAccordionMenuItem) => {
-  const { name, title, img, href } = options;
+  const { name, title, img, titleHref } = options;
 
   return children ? (
     <>
@@ -53,7 +53,7 @@ export const AccordionMenuItem = ({
     </>
   ) : (
     <li className={styles.accordionItem}>
-      <Link className={styles.titleWrapper} href={href || '#'}>
+      <Link className={styles.titleWrapper} href={titleHref || '#'}>
         {img.src && (
           <Image
             width={img.width}

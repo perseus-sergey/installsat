@@ -1,12 +1,13 @@
 import Link from 'next/link';
 import styles from '../SatNewsList/SatNewsList.module.scss';
-import { EUrlParam } from '@/models/url.model';
 import { getDate, getFormattedDateStr } from '@/libs/utils';
 import React from 'react';
 import DangerHtmlUl from '../DangerHtmlUl/DangerHtmlUl';
 import { getDailyNews } from '../SatNewsList/SatNewsList';
 import { setGroupedNewsByDateMap } from '@/controllers/satDigest.controller';
 import EmptyData from '../EmptyData/EmptyData';
+import { EUrlBaseParam } from '@/models/url.model';
+import { DATE_NEWS_LIST_TITLE } from '@/models/satDigest.model';
 
 const DateNewsList = async () => {
   const newsArray = await setGroupedNewsByDateMap();
@@ -19,9 +20,9 @@ const DateNewsList = async () => {
       <div className={styles.newsBlock} key={news[0]}>
         <h2 className={`${styles.groupTitle} ${styles.alignCenter}`}>
           <Link
-            href={`/${EUrlParam.TRANSPONDER_NEWS}/${getFormattedDateStr(news[0])}`}
+            href={`/${EUrlBaseParam.TRANSPONDER_NEWS}/${getFormattedDateStr(news[0])}`}
           >
-            Транспондерні новини за{' '}
+            {DATE_NEWS_LIST_TITLE.ua}
             <span className={styles.groupTitleDate}>{getDate(news[0])}</span>
           </Link>
         </h2>

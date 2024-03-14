@@ -15,6 +15,8 @@ export enum EUITitles {
 
 type TUITitle = Map<EUITitles, ILang>;
 
+export const BREADCRUMBS_SEPARATOR = '჻';
+
 export const MUITitles: TUITitle = new Map([
   [
     EUITitles.ERROR_EMPTY_DATA,

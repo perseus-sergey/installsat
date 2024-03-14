@@ -5,14 +5,12 @@ import styles from './BreadCrumbs.module.scss';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { capitalizedWord } from '@/libs/utils';
-import {
-  BREAD_CRUMBS_HOME,
-  BREAD_SEPARATOR,
-  MBreadCrumbs,
-} from '@/models/breadCrumbs.model';
+import { BREAD_SEPARATOR, MBreadCrumbs } from '@/models/breadCrumbs.model';
 import { EUrlBaseParam } from '@/models/url.model';
+import { ILang } from '@/models/ui.model';
 
 interface IBreadCrumbProps extends React.HTMLAttributes<HTMLElement> {
+  language?: keyof ILang;
   homeElement?: ReactNode;
   separator?: ReactNode;
   activeLinkColor?: string;
@@ -20,23 +18,27 @@ interface IBreadCrumbProps extends React.HTMLAttributes<HTMLElement> {
 }
 
 const BreadCrumb = ({
+  language = 'ua',
   className,
-  homeElement = BREAD_CRUMBS_HOME.ua,
   activeLinkColor,
   isCapitalizeLinks = true,
   separator = BREAD_SEPARATOR,
 }: IBreadCrumbProps) => {
   const paths = usePathname();
+  const [homeElement, setHomeElement] = useState<string>('');
   const [pathNames, setPathNames] = useState<string[]>([]);
   const [handledPaths, setHandledPaths] = useState<string[]>([]);
 
   useEffect(() => {
+    const homeObj = MBreadCrumbs.get(EUrlBaseParam.BASE_PATH);
+    setHomeElement(homeObj ? homeObj[language] : 'Home');
+
     const pathTitles = paths.split('/').filter((path) => path);
     setPathNames(pathTitles);
     setHandledPaths(
       pathTitles.map((segment) => {
         const mappedSegment = MBreadCrumbs.get(segment as EUrlBaseParam);
-        const findSegment = mappedSegment ? mappedSegment.ua : segment;
+        const findSegment = mappedSegment ? mappedSegment[language] : segment;
 
         return isCapitalizeLinks ? capitalizedWord(findSegment) : findSegment;
       })

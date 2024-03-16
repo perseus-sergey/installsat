@@ -13,7 +13,10 @@ export const MBreadCrumbs: IBreadCrumbs = new Map([
   ],
   [
     EUrlBaseParam.SAT_CHANNEL_LIST,
-    { ua: 'Список каналів супутника', en: 'List of satellite channels' },
+    {
+      ua: 'Список безкоштовних каналів супутників',
+      en: 'List of satellite free channels',
+    },
   ],
   [
     EUrlBaseParam.PACKAGE_CHANNEL_LIST,

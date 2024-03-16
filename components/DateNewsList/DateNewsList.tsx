@@ -2,7 +2,7 @@ import Link from 'next/link';
 import styles from '../SatNewsList/SatNewsList.module.scss';
 import { getDate, getFormattedDateStr } from '@/libs/utils';
 import React from 'react';
-import DangerHtmlUl from '../DangerHtmlUl/DangerHtmlUl';
+import DangerHtmlUl from '../DangerHtml/DangerHtml';
 import { getDailyNews } from '../SatNewsList/SatNewsList';
 import { setGroupedNewsByDateMap } from '@/controllers/satDigest.controller';
 import EmptyData from '../EmptyData/EmptyData';
@@ -33,7 +33,7 @@ const DateNewsList = async () => {
                 {`${satNews[0]} ${satNews[1][0].satPosition}`}
               </h3>
               <div className={styles.newsList}>
-                <DangerHtmlUl text={getDailyNews(satNews[1])} />
+                <DangerHtmlUl text={getDailyNews(satNews[1])} tagName="ul" />
               </div>
             </React.Fragment>
           );

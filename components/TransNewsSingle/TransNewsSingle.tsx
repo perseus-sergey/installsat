@@ -2,7 +2,7 @@ import { Title } from '../Title/Title';
 // import styles from './TransNewsSingle.module.scss';
 import satNewsStyles from '../SatNewsList/SatNewsList.module.scss';
 import React from 'react';
-import DangerHtmlUl from '../DangerHtmlUl/DangerHtmlUl';
+import DangerHtmlUl from '../DangerHtml/DangerHtml';
 import { getDailyNews } from '../SatNewsList/SatNewsList';
 import { TSatDigest } from '@/models/satDigest.model';
 import Image from 'next/image';
@@ -32,7 +32,7 @@ const TransNewsSingle = ({ newsArray, title }: ITransNewsSingleProps) => (
               {satNews[0]}
             </h2>
             <div className={satNewsStyles.newsList}>
-              <DangerHtmlUl text={getDailyNews(satNews[1])} />
+              <DangerHtmlUl text={getDailyNews(satNews[1])} tagName="ul" />
             </div>
           </React.Fragment>
         );

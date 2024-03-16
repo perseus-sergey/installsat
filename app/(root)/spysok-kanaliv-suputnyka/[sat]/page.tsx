@@ -1,7 +1,18 @@
+import DangerHtmlUl from '@/components/DangerHtml/DangerHtml';
+import EmptyData from '@/components/EmptyData/EmptyData';
 import { Title } from '@/components/Title/Title';
+import { getSatChannels } from '@/controllers/satChannelList.controller';
 import { getChannelSatList } from '@/controllers/sidebar.controller';
-import { META_SAT_CHANNEL_LIST } from '@/models/satChannelList.model';
+import {
+  META_SAT_CHANNEL_LIST,
+  START_CONTENT,
+} from '@/models/satChannelList.model';
+import { EUrlBaseParam } from '@/models/url.model';
 import type { Metadata } from 'next';
+import Link from 'next/link';
+import { IMG_PROPERTIES } from '@/models/ui.model';
+import { getSmallSatLogoPath, imagePathValidate } from '@/libs/utilsServer';
+import BlurImage from '@/components/BlurImage/BlurImage';
 
 export interface ISatChannelListParams {
   params: { sat: string };
@@ -9,19 +20,27 @@ export interface ISatChannelListParams {
 
 const satListResponse = await getChannelSatList();
 
-const getCurrentSatTitle = (satCpu: string) => {
-  const satTitle =
+const getCurrentSatParams = (satCpu: string) => {
+  const satParams =
     satListResponse instanceof Error
       ? ''
       : satListResponse.find((sat) => sat.cpu === satCpu);
 
-  return satTitle ? satTitle.title : '';
+  return satParams
+    ? {
+        title: satParams.title,
+        id: `${satParams.id}`,
+        satPosition: satParams.position,
+        logo: satParams.logo,
+      }
+    : { title: '', id: '-1', satPosition: -1, logo: '' };
 };
 
 export const generateMetadata = ({
   params,
 }: ISatChannelListParams): Metadata => {
-  const satTitle = getCurrentSatTitle(params.sat);
+  const satParams = getCurrentSatParams(params.sat);
+  const satTitle = `${satParams.title} - ${satParams.satPosition}`;
 
   return {
     title: `${META_SAT_CHANNEL_LIST.getTitle().ua} ${satTitle}`,
@@ -44,13 +63,60 @@ export const dynamicParams = false;
 export default async function SatNewsDatePage({
   params,
 }: ISatChannelListParams) {
-  const satTitle = getCurrentSatTitle(params.sat);
+  const satParams = getCurrentSatParams(params.sat);
+  const satChannels = await getSatChannels(satParams.id);
 
+  if (satChannels instanceof Error)
+    return <EmptyData description={satChannels.message} />;
   // const newsArray = await getTransNewsForSingleDay(params.sat, singleDaySql);
   // if (newsArray instanceof Error)
   //   return <EmptyData description={newsArray.message} />;
 
-  return <Title>{satTitle}</Title>;
+  const h1ImagePath = imagePathValidate(
+    `${IMG_PROPERTIES.h1SatImage.path}${satParams.logo}`,
+    IMG_PROPERTIES.h1SatImage.defaultImage
+  );
+
+  return (
+    <>
+      <Title className="flex items-center justify-between gap-4">
+        {`${satParams.title} - ${satParams.satPosition}`}
+        {h1ImagePath ? (
+          <BlurImage
+            imgParentWidth={132}
+            imgParentHeight={99}
+            imgPath={h1ImagePath}
+            alt={`Satellite logo for ${satParams.title}`}
+          />
+        ) : (
+          <span className="text-8xl">
+            {IMG_PROPERTIES.h1SatImage.alternativeSymbol}
+          </span>
+        )}
+      </Title>
+      <DangerHtmlUl tagName="p" text={START_CONTENT} />
+      <ul>
+        {satChannels.map((satChannel) => (
+          <li key={satChannel.cpu}>
+            <Link href={`/${EUrlBaseParam.CHANNEL_PARAMS}/${satChannel.cpu}`}>
+              <BlurImage
+                imgParentWidth={55}
+                imgParentHeight={42}
+                imgPath={
+                  getSmallSatLogoPath(
+                    `${IMG_PROPERTIES.channelLogo.small.path}${satChannel.logo}`,
+                    IMG_PROPERTIES.channelLogo.small.defaultImage
+                  ) || IMG_PROPERTIES.channelLogo.small.defaultImage
+                }
+                alt={satChannel.title}
+              />
+              {satChannel.title}
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </>
+  );
 }
 
 // protected function createObjH1 () {

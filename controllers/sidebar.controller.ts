@@ -23,7 +23,7 @@ SELECT title, id, cpu FROM tbl_useful WHERE cat=4 OR cat=5
 `;
 
 export const channelSatsSql = `
-SELECT title,position,id,cpu
+SELECT title,position,id,cpu,logo
 FROM tbl_chan_sat
 WHERE id != 1 AND fill = 1
 ORDER BY position

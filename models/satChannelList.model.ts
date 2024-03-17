@@ -29,7 +29,7 @@ const satChannelListEmptyModel = {
   id: -1,
   title: '',
   cpu: '',
-  frequency: '',
+  frequency: -1,
   tema: -1,
   logo: '',
   programma: -1,

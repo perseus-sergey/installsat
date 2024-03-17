@@ -80,7 +80,7 @@ export default async function SatNewsDatePage({
   return (
     <>
       <Title
-        className="flex items-center justify-between gap-4"
+        className="flex items-center justify-around gap-4"
         style={{ borderBottom: '2px groove' }}
       >
         {`${satParams.title} - ${satParams.satPosition}`}

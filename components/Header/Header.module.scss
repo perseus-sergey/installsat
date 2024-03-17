@@ -1,4 +1,3 @@
-$toggleLabelColor: #ccd2de;
 .Header {
   display: flex;
   align-items: center;
@@ -24,11 +23,11 @@ $toggleLabelColor: #ccd2de;
 
 .ToggleSidebarLabel {
   font-size: 4rem;
-  color: $toggleLabelColor;
+  color: #ccd2de;
   padding: 0 0.5rem 0.5rem;
   cursor: pointer;
   line-height: 1;
-  border: 1px solid $toggleLabelColor;
+  border: 1px solid #ccd2de78;
   border-radius: 0.25rem;
   margin: 0 1rem;
 }

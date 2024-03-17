@@ -26,7 +26,7 @@ export const IMG_PROPERTIES = {
   },
   channelLogo: {
     big: {
-      path: '/imagess/channelsOptimized/',
+      path: '/images/channelsOptimized/',
       defaultImage: '/images/1not_found_chan.png',
       height: 99,
       width: 132,

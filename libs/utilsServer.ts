@@ -4,26 +4,22 @@ import path from 'path';
 export const isFileExists = (filePath: string): boolean =>
   fs.existsSync(path.join(process.cwd(), 'public', filePath));
 
+const changeExtToGif = (path: string) => {
+  const splitted = path.split('.').reverse();
+  const [, ...startPath] = splitted;
+
+  return [...startPath, 'gif'].join('.');
+};
+
 export const imagePathValidate = (
   imgPath: string,
-  alternativePath: string
-): string | null =>
-  isFileExists(imgPath)
-    ? imgPath
-    : isFileExists(alternativePath)
-      ? alternativePath
-      : null;
-
-export const getSmallSatLogoPath = (
-  imgPath: string,
-  alternativePath: string
+  alternativePath: string,
+  isChangeToGif = false
 ): string | null => {
-  const splitted = imgPath.split('.').reverse();
-  const [, ...startPath] = splitted;
-  const newPath = [...startPath, 'gif'].join('.');
+  const path = isChangeToGif ? changeExtToGif(imgPath) : imgPath;
 
-  return isFileExists(newPath)
-    ? newPath
+  return isFileExists(path)
+    ? path
     : isFileExists(alternativePath)
       ? alternativePath
       : null;

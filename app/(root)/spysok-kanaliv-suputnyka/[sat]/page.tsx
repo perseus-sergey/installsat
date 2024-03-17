@@ -7,12 +7,12 @@ import {
   META_SAT_CHANNEL_LIST,
   START_CONTENT,
 } from '@/models/satChannelList.model';
-import { EUrlBaseParam } from '@/models/url.model';
 import type { Metadata } from 'next';
-import Link from 'next/link';
 import { IMG_PROPERTIES } from '@/models/ui.model';
-import { getSmallSatLogoPath, imagePathValidate } from '@/libs/utilsServer';
+import { imagePathValidate } from '@/libs/utilsServer';
 import BlurImage from '@/components/BlurImage/BlurImage';
+import StartArticleSection from '@/components/StartArticleSection/StartArticleSection';
+import SatChannelsTable from '@/components/SatChannelsTable/SatChannelsTable';
 
 export interface ISatChannelListParams {
   params: { sat: string };
@@ -79,7 +79,10 @@ export default async function SatNewsDatePage({
 
   return (
     <>
-      <Title className="flex items-center justify-between gap-4">
+      <Title
+        className="flex items-center justify-between gap-4"
+        style={{ borderBottom: '2px groove' }}
+      >
         {`${satParams.title} - ${satParams.satPosition}`}
         {h1ImagePath ? (
           <BlurImage
@@ -94,27 +97,10 @@ export default async function SatNewsDatePage({
           </span>
         )}
       </Title>
-      <DangerHtmlUl tagName="p" text={START_CONTENT} />
-      <ul>
-        {satChannels.map((satChannel) => (
-          <li key={satChannel.cpu}>
-            <Link href={`/${EUrlBaseParam.CHANNEL_PARAMS}/${satChannel.cpu}`}>
-              <BlurImage
-                imgParentWidth={55}
-                imgParentHeight={42}
-                imgPath={
-                  getSmallSatLogoPath(
-                    `${IMG_PROPERTIES.channelLogo.small.path}${satChannel.logo}`,
-                    IMG_PROPERTIES.channelLogo.small.defaultImage
-                  ) || IMG_PROPERTIES.channelLogo.small.defaultImage
-                }
-                alt={satChannel.title}
-              />
-              {satChannel.title}
-            </Link>
-          </li>
-        ))}
-      </ul>
+      <StartArticleSection>
+        <DangerHtmlUl tagName="p" text={START_CONTENT} />
+      </StartArticleSection>
+      <SatChannelsTable satChannels={satChannels} />
     </>
   );
 }

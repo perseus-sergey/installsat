@@ -21,21 +21,21 @@ export const IMG_PROPERTIES = {
     path: '/images/satellites/',
     defaultImage: '/images/satellite_7144.png',
     alternativeSymbol: '🛰',
-    height: 99,
-    width: 132,
+    height: '99px',
+    width: '132px',
   },
   channelLogo: {
     big: {
       path: '/images/channelsOptimized/',
       defaultImage: '/images/1not_found_chan.png',
-      height: 99,
-      width: 132,
+      height: '99px',
+      width: '132px',
     },
     small: {
       path: '/images/channel_55/',
       defaultImage: '/images/1not_found_chan.png',
-      height: 42,
-      width: 55,
+      height: '42px',
+      width: '55px',
     },
   },
 };

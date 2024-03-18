@@ -19,9 +19,17 @@ const Tooltip = ({ children, hintHtml }: ITooltipProps) => {
     );
   };
 
+  const mouseOut = () => {
+    setElStyles((oldStyles) => ({
+      ...oldStyles,
+      left: '-200vw',
+    }));
+  };
+
   return (
     <div
       onMouseMove={mouseMove}
+      onMouseOut={mouseOut}
       className={styles.Tooltip}
       data-testid="Tooltip"
     >

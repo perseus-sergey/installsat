@@ -9,5 +9,51 @@
   td {
     border: 1px solid #999999;
     padding: 3px;
+
+    a {
+      color: #4261a3;
+      font-weight: bold;
+
+      &:hover {
+        color: #fff6ca;
+        text-shadow:
+          1px -1px 1px #36f,
+          1px 1px 2px grey;
+      }
+    }
+  }
+
+  .tdCompression,
+  .biss,
+  .beam {
+    font-size: 0.9rem;
+  }
+
+  .beam {
+    color: #666666;
+  }
+
+  .tdChanLogo,
+  .tdGenre {
+    line-height: 0;
+  }
+
+  .tdTitle {
+  }
+
+  .biss {
+    background-color: #dad4c04d;
+  }
+
+  @media (width < 700px) {
+    .tdCompression,
+    .biss,
+    .beam {
+      font-size: 0.7rem;
+    }
+
+    .tdFrequency {
+      font-size: 0.9rem;
+    }
   }
 }

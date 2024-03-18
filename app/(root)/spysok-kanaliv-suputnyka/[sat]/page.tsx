@@ -10,9 +10,9 @@ import {
 import type { Metadata } from 'next';
 import { IMG_PROPERTIES } from '@/models/ui.model';
 import { imagePathValidate } from '@/libs/utilsServer';
-import BlurImage from '@/components/BlurImage/BlurImage';
 import StartArticleSection from '@/components/StartArticleSection/StartArticleSection';
 import SatChannelsTable from '@/components/SatChannelsTable/SatChannelsTable';
+import FillingImg from '@/components/Images/FillingImage';
 
 export interface ISatChannelListParams {
   params: { sat: string };
@@ -85,11 +85,12 @@ export default async function SatNewsDatePage({
       >
         {`${satParams.title} - ${satParams.satPosition}`}
         {h1ImagePath ? (
-          <BlurImage
-            imgParentWidth={132}
-            imgParentHeight={99}
-            imgPath={h1ImagePath}
+          <FillingImg
+            width={IMG_PROPERTIES.h1SatImage.width}
+            height={IMG_PROPERTIES.h1SatImage.height}
+            src={h1ImagePath}
             alt={`Satellite logo for ${satParams.title}`}
+            isBlur
           />
         ) : (
           <span className="text-8xl">

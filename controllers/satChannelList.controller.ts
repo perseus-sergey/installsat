@@ -3,7 +3,7 @@ import { TSatChannelListModel } from '@/models/satChannelList.model';
 
 export const getSatChannels = async (channelId: string) => {
   const sql = `
-  SELECT ch.id, ch.title, ch.cpu, ch.frequency, ch.sat AS tema, ch.logo, ch.programma, ch.encryption, ch.biss, ch.description,
+  SELECT ch.id, ch.title, ch.cpu, ch.frequency, ch.sat, ch.tema, ch.logo, ch.programma, ch.encryption, ch.biss, ch.description,
   fr.freq,
   fr.sr,
   fr.fec,

@@ -1,6 +1,7 @@
 import {
   MChanTheme,
   MCompressionColors,
+  META_ALL_SAT_CHANNEL_LIST,
   META_SAT_CHANNEL_LIST,
   TOOLTIP_TITLES,
   TSatChannelListModel,
@@ -13,7 +14,7 @@ import { EUrlBaseParam } from '@/models/url.model';
 import { cutText } from '@/libs/utils';
 import Tooltip from '../Tooltip/Tooltip';
 import FillingImg from '../Images/FillingImage';
-import { Title } from '../Title/Title';
+import TooltipSimple from '../TooltipSimple/TooltipSimple';
 
 interface ISatChannelsTableProps {
   satChannels: TSatChannelListModel[][][];
@@ -129,26 +130,40 @@ const SatChannelsTable = ({ satChannels }: ISatChannelsTableProps) => (
       return (
         <>
           {satChannels.length > 1 && (
-            <Title
-              key={i}
-              className="flex items-center justify-around gap-4"
-              style={{ borderBottom: '2px groove' }}
-            >
-              {`${sat[0][0].sat_title} - ${sat[0][0].sat_position}`}
-              {h1ImagePath ? (
-                <FillingImg
-                  width={META_SAT_CHANNEL_LIST.h1SatImage.width}
-                  height={META_SAT_CHANNEL_LIST.h1SatImage.height}
-                  src={h1ImagePath}
-                  alt={`Satellite logo for ${sat[0][0].title}`}
-                  isBlur
-                />
-              ) : (
-                <span className="text-8xl">
-                  {META_SAT_CHANNEL_LIST.h1SatImage.alternativeSymbol}
-                </span>
-              )}
-            </Title>
+            <h2 key={i} className={styles.satTitle} id={sat[0][0].sat_slug}>
+              <TooltipSimple tooltipText="На початок сторінки">
+                <Link
+                  href={`/${EUrlBaseParam.SAT_CHANNEL_LIST}`}
+                  title="Угору"
+                  className={styles.goUpLink}
+                >
+                  ⇧
+                </Link>
+              </TooltipSimple>
+              <TooltipSimple tooltipText={'Дивитись мапи покриття супутника'}>
+                <Link
+                  className={styles.satTitleLink}
+                  href={`/${EUrlBaseParam.SAT_COVERAGE_MAP}/${sat[0][0].sat_slug}`}
+                >
+                  {`${sat[0][0].sat_title} - ${sat[0][0].sat_position}`}
+                  {h1ImagePath ? (
+                    <FillingImg
+                      width={META_ALL_SAT_CHANNEL_LIST.satTitleImgParams.width}
+                      height={
+                        META_ALL_SAT_CHANNEL_LIST.satTitleImgParams.height
+                      }
+                      src={h1ImagePath}
+                      alt={`${META_SAT_CHANNEL_LIST.h1SatImage.alt.ua} ${sat[0][0].sat_title}`}
+                      isBlur
+                    />
+                  ) : (
+                    <span className="text-8xl">
+                      {META_SAT_CHANNEL_LIST.h1SatImage.alternativeSymbol}
+                    </span>
+                  )}
+                </Link>
+              </TooltipSimple>
+            </h2>
           )}
           <table
             className={styles.SatChannelsTable}

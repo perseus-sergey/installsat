@@ -28,6 +28,10 @@ export const META_SAT_CHANNEL_LIST = {
     alternativeSymbol: '🛰',
     height: '99px',
     width: '132px',
+    alt: {
+      ua: `Безкоштовні канали супутника`,
+      en: `Free channels of`,
+    },
   },
 };
 
@@ -56,6 +60,10 @@ export const META_ALL_SAT_CHANNEL_LIST = {
       en: 'List of channels with program guides available for free viewing from the most popular satellites without any obligations or subscription fees',
     };
   },
+  satTitleImgParams: {
+    height: '60px',
+    width: '80px',
+  },
   h1ImageParams: {
     path: '/images/packages/money_free.jpg',
     defaultImage: '/images/satellite_7144.png',
@@ -78,6 +86,8 @@ const satChannelListEmptyModel = {
   sat_title: '',
   sat_position: '',
   sat_logo: '',
+  sat_slug: '',
+  sat_grade: -1,
   frequency: -1,
   sat: -1,
   tema: -1,

@@ -3,7 +3,7 @@ import EmptyData from '@/components/EmptyData/EmptyData';
 import { Title } from '@/components/Title/Title';
 import {
   getSatChannels,
-  groupedChannelsAllSat,
+  getGroupedChannelsAllSat,
 } from '@/controllers/satChannelList.controller';
 import { getChannelSatList } from '@/controllers/sidebar.controller';
 import {
@@ -79,7 +79,7 @@ export default async function SatNewsDatePage({
   return (
     <>
       <Title
-        className="flex items-center justify-around gap-4"
+        className="flex items-center justify-around gap-4 flex-wrap"
         style={{ borderBottom: '2px groove' }}
       >
         {
@@ -92,7 +92,7 @@ export default async function SatNewsDatePage({
             width={META_SAT_CHANNEL_LIST.h1SatImage.width}
             height={META_SAT_CHANNEL_LIST.h1SatImage.height}
             src={h1ImagePath}
-            alt={`Satellite logo for ${satParams.title}`}
+            alt={`${META_SAT_CHANNEL_LIST.h1SatImage.alt.ua} ${satParams.title}`}
             isBlur
           />
         ) : (
@@ -104,7 +104,7 @@ export default async function SatNewsDatePage({
       <StartArticleSection>
         <DangerHtmlUl wrapperTagName="p" text={START_CONTENT} />
       </StartArticleSection>
-      <SatChannelsTable satChannels={groupedChannelsAllSat([satChannels])} />
+      <SatChannelsTable satChannels={getGroupedChannelsAllSat([satChannels])} />
     </>
   );
 }

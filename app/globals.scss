@@ -27,8 +27,11 @@
   margin: 0;
 }
 
+html {
+  scroll-behavior: smooth !important;
+}
+
 body {
-  scroll-behavior: smooth;
   font-family: 'Times New Roman', Times, serif;
   color: #5a5a5a;
   // color: rgb(var(--foreground-rgb));

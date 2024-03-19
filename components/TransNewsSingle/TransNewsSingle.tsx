@@ -32,7 +32,10 @@ const TransNewsSingle = ({ newsArray, title }: ITransNewsSingleProps) => (
               {satNews[0]}
             </h2>
             <div className={satNewsStyles.newsList}>
-              <DangerHtmlUl text={getDailyNews(satNews[1])} tagName="ul" />
+              <DangerHtmlUl
+                text={getDailyNews(satNews[1])}
+                wrapperTagName="ul"
+              />
             </div>
           </React.Fragment>
         );

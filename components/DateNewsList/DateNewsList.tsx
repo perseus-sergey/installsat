@@ -33,7 +33,10 @@ const DateNewsList = async () => {
                 {`${satNews[0]} ${satNews[1][0].satPosition}`}
               </h3>
               <div className={styles.newsList}>
-                <DangerHtmlUl text={getDailyNews(satNews[1])} tagName="ul" />
+                <DangerHtmlUl
+                  text={getDailyNews(satNews[1])}
+                  wrapperTagName="ul"
+                />
               </div>
             </React.Fragment>
           );

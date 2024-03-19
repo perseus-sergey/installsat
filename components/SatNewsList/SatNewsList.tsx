@@ -94,7 +94,10 @@ const SatNewsList = async ({ searchParams }: ISatNewsListProps) => {
                 {`${getDate(satNews[0])} ....`}
               </h3>
               <div className={styles.newsList}>
-                <DangerHtmlUl text={getDailyNews(satNews[1])} tagName="ul" />
+                <DangerHtmlUl
+                  text={getDailyNews(satNews[1])}
+                  wrapperTagName="ul"
+                />
               </div>
             </React.Fragment>
           );

@@ -1,14 +1,16 @@
 import DangerHtmlUl from '@/components/DangerHtml/DangerHtml';
 import EmptyData from '@/components/EmptyData/EmptyData';
 import { Title } from '@/components/Title/Title';
-import { getSatChannels } from '@/controllers/satChannelList.controller';
+import {
+  getSatChannels,
+  groupedChannelsAllSat,
+} from '@/controllers/satChannelList.controller';
 import { getChannelSatList } from '@/controllers/sidebar.controller';
 import {
   META_SAT_CHANNEL_LIST,
   START_CONTENT,
 } from '@/models/satChannelList.model';
 import type { Metadata } from 'next';
-import { IMG_PROPERTIES } from '@/models/ui.model';
 import { imagePathValidate } from '@/libs/utilsServer';
 import StartArticleSection from '@/components/StartArticleSection/StartArticleSection';
 import SatChannelsTable from '@/components/SatChannelsTable/SatChannelsTable';
@@ -68,13 +70,10 @@ export default async function SatNewsDatePage({
 
   if (satChannels instanceof Error)
     return <EmptyData description={satChannels.message} />;
-  // const newsArray = await getTransNewsForSingleDay(params.sat, singleDaySql);
-  // if (newsArray instanceof Error)
-  //   return <EmptyData description={newsArray.message} />;
 
   const h1ImagePath = imagePathValidate(
-    `${IMG_PROPERTIES.h1SatImage.path}${satParams.logo}`,
-    IMG_PROPERTIES.h1SatImage.defaultImage
+    `${META_SAT_CHANNEL_LIST.h1SatImage.path}${satParams.logo}`,
+    META_SAT_CHANNEL_LIST.h1SatImage.defaultImage
   );
 
   return (
@@ -83,37 +82,29 @@ export default async function SatNewsDatePage({
         className="flex items-center justify-around gap-4"
         style={{ borderBottom: '2px groove' }}
       >
-        {`${satParams.title} - ${satParams.satPosition}`}
+        {
+          META_SAT_CHANNEL_LIST.getH1(
+            `${satParams.title} - ${satParams.satPosition}`
+          ).ua
+        }
         {h1ImagePath ? (
           <FillingImg
-            width={IMG_PROPERTIES.h1SatImage.width}
-            height={IMG_PROPERTIES.h1SatImage.height}
+            width={META_SAT_CHANNEL_LIST.h1SatImage.width}
+            height={META_SAT_CHANNEL_LIST.h1SatImage.height}
             src={h1ImagePath}
             alt={`Satellite logo for ${satParams.title}`}
             isBlur
           />
         ) : (
           <span className="text-8xl">
-            {IMG_PROPERTIES.h1SatImage.alternativeSymbol}
+            {META_SAT_CHANNEL_LIST.h1SatImage.alternativeSymbol}
           </span>
         )}
       </Title>
       <StartArticleSection>
-        <DangerHtmlUl tagName="p" text={START_CONTENT} />
+        <DangerHtmlUl wrapperTagName="p" text={START_CONTENT} />
       </StartArticleSection>
-      <SatChannelsTable satChannels={satChannels} />
+      <SatChannelsTable satChannels={groupedChannelsAllSat([satChannels])} />
     </>
   );
 }
-
-// protected function createObjH1 () {
-//   $this->h1 	= "Список каналов спутника \"{$this->title}\" - {$this->position}";
-//   $this->imgAltH1 		= "Список телеканалов спутника {$this->title}";
-//   if ($this->logo) {
-//     $this->imgClassH1 	= "h1img_chan";
-//     $this->imgPathH1 	= "Images/satellites/{$this->logo}";
-//   } else {
-//     $this->imgClassH1 	= "h1img";
-//     $this->imgPathH1 	= "Images/satellite_7144.png";
-//   }
-// }

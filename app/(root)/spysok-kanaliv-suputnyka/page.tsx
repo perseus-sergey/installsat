@@ -1,26 +1,49 @@
+import DangerHtmlUl from '@/components/DangerHtml/DangerHtml';
+import EmptyData from '@/components/EmptyData/EmptyData';
 import { Title } from '@/components/Title/Title';
+import {
+  getSatChannels,
+  groupedChannelsAllSat,
+} from '@/controllers/satChannelList.controller';
+import {
+  META_ALL_SAT_CHANNEL_LIST,
+  START_CONTENT,
+} from '@/models/satChannelList.model';
+import type { Metadata } from 'next';
+import StartArticleSection from '@/components/StartArticleSection/StartArticleSection';
+import SatChannelsTable from '@/components/SatChannelsTable/SatChannelsTable';
+import FillingImg from '@/components/Images/FillingImage';
 
-// export const generateMetadata = async ({
-//   params: { sat },
-// }: ISatChannelListParams) => {
-//   const dateStr = getDate(sat);
-
-//   return {
-//     // metadataBase: new URL(SITE_BASE_URL),
-//     title: META_TRANS_NEWS_SINGLE.getTitle(dateStr),
-//     description: META_TRANS_NEWS_SINGLE.getDescription(dateStr),
-//     keywords: META_TRANS_NEWS_SINGLE.getKeywords(dateStr),
-//   };
-// };
+export const metadata: Metadata = {
+  title: META_ALL_SAT_CHANNEL_LIST.getTitle().ua,
+  description: META_ALL_SAT_CHANNEL_LIST.getDescription().ua,
+  keywords: META_ALL_SAT_CHANNEL_LIST.getKeywords().ua,
+};
 
 export default async function SatNewsDatePage() {
-  // const dateStr = getDate(params.sat);
+  const satChannels = await getSatChannels();
 
-  // if (!dateStr) notFound();
+  if (satChannels instanceof Error)
+    return <EmptyData description={satChannels.message} />;
 
-  // const newsArray = await getTransNewsForSingleDay(params.sat, singleDaySql);
-  // if (newsArray instanceof Error)
-  //   return <EmptyData description={newsArray.message} />;
-
-  return <Title>All Satellites</Title>;
+  return (
+    <>
+      <Title
+        className="flex items-center justify-around gap-4"
+        style={{ borderBottom: '2px groove' }}
+      >
+        {META_ALL_SAT_CHANNEL_LIST.getH1().ua}
+        <FillingImg
+          src={META_ALL_SAT_CHANNEL_LIST.h1ImageParams.path}
+          alt={META_ALL_SAT_CHANNEL_LIST.h1ImageParams.alt.ua}
+          width={META_ALL_SAT_CHANNEL_LIST.h1ImageParams.width}
+          height={META_ALL_SAT_CHANNEL_LIST.h1ImageParams.height}
+        />
+      </Title>
+      <StartArticleSection>
+        <DangerHtmlUl wrapperTagName="p" text={START_CONTENT} />
+      </StartArticleSection>
+      <SatChannelsTable satChannels={groupedChannelsAllSat([satChannels])} />
+    </>
+  );
 }

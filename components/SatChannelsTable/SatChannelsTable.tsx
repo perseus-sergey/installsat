@@ -1,4 +1,10 @@
-import { TSatChannelListModel } from '@/models/satChannelList.model';
+import {
+  MChanTheme,
+  MCompressionColors,
+  META_SAT_CHANNEL_LIST,
+  TOOLTIP_TITLES,
+  TSatChannelListModel,
+} from '@/models/satChannelList.model';
 import styles from './SatChannelsTable.module.scss';
 import { imagePathValidate } from '@/libs/utilsServer';
 import { IMG_PROPERTIES } from '@/models/ui.model';
@@ -7,54 +13,11 @@ import { EUrlBaseParam } from '@/models/url.model';
 import { cutText } from '@/libs/utils';
 import Tooltip from '../Tooltip/Tooltip';
 import FillingImg from '../Images/FillingImage';
+import { Title } from '../Title/Title';
 
 interface ISatChannelsTableProps {
-  satChannels: TSatChannelListModel[];
+  satChannels: TSatChannelListModel[][][];
 }
-
-const MCompressionColors = new Map([
-  ['MPEG-2', '#E9E3FD'],
-  ['DEFAULT', '#E9E3FD'],
-  ['T2-MI', '#f5b3cb'],
-  ['MPEG-4', '#FFEDCA'],
-  ['DVB-S2', '#FFEDCA'],
-  ['HD', '#C5F9F7'],
-  ['4K UHD', '#81e3f3'],
-]);
-
-const MChanTheme = new Map([
-  [1, 'public.png'],
-  [2, 'news.png'],
-  [3, 'cinema.png'],
-  [4, 'sport.png'],
-  [5, 'sunset.png'],
-  [6, 'kids.png'],
-  [7, 'xxx.png'],
-  [8, 'music.png'],
-  [9, 'discovery.png'],
-  [10, 'comedy.png'],
-  [11, 'game.png'],
-  [12, 'religion.png'],
-  [13, 'tv_shopping.png'],
-  [14, 'fashion.png'],
-]);
-// 656D7D
-
-const groupedChannels = (
-  satChannels: TSatChannelListModel[]
-): TSatChannelListModel[][] => {
-  return Object.values(
-    satChannels.reduce((acc: Record<number, TSatChannelListModel[]>, curr) => {
-      const key = curr.frequency;
-      if (!acc[key]) {
-        acc[key] = [];
-      }
-      acc[key].push(curr);
-
-      return acc;
-    }, {})
-  ).sort((a, b) => a[0].freq - b[0].freq);
-};
 
 const FrequencySegment = ({
   frequencyChannels,
@@ -74,7 +37,6 @@ const FrequencySegment = ({
           <span className={styles.beam}>{frequencyChannels[0].beam} луч</span>
         </td>
       )}
-      {/* <td style='".$this->mpegColor ($arrChannal["compr"])."'><span>$arrChannal[compr]</span></td> */}
       <td
         className={styles.tdCompression}
         style={{
@@ -102,20 +64,23 @@ const FrequencySegment = ({
               <div className="py-2.5 px-5">
                 <ul>
                   <li>
-                    Назва: <strong>{satChannel.title}</strong>
+                    {TOOLTIP_TITLES.name.ua}:{' '}
+                    <strong>{satChannel.title}</strong>
                   </li>
                   <li>
-                    Жанр: <strong>{satChannel.tem}</strong>
+                    {TOOLTIP_TITLES.genre.ua}: <strong>{satChannel.tem}</strong>
                   </li>
                   <li>
-                    Мова: <strong>{satChannel.lan}</strong>
+                    {TOOLTIP_TITLES.language.ua}:{' '}
+                    <strong>{satChannel.lan}</strong>
                   </li>
                   <li>
-                    Опис:{' '}
+                    {TOOLTIP_TITLES.description.ua}:{' '}
                     <strong>{cutText(satChannel.description, 100)}</strong>
                   </li>
                   <li>
-                    Формат: <strong>{satChannel.compr}</strong>
+                    {TOOLTIP_TITLES.name.ua}:{' '}
+                    <strong>{satChannel.compr}</strong>
                   </li>
                 </ul>
               </div>
@@ -154,13 +119,51 @@ const FrequencySegment = ({
   ));
 
 const SatChannelsTable = ({ satChannels }: ISatChannelsTableProps) => (
-  <table className={styles.SatChannelsTable} data-testid="SatChannelsTable">
-    <tbody>
-      {groupedChannels(satChannels).map((satChannels, idx) => (
-        <FrequencySegment key={idx} frequencyChannels={satChannels} />
-      ))}
-    </tbody>
-  </table>
+  <>
+    {satChannels.map((sat, i) => {
+      const h1ImagePath = imagePathValidate(
+        `${META_SAT_CHANNEL_LIST.h1SatImage.path}${sat[0][0].sat_logo}`,
+        META_SAT_CHANNEL_LIST.h1SatImage.defaultImage
+      );
+
+      return (
+        <>
+          {satChannels.length > 1 && (
+            <Title
+              key={i}
+              className="flex items-center justify-around gap-4"
+              style={{ borderBottom: '2px groove' }}
+            >
+              {`${sat[0][0].sat_title} - ${sat[0][0].sat_position}`}
+              {h1ImagePath ? (
+                <FillingImg
+                  width={META_SAT_CHANNEL_LIST.h1SatImage.width}
+                  height={META_SAT_CHANNEL_LIST.h1SatImage.height}
+                  src={h1ImagePath}
+                  alt={`Satellite logo for ${sat[0][0].title}`}
+                  isBlur
+                />
+              ) : (
+                <span className="text-8xl">
+                  {META_SAT_CHANNEL_LIST.h1SatImage.alternativeSymbol}
+                </span>
+              )}
+            </Title>
+          )}
+          <table
+            className={styles.SatChannelsTable}
+            data-testid="SatChannelsTable"
+          >
+            <tbody>
+              {sat.map((freqChannels, idx) => (
+                <FrequencySegment key={idx} frequencyChannels={freqChannels} />
+              ))}
+            </tbody>
+          </table>
+        </>
+      );
+    })}
+  </>
 );
 
 export default SatChannelsTable;

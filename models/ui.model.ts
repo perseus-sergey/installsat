@@ -17,13 +17,6 @@ type TUITitle = Map<EUITitles, ILang>;
 
 export const IMG_PROPERTIES = {
   defaultImgBlur: '/images/1blur.gif',
-  h1SatImage: {
-    path: '/images/satellites/',
-    defaultImage: '/images/satellite_7144.png',
-    alternativeSymbol: '🛰',
-    height: '99px',
-    width: '132px',
-  },
   channelLogo: {
     big: {
       path: '/images/channelsOptimized/',

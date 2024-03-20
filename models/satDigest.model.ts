@@ -23,12 +23,19 @@ export const META_TRANS_NEWS_LIST = {
   getDescription() {
     return 'Транспондерні новини популярних супутників за обраний період часу';
   },
+  fieldsetTitle: {
+    ua: 'Виберіть супутники та проміжок часу',
+    en: 'Select satellites and time slot',
+  },
 };
 
 export const META_TRANS_NEWS_SINGLE = {
-  getH1(dateStr: string) {
-    return `Транспондерні новини за ${dateStr}`;
-    // return `Транспондерні новини за ${getDate(date, lang)}`;
+  getH1() {
+    // return `Транспондерні новини за ${dateStr}`;
+    return {
+      ua: 'Транспондерні новини за ',
+      en: 'Transponder news for ',
+    };
   },
   getTitle(dateStr: string) {
     return `Installsat - транспондерні новини за ${dateStr}`;
@@ -57,11 +64,6 @@ export const rawSatDigest = {
 };
 
 export type TSatDigest = typeof rawSatDigest;
-
-export const DATE_NEWS_LIST_TITLE = {
-  ua: 'Транспондерні новини за ',
-  en: 'Transponder news for ',
-};
 
 export interface StateOption {
   readonly value: number;

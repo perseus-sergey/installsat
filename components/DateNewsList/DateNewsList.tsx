@@ -7,7 +7,7 @@ import { getDailyNews } from '../SatNewsList/SatNewsList';
 import { setGroupedNewsByDateMap } from '@/controllers/satDigest.controller';
 import EmptyData from '../EmptyData/EmptyData';
 import { EUrlBaseParam } from '@/models/url.model';
-import { DATE_NEWS_LIST_TITLE } from '@/models/satDigest.model';
+import { META_TRANS_NEWS_SINGLE } from '@/models/satDigest.model';
 
 const DateNewsList = async () => {
   const newsArray = await setGroupedNewsByDateMap();
@@ -22,7 +22,7 @@ const DateNewsList = async () => {
           <Link
             href={`/${EUrlBaseParam.TRANSPONDER_NEWS}/${getFormattedDateStr(news[0])}`}
           >
-            {DATE_NEWS_LIST_TITLE.ua}
+            {META_TRANS_NEWS_SINGLE.getH1().ua}
             <span className={styles.groupTitleDate}>{getDate(news[0])}</span>
           </Link>
         </h2>

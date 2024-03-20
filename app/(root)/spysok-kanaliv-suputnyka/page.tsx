@@ -14,6 +14,7 @@ import StartArticleSection from '@/components/StartArticleSection/StartArticleSe
 import SatChannelsTable from '@/components/SatChannelsTable/SatChannelsTable';
 import FillingImg from '@/components/Images/FillingImage';
 import Link from 'next/link';
+import Fieldset from '@/components/Fieldset/Fieldset';
 
 export const metadata: Metadata = {
   title: META_ALL_SAT_CHANNEL_LIST.getTitle().ua,
@@ -48,13 +49,22 @@ export default async function SatNewsDatePage() {
           height={META_ALL_SAT_CHANNEL_LIST.h1ImageParams.height}
         />
       </Title>
-      <ul>
-        {satLinks.map((satLink) => (
-          <li key={satLink.slug}>
-            <Link href={`#${satLink.slug}`}>{satLink.title}</Link>
-          </li>
-        ))}
-      </ul>
+      <Fieldset legendText={'Швидке переміщення'}>
+        <nav className="text-center text-xl">
+          <ul>
+            {satLinks.map((satLink) => (
+              <li key={satLink.slug}>
+                <Link
+                  href={`#${satLink.slug}`}
+                  className="text-indigo-800 hover:text-red-500"
+                >
+                  {satLink.title}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      </Fieldset>
       <StartArticleSection>
         <DangerHtmlUl wrapperTagName="p" text={START_CONTENT} />
       </StartArticleSection>

@@ -1,6 +1,10 @@
 import TextButton from '../TextButton/TextButton';
 import styles from './FormDigestInterval.module.scss';
-import { LAST_NEWS_INTERVAL, digestIntervals } from '@/models/satDigest.model';
+import {
+  LAST_NEWS_INTERVAL,
+  META_TRANS_NEWS_LIST,
+  digestIntervals,
+} from '@/models/satDigest.model';
 import { Loader } from '../loaders/Loader';
 import { redirect } from 'next/navigation';
 import {
@@ -13,6 +17,7 @@ import {
 } from '@/controllers/satDigest.controller';
 import EmptyData from '../EmptyData/EmptyData';
 import { EUrlBaseParam, EUrlSearchParam } from '@/models/url.model';
+import Fieldset from '../Fieldset/Fieldset';
 
 interface IFormDigestIntervalProps {
   searchParams: { [key: string]: string | string[] | undefined };
@@ -52,49 +57,48 @@ const FormDigestInterval = async ({
       id="formDigestInterval"
       className={styles.FormDigestInterval}
     >
-      <fieldset className={styles.fieldset}>
-        <legend className={styles.legend}>
-          Виберіть супутники та проміжок часу
-        </legend>
+      <Fieldset legendText={META_TRANS_NEWS_LIST.fieldsetTitle.ua}>
+        <div className={styles.formWrapper}>
+          <div className={styles.selectsBlock}>
+            {groupedSats[1] ? (
+              <ReactSelectSat
+                defValue={groupedSats[0].options[0]}
+                groupedSats={groupedSats}
+              />
+            ) : (
+              <h2>
+                <Loader /> Loading...
+              </h2>
+            )}
 
-        <div className={styles.selectsBlock}>
-          {groupedSats[1] ? (
-            <ReactSelectSat
-              defValue={groupedSats[0].options[0]}
-              groupedSats={groupedSats}
-            />
-          ) : (
-            <h2>
-              <Loader /> Loading...
-            </h2>
-          )}
+            {digestIntervals[0] ? (
+              <ReactSelectInterval
+                defValue={
+                  digestIntervals.find(
+                    (interv) =>
+                      `${interv.value}` ===
+                      searchParams[EUrlSearchParam.INTERVAL]
+                  ) || digestIntervals[1]
+                }
+              />
+            ) : (
+              <h2>
+                <Loader /> Loading...
+              </h2>
+            )}
+          </div>
 
-          {digestIntervals[0] ? (
-            <ReactSelectInterval
-              defValue={
-                digestIntervals.find(
-                  (interv) =>
-                    `${interv.value}` === searchParams[EUrlSearchParam.INTERVAL]
-                ) || digestIntervals[1]
-              }
-            />
-          ) : (
-            <h2>
-              <Loader /> Loading...
-            </h2>
-          )}
+          <TextButton
+            type="submit"
+            id="submitBtn"
+            name="submitBtn"
+            value="Submit"
+            // aria-disabled={pending}
+          >
+            Submit
+          </TextButton>
         </div>
-
-        <TextButton
-          type="submit"
-          id="submitBtn"
-          name="submitBtn"
-          value="Submit"
-          // aria-disabled={pending}
-        >
-          Submit
-        </TextButton>
-      </fieldset>
+      </Fieldset>
     </form>
   );
 };

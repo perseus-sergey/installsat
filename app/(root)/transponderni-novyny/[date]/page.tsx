@@ -39,7 +39,7 @@ export default async function SatNewsDatePage({
 
   return (
     <TransNewsSingle
-      title={META_TRANS_NEWS_SINGLE.getH1(dateStr)}
+      title={`${META_TRANS_NEWS_SINGLE.getH1().ua}${dateStr}`}
       newsArray={newsArray}
     />
   );

@@ -1,18 +1,23 @@
 import TextButton from '../TextButton/TextButton';
 import styles from './FormDigestInterval.module.scss';
-import { LAST_NEWS_INTERVAL, digestIntervals } from '@/models/satDigest.model';
+import {
+  LAST_NEWS_INTERVAL,
+  META_TRANS_NEWS_LIST,
+  digestIntervals,
+} from '@/models/satDigest.model';
 import { Loader } from '../loaders/Loader';
 import { redirect } from 'next/navigation';
 import {
   ReactSelectInterval,
   ReactSelectSat,
 } from '../ReactSelect/ReactSelect';
-import { EUrlParam } from '@/models/url.model';
 import {
   getGroupedSatelliteOptions,
   getSatsForForm,
 } from '@/controllers/satDigest.controller';
 import EmptyData from '../EmptyData/EmptyData';
+import { EUrlBaseParam, EUrlSearchParam } from '@/models/url.model';
+import Fieldset from '../Fieldset/Fieldset';
 
 interface IFormDigestIntervalProps {
   searchParams: { [key: string]: string | string[] | undefined };
@@ -35,15 +40,14 @@ const FormDigestInterval = async ({
     const timeInterval = formData.get('timeInterval') || LAST_NEWS_INTERVAL;
 
     const urlSePar = new URLSearchParams();
-    if (timeInterval)
-      urlSePar.set(EUrlParam.SEARCH_PARAM_INTERVAL, `${timeInterval}`);
+    if (timeInterval) urlSePar.set(EUrlSearchParam.INTERVAL, `${timeInterval}`);
     if (selectSats && selectSats[0])
       selectSats.forEach((sat) =>
-        urlSePar.append(EUrlParam.SEARCH_PARAM_SAT, `${sat}`)
+        urlSePar.append(EUrlSearchParam.SAT, `${sat}`)
       );
 
     // revalidatePath('/');
-    redirect(`${EUrlParam.BASE_PATH}?${urlSePar.toString()}`);
+    redirect(`${EUrlBaseParam.BASE_PATH}?${urlSePar.toString()}`);
   }
 
   return (
@@ -53,50 +57,48 @@ const FormDigestInterval = async ({
       id="formDigestInterval"
       className={styles.FormDigestInterval}
     >
-      <fieldset className={styles.fieldset}>
-        <legend className={styles.legend}>
-          Виберіть супутники та проміжок часу
-        </legend>
+      <Fieldset legendText={META_TRANS_NEWS_LIST.fieldsetTitle.ua}>
+        <div className={styles.formWrapper}>
+          <div className={styles.selectsBlock}>
+            {groupedSats[1] ? (
+              <ReactSelectSat
+                defValue={groupedSats[0].options[0]}
+                groupedSats={groupedSats}
+              />
+            ) : (
+              <h2>
+                <Loader /> Loading...
+              </h2>
+            )}
 
-        <div className={styles.selectsBlock}>
-          {groupedSats[1] ? (
-            <ReactSelectSat
-              defValue={groupedSats[0].options[0]}
-              groupedSats={groupedSats}
-            />
-          ) : (
-            <h2>
-              <Loader /> Loading...
-            </h2>
-          )}
+            {digestIntervals[0] ? (
+              <ReactSelectInterval
+                defValue={
+                  digestIntervals.find(
+                    (interv) =>
+                      `${interv.value}` ===
+                      searchParams[EUrlSearchParam.INTERVAL]
+                  ) || digestIntervals[1]
+                }
+              />
+            ) : (
+              <h2>
+                <Loader /> Loading...
+              </h2>
+            )}
+          </div>
 
-          {digestIntervals[0] ? (
-            <ReactSelectInterval
-              defValue={
-                digestIntervals.find(
-                  (interv) =>
-                    `${interv.value}` ===
-                    searchParams[EUrlParam.SEARCH_PARAM_INTERVAL]
-                ) || digestIntervals[1]
-              }
-            />
-          ) : (
-            <h2>
-              <Loader /> Loading...
-            </h2>
-          )}
+          <TextButton
+            type="submit"
+            id="submitBtn"
+            name="submitBtn"
+            value="Submit"
+            // aria-disabled={pending}
+          >
+            Submit
+          </TextButton>
         </div>
-
-        <TextButton
-          type="submit"
-          id="submitBtn"
-          name="submitBtn"
-          value="Submit"
-          // aria-disabled={pending}
-        >
-          Submit
-        </TextButton>
-      </fieldset>
+      </Fieldset>
     </form>
   );
 };

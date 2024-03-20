@@ -27,8 +27,11 @@
   margin: 0;
 }
 
+html {
+  scroll-behavior: smooth !important;
+}
+
 body {
-  scroll-behavior: smooth;
   font-family: 'Times New Roman', Times, serif;
   color: #5a5a5a;
   // color: rgb(var(--foreground-rgb));
@@ -39,6 +42,7 @@ body {
   //   )
   //   rgb(var(--background-start-rgb));
   background: url('/images/black00001.gif');
+  background-color: #000000;
 }
 
 a {
@@ -49,7 +53,7 @@ a {
 .main {
   width: 95%;
   margin: 0 auto;
-  overflow: auto;
+  // overflow: auto;
   background-color: #03182d;
   border-radius: 10px;
   border: thin groove #cccccc;

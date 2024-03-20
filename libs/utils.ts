@@ -1,3 +1,11 @@
+export const cutText = (text: string, length: number) => {
+  const trimmedText = text.trim();
+
+  return trimmedText.length <= length
+    ? trimmedText
+    : `${text.slice(0, length).trim()} ...`;
+};
+
 export const createArray = (length: number) => [...Array(length)];
 
 export const arrayShift = <T>(array: T[][]): T[][] => {

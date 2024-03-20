@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from './SatNewsList.module.scss';
-import DangerHtmlUl from '../DangerHtmlUl/DangerHtmlUl';
+import DangerHtmlUl from '../DangerHtml/DangerHtml';
 import { getDate } from '@/libs/utils';
 import { LAST_NEWS_INTERVAL, TSatDigest } from '@/models/satDigest.model';
 import { TGroupedNews } from '../SatNews/SatNews';
@@ -94,7 +94,10 @@ const SatNewsList = async ({ searchParams }: ISatNewsListProps) => {
                 {`${getDate(satNews[0])} ....`}
               </h3>
               <div className={styles.newsList}>
-                <DangerHtmlUl text={getDailyNews(satNews[1])} />
+                <DangerHtmlUl
+                  text={getDailyNews(satNews[1])}
+                  wrapperTagName="ul"
+                />
               </div>
             </React.Fragment>
           );

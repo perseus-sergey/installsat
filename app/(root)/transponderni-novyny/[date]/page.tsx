@@ -5,7 +5,7 @@ import {
   singleDaySql,
 } from '@/controllers/satDigest.controller';
 import { getDate } from '@/libs/utils';
-import { META_TRANS_NEWS_SINGLE } from '@/models/meta.model';
+import { META_TRANS_NEWS_SINGLE } from '@/models/satDigest.model';
 import { notFound } from 'next/navigation';
 
 interface ISatNewsDatePageParams {
@@ -39,7 +39,7 @@ export default async function SatNewsDatePage({
 
   return (
     <TransNewsSingle
-      title={META_TRANS_NEWS_SINGLE.getH1(dateStr)}
+      title={`${META_TRANS_NEWS_SINGLE.getH1().ua}${dateStr}`}
       newsArray={newsArray}
     />
   );

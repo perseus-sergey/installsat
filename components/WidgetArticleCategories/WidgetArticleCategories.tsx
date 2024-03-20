@@ -4,6 +4,7 @@ import { articleCategoriesSql } from '@/controllers/sidebar.controller';
 import EmptyData from '../EmptyData/EmptyData';
 import Link from 'next/link';
 import { TCategories } from '@/models/tblCategories.model';
+import { WIDGET_ARTICLE_CATEGORY } from '@/models/widget.model';
 
 const WidgetArticleCategories = async () => {
   const articleCatWidgetList =
@@ -13,11 +14,8 @@ const WidgetArticleCategories = async () => {
   return (
     <ul className="sidebar-widget" data-testid="WidgetArticleCategories">
       <li className={styles.listItem}>
-        <Link
-          className={styles.itemLink}
-          href="/novosti-i-statji/transpondernye-novosti/"
-        >
-          Транспондерні новини
+        <Link className={styles.itemLink} href={WIDGET_ARTICLE_CATEGORY.href}>
+          {WIDGET_ARTICLE_CATEGORY.title.ua}
         </Link>
         <br />
       </li>
@@ -25,7 +23,7 @@ const WidgetArticleCategories = async () => {
         <li key={item.id} className={styles.listItem}>
           <Link
             className={styles.itemLink}
-            href={`/novosti-i-statji/${item.cpu}/`}
+            href={`${WIDGET_ARTICLE_CATEGORY.baseHrefOfList}/${item.cpu}/`}
           >
             {item.title}
           </Link>

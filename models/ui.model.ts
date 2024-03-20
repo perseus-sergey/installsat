@@ -34,6 +34,7 @@ export const IMG_PROPERTIES = {
 };
 
 export const BREADCRUMBS_SEPARATOR = '჻';
+export const SIDE_BAR_CLOSE_BTN = '⚔';
 
 export const MUITitles: TUITitle = new Map([
   [

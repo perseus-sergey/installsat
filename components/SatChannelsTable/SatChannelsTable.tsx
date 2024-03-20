@@ -3,7 +3,7 @@ import {
   MCompressionColors,
   META_ALL_SAT_CHANNEL_LIST,
   META_SAT_CHANNEL_LIST,
-  TOOLTIP_TITLES,
+  CHANNEL_TOOLTIP_TITLES,
   TSatChannelListModel,
 } from '@/models/satChannelList.model';
 import styles from './SatChannelsTable.module.scss';
@@ -65,22 +65,23 @@ const FrequencySegment = ({
               <div className="py-2.5 px-5">
                 <ul>
                   <li>
-                    {TOOLTIP_TITLES.name.ua}:{' '}
+                    {CHANNEL_TOOLTIP_TITLES.name.ua}:{' '}
                     <strong>{satChannel.title}</strong>
                   </li>
                   <li>
-                    {TOOLTIP_TITLES.genre.ua}: <strong>{satChannel.tem}</strong>
+                    {CHANNEL_TOOLTIP_TITLES.genre.ua}:{' '}
+                    <strong>{satChannel.tem}</strong>
                   </li>
                   <li>
-                    {TOOLTIP_TITLES.language.ua}:{' '}
+                    {CHANNEL_TOOLTIP_TITLES.language.ua}:{' '}
                     <strong>{satChannel.lan}</strong>
                   </li>
                   <li>
-                    {TOOLTIP_TITLES.description.ua}:{' '}
+                    {CHANNEL_TOOLTIP_TITLES.description.ua}:{' '}
                     <strong>{cutText(satChannel.description, 100)}</strong>
                   </li>
                   <li>
-                    {TOOLTIP_TITLES.name.ua}:{' '}
+                    {CHANNEL_TOOLTIP_TITLES.name.ua}:{' '}
                     <strong>{satChannel.compr}</strong>
                   </li>
                 </ul>
@@ -131,26 +132,36 @@ const SatChannelsTable = ({ satChannels }: ISatChannelsTableProps) => (
         <>
           {satChannels.length > 1 && (
             <h2 key={i} className={styles.satTitle} id={sat[0][0].sat_slug}>
-              <TooltipSimple tooltipText="На початок сторінки">
+              <TooltipSimple
+                tooltipText={
+                  META_ALL_SAT_CHANNEL_LIST.anchors.goUpLink.title.ua
+                }
+              >
                 <Link
                   href={`/${EUrlBaseParam.SAT_CHANNEL_LIST}`}
-                  title="Угору"
+                  title={META_ALL_SAT_CHANNEL_LIST.anchors.goUpLink.title.ua}
                   className={styles.goUpLink}
                 >
-                  ⇧
+                  {META_ALL_SAT_CHANNEL_LIST.anchors.goUpLink.img}
                 </Link>
               </TooltipSimple>
-              <TooltipSimple tooltipText={'Дивитись мапи покриття супутника'}>
+              <TooltipSimple
+                tooltipText={
+                  META_ALL_SAT_CHANNEL_LIST.links.satTitleLink.tooltipTitle.ua
+                }
+              >
                 <Link
                   className={styles.satTitleLink}
-                  href={`/${EUrlBaseParam.SAT_COVERAGE_MAP}/${sat[0][0].sat_slug}`}
+                  href={`${META_ALL_SAT_CHANNEL_LIST.links.satTitleLink.linkUrl}/${sat[0][0].sat_slug}`}
                 >
                   {`${sat[0][0].sat_title} - ${sat[0][0].sat_position}`}
                   {h1ImagePath ? (
                     <FillingImg
-                      width={META_ALL_SAT_CHANNEL_LIST.satTitleImgParams.width}
+                      width={
+                        META_ALL_SAT_CHANNEL_LIST.image.satTitleImgParams.width
+                      }
                       height={
-                        META_ALL_SAT_CHANNEL_LIST.satTitleImgParams.height
+                        META_ALL_SAT_CHANNEL_LIST.image.satTitleImgParams.height
                       }
                       src={h1ImagePath}
                       alt={`${META_SAT_CHANNEL_LIST.h1SatImage.alt.ua} ${sat[0][0].sat_title}`}

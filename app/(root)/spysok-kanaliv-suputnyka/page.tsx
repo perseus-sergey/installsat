@@ -43,13 +43,13 @@ export default async function SatNewsDatePage() {
       >
         {META_ALL_SAT_CHANNEL_LIST.getH1().ua}
         <FillingImg
-          src={META_ALL_SAT_CHANNEL_LIST.h1ImageParams.path}
-          alt={META_ALL_SAT_CHANNEL_LIST.h1ImageParams.alt.ua}
-          width={META_ALL_SAT_CHANNEL_LIST.h1ImageParams.width}
-          height={META_ALL_SAT_CHANNEL_LIST.h1ImageParams.height}
+          src={META_ALL_SAT_CHANNEL_LIST.image.h1ImageParams.path}
+          alt={META_ALL_SAT_CHANNEL_LIST.image.h1ImageParams.alt.ua}
+          width={META_ALL_SAT_CHANNEL_LIST.image.h1ImageParams.width}
+          height={META_ALL_SAT_CHANNEL_LIST.image.h1ImageParams.height}
         />
       </Title>
-      <Fieldset legendText={'Швидке переміщення'}>
+      <Fieldset legendText={META_ALL_SAT_CHANNEL_LIST.anchors.legendTitle.ua}>
         <nav className="text-center text-xl">
           <ul>
             {satLinks.map((satLink) => (

@@ -1,4 +1,5 @@
 import { ILang } from './ui.model';
+import { EUrlBaseParam } from './url.model';
 
 export const META_SAT_CHANNEL_LIST = {
   getH1(satTitle: string) {
@@ -60,19 +61,43 @@ export const META_ALL_SAT_CHANNEL_LIST = {
       en: 'List of channels with program guides available for free viewing from the most popular satellites without any obligations or subscription fees',
     };
   },
-  satTitleImgParams: {
-    height: '60px',
-    width: '80px',
+  anchors: {
+    legendTitle: {
+      ua: 'Швидке переміщення',
+      en: 'Fast moving',
+    },
+    goUpLink: {
+      title: {
+        ua: 'На початок',
+        en: 'Go to top',
+      },
+      img: '⇧',
+    },
   },
-  h1ImageParams: {
-    path: '/images/packages/money_free.jpg',
-    defaultImage: '/images/satellite_7144.png',
-    alternativeSymbol: '🛰',
-    height: '150px',
-    width: '239px',
-    alt: {
-      ua: 'Безкоштовні канали популярних супутників',
-      en: 'Free channels of popular satellites',
+  links: {
+    satTitleLink: {
+      tooltipTitle: {
+        ua: 'Дивитись мапи покриття супутника',
+        en: 'See satellite coverage maps',
+      },
+      linkUrl: `/${EUrlBaseParam.SAT_COVERAGE_MAP}`,
+    },
+  },
+  image: {
+    satTitleImgParams: {
+      height: '60px',
+      width: '80px',
+    },
+    h1ImageParams: {
+      path: '/images/packages/money_free.jpg',
+      defaultImage: '/images/satellite_7144.png',
+      alternativeSymbol: '🛰',
+      height: '150px',
+      width: '239px',
+      alt: {
+        ua: 'Безкоштовні канали популярних супутників',
+        en: 'Free channels of popular satellites',
+      },
     },
   },
 };
@@ -136,7 +161,7 @@ export const MChanTheme = new Map([
 ]);
 // 656D7D
 
-export const TOOLTIP_TITLES = {
+export const CHANNEL_TOOLTIP_TITLES = {
   name: { ua: 'Назва', en: 'Name' },
   genre: { ua: 'Жанр', en: 'Genre' },
   language: { ua: 'Мова', en: 'Language' },

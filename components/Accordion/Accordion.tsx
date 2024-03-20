@@ -8,7 +8,7 @@ import {
 } from '@/controllers/sidebar.controller';
 import Link from 'next/link';
 import { AccordionMenuItem } from '../AccordionMenuItem/AccordionMenuItem';
-import { MENU_ACCORDION } from '@/models/menuAccordion.model';
+import { ADDED_ITEMS, MENU_ACCORDION } from '@/models/menuAccordion.model';
 
 const Accordion = async () => {
   const installationsList = await getInstallationsList();
@@ -64,6 +64,14 @@ const Accordion = async () => {
         </AccordionMenuItem>
         <AccordionMenuItem language="ua" options={MENU_ACCORDION.PACKAGES}>
           <ul className={styles.accordionContent}>
+            <li className={styles.contentItem}>
+              <Link
+                href={ADDED_ITEMS.freeChannels.link}
+                className={styles.contentItemLink}
+              >
+                {ADDED_ITEMS.freeChannels.title.ua}
+              </Link>
+            </li>
             {channelCatList.map((item) => (
               <li key={item.id} className={styles.contentItem}>
                 <Link

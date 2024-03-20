@@ -101,3 +101,13 @@ export const MENU_ACCORDION: { [key: string]: IAccordionItemOptions } = {
     // titleHref: '/spisok-online-kanalov/vse-tv/',
   },
 };
+
+export const ADDED_ITEMS = {
+  freeChannels: {
+    title: {
+      ua: 'Безкоштовні',
+      en: 'Free channels',
+    },
+    link: `/${EUrlBaseParam.SAT_CHANNEL_LIST}`,
+  },
+};

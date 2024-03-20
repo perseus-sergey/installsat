@@ -1,9 +1,9 @@
 import { EUITitles, MUITitles } from '@/models/ui.model';
 import styles from './NotFoundPage.module.scss';
 import Link from 'next/link';
-import { EUrlParam } from '@/models/url.model';
 import { Title } from '../Title/Title';
 import Image from 'next/image';
+import { EUrlBaseParam } from '@/models/url.model';
 
 const NotFoundPage = () => (
   <div className={styles.NotFoundPage} data-testid="NotFoundPage">
@@ -13,7 +13,7 @@ const NotFoundPage = () => (
     <p className="text-center font-bold text-xl">
       {MUITitles.get(EUITitles.NOT_FOUND_DESCRIPTION)?.ua}
     </p>
-    <Link href={EUrlParam.BASE_PATH} className={styles.linkWrapper}>
+    <Link href={EUrlBaseParam.BASE_PATH} className={styles.linkWrapper}>
       <Image
         className=""
         src="/images/InstallsatOrig_400.png"

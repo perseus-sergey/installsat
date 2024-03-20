@@ -15,6 +15,27 @@ export enum EUITitles {
 
 type TUITitle = Map<EUITitles, ILang>;
 
+export const IMG_PROPERTIES = {
+  defaultImgBlur: '/images/1blur.gif',
+  channelLogo: {
+    big: {
+      path: '/images/channelsOptimized/',
+      defaultImage: '/images/1not_found_chan.png',
+      height: '99px',
+      width: '132px',
+    },
+    small: {
+      path: '/images/channel_55/',
+      defaultImage: '/images/1not_found_chan.png',
+      height: '42px',
+      width: '55px',
+    },
+  },
+};
+
+export const BREADCRUMBS_SEPARATOR = '჻';
+export const SIDE_BAR_CLOSE_BTN = '⚔';
+
 export const MUITitles: TUITitle = new Map([
   [
     EUITitles.ERROR_EMPTY_DATA,

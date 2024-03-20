@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
-import { META_TRANS_NEWS_LIST } from '@/models/meta.model';
 import React from 'react';
 import SideBar from '@/components/SideBar/SideBar';
-import { SITE_BASE_URL } from '@/models/url.model';
+import { EUrlBaseParam, SITE_BASE_URL } from '@/models/url.model';
+import { META_TRANS_NEWS_LIST } from '@/models/satDigest.model';
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_BASE_URL),
@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   description: META_TRANS_NEWS_LIST.getDescription(),
   keywords: META_TRANS_NEWS_LIST.getKeywords(),
   alternates: {
-    canonical: '/',
+    canonical: EUrlBaseParam.BASE_PATH,
   },
 };
 

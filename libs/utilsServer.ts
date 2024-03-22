@@ -1,3 +1,4 @@
+import { IImgParams } from '@/models/ui.model';
 import fs from 'fs';
 import path from 'path';
 
@@ -12,15 +13,30 @@ const changeExtToGif = (path: string) => {
 };
 
 export const imagePathValidate = (
-  imgPath: string,
-  alternativePath: string,
+  img: IImgParams,
+  alternativeString: string,
+  alternativeImg?: IImgParams,
   isChangeToGif = false
-): string | null => {
-  const path = isChangeToGif ? changeExtToGif(imgPath) : imgPath;
+): IImgParams | string => {
+  const path = isChangeToGif ? changeExtToGif(img.src) : img.src;
 
   return isFileExists(path)
-    ? path
-    : isFileExists(alternativePath)
-      ? alternativePath
-      : null;
+    ? { ...img, src: path }
+    : alternativeImg && isFileExists(alternativeImg.src)
+      ? alternativeImg
+      : alternativeString;
 };
+
+// export const imagePathValidate = (
+//   imgPath: string,
+//   alternativePath: string,
+//   isChangeToGif = false
+// ): string | null => {
+//   const path = isChangeToGif ? changeExtToGif(imgPath) : imgPath;
+
+//   return isFileExists(path)
+//     ? path
+//     : isFileExists(alternativePath)
+//       ? alternativePath
+//       : null;
+// };

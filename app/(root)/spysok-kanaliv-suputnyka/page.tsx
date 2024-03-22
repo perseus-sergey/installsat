@@ -37,10 +37,7 @@ export default async function SatNewsDatePage() {
 
   return (
     <>
-      <Title
-        className="flex items-center justify-around gap-4 flex-wrap"
-        style={{ borderBottom: '2px groove' }}
-      >
+      <Title style={{ borderBottom: '2px groove' }}>
         {META_ALL_SAT_CHANNEL_LIST.getH1().ua}
         <FillingImg
           src={META_ALL_SAT_CHANNEL_LIST.image.h1ImageParams.path}

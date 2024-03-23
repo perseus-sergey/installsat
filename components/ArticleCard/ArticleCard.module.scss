@@ -1,6 +1,6 @@
 .ArticleCard {
   margin-bottom: 1rem;
-  box-shadow: 1px 1px 4px;
+  box-shadow: 2px 2px 5px #999999;
 }
 
 .h2Title {
@@ -9,7 +9,6 @@
   gap: 1rem;
   font-family: Verdana, Geneva, sans-serif;
   color: #000099;
-  text-align: center;
   font-size: 1.2rem;
   font-weight: bold;
   padding: 1rem 0.5rem;
@@ -20,6 +19,7 @@
 
 .descriptionWrapper {
   display: flex;
+  padding-bottom: 1rem;
 }
 
 .text,

@@ -1,7 +1,17 @@
 import { executeQuery } from '@/libs/db/mysqldb';
-import { IAllNewsModel } from '@/models/articles.model';
+import {
+  IAllNewsModel,
+  ISingleCatArticlesModel,
+} from '@/models/articles.model';
+import { cache } from 'react';
 
-export const getChunkOfAllNews = async (quantity: number, start = 0) => {
+export const getChunkOfNews = async (
+  quantity: number,
+  start = 0,
+  catId?: number
+) => {
+  const catValue = catId ? `=${catId}` : 'NOT IN (2,8,0,12,13)';
+
   const sql = `
 SELECT 
     U.id,
@@ -35,13 +45,13 @@ CROSS JOIN
      FROM 
          tbl_useful 
      WHERE 
-         cat NOT IN (2,8,0,12)) T
+         cat ${catValue}) T
 LEFT JOIN
     tbl_categories C2
 ON
     U.cat = C2.id
 WHERE 
-    U.cat NOT IN (2,8,0,12)
+    U.cat ${catValue}
 ORDER BY 
     U.date DESC, U.id 
 LIMIT ?, ?
@@ -73,9 +83,11 @@ LIMIT ?, ?
 // SELECT id,title, cpu FROM tbl_categories WHERE id != 2 AND id!=12 AND title!=''
 // `;
 
-// export const getInstallationsList = cache(
-//   async () => await executeQuery<TInstallationsModel>(installationsSql)
-// );
+export const getArticleCatList = cache(async () => {
+  const sql = `SELECT id, title, cpu, description, text FROM tbl_categories WHERE id NOT IN (2,8,0,12,13)`;
+
+  return await executeQuery<ISingleCatArticlesModel>(sql);
+});
 
 // export const getChannelCatList = cache(
 //   async () => await executeQuery<TChannelCatsModel>(channelCatsSql)

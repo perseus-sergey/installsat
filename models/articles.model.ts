@@ -4,12 +4,12 @@ import { EUrlBaseParam } from './url.model';
 export const ARTICLES = {
   article: {
     meta: {
-      getH1(date: string) {
-        return {
-          ua: `Останні новини ТБ, статті та огляди на ${date}`,
-          en: `Latest TV news, articles and reviews as of ${date}`,
-        };
-      },
+      // getH1(date: string) {
+      //   return {
+      //     ua: `Останні новини ТБ, статті та огляди на ${date}`,
+      //     en: `Latest TV news, articles and reviews as of ${date}`,
+      //   };
+      // },
       getTitle() {
         return {
           ua: 'Останні новини та статті про цифрове телебачення',
@@ -39,8 +39,8 @@ export const ARTICLES = {
         alternativeStr: { title: '🎞', fontSize: '6rem' },
         getAlt() {
           return {
-            ua: `Логотип до статті: ${ARTICLES.article.meta.getTitle().ua}`,
-            en: `Logo for article: ${ARTICLES.article.meta.getTitle().en}`,
+            ua: `Логотип до статті: `,
+            en: `Logo for article: `,
           };
         },
       },
@@ -93,6 +93,43 @@ export const ARTICLES = {
         path: `/${EUrlBaseParam.ARTICLE}/`,
       },
     },
+    articlesCountCaption: {
+      en: 'Number of articles in this category: ',
+      ua: 'Кількість статей в цієї категорії: ',
+    },
+  },
+  articleSingleCatList: {
+    meta: {
+      getH1(date: string, title: string) {
+        return {
+          ua: `${title} на ${date}`,
+          en: `${title} as of ${date}`,
+        };
+      },
+    },
+    images: {
+      h1Image: {
+        src: '/images/articles/all_news_64.png',
+        height: '64px',
+        width: '64px',
+        alternativeStr: { title: '📰', fontSize: '6rem' },
+        alt: {
+          ua: 'Новини та статті про цифрове телебачення',
+          en: 'News and articles about digital television',
+        },
+      },
+      titleImg: {
+        src: '/images/articles/package_network_4729.png',
+        height: '32px',
+        width: '32px',
+        alternativeStr: { title: '🌎', fontSize: '2rem' },
+      },
+    },
+    links: {
+      articleLink: {
+        path: `/${EUrlBaseParam.ARTICLE}/`,
+      },
+    },
   },
 };
 
@@ -112,6 +149,14 @@ export interface IAllNewsModel {
   total_count: number;
   category_title: string;
   category_cpu: string;
+}
+
+export interface ISingleCatArticlesModel {
+  id: number;
+  title: string;
+  description: string;
+  cpu: string;
+  text: string;
 }
 
 // export const MChanTheme = new Map([

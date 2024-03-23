@@ -12,6 +12,10 @@
   display: flex;
   gap: 0.5rem;
 
+  .infoPanelItem {
+    text-align: center;
+  }
+
   .itemValue {
     display: inline-block;
     color: #ffffff;

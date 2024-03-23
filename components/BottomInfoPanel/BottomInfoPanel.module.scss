@@ -1,0 +1,19 @@
+.BottomInfoPanel {
+  background: linear-gradient(
+    to bottom,
+    rgb(30, 87, 153) 20%,
+    rgb(2, 118, 214) 50%,
+    rgb(30, 87, 153) 80%
+  );
+  color: #cccccc;
+  font-family: Verdana, Tahoma, Arial, Sans-Serif;
+  font-size: 0.7rem;
+  padding: 0.3rem 1rem;
+  display: flex;
+  gap: 0.5rem;
+
+  .itemValue {
+    display: inline-block;
+    color: #ffffff;
+  }
+}

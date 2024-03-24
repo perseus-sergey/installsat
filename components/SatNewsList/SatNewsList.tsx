@@ -2,45 +2,36 @@ import React from 'react';
 import styles from './SatNewsList.module.scss';
 import DangerHtmlUl from '../DangerHtml/DangerHtml';
 import { getDate } from '@/libs/utils';
-import { LAST_NEWS_INTERVAL, TSatDigest } from '@/models/satDigest.model';
-import { TGroupedNews } from '../SatNews/SatNews';
-import Image from 'next/image';
+import {
+  LAST_NEWS_INTERVAL,
+  META_TRANS_NEWS_LIST,
+  TSatDigest,
+} from '@/models/satDigest.model';
 import { executeQuery } from '@/libs/db/mysqldb';
-import { makeDigestSql } from '@/controllers/satDigest.controller';
+import {
+  getDailyNews,
+  makeDigestSql,
+  setGroupedNewsBySatMap,
+} from '@/controllers/satDigest.controller';
 import EmptyData from '../EmptyData/EmptyData';
+import FillingValidImage from '../Images/FillingValidImage';
 
 interface ISatNewsListProps {
   searchParams: { [key: string]: string | string[] | undefined };
 }
 
-const getSatLogoName = (map: Map<string, TSatDigest[]>): string => {
-  const m = map.get([...map.keys()][0]);
-  if (!m) return 'wrong_sat.png';
+// const getSatLogoName = (map: Map<string, TSatDigest[]>): string => {
+//   const m = map.get([...map.keys()][0]);
+//   if (!m) return 'wrong_sat.png';
 
-  return m[0].satLogo || 'wrong_sat.png';
-};
+//   return m[0].satLogo || 'wrong_sat.png';
+// };
 
-const setGroupedNewsBySatMap = (news: TSatDigest[]): TGroupedNews =>
-  Array.from(
-    news.reduce((acc, currObj) => {
-      const strCurrDate = `${currObj.date}`;
-      const satTitle = `${currObj.satTitle} ${currObj.satPosition}`;
-
-      const mapCurrSat = acc.get(satTitle) || new Map();
-      const newsArrForCurrDate = mapCurrSat.get(strCurrDate) || [];
-      mapCurrSat.set(strCurrDate, [...newsArrForCurrDate, currObj]);
-      acc.set(satTitle, mapCurrSat);
-
-      return acc;
-    }, new Map())
-  );
-
-export const getDailyNews = (newsArray: TSatDigest[]) =>
-  newsArray.reduce((acc, curr) => curr.text + acc, '');
-
-const SatNewsList = async ({ searchParams }: ISatNewsListProps) => {
-  const selectSats = searchParams.sat as string[];
-  const timeInterval = searchParams.interval || LAST_NEWS_INTERVAL;
+const SatNewsList = async ({
+  searchParams: { sat, interval },
+}: ISatNewsListProps) => {
+  const selectSats = sat as string[];
+  const timeInterval = interval || LAST_NEWS_INTERVAL;
   let orderBy = '';
   let inSatList = '';
   let tblName = 'tbl_digest';
@@ -73,14 +64,16 @@ const SatNewsList = async ({ searchParams }: ISatNewsListProps) => {
     return (
       <div className={styles.newsBlock} key={news[0]}>
         <h2 className={styles.groupTitle}>
-          <Image
-            className={styles.satImg}
-            src={`/images/satellites/${getSatLogoName(news[1])}`}
-            alt={`логотип супутника ${news[0]}`}
-            width={67}
-            height={50}
-            // width={132}
-            // height={99}
+          <FillingValidImage
+            image={{
+              ...META_TRANS_NEWS_LIST.images.satLogo,
+              src: `${META_TRANS_NEWS_LIST.images.satLogo.path}${news[1].get([...news[1].keys()][0])?.[0].satLogo}`,
+            }}
+            defaultImage={META_TRANS_NEWS_LIST.images.satLogo.defaultImg}
+            alternativeImgString={
+              META_TRANS_NEWS_LIST.images.satLogo.alternativeStr
+            }
+            alt={`${META_TRANS_NEWS_LIST.images.satLogo.alt.ua}${news[0]}`}
           />
           <div>
             Новини супутника{' '}

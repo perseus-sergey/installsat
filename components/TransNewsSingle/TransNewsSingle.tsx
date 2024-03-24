@@ -3,9 +3,9 @@ import { Title } from '../Title/Title';
 import satNewsStyles from '../SatNewsList/SatNewsList.module.scss';
 import React from 'react';
 import DangerHtmlUl from '../DangerHtml/DangerHtml';
-import { getDailyNews } from '../SatNewsList/SatNewsList';
 import { TSatDigest } from '@/models/satDigest.model';
 import Image from 'next/image';
+import { getDailyNews } from '@/controllers/satDigest.controller';
 
 interface ITransNewsSingleProps {
   newsArray: [string, TSatDigest[]][];

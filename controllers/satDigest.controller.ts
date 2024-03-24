@@ -105,6 +105,24 @@ export const setGroupedNewsByDateMap = async (): Promise<
   );
 };
 
+export const setGroupedNewsBySatMap = (news: TSatDigest[]): TGroupedNews =>
+  Array.from(
+    news.reduce((acc, currObj) => {
+      const strCurrDate = `${currObj.date}`;
+      const satTitle = `${currObj.satTitle} ${currObj.satPosition}`;
+
+      const mapCurrSat = acc.get(satTitle) || new Map();
+      const newsArrForCurrDate = mapCurrSat.get(strCurrDate) || [];
+      mapCurrSat.set(strCurrDate, [...newsArrForCurrDate, currObj]);
+      acc.set(satTitle, mapCurrSat);
+
+      return acc;
+    }, new Map())
+  );
+
+export const getDailyNews = (newsArray: TSatDigest[]) =>
+  newsArray.reduce((acc, curr) => curr.text + acc, '');
+
 export const getGroupedSatelliteOptions = ([
   eastSats,
   westSats,

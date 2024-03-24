@@ -27,6 +27,23 @@ export const META_TRANS_NEWS_LIST = {
     ua: 'Виберіть супутники та проміжок часу',
     en: 'Select satellites and time slot',
   },
+  images: {
+    satLogo: {
+      path: '/images/satellites/',
+      height: '50px',
+      width: '67px',
+      defaultImg: {
+        src: '/images/satellites/wrong_sat_64.png',
+        height: '64px',
+        width: '64px',
+      },
+      alternativeStr: { title: '🌏', fontSize: '4rem' },
+      alt: {
+        ua: `Логотип супутника `,
+        en: `Satellite logo `,
+      },
+    },
+  },
 };
 
 export const META_TRANS_NEWS_SINGLE = {

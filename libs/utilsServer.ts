@@ -2,8 +2,17 @@ import { IImgParams } from '@/models/ui.model';
 import fs from 'fs';
 import path from 'path';
 
-export const isFileExists = (filePath: string): boolean =>
-  fs.existsSync(path.join(process.cwd(), 'public', filePath));
+export const isFileExists = (filePath: string): boolean => {
+  const fullPath = path.join(process.cwd(), 'public', filePath);
+
+  try {
+    const stats = fs.statSync(fullPath);
+
+    return stats.isFile();
+  } catch (error) {
+    return false;
+  }
+};
 
 const changeExtToGif = (path: string) => {
   const splitted = path.split('.').reverse();

@@ -1,9 +1,6 @@
 import EmptyData from '@/components/EmptyData/EmptyData';
 import TransNewsSingle from '@/components/TransNewsSingle/TransNewsSingle';
-import {
-  getTransNewsForSingleDay,
-  singleDaySql,
-} from '@/controllers/satDigest.controller';
+import { getTransNewsForSingleDay } from '@/controllers/satDigest.controller';
 import { getDate } from '@/libs/utils';
 import { META_TRANS_NEWS_SINGLE } from '@/models/satDigest.model';
 import { notFound } from 'next/navigation';
@@ -26,11 +23,11 @@ export const generateMetadata = async ({
 };
 
 export default async function SatNewsDatePage({
-  params,
+  params: { date },
 }: ISatNewsDatePageParams) {
-  const newsArray = await getTransNewsForSingleDay(params.date, singleDaySql);
+  const newsArray = await getTransNewsForSingleDay(date);
 
-  const dateStr = getDate(params.date);
+  const dateStr = getDate(date);
 
   if (!dateStr) notFound();
 

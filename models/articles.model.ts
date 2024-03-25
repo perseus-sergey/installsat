@@ -93,6 +93,10 @@ export const ARTICLES = {
         path: `/${EUrlBaseParam.ARTICLE}/`,
       },
     },
+    pagination: {
+      perPage: 20,
+      offsetNumber: 3,
+    },
     articlesCountCaption: {
       en: 'Number of articles in this category: ',
       ua: 'Кількість статей в цієї категорії: ',

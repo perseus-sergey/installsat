@@ -15,6 +15,8 @@ import ArticleList from '@/components/ArticleList/ArticleList';
 import { notFound } from 'next/navigation';
 import Pagination from '@/components/Pagination/Pagination';
 
+export const dynamic = 'force-dynamic';
+
 export interface ISatChannelListParams {
   params: { cat: string };
   searchParams: { [key: string]: string | string[] | undefined };

@@ -23,9 +23,30 @@ export const META_TRANS_NEWS_LIST = {
   getDescription() {
     return 'Транспондерні новини популярних супутників за обраний період часу';
   },
+  h2start: {
+    en: 'News of the satellite ',
+    ua: 'Новини супутника ',
+  },
   fieldsetTitle: {
     ua: 'Виберіть супутники та проміжок часу',
     en: 'Select satellites and time slot',
+  },
+  images: {
+    satLogo: {
+      path: '/images/satellites/',
+      height: '50px',
+      width: '67px',
+      defaultImg: {
+        src: '/images/satellites/wrong_sat_64.png',
+        height: '64px',
+        width: '64px',
+      },
+      alternativeStr: { title: '🌏', fontSize: '4rem' },
+      alt: {
+        ua: `Логотип супутника `,
+        en: `Satellite logo `,
+      },
+    },
   },
 };
 

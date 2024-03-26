@@ -3,37 +3,60 @@ import { executeQuery } from '@/libs/db/mysqldb';
 import { IGroupedSatelliteOption, TSatModel } from '@/models/tblSat.model';
 import { LAST_NEWS_INTERVAL, TSatDigest } from '@/models/satDigest.model';
 
-export const singleDaySql = `
-SELECT d.date, d.text, d.id,
-	sat.parent AS satPar,
-	sat.title AS satTitle,
-	sat.logo AS satLogo,
-	sat.grade AS satGrade,
-	sat.position AS satPosition
-	FROM tbl_digest AS d
-	LEFT JOIN tbl_chan_sat AS sat ON d.sat = sat.id
-	WHERE date = ?
-	ORDER BY satGrade, satTitle
-`;
+// export const singleDaySql = `
+// SELECT d.date, d.text, d.id,
+// 	sat.parent AS satPar,
+// 	sat.title AS satTitle,
+// 	sat.logo AS satLogo,
+// 	sat.grade AS satGrade,
+// 	sat.position AS satPosition
+// 	FROM tbl_digest AS d
+// 	LEFT JOIN tbl_chan_sat AS sat ON d.sat = sat.id
+// 	WHERE date = ?
+// 	ORDER BY satGrade, satTitle
+// `;
 
-export const makeDigestSql = (
-  tblName: string,
-  where: string,
-  inSatList: string,
-  orderBy: string
-) => `
-  SELECT d.id, d.date, d.text,
-  sat.parent AS satParent,
-  sat.title AS satTitle,
-  sat.logo AS satLogo,
-  sat.grade AS satGrade,
-  sat.position AS satPosition
-  FROM ${tblName} AS d
-  LEFT JOIN tbl_chan_sat AS sat ON d.sat = sat.id
-  ${where}
-  ${inSatList}
-  ${orderBy}
-`;
+export const getSatDigestNews = async (
+  satellites?: string | string[] | undefined,
+  timeInterval = 0
+) => {
+  let orderBy = 'ORDER BY d.date DESC, satGrade, satTitle';
+  let tblName = 'tbl_digest';
+  let where = '';
+  let inSatList = `WHERE d.date >= CURDATE() - INTERVAL ${LAST_NEWS_INTERVAL} DAY`;
+
+  if (timeInterval) {
+    orderBy = 'ORDER BY satGrade, satTitle, d.date DESC';
+    if (timeInterval > 180) {
+      if (timeInterval !== new Date().getFullYear())
+        tblName += `_${timeInterval}`;
+    } else {
+      where = `WHERE date >= CURDATE() - INTERVAL ${timeInterval} DAY`;
+    }
+  }
+
+  if (satellites && satellites[0]) {
+    const selectedSats =
+      typeof satellites === 'string' ? satellites : satellites.join('","');
+    inSatList = `AND sat.grade IN ("${selectedSats}")`;
+  }
+
+  const sql = `
+    SELECT d.id, d.date, d.text,
+    sat.parent AS satParent,
+    sat.title AS satTitle,
+    sat.logo AS satLogo,
+    sat.grade AS satGrade,
+    sat.position AS satPosition
+    FROM ${tblName} AS d
+    LEFT JOIN tbl_chan_sat AS sat ON d.sat = sat.id
+    ${where}
+    ${inSatList}
+    ${orderBy}
+  `;
+
+  return await executeQuery<TSatDigest>(sql, []);
+};
 
 export const satSql = `
   SELECT title, id, position, grade
@@ -41,13 +64,6 @@ export const satSql = `
   WHERE title!=''
   ORDER BY grade
 `;
-
-export const initNewsSql = makeDigestSql(
-  'tbl_digest',
-  'WHERE d.date >= CURDATE() - INTERVAL ? DAY',
-  '',
-  'ORDER BY d.date DESC, satGrade, satTitle'
-);
 
 export const getSatsForForm = async () => {
   const satResult = await executeQuery<TSatModel>(satSql);
@@ -65,10 +81,21 @@ export const getSatsForForm = async () => {
 };
 
 export const getTransNewsForSingleDay = async (
-  date: string,
-  singleDaySql: string
+  date: string
 ): Promise<[string, TSatDigest[]][] | Error> => {
-  const newsResult = await executeQuery<TSatDigest>(singleDaySql, [date]);
+  const sql = `
+  SELECT d.date, d.text, d.id,
+	sat.parent AS satPar,
+	sat.title AS satTitle,
+	sat.logo AS satLogo,
+	sat.grade AS satGrade,
+	sat.position AS satPosition
+	FROM tbl_digest AS d
+	LEFT JOIN tbl_chan_sat AS sat ON d.sat = sat.id
+	WHERE date = ?
+	ORDER BY satGrade, satTitle
+`;
+  const newsResult = await executeQuery<TSatDigest>(sql, [date]);
 
   if (newsResult instanceof Error) return newsResult;
 
@@ -86,9 +113,7 @@ export const getTransNewsForSingleDay = async (
 export const setGroupedNewsByDateMap = async (): Promise<
   TGroupedNews | Error
 > => {
-  const newsResult = await executeQuery<TSatDigest>(initNewsSql, [
-    `${LAST_NEWS_INTERVAL}`,
-  ]);
+  const newsResult = await getSatDigestNews();
 
   if (newsResult instanceof Error) return newsResult;
 
@@ -104,6 +129,24 @@ export const setGroupedNewsByDateMap = async (): Promise<
     }, new Map())
   );
 };
+
+export const setGroupedNewsBySatMap = (news: TSatDigest[]): TGroupedNews =>
+  Array.from(
+    news.reduce((acc, currObj) => {
+      const strCurrDate = `${currObj.date}`;
+      const satTitle = `${currObj.satTitle} ${currObj.satPosition}`;
+
+      const mapCurrSat = acc.get(satTitle) || new Map();
+      const newsArrForCurrDate = mapCurrSat.get(strCurrDate) || [];
+      mapCurrSat.set(strCurrDate, [...newsArrForCurrDate, currObj]);
+      acc.set(satTitle, mapCurrSat);
+
+      return acc;
+    }, new Map())
+  );
+
+export const getDailyNews = (newsArray: TSatDigest[]) =>
+  newsArray.reduce((acc, curr) => curr.text + acc, '');
 
 export const getGroupedSatelliteOptions = ([
   eastSats,

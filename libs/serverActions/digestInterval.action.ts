@@ -1,13 +1,8 @@
 'use server';
 
-import {
-  TSatDigest,
-  LAST_NEWS_INTERVAL,
-  rawSatDigest,
-} from '@/models/satDigest.model';
-import { executeQuery } from '../db/mysqldb';
+import { LAST_NEWS_INTERVAL, rawSatDigest } from '@/models/satDigest.model';
 import { revalidatePath } from 'next/cache';
-import { makeDigestSql } from '@/controllers/satDigest.controller';
+import { getSatDigestNews } from '@/controllers/satDigest.controller';
 
 const digestIntervalAction = async (
   _prevState: {
@@ -15,53 +10,30 @@ const digestIntervalAction = async (
   },
   formData: FormData
 ) => {
-  const selectSats = formData.getAll('selectSats') as string[] | null;
+  const selectSats = formData.getAll('selectSats') as string[] | undefined;
   const timeInterval = formData.get('timeInterval') || LAST_NEWS_INTERVAL;
   const submitBtn = formData.get('submitBtn');
-  let orderBy = '';
-  let inSatList = '';
-  let tblName = 'tbl_digest';
-  let where = '';
 
-  if (submitBtn === 'Submit') {
-    if (timeInterval) {
-      orderBy = 'ORDER BY satGrade, satTitle, d.date DESC';
-      if (+timeInterval > 180) {
-        if (+timeInterval !== new Date().getFullYear())
-          tblName = `tbl_digest_${timeInterval}`;
-      } else {
-        where = `WHERE date >= CURDATE() - INTERVAL ${timeInterval} DAY`;
-      }
-    }
-    if (selectSats && selectSats.length && selectSats[0]) {
-      inSatList = `AND sat.grade IN ("${selectSats.join('","')}")`;
-    }
-  }
-  const newsSql = makeDigestSql(tblName, where, inSatList, orderBy);
-  // console.log('🚀 ~ newsSql:', newsSql);
-
-  try {
-    const newsIntervalResult = await executeQuery<TSatDigest>(newsSql, []);
-
-    if (newsIntervalResult instanceof Error)
-      return {
-        message: `Failed to fetch data. Error: ${newsIntervalResult.message}`,
-        newsIntervalResult: [rawSatDigest],
-      };
-
-    revalidatePath('/');
-
-    return { message: '', newsIntervalResult };
-  } catch (e) {
-    const err = e as Error;
-
+  if (submitBtn !== 'Submit')
     return {
-      // TODO:
-      // message: `Sorry, the error has happened while receiving data.`,
-      message: `Failed to fetch data. Error: ${err.message}`,
+      message: `The submit button was not clicked!`,
       newsIntervalResult: [rawSatDigest],
     };
-  }
+
+  const newsIntervalResult = await getSatDigestNews(
+    selectSats,
+    Number(timeInterval)
+  );
+
+  if (newsIntervalResult instanceof Error)
+    return {
+      message: `Failed to fetch data. Error: ${newsIntervalResult.message}`,
+      newsIntervalResult: [rawSatDigest],
+    };
+
+  revalidatePath('/');
+
+  return { message: '', newsIntervalResult };
 };
 
 export default digestIntervalAction;

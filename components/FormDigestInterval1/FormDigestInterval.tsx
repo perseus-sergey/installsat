@@ -46,7 +46,6 @@ const FormDigestInterval = async ({
         urlSePar.append(EUrlSearchParam.SAT, `${sat}`)
       );
 
-    // revalidatePath('/');
     redirect(`${EUrlBaseParam.BASE_PATH}?${urlSePar.toString()}`);
   }
 

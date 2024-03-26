@@ -1,4 +1,8 @@
 .sectionTitle {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  gap: 1rem;
   font-family: Georgia, 'Times New Roman', Times, serif;
   text-shadow:
     1px 1px 0px #fff,
@@ -9,21 +13,9 @@
   text-align: center;
   font-size: 5vh;
   line-height: 1.4;
-  animation: Title_anim_h1__HjIMB 0.4s linear;
-
-  @keyframes anim_h1 {
-    0% {
-      transform: scale(0);
-    }
-    50% {
-      transform: scale(1.1);
-    }
-    100% {
-      transform: scale(1);
-    }
-  }
 
   @media screen and (orientation: portrait) {
     font-size: 5vw;
+    flex-wrap: wrap;
   }
 }

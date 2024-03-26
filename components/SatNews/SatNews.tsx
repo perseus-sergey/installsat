@@ -1,5 +1,3 @@
-// 'use client';
-
 import { TSatDigest } from '@/models/satDigest.model';
 import SatNewsList from '../SatNewsList/SatNewsList';
 import DateNewsList from '../DateNewsList/DateNewsList';

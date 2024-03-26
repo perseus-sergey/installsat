@@ -32,6 +32,7 @@ const ArticleList = ({ articleList, articleTitleImg }: IArticleListProps) => (
           cpu,
         }) => (
           <li key={id}>
+            {`${ARTICLES.article.images.h1Image.path}${logo}}`}
             <ArticleCard
               articleTitle={
                 <>

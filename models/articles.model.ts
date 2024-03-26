@@ -96,6 +96,10 @@ export const ARTICLES = {
     pagination: {
       perPage: 20,
       offsetNumber: 3,
+      nextPageTitle: 'Next Page',
+      previousPageTitle: 'Previous Page',
+      firstPageTitle: 'FirstPage',
+      lastPageTitle: 'LastPage',
     },
     articlesCountCaption: {
       en: 'Number of articles in this category: ',

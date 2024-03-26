@@ -2,6 +2,9 @@ import { IImgParams } from '@/models/ui.model';
 import fs from 'fs';
 import path from 'path';
 
+// export const isFileExists = (filePath: string): boolean =>
+//   fs.existsSync(path.join(process.cwd(), 'public', filePath));
+
 export const isFileExists = (filePath: string): boolean => {
   const fullPath = path.join(process.cwd(), 'public', filePath);
 
@@ -10,6 +13,7 @@ export const isFileExists = (filePath: string): boolean => {
 
     return stats.isFile();
   } catch (error) {
+    // console.log('🚀 ~ isFileExists ~ error:', error.message);
     return false;
   }
 };
@@ -35,17 +39,3 @@ export const imagePathValidate = (
       ? alternativeImg
       : alternativeString;
 };
-
-// export const imagePathValidate = (
-//   imgPath: string,
-//   alternativePath: string,
-//   isChangeToGif = false
-// ): string | null => {
-//   const path = isChangeToGif ? changeExtToGif(imgPath) : imgPath;
-
-//   return isFileExists(path)
-//     ? path
-//     : isFileExists(alternativePath)
-//       ? alternativePath
-//       : null;
-// };

@@ -18,12 +18,16 @@ export const metadata: Metadata = {
   description: ARTICLES.articleList.meta.getDescription().ua,
   keywords: ARTICLES.articleList.meta.getKeywords('ua'),
 };
-export default async function SatNewsDatePage({ searchParams }: IProps) {
-  const page = parseInt(`${searchParams.page}`, 10);
-  if (isNaN(page)) notFound();
+export default async function Page({ searchParams }: IProps) {
+  let page = 0;
+  let start = 0;
+  const { perPage } = ARTICLES.articleList.pagination;
 
-  const perPage = ARTICLES.articleList.pagination.perPage;
-  const start = page * perPage;
+  if (searchParams && Object.keys(searchParams).length) {
+    page = parseInt(`${searchParams.page}`, 10);
+    if (isNaN(page)) notFound();
+    start = (page - 1) * perPage;
+  }
 
   const allNews = await getChunkOfNews(perPage, start);
   if (allNews instanceof Error)
@@ -56,11 +60,14 @@ export default async function SatNewsDatePage({ searchParams }: IProps) {
         />
       </Title>
 
-      <Pagination
-        page={page || 1}
-        offsetNumber={ARTICLES.articleList.pagination.offsetNumber}
-        totalPages={totalPages}
-      />
+      {totalPages > 1 && (
+        <Pagination
+          page={page || 1}
+          offsetNumber={ARTICLES.articleList.pagination.offsetNumber}
+          totalPages={totalPages}
+          searchParams={searchParams}
+        />
+      )}
 
       <ArticleList articleList={allNews} articleTitleImg={articleTitleImg} />
     </>

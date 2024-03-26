@@ -24,4 +24,5 @@ export enum EUrlBaseParam {
 export enum EUrlSearchParam {
   SAT = 'sat',
   INTERVAL = 'interval',
+  PAGE = 'page',
 }

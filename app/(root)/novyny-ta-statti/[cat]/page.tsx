@@ -12,9 +12,12 @@ import { getFormattedDateStr } from '@/libs/utils';
 import { cache } from 'react';
 import TextUnderH1 from '@/components/TextUnderH1/TextUnderH1';
 import ArticleList from '@/components/ArticleList/ArticleList';
+import { notFound } from 'next/navigation';
+import Pagination from '@/components/Pagination/Pagination';
 
 export interface ISatChannelListParams {
   params: { cat: string };
+  searchParams: { [key: string]: string | string[] | undefined };
 }
 
 const currDateStr = getFormattedDateStr(new Date());
@@ -61,12 +64,31 @@ export async function generateStaticParams(): Promise<
 }
 
 export const dynamicParams = false;
-export default async function SatNewsDatePage({
+export default async function Page({
   params: { cat },
+  searchParams,
 }: ISatChannelListParams) {
   const { id, description, text } = getCurrentCatParams(cat);
 
-  const allNews = await getChunkOfNews(20, 0, id);
+  let page = 0;
+  let start = 0;
+  const { perPage } = ARTICLES.articleList.pagination;
+
+  if (searchParams && Object.keys(searchParams).length) {
+    page = parseInt(`${searchParams.page}`, 10);
+    if (isNaN(page)) notFound();
+    start = (page - 1) * perPage;
+  }
+
+  const allNews = await getChunkOfNews(perPage, start, id);
+  if (allNews instanceof Error)
+    return <EmptyData description={allNews.message} />;
+
+  if (!allNews.length) return <EmptyData description={`Couldn't find data`} />;
+
+  const totalPages = Math.ceil(allNews[0].total_count / perPage);
+
+  if (page > totalPages) notFound();
 
   if (allNews instanceof Error)
     return <EmptyData description={allNews.message} />;
@@ -92,6 +114,14 @@ export default async function SatNewsDatePage({
 
       <TextUnderH1>{text}</TextUnderH1>
 
+      {totalPages > 1 && (
+        <Pagination
+          page={page || 1}
+          offsetNumber={ARTICLES.articleList.pagination.offsetNumber}
+          totalPages={totalPages}
+          searchParams={searchParams}
+        />
+      )}
       <ArticleList articleList={allNews} articleTitleImg={articleTitleImg} />
     </>
   );

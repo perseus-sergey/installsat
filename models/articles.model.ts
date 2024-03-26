@@ -96,10 +96,32 @@ export const ARTICLES = {
     pagination: {
       perPage: 20,
       offsetNumber: 3,
-      nextPageTitle: 'Next Page',
-      previousPageTitle: 'Previous Page',
-      firstPageTitle: 'FirstPage',
-      lastPageTitle: 'LastPage',
+      firstPageTitle: '<<',
+      lastPageTitle: '>>',
+      previousPageTitle: '<',
+      nextPageTitle: '>',
+      linkTitle: {
+        pageStartStr: {
+          en: 'To page: ',
+          ua: 'На сторінку: ',
+        },
+        firstPage: {
+          en: 'To first page',
+          ua: 'На першу сторінку',
+        },
+        nextPage: {
+          en: 'To next page',
+          ua: 'На наступну сторінку',
+        },
+        previousPage: {
+          en: 'To previous page',
+          ua: 'На попередню сторінку',
+        },
+        lastPage: {
+          en: 'To last page',
+          ua: 'На останню сторінку',
+        },
+      },
     },
     articlesCountCaption: {
       en: 'Number of articles in this category: ',

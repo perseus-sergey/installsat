@@ -1,6 +1,84 @@
+$backgroundColor: #2094b2;
+$itemWidthHeight: 2.3rem;
+$itemWidthHeightSmall: 1.8rem;
+$smallScreenSize: 450px;
+
 .Pagination {
   display: flex;
-  margin-top: 4rem;
   justify-content: center;
-  align-items: center;
+  padding: 1rem 0;
+
+  .paginationList {
+    box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.25);
+    width: fit-content;
+    padding: 0.5rem;
+    background-color: rgba(255, 255, 255, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-width: 1px;
+
+    @media (max-width: $smallScreenSize) {
+      padding: 0.5rem 0.2rem;
+      min-width: $itemWidthHeightSmall;
+      min-height: $itemWidthHeightSmall;
+    }
+
+    li {
+      background-color: $backgroundColor;
+    }
+
+    .listItem,
+    .currentPageNumber {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      font-weight: 300;
+      text-decoration: none;
+      border: 1px solid rgba(0, 0, 0, 0.25);
+      border-left-width: 0;
+      min-width: $itemWidthHeight;
+      min-height: $itemWidthHeight;
+
+      @media (max-width: $smallScreenSize) {
+        min-width: $itemWidthHeightSmall;
+        min-height: $itemWidthHeightSmall;
+      }
+    }
+
+    .listItem {
+      padding-top: 1px;
+      color: rgba(255, 255, 255, 0.85);
+      box-shadow: inset 0px 1px 0px 0px rgba(255, 255, 255, 0.35);
+      background-color: $backgroundColor;
+
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.2);
+        border-top-color: rgba(0, 0, 0, 0.35);
+        border-bottom-color: rgba(0, 0, 0, 0.5);
+      }
+
+      &:active {
+        box-shadow: 0px 0px 10px 1px rgba(0, 0, 0, 0.25);
+        border-left-width: 1px;
+      }
+
+      &.disabled {
+        background-color: rgb(156 156 156 / 70%);
+        color: #cfcfcf;
+        cursor: default;
+        pointer-events: none;
+      }
+    }
+  }
+
+  .currentPageNumber {
+    padding-top: 0.25em;
+    color: rgba(255, 255, 255, 1);
+    background-color: rgba(255, 255, 255, 0.35);
+    box-shadow: inset 0px 2px 1px 0px rgba(0, 0, 0, 0.25);
+    cursor: default;
+    pointer-events: none;
+  }
 }

@@ -32,7 +32,6 @@ const ArticleList = ({ articleList, articleTitleImg }: IArticleListProps) => (
           cpu,
         }) => (
           <li key={id}>
-            {`${ARTICLES.article.images.h1Image.path}${logo}}`}
             <ArticleCard
               articleTitle={
                 <>
@@ -48,7 +47,7 @@ const ArticleList = ({ articleList, articleTitleImg }: IArticleListProps) => (
                 <FillingValidImage
                   image={{
                     ...ARTICLES.article.images.h1Image,
-                    src: `${ARTICLES.article.images.h1Image.path}${logo}}`,
+                    src: `${ARTICLES.article.images.h1Image.path}${logo}`,
                   }}
                   defaultImage={ARTICLES.article.images.h1Image.defaultImg}
                   alternativeImgString={

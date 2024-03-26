@@ -13,7 +13,6 @@ export const isFileExists = (filePath: string): boolean => {
 
     return stats.isFile();
   } catch (error) {
-    // console.log('🚀 ~ isFileExists ~ error:', error.message);
     return false;
   }
 };

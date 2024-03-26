@@ -66,64 +66,121 @@ const Pagination = ({
 
   const pageNumbers = getPageNumbers(page, offsetNumber, totalPages);
 
+  const {
+    nextPageTitle,
+    previousPageTitle,
+    firstPageTitle,
+    lastPageTitle,
+    linkTitle,
+  } = ARTICLES.articleList.pagination;
+
   return (
-    <div className={styles.Pagination} data-testid="Pagination">
-      <div className="flex border-[1px] gap-4 rounded-[10px] border-light-green p-4">
+    <nav className={styles.Pagination} data-testid="Pagination">
+      <ul className={styles.paginationList}>
         {page === 1 ? (
           <>
-            <div className="opacity-60" aria-disabled="true">
-              {ARTICLES.articleList.pagination.firstPageTitle}
-            </div>
-            <div className="opacity-60" aria-disabled="true">
-              {ARTICLES.articleList.pagination.previousPageTitle}
-            </div>
+            <li>
+              <div
+                className={`${styles.listItem} ${styles.disabled}`}
+                aria-disabled="true"
+              >
+                {firstPageTitle}
+              </div>
+            </li>
+            <li>
+              <div
+                className={`${styles.listItem} ${styles.disabled}`}
+                aria-disabled="true"
+              >
+                {previousPageTitle}
+              </div>
+            </li>
           </>
         ) : (
           <>
-            <Link href={firstPage} aria-label="Previous Page">
-              {ARTICLES.articleList.pagination.firstPageTitle}
-            </Link>
-            <Link href={prevPage} aria-label="Previous Page">
-              {ARTICLES.articleList.pagination.previousPageTitle}
-            </Link>
+            <li>
+              <Link
+                className={styles.listItem}
+                href={firstPage}
+                aria-label={linkTitle.firstPage.ua}
+                title={linkTitle.firstPage.ua}
+              >
+                {firstPageTitle}
+              </Link>
+            </li>
+            <li>
+              <Link
+                className={styles.listItem}
+                href={prevPage}
+                aria-label={linkTitle.previousPage.ua}
+                title={linkTitle.previousPage.ua}
+              >
+                {previousPageTitle}
+              </Link>
+            </li>
           </>
         )}
 
         {pageNumbers.map((pageNumber, index) => (
-          <Link
-            key={index}
-            className={
-              page === pageNumber
-                ? 'bg-green-500 fw-bold px-2 rounded-md text-black'
-                : 'hover:bg-green-500 px-1 rounded-md'
-            }
-            href={makeUrlSearchParamsStr(pageNumber)}
-          >
-            {pageNumber}
-          </Link>
+          <li key={index}>
+            <Link
+              className={
+                page === pageNumber ? styles.currentPageNumber : styles.listItem
+              }
+              href={makeUrlSearchParamsStr(pageNumber)}
+              aria-label={`${linkTitle.pageStartStr.ua}${pageNumber}`}
+              title={`${linkTitle.pageStartStr.ua}${pageNumber}`}
+            >
+              {pageNumber}
+            </Link>
+          </li>
         ))}
 
         {page === totalPages ? (
           <>
-            <div className="opacity-60" aria-disabled="true">
-              {ARTICLES.articleList.pagination.nextPageTitle}
-            </div>
-            <div className="opacity-60" aria-disabled="true">
-              {ARTICLES.articleList.pagination.lastPageTitle}
-            </div>
+            <li>
+              <div
+                className={`${styles.listItem} ${styles.disabled}`}
+                aria-disabled="true"
+              >
+                {nextPageTitle}
+              </div>
+            </li>
+            <li>
+              <div
+                className={`${styles.listItem} ${styles.disabled}`}
+                aria-disabled="true"
+              >
+                {lastPageTitle}
+              </div>
+            </li>
           </>
         ) : (
           <>
-            <Link href={nextPage} aria-label="Next Page">
-              {ARTICLES.articleList.pagination.nextPageTitle}
-            </Link>
-            <Link href={lastPage} aria-label="Next Page">
-              {ARTICLES.articleList.pagination.lastPageTitle}
-            </Link>
+            <li>
+              <Link
+                className={styles.listItem}
+                href={nextPage}
+                aria-label={linkTitle.nextPage.ua}
+                title={linkTitle.nextPage.ua}
+              >
+                {nextPageTitle}
+              </Link>
+            </li>
+            <li>
+              <Link
+                className={styles.listItem}
+                href={lastPage}
+                aria-label={linkTitle.lastPage.ua}
+                title={linkTitle.lastPage.ua}
+              >
+                {lastPageTitle}
+              </Link>
+            </li>
           </>
         )}
-      </div>
-    </div>
+      </ul>
+    </nav>
   );
 };
 

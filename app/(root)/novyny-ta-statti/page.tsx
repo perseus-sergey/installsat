@@ -48,6 +48,7 @@ export default async function Page({ searchParams }: IProps) {
 
   return (
     <>
+      {JSON.stringify(searchParams)}
       <Title style={{ borderBottom: '2px groove' }}>
         {ARTICLES.articleList.meta.getH1(currDate).ua}
         <FillingValidImage

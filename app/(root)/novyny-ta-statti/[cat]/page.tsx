@@ -100,7 +100,6 @@ export default async function Page({
 
   return (
     <>
-      {JSON.stringify(searchParams)}
       <Title style={{ borderBottom: '2px groove' }}>
         {ARTICLES.articleSingleCatList.meta.getH1(currDateStr, description).ua}
         <FillingValidImage

@@ -1,14 +1,14 @@
 import React from 'react';
 
-interface IDangerHtmlUlProps {
+interface IDangerHtmlProps {
   text: string;
   wrapperTagName?: string;
 }
 
-const DangerHtml: React.FC<IDangerHtmlUlProps> = ({
+const DangerHtml: React.FC<IDangerHtmlProps> = ({
   text,
   wrapperTagName = 'div',
-}: IDangerHtmlUlProps) => {
+}: IDangerHtmlProps) => {
   const TagName = wrapperTagName as keyof JSX.IntrinsicElements;
 
   return <TagName dangerouslySetInnerHTML={{ __html: text }} />;

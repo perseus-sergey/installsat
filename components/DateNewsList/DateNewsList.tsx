@@ -3,8 +3,10 @@ import styles from '../SatNewsList/SatNewsList.module.scss';
 import { getDate, getFormattedDateStr } from '@/libs/utils';
 import React from 'react';
 import DangerHtmlUl from '../DangerHtml/DangerHtml';
-import { getDailyNews } from '../SatNewsList/SatNewsList';
-import { setGroupedNewsByDateMap } from '@/controllers/satDigest.controller';
+import {
+  getDailyNews,
+  setGroupedNewsByDateMap,
+} from '@/controllers/satDigest.controller';
 import EmptyData from '../EmptyData/EmptyData';
 import { EUrlBaseParam } from '@/models/url.model';
 import { META_TRANS_NEWS_SINGLE } from '@/models/satDigest.model';

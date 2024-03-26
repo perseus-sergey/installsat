@@ -7,7 +7,6 @@ import {
   TSatChannelListModel,
 } from '@/models/satChannelList.model';
 import styles from './SatChannelsTable.module.scss';
-import { imagePathValidate } from '@/libs/utilsServer';
 import { IMG_PROPERTIES } from '@/models/ui.model';
 import Link from 'next/link';
 import { EUrlBaseParam } from '@/models/url.model';
@@ -15,6 +14,7 @@ import { cutText } from '@/libs/utils';
 import Tooltip from '../Tooltip/Tooltip';
 import FillingImg from '../Images/FillingImage';
 import TooltipSimple from '../TooltipSimple/TooltipSimple';
+import FillingValidImage from '../Images/FillingValidImage';
 
 interface ISatChannelsTableProps {
   satChannels: TSatChannelListModel[][][];
@@ -25,170 +25,149 @@ const FrequencySegment = ({
 }: {
   frequencyChannels: TSatChannelListModel[];
 }) =>
-  frequencyChannels.map((satChannel, idx) => (
-    <tr key={idx}>
-      {!idx && (
-        <td rowSpan={frequencyChannels.length} className={styles.tdFrequency}>
-          <strong>
-            {`${frequencyChannels[0].freq} ${frequencyChannels[0].polar}`}
-            <br />
-            {`${frequencyChannels[0].sr}, ${frequencyChannels[0].fec}`}
-            <br />
-          </strong>
-          <span className={styles.beam}>{frequencyChannels[0].beam} луч</span>
-        </td>
-      )}
-      <td
-        className={styles.tdCompression}
-        style={{
-          backgroundColor: `${MCompressionColors.get(satChannel.compr.toUpperCase() || 'DEFAULT')}`,
-        }}
-      >
-        {satChannel.compr}
-      </td>
-      <td className={styles.tdChanLogo}>
-        <Tooltip
-          hintHtml={
-            <>
-              <FillingImg
-                width={IMG_PROPERTIES.channelLogo.big.width}
-                height={IMG_PROPERTIES.channelLogo.big.height}
-                src={
-                  imagePathValidate(
-                    `${IMG_PROPERTIES.channelLogo.big.path}${satChannel.logo}`,
-                    IMG_PROPERTIES.channelLogo.big.defaultImage
-                  ) || IMG_PROPERTIES.channelLogo.big.defaultImage
-                }
-                alt={satChannel.title}
-                isBlur
-              />
-              <div className="py-2.5 px-5">
-                <ul>
-                  <li>
-                    {CHANNEL_TOOLTIP_TITLES.name.ua}:{' '}
-                    <strong>{satChannel.title}</strong>
-                  </li>
-                  <li>
-                    {CHANNEL_TOOLTIP_TITLES.genre.ua}:{' '}
-                    <strong>{satChannel.tem}</strong>
-                  </li>
-                  <li>
-                    {CHANNEL_TOOLTIP_TITLES.language.ua}:{' '}
-                    <strong>{satChannel.lan}</strong>
-                  </li>
-                  <li>
-                    {CHANNEL_TOOLTIP_TITLES.description.ua}:{' '}
-                    <strong>{cutText(satChannel.description, 100)}</strong>
-                  </li>
-                  <li>
-                    {CHANNEL_TOOLTIP_TITLES.name.ua}:{' '}
-                    <strong>{satChannel.compr}</strong>
-                  </li>
-                </ul>
-              </div>
-            </>
-          }
+  frequencyChannels.map(
+    ({ logo, compr, title, tem, lan, description, cpu, biss, tema }, idx) => (
+      <tr key={idx}>
+        {!idx && (
+          <td rowSpan={frequencyChannels.length} className={styles.tdFrequency}>
+            <strong>
+              {`${frequencyChannels[0].freq} ${frequencyChannels[0].polar}`}
+              <br />
+              {`${frequencyChannels[0].sr}, ${frequencyChannels[0].fec}`}
+              <br />
+            </strong>
+            <span className={styles.beam}>{frequencyChannels[0].beam} луч</span>
+          </td>
+        )}
+        <td
+          className={styles.tdCompression}
+          style={{
+            backgroundColor: `${MCompressionColors.get(compr.toUpperCase() || 'DEFAULT')}`,
+          }}
         >
-          <FillingImg
-            width={IMG_PROPERTIES.channelLogo.small.width}
-            height={IMG_PROPERTIES.channelLogo.small.height}
-            src={
-              imagePathValidate(
-                `${IMG_PROPERTIES.channelLogo.small.path}${satChannel.logo}`,
-                IMG_PROPERTIES.channelLogo.small.defaultImage,
-                true
-              ) || IMG_PROPERTIES.channelLogo.small.defaultImage
+          {compr}
+        </td>
+        <td className={styles.tdChanLogo}>
+          <Tooltip
+            hintHtml={
+              <>
+                <FillingValidImage
+                  image={{
+                    ...IMG_PROPERTIES.channelLogo.big,
+                    src: `${IMG_PROPERTIES.channelLogo.big.path}${logo}`,
+                  }}
+                  defaultImage={IMG_PROPERTIES.channelLogo.big.defaultImage}
+                  alternativeImgString={
+                    IMG_PROPERTIES.channelLogo.big.alternativeImgStr
+                  }
+                />
+                <div className="py-2.5 px-5">
+                  <ul>
+                    <li>
+                      {CHANNEL_TOOLTIP_TITLES.name.ua}: <strong>{title}</strong>
+                    </li>
+                    <li>
+                      {CHANNEL_TOOLTIP_TITLES.genre.ua}: <strong>{tem}</strong>
+                    </li>
+                    <li>
+                      {CHANNEL_TOOLTIP_TITLES.language.ua}:{' '}
+                      <strong>{lan}</strong>
+                    </li>
+                    <li>
+                      {CHANNEL_TOOLTIP_TITLES.description.ua}:{' '}
+                      <strong>{cutText(description, 100)}</strong>
+                    </li>
+                    <li>
+                      {CHANNEL_TOOLTIP_TITLES.name.ua}: <strong>{compr}</strong>
+                    </li>
+                  </ul>
+                </div>
+              </>
             }
-            alt={satChannel.title}
-            isBlur
+          >
+            <FillingValidImage
+              image={{
+                ...IMG_PROPERTIES.channelLogo.small,
+                src: `${IMG_PROPERTIES.channelLogo.small.path}${logo}`,
+              }}
+              defaultImage={IMG_PROPERTIES.channelLogo.small.defaultImage}
+              alternativeImgString={
+                IMG_PROPERTIES.channelLogo.small.alternativeImgStr
+              }
+              isChangeToGif
+            />
+          </Tooltip>
+        </td>
+        <td className={styles.tdTitle}>
+          <Link href={`/${EUrlBaseParam.CHANNEL_PARAMS}/${cpu}`}>{title}</Link>
+          {biss && <p className={styles.biss}>{biss}</p>}
+        </td>
+        <td className={styles.tdGenre}>
+          <FillingImg
+            width="24px"
+            height="24px"
+            src={`/images/genre/${MChanTheme.get(tema)}`}
           />
-        </Tooltip>
-      </td>
-      <td className={styles.tdTitle}>
-        <Link href={`/${EUrlBaseParam.CHANNEL_PARAMS}/${satChannel.cpu}`}>
-          {satChannel.title}
-        </Link>
-        {satChannel.biss && <p className={styles.biss}>{satChannel.biss}</p>}
-      </td>
-      <td className={styles.tdGenre}>
-        <FillingImg
-          width="24px"
-          height="24px"
-          src={`/images/genre/${MChanTheme.get(satChannel.tema)}`}
-        />
-      </td>
-    </tr>
-  ));
+        </td>
+      </tr>
+    )
+  );
 
 const SatChannelsTable = ({ satChannels }: ISatChannelsTableProps) => (
   <>
-    {satChannels.map((sat, i) => {
-      const h1ImagePath = imagePathValidate(
-        `${META_SAT_CHANNEL_LIST.h1SatImage.path}${sat[0][0].sat_logo}`,
-        META_SAT_CHANNEL_LIST.h1SatImage.defaultImage
-      );
-
-      return (
-        <>
-          {satChannels.length > 1 && (
-            <h2 key={i} className={styles.satTitle} id={sat[0][0].sat_slug}>
-              <TooltipSimple
-                tooltipText={
-                  META_ALL_SAT_CHANNEL_LIST.anchors.goUpLink.title.ua
-                }
+    {satChannels.map((sat, i) => (
+      <>
+        {satChannels.length > 1 && (
+          <h2 key={i} className={styles.satTitle} id={sat[0][0].sat_slug}>
+            <TooltipSimple
+              tooltipText={META_ALL_SAT_CHANNEL_LIST.anchors.goUpLink.title.ua}
+            >
+              <Link
+                href={`/${EUrlBaseParam.SAT_CHANNEL_LIST}`}
+                title={META_ALL_SAT_CHANNEL_LIST.anchors.goUpLink.title.ua}
+                className={styles.goUpLink}
               >
-                <Link
-                  href={`/${EUrlBaseParam.SAT_CHANNEL_LIST}`}
-                  title={META_ALL_SAT_CHANNEL_LIST.anchors.goUpLink.title.ua}
-                  className={styles.goUpLink}
-                >
-                  {META_ALL_SAT_CHANNEL_LIST.anchors.goUpLink.img}
-                </Link>
-              </TooltipSimple>
-              <TooltipSimple
-                tooltipText={
-                  META_ALL_SAT_CHANNEL_LIST.links.satTitleLink.tooltipTitle.ua
-                }
+                {META_ALL_SAT_CHANNEL_LIST.anchors.goUpLink.img}
+              </Link>
+            </TooltipSimple>
+            <TooltipSimple
+              tooltipText={
+                META_ALL_SAT_CHANNEL_LIST.links.satTitleLink.tooltipTitle.ua
+              }
+            >
+              <Link
+                className={styles.satTitleLink}
+                href={`${META_ALL_SAT_CHANNEL_LIST.links.satTitleLink.linkUrl}/${sat[0][0].sat_slug}`}
               >
-                <Link
-                  className={styles.satTitleLink}
-                  href={`${META_ALL_SAT_CHANNEL_LIST.links.satTitleLink.linkUrl}/${sat[0][0].sat_slug}`}
-                >
-                  {`${sat[0][0].sat_title} - ${sat[0][0].sat_position}`}
-                  {h1ImagePath ? (
-                    <FillingImg
-                      width={
-                        META_ALL_SAT_CHANNEL_LIST.image.satTitleImgParams.width
-                      }
-                      height={
-                        META_ALL_SAT_CHANNEL_LIST.image.satTitleImgParams.height
-                      }
-                      src={h1ImagePath}
-                      alt={`${META_SAT_CHANNEL_LIST.h1SatImage.alt.ua} ${sat[0][0].sat_title}`}
-                      isBlur
-                    />
-                  ) : (
-                    <span className="text-8xl">
-                      {META_SAT_CHANNEL_LIST.h1SatImage.alternativeSymbol}
-                    </span>
-                  )}
-                </Link>
-              </TooltipSimple>
-            </h2>
-          )}
-          <table
-            className={styles.SatChannelsTable}
-            data-testid="SatChannelsTable"
-          >
-            <tbody>
-              {sat.map((freqChannels, idx) => (
-                <FrequencySegment key={idx} frequencyChannels={freqChannels} />
-              ))}
-            </tbody>
-          </table>
-        </>
-      );
-    })}
+                {`${sat[0][0].sat_title} - ${sat[0][0].sat_position}`}
+                <FillingValidImage
+                  image={{
+                    ...META_SAT_CHANNEL_LIST.h1SatImage,
+                    src: `${META_SAT_CHANNEL_LIST.h1SatImage.path}${sat[0][0].sat_logo}`,
+                  }}
+                  defaultImage={META_SAT_CHANNEL_LIST.h1SatImage.defaultImage}
+                  alternativeImgString={
+                    META_SAT_CHANNEL_LIST.h1SatImage.alternativeString
+                  }
+                  alt={`${META_SAT_CHANNEL_LIST.h1SatImage.alt.ua} ${sat[0][0].sat_title}`}
+                  isBlur
+                />
+              </Link>
+            </TooltipSimple>
+          </h2>
+        )}
+        <table
+          className={styles.SatChannelsTable}
+          data-testid="SatChannelsTable"
+        >
+          <tbody>
+            {sat.map((freqChannels, idx) => (
+              <FrequencySegment key={idx} frequencyChannels={freqChannels} />
+            ))}
+          </tbody>
+        </table>
+      </>
+    ))}
   </>
 );
 

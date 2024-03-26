@@ -25,13 +25,17 @@ export const META_SAT_CHANNEL_LIST = {
   },
   h1SatImage: {
     path: '/images/satellites/',
-    defaultImage: '/images/satellite_7144.png',
-    alternativeSymbol: '🛰',
+    alternativeString: { title: '🛰', fontSize: '5rem' },
     height: '99px',
     width: '132px',
     alt: {
       ua: `Безкоштовні канали супутника`,
       en: `Free channels of`,
+    },
+    defaultImage: {
+      src: '/images/satellite_7144.png',
+      height: '99px',
+      width: '132px',
     },
   },
 };

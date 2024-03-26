@@ -35,22 +35,6 @@ export const getSatChannels = cache(async (channelId = '') => {
   return await executeQuery<TSatChannelListModel>(sql, [channelId]);
 });
 
-// export const groupedChannels = (
-//   satChannels: TSatChannelListModel[]
-// ): TSatChannelListModel[][] => {
-//   return Object.values(
-//     satChannels.reduce((acc: Record<number, TSatChannelListModel[]>, curr) => {
-//       const key = curr.frequency;
-//       if (!acc[key]) {
-//         acc[key] = [];
-//       }
-//       acc[key].push(curr);
-
-//       return acc;
-//     }, {})
-//   ).sort((a, b) => a[0].freq - b[0].freq);
-// };
-
 export const getGroupedChannelsAllSat = (
   satChannels: TSatChannelListModel[][]
 ): TSatChannelListModel[][][] => {
@@ -73,39 +57,3 @@ export const getGroupedChannelsAllSat = (
     .map((satGroup) => Object.values(satGroup))
     .sort((a, b) => a[0][0].sat_grade - b[1][0].sat_grade);
 };
-
-// const channels = [
-//   { sat: 1, freq: 4444, title: 'someTitle' },
-//   { sat: 1, freq: 4444, title: 'someTitle' },
-//   { sat: 3, freq: 1111, title: 'someTitle' },
-//   { sat: 3, freq: 1111, title: 'someTitle' },
-//   { sat: 1, freq: 2222, title: 'someTitle' },
-//   { sat: 1, freq: 2222, title: 'someTitle' },
-//   { sat: 1, freq: 2222, title: 'someTitle' },
-//   { sat: 3, freq: 3333, title: 'someTitle' },
-// ];
-
-// const groupedChannels = (satChannels) => {}
-// Напиши функцію groupedChannels
-// groupedChannels(channels);
-// яка поверне такий результат:
-// [
-//   [
-//     [
-//       { sat: 3, freq: 1111, title: 'someTitle' },
-//       { sat: 3, freq: 1111, title: 'someTitle' },
-//     ],
-//     [{ sat: 3, freq: 3333, title: 'someTitle' }],
-//   ],
-//   [
-//     [
-//       { sat: 1, freq: 4444, title: 'someTitle' },
-//       { sat: 1, freq: 4444, title: 'someTitle' },
-//     ],
-//     [
-//       { sat: 1, freq: 2222, title: 'someTitle' },
-//       { sat: 1, freq: 2222, title: 'someTitle' },
-//       { sat: 1, freq: 2222, title: 'someTitle' },
-//     ],
-//   ],
-// ];

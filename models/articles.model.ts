@@ -182,3 +182,19 @@ export interface ISingleCatArticlesModel {
   cpu: string;
   text: string;
 }
+
+export interface IArticleModel {
+  id: number;
+  title: string;
+  slug: string;
+  date: Date;
+  description: string;
+  text: string;
+  author: string;
+  cat_id: number;
+  view: number;
+  logo: string;
+  cat_name: string;
+  cat_slug: string;
+  cat_folder: string;
+}

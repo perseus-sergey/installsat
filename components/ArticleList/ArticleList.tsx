@@ -30,56 +30,60 @@ const ArticleList = ({ articleList, articleTitleImg }: IArticleListProps) => (
           category_cpu,
           logo,
           cpu,
-        }) => (
-          <li key={id}>
-            <ArticleCard
-              articleTitle={
-                <>
-                  {typeof articleTitleImg !== 'string' ? (
-                    <FillingImg {...articleTitleImg} />
-                  ) : (
-                    <span style={{ fontSize: '2rem' }}>{articleTitleImg}</span>
-                  )}
-                  {title}
-                </>
-              }
-              image={
-                <FillingValidImage
-                  image={{
-                    ...ARTICLES.article.images.h1Image,
-                    src: `${ARTICLES.article.images.h1Image.path}${logo}`,
-                  }}
-                  defaultImage={ARTICLES.article.images.h1Image.defaultImg}
-                  alternativeImgString={
-                    ARTICLES.article.images.h1Image.alternativeStr
-                  }
-                  alt={`${ARTICLES.article.images.h1Image.getAlt().ua}${title}`}
-                  isBlur
-                />
-              }
-              articleDescription={
-                <DangerHtml text={description} wrapperTagName="span" />
-              }
-              href={`${ARTICLES.articleList.links.articleLink.path}${cpu}`}
-              infoPanelItems={[
-                {
-                  name: 'Тема',
-                  value: (
-                    <Link
-                      href={`${EUrlBaseParam.NEWS_AND_ARTICLES}/${category_cpu}`}
-                      style={{ textDecoration: 'underline' }}
-                    >
-                      {category_title}
-                    </Link>
-                  ), // TODO: href
-                },
-                { name: 'Переглядів', value: view },
-                { name: 'Дата', value: getFormattedDateStr(date) },
-                { name: 'Коментарів', value: comment_count },
-              ]}
-            />
-          </li>
-        )
+        }) => {
+          const { h1Image } = ARTICLES.article.images;
+
+          return (
+            <li key={id}>
+              <ArticleCard
+                articleTitle={
+                  <>
+                    {typeof articleTitleImg !== 'string' ? (
+                      <FillingImg {...articleTitleImg} />
+                    ) : (
+                      <span style={{ fontSize: '2rem' }}>
+                        {articleTitleImg}
+                      </span>
+                    )}
+                    {title}
+                  </>
+                }
+                image={
+                  <FillingValidImage
+                    image={{
+                      ...h1Image,
+                      src: `${h1Image.path}${logo}`,
+                    }}
+                    defaultImage={h1Image.defaultImg}
+                    alternativeImgString={h1Image.alternativeStr}
+                    alt={`${h1Image.getAlt().ua}${title}`}
+                    isBlur
+                  />
+                }
+                articleDescription={
+                  <DangerHtml text={description} wrapperTagName="span" />
+                }
+                href={`${ARTICLES.articleList.links.articleLink.path}${cpu}`}
+                infoPanelItems={[
+                  {
+                    name: 'Тема',
+                    value: (
+                      <Link
+                        href={`${EUrlBaseParam.NEWS_AND_ARTICLES}/${category_cpu}`}
+                        style={{ textDecoration: 'underline' }}
+                      >
+                        {category_title}
+                      </Link>
+                    ),
+                  },
+                  { name: 'Переглядів', value: view },
+                  { name: 'Дата', value: getFormattedDateStr(date) },
+                  { name: 'Коментарів', value: comment_count },
+                ]}
+              />
+            </li>
+          );
+        }
       )}
     </ul>
     <p

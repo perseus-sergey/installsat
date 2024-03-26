@@ -92,9 +92,6 @@ export default async function Page({
 
   if (page > totalPages) notFound();
 
-  if (allNews instanceof Error)
-    return <EmptyData description={allNews.message} />;
-
   const articleTitleImg = imagePathValidate(
     ARTICLES.articleList.images.titleImg,
     ARTICLES.articleList.images.titleImg.alternativeStr.title

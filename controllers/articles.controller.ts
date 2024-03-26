@@ -1,6 +1,7 @@
 import { executeQuery } from '@/libs/db/mysqldb';
 import {
   IAllNewsModel,
+  IArticleModel,
   ISingleCatArticlesModel,
 } from '@/models/articles.model';
 import { cache } from 'react';
@@ -58,6 +59,32 @@ LIMIT ?, ?
 `;
 
   return await executeQuery<IAllNewsModel>(sql, [`${start}`, `${quantity}`]);
+};
+
+export const getArticle = async (slug: string) => {
+  const sql = `
+  SELECT 
+  U.id,
+  U.title,
+  U.cpu AS slug,
+  U.date,
+  U.description,
+  U.text,
+  U.author,
+  U.cat AS cat_id,
+  U.view,
+  U.logo,
+  C.title AS cat_name,
+  C.cpu AS cat_slug,
+  C.folder AS cat_folder
+FROM 
+  tbl_useful U
+LEFT JOIN 
+  tbl_categories C ON U.cat = C.id
+WHERE U.cpu = ?
+`;
+
+  return await executeQuery<IArticleModel>(sql, [slug]);
 };
 
 export const getArticleCatList = cache(async () => {

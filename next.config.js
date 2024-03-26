@@ -12,6 +12,11 @@ const nextConfig = {
         destination: '/',
         permanent: true,
       },
+      {
+        source: '/stattia',
+        destination: '/novyny-ta-statti',
+        permanent: true,
+      },
     ];
   },
 };

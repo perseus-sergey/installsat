@@ -9,6 +9,8 @@ import ArticleList from '@/components/ArticleList/ArticleList';
 import Pagination from '@/components/Pagination/Pagination';
 import { notFound } from 'next/navigation';
 
+export const dynamic = 'force-dynamic';
+
 interface IProps {
   searchParams: { [key: string]: string | string[] | undefined };
 }
@@ -48,7 +50,7 @@ export default async function Page({ searchParams }: IProps) {
 
   return (
     <>
-      {JSON.stringify(searchParams)}
+      {/* {JSON.stringify(searchParams)} */}
       <Title style={{ borderBottom: '2px groove' }}>
         {ARTICLES.articleList.meta.getH1(currDate).ua}
         <FillingValidImage

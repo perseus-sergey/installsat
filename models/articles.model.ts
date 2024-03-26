@@ -4,12 +4,6 @@ import { EUrlBaseParam } from './url.model';
 export const ARTICLES = {
   article: {
     meta: {
-      // getH1(date: string) {
-      //   return {
-      //     ua: `Останні новини ТБ, статті та огляди на ${date}`,
-      //     en: `Latest TV news, articles and reviews as of ${date}`,
-      //   };
-      // },
       getTitle() {
         return {
           ua: 'Останні новини та статті про цифрове телебачення',
@@ -188,19 +182,3 @@ export interface ISingleCatArticlesModel {
   cpu: string;
   text: string;
 }
-
-// export const MChanTheme = new Map([
-//   [2, 'news.png'],
-//   [3, 'cinema.png'],
-//   [4, 'sport.png'],
-//   [5, 'sunset.png'],
-//   [6, 'kids.png'],
-//   [7, 'xxx.png'],
-//   [8, 'music.png'],
-//   [9, 'discovery.png'],
-//   [10, 'comedy.png'],
-//   [11, 'game.png'],
-//   [12, 'religion.png'],
-//   [13, 'tv_shopping.png'],
-//   [14, 'fashion.png'],
-// ]);

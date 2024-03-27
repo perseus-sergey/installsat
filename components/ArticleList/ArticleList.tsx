@@ -69,7 +69,7 @@ const ArticleList = ({ articleList, articleTitleImg }: IArticleListProps) => (
                     name: 'Тема',
                     value: (
                       <Link
-                        href={`${EUrlBaseParam.NEWS_AND_ARTICLES}/${category_cpu}`}
+                        href={`/${EUrlBaseParam.NEWS_AND_ARTICLES}/${category_cpu}`}
                         style={{ textDecoration: 'underline' }}
                       >
                         {category_title}

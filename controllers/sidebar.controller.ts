@@ -5,6 +5,7 @@ import { TSatModel } from '@/models/tblSat.model';
 import { TUsefulArticlesSqlModel } from '@/models/tblUseful.model';
 import { NUMBER_OF_LAST_NEWS_WIDGET } from '@/models/widget.model';
 import { cache } from 'react';
+import { WRONG_CAT_IDS } from './articles.controller';
 
 export const installationsSql = `
 SELECT title, cpu, id FROM tbl_installations WHERE id NOT IN (8,9)
@@ -15,7 +16,7 @@ SELECT title, id, parent, cpu FROM tbl_chan_categ WHERE parent=0 AND title != ''
 `;
 
 export const lastNewsWidgetSql = `
-SELECT id, title, cpu FROM tbl_useful WHERE cat NOT IN (2,8,0,12) ORDER BY date DESC, id DESC LIMIT ${NUMBER_OF_LAST_NEWS_WIDGET}
+SELECT id, title, cpu FROM tbl_useful WHERE cat NOT IN ${WRONG_CAT_IDS} ORDER BY date DESC, id DESC LIMIT ${NUMBER_OF_LAST_NEWS_WIDGET}
 `;
 
 export const usefulArticlesSql = `

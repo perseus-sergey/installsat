@@ -189,6 +189,13 @@ export interface ISingleCatArticlesModel {
   text: string;
 }
 
+export interface ISimilarArticleModel {
+  id: number;
+  title: string;
+  cpu: string;
+  date: Date;
+}
+
 export interface IArticleModel {
   id: number;
   title: string;
@@ -204,3 +211,19 @@ export interface IArticleModel {
   cat_slug: string;
   cat_folder: string;
 }
+
+// export interface IArticleModel {
+//   id: number;
+//   title: string;
+//   slug: string;
+//   date: Date;
+//   description: string;
+//   text: string;
+//   author: string;
+//   cat_id: number;
+//   view: number;
+//   logo: string;
+//   cat_name: string;
+//   cat_slug: string;
+//   cat_folder: string;
+// }

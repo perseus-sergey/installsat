@@ -67,8 +67,13 @@ a {
   }
 }
 
-.article {
+.articleWrapper {
+  display: flex;
+  flex-direction: column;
   flex: 3;
+}
+
+.article {
   border-radius: 10px;
   border: thick inset #cccccc;
   background-color: var(--background-color);

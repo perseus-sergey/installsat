@@ -22,7 +22,8 @@ export default function RootLayout({
   return (
     <main className="main">
       <SideBar />
-      <article className="article">{children}</article>
+      {/* <article className="article">{children}</article> */}
+      {children}
     </main>
   );
 }

@@ -2,16 +2,19 @@ import { executeQuery } from '@/libs/db/mysqldb';
 import {
   IAllNewsModel,
   IArticleModel,
+  ISimilarArticleModel,
   ISingleCatArticlesModel,
 } from '@/models/articles.model';
 import { cache } from 'react';
+
+export const WRONG_CAT_IDS = '(2,8,0,11,12,13)';
 
 export const getChunkOfNews = async (
   quantity: number,
   start = 0,
   catId?: number
 ) => {
-  const catValue = catId ? `=${catId}` : 'NOT IN (2,8,0,12,13)';
+  const catValue = catId ? `=${catId}` : `NOT IN ${WRONG_CAT_IDS}`;
 
   const sql = `
 SELECT 
@@ -63,7 +66,7 @@ LIMIT ?, ?
 
 export const getArticle = cache(async (slug: string) => {
   const sql = `
-  SELECT 
+  SELECT
   U.id,
   U.title,
   U.cpu AS slug,
@@ -77,9 +80,9 @@ export const getArticle = cache(async (slug: string) => {
   C.title AS cat_name,
   C.cpu AS cat_slug,
   C.folder AS cat_folder
-FROM 
+FROM
   tbl_useful U
-LEFT JOIN 
+LEFT JOIN
   tbl_categories C ON U.cat = C.id
 WHERE U.cpu = ?
 `;
@@ -87,8 +90,22 @@ WHERE U.cpu = ?
   return await executeQuery<IArticleModel>(sql, [slug]);
 });
 
+export const getSimilarArticles = async (logo: string, id: number) => {
+  const sql = `
+    SELECT id, title, cpu, date
+    FROM tbl_useful
+    WHERE logo = ?
+    AND id != ?
+    AND cat NOT IN ${WRONG_CAT_IDS}
+    ORDER BY date DESC, id DESC
+    LIMIT 7
+`;
+
+  return await executeQuery<ISimilarArticleModel>(sql, [logo, `${id}`]);
+};
+
 export const getArticleCatList = cache(async () => {
-  const sql = `SELECT id, title, cpu, description, text FROM tbl_categories WHERE id NOT IN (2,8,0,12,13)`;
+  const sql = `SELECT id, title, cpu, description, text FROM tbl_categories WHERE id NOT IN ${WRONG_CAT_IDS}`;
 
   return await executeQuery<ISingleCatArticlesModel>(sql);
 });

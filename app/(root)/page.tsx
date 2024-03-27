@@ -21,15 +21,19 @@ export default function SatNewsPage({ searchParams }: IProps) {
 
   return (
     <>
-      <Title>{META_TRANS_NEWS_LIST.getH1(intervalDays)}</Title>
-      <nav>
-        <Suspense>
-          <FormDigestInterval searchParams={searchParams} />
-        </Suspense>
-      </nav>
-      <Suspense>
-        <SatNews searchParams={searchParams} />
-      </Suspense>
+      <section className="articleWrapper">
+        <article className="article">
+          <Title>{META_TRANS_NEWS_LIST.getH1(intervalDays)}</Title>
+          <nav>
+            <Suspense>
+              <FormDigestInterval searchParams={searchParams} />
+            </Suspense>
+          </nav>
+          <Suspense>
+            <SatNews searchParams={searchParams} />
+          </Suspense>
+        </article>
+      </section>
     </>
   );
 }

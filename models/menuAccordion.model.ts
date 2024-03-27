@@ -18,7 +18,7 @@ export const MENU_ACCORDION: { [key: string]: IAccordionItemOptions } = {
   SATELLITE_TV: {
     name: 'SATELLITE_TV',
     img: {
-      src: '/images/accordion/folder_home_3055.png',
+      src: '/Images/accordion/folder_home_3055.png',
       width: 32,
       height: 32,
       alt: {
@@ -32,7 +32,7 @@ export const MENU_ACCORDION: { [key: string]: IAccordionItemOptions } = {
   INSTALLATIONS: {
     name: 'INSTALLATIONS',
     img: {
-      src: '/images/accordion/advancedsettings_2775.png',
+      src: '/Images/accordion/advancedsettings_2775.png',
       width: 32,
       height: 32,
       alt: {
@@ -46,7 +46,7 @@ export const MENU_ACCORDION: { [key: string]: IAccordionItemOptions } = {
   SATELLITES: {
     name: 'SATELLITES',
     img: {
-      src: '/images/accordion/satellite32.png',
+      src: '/Images/accordion/satellite32.png',
       width: 34,
       height: 32,
       alt: {
@@ -60,7 +60,7 @@ export const MENU_ACCORDION: { [key: string]: IAccordionItemOptions } = {
   PACKAGES: {
     name: 'PACKAGES',
     img: {
-      src: '/images/accordion/film24.png',
+      src: '/Images/accordion/film24.png',
       width: 32,
       height: 24,
       alt: {
@@ -74,7 +74,7 @@ export const MENU_ACCORDION: { [key: string]: IAccordionItemOptions } = {
   USEFUL: {
     name: 'USEFUL',
     img: {
-      src: '/images/accordion/icon_info_key.png',
+      src: '/Images/accordion/icon_info_key.png',
       width: 32,
       height: 32,
       alt: {
@@ -88,7 +88,7 @@ export const MENU_ACCORDION: { [key: string]: IAccordionItemOptions } = {
   ONLINE_TV: {
     name: 'ONLINE_TV',
     img: {
-      src: '/images/accordion/trailer-icon_37.png',
+      src: '/Images/accordion/trailer-icon_37.png',
       width: 37,
       height: 32,
       alt: {

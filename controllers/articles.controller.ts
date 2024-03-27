@@ -61,7 +61,7 @@ LIMIT ?, ?
   return await executeQuery<IAllNewsModel>(sql, [`${start}`, `${quantity}`]);
 };
 
-export const getArticle = async (slug: string) => {
+export const getArticle = cache(async (slug: string) => {
   const sql = `
   SELECT 
   U.id,
@@ -85,10 +85,16 @@ WHERE U.cpu = ?
 `;
 
   return await executeQuery<IArticleModel>(sql, [slug]);
-};
+});
 
 export const getArticleCatList = cache(async () => {
   const sql = `SELECT id, title, cpu, description, text FROM tbl_categories WHERE id NOT IN (2,8,0,12,13)`;
 
   return await executeQuery<ISingleCatArticlesModel>(sql);
+});
+
+export const getArticleSlugList = cache(async () => {
+  const sql = `SELECT cpu FROM tbl_useful`;
+
+  return await executeQuery<{ cpu: string }>(sql);
 });

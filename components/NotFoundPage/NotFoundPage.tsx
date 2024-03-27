@@ -16,7 +16,7 @@ const NotFoundPage = () => (
     <Link href={EUrlBaseParam.BASE_PATH} className={styles.linkWrapper}>
       <Image
         className=""
-        src="/images/InstallsatOrig_400.png"
+        src="/Images/InstallsatOrig_400.png"
         alt="Installsat TV Logo"
         width={400}
         height={200}

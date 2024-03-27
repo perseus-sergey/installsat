@@ -1,3 +1,5 @@
+$gap: 0.5rem;
+
 .BottomInfoPanel {
   background: linear-gradient(
     to bottom,
@@ -10,10 +12,15 @@
   font-size: 0.7rem;
   padding: 0.3rem 1rem;
   display: flex;
-  gap: 0.5rem;
+  gap: $gap;
 
   .infoPanelItem {
     text-align: center;
+
+    &.bordered {
+      border-right: 1px solid #cccccc;
+      padding-right: $gap;
+    }
   }
 
   .itemValue {

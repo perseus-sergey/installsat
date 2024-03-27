@@ -22,11 +22,11 @@ export const ARTICLES = {
     },
     images: {
       h1Image: {
-        path: '/images/channelsOptimized/',
+        path: '/Images/channelsOptimized/',
         height: '100px',
         width: '140px',
         defaultImg: {
-          src: '/images/channelsOptimized/zastavka.jpg',
+          src: '/Images/channelsOptimized/zastavka.jpg',
           height: '100px',
           width: '100px',
         },
@@ -66,7 +66,7 @@ export const ARTICLES = {
     },
     images: {
       h1Image: {
-        src: '/images/articles/all_news_64.png',
+        src: '/Images/articles/all_news_64.png',
         height: '64px',
         width: '64px',
         alternativeStr: { title: '📰', fontSize: '6rem' },
@@ -76,7 +76,7 @@ export const ARTICLES = {
         },
       },
       titleImg: {
-        src: '/images/articles/package_network_4729.png',
+        src: '/Images/articles/package_network_4729.png',
         height: '32px',
         width: '32px',
         alternativeStr: { title: '🌎', fontSize: '2rem' },
@@ -133,7 +133,7 @@ export const ARTICLES = {
     },
     images: {
       h1Image: {
-        src: '/images/articles/all_news_64.png',
+        src: '/Images/articles/all_news_64.png',
         height: '64px',
         width: '64px',
         alternativeStr: { title: '📰', fontSize: '6rem' },
@@ -143,7 +143,7 @@ export const ARTICLES = {
         },
       },
       titleImg: {
-        src: '/images/articles/package_network_4729.png',
+        src: '/Images/articles/package_network_4729.png',
         height: '32px',
         width: '32px',
         alternativeStr: { title: '🌎', fontSize: '2rem' },
@@ -154,6 +154,12 @@ export const ARTICLES = {
         path: `/${EUrlBaseParam.ARTICLE}/`,
       },
     },
+  },
+  infoPanelTitles: {
+    theme: { ua: 'Тема', en: 'Theme' },
+    views: { ua: 'Переглядів', en: 'Views' },
+    date: { ua: 'Дата', en: 'Date' },
+    comments: { ua: 'Коментарів', en: 'Comments' },
   },
 };
 

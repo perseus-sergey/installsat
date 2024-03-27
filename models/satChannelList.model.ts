@@ -24,7 +24,7 @@ export const META_SAT_CHANNEL_LIST = {
     };
   },
   h1SatImage: {
-    path: '/images/satellites/',
+    path: '/Images/satellites/',
     alternativeString: { title: '🛰', fontSize: '5rem' },
     height: '99px',
     width: '132px',
@@ -33,7 +33,7 @@ export const META_SAT_CHANNEL_LIST = {
       en: `Free channels of`,
     },
     defaultImage: {
-      src: '/images/satellite_7144.png',
+      src: '/Images/satellite_7144.png',
       height: '99px',
       width: '132px',
     },
@@ -93,8 +93,8 @@ export const META_ALL_SAT_CHANNEL_LIST = {
       width: '80px',
     },
     h1ImageParams: {
-      path: '/images/packages/money_free.jpg',
-      defaultImage: '/images/satellite_7144.png',
+      path: '/Images/packages/money_free.jpg',
+      defaultImage: '/Images/satellite_7144.png',
       alternativeSymbol: '🛰',
       height: '150px',
       width: '239px',

@@ -22,26 +22,26 @@ export interface IImgParams {
 }
 
 export const IMG_PROPERTIES = {
-  defaultImgBlur: '/images/1blur.gif',
+  defaultImgBlur: '/Images/1blur.gif',
   channelLogo: {
     big: {
-      path: '/images/channelsOptimized/',
+      path: '/Images/channelsOptimized/',
       height: '99px',
       width: '132px',
       alternativeImgStr: { title: '🎞', fontSize: '6rem' },
       defaultImage: {
-        src: '/images/1not_found_chan.png',
+        src: '/Images/1not_found_chan.png',
         height: '99px',
         width: '132px',
       },
     },
     small: {
-      path: '/images/channel_55/',
+      path: '/Images/channel_55/',
       height: '42px',
       width: '55px',
       alternativeImgStr: { title: '🎞', fontSize: '2rem' },
       defaultImage: {
-        src: '/images/1not_found_chan.png',
+        src: '/Images/1not_found_chan.png',
         height: '42px',
         width: '55px',
       },
@@ -86,3 +86,25 @@ export const MUITitles: TUITitle = new Map([
     },
   ],
 ]);
+
+export const defaultMetaData = {
+  ua: {
+    title: 'Сайт про цифрове телебачення',
+    description:
+      'Статті, новини, списки телеканалів в пакетах провайдерів цифрового телебачення. Програма телепередач',
+    keywords:
+      'Статті, новини, списки телеканалів, провайдери, цифрове телебачення, Програма телепередач, бісс ключі, мовлення',
+  },
+  en: {
+    title: 'Site about digital television',
+    description:
+      'Articles, news, lists of TV channels in packages of digital television providers. TV program',
+    keywords:
+      'Articles, news, lists of TV channels, providers, digital television, TV program, biss keys, broadcasting',
+  },
+  openGraph: {
+    siteName: 'Installsat TV',
+    type: 'article',
+    authors: ['Installsat'],
+  },
+};

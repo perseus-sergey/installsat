@@ -2,13 +2,17 @@ import EmptyData from '@/components/EmptyData/EmptyData';
 import { Title } from '@/components/Title/Title';
 import type { Metadata } from 'next';
 import FillingValidImage from '@/components/Images/FillingValidImage';
-import { ARTICLES, ISingleCatArticlesModel } from '@/models/articles.model';
+import { ARTICLES } from '@/models/articles.model';
 import {
   getArticle,
-  getArticleCatList,
+  getArticleSlugList,
 } from '@/controllers/articles.controller';
-import { cache } from 'react';
 import DangerHtml from '@/components/DangerHtml/DangerHtml';
+import { defaultMetaData } from '@/models/ui.model';
+import { getFormattedDateStr } from '@/libs/utils';
+import { EUrlBaseParam, SITE_BASE_URL } from '@/models/url.model';
+import BottomInfoPanel from '@/components/BottomInfoPanel/BottomInfoPanel';
+import Link from 'next/link';
 
 // export const dynamic = 'force-dynamic';
 
@@ -16,45 +20,55 @@ export interface ISatChannelListParams {
   params: { article: string };
 }
 
-const allCatResponse = await getArticleCatList();
+const articleSlugList = await getArticleSlugList();
 
-const getCurrentCatParams = cache((catCpu: string): ISingleCatArticlesModel => {
-  const catParams =
-    allCatResponse instanceof Error
-      ? ''
-      : allCatResponse.find((cat) => cat.cpu === catCpu);
+// const getCurrentCatParams = cache((catCpu: string): ISingleCatArticlesModel => {
+//   const catParams =
+//     articleSlugList instanceof Error
+//       ? ''
+//       : articleSlugList.find((cat) => cat.cpu === catCpu);
 
-  return catParams
-    ? {
-        title: catParams.title,
-        id: catParams.id,
-        cpu: catParams.cpu,
-        description: catParams.description,
-        text: catParams.text,
-      }
-    : { title: '', description: '', id: -1, cpu: '', text: '' };
-});
+//   return catParams
+//     ? {
+//         title: catParams.title,
+//         id: catParams.id,
+//         cpu: catParams.cpu,
+//         description: catParams.description,
+//         text: catParams.text,
+//       }
+//     : { title: '', description: '', id: -1, cpu: '', text: '' };
+// });
 
-export const generateMetadata = ({
+export const generateMetadata = async ({
   params: { article },
-}: ISatChannelListParams): Metadata => {
-  const { title, description } = getCurrentCatParams(article);
+}: ISatChannelListParams): Promise<Metadata> => {
+  const sqlResult = await getArticle(article);
+  if (sqlResult instanceof Error) return defaultMetaData.ua;
+
+  const { title, description, date, slug } = sqlResult[0];
 
   return {
     title,
     description,
     keywords: description,
+    openGraph: {
+      ...defaultMetaData.openGraph,
+      title,
+      description,
+      url: SITE_BASE_URL + EUrlBaseParam.ARTICLE + slug,
+      publishedTime: getFormattedDateStr(date),
+    },
   };
 };
 
 export async function generateStaticParams(): Promise<
   {
-    cat: string;
+    article: string;
   }[]
 > {
-  if (allCatResponse instanceof Error) return [{ cat: '' }];
+  if (articleSlugList instanceof Error) return [{ article: '' }];
 
-  return allCatResponse.map((cat) => ({ cat: cat.cpu }));
+  return articleSlugList.map((article) => ({ article: article.cpu }));
 }
 
 export const dynamicParams = false;
@@ -67,30 +81,51 @@ export default async function Page({
   if (sqlResult instanceof Error)
     return <EmptyData description={sqlResult.message} />;
 
-  const articleResult = sqlResult[0];
-  // const articleTitleImg = imagePathValidate(
-  //   ARTICLES.articleList.images.titleImg,
-  //   ARTICLES.articleList.images.titleImg.alternativeStr.title
-  // );
+  const { title, logo, text, cat_slug, cat_name, date, view } = sqlResult[0];
+
   const { h1Image } = ARTICLES.article.images;
+
+  const {
+    date: dateTitle,
+    theme: themeTitle,
+    views: viewsTitle,
+  } = ARTICLES.infoPanelTitles;
 
   return (
     <>
       <Title style={{ borderBottom: '2px groove' }}>
-        {articleResult.title}
+        {title}
         <FillingValidImage
           image={{
             ...h1Image,
-            src: `${h1Image.path}${articleResult.logo}`,
+            src: `${h1Image.path}${logo}`,
           }}
           defaultImage={h1Image.defaultImg}
           alternativeImgString={h1Image.alternativeStr}
-          alt={`${h1Image.getAlt().ua}${articleResult.title}`}
+          alt={`${h1Image.getAlt().ua}${title}`}
           isBlur
         />
       </Title>
 
-      <DangerHtml text={articleResult.text} />
+      <DangerHtml text={text} />
+
+      <BottomInfoPanel
+        items={[
+          {
+            name: themeTitle.ua,
+            value: (
+              <Link
+                href={`/${EUrlBaseParam.NEWS_AND_ARTICLES}/${cat_slug}`}
+                style={{ textDecoration: 'underline' }}
+              >
+                {cat_name}
+              </Link>
+            ),
+          },
+          { name: viewsTitle.ua, value: view },
+          { name: dateTitle.ua, value: getFormattedDateStr(date) },
+        ]}
+      />
     </>
   );
 }

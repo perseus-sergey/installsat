@@ -68,10 +68,8 @@ export default async function layout({
 
   return (
     <>
-      <section className="articleWrapper">
-        <article className="article">{children}</article>
-        <SimilarArticles similarArticles={similarArticles} />
-      </section>
+      <article className="article">{children}</article>
+      <SimilarArticles similarArticles={similarArticles} />
     </>
   );
 }

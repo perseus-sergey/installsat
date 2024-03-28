@@ -14,10 +14,12 @@ import TextUnderH1 from '@/components/TextUnderH1/TextUnderH1';
 import ArticleList from '@/components/ArticleList/ArticleList';
 import { notFound } from 'next/navigation';
 import Pagination from '@/components/Pagination/Pagination';
+import { defaultMetaData } from '@/models/ui.model';
+import { EUrlBaseParam, SITE_BASE_URL } from '@/models/url.model';
 
 export const dynamic = 'force-dynamic';
 
-export interface ISatChannelListParams {
+export interface IPageParams {
   params: { cat: string };
   searchParams: { [key: string]: string | string[] | undefined };
 }
@@ -45,13 +47,20 @@ const getCurrentCatParams = cache((catCpu: string): ISingleCatArticlesModel => {
 
 export const generateMetadata = ({
   params: { cat },
-}: ISatChannelListParams): Metadata => {
-  const { title, description } = getCurrentCatParams(cat);
+}: IPageParams): Metadata => {
+  const { title, description, cpu } = getCurrentCatParams(cat);
 
   return {
     title,
     description,
     keywords: description,
+    openGraph: {
+      ...defaultMetaData.openGraph,
+      title,
+      description,
+      url: `${SITE_BASE_URL}/${EUrlBaseParam.NEWS_AND_ARTICLES}/${cpu}`,
+      publishedTime: getFormattedDateStr(currDateStr),
+    },
   };
 };
 
@@ -69,7 +78,7 @@ export const dynamicParams = false;
 export default async function Page({
   params: { cat },
   searchParams,
-}: ISatChannelListParams) {
+}: IPageParams) {
   const { id, description, text } = getCurrentCatParams(cat);
 
   let page = 0;

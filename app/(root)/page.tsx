@@ -12,7 +12,7 @@ interface IProps {
   searchParams: { [key: string]: string | string[] | undefined };
 }
 
-export default function SatNewsPage({ searchParams }: IProps) {
+export default function Page({ searchParams }: IProps) {
   const searchInterval = searchParams[EUrlSearchParam.INTERVAL];
   const intervalDays =
     typeof searchInterval === 'string' && searchInterval
@@ -21,19 +21,17 @@ export default function SatNewsPage({ searchParams }: IProps) {
 
   return (
     <>
-      <section className="articleWrapper">
-        <article className="article">
-          <Title>{META_TRANS_NEWS_LIST.getH1(intervalDays)}</Title>
-          <nav>
-            <Suspense>
-              <FormDigestInterval searchParams={searchParams} />
-            </Suspense>
-          </nav>
+      <article className="article">
+        <Title>{META_TRANS_NEWS_LIST.getH1(intervalDays)}</Title>
+        <nav>
           <Suspense>
-            <SatNews searchParams={searchParams} />
+            <FormDigestInterval searchParams={searchParams} />
           </Suspense>
-        </article>
-      </section>
+        </nav>
+        <Suspense>
+          <SatNews searchParams={searchParams} />
+        </Suspense>
+      </article>
     </>
   );
 }

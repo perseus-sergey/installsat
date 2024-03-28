@@ -3,11 +3,5 @@ export interface IParams {
 }
 
 export default async function layout({ children }: IParams) {
-  return (
-    <>
-      <section className="articleWrapper">
-        <article className="article">{children}</article>
-      </section>
-    </>
-  );
+  return <article className="article">{children}</article>;
 }

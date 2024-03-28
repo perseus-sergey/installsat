@@ -15,14 +15,24 @@ import SatChannelsTable from '@/components/SatChannelsTable/SatChannelsTable';
 import FillingImg from '@/components/Images/FillingImage';
 import Link from 'next/link';
 import Fieldset from '@/components/Fieldset/Fieldset';
+import { defaultMetaData } from '@/models/ui.model';
+import { getFormattedDateStr } from '@/libs/utils';
+import { EUrlBaseParam, SITE_BASE_URL } from '@/models/url.model';
 
 export const metadata: Metadata = {
   title: META_ALL_SAT_CHANNEL_LIST.getTitle().ua,
   description: META_ALL_SAT_CHANNEL_LIST.getDescription().ua,
   keywords: META_ALL_SAT_CHANNEL_LIST.getKeywords().ua,
+  openGraph: {
+    ...defaultMetaData.openGraph,
+    title: META_ALL_SAT_CHANNEL_LIST.getTitle().ua,
+    description: META_ALL_SAT_CHANNEL_LIST.getDescription().ua,
+    url: `${SITE_BASE_URL}/${EUrlBaseParam.SAT_CHANNEL_LIST}`,
+    publishedTime: getFormattedDateStr(new Date()),
+  },
 };
 
-export default async function SatNewsDatePage() {
+export default async function Page() {
   const satChannels = await getSatChannels();
 
   if (satChannels instanceof Error)

@@ -12,47 +12,9 @@ import { EUrlBaseParam } from '@/models/url.model';
 import BottomInfoPanel from '@/components/BottomInfoPanel/BottomInfoPanel';
 import Link from 'next/link';
 
-// export const dynamic = 'force-dynamic';
-
 export interface IArticleParams {
   params: { article: string };
 }
-
-// const articleSlugList = await getArticleSlugList();
-
-// export const generateMetadata = async ({
-//   params: { article },
-// }: IArticleParams): Promise<Metadata> => {
-//   const sqlResult = await getArticle(article);
-//   if (sqlResult instanceof Error) return defaultMetaData.ua;
-
-//   const { title, description, date, slug } = sqlResult[0];
-
-//   return {
-//     title,
-//     description,
-//     keywords: description,
-//     openGraph: {
-//       ...defaultMetaData.openGraph,
-//       title,
-//       description,
-//       url: SITE_BASE_URL + EUrlBaseParam.ARTICLE + slug,
-//       publishedTime: getFormattedDateStr(date),
-//     },
-//   };
-// };
-
-// export async function generateStaticParams(): Promise<
-//   {
-//     article: string;
-//   }[]
-// > {
-//   if (articleSlugList instanceof Error) return [{ article: '' }];
-
-//   return articleSlugList.map((article) => ({ article: article.cpu }));
-// }
-
-// export const dynamicParams = false;
 
 export default async function Page({ params: { article } }: IArticleParams) {
   const sqlResult = await getArticle(article);

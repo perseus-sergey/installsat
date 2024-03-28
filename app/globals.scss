@@ -74,11 +74,17 @@ a {
 }
 
 .article {
+  display: flex;
+  flex-direction: column;
   border-radius: 10px;
   border: thick inset #cccccc;
   background-color: var(--background-color);
   min-height: 75vh;
   padding: 0.7rem;
+}
+
+.article-text {
+  flex: 1;
 }
 
 .sidebar {

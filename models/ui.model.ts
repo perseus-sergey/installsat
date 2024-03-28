@@ -108,3 +108,10 @@ export const defaultMetaData = {
     authors: ['Installsat'],
   },
 };
+
+export const SIMILAR_ARTICLES = {
+  title: {
+    en: 'Similar articles',
+    ua: 'Схожі статті',
+  },
+};

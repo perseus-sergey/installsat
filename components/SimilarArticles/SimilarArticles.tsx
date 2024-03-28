@@ -1,20 +1,16 @@
-import { ISimilarArticleModel } from '@/models/articles.model';
 import styles from './SimilarArticles.module.scss';
-import Link from 'next/link';
-import { EUrlBaseParam } from '@/models/url.model';
+import { SIMILAR_ARTICLES } from '@/models/ui.model';
+import { ReactNode } from 'react';
 
 interface ISimilarArticlesProps {
-  similarArticles: ISimilarArticleModel[];
+  similarArticlesMapped: ReactNode[];
 }
 
-const SimilarArticles = ({ similarArticles }: ISimilarArticlesProps) => (
-  <ul className={styles.SimilarArticles} data-testid="SimilarArticles">
-    {similarArticles.map((art) => (
-      <li key={art.cpu}>
-        <Link href={`/${EUrlBaseParam.ARTICLE}/${art.cpu}`}>{art.title}</Link>
-      </li>
-    ))}
-  </ul>
+const SimilarArticles = ({ similarArticlesMapped }: ISimilarArticlesProps) => (
+  <nav className={styles.SimilarArticles} data-testid="SimilarArticles">
+    <h2 className={styles.title}>{SIMILAR_ARTICLES.title.ua}</h2>
+    <ul className={styles.list}>{similarArticlesMapped}</ul>
+  </nav>
 );
 
 export default SimilarArticles;

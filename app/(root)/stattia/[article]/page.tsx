@@ -51,8 +51,9 @@ export default async function Page({ params: { article } }: IArticleParams) {
           isBlur
         />
       </Title>
-
-      <DangerHtml text={text} />
+      <div className="article-text">
+        <DangerHtml text={text} />
+      </div>
 
       <BottomInfoPanel
         items={[

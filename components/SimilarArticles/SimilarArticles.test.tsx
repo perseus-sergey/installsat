@@ -5,7 +5,7 @@ import test, { describe } from 'node:test';
 
 describe('<SimilarArticles />', () => {
   test('it should mount', () => {
-    render(<SimilarArticles similarArticles={[]} />);
+    render(<SimilarArticles similarArticlesMapped={[]} />);
 
     const similarArticles = screen.getByTestId('SimilarArticles');
 

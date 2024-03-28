@@ -11,6 +11,7 @@ import {
 import SimilarArticles from '@/components/SimilarArticles/SimilarArticles';
 import EmptyData from '@/components/EmptyData/EmptyData';
 import { IArticleParams } from './page';
+import Link from 'next/link';
 
 export interface IArticleLayoutParams extends IArticleParams {
   children: React.ReactNode;
@@ -69,7 +70,16 @@ export default async function layout({
   return (
     <>
       <article className="article">{children}</article>
-      <SimilarArticles similarArticles={similarArticles} />
+      <SimilarArticles
+        similarArticlesMapped={similarArticles.map((art) => (
+          <li key={art.cpu}>
+            <Link href={`/${EUrlBaseParam.ARTICLE}/${art.cpu}`}>
+              {art.title}
+            </Link>
+            <span>{` (${getFormattedDateStr(art.date)})`}</span>
+          </li>
+        ))}
+      />
     </>
   );
 }

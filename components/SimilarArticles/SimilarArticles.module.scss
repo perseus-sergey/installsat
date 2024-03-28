@@ -1,2 +1,37 @@
 .SimilarArticles {
+  margin: 4px auto;
+  border-radius: 10px;
+  border: thick inset #cccccc;
+  padding: 1rem 1rem 1rem 3rem;
+  width: 100%;
+  background: linear-gradient(
+    to bottom,
+    #fceabb 0%,
+    #fccd4d 35%,
+    #f8b500 36%,
+    #fbdf93 100%
+  );
+
+  .title {
+    font-size: 1.8rem;
+    font-weight: bold;
+    font-family: Verdana, Geneva, sans-serif;
+    padding: 0.5rem 0;
+    text-shadow: 1px 1px 0px white;
+    color: #000099;
+    text-align: center;
+  }
+
+  .list {
+    list-style-image: url(/Images/galka_blue.png);
+    font:
+      1.2rem / 1.5 Georgia,
+      'Times New Roman',
+      Times,
+      serif;
+
+    a {
+      color: #0000cc;
+    }
+  }
 }

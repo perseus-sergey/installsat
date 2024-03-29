@@ -115,3 +115,7 @@ export const SIMILAR_ARTICLES = {
     ua: 'Схожі статті',
   },
 };
+
+export enum EDBTableTitles {
+  ARTICLE = 'tbl_useful',
+}

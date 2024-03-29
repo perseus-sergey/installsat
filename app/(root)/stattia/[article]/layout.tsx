@@ -2,11 +2,12 @@ import type { Metadata } from 'next';
 import React from 'react';
 import { EUrlBaseParam, SITE_BASE_URL } from '@/models/url.model';
 import { getFormattedDateStr } from '@/libs/utils';
-import { defaultMetaData } from '@/models/ui.model';
+import { EDBTableTitles, defaultMetaData } from '@/models/ui.model';
 import {
   getArticle,
   getArticleSlugList,
   getSimilarArticles,
+  updateViewCount,
 } from '@/controllers/articles.controller';
 import SimilarArticles from '@/components/SimilarArticles/SimilarArticles';
 import EmptyData from '@/components/EmptyData/EmptyData';
@@ -61,11 +62,13 @@ export default async function layout({
   if (sqlResult instanceof Error)
     return <EmptyData description={sqlResult.message} />;
 
-  const { id, logo } = sqlResult[0];
+  const { id, logo, view } = sqlResult[0];
 
   const similarArticles = await getSimilarArticles(logo, id);
   if (similarArticles instanceof Error)
     return <EmptyData description={similarArticles.message} />;
+
+  updateViewCount(EDBTableTitles.ARTICLE, id, view);
 
   return (
     <>

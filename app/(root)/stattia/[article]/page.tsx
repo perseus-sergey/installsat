@@ -68,7 +68,7 @@ export default async function Page({ params: { article } }: IArticleParams) {
               </Link>
             ),
           },
-          { name: viewsTitle.ua, value: view },
+          { name: viewsTitle.ua, value: view + 1 },
           { name: dateTitle.ua, value: getFormattedDateStr(date) },
         ]}
       />

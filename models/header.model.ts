@@ -9,7 +9,10 @@ export const LOGO = {
       en: 'To Home Page',
       ua: 'На головну сторінку',
     },
-    img: {
+    siteLogo: {
+      src: '/Images/InstallsatOrigBlue_200.png',
+      width: '200px',
+      height: '85px',
       alt: {
         en: 'Installsat TV Logo',
         ua: 'Installsat TV Логотип',

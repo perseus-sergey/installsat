@@ -51,7 +51,7 @@ export const MBreadCrumbs: IBreadCrumbs = new Map([
   [EUrlBaseParam.PRODUCT, { ua: 'Товари', en: 'Products' }],
   [EUrlBaseParam.PRODUCT_LIST, { ua: 'Список товарів', en: 'Product list' }],
   [
-    EUrlBaseParam.PRODUCT_CATEGORY,
+    EUrlBaseParam.PRODUCT_CATEGORIES,
     { ua: 'Категорії товарів', en: 'Product categories' },
   ],
 ]);

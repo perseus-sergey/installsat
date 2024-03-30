@@ -9,7 +9,7 @@ export enum EUrlBaseParam {
   // ALL_SATS_CHANNEL_LIST = 'vsi-suputnyky',
   INSTALLATION_OPTIONS = 'varianty-vstanovlennia-anten',
   ARTICLE = 'stattia',
-  SAT_COVERAGE_MAP = 'mapa-pokryttia-suputnyka',
+  SAT_COVERAGE_MAP = 'karty-pokryttia-suputnykiv',
   NEWS_AND_ARTICLES = 'novyny-ta-statti',
   CHANNEL_PARAMS = 'parametry-kanalu',
   ONLINE_CHANNEL_LIST = 'telekanaly-onlain',
@@ -18,7 +18,7 @@ export enum EUrlBaseParam {
   CHANNELS_TV_PROGRAM = 'programa-telekanaliv',
   PRODUCT = 'tovar',
   PRODUCT_LIST = 'spysok-tovariv',
-  PRODUCT_CATEGORY = 'kategorija-tovara',
+  PRODUCT_CATEGORIES = 'kategoriji-tovariv',
 }
 
 export enum EUrlSearchParam {

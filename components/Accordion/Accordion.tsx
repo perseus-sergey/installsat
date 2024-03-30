@@ -104,7 +104,7 @@ const Accordion = async () => {
                 <Image
                   width="32"
                   height="32"
-                  src="/images/accordion/hardwarepng_1855.png"
+                  src="/Images/accordion/hardwarepng_1855.png"
                   alt="Обладнання для супутникового та ефірного тб"
                 />
                 Обладнання
@@ -115,7 +115,7 @@ const Accordion = async () => {
                       <Image
                         height="16"
                         width="16"
-                        src="/images/accordion/bulb2.png"
+                        src="/Images/accordion/bulb2.png"
                         alt={item.title}
                       />
                       {item.title}

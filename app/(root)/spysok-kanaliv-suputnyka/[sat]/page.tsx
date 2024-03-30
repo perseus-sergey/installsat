@@ -14,14 +14,18 @@ import type { Metadata } from 'next';
 import StartArticleSection from '@/components/StartArticleSection/StartArticleSection';
 import SatChannelsTable from '@/components/SatChannelsTable/SatChannelsTable';
 import FillingValidImage from '@/components/Images/FillingValidImage';
+import { cache } from 'react';
+import { defaultMetaData } from '@/models/ui.model';
+import { EUrlBaseParam, SITE_BASE_URL } from '@/models/url.model';
+import { getFormattedDateStr } from '@/libs/utils';
 
-export interface ISatChannelListParams {
+export interface IPageParams {
   params: { sat: string };
 }
 
 const satListResponse = await getChannelSatList();
 
-const getCurrentSatParams = (satCpu: string) => {
+const getCurrentSatParams = cache((satCpu: string) => {
   const satParams =
     satListResponse instanceof Error
       ? ''
@@ -33,20 +37,28 @@ const getCurrentSatParams = (satCpu: string) => {
         id: `${satParams.id}`,
         satPosition: satParams.position,
         logo: satParams.logo,
+        slug: satParams.cpu,
       }
-    : { title: '', id: '-1', satPosition: -1, logo: '' };
-};
+    : { title: '', id: '-1', satPosition: -1, logo: '', slug: '' };
+});
 
-export const generateMetadata = ({
-  params,
-}: ISatChannelListParams): Metadata => {
-  const satParams = getCurrentSatParams(params.sat);
-  const satTitle = `${satParams.title} - ${satParams.satPosition}`;
+export const generateMetadata = ({ params }: IPageParams): Metadata => {
+  const { title, satPosition, slug } = getCurrentSatParams(params.sat);
+  const satTitle = `${title} - ${satPosition}`;
+  const metaTitle = `${META_SAT_CHANNEL_LIST.getTitle().ua} ${satTitle}`;
+  const description = `${META_SAT_CHANNEL_LIST.getDescription().ua} ${satTitle}`;
 
   return {
-    title: `${META_SAT_CHANNEL_LIST.getTitle().ua} ${satTitle}`,
-    description: `${META_SAT_CHANNEL_LIST.getDescription().ua} ${satTitle}`,
+    title: metaTitle,
+    description,
     keywords: `${satTitle} ${META_SAT_CHANNEL_LIST.getKeywords('ua')}`,
+    openGraph: {
+      ...defaultMetaData.openGraph,
+      title: metaTitle,
+      description,
+      url: `${SITE_BASE_URL}/${EUrlBaseParam.SAT_CHANNEL_LIST}/${slug}`,
+      publishedTime: getFormattedDateStr(new Date()),
+    },
   };
 };
 
@@ -61,9 +73,7 @@ export async function generateStaticParams(): Promise<
 }
 
 export const dynamicParams = false;
-export default async function SatNewsDatePage({
-  params,
-}: ISatChannelListParams) {
+export default async function Page({ params }: IPageParams) {
   const satParams = getCurrentSatParams(params.sat);
   const satChannels = await getSatChannels(satParams.id);
 

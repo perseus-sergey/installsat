@@ -106,7 +106,7 @@ const FrequencySegment = ({
           <FillingImg
             width="24px"
             height="24px"
-            src={`/images/genre/${MChanTheme.get(tema)}`}
+            src={`/Images/genre/${MChanTheme.get(tema)}`}
           />
         </td>
       </tr>

@@ -1,0 +1,35 @@
+1. копируем старую галерею в новую €чейку таблицы td
+2. мен€ем в новой галереи id="thumb3" на id="thumb..."
+3. мен€ем все onclick="return hs.expand(this, config3 ) на onclick="return hs.expand(this, config... )
+4. мен€ем все фото
+5. добавл€ем в скрипт "highslide_gall/highslide_gall.config.js" новые
+var config... = {
+	slideshowGroup: 'group...',
+	thumbnailId: 'thumb...',
+	transitions: ['expand', 'crossfade']
+};
+
+и
+
+// Add the slideshow controller
+hs.addSlideshow({
+	slideshowGroup: 'group...',
+	interval: 4000,
+	repeat: true,
+	useControls: true,
+	fixedControls: 'fit',
+	overlayOptions: {
+		opacity: 0.75,
+		position: 'top right',
+		offsetX: 0,
+		offsetY: -15,
+		hideOnMouseOut: true
+	},
+	thumbstrip: {
+		mode: 'horizontal',
+		position: 'below',
+		relativeTo: 'image'
+	}
+
+});
+

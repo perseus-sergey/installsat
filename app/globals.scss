@@ -41,7 +41,7 @@ body {
   //     rgb(var(--background-end-rgb))
   //   )
   //   rgb(var(--background-start-rgb));
-  background: url('/images/black00001.gif');
+  background: url('/Images/black00001.gif');
   background-color: #000000;
 }
 
@@ -67,13 +67,49 @@ a {
   }
 }
 
-.article {
+.articleWrapper {
+  display: flex;
+  flex-direction: column;
   flex: 3;
+}
+
+.article {
+  display: flex;
+  flex-direction: column;
   border-radius: 10px;
   border: thick inset #cccccc;
   background-color: var(--background-color);
   min-height: 75vh;
   padding: 0.7rem;
+}
+
+.article-text {
+  flex: 1;
+  padding: 2rem 1rem;
+  color: #4b4a4a;
+  font-size: 1.1rem;
+
+  h2 {
+    font-family: Verdana, Geneva, sans-serif;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #000099;
+    text-shadow: 3px 3px 3px #cccccc;
+    text-align: center;
+    padding: 10px;
+  }
+
+  ul {
+    margin-left: 2rem;
+    list-style-image: url(/Images/galka_blue.png);
+  }
+
+  a {
+    color: #0000cc;
+    &:hover {
+      color: red;
+    }
+  }
 }
 
 .sidebar {

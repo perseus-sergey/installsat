@@ -15,6 +15,7 @@ interface IBreadCrumbProps extends React.HTMLAttributes<HTMLElement> {
   separator?: ReactNode;
   activeLinkColor?: string;
   isCapitalizeLinks?: boolean;
+  isHideLastLink?: boolean;
 }
 
 const BreadCrumb = ({
@@ -23,6 +24,7 @@ const BreadCrumb = ({
   activeLinkColor,
   isCapitalizeLinks = true,
   separator = BREAD_SEPARATOR,
+  isHideLastLink = true,
 }: IBreadCrumbProps) => {
   const paths = usePathname();
   const [homeElement, setHomeElement] = useState<string>('');
@@ -33,7 +35,13 @@ const BreadCrumb = ({
     const homeObj = MBreadCrumbs.get(EUrlBaseParam.BASE_PATH);
     setHomeElement(homeObj ? homeObj[language] : 'Home');
 
-    const pathTitles = paths.split('/').filter((path) => path);
+    const splitTitles = paths.split('/');
+    const pathTitles = splitTitles.filter((path, i) => {
+      if (isHideLastLink && i === splitTitles.length - 1) return false;
+
+      return path;
+    });
+    // const pathTitles = splitTitles.filter((path) => path);
     setPathNames(pathTitles);
     setHandledPaths(
       pathTitles.map((segment) => {

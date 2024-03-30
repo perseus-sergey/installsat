@@ -2,7 +2,7 @@ import React from 'react';
 import styles from './Header.module.scss';
 import Image from 'next/image';
 import Link from 'next/link';
-import mainLogo from '/public/images/InstallsatOrigBlue_200.png';
+import mainLogo from '/public/Images/InstallsatOrigBlue_200.png';
 import ToggleSidebarLabel from '../ToggleSidebarLabel/ToggleSidebarLabel';
 import { LOGO, TOGGLE_SIDEBAR_BUTTON_TITLE } from '@/models/header.model';
 

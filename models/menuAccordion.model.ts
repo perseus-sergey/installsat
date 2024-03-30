@@ -98,7 +98,6 @@ export const MENU_ACCORDION: { [key: string]: IAccordionItemOptions } = {
     },
     title: { ua: 'Онлайн ТБ', en: 'Online TV' },
     titleHref: `/${EUrlBaseParam.ONLINE_CHANNEL_LIST}`,
-    // titleHref: '/spisok-online-kanalov/vse-tv/',
   },
 };
 

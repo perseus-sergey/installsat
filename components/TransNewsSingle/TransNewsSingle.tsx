@@ -5,6 +5,8 @@ import DangerHtmlUl from '../DangerHtml/DangerHtml';
 import { META_TRANS_NEWS_LIST, TSatDigest } from '@/models/satDigest.model';
 import { getDailyNews } from '@/controllers/satDigest.controller';
 import FillingValidImage from '../Images/FillingValidImage';
+import { ERRORS } from '@/models/ui.model';
+import EmptyPage from '../EmptyPage/EmptyPage';
 
 interface ITransNewsSingleProps {
   newsArray: [string, TSatDigest[]][];
@@ -15,32 +17,36 @@ const TransNewsSingle = ({ newsArray, title }: ITransNewsSingleProps) => (
   <>
     <Title>{title}</Title>
     <div className={satNewsStyles.newsBlock}>
-      {newsArray.map((satNews) => {
-        const { satLogo } = META_TRANS_NEWS_LIST.images;
+      {newsArray.length ? (
+        newsArray.map((satNews) => {
+          const { satLogo } = META_TRANS_NEWS_LIST.images;
 
-        return (
-          <>
-            <h2 className={satNewsStyles.groupTitle} key={satNews[0]}>
-              <FillingValidImage
-                image={{
-                  ...satLogo,
-                  src: `${satLogo.path}${satNews[1][0].satLogo}`,
-                }}
-                defaultImage={satLogo.defaultImg}
-                alternativeImgString={satLogo.alternativeStr}
-                alt={`${satLogo.alt.ua}${satNews[0]}`}
-              />
-              {satNews[0]}
-            </h2>
-            <div className={satNewsStyles.newsList}>
-              <DangerHtmlUl
-                text={getDailyNews(satNews[1])}
-                wrapperTagName="ul"
-              />
-            </div>
-          </>
-        );
-      })}
+          return (
+            <>
+              <h2 className={satNewsStyles.groupTitle} key={satNews[0]}>
+                <FillingValidImage
+                  image={{
+                    ...satLogo,
+                    src: `${satLogo.path}${satNews[1][0].satLogo}`,
+                  }}
+                  defaultImage={satLogo.defaultImg}
+                  alternativeImgString={satLogo.alternativeStr}
+                  alt={`${satLogo.alt.ua}${satNews[0]}`}
+                />
+                {satNews[0]}
+              </h2>
+              <div className={satNewsStyles.newsList}>
+                <DangerHtmlUl
+                  text={getDailyNews(satNews[1])}
+                  wrapperTagName="ul"
+                />
+              </div>
+            </>
+          );
+        })
+      ) : (
+        <EmptyPage title={ERRORS.EMPTY_DATE_NEWS_PAGE.title.ua} />
+      )}
     </div>
   </>
 );

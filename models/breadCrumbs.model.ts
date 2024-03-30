@@ -44,9 +44,8 @@ export const MBreadCrumbs: IBreadCrumbs = new Map([
     { ua: 'Список онлайн каналів', en: 'Online channel list' },
   ],
   [EUrlBaseParam.TV_ONLINE, { ua: 'Канали онлайн', en: 'Online channels' }],
-  [EUrlBaseParam.TV_PROGRAM, { ua: 'Програма каналів', en: 'Channel program' }],
   [
-    EUrlBaseParam.CHANNEL_TV_PROGRAM,
+    EUrlBaseParam.CHANNELS_TV_PROGRAM,
     { ua: 'Програма каналів', en: 'Channel program' },
   ],
   [EUrlBaseParam.PRODUCT, { ua: 'Товари', en: 'Products' }],

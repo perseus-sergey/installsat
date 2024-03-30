@@ -73,16 +73,19 @@ export default async function layout({
   return (
     <>
       <article className="article">{children}</article>
-      <SimilarArticles
-        similarArticlesMapped={similarArticles.map((art) => (
-          <li key={art.cpu}>
-            <Link href={`/${EUrlBaseParam.ARTICLE}/${art.cpu}`}>
-              {art.title}
-            </Link>
-            <span>{` (${getFormattedDateStr(art.date)})`}</span>
-          </li>
-        ))}
-      />
+
+      {similarArticles.length ? (
+        <SimilarArticles
+          similarArticlesMapped={similarArticles.map((art) => (
+            <li key={art.cpu}>
+              <Link href={`/${EUrlBaseParam.ARTICLE}/${art.cpu}`}>
+                {art.title}
+              </Link>
+              <span>{` (${getFormattedDateStr(art.date)})`}</span>
+            </li>
+          ))}
+        />
+      ) : null}
     </>
   );
 }

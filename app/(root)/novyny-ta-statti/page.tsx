@@ -8,6 +8,9 @@ import FillingValidImage from '@/components/Images/FillingValidImage';
 import ArticleList from '@/components/ArticleList/ArticleList';
 import Pagination from '@/components/Pagination/Pagination';
 import { notFound } from 'next/navigation';
+import { getFormattedDateStr } from '@/libs/utils';
+import { EUrlBaseParam, SITE_BASE_URL } from '@/models/url.model';
+import { defaultMetaData } from '@/models/ui.model';
 
 export const dynamic = 'force-dynamic';
 
@@ -19,6 +22,13 @@ export const metadata: Metadata = {
   title: ARTICLES.articleList.meta.getTitle().ua,
   description: ARTICLES.articleList.meta.getDescription().ua,
   keywords: ARTICLES.articleList.meta.getKeywords('ua'),
+  openGraph: {
+    ...defaultMetaData.openGraph,
+    title: ARTICLES.articleList.meta.getTitle().ua,
+    description: ARTICLES.articleList.meta.getDescription().ua,
+    url: `${SITE_BASE_URL}/${EUrlBaseParam.NEWS_AND_ARTICLES}`,
+    publishedTime: getFormattedDateStr(new Date()),
+  },
 };
 export default async function Page({ searchParams }: IProps) {
   let page = 0;
@@ -50,7 +60,6 @@ export default async function Page({ searchParams }: IProps) {
 
   return (
     <>
-      {/* {JSON.stringify(searchParams)} */}
       <Title style={{ borderBottom: '2px groove' }}>
         {ARTICLES.articleList.meta.getH1(currDate).ua}
         <FillingValidImage

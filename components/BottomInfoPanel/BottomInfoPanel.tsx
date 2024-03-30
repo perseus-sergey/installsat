@@ -11,22 +11,22 @@ interface IBottomInfoPanel {
 }
 
 const BottomInfoPanel = ({ items }: IBottomInfoPanel) => {
-  const separatorsCount = items.length - 2;
+  const filteredItems = items.filter((item) => item.value);
+  const lastId = filteredItems.length - 1;
 
   return (
     <section className={styles.BottomInfoPanel} data-testid="BottomInfoPanel">
-      {items.map(
-        ({ name, value }, i) =>
-          value && (
-            <>
-              <figure className={styles.infoPanelItem} key={name}>
-                <span className={styles.itemName}>{name}: </span>
-                <figcaption className={styles.itemValue}>{value}</figcaption>
-              </figure>
-              {i < separatorsCount && <span>|</span>}
-            </>
-          )
-      )}
+      {filteredItems.map(({ name, value }, i) => (
+        <>
+          <figure
+            className={`${styles.infoPanelItem}${i !== lastId ? ` ${styles.bordered}` : ''}`}
+            key={name}
+          >
+            <span className={styles.itemName}>{name}: </span>
+            <figcaption className={styles.itemValue}>{value}</figcaption>
+          </figure>
+        </>
+      ))}
     </section>
   );
 };

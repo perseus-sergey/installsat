@@ -41,7 +41,7 @@ export const footerMenuList: IFooterMenu[] = [
   },
   {
     title: { ua: 'Супутникове обладнання', en: 'Satellite equipment' },
-    href: `${EUrlBaseParam.PRODUCT_CATEGORY}`,
+    href: `${EUrlBaseParam.PRODUCT_CATEGORIES}`,
     // href: '/novosti-i-statji/satellite_equipments',
   },
   {

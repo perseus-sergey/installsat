@@ -33,11 +33,11 @@ export const META_TRANS_NEWS_LIST = {
   },
   images: {
     satLogo: {
-      path: '/images/satellites/',
+      path: '/Images/satellites/',
       height: '50px',
       width: '67px',
       defaultImg: {
-        src: '/images/satellites/wrong_sat_64.png',
+        src: '/Images/satellites/wrong_sat_64.png',
         height: '64px',
         width: '64px',
       },

@@ -9,16 +9,16 @@ export enum EUrlBaseParam {
   // ALL_SATS_CHANNEL_LIST = 'vsi-suputnyky',
   INSTALLATION_OPTIONS = 'varianty-vstanovlennia-anten',
   ARTICLE = 'stattia',
-  SAT_COVERAGE_MAP = 'mapa-pokryttia-suputnyka',
+  SAT_COVERAGE_MAP = 'karty-pokryttia-suputnykiv',
   NEWS_AND_ARTICLES = 'novyny-ta-statti',
   CHANNEL_PARAMS = 'parametry-kanalu',
-  ONLINE_CHANNEL_LIST = 'spysok-online-kanaliv',
+  ONLINE_CHANNEL_LIST = 'telekanaly-onlain',
   TV_ONLINE = 'tb-online',
-  TV_PROGRAM = 'programa-tb',
-  CHANNEL_TV_PROGRAM = 'programa-kanalu',
+  // TV_PROGRAM = 'programa-tb',
+  CHANNELS_TV_PROGRAM = 'programa-telekanaliv',
   PRODUCT = 'tovar',
   PRODUCT_LIST = 'spysok-tovariv',
-  PRODUCT_CATEGORY = 'kategorija-tovara',
+  PRODUCT_CATEGORIES = 'kategoriji-tovariv',
 }
 
 export enum EUrlSearchParam {

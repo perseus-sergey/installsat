@@ -125,14 +125,3 @@ export const updateViewCount = async (
     `UPDATE ${dbTableTitle} SET view = ? WHERE id = ?`,
     [`${oldViewNumber + 1}`, `${articleId}`]
   );
-
-// export const updateViewCount = async (
-//   dbTableTitle: string,
-//   articleId: number,
-//   oldViewNumber: number
-// ) =>
-//   await executeQuery<{ cpu: string }>(`UPDATE ? SET view = ? WHERE id = ?`, [
-//     dbTableTitle,
-//     `${oldViewNumber + 1}`,
-//     `${articleId}`,
-//   ]);

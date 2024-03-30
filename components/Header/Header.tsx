@@ -1,10 +1,9 @@
 import React from 'react';
 import styles from './Header.module.scss';
-import Image from 'next/image';
 import Link from 'next/link';
-import mainLogo from '/public/Images/InstallsatOrigBlue_200.png';
 import ToggleSidebarLabel from '../ToggleSidebarLabel/ToggleSidebarLabel';
 import { LOGO, TOGGLE_SIDEBAR_BUTTON_TITLE } from '@/models/header.model';
+import FillingImg from '../Images/FillingImage';
 
 const Header = () => (
   <header className={styles.Header} data-testid="Header">
@@ -16,11 +15,7 @@ const Header = () => (
       title={LOGO.link.title.ua}
       className={styles.Link}
     >
-      <Image
-        className={styles.Logo}
-        src={mainLogo}
-        alt={LOGO.link.img.alt.ua}
-      />
+      <FillingImg {...LOGO.link.siteLogo} alt={LOGO.link.siteLogo.alt.ua} />
     </Link>
   </header>
 );

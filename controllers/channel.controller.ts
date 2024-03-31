@@ -3,7 +3,6 @@ import { IChannel, ISimilarChannel } from '@/models/channel.model';
 import { cache } from 'react';
 
 export const getDBChannel = cache(async (slug: string) => {
-  console.log('🚀 ~ getDBChannel ~ slug:', slug);
   const sql = `
   SELECT 
   CH.id, 
@@ -32,6 +31,7 @@ export const getDBChannel = cache(async (slug: string) => {
   C.parent AS cat_parent_id,
   C.cpu AS cat_slug,
   (SELECT title FROM tbl_chan_categ WHERE id = C.parent LIMIT 1) AS cat_parent_title,
+  (SELECT cpu FROM tbl_chan_categ WHERE id = C.parent LIMIT 1) AS cat_parent_cpu,
   L.title AS chan_lang
 FROM 
   tbl_channals AS CH 

@@ -85,4 +85,5 @@ export const SIMILAR_ARTICLES = {
 export enum EDBTableTitles {
   ARTICLE = 'tbl_useful',
   CHANNELS = 'tbl_channals',
+  COMMENTS_CHANNEL = 'tbl_comments_chan',
 }

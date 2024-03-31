@@ -32,6 +32,10 @@
 
     a {
       color: #0000cc;
+
+      &:hover {
+        color: red;
+      }
     }
   }
 }

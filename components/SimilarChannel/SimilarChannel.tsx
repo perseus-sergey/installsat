@@ -10,6 +10,7 @@ interface ISimilarChannelProps {
 const SimilarChannel = ({ chanParams, channelTitle }: ISimilarChannelProps) => {
   const parentCatTitle =
     chanParams.cat_parent_id > 0 ? `${chanParams.cat_parent_title} | ` : '';
+
   const catLink =
     chanParams.cat_parent_id > 0
       ? `${chanParams.cat_parent_cpu}#${chanParams.cat_cpu}`

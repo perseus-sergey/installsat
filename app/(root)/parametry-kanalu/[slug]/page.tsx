@@ -1,42 +1,215 @@
+import BottomInfoPanel from '@/components/BottomInfoPanel/BottomInfoPanel';
+import DangerHtml from '@/components/DangerHtml/DangerHtml';
 import EmptyData from '@/components/EmptyData/EmptyData';
 import FillingValidImage from '@/components/Images/FillingValidImage';
+import SimilarArticles from '@/components/SimilarArticles/SimilarArticles';
+import SimilarChannel from '@/components/SimilarChannel/SimilarChannel';
 import { Title } from '@/components/Title/Title';
-import { getDBChannel } from '@/controllers/channel.controller';
+import {
+  getComments,
+  getSimilarArticles,
+  updateViewCount,
+} from '@/controllers/articles.controller';
+import {
+  getDBChannel,
+  getDBChannelSlugList,
+  getSimilarChannels,
+} from '@/controllers/channel.controller';
+import { getFormattedDateStr } from '@/libs/utils';
 import { META_CHANNEL } from '@/models/channel.model';
+import { EDBTableTitles, defaultMetaData } from '@/models/ui.model';
+import { EUrlBaseParam, SITE_BASE_URL } from '@/models/url.model';
+import { Metadata } from 'next';
+import Link from 'next/link';
+
+const {
+  images: {
+    channelLogo: { big: bigLogo },
+  },
+  infoPanelTitles: {
+    package: packageTitle,
+    comments: commentsTitle,
+    views: viewsTitle,
+  },
+  titleBefore,
+  keywordsBefore,
+  similar: { channels: simChannelsBefore, articles: simArticlesBefore },
+} = META_CHANNEL;
 
 export interface IChannelProps {
   params: { slug: string };
 }
+
+export const generateMetadata = async ({
+  params: { slug },
+}: IChannelProps): Promise<Metadata> => {
+  const sqlResult = await getDBChannel(slug);
+  if (sqlResult instanceof Error) return defaultMetaData.ua;
+
+  const {
+    title,
+    description,
+    chan_slug,
+    cat_parent_id,
+    cat_parent_title,
+    cat_title,
+    cat_id,
+    sat_title,
+    freq,
+    polar,
+    canonical,
+  } = sqlResult[0];
+  const metaTitle =
+    cat_parent_id > 0
+      ? `${titleBefore.ua} ${title} | ${cat_parent_title} | ${cat_title}`
+      : `${titleBefore.ua} ${title} | ${sat_title} ${freq} ${polar} | ${cat_title}`;
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [clearedCanonical, ..._] = canonical
+    .replace(/\/$/, '')
+    .split('/')
+    .reverse();
+
+  // if it is encrypted channel or category lybid || UA TV then canonical, else native url
+  const addCanonical =
+    canonical && (cat_id === 23 || cat_parent_id === 2 || cat_parent_id === 25)
+      ? clearedCanonical
+      : chan_slug;
+
+  return {
+    title: metaTitle,
+    description: description || title,
+    keywords: keywordsBefore.ua + description,
+    alternates: {
+      canonical: `${SITE_BASE_URL}/${EUrlBaseParam.CHANNEL_PARAMS}/${addCanonical}`,
+    },
+    openGraph: {
+      ...defaultMetaData.openGraph,
+      title: metaTitle,
+      description: description || title,
+      url: `${SITE_BASE_URL}/${EUrlBaseParam.CHANNEL_PARAMS}/${chan_slug}`,
+      publishedTime: getFormattedDateStr(),
+    },
+  };
+};
+
+export async function generateStaticParams(): Promise<
+  {
+    slug: string;
+  }[]
+> {
+  const channelSlugList = await getDBChannelSlugList();
+
+  if (channelSlugList instanceof Error) return [{ slug: '' }];
+
+  return channelSlugList.map((channel) => ({ slug: channel.cpu }));
+}
+
+export const dynamicParams = false;
 
 export default async function Page({ params: { slug } }: IChannelProps) {
   const sqlResult = await getDBChannel(slug);
   if (sqlResult instanceof Error)
     return <EmptyData description={sqlResult.message} />;
 
-  const { title, logo } = sqlResult[0];
-
   const {
-    images: {
-      channelLogo: { big: bigLogo },
-    },
-    titleBefore,
-  } = META_CHANNEL;
+    id,
+    title,
+    logo,
+    text,
+    view,
+    cat_title,
+    cat_parent_title,
+    cat_parent_id,
+    cat_parent_cpu,
+    cat_slug,
+    // sat_title,
+    // freq,
+    // polar,
+  } = sqlResult[0];
+
+  const catLink =
+    cat_parent_id > 0 ? `${cat_parent_cpu}#${cat_slug}` : cat_slug;
+
+  const catTitle =
+    cat_parent_id > 0 ? `${cat_parent_title} - ${cat_title}` : cat_title;
+
+  const similarChannelsResult = await getSimilarChannels(logo);
+  const similarChannels =
+    similarChannelsResult instanceof Error ? [] : similarChannelsResult;
+
+  const similarArticlesResult = await getSimilarArticles(logo);
+  const similarArticles =
+    similarArticlesResult instanceof Error ? [] : similarArticlesResult;
+
+  updateViewCount(EDBTableTitles.CHANNELS, id, view);
+
+  const commDbResult = await getComments(id, EDBTableTitles.COMMENTS_CHANNEL);
+  const comments = commDbResult instanceof Error ? [] : commDbResult;
 
   return (
     <>
-      <Title>
-        {`${titleBefore.ua} "${title}"`}
-        <FillingValidImage
-          image={{
-            ...bigLogo,
-            src: `${bigLogo.path}${logo}`,
-          }}
-          defaultImage={bigLogo.defaultImage}
-          alternativeImgString={bigLogo.alternativeImgStr}
-          alt={`${bigLogo.alt.ua} "${title}"`}
-          isBlur
+      <article className="article">
+        <Title style={{ borderBottom: '2px groove' }}>
+          {`${titleBefore.ua} "${title}"`}
+          <FillingValidImage
+            image={{
+              ...bigLogo,
+              src: `${bigLogo.path}${logo}`,
+            }}
+            defaultImage={bigLogo.defaultImage}
+            alternativeImgString={bigLogo.alternativeImgStr}
+            alt={`${bigLogo.alt.ua} "${title}"`}
+            isBlur
+          />
+        </Title>
+
+        <div className="article-text">
+          <DangerHtml text={text} />
+        </div>
+
+        <BottomInfoPanel
+          items={[
+            {
+              name: packageTitle.ua,
+              value: (
+                <Link
+                  href={`/${EUrlBaseParam.PACKAGE_CHANNEL_LIST}/${catLink}`}
+                >
+                  {catTitle}
+                </Link>
+              ),
+            },
+            { name: viewsTitle.ua, value: view + 1 },
+            { name: commentsTitle.ua, value: comments.length },
+          ]}
         />
-      </Title>
+      </article>
+
+      {similarChannels.length ? (
+        <SimilarArticles
+          similarTitle={`${simChannelsBefore.title.ua}"${title}"`}
+          similarArticlesMapped={similarChannels.map((chan) => (
+            <li key={chan.cpu}>
+              <SimilarChannel channelTitle={title} chanParams={chan} />
+            </li>
+          ))}
+        />
+      ) : null}
+
+      {similarArticles.length ? (
+        <SimilarArticles
+          similarTitle={simArticlesBefore.title.ua}
+          similarArticlesMapped={similarArticles.map((art) => (
+            <li key={art.cpu}>
+              <Link href={`/${EUrlBaseParam.ARTICLE}/${art.cpu}`}>
+                {art.title}
+              </Link>
+              <span>{` (${getFormattedDateStr(art.date)})`}</span>
+            </li>
+          ))}
+        />
+      ) : null}
     </>
   );
 }

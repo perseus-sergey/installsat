@@ -25,6 +25,7 @@ export interface IChannel {
   cat_slug: string;
   cat_parent_id: number;
   cat_parent_title: string;
+  cat_parent_cpu: string;
   chan_lang: string;
 }
 
@@ -96,8 +97,23 @@ export const META_CHANNEL = {
       },
     },
   },
-  similarArticlesTitle: {
-    ua: 'Де дивитись ',
-    en: 'Where to watch ',
+  infoPanelTitles: {
+    package: { ua: 'Пакет', en: 'Package' },
+    views: { ua: 'Переглядів', en: 'Views' },
+    comments: { ua: 'Коментарів', en: 'Comments' },
+  },
+  similar: {
+    channels: {
+      title: {
+        ua: 'Де дивитись',
+        en: 'Where to watch',
+      },
+    },
+    articles: {
+      title: {
+        ua: 'Новини каналу:',
+        en: 'Channel news:',
+      },
+    },
   },
 };

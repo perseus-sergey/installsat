@@ -10,11 +10,7 @@
 
 import { Title } from '@/components/Title/Title';
 
-export interface IChannelProps {
-  params: { slug: string };
-}
-
-export default function Page({ params: { slug } }: IChannelProps) {
+export default function Page() {
   //   const searchInterval = searchParams[EUrlSearchParam.INTERVAL];
   //   const intervalDays =
   //     typeof searchInterval === 'string' && searchInterval
@@ -23,7 +19,9 @@ export default function Page({ params: { slug } }: IChannelProps) {
 
   return (
     <>
-      <Title>Телеканал {slug}</Title>
+      <article className="article">
+        <Title>ТВ Канали онлайн</Title>
+      </article>
     </>
   );
 }

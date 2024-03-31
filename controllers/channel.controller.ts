@@ -1,0 +1,102 @@
+import { executeQuery } from '@/libs/db/mysqldb';
+import { IChannel, ISimilarChannel } from '@/models/channel.model';
+import { cache } from 'react';
+
+export const getDBChannel = cache(async (slug: string) => {
+  const sql = `
+  SELECT 
+  CH.id, 
+  CH.title, 
+  CH.cpu AS chan_slug, 
+  CH.logo, 
+  CH.description, 
+  CH.text, 
+  CH.cat AS cat_id, 
+  CH.url, 
+  CH.view, 
+  CH.canonical, 
+  CH.vsetv, 
+  CH.vipiko, 
+  CH.tvforsite_net,
+  F.freq,
+  F.sr,
+  F.fec,
+  B.polar,
+  S.title AS sat_title,
+  S.cpu AS sat_slug,
+  E.title AS encryption,
+  T.title AS genre,
+  CO.title AS compression,
+  C.title AS cat_title,
+  C.cpu AS cat_slug,
+  (SELECT title FROM tbl_chan_categ WHERE id = C.parent LIMIT 1) AS cat_parent_title,
+  L.title AS chan_lang
+FROM 
+  tbl_channals AS CH 
+LEFT JOIN 
+  tbl_chan_tema AS T ON CH.tema = T.id 
+LEFT JOIN 
+  tbl_chan_encryption AS E ON CH.encryption = E.id  
+LEFT JOIN 
+  tbl_chan_beam AS B ON CH.beam = B.id 
+LEFT JOIN 
+  tbl_chan_sat AS S ON CH.sat = S.id 
+LEFT JOIN 
+  tbl_chan_freq AS F ON CH.frequency = F.id 
+LEFT JOIN 
+  tbl_chan_categ AS C ON CH.cat = C.id 
+LEFT JOIN 
+  tbl_chan_compress AS CO ON CH.compress = CO.id 
+LEFT JOIN 
+  tbl_language AS L ON CH.lang = L.id 
+WHERE 
+  CH.cpu = ?
+LIMIT 1
+`;
+
+  return await executeQuery<IChannel>(sql, [slug]);
+});
+
+export const getDBChannelSlugList = async () =>
+  await executeQuery<{ cpu: string }>(`SELECT cpu FROM tbl_channals`);
+
+export const getSimilarChannels = async (logo: string) => {
+  const sql = `
+  SELECT  
+    C.id, 
+    C.compress, 
+    C.cpu,
+    C.cat       AS cat_id,
+    CA.title    AS cat_title,
+    CA.cpu      AS cat_cpu,
+    CA.parent   AS cat_parent_id,
+    S.title     AS sat_title,
+    S.cpu       AS sat_cpu,
+    S.position  AS sat_position,
+    F.freq      AS freq,
+    (SELECT title FROM tbl_chan_categ WHERE id = CA.parent LIMIT 1) AS cat_parent_title,
+    (SELECT cpu FROM tbl_chan_categ WHERE id = CA.parent LIMIT 1) AS cat_parent_cpu
+  FROM 
+    tbl_channals AS C 
+  LEFT JOIN 
+    tbl_chan_sat AS S ON C.sat = S.id 
+  LEFT JOIN 
+    tbl_chan_freq AS F ON C.frequency = F.id
+  LEFT JOIN 
+    tbl_chan_categ AS CA ON C.cat = CA.id 
+  WHERE 
+    C.logo = ?
+  AND
+    C.cat != 23
+  AND
+    CA.parent NOT IN (2, 25)
+  OR 
+    C.logo = "1plus1.jpg" 
+  AND 
+    C.compress = 5
+  ORDER BY 
+    C.cat DESC, S.grade
+  `;
+
+  return await executeQuery<ISimilarChannel>(sql, [logo]);
+};

@@ -34,7 +34,7 @@ export const generateMetadata = async ({
       ...defaultMetaData.openGraph,
       title,
       description,
-      url: SITE_BASE_URL + EUrlBaseParam.ARTICLE + slug,
+      url: `${SITE_BASE_URL}/${EUrlBaseParam.ARTICLE}/${slug}`,
       publishedTime: getFormattedDateStr(date),
     },
   };

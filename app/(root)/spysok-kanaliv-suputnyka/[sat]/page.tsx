@@ -9,7 +9,7 @@ import { getChannelSatList } from '@/controllers/sidebar.controller';
 import {
   META_SAT_CHANNEL_LIST,
   START_CONTENT,
-} from '@/models/satChannelList.model';
+} from '@/models/channelList.model';
 import type { Metadata } from 'next';
 import StartArticleSection from '@/components/StartArticleSection/StartArticleSection';
 import SatChannelsTable from '@/components/SatChannelsTable/SatChannelsTable';

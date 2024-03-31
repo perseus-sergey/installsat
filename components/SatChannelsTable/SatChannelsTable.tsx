@@ -5,7 +5,7 @@ import {
   META_SAT_CHANNEL_LIST,
   CHANNEL_TOOLTIP_TITLES,
   TSatChannelListModel,
-} from '@/models/satChannelList.model';
+} from '@/models/channelList.model';
 import styles from './SatChannelsTable.module.scss';
 import { IMG_PROPERTIES } from '@/models/ui.model';
 import Link from 'next/link';

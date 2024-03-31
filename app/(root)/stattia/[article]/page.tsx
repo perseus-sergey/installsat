@@ -2,10 +2,7 @@ import EmptyData from '@/components/EmptyData/EmptyData';
 import { Title } from '@/components/Title/Title';
 import FillingValidImage from '@/components/Images/FillingValidImage';
 import { ARTICLES } from '@/models/articles.model';
-import {
-  getArticle,
-  getSimilarArticles,
-} from '@/controllers/articles.controller';
+import { getArticle } from '@/controllers/articles.controller';
 import DangerHtml from '@/components/DangerHtml/DangerHtml';
 import { getFormattedDateStr } from '@/libs/utils';
 import { EUrlBaseParam } from '@/models/url.model';
@@ -21,12 +18,7 @@ export default async function Page({ params: { article } }: IArticleParams) {
   if (sqlResult instanceof Error)
     return <EmptyData description={sqlResult.message} />;
 
-  const { id, title, logo, text, cat_slug, cat_name, date, view } =
-    sqlResult[0];
-
-  const similarArticles = await getSimilarArticles(logo, id);
-  if (similarArticles instanceof Error)
-    return <EmptyData description={similarArticles.message} />;
+  const { title, logo, text, cat_slug, cat_name, date, view } = sqlResult[0];
 
   const { h1Image } = ARTICLES.article.images;
 

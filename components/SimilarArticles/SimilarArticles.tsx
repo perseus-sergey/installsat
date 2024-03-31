@@ -1,14 +1,17 @@
 import styles from './SimilarArticles.module.scss';
-import { SIMILAR_ARTICLES } from '@/models/ui.model';
 import { ReactNode } from 'react';
 
 interface ISimilarArticlesProps {
   similarArticlesMapped: ReactNode[];
+  similarTitle: string;
 }
 
-const SimilarArticles = ({ similarArticlesMapped }: ISimilarArticlesProps) => (
+const SimilarArticles = ({
+  similarArticlesMapped,
+  similarTitle,
+}: ISimilarArticlesProps) => (
   <nav className={styles.SimilarArticles} data-testid="SimilarArticles">
-    <h2 className={styles.title}>{SIMILAR_ARTICLES.title.ua}</h2>
+    <h2 className={styles.title}>{similarTitle}</h2>
     <ul className={styles.list}>{similarArticlesMapped}</ul>
   </nav>
 );

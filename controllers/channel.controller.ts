@@ -28,6 +28,7 @@ export const getDBChannel = cache(async (slug: string) => {
   T.title AS genre,
   CO.title AS compression,
   C.title AS cat_title,
+  C.parent AS cat_parent_id,
   C.cpu AS cat_slug,
   (SELECT title FROM tbl_chan_categ WHERE id = C.parent LIMIT 1) AS cat_parent_title,
   L.title AS chan_lang

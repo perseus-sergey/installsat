@@ -3,6 +3,7 @@ import { IChannel, ISimilarChannel } from '@/models/channel.model';
 import { cache } from 'react';
 
 export const getDBChannel = cache(async (slug: string) => {
+  console.log('🚀 ~ getDBChannel ~ slug:', slug);
   const sql = `
   SELECT 
   CH.id, 

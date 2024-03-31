@@ -58,26 +58,42 @@ export const META_CHANNEL = {
     };
   },
   titleBefore: {
-    ua: `Канал `,
-    en: `Channel `,
+    ua: `Канал`,
+    en: `Channel`,
   },
   keywordsBefore: {
     ua: `Телевізійний канал `,
     en: `Television channel `,
   },
-  h1SatImage: {
-    path: '/Images/satellites/',
-    alternativeString: { title: '🛰', fontSize: '5rem' },
-    height: '99px',
-    width: '132px',
-    alt: {
-      ua: `Безкоштовні канали супутника`,
-      en: `Free channels of`,
-    },
-    defaultImage: {
-      src: '/Images/satellite_7144.png',
-      height: '99px',
-      width: '132px',
+  images: {
+    defaultImgBlur: '/Images/1blur.gif',
+    channelLogo: {
+      big: {
+        path: '/Images/channelsOptimized/',
+        height: '99px',
+        width: '132px',
+        alternativeImgStr: { title: '🎞', fontSize: '6rem' },
+        defaultImage: {
+          src: '/Images/1not_found_chan.png',
+          height: '99px',
+          width: '132px',
+        },
+        alt: {
+          ua: `Логотип каналу`,
+          en: `Logo of the channel`,
+        },
+      },
+      small: {
+        path: '/Images/channel_55/',
+        height: '42px',
+        width: '55px',
+        alternativeImgStr: { title: '🎞', fontSize: '2rem' },
+        defaultImage: {
+          src: '/Images/1not_found_chan.png',
+          height: '42px',
+          width: '55px',
+        },
+      },
     },
   },
   similarArticlesTitle: {

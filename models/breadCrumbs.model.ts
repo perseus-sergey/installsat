@@ -37,7 +37,7 @@ export const MBreadCrumbs: IBreadCrumbs = new Map([
   ],
   [
     EUrlBaseParam.CHANNEL_PARAMS,
-    { ua: 'Параметри каналу', en: 'Channel parameters' },
+    { ua: 'Параметри каналів', en: 'Channel parameters' },
   ],
   [
     EUrlBaseParam.ONLINE_CHANNEL_LIST,

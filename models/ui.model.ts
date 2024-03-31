@@ -13,30 +13,6 @@ export interface IImgParams {
 
 export const IMG_PROPERTIES = {
   defaultImgBlur: '/Images/1blur.gif',
-  channelLogo: {
-    big: {
-      path: '/Images/channelsOptimized/',
-      height: '99px',
-      width: '132px',
-      alternativeImgStr: { title: '🎞', fontSize: '6rem' },
-      defaultImage: {
-        src: '/Images/1not_found_chan.png',
-        height: '99px',
-        width: '132px',
-      },
-    },
-    small: {
-      path: '/Images/channel_55/',
-      height: '42px',
-      width: '55px',
-      alternativeImgStr: { title: '🎞', fontSize: '2rem' },
-      defaultImage: {
-        src: '/Images/1not_found_chan.png',
-        height: '42px',
-        width: '55px',
-      },
-    },
-  },
 };
 
 export const BREADCRUMBS_SEPARATOR = '჻';

@@ -1,29 +1,42 @@
-// import FormDigestInterval from '@/components/FormDigestInterval1/FormDigestInterval';
-// import SatNews from '@/components/SatNews/SatNews';
-// import { Title } from '@/components/Title/Title';
-// import {
-//   LAST_NEWS_INTERVAL,
-//   META_TRANS_NEWS_LIST,
-// } from '@/models/satDigest.model';
-// import { EUrlSearchParam } from '@/models/url.model';
-// import { Suspense } from 'react';
-
+import EmptyData from '@/components/EmptyData/EmptyData';
+import FillingValidImage from '@/components/Images/FillingValidImage';
 import { Title } from '@/components/Title/Title';
+import { getDBChannel } from '@/controllers/channel.controller';
+import { META_CHANNEL } from '@/models/channel.model';
 
 export interface IChannelProps {
   params: { slug: string };
 }
 
-export default function Page({ params: { slug } }: IChannelProps) {
-  //   const searchInterval = searchParams[EUrlSearchParam.INTERVAL];
-  //   const intervalDays =
-  //     typeof searchInterval === 'string' && searchInterval
-  //       ? +searchInterval
-  //       : LAST_NEWS_INTERVAL;
+export default async function Page({ params: { slug } }: IChannelProps) {
+  const sqlResult = await getDBChannel(slug);
+  if (sqlResult instanceof Error)
+    return <EmptyData description={sqlResult.message} />;
+
+  const { title, logo } = sqlResult[0];
+
+  const {
+    images: {
+      channelLogo: { big: bigLogo },
+    },
+    titleBefore,
+  } = META_CHANNEL;
 
   return (
     <>
-      <Title>Телеканал {slug}</Title>
+      <Title>
+        {`${titleBefore.ua} "${title}"`}
+        <FillingValidImage
+          image={{
+            ...bigLogo,
+            src: `${bigLogo.path}${logo}`,
+          }}
+          defaultImage={bigLogo.defaultImage}
+          alternativeImgString={bigLogo.alternativeImgStr}
+          alt={`${bigLogo.alt.ua} "${title}"`}
+          isBlur
+        />
+      </Title>
     </>
   );
 }

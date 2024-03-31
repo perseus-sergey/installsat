@@ -13,6 +13,11 @@ const nextConfig = {
         permanent: true,
       },
       {
+        source: '/parametry-kanalu',
+        destination: '/spysok-kanaliv-suputnyka',
+        permanent: true,
+      },
+      {
         source: '/sputnikovye-novosti/:date',
         destination: '/transponderni-novyny/:date',
         permanent: true,

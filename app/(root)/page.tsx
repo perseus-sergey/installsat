@@ -5,11 +5,12 @@ import {
   LAST_NEWS_INTERVAL,
   META_TRANS_NEWS_LIST,
 } from '@/models/satDigest.model';
+import { TSearchParams } from '@/models/ui.model';
 import { EUrlSearchParam } from '@/models/url.model';
 import { Suspense } from 'react';
 
 interface IProps {
-  searchParams: { [key: string]: string | string[] | undefined };
+  searchParams: TSearchParams;
 }
 
 export default function Page({ searchParams }: IProps) {

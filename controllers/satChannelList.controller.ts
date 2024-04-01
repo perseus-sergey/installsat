@@ -1,5 +1,5 @@
 import { executeQuery } from '@/libs/db/mysqldb';
-import { TSatChannelListModel } from '@/models/satChannelList.model';
+import { TSatChannelListModel } from '@/models/channelList.model';
 import { cache } from 'react';
 
 export const getSatChannels = cache(async (channelId = '') => {

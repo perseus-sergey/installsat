@@ -2,7 +2,11 @@ import type { Metadata } from 'next';
 import React from 'react';
 import { EUrlBaseParam, SITE_BASE_URL } from '@/models/url.model';
 import { getFormattedDateStr } from '@/libs/utils';
-import { EDBTableTitles, defaultMetaData } from '@/models/ui.model';
+import {
+  EDBTableTitles,
+  SIMILAR_ARTICLES,
+  defaultMetaData,
+} from '@/models/ui.model';
 import {
   getArticle,
   getArticleSlugList,
@@ -34,7 +38,7 @@ export const generateMetadata = async ({
       ...defaultMetaData.openGraph,
       title,
       description,
-      url: SITE_BASE_URL + EUrlBaseParam.ARTICLE + slug,
+      url: `${SITE_BASE_URL}/${EUrlBaseParam.ARTICLE}/${slug}`,
       publishedTime: getFormattedDateStr(date),
     },
   };
@@ -76,6 +80,7 @@ export default async function layout({
 
       {similarArticles.length ? (
         <SimilarArticles
+          similarTitle={SIMILAR_ARTICLES.title.ua}
           similarArticlesMapped={similarArticles.map((art) => (
             <li key={art.cpu}>
               <Link href={`/${EUrlBaseParam.ARTICLE}/${art.cpu}`}>

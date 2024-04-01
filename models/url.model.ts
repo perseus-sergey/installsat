@@ -13,7 +13,7 @@ export enum EUrlBaseParam {
   NEWS_AND_ARTICLES = 'novyny-ta-statti',
   CHANNEL_PARAMS = 'parametry-kanalu',
   ONLINE_CHANNEL_LIST = 'telekanaly-onlain',
-  TV_ONLINE = 'tb-online',
+  // TV_ONLINE = 'tb-online',
   // TV_PROGRAM = 'programa-tb',
   CHANNELS_TV_PROGRAM = 'programa-telekanaliv',
   PRODUCT = 'tovar',
@@ -25,4 +25,5 @@ export enum EUrlSearchParam {
   SAT = 'sat',
   INTERVAL = 'interval',
   PAGE = 'page',
+  DATE = 'date',
 }

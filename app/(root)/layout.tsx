@@ -18,9 +18,6 @@ export const metadata: Metadata = {
     url: SITE_BASE_URL,
     publishedTime: getFormattedDateStr(new Date()),
   },
-  // alternates: {
-  //   canonical: EUrlBaseParam.BASE_PATH,
-  // },
 };
 export default function RootLayout({
   children,

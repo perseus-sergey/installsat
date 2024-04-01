@@ -10,9 +10,10 @@ import {
 } from '@/controllers/satDigest.controller';
 import EmptyData from '../EmptyData/EmptyData';
 import FillingValidImage from '../Images/FillingValidImage';
+import { TSearchParams } from '@/models/ui.model';
 
 interface ISatNewsListProps {
-  searchParams: { [key: string]: string | string[] | undefined };
+  searchParams: TSearchParams;
 }
 
 const SatNewsList = async ({

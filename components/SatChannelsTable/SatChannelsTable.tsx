@@ -5,9 +5,8 @@ import {
   META_SAT_CHANNEL_LIST,
   CHANNEL_TOOLTIP_TITLES,
   TSatChannelListModel,
-} from '@/models/satChannelList.model';
+} from '@/models/channelList.model';
 import styles from './SatChannelsTable.module.scss';
-import { IMG_PROPERTIES } from '@/models/ui.model';
 import Link from 'next/link';
 import { EUrlBaseParam } from '@/models/url.model';
 import { cutText } from '@/libs/utils';
@@ -15,6 +14,7 @@ import Tooltip from '../Tooltip/Tooltip';
 import FillingImg from '../Images/FillingImage';
 import TooltipSimple from '../TooltipSimple/TooltipSimple';
 import FillingValidImage from '../Images/FillingValidImage';
+import { META_CHANNEL } from '@/models/channel.model';
 
 interface ISatChannelsTableProps {
   satChannels: TSatChannelListModel[][][];
@@ -53,12 +53,14 @@ const FrequencySegment = ({
               <>
                 <FillingValidImage
                   image={{
-                    ...IMG_PROPERTIES.channelLogo.big,
-                    src: `${IMG_PROPERTIES.channelLogo.big.path}${logo}`,
+                    ...META_CHANNEL.images.channelLogo.big,
+                    src: `${META_CHANNEL.images.channelLogo.big.path}${logo}`,
                   }}
-                  defaultImage={IMG_PROPERTIES.channelLogo.big.defaultImage}
+                  defaultImage={
+                    META_CHANNEL.images.channelLogo.big.defaultImage
+                  }
                   alternativeImgString={
-                    IMG_PROPERTIES.channelLogo.big.alternativeImgStr
+                    META_CHANNEL.images.channelLogo.big.alternativeImgStr
                   }
                 />
                 <div className="py-2.5 px-5">
@@ -87,19 +89,21 @@ const FrequencySegment = ({
           >
             <FillingValidImage
               image={{
-                ...IMG_PROPERTIES.channelLogo.small,
-                src: `${IMG_PROPERTIES.channelLogo.small.path}${logo}`,
+                ...META_CHANNEL.images.channelLogo.small,
+                src: `${META_CHANNEL.images.channelLogo.small.path}${logo}`,
               }}
-              defaultImage={IMG_PROPERTIES.channelLogo.small.defaultImage}
+              defaultImage={META_CHANNEL.images.channelLogo.small.defaultImage}
               alternativeImgString={
-                IMG_PROPERTIES.channelLogo.small.alternativeImgStr
+                META_CHANNEL.images.channelLogo.small.alternativeImgStr
               }
               isChangeToGif
             />
           </Tooltip>
         </td>
         <td className={styles.tdTitle}>
-          <Link href={`/${EUrlBaseParam.CHANNEL_PARAMS}/${cpu}`}>{title}</Link>
+          <Link id={cpu} href={`/${EUrlBaseParam.CHANNEL_PARAMS}/${cpu}`}>
+            {title}
+          </Link>
           {biss && <p className={styles.biss}>{biss}</p>}
         </td>
         <td className={styles.tdGenre}>

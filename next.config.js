@@ -13,6 +13,11 @@ const nextConfig = {
         permanent: true,
       },
       {
+        source: '/parametry-kanalu',
+        destination: '/spysok-kanaliv-suputnyka',
+        permanent: true,
+      },
+      {
         source: '/sputnikovye-novosti/:date',
         destination: '/transponderni-novyny/:date',
         permanent: true,
@@ -99,7 +104,7 @@ const nextConfig = {
       },
       {
         source: '/programma-kanala/:slug/:date',
-        destination: '/programa-telekanaliv/:slug',
+        destination: '/programa-telekanaliv/:slug?date=:date',
         permanent: true,
       },
       {

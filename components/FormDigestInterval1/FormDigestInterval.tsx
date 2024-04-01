@@ -18,9 +18,10 @@ import {
 import EmptyData from '../EmptyData/EmptyData';
 import { EUrlBaseParam, EUrlSearchParam } from '@/models/url.model';
 import Fieldset from '../Fieldset/Fieldset';
+import { TSearchParams } from '@/models/ui.model';
 
 interface IFormDigestIntervalProps {
-  searchParams: { [key: string]: string | string[] | undefined };
+  searchParams: TSearchParams;
 }
 
 const FormDigestInterval = async ({

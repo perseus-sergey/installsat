@@ -8,7 +8,7 @@ import {
 import {
   META_ALL_SAT_CHANNEL_LIST,
   START_CONTENT,
-} from '@/models/satChannelList.model';
+} from '@/models/channelList.model';
 import type { Metadata } from 'next';
 import StartArticleSection from '@/components/StartArticleSection/StartArticleSection';
 import SatChannelsTable from '@/components/SatChannelsTable/SatChannelsTable';
@@ -47,7 +47,7 @@ export default async function Page() {
 
   return (
     <>
-      <Title style={{ borderBottom: '2px groove' }}>
+      <Title>
         {META_ALL_SAT_CHANNEL_LIST.getH1().ua}
         <FillingImg
           src={META_ALL_SAT_CHANNEL_LIST.image.h1ImageParams.path}

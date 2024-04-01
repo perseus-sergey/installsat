@@ -1,0 +1,33 @@
+.ChannelOnlineLink {
+  display: flex;
+  justify-content: center;
+  margin: 0.3rem;
+  font-family: Verdana, Geneva, sans-serif;
+  font-size: 1rem;
+  font-weight: bold;
+  text-shadow:
+    1px 1px 0 #f9f9f9,
+    3px 3px 3px #cccccc;
+
+  .link {
+    box-shadow: inset 0px 0px 3px 0px #a1ace2;
+    border: 2px #a1ace2 solid;
+    border-radius: 2rem;
+    padding: 0.3rem 0.8rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    animation: rainbow 1.5s linear 1.5s infinite;
+
+    @keyframes rainbow {
+      0%,
+      100% {
+        box-shadow: inset 0px 0px 12px 6px #a1ace2;
+      }
+      50% {
+        box-shadow: inset 0px 0px 3px 0px #a1ace2;
+      }
+    }
+  }
+}

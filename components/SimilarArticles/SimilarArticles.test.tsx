@@ -5,7 +5,12 @@ import test, { describe } from 'node:test';
 
 describe('<SimilarArticles />', () => {
   test('it should mount', () => {
-    render(<SimilarArticles similarArticlesMapped={[]} />);
+    render(
+      <SimilarArticles
+        similarTitle="Similar Articles"
+        similarArticlesMapped={[]}
+      />
+    );
 
     const similarArticles = screen.getByTestId('SimilarArticles');
 

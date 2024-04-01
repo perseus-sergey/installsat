@@ -14,14 +14,14 @@ import TextUnderH1 from '@/components/TextUnderH1/TextUnderH1';
 import ArticleList from '@/components/ArticleList/ArticleList';
 import { notFound } from 'next/navigation';
 import Pagination from '@/components/Pagination/Pagination';
-import { defaultMetaData } from '@/models/ui.model';
+import { TSearchParams, defaultMetaData } from '@/models/ui.model';
 import { EUrlBaseParam, SITE_BASE_URL } from '@/models/url.model';
 
 export const dynamic = 'force-dynamic';
 
 export interface IPageParams {
   params: { cat: string };
-  searchParams: { [key: string]: string | string[] | undefined };
+  searchParams: TSearchParams;
 }
 
 const currDateStr = getFormattedDateStr(new Date());
@@ -108,7 +108,7 @@ export default async function Page({
 
   return (
     <>
-      <Title style={{ borderBottom: '2px groove' }}>
+      <Title>
         {ARTICLES.articleSingleCatList.meta.getH1(currDateStr, description).ua}
         <FillingValidImage
           image={ARTICLES.articleList.images.h1Image}

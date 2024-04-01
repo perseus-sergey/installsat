@@ -7,6 +7,8 @@
 :root {
   --color-title-h1: #ffffff;
   --background-color: #cbdafa;
+  --h1-border-color: #e2e2e2;
+  --groove-border: 2px groove #e2e2e2;
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
   --background-end-rgb: 255, 255, 255;
@@ -34,13 +36,6 @@ html {
 body {
   font-family: 'Times New Roman', Times, serif;
   color: #5a5a5a;
-  // color: rgb(var(--foreground-rgb));
-  // background: linear-gradient(
-  //     to bottom,
-  //     transparent,
-  //     rgb(var(--background-end-rgb))
-  //   )
-  //   rgb(var(--background-start-rgb));
   background: url('/Images/black00001.gif');
   background-color: #000000;
 }
@@ -65,6 +60,10 @@ a {
   @media (max-width: $widthScreenForBurgerMenu) {
     display: block;
   }
+}
+
+.groove-border {
+  border-bottom: var(--groove-border);
 }
 
 .articleWrapper {

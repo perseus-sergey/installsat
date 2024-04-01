@@ -1,3 +1,5 @@
+import { TSearchParams } from '@/models/ui.model';
+
 export const cutText = (text: string, length: number) => {
   const trimmedText = text.trim();
 
@@ -67,3 +69,20 @@ export const addRemoveClassName = (
   className: string,
   isAdd: boolean
 ) => (isAdd ? [...oldArr, className] : oldArr.filter((cl) => cl !== className));
+
+export const makeUrlSearchParams = (
+  searchParams: TSearchParams
+): URLSearchParams => {
+  const params = new URLSearchParams();
+  Object.entries(searchParams).forEach(([key, value]) => {
+    if (value !== undefined) {
+      if (Array.isArray(value)) {
+        value.forEach((v) => params.append(key, v));
+      } else {
+        params.set(key, value);
+      }
+    }
+  });
+
+  return params;
+};

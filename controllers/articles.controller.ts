@@ -2,6 +2,7 @@ import { executeQuery } from '@/libs/db/mysqldb';
 import {
   IAllNewsModel,
   IArticleModel,
+  ICommentsModel,
   ISimilarArticleModel,
   ISingleCatArticlesModel,
 } from '@/models/articles.model';
@@ -90,18 +91,20 @@ WHERE U.cpu = ?
   return await executeQuery<IArticleModel>(sql, [slug]);
 });
 
-export const getSimilarArticles = async (logo: string, id: number) => {
+export const getSimilarArticles = async (logo: string, id = -1) => {
+  const removeId = id > -1 ? `AND id != ${id}` : '';
+
   const sql = `
     SELECT id, title, cpu, date
     FROM tbl_useful
     WHERE logo = ?
-    AND id != ?
+    ${removeId}
     AND cat NOT IN ${WRONG_CAT_IDS}
     ORDER BY date DESC, id DESC
     LIMIT 7
 `;
 
-  return await executeQuery<ISimilarArticleModel>(sql, [logo, `${id}`]);
+  return await executeQuery<ISimilarArticleModel>(sql, [logo]);
 };
 
 export const getArticleCatList = cache(async () => {
@@ -116,12 +119,21 @@ export const getArticleSlugList = cache(async () => {
   return await executeQuery<{ cpu: string }>(sql);
 });
 
+export const getComments = async (
+  articleId: number,
+  dbCommentTableTitle: string
+) => {
+  const sql = `SELECT * FROM ${dbCommentTableTitle} WHERE post = ?`;
+
+  return await executeQuery<ICommentsModel>(sql, [`${articleId}`]);
+};
+
 export const updateViewCount = async (
   dbTableTitle: string,
   articleId: number,
   oldViewNumber: number
 ) =>
-  await executeQuery<{ cpu: string }>(
-    `UPDATE ${dbTableTitle} SET view = ? WHERE id = ?`,
-    [`${oldViewNumber + 1}`, `${articleId}`]
-  );
+  await executeQuery(`UPDATE ${dbTableTitle} SET view = ? WHERE id = ?`, [
+    `${oldViewNumber + 1}`,
+    `${articleId}`,
+  ]);

@@ -2,13 +2,14 @@ import Link from 'next/link';
 import styles from './Pagination.module.scss';
 import { EUrlSearchParam } from '@/models/url.model';
 import { ARTICLES } from '@/models/articles.model';
-// import { URLSearchParams } from 'url';
+import { TSearchParams } from '@/models/ui.model';
+import { makeUrlSearchParams } from '@/libs/utils';
 
 interface IPaginationProps {
   page: number;
   offsetNumber: number;
   totalPages: number;
-  searchParams: { [key: string]: string | string[] | undefined };
+  searchParams: TSearchParams;
 }
 
 const getPageNumbers = (
@@ -33,36 +34,21 @@ const Pagination = ({
   totalPages,
   searchParams,
 }: IPaginationProps) => {
-  const makeUrlSearchParams = (): URLSearchParams => {
-    const params = new URLSearchParams();
-    Object.entries(searchParams).forEach(([key, value]) => {
-      if (value !== undefined) {
-        if (Array.isArray(value)) {
-          value.forEach((v) => params.append(key, v));
-        } else {
-          params.set(key, value);
-        }
-      }
-    });
+  const urlSearchParams = makeUrlSearchParams(searchParams);
 
-    return params;
-  };
-
-  const urlSearchParams = makeUrlSearchParams();
-
-  const makeUrlSearchParamsStr = (value: string | number): string => {
+  const setUrlSearchParamsStr = (value: string | number): string => {
     urlSearchParams.set(EUrlSearchParam.PAGE, `${value}`);
 
     return `?${urlSearchParams.toString()}`;
   };
 
-  const firstPage = makeUrlSearchParamsStr('1');
+  const firstPage = setUrlSearchParamsStr('1');
 
-  const prevPage = makeUrlSearchParamsStr(`${page - 1 || 1}`);
+  const prevPage = setUrlSearchParamsStr(`${page - 1 || 1}`);
 
-  const nextPage = makeUrlSearchParamsStr(`${page + 1}`);
+  const nextPage = setUrlSearchParamsStr(`${page + 1}`);
 
-  const lastPage = makeUrlSearchParamsStr(`${totalPages}`);
+  const lastPage = setUrlSearchParamsStr(`${totalPages}`);
 
   const pageNumbers = getPageNumbers(page, offsetNumber, totalPages);
 
@@ -127,7 +113,7 @@ const Pagination = ({
               className={
                 page === pageNumber ? styles.currentPageNumber : styles.listItem
               }
-              href={makeUrlSearchParamsStr(pageNumber)}
+              href={setUrlSearchParamsStr(pageNumber)}
               aria-label={`${linkTitle.pageStartStr.ua}${pageNumber}`}
               title={`${linkTitle.pageStartStr.ua}${pageNumber}`}
             >

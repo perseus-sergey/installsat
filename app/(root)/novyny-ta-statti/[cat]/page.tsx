@@ -108,7 +108,7 @@ export default async function Page({
 
   return (
     <>
-      <Title style={{ borderBottom: '2px groove' }}>
+      <Title>
         {ARTICLES.articleSingleCatList.meta.getH1(currDateStr, description).ua}
         <FillingValidImage
           image={ARTICLES.articleList.images.h1Image}

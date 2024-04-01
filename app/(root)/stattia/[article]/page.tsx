@@ -30,7 +30,7 @@ export default async function Page({ params: { article } }: IArticleParams) {
 
   return (
     <>
-      <Title style={{ borderBottom: '2px groove' }}>
+      <Title>
         {title}
         <FillingValidImage
           image={{

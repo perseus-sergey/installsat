@@ -60,7 +60,7 @@ export default async function Page({ searchParams }: IProps) {
 
   return (
     <>
-      <Title style={{ borderBottom: '2px groove' }}>
+      <Title>
         {ARTICLES.articleList.meta.getH1(currDate).ua}
         <FillingValidImage
           image={ARTICLES.articleList.images.h1Image}

@@ -97,6 +97,50 @@ export const META_CHANNEL = {
       },
     },
   },
+  chanParamsBlock: {
+    getParamsTitle(channelTitle: string) {
+      return {
+        ua: `Параметри мовлення каналу "${channelTitle}"`,
+        en: `Broadcast options for channel "${channelTitle}"`,
+      };
+    },
+    paramsLanguage: {
+      ua: `Мова мовлення (перекладу) : `,
+      en: `Broadcast (translation) language : `,
+    },
+    paramsFormat: {
+      ua: `Формат мовлення : `,
+      en: `Broadcast format : `,
+    },
+    paramsSatellite: {
+      ua: `Супутник : `,
+      en: `Satellite : `,
+    },
+    paramsFrequency: {
+      ua: `Частота : `,
+      en: `Frequency : `,
+    },
+    paramsFEC: {
+      ua: `FEC : `,
+      en: `FEC : `,
+    },
+    paramsEncryption: {
+      ua: `Шифрування : `,
+      en: `Encryption : `,
+    },
+    getParamsSite(channelTitle: string) {
+      return {
+        ua: `Сайт каналу "${channelTitle}"`,
+        en: `Channel website "${channelTitle}"`,
+      };
+    },
+  },
+  getResponsibilityText(channelTitle: string) {
+    return {
+      ua: `Шановні відвідувачі, ми не є власниками телеканалу «${channelTitle}». Ми не несемо відповідальності за трансльовані передачі та проблеми мовлення каналу.`,
+      en: `Dear visitors, we are not the owners of the «${channelTitle}» channel. We are not responsible for broadcast programs and channel broadcast problems.`,
+    };
+  },
   infoPanelTitles: {
     package: { ua: 'Пакет', en: 'Package' },
     views: { ua: 'Переглядів', en: 'Views' },
@@ -107,6 +151,28 @@ export const META_CHANNEL = {
       title: {
         ua: 'Де дивитись',
         en: 'Where to watch',
+      },
+      getOnlineChannelTitle(channelTitle: string) {
+        return {
+          ua: `Дивитись канал "${channelTitle}" у прямому ефірі онлайн`,
+          en: `Watch the channel "${channelTitle}" live online`,
+        };
+      },
+      getSatChannelTitle(satTitle: string, satPosition: number) {
+        return {
+          ua: `Супутник: ${satTitle} ${satPosition}`,
+          en: `Satellite: ${satTitle} ${satPosition}`,
+        };
+      },
+      getFrequencyTitle(frequency: number) {
+        return {
+          ua: `| Частота: ${frequency}`,
+          en: `| Frequency: ${frequency}`,
+        };
+      },
+      packageTitle: {
+        ua: 'Пакет:',
+        en: 'Package:',
       },
     },
     articles: {

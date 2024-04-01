@@ -1,4 +1,5 @@
 import BottomInfoPanel from '@/components/BottomInfoPanel/BottomInfoPanel';
+import ChannelParams from '@/components/ChannelParams/ChannelParams';
 import DangerHtml from '@/components/DangerHtml/DangerHtml';
 import EmptyData from '@/components/EmptyData/EmptyData';
 import FillingValidImage from '@/components/Images/FillingValidImage';
@@ -33,6 +34,16 @@ const {
   },
   titleBefore,
   keywordsBefore,
+  // chanParamsBlock: {
+  //   getParamsTitle,
+  //   paramsLanguage,
+  //   paramsFormat,
+  //   paramsSatellite,
+  //   paramsFrequency,
+  //   paramsFEC,
+  //   paramsEncryption,
+  //   getParamsSite,
+  // },
   similar: { channels: simChannelsBefore, articles: simArticlesBefore },
 } = META_CHANNEL;
 
@@ -123,9 +134,6 @@ export default async function Page({ params: { slug } }: IChannelProps) {
     cat_parent_id,
     cat_parent_cpu,
     cat_slug,
-    // sat_title,
-    // freq,
-    // polar,
   } = sqlResult[0];
 
   const catLink =
@@ -150,7 +158,7 @@ export default async function Page({ params: { slug } }: IChannelProps) {
   return (
     <>
       <article className="article">
-        <Title style={{ borderBottom: '2px groove' }}>
+        <Title>
           {`${titleBefore.ua} "${title}"`}
           <FillingValidImage
             image={{
@@ -166,6 +174,7 @@ export default async function Page({ params: { slug } }: IChannelProps) {
 
         <div className="article-text">
           <DangerHtml text={text} />
+          <ChannelParams channelDBParams={sqlResult[0]} />
         </div>
 
         <BottomInfoPanel

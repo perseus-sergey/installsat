@@ -82,7 +82,7 @@ export default async function Page({ params }: IPageParams) {
 
   return (
     <>
-      <Title style={{ borderBottom: '2px groove' }}>
+      <Title>
         {
           META_SAT_CHANNEL_LIST.getH1(
             `${satParams.title} - ${satParams.satPosition}`

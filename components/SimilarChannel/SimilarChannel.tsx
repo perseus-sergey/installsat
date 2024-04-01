@@ -1,4 +1,4 @@
-import { ISimilarChannel } from '@/models/channel.model';
+import { ISimilarChannel, META_CHANNEL } from '@/models/channel.model';
 import Link from 'next/link';
 import { EUrlBaseParam } from '@/models/url.model';
 
@@ -7,43 +7,60 @@ interface ISimilarChannelProps {
   channelTitle: string;
 }
 
-const SimilarChannel = ({ chanParams, channelTitle }: ISimilarChannelProps) => {
-  const parentCatTitle =
-    chanParams.cat_parent_id > 0 ? `${chanParams.cat_parent_title} | ` : '';
+const SimilarChannel = ({
+  chanParams: {
+    cat_parent_title,
+    cat_parent_id,
+    cat_id,
+    cat_title,
+    cat_cpu,
+    cat_parent_cpu,
+    sat_cpu,
+    sat_position,
+    sat_title,
+    freq,
+    compress,
+    cpu,
+  },
+  channelTitle,
+}: ISimilarChannelProps) => {
+  const {
+    getOnlineChannelTitle,
+    getFrequencyTitle,
+    getSatChannelTitle,
+    packageTitle,
+  } = META_CHANNEL.similar.channels;
 
-  const catLink =
-    chanParams.cat_parent_id > 0
-      ? `${chanParams.cat_parent_cpu}#${chanParams.cat_cpu}`
-      : chanParams.cat_cpu;
+  const parentCatTitle = cat_parent_id > 0 ? `${cat_parent_title} | ` : '';
 
-  if (chanParams.compress === 5)
+  const catLink = cat_parent_id > 0 ? `${cat_parent_cpu}#${cat_cpu}` : cat_cpu;
+
+  if (compress === 5)
     return (
       <>
-        <Link href={`/${EUrlBaseParam.ONLINE_CHANNEL_LIST}/${chanParams.cpu}`}>
-          Дивитись канал {`"`}
-          {channelTitle}
-          {`"`} у прямому ефірі онлайн
+        <Link href={`/${EUrlBaseParam.ONLINE_CHANNEL_LIST}/${cpu}`}>
+          {getOnlineChannelTitle(channelTitle).ua}
         </Link>
       </>
     );
 
-  if (chanParams.cat_id === 4 && chanParams.cat_title)
+  if (cat_id === 4 && cat_title)
     return (
       <>
-        <Link href={`/${EUrlBaseParam.SAT_CHANNEL_LIST}/${chanParams.sat_cpu}`}>
-          Супутник: {chanParams.sat_title} {chanParams.sat_position}
+        <Link href={`/${EUrlBaseParam.SAT_CHANNEL_LIST}/${sat_cpu}`}>
+          {getSatChannelTitle(sat_title, sat_position).ua}
         </Link>{' '}
-        | Частота: {chanParams.freq}
+        {getFrequencyTitle(freq).ua}
       </>
     );
 
-  if (chanParams.cat_title)
+  if (cat_title)
     return (
       <>
-        Пакет:{' '}
+        {packageTitle.ua}{' '}
         <Link href={`/${EUrlBaseParam.PACKAGE_CHANNEL_LIST}/${catLink}`}>
           {parentCatTitle}
-          {chanParams.cat_title}
+          {cat_title}
         </Link>
       </>
     );

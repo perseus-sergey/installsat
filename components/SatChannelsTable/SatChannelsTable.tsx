@@ -101,7 +101,9 @@ const FrequencySegment = ({
           </Tooltip>
         </td>
         <td className={styles.tdTitle}>
-          <Link href={`/${EUrlBaseParam.CHANNEL_PARAMS}/${cpu}`}>{title}</Link>
+          <Link id={cpu} href={`/${EUrlBaseParam.CHANNEL_PARAMS}/${cpu}`}>
+            {title}
+          </Link>
           {biss && <p className={styles.biss}>{biss}</p>}
         </td>
         <td className={styles.tdGenre}>

@@ -47,7 +47,7 @@ export default async function Page() {
 
   return (
     <>
-      <Title style={{ borderBottom: '2px groove' }}>
+      <Title>
         {META_ALL_SAT_CHANNEL_LIST.getH1().ua}
         <FillingImg
           src={META_ALL_SAT_CHANNEL_LIST.image.h1ImageParams.path}

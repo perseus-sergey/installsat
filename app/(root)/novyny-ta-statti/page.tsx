@@ -10,12 +10,12 @@ import Pagination from '@/components/Pagination/Pagination';
 import { notFound } from 'next/navigation';
 import { getFormattedDateStr } from '@/libs/utils';
 import { EUrlBaseParam, SITE_BASE_URL } from '@/models/url.model';
-import { defaultMetaData } from '@/models/ui.model';
+import { TSearchParams, defaultMetaData } from '@/models/ui.model';
 
 export const dynamic = 'force-dynamic';
 
 interface IProps {
-  searchParams: { [key: string]: string | string[] | undefined };
+  searchParams: TSearchParams;
 }
 
 export const metadata: Metadata = {

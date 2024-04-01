@@ -1,11 +1,12 @@
 import { TSatDigest } from '@/models/satDigest.model';
 import SatNewsList from '../SatNewsList/SatNewsList';
 import DateNewsList from '../DateNewsList/DateNewsList';
+import { TSearchParams } from '@/models/ui.model';
 
 export type TGroupedNews = [string, Map<string, TSatDigest[]>][];
 
 interface ISatNewsProps {
-  searchParams: { [key: string]: string | string[] | undefined };
+  searchParams: TSearchParams;
 }
 
 const SatNews = ({ searchParams }: ISatNewsProps) =>

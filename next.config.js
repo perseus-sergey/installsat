@@ -73,11 +73,6 @@ const nextConfig = {
         permanent: true,
       },
       {
-        source: '/spysok-kanaliv-paketu/bez-abonplati',
-        destination: '/spysok-kanaliv-suputnyka',
-        permanent: true,
-      },
-      {
         source: '/spisok-kanalov-paketa/bez-abonplati',
         destination: '/spysok-kanaliv-suputnyka',
         permanent: true,
@@ -109,7 +104,7 @@ const nextConfig = {
       },
       {
         source: '/programma-kanala/:slug/:date',
-        destination: '/programa-telekanaliv/:slug',
+        destination: '/programa-telekanaliv/:slug?date=:date',
         permanent: true,
       },
       {

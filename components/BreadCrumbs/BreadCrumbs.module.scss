@@ -4,7 +4,7 @@ $activeItemColor: #5c6469;
 $separatorColor: #4a4d5d;
 
 .BreadCrumb {
-  border-bottom: 2px groove var(--h1-border-color);
+  border-bottom: var(--groove-border);
   border-radius: 0.5rem;
   background-color: var(--background-color);
   margin: 2px 0 0;

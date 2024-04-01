@@ -5,6 +5,7 @@ export interface ILang {
   en: string;
 }
 
+export type TSearchParams = { [key: string]: string | string[] | undefined };
 export interface IImgParams {
   src: string;
   width: string;

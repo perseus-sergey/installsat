@@ -8,6 +8,7 @@
   --color-title-h1: #ffffff;
   --background-color: #cbdafa;
   --h1-border-color: #e2e2e2;
+  --groove-border: 2px groove #e2e2e2;
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
   --background-end-rgb: 255, 255, 255;
@@ -59,6 +60,10 @@ a {
   @media (max-width: $widthScreenForBurgerMenu) {
     display: block;
   }
+}
+
+.groove-border {
+  border-bottom: var(--groove-border);
 }
 
 .articleWrapper {

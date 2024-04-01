@@ -66,6 +66,22 @@ export const META_CHANNEL = {
     ua: `Телевізійний канал `,
     en: `Television channel `,
   },
+  scheduleLinkText: {
+    channel: {
+      ua: 'Телепрограма на',
+      en: 'TV Schedule for',
+    },
+    onlineChannel: {
+      ua: 'Повна телепрограма',
+      en: 'Full TV Schedule',
+    },
+  },
+  getOnlineLinkText(channelTitle: string) {
+    return {
+      ua: `Канал "${channelTitle}" онлайн`,
+      en: `Channel "${channelTitle}" online`,
+    };
+  },
   images: {
     defaultImgBlur: '/Images/1blur.gif',
     channelLogo: {
@@ -94,6 +110,26 @@ export const META_CHANNEL = {
           height: '42px',
           width: '55px',
         },
+      },
+    },
+    scheduleImg: {
+      src: '/Images/schedule-icon96.png',
+      height: '96px',
+      width: '96px',
+      alternativeImgStr: { title: '📋', fontSize: '6rem' },
+      alt: {
+        ua: `Перегляд розкладу телепередач`,
+        en: `View TV schedules`,
+      },
+    },
+    onlineLinkImg: {
+      src: '/Images/network-wireless_32.png',
+      height: '32px',
+      width: '32px',
+      alternativeImgStr: { title: '📺', fontSize: '2rem' },
+      alt: {
+        ua: `Перехід до онлайн ТБ сторінки`,
+        en: `Go to the online TV page`,
       },
     },
   },

@@ -9,6 +9,13 @@ import { EUrlBaseParam } from '@/models/url.model';
 import BottomInfoPanel from '@/components/BottomInfoPanel/BottomInfoPanel';
 import Link from 'next/link';
 
+const { h1Image } = ARTICLES.article.images;
+
+const {
+  date: dateTitle,
+  theme: themeTitle,
+  views: viewsTitle,
+} = ARTICLES.infoPanelTitles;
 export interface IArticleParams {
   params: { article: string };
 }
@@ -19,14 +26,6 @@ export default async function Page({ params: { article } }: IArticleParams) {
     return <EmptyData description={sqlResult.message} />;
 
   const { title, logo, text, cat_slug, cat_name, date, view } = sqlResult[0];
-
-  const { h1Image } = ARTICLES.article.images;
-
-  const {
-    date: dateTitle,
-    theme: themeTitle,
-    views: viewsTitle,
-  } = ARTICLES.infoPanelTitles;
 
   return (
     <>
@@ -52,10 +51,7 @@ export default async function Page({ params: { article } }: IArticleParams) {
           {
             name: themeTitle.ua,
             value: (
-              <Link
-                href={`/${EUrlBaseParam.NEWS_AND_ARTICLES}/${cat_slug}`}
-                style={{ textDecoration: 'underline' }}
-              >
+              <Link href={`/${EUrlBaseParam.NEWS_AND_ARTICLES}/${cat_slug}`}>
                 {cat_name}
               </Link>
             ),

@@ -1,5 +1,4 @@
 import { IChannel, META_CHANNEL } from '@/models/channel.model';
-import styles from './ChannelParams.module.scss';
 import Link from 'next/link';
 import { EUrlBaseParam } from '@/models/url.model';
 
@@ -40,8 +39,8 @@ const ChannelParams = ({
       : '';
 
   return (
-    <section className={styles.ChannelParams} data-testid="ChannelParams">
-      <h2 className="txtshadowblack">{getParamsTitle(title).ua}</h2>
+    <section>
+      <h2>{getParamsTitle(title).ua}</h2>
       <ul>
         {chan_lang && (
           <li>

@@ -1,17 +1,12 @@
 import BottomInfoPanel from '@/components/BottomInfoPanel/BottomInfoPanel';
-import ChannelOnlineLink from '@/components/ChannelOnlineLink/ChannelOnlineLink';
-import ChannelParams from '@/components/ChannelParams/ChannelParams';
-import DangerHtml from '@/components/DangerHtml/DangerHtml';
 import EmptyData from '@/components/EmptyData/EmptyData';
 import FillingValidImage from '@/components/Images/FillingValidImage';
 import SimilarArticles from '@/components/SimilarArticles/SimilarArticles';
 import SimilarChannel from '@/components/SimilarChannel/SimilarChannel';
 import { Title } from '@/components/Title/Title';
-import TvScheduleLink from '@/components/TvScheduleLink/TvScheduleLink';
 import {
   getComments,
   getSimilarArticles,
-  updateViewCount,
 } from '@/controllers/articles.controller';
 import {
   getDBChannel,
@@ -20,12 +15,12 @@ import {
 } from '@/controllers/channel.controller';
 import { getFormattedDateStr } from '@/libs/utils';
 import { META_CHANNEL } from '@/models/channel.model';
-import { EDBTableTitles, defaultMetaData } from '@/models/ui.model';
 import {
-  EUrlBaseParam,
-  EUrlSearchParam,
-  SITE_BASE_URL,
-} from '@/models/url.model';
+  EDBTableTitles,
+  TSearchParams,
+  defaultMetaData,
+} from '@/models/ui.model';
+import { EUrlBaseParam, SITE_BASE_URL } from '@/models/url.model';
 import { Metadata } from 'next';
 import Link from 'next/link';
 
@@ -40,18 +35,17 @@ const {
   },
   titleBefore,
   keywordsBefore,
-  scheduleLinkText: { channel: scheduleTitle },
-  getOnlineLinkText,
   similar: { channels: simChannelsBefore, articles: simArticlesBefore },
 } = META_CHANNEL;
 
-export interface IChannelProps {
+export interface IPageProps {
   params: { slug: string };
+  searchParams: TSearchParams;
 }
 
 export const generateMetadata = async ({
   params: { slug },
-}: IChannelProps): Promise<Metadata> => {
+}: IPageProps): Promise<Metadata> => {
   const sqlResult = await getDBChannel(slug);
   if (sqlResult instanceof Error) return defaultMetaData.ua;
 
@@ -116,7 +110,10 @@ export async function generateStaticParams(): Promise<
 
 export const dynamicParams = false;
 
-export default async function Page({ params: { slug } }: IChannelProps) {
+export default async function Page({
+  params: { slug },
+  searchParams: { date },
+}: IPageProps) {
   const sqlResult = await getDBChannel(slug);
   if (sqlResult instanceof Error)
     return <EmptyData description={sqlResult.message} />;
@@ -125,14 +122,12 @@ export default async function Page({ params: { slug } }: IChannelProps) {
     id,
     title,
     logo,
-    text,
     view,
     cat_title,
     cat_parent_title,
     cat_parent_id,
     cat_parent_cpu,
     cat_slug,
-    tvforsite_net,
   } = sqlResult[0];
 
   const catLink =
@@ -149,7 +144,23 @@ export default async function Page({ params: { slug } }: IChannelProps) {
   const similarArticles =
     similarArticlesResult instanceof Error ? [] : similarArticlesResult;
 
-  updateViewCount(EDBTableTitles.CHANNELS, id, view);
+  //   const urlSearchParams = makeUrlSearchParams(searchParams);
+
+  // const setUrlSearchParamsStr = (value: string | number): string => {
+  //   urlSearchParams.set(EUrlSearchParam.PAGE, `${value}`);
+
+  //   return `?${urlSearchParams.toString()}`;
+  // };
+
+  // const firstPage = setUrlSearchParamsStr('1');
+
+  // const prevPage = setUrlSearchParamsStr(`${page - 1 || 1}`);
+
+  // const nextPage = setUrlSearchParamsStr(`${page + 1}`);
+
+  // const lastPage = setUrlSearchParamsStr(`${totalPages}`);
+
+  // updateViewCount(EDBTableTitles.CHANNELS, id, view);
 
   const commDbResult = await getComments(id, EDBTableTitles.COMMENTS_CHANNEL);
   const comments = commDbResult instanceof Error ? [] : commDbResult;
@@ -158,7 +169,7 @@ export default async function Page({ params: { slug } }: IChannelProps) {
     <>
       <article className="article">
         <Title>
-          {`${titleBefore.ua} "${title}"`}
+          {`${titleBefore.ua} "${title}"`} on {date}
           <FillingValidImage
             image={{
               ...bigLogo,
@@ -171,25 +182,7 @@ export default async function Page({ params: { slug } }: IChannelProps) {
           />
         </Title>
 
-        <div className="article-text">
-          <DangerHtml text={text} />
-
-          <div className="groove-border"></div>
-
-          <TvScheduleLink
-            title={`${scheduleTitle.ua} "${title}"`}
-            href={`/${EUrlBaseParam.CHANNELS_TV_PROGRAM}/${slug}?${EUrlSearchParam.DATE}=${getFormattedDateStr()}`}
-          />
-
-          {tvforsite_net && (
-            <ChannelOnlineLink
-              href={`/${EUrlBaseParam.ONLINE_CHANNEL_LIST}/${slug}`}
-            >
-              {getOnlineLinkText(title).ua}
-            </ChannelOnlineLink>
-          )}
-          <ChannelParams channelDBParams={sqlResult[0]} />
-        </div>
+        <div className="article-text"></div>
 
         <BottomInfoPanel
           items={[

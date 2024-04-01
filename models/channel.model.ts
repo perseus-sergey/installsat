@@ -171,6 +171,10 @@ export const META_CHANNEL = {
       };
     },
   },
+  noteTitle: {
+    ua: 'Примітка',
+    en: 'Note',
+  },
   getResponsibilityText(channelTitle: string) {
     return {
       ua: `Шановні відвідувачі, ми не є власниками телеканалу «${channelTitle}». Ми не несемо відповідальності за трансльовані передачі та проблеми мовлення каналу.`,

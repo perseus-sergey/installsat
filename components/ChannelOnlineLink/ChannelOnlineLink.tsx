@@ -26,14 +26,3 @@ const ChannelOnlineLink = ({ children, href }: IChannelOnlineLinkProps) => (
 );
 
 export default ChannelOnlineLink;
-
-//       {/* if ($this->arrDbQuary[0]["tvforsite_net"]) {
-// 	return "
-// 		<p style='text-align:center;'>
-// 			<a target='_blank' id='flash' class = 'thhead' href='".SITE_ROOT."/tv-online/{$this->arrDbQuary[0]["cpu"]}/'>
-// 			<img style='padding-right:5px;bottom:-9px;position:relative;' width='32' height='32' src='/Images/  ' alt='Онлайн ТВ' />
-// 			Канал \"{$this->title}\" онлайн
-// 			</a>
-// 		</p>
-// 	";
-// } */}

@@ -4,6 +4,7 @@ import ChannelParams from '@/components/ChannelParams/ChannelParams';
 import DangerHtml from '@/components/DangerHtml/DangerHtml';
 import EmptyData from '@/components/EmptyData/EmptyData';
 import FillingValidImage from '@/components/Images/FillingValidImage';
+import NoteBlock from '@/components/NoteBlock/NoteBlock';
 import SimilarArticles from '@/components/SimilarArticles/SimilarArticles';
 import SimilarChannel from '@/components/SimilarChannel/SimilarChannel';
 import { Title } from '@/components/Title/Title';
@@ -41,7 +42,9 @@ const {
   titleBefore,
   keywordsBefore,
   scheduleLinkText: { channel: scheduleTitle },
+  noteTitle,
   getOnlineLinkText,
+  getResponsibilityText,
   similar: { channels: simChannelsBefore, articles: simArticlesBefore },
 } = META_CHANNEL;
 
@@ -189,6 +192,10 @@ export default async function Page({ params: { slug } }: IChannelProps) {
             </ChannelOnlineLink>
           )}
           <ChannelParams channelDBParams={sqlResult[0]} />
+
+          <NoteBlock noteTitle={noteTitle.ua}>
+            {getResponsibilityText(title).ua}
+          </NoteBlock>
         </div>
 
         <BottomInfoPanel

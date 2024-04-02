@@ -1,6 +1,6 @@
 // import styles from './WrongSegment.module.scss';
 import Link from 'next/link';
-import TextButton from '../TextButton/TextButton';
+import TextButton from '../buttons/TextButton/TextButton';
 import { Title } from '../Title/Title';
 
 type TWrongSegmentProps = {

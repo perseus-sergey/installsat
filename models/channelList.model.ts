@@ -15,7 +15,7 @@ export const META_SAT_CHANNEL_LIST = {
     };
   },
   getKeywords(lang: keyof ILang) {
-    return `${this.getTitle()[lang]} ${this.getDescription()[lang]}`;
+    return `${META_SAT_CHANNEL_LIST.getTitle()[lang]} ${META_SAT_CHANNEL_LIST.getDescription()[lang]}`;
   },
   getDescription() {
     return {
@@ -85,6 +85,18 @@ export const META_ALL_SAT_CHANNEL_LIST = {
         en: 'See satellite coverage maps',
       },
       linkUrl: `/${EUrlBaseParam.SAT_COVERAGE_MAP}`,
+    },
+  },
+  filtering: {
+    filterByChannelName: {
+      placeholder: {
+        ua: 'Назва каналу...',
+        en: 'Channel name...',
+      },
+      labelTitle: {
+        ua: 'Фільтр каналів по назві',
+        en: 'Filter channels by name',
+      },
     },
   },
   image: {

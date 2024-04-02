@@ -5,7 +5,7 @@ import {
   ISatelliteOption,
   TSatModel,
 } from '@/models/tblSat.model';
-import TextButton from '../TextButton/TextButton';
+import TextButton from '../buttons/TextButton/TextButton';
 import styles from './FormDigestInterval.module.scss';
 import Select, { components, GroupProps, ControlProps } from 'react-select';
 import { TSatDigest, digestIntervals } from '@/models/satDigest.model';

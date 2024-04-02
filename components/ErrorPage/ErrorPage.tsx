@@ -1,6 +1,6 @@
 // import styles from './ErrorPage.module.scss';
 import { ERRORS } from '@/models/ui.model';
-import TextButton from '../TextButton/TextButton';
+import TextButton from '../buttons/TextButton/TextButton';
 
 interface IErrorPageProps {
   error: Error & { digest?: string };

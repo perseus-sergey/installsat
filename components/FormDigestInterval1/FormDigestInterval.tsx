@@ -1,4 +1,4 @@
-import TextButton from '../TextButton/TextButton';
+import TextButton from '../buttons/TextButton/TextButton';
 import styles from './FormDigestInterval.module.scss';
 import {
   LAST_NEWS_INTERVAL,

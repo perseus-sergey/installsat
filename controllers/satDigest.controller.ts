@@ -3,31 +3,19 @@ import { executeQuery } from '@/libs/db/mysqldb';
 import { IGroupedSatelliteOption, TSatModel } from '@/models/tblSat.model';
 import { LAST_NEWS_INTERVAL, TSatDigest } from '@/models/satDigest.model';
 
-// export const singleDaySql = `
-// SELECT d.date, d.text, d.id,
-// 	sat.parent AS satPar,
-// 	sat.title AS satTitle,
-// 	sat.logo AS satLogo,
-// 	sat.grade AS satGrade,
-// 	sat.position AS satPosition
-// 	FROM tbl_digest AS d
-// 	LEFT JOIN tbl_chan_sat AS sat ON d.sat = sat.id
-// 	WHERE date = ?
-// 	ORDER BY satGrade, satTitle
-// `;
-
 export const getSatDigestNews = async (
   satellites?: string | string[] | undefined,
   timeInterval = 0
 ) => {
   let orderBy = 'ORDER BY d.date DESC, satGrade, satTitle';
   let tblName = 'tbl_digest';
-  let where = '';
-  let inSatList = `WHERE d.date >= CURDATE() - INTERVAL ${LAST_NEWS_INTERVAL} DAY`;
+  let where = `WHERE date >= CURDATE() - INTERVAL ${LAST_NEWS_INTERVAL} DAY`;
+  let inSatList = '';
 
   if (timeInterval) {
     orderBy = 'ORDER BY satGrade, satTitle, d.date DESC';
     if (timeInterval > 180) {
+      where = '';
       if (timeInterval !== new Date().getFullYear())
         tblName += `_${timeInterval}`;
     } else {
@@ -38,7 +26,7 @@ export const getSatDigestNews = async (
   if (satellites && satellites[0]) {
     const selectedSats =
       typeof satellites === 'string' ? satellites : satellites.join('","');
-    inSatList = `AND sat.grade IN ("${selectedSats}")`;
+    inSatList = `${timeInterval > 180 ? 'WHERE' : 'AND'} sat.grade IN ("${selectedSats}")`;
   }
 
   const sql = `
@@ -54,6 +42,7 @@ export const getSatDigestNews = async (
     ${inSatList}
     ${orderBy}
   `;
+  console.log('🚀 ~ sql:', sql);
 
   return await executeQuery<TSatDigest>(sql, []);
 };

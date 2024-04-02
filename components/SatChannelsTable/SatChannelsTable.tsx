@@ -16,6 +16,11 @@ import TooltipSimple from '../TooltipSimple/TooltipSimple';
 import FillingValidImage from '../Images/FillingValidImage';
 import { META_CHANNEL } from '@/models/channel.model';
 
+const {
+  anchors: { goUpLink },
+  links: { satTitleLink },
+} = META_ALL_SAT_CHANNEL_LIST;
+
 interface ISatChannelsTableProps {
   satChannels: TSatChannelListModel[][][];
 }
@@ -121,29 +126,31 @@ const SatChannelsTable = ({ satChannels }: ISatChannelsTableProps) => (
   <>
     {satChannels.map((sat, i) => (
       <>
-        {satChannels.length > 1 && (
+        {satChannels.length > 0 && (
           <h2 key={i} className={styles.satTitle} id={sat[0][0].sat_slug}>
-            <TooltipSimple
-              tooltipText={META_ALL_SAT_CHANNEL_LIST.anchors.goUpLink.title.ua}
-            >
+            <TooltipSimple tooltipText={goUpLink.title.ua}>
               <Link
-                href={`/${EUrlBaseParam.SAT_CHANNEL_LIST}`}
-                title={META_ALL_SAT_CHANNEL_LIST.anchors.goUpLink.title.ua}
+                href={`#`}
+                title={goUpLink.title.ua}
                 className={styles.goUpLink}
               >
-                {META_ALL_SAT_CHANNEL_LIST.anchors.goUpLink.img}
+                {goUpLink.img}
               </Link>
             </TooltipSimple>
-            <TooltipSimple
-              tooltipText={
-                META_ALL_SAT_CHANNEL_LIST.links.satTitleLink.tooltipTitle.ua
-              }
-            >
+
+            <TooltipSimple tooltipText={satTitleLink.tooltipTitle.ua}>
               <Link
                 className={styles.satTitleLink}
-                href={`${META_ALL_SAT_CHANNEL_LIST.links.satTitleLink.linkUrl}/${sat[0][0].sat_slug}`}
+                href={`${satTitleLink.linkUrl}/${sat[0][0].sat_slug}`}
               >
                 {`${sat[0][0].sat_title} - ${sat[0][0].sat_position}`}
+              </Link>
+            </TooltipSimple>
+            <TooltipSimple tooltipText={satTitleLink.tooltipTitle.ua}>
+              <Link
+                className={styles.satTitleLink}
+                href={`${satTitleLink.linkUrl}/${sat[0][0].sat_slug}`}
+              >
                 <FillingValidImage
                   image={{
                     ...META_SAT_CHANNEL_LIST.h1SatImage,

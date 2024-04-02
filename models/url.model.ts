@@ -23,6 +23,7 @@ export enum EUrlBaseParam {
 
 export enum EUrlSearchParam {
   SAT = 'sat',
+  CHANNEL = 'channel',
   INTERVAL = 'interval',
   PAGE = 'page',
   DATE = 'date',

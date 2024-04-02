@@ -1,4 +1,3 @@
-import DangerHtmlUl from '@/components/DangerHtml/DangerHtml';
 import EmptyData from '@/components/EmptyData/EmptyData';
 import { Title } from '@/components/Title/Title';
 import {
@@ -15,25 +14,52 @@ import SatChannelsTable from '@/components/SatChannelsTable/SatChannelsTable';
 import FillingImg from '@/components/Images/FillingImage';
 import Link from 'next/link';
 import Fieldset from '@/components/Fieldset/Fieldset';
-import { defaultMetaData } from '@/models/ui.model';
+import { TSearchParams, defaultMetaData } from '@/models/ui.model';
 import { getFormattedDateStr } from '@/libs/utils';
-import { EUrlBaseParam, SITE_BASE_URL } from '@/models/url.model';
+import {
+  EUrlBaseParam,
+  EUrlSearchParam,
+  SITE_BASE_URL,
+} from '@/models/url.model';
+import Filter from '@/components/Filter/Filter';
+import { Suspense } from 'react';
+
+const {
+  getTitle,
+  getDescription,
+  getKeywords,
+  getH1,
+  image: { h1ImageParams },
+  anchors,
+  filtering: {
+    filterByChannelName: { placeholder, labelTitle },
+  },
+} = META_ALL_SAT_CHANNEL_LIST;
 
 export const metadata: Metadata = {
-  title: META_ALL_SAT_CHANNEL_LIST.getTitle().ua,
-  description: META_ALL_SAT_CHANNEL_LIST.getDescription().ua,
-  keywords: META_ALL_SAT_CHANNEL_LIST.getKeywords().ua,
+  title: getTitle().ua,
+  description: getDescription().ua,
+  keywords: getKeywords().ua,
   openGraph: {
     ...defaultMetaData.openGraph,
-    title: META_ALL_SAT_CHANNEL_LIST.getTitle().ua,
-    description: META_ALL_SAT_CHANNEL_LIST.getDescription().ua,
+    title: getTitle().ua,
+    description: getDescription().ua,
     url: `${SITE_BASE_URL}/${EUrlBaseParam.SAT_CHANNEL_LIST}`,
     publishedTime: getFormattedDateStr(new Date()),
   },
 };
+interface IPageProps {
+  searchParams?: TSearchParams;
+}
 
-export default async function Page() {
-  const satChannels = await getSatChannels();
+export default async function Page({ searchParams }: IPageProps) {
+  const searchQueryChannel =
+    searchParams?.[EUrlSearchParam.CHANNEL] &&
+    typeof searchParams[EUrlSearchParam.CHANNEL] === 'string'
+      ? searchParams[EUrlSearchParam.CHANNEL]
+      : '';
+
+  const satChannels = await getSatChannels(searchQueryChannel);
 
   if (satChannels instanceof Error)
     return <EmptyData description={satChannels.message} />;
@@ -48,15 +74,15 @@ export default async function Page() {
   return (
     <>
       <Title>
-        {META_ALL_SAT_CHANNEL_LIST.getH1().ua}
+        {getH1().ua}
         <FillingImg
-          src={META_ALL_SAT_CHANNEL_LIST.image.h1ImageParams.path}
-          alt={META_ALL_SAT_CHANNEL_LIST.image.h1ImageParams.alt.ua}
-          width={META_ALL_SAT_CHANNEL_LIST.image.h1ImageParams.width}
-          height={META_ALL_SAT_CHANNEL_LIST.image.h1ImageParams.height}
+          src={h1ImageParams.path}
+          alt={h1ImageParams.alt.ua}
+          width={h1ImageParams.width}
+          height={h1ImageParams.height}
         />
       </Title>
-      <Fieldset legendText={META_ALL_SAT_CHANNEL_LIST.anchors.legendTitle.ua}>
+      <Fieldset legendText={anchors.legendTitle.ua}>
         <nav className="text-center text-xl">
           <ul>
             {satLinks.map((satLink) => (
@@ -70,12 +96,19 @@ export default async function Page() {
               </li>
             ))}
           </ul>
+          <Filter
+            placeholder={placeholder.ua}
+            labelTitle={labelTitle.ua}
+            searchQueryTitle={EUrlSearchParam.CHANNEL}
+          />
         </nav>
       </Fieldset>
       <StartArticleSection>
-        <DangerHtmlUl wrapperTagName="p" text={START_CONTENT} />
+        <p>{START_CONTENT}</p>
       </StartArticleSection>
-      <SatChannelsTable satChannels={groupedChannelsAllSat} />
+      <Suspense key={searchQueryChannel}>
+        <SatChannelsTable satChannels={groupedChannelsAllSat} />
+      </Suspense>
     </>
   );
 }

@@ -1,5 +1,5 @@
 import { ILang } from './ui.model';
-import { EUrlBaseParam } from './url.model';
+import { EUrlBaseParam, EUrlSearchParam } from './url.model';
 
 export const META_SAT_CHANNEL_LIST = {
   getH1(satTitle: string) {
@@ -105,6 +105,18 @@ export const META_ALL_SAT_CHANNEL_LIST = {
         searchIconStr: '⏿',
         imgStr: 'x',
       },
+    },
+    filterByChannelFormat: {
+      formats: [
+        {
+          title: 'T2-MI',
+          searchQueryName: EUrlSearchParam.CHANNEL_FORMAT_T2MI,
+        },
+        {
+          title: 'MPEG-4, DVB-S2, HD, 4K(UHD)',
+          searchQueryName: EUrlSearchParam.CHANNEL_FORMAT_MPG4,
+        },
+      ],
     },
   },
   image: {

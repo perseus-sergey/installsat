@@ -1,14 +1,11 @@
 import Link from 'next/link';
 import styles from './WidgetLastNews.module.scss';
-import { lastNewsWidgetSql } from '@/controllers/sidebar.controller';
+import { getLastNewsWidgetList } from '@/controllers/sidebar.controller';
 import EmptyData from '../EmptyData/EmptyData';
-import { executeQuery } from '@/libs/db/mysqldb';
-import { TUsefulArticlesSqlModel } from '@/models/tblUseful.model';
 import { WIDGET_LAST_NEWS } from '@/models/widget.model';
 
 const WidgetLastNews = async () => {
-  const lastNewsWidgetList =
-    await executeQuery<TUsefulArticlesSqlModel>(lastNewsWidgetSql);
+  const lastNewsWidgetList = await getLastNewsWidgetList();
   if (lastNewsWidgetList instanceof Error) return <EmptyData />;
 
   return (

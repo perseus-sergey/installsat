@@ -1,0 +1,13 @@
+.AnchorListItem {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+
+  .linkText {
+    color: #3730a3;
+
+    &:hover {
+      color: #ef4444;
+    }
+  }
+}

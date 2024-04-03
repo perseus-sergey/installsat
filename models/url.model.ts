@@ -27,4 +27,6 @@ export enum EUrlSearchParam {
   INTERVAL = 'interval',
   PAGE = 'page',
   DATE = 'date',
+  CHANNEL_FORMAT_T2MI = 't2-mi',
+  CHANNEL_FORMAT_MPG4 = 'mpeg4',
 }

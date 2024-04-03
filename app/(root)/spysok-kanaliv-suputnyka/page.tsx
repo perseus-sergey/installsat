@@ -12,7 +12,6 @@ import type { Metadata } from 'next';
 import StartArticleSection from '@/components/StartArticleSection/StartArticleSection';
 import SatChannelsTable from '@/components/SatChannelsTable/SatChannelsTable';
 import FillingImg from '@/components/Images/FillingImage';
-import Link from 'next/link';
 import Fieldset from '@/components/Fieldset/Fieldset';
 import { TSearchParams, defaultMetaData } from '@/models/ui.model';
 import { getFormattedDateStr } from '@/libs/utils';
@@ -23,6 +22,9 @@ import {
 } from '@/models/url.model';
 import Filter from '@/components/Filter/Filter';
 import { Suspense } from 'react';
+import AnchorListItem from '@/components/AnchorListItem/AnchorListItem';
+import { getChannelSatList } from '@/controllers/sidebar.controller';
+import ChannelFormatSliders from '@/components/ChannelFormatSliders/ChannelFormatSliders';
 
 const {
   getTitle,
@@ -33,6 +35,7 @@ const {
   anchors,
   filtering: {
     filterByChannelName: { placeholder, labelTitle },
+    filterByChannelFormat: { formats },
   },
 } = META_ALL_SAT_CHANNEL_LIST;
 
@@ -59,16 +62,25 @@ export default async function Page({ searchParams }: IPageProps) {
       ? searchParams[EUrlSearchParam.CHANNEL]
       : '';
 
-  const satChannels = await getSatChannels(searchQueryChannel);
+  const satChannels = await getSatChannels(
+    searchQueryChannel,
+    '',
+    searchParams?.[EUrlSearchParam.SAT],
+    !!searchParams?.[EUrlSearchParam.CHANNEL_FORMAT_MPG4],
+    !!searchParams?.[EUrlSearchParam.CHANNEL_FORMAT_T2MI]
+  );
 
   if (satChannels instanceof Error)
     return <EmptyData description={satChannels.message} />;
 
+  const satListResults = await getChannelSatList();
+  const satList = satListResults instanceof Error ? [] : satListResults;
+
   const groupedChannelsAllSat = getGroupedChannelsAllSat([satChannels]);
 
-  const satLinks = groupedChannelsAllSat.map((sat) => ({
-    title: `${sat[0][0].sat_title} - ${sat[0][0].sat_position}`,
-    slug: sat[0][0].sat_slug,
+  const satLinks = satList.map((sat) => ({
+    title: `${sat.title} - ${sat.position}`,
+    slug: sat.cpu,
   }));
 
   return (
@@ -87,12 +99,23 @@ export default async function Page({ searchParams }: IPageProps) {
           <ul>
             {satLinks.map((satLink) => (
               <li key={satLink.slug}>
-                <Link
-                  href={`#${satLink.slug}`}
-                  className="text-indigo-800 hover:text-red-500"
-                >
-                  {satLink.title}
-                </Link>
+                <AnchorListItem
+                  linkParams={{
+                    title: satLink.title,
+                    href: `#${satLink.slug}`,
+                  }}
+                  inputAttributes={{
+                    value: satLink.slug,
+                    id: `chb-${satLink.slug}`,
+                    name: satLink.slug,
+                  }}
+                  searchQueryName={EUrlSearchParam.SAT}
+                />
+              </li>
+            ))}
+            {formats.map((format) => (
+              <li key={format.searchQueryName}>
+                <ChannelFormatSliders {...format} />
               </li>
             ))}
           </ul>

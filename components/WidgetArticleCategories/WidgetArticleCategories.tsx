@@ -1,14 +1,11 @@
-import { executeQuery } from '@/libs/db/mysqldb';
 import styles from './WidgetArticleCategories.module.scss';
-import { articleCategoriesSql } from '@/controllers/sidebar.controller';
 import EmptyData from '../EmptyData/EmptyData';
 import Link from 'next/link';
-import { TCategories } from '@/models/tblCategories.model';
 import { WIDGET_ARTICLE_CATEGORY } from '@/models/widget.model';
+import { getArticleCatWidgetList } from '@/controllers/sidebar.controller';
 
 const WidgetArticleCategories = async () => {
-  const articleCatWidgetList =
-    await executeQuery<TCategories>(articleCategoriesSql);
+  const articleCatWidgetList = await getArticleCatWidgetList();
   if (articleCatWidgetList instanceof Error) return <EmptyData />;
 
   return (

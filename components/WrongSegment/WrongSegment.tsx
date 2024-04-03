@@ -17,7 +17,7 @@ const WrongSegment = ({
   <>
     <Title>{wrongMessage}</Title>
     <Link href={redirectPath}>
-      <TextButton>{btnTitle}</TextButton>
+      <TextButton ariaLabel="Go back">{btnTitle}</TextButton>
     </Link>
   </>
 );

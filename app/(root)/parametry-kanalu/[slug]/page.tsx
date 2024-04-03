@@ -218,7 +218,7 @@ export default async function Page({ params: { slug } }: IChannelProps) {
 
       {similarChannels.length ? (
         <SimilarArticles
-          similarTitle={`${simChannelsBefore.title.ua}"${title}"`}
+          similarTitle={`${simChannelsBefore.title.ua} "${title}"`}
           similarArticlesMapped={similarChannels.map((chan) => (
             <li key={chan.cpu}>
               <SimilarChannel channelTitle={title} chanParams={chan} />

@@ -31,6 +31,16 @@ export const META_TRANS_NEWS_LIST = {
     ua: 'Виберіть супутники та проміжок часу',
     en: 'Select satellites and time slot',
   },
+  submitButton: {
+    title: {
+      ua: 'Підтвердити',
+      en: 'Confirm',
+    },
+    ariaLabel: {
+      ua: 'Підтвердити зміни',
+      en: 'Confirm changes',
+    },
+  },
   images: {
     satLogo: {
       path: '/Images/satellites/',

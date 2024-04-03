@@ -1,0 +1,16 @@
+.BtnWrapper {
+  text-align: center;
+}
+
+.Button {
+  cursor: pointer;
+  position: relative;
+  width: fit-content;
+
+  &:hover {
+  }
+
+  &:active {
+    background-color: #9d9d9d50;
+  }
+}

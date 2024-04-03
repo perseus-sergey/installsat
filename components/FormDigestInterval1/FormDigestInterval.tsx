@@ -20,6 +20,7 @@ import { EUrlBaseParam, EUrlSearchParam } from '@/models/url.model';
 import Fieldset from '../Fieldset/Fieldset';
 import { TSearchParams } from '@/models/ui.model';
 
+const { fieldsetTitle, submitButton } = META_TRANS_NEWS_LIST;
 interface IFormDigestIntervalProps {
   searchParams: TSearchParams;
 }
@@ -57,7 +58,7 @@ const FormDigestInterval = async ({
       id="formDigestInterval"
       className={styles.FormDigestInterval}
     >
-      <Fieldset legendText={META_TRANS_NEWS_LIST.fieldsetTitle.ua}>
+      <Fieldset legendText={fieldsetTitle.ua}>
         <div className={styles.formWrapper}>
           <div className={styles.selectsBlock}>
             {groupedSats[1] ? (
@@ -89,13 +90,13 @@ const FormDigestInterval = async ({
           </div>
 
           <TextButton
+            ariaLabel={submitButton.ariaLabel.ua}
             type="submit"
             id="submitBtn"
             name="submitBtn"
             value="Submit"
-            // aria-disabled={pending}
           >
-            Submit
+            {submitButton.title.ua}
           </TextButton>
         </div>
       </Fieldset>

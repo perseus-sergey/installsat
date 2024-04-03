@@ -97,6 +97,14 @@ export const META_ALL_SAT_CHANNEL_LIST = {
         ua: 'Фільтр каналів по назві',
         en: 'Filter channels by name',
       },
+      cancelButton: {
+        ariaLabel: {
+          ua: 'Скасувати',
+          en: 'Cancel',
+        },
+        searchIconStr: '⏿',
+        imgStr: 'x',
+      },
     },
   },
   image: {

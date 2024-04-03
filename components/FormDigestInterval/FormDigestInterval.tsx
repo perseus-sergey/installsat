@@ -14,6 +14,7 @@ import digestIntervalAction from '@/libs/serverActions/digestInterval.action';
 import { Loader } from '../loaders/Loader';
 import { useCallback, useEffect, useState } from 'react';
 import { getGroupedSatelliteOptions } from '@/controllers/satDigest.controller';
+import TooltipSimple from '../TooltipSimple/TooltipSimple';
 
 interface IFormDigestIntervalProps {
   satellites: TSatModel[][];
@@ -141,15 +142,18 @@ const FormDigestInterval = ({
           )}
         </div>
 
-        <TextButton
-          type="submit"
-          id="submitBtn"
-          name="submitBtn"
-          value="Submit"
-          aria-disabled={pending}
-        >
-          Submit
-        </TextButton>
+        <TooltipSimple tooltipText={'Implement changes'}>
+          <TextButton
+            ariaLabel="Implement changes"
+            type="submit"
+            id="submitBtn"
+            name="submitBtn"
+            value="Submit"
+            aria-disabled={pending}
+          >
+            Submit
+          </TextButton>
+        </TooltipSimple>
       </fieldset>
       {pending ? (
         <h2>

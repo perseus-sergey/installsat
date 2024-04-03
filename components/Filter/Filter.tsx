@@ -3,6 +3,13 @@
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import styles from './Filter.module.scss';
 import { EUrlSearchParam } from '@/models/url.model';
+import { META_ALL_SAT_CHANNEL_LIST } from '@/models/channelList.model';
+import BaseButton from '../buttons/BaseButton/BaseButton';
+import { useState } from 'react';
+import { useDebouncedCallback } from 'use-debounce';
+
+const { ariaLabel, imgStr, searchIconStr } =
+  META_ALL_SAT_CHANNEL_LIST.filtering.filterByChannelName.cancelButton;
 
 interface IFilterProps {
   placeholder: string;
@@ -18,8 +25,13 @@ export default function Filter({
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const { replace } = useRouter();
+  const [searchValue, setSearchValue] = useState(
+    searchParams.get(searchQueryTitle)?.toString()
+  );
 
-  function handleSearch(term: string) {
+  const handleSearch = (term: string) => {
+    setSearchValue(term);
+
     const params = new URLSearchParams(searchParams);
     if (term) {
       params.set(searchQueryTitle, term);
@@ -27,7 +39,16 @@ export default function Filter({
       params.delete(searchQueryTitle);
     }
     replace(`${pathname}?${params.toString()}`);
-  }
+  };
+
+  const handleSearchDebounced = useDebouncedCallback(handleSearch, 300);
+
+  const cancelClick = () => {
+    if (!searchValue) return;
+
+    handleSearch('');
+    setSearchValue('');
+  };
 
   return (
     <div className={styles.filterInputBlock}>
@@ -39,11 +60,18 @@ export default function Filter({
           className={styles.inputField}
           placeholder={placeholder}
           onChange={(e) => {
-            handleSearch(e.target.value);
+            handleSearchDebounced(e.target.value);
           }}
-          defaultValue={searchParams.get(searchQueryTitle)?.toString()}
+          value={searchValue}
         />
-        <span className={styles.searchIcon}>⏿</span>
+        <span className={styles.searchIcon}>{searchIconStr}</span>
+        <BaseButton
+          onClick={cancelClick}
+          className={styles.cancelButton}
+          ariaLabel={ariaLabel.ua}
+        >
+          {imgStr}
+        </BaseButton>
       </div>
     </div>
   );

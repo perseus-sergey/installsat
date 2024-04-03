@@ -17,6 +17,9 @@
     color: #0000cc;
     text-shadow: 1px 1px 1px #ffffff;
 
+    @media (width < 700px) {
+      font-size: 1.5rem;
+    }
     &:hover {
       color: red;
     }
@@ -31,10 +34,11 @@
     height: 2.5rem;
     border-radius: 2rem;
     color: rgb(203 218 250);
-    background-color: #e41d23;
+    background-color: #a7a7a7;
 
     &:hover {
       color: #ffffff;
+      background-color: rgb(255 0 0 / 37%);
     }
   }
 }

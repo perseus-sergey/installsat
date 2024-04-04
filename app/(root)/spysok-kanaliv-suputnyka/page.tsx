@@ -41,6 +41,8 @@ const {
     filterByChannelName: { placeholder, labelTitle },
     filterByChannelFormat: { formats },
     resetAllFiltersButton,
+    satCheckBox,
+    satAnchor,
   },
 } = META_ALL_SAT_CHANNEL_LIST;
 
@@ -108,11 +110,13 @@ export default async function Page({ searchParams }: IPageProps) {
                   linkParams={{
                     title: satLink.title,
                     href: `#${satLink.slug}`,
+                    'aria-label': satAnchor.tooltip[CURRENT_LANGUAGE],
                   }}
                   inputAttributes={{
                     value: satLink.slug,
                     id: `chb-${satLink.slug}`,
                     name: satLink.slug,
+                    'aria-label': satCheckBox.tooltip[CURRENT_LANGUAGE],
                   }}
                   searchQueryName={EUrlSearchParam.SAT}
                 />

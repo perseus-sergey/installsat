@@ -1,5 +1,5 @@
 import { executeQuery } from '@/libs/db/mysqldb';
-import { TSatChannelListModel } from '@/models/channelList.model';
+import { ISatChannelListEmptyModel } from '@/models/channelList.model';
 import { cache } from 'react';
 
 export const getSatChannels = cache(
@@ -58,15 +58,16 @@ export const getSatChannels = cache(
   ORDER BY fr.freq, be.polar, ch.title
   `;
 
-    return await executeQuery<TSatChannelListModel>(sql, [channelId]);
+    return await executeQuery<ISatChannelListEmptyModel>(sql, [channelId]);
   }
 );
 
 export const getGroupedChannelsAllSat = (
-  satChannels: TSatChannelListModel[][]
-): TSatChannelListModel[][][] => {
-  const grouped: { [sat: number]: { [freq: number]: TSatChannelListModel[] } } =
-    {};
+  satChannels: ISatChannelListEmptyModel[][]
+): ISatChannelListEmptyModel[][][] => {
+  const grouped: {
+    [sat: number]: { [freq: number]: ISatChannelListEmptyModel[] };
+  } = {};
 
   satChannels.forEach((satGroup) => {
     satGroup.forEach((channel) => {

@@ -25,19 +25,30 @@ export const META_SAT_CHANNEL_LIST = {
         'List of available unencrypted channels broadcast from satellite',
     };
   },
-  h1SatImage: {
-    path: '/Images/satellites/',
-    alternativeString: { title: '🛰', fontSize: '5rem' },
-    height: '99px',
-    width: '132px',
-    alt: {
-      [ELanguage.UA]: `Безкоштовні канали супутника`,
-      [ELanguage.EN]: `Free channels of`,
-    },
-    defaultImage: {
-      src: '/Images/satellite_7144.png',
+  images: {
+    h1SatImage: {
+      path: '/Images/satellites/',
+      alternativeString: { title: '🛰', fontSize: '5rem' },
       height: '99px',
       width: '132px',
+      alt: {
+        [ELanguage.UA]: `Безкоштовні канали супутника`,
+        [ELanguage.EN]: `Free channels of`,
+      },
+      defaultImage: {
+        src: '/Images/satellite_7144.png',
+        height: '99px',
+        width: '132px',
+      },
+    },
+    genreImage: {
+      path: '/Images/genre/',
+      height: '24px',
+      width: '24px',
+      altPre: {
+        [ELanguage.UA]: 'Жанр:',
+        [ELanguage.EN]: 'Genre:',
+      },
     },
   },
 };
@@ -92,6 +103,18 @@ export const META_ALL_SAT_CHANNEL_LIST = {
     },
   },
   filtering: {
+    satCheckBox: {
+      tooltip: {
+        [ELanguage.UA]: 'Обрати супутник',
+        [ELanguage.EN]: 'Choose a satellite',
+      },
+    },
+    satAnchor: {
+      tooltip: {
+        [ELanguage.UA]: 'Перейти до супутника',
+        [ELanguage.EN]: 'Go to satellite',
+      },
+    },
     filterByChannelName: {
       placeholder: {
         [ELanguage.UA]: 'Назва каналу...',
@@ -151,34 +174,32 @@ export const META_ALL_SAT_CHANNEL_LIST = {
 
 export const START_CONTENT = `У наведеному списку показані ті канали, які транслюються без абонентської плати.`;
 
-const satChannelListEmptyModel = {
-  id: -1,
-  title: '',
-  cpu: '',
-  sat_title: '',
-  sat_position: '',
-  sat_logo: '',
-  sat_slug: '',
-  sat_grade: -1,
-  frequency: -1,
-  sat: -1,
-  tema: -1,
-  logo: '',
-  programma: -1,
-  encryption: '',
-  biss: '',
-  description: '',
-  freq: -1,
-  sr: -1,
-  fec: '',
-  polar: '',
-  beam: '',
-  tem: '',
-  compr: '',
-  lan: '',
-};
-
-export type TSatChannelListModel = typeof satChannelListEmptyModel;
+export interface ISatChannelListEmptyModel {
+  id: number;
+  title: string;
+  cpu: string;
+  sat_title: string;
+  sat_position: string;
+  sat_logo: string;
+  sat_slug: string;
+  sat_grade: number;
+  frequency: number;
+  sat: number;
+  tema: number;
+  logo: string;
+  programma: number;
+  encryption: string;
+  biss: string;
+  description: string;
+  freq: number;
+  sr: number;
+  fec: string;
+  polar: string;
+  beam: string;
+  tem: string;
+  compr: string;
+  lan: string;
+}
 
 export const MCompressionColors = new Map([
   ['MPEG-2', '#E9E3FD'],

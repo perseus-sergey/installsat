@@ -4,7 +4,7 @@ import {
   META_ALL_SAT_CHANNEL_LIST,
   META_SAT_CHANNEL_LIST,
   CHANNEL_TOOLTIP_TITLES,
-  TSatChannelListModel,
+  ISatChannelListEmptyModel,
 } from '@/models/channelList.model';
 import styles from './SatChannelsTable.module.scss';
 import Link from 'next/link';
@@ -22,14 +22,19 @@ const {
   links: { satTitleLink },
 } = META_ALL_SAT_CHANNEL_LIST;
 
+const {
+  images: { h1SatImage, genreImage },
+} = META_SAT_CHANNEL_LIST;
+
 interface ISatChannelsTableProps {
-  satChannels: TSatChannelListModel[][][];
+  satChannels: ISatChannelListEmptyModel[][][];
+  isSingleSat?: boolean;
 }
 
 const FrequencySegment = ({
   frequencyChannels,
 }: {
-  frequencyChannels: TSatChannelListModel[];
+  frequencyChannels: ISatChannelListEmptyModel[];
 }) =>
   frequencyChannels.map(
     ({ logo, compr, title, tem, lan, description, cpu, biss, tema }, idx) => (
@@ -116,21 +121,27 @@ const FrequencySegment = ({
           {biss && <p className={styles.biss}>{biss}</p>}
         </td>
         <td className={styles.tdGenre}>
-          <FillingImg
-            width="24px"
-            height="24px"
-            src={`/Images/genre/${MChanTheme.get(tema)}`}
-          />
+          <TooltipSimple tooltipText={tem}>
+            <FillingImg
+              width={genreImage.width}
+              height={genreImage.height}
+              alt={`${genreImage.altPre} ${tem}`}
+              src={`/Images/genre/${MChanTheme.get(tema)}`}
+            />
+          </TooltipSimple>
         </td>
       </tr>
     )
   );
 
-const SatChannelsTable = ({ satChannels }: ISatChannelsTableProps) => (
+const SatChannelsTable = ({
+  satChannels,
+  isSingleSat = false,
+}: ISatChannelsTableProps) => (
   <>
     {satChannels.map((sat, i) => (
       <>
-        {satChannels.length > 0 && (
+        {!isSingleSat && (
           <h2 key={i} className={styles.satTitle} id={sat[0][0].sat_slug}>
             <TooltipSimple tooltipText={goUpLink.title[CURRENT_LANGUAGE]}>
               <Link
@@ -161,14 +172,12 @@ const SatChannelsTable = ({ satChannels }: ISatChannelsTableProps) => (
               >
                 <FillingValidImage
                   image={{
-                    ...META_SAT_CHANNEL_LIST.h1SatImage,
-                    src: `${META_SAT_CHANNEL_LIST.h1SatImage.path}${sat[0][0].sat_logo}`,
+                    ...h1SatImage,
+                    src: `${h1SatImage.path}${sat[0][0].sat_logo}`,
                   }}
-                  defaultImage={META_SAT_CHANNEL_LIST.h1SatImage.defaultImage}
-                  alternativeImgString={
-                    META_SAT_CHANNEL_LIST.h1SatImage.alternativeString
-                  }
-                  alt={`${META_SAT_CHANNEL_LIST.h1SatImage.alt[CURRENT_LANGUAGE]} ${sat[0][0].sat_title}`}
+                  defaultImage={h1SatImage.defaultImage}
+                  alternativeImgString={h1SatImage.alternativeString}
+                  alt={`${h1SatImage.alt[CURRENT_LANGUAGE]} ${sat[0][0].sat_title}`}
                   isBlur
                 />
               </Link>

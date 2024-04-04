@@ -10,11 +10,13 @@ interface IAnchorListItemProps {
   linkParams: {
     title: string;
     href: string;
+    'aria-label': string;
   };
   inputAttributes: {
     id: string;
     name: string;
     value: string;
+    'aria-label': string;
   };
   searchQueryName: EUrlSearchParam;
 }
@@ -46,7 +48,7 @@ const AnchorListItem = ({
 
   return (
     <div className={styles.AnchorListItem}>
-      <TooltipSimple tooltipText="Обрати супутник">
+      <TooltipSimple tooltipText={inputAttributes['aria-label']}>
         <div className={styles.checkboxWrapper}>
           <input
             type="checkbox"
@@ -58,8 +60,8 @@ const AnchorListItem = ({
         </div>
       </TooltipSimple>
       {!isSearchQuerySatExist || (isSearchQuerySatExist && isChecked) ? (
-        <TooltipSimple tooltipText="Перейти до супутника">
-          <Link href={linkParams.href} className={styles.linkText}>
+        <TooltipSimple tooltipText={linkParams['aria-label']}>
+          <Link {...linkParams} className={styles.linkText}>
             {linkParams.title}
           </Link>
         </TooltipSimple>

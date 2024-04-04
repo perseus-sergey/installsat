@@ -19,8 +19,13 @@ import { CURRENT_LANGUAGE, defaultMetaData } from '@/models/ui.model';
 import { EUrlBaseParam, SITE_BASE_URL } from '@/models/url.model';
 import { getFormattedDateStr } from '@/libs/utils';
 
-const { getTitle, getDescription, getKeywords, getH1, h1SatImage } =
-  META_SAT_CHANNEL_LIST;
+const {
+  getTitle,
+  getDescription,
+  getKeywords,
+  getH1,
+  images: { h1SatImage },
+} = META_SAT_CHANNEL_LIST;
 
 export interface IPageParams {
   params: { sat: string };
@@ -103,7 +108,10 @@ export default async function Page({ params }: IPageParams) {
       <StartArticleSection>
         <DangerHtmlUl wrapperTagName="p" text={START_CONTENT} />
       </StartArticleSection>
-      <SatChannelsTable satChannels={getGroupedChannelsAllSat([satChannels])} />
+      <SatChannelsTable
+        isSingleSat
+        satChannels={getGroupedChannelsAllSat([satChannels])}
+      />
     </>
   );
 }

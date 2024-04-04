@@ -40,6 +40,7 @@ const {
   filtering: {
     filterByChannelName: { placeholder, labelTitle },
     filterByChannelFormat: { formats },
+    resetAllFiltersButton,
   },
 } = META_ALL_SAT_CHANNEL_LIST;
 
@@ -127,6 +128,10 @@ export default async function Page({ searchParams }: IPageProps) {
             placeholder={placeholder[CURRENT_LANGUAGE]}
             labelTitle={labelTitle[CURRENT_LANGUAGE]}
             searchQueryTitle={EUrlSearchParam.CHANNEL}
+            resetButton={{
+              ariaLabel: resetAllFiltersButton.ariaLabel[CURRENT_LANGUAGE],
+              content: resetAllFiltersButton.imgStr,
+            }}
           />
         </nav>
       </Fieldset>

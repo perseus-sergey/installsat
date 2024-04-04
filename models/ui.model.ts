@@ -5,7 +5,7 @@ export enum ELanguage {
   EN = 'en',
 }
 
-export const CURRENT_LANGUAGE = ELanguage.EN;
+export const CURRENT_LANGUAGE = ELanguage.UA;
 
 export interface ILang {
   [ELanguage.UA]: string;

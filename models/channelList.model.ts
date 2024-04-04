@@ -110,6 +110,13 @@ export const META_ALL_SAT_CHANNEL_LIST = {
         imgStr: 'x',
       },
     },
+    resetAllFiltersButton: {
+      ariaLabel: {
+        [ELanguage.UA]: 'Скинути всі фільтри',
+        [ELanguage.EN]: 'Reset All Filters',
+      },
+      imgStr: '⏻',
+    },
     filterByChannelFormat: {
       formats: [
         {

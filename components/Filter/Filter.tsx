@@ -8,6 +8,7 @@ import BaseButton from '../buttons/BaseButton/BaseButton';
 import { useState } from 'react';
 import { useDebouncedCallback } from 'use-debounce';
 import { CURRENT_LANGUAGE } from '@/models/ui.model';
+import TooltipSimple from '../TooltipSimple/TooltipSimple';
 
 const { ariaLabel, imgStr, searchIconStr } =
   META_ALL_SAT_CHANNEL_LIST.filtering.filterByChannelName.cancelButton;
@@ -16,12 +17,14 @@ interface IFilterProps {
   placeholder: string;
   labelTitle: string;
   searchQueryTitle: EUrlSearchParam;
+  resetButton: { ariaLabel: string; content: string };
 }
 
 export default function Filter({
   placeholder,
   labelTitle,
   searchQueryTitle,
+  resetButton: { ariaLabel: resetBtnAriaL, content: resetBtnContent },
 }: IFilterProps) {
   const searchParams = useSearchParams();
   const pathname = usePathname();
@@ -51,29 +54,48 @@ export default function Filter({
     setSearchValue('');
   };
 
+  const resetAll = () => {
+    setSearchValue('');
+    replace(pathname);
+  };
+
   return (
     <div className={styles.filterInputBlock}>
       <label htmlFor="search" className="sr-only">
         {labelTitle}
       </label>
       <div className={styles.inputWrapper}>
-        <input
-          className={styles.inputField}
-          placeholder={placeholder}
-          onChange={(e) => {
-            handleSearchDebounced(e.target.value);
-          }}
-          value={searchValue}
-        />
-        <span className={styles.searchIcon}>{searchIconStr}</span>
-        <BaseButton
-          onClick={cancelClick}
-          className={styles.cancelButton}
-          ariaLabel={ariaLabel[CURRENT_LANGUAGE]}
-        >
-          {imgStr}
-        </BaseButton>
+        <div className={styles.inputBlock}>
+          <input
+            className={styles.inputField}
+            placeholder={placeholder}
+            onChange={(e) => {
+              handleSearchDebounced(e.target.value);
+            }}
+            value={searchValue}
+          />
+          <span className={styles.searchIcon}>{searchIconStr}</span>
+        </div>
+        <TooltipSimple tooltipText={ariaLabel[CURRENT_LANGUAGE]}>
+          <BaseButton
+            onClick={cancelClick}
+            className={styles.cancelButton}
+            ariaLabel={ariaLabel[CURRENT_LANGUAGE]}
+          >
+            {imgStr}
+          </BaseButton>
+        </TooltipSimple>
       </div>
+      <TooltipSimple tooltipText={resetBtnAriaL}>
+        <BaseButton
+          className={styles.ResetAllButton}
+          data-testid="ResetFiltersButton"
+          ariaLabel={resetBtnAriaL}
+          onClick={resetAll}
+        >
+          {resetBtnContent}
+        </BaseButton>
+      </TooltipSimple>
     </div>
   );
 }

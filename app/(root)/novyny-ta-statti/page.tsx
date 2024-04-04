@@ -10,7 +10,11 @@ import Pagination from '@/components/Pagination/Pagination';
 import { notFound } from 'next/navigation';
 import { getFormattedDateStr } from '@/libs/utils';
 import { EUrlBaseParam, SITE_BASE_URL } from '@/models/url.model';
-import { TSearchParams, defaultMetaData } from '@/models/ui.model';
+import {
+  CURRENT_LANGUAGE,
+  TSearchParams,
+  defaultMetaData,
+} from '@/models/ui.model';
 
 export const dynamic = 'force-dynamic';
 
@@ -19,13 +23,13 @@ interface IProps {
 }
 
 export const metadata: Metadata = {
-  title: ARTICLES.articleList.meta.getTitle().ua,
-  description: ARTICLES.articleList.meta.getDescription().ua,
-  keywords: ARTICLES.articleList.meta.getKeywords('ua'),
+  title: ARTICLES.articleList.meta.getTitle()[CURRENT_LANGUAGE],
+  description: ARTICLES.articleList.meta.getDescription()[CURRENT_LANGUAGE],
+  keywords: ARTICLES.articleList.meta.getKeywords(CURRENT_LANGUAGE),
   openGraph: {
     ...defaultMetaData.openGraph,
-    title: ARTICLES.articleList.meta.getTitle().ua,
-    description: ARTICLES.articleList.meta.getDescription().ua,
+    title: ARTICLES.articleList.meta.getTitle()[CURRENT_LANGUAGE],
+    description: ARTICLES.articleList.meta.getDescription()[CURRENT_LANGUAGE],
     url: `${SITE_BASE_URL}/${EUrlBaseParam.NEWS_AND_ARTICLES}`,
     publishedTime: getFormattedDateStr(new Date()),
   },
@@ -61,13 +65,13 @@ export default async function Page({ searchParams }: IProps) {
   return (
     <>
       <Title>
-        {ARTICLES.articleList.meta.getH1(currDate).ua}
+        {ARTICLES.articleList.meta.getH1(currDate)[CURRENT_LANGUAGE]}
         <FillingValidImage
           image={ARTICLES.articleList.images.h1Image}
           alternativeImgString={
             ARTICLES.articleList.images.h1Image.alternativeStr
           }
-          alt={ARTICLES.articleList.images.h1Image.alt.ua}
+          alt={ARTICLES.articleList.images.h1Image.alt[CURRENT_LANGUAGE]}
           isBlur
         />
       </Title>

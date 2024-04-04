@@ -14,7 +14,11 @@ import TextUnderH1 from '@/components/TextUnderH1/TextUnderH1';
 import ArticleList from '@/components/ArticleList/ArticleList';
 import { notFound } from 'next/navigation';
 import Pagination from '@/components/Pagination/Pagination';
-import { TSearchParams, defaultMetaData } from '@/models/ui.model';
+import {
+  CURRENT_LANGUAGE,
+  TSearchParams,
+  defaultMetaData,
+} from '@/models/ui.model';
 import { EUrlBaseParam, SITE_BASE_URL } from '@/models/url.model';
 
 export const dynamic = 'force-dynamic';
@@ -109,13 +113,17 @@ export default async function Page({
   return (
     <>
       <Title>
-        {ARTICLES.articleSingleCatList.meta.getH1(currDateStr, description).ua}
+        {
+          ARTICLES.articleSingleCatList.meta.getH1(currDateStr, description)[
+            CURRENT_LANGUAGE
+          ]
+        }
         <FillingValidImage
           image={ARTICLES.articleList.images.h1Image}
           alternativeImgString={
             ARTICLES.articleList.images.h1Image.alternativeStr
           }
-          alt={ARTICLES.articleList.images.h1Image.alt.ua}
+          alt={ARTICLES.articleList.images.h1Image.alt[CURRENT_LANGUAGE]}
           isBlur
         />
       </Title>

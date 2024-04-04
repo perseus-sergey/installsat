@@ -7,6 +7,7 @@ import { META_ALL_SAT_CHANNEL_LIST } from '@/models/channelList.model';
 import BaseButton from '../buttons/BaseButton/BaseButton';
 import { useState } from 'react';
 import { useDebouncedCallback } from 'use-debounce';
+import { CURRENT_LANGUAGE } from '@/models/ui.model';
 
 const { ariaLabel, imgStr, searchIconStr } =
   META_ALL_SAT_CHANNEL_LIST.filtering.filterByChannelName.cancelButton;
@@ -68,7 +69,7 @@ export default function Filter({
         <BaseButton
           onClick={cancelClick}
           className={styles.cancelButton}
-          ariaLabel={ariaLabel.ua}
+          ariaLabel={ariaLabel[CURRENT_LANGUAGE]}
         >
           {imgStr}
         </BaseButton>

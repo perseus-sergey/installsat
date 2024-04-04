@@ -1,13 +1,66 @@
 .AnchorListItem {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 0.5rem;
+  font-size: 1.1rem;
+  padding: 0.2rem 1rem;
 
   .linkText {
     color: #3730a3;
 
     &:hover {
       color: #ef4444;
+    }
+  }
+}
+.checkboxWrapper {
+  width: 24px;
+  height: 24px;
+  position: relative;
+  background: linear-gradient(to bottom, #fcfff4 0%, #dfe5d7 40%, #b3bead 100%);
+  border-radius: 50px;
+  box-shadow:
+    inset 0px 1px 1px white,
+    0px 1px 3px rgba(0, 0, 0, 0.5);
+
+  label {
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    cursor: pointer;
+    background: linear-gradient(to bottom, #0e2f84 0%, #708ae8 100%);
+    border-radius: 50px;
+    box-shadow:
+      inset 0px 1px 1px rgba(0, 0, 0, 0.5),
+      0px 1px 0px white;
+
+    &:after {
+      content: '';
+      width: 11px;
+      height: 7px;
+      position: absolute;
+      top: 50%;
+      right: 50%;
+      border: 3px solid #fcfff4;
+      border-top: none;
+      border-right: none;
+      background: transparent;
+      opacity: 0;
+      transform: rotate(-45deg) translate(65%, 20%);
+    }
+
+    &:hover::after {
+      opacity: 0.3;
+    }
+  }
+
+  input[type='checkbox'] {
+    visibility: hidden;
+
+    &:checked + label:after {
+      opacity: 1;
     }
   }
 }

@@ -11,14 +11,11 @@ import {
   ReactSelectInterval,
   ReactSelectSat,
 } from '../ReactSelect/ReactSelect';
-import {
-  getGroupedSatelliteOptions,
-  getSatsForForm,
-} from '@/controllers/satDigest.controller';
+import { getSatsForForm } from '@/controllers/satDigest.controller';
 import EmptyData from '../EmptyData/EmptyData';
 import { EUrlBaseParam, EUrlSearchParam } from '@/models/url.model';
 import Fieldset from '../Fieldset/Fieldset';
-import { TSearchParams } from '@/models/ui.model';
+import { CURRENT_LANGUAGE, TSearchParams } from '@/models/ui.model';
 
 const { fieldsetTitle, submitButton } = META_TRANS_NEWS_LIST;
 interface IFormDigestIntervalProps {
@@ -28,12 +25,10 @@ interface IFormDigestIntervalProps {
 const FormDigestInterval = async ({
   searchParams,
 }: IFormDigestIntervalProps) => {
-  const satsForForm = await getSatsForForm();
+  const groupedSats = await getSatsForForm();
 
-  if (satsForForm instanceof Error)
-    return <EmptyData description={satsForForm.message} />;
-
-  const groupedSats = getGroupedSatelliteOptions(satsForForm);
+  if (groupedSats instanceof Error)
+    return <EmptyData description={groupedSats.message} />;
 
   async function formAction(formData: FormData) {
     'use server';
@@ -58,7 +53,7 @@ const FormDigestInterval = async ({
       id="formDigestInterval"
       className={styles.FormDigestInterval}
     >
-      <Fieldset legendText={fieldsetTitle.ua}>
+      <Fieldset legendText={fieldsetTitle[CURRENT_LANGUAGE]}>
         <div className={styles.formWrapper}>
           <div className={styles.selectsBlock}>
             {groupedSats[1] ? (
@@ -90,13 +85,13 @@ const FormDigestInterval = async ({
           </div>
 
           <TextButton
-            ariaLabel={submitButton.ariaLabel.ua}
+            ariaLabel={submitButton.ariaLabel[CURRENT_LANGUAGE]}
             type="submit"
             id="submitBtn"
             name="submitBtn"
             value="Submit"
           >
-            {submitButton.title.ua}
+            {submitButton.title[CURRENT_LANGUAGE]}
           </TextButton>
         </div>
       </Fieldset>

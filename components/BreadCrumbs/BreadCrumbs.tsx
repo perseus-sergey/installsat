@@ -7,7 +7,7 @@ import { usePathname } from 'next/navigation';
 import { capitalizedWord } from '@/libs/utils';
 import { BREAD_SEPARATOR, MBreadCrumbs } from '@/models/breadCrumbs.model';
 import { EUrlBaseParam } from '@/models/url.model';
-import { ILang } from '@/models/ui.model';
+import { CURRENT_LANGUAGE, ILang } from '@/models/ui.model';
 
 interface IBreadCrumbProps extends React.HTMLAttributes<HTMLElement> {
   language?: keyof ILang;
@@ -19,7 +19,7 @@ interface IBreadCrumbProps extends React.HTMLAttributes<HTMLElement> {
 }
 
 const BreadCrumb = ({
-  language = 'ua',
+  language = CURRENT_LANGUAGE,
   className,
   activeLinkColor,
   isCapitalizeLinks = true,

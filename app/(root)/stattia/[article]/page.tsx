@@ -8,6 +8,7 @@ import { getFormattedDateStr } from '@/libs/utils';
 import { EUrlBaseParam } from '@/models/url.model';
 import BottomInfoPanel from '@/components/BottomInfoPanel/BottomInfoPanel';
 import Link from 'next/link';
+import { CURRENT_LANGUAGE } from '@/models/ui.model';
 
 const { h1Image } = ARTICLES.article.images;
 
@@ -38,7 +39,7 @@ export default async function Page({ params: { article } }: IArticleParams) {
           }}
           defaultImage={h1Image.defaultImg}
           alternativeImgString={h1Image.alternativeStr}
-          alt={`${h1Image.getAlt().ua}${title}`}
+          alt={`${h1Image.getAlt()[CURRENT_LANGUAGE]}${title}`}
           isBlur
         />
       </Title>
@@ -49,15 +50,18 @@ export default async function Page({ params: { article } }: IArticleParams) {
       <BottomInfoPanel
         items={[
           {
-            name: themeTitle.ua,
+            name: themeTitle[CURRENT_LANGUAGE],
             value: (
               <Link href={`/${EUrlBaseParam.NEWS_AND_ARTICLES}/${cat_slug}`}>
                 {cat_name}
               </Link>
             ),
           },
-          { name: viewsTitle.ua, value: view + 1 },
-          { name: dateTitle.ua, value: getFormattedDateStr(date) },
+          { name: viewsTitle[CURRENT_LANGUAGE], value: view + 1 },
+          {
+            name: dateTitle[CURRENT_LANGUAGE],
+            value: getFormattedDateStr(date),
+          },
         ]}
       />
     </>

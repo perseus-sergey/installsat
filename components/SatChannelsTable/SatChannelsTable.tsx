@@ -15,6 +15,7 @@ import FillingImg from '../Images/FillingImage';
 import TooltipSimple from '../TooltipSimple/TooltipSimple';
 import FillingValidImage from '../Images/FillingValidImage';
 import { META_CHANNEL } from '@/models/channel.model';
+import { CURRENT_LANGUAGE } from '@/models/ui.model';
 
 const {
   anchors: { goUpLink },
@@ -71,21 +72,24 @@ const FrequencySegment = ({
                 <div className="py-2.5 px-5">
                   <ul>
                     <li>
-                      {CHANNEL_TOOLTIP_TITLES.name.ua}: <strong>{title}</strong>
+                      {CHANNEL_TOOLTIP_TITLES.name[CURRENT_LANGUAGE]}:{' '}
+                      <strong>{title}</strong>
                     </li>
                     <li>
-                      {CHANNEL_TOOLTIP_TITLES.genre.ua}: <strong>{tem}</strong>
+                      {CHANNEL_TOOLTIP_TITLES.genre[CURRENT_LANGUAGE]}:{' '}
+                      <strong>{tem}</strong>
                     </li>
                     <li>
-                      {CHANNEL_TOOLTIP_TITLES.language.ua}:{' '}
+                      {CHANNEL_TOOLTIP_TITLES.language[CURRENT_LANGUAGE]}:{' '}
                       <strong>{lan}</strong>
                     </li>
                     <li>
-                      {CHANNEL_TOOLTIP_TITLES.description.ua}:{' '}
+                      {CHANNEL_TOOLTIP_TITLES.description[CURRENT_LANGUAGE]}:{' '}
                       <strong>{cutText(description, 100)}</strong>
                     </li>
                     <li>
-                      {CHANNEL_TOOLTIP_TITLES.name.ua}: <strong>{compr}</strong>
+                      {CHANNEL_TOOLTIP_TITLES.name[CURRENT_LANGUAGE]}:{' '}
+                      <strong>{compr}</strong>
                     </li>
                   </ul>
                 </div>
@@ -128,17 +132,19 @@ const SatChannelsTable = ({ satChannels }: ISatChannelsTableProps) => (
       <>
         {satChannels.length > 0 && (
           <h2 key={i} className={styles.satTitle} id={sat[0][0].sat_slug}>
-            <TooltipSimple tooltipText={goUpLink.title.ua}>
+            <TooltipSimple tooltipText={goUpLink.title[CURRENT_LANGUAGE]}>
               <Link
                 href={`#`}
-                title={goUpLink.title.ua}
+                title={goUpLink.title[CURRENT_LANGUAGE]}
                 className={styles.goUpLink}
               >
                 {goUpLink.img}
               </Link>
             </TooltipSimple>
 
-            <TooltipSimple tooltipText={satTitleLink.tooltipTitle.ua}>
+            <TooltipSimple
+              tooltipText={satTitleLink.tooltipTitle[CURRENT_LANGUAGE]}
+            >
               <Link
                 className={styles.satTitleLink}
                 href={`${satTitleLink.linkUrl}/${sat[0][0].sat_slug}`}
@@ -146,7 +152,9 @@ const SatChannelsTable = ({ satChannels }: ISatChannelsTableProps) => (
                 {`${sat[0][0].sat_title} - ${sat[0][0].sat_position}`}
               </Link>
             </TooltipSimple>
-            <TooltipSimple tooltipText={satTitleLink.tooltipTitle.ua}>
+            <TooltipSimple
+              tooltipText={satTitleLink.tooltipTitle[CURRENT_LANGUAGE]}
+            >
               <Link
                 className={styles.satTitleLink}
                 href={`${satTitleLink.linkUrl}/${sat[0][0].sat_slug}`}
@@ -160,7 +168,7 @@ const SatChannelsTable = ({ satChannels }: ISatChannelsTableProps) => (
                   alternativeImgString={
                     META_SAT_CHANNEL_LIST.h1SatImage.alternativeString
                   }
-                  alt={`${META_SAT_CHANNEL_LIST.h1SatImage.alt.ua} ${sat[0][0].sat_title}`}
+                  alt={`${META_SAT_CHANNEL_LIST.h1SatImage.alt[CURRENT_LANGUAGE]} ${sat[0][0].sat_title}`}
                   isBlur
                 />
               </Link>

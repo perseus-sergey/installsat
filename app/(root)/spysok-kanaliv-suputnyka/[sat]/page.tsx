@@ -15,7 +15,7 @@ import StartArticleSection from '@/components/StartArticleSection/StartArticleSe
 import SatChannelsTable from '@/components/SatChannelsTable/SatChannelsTable';
 import FillingValidImage from '@/components/Images/FillingValidImage';
 import { cache } from 'react';
-import { defaultMetaData } from '@/models/ui.model';
+import { CURRENT_LANGUAGE, defaultMetaData } from '@/models/ui.model';
 import { EUrlBaseParam, SITE_BASE_URL } from '@/models/url.model';
 import { getFormattedDateStr } from '@/libs/utils';
 
@@ -49,13 +49,13 @@ export const generateMetadata = ({ params }: IPageParams): Metadata => {
   const { title, satPosition, slug } = getCurrentSatParams(params.sat);
 
   const satTitle = `${title} - ${satPosition}`;
-  const metaTitle = `${getTitle().ua} ${satTitle}`;
-  const description = `${getDescription().ua} ${satTitle}`;
+  const metaTitle = `${getTitle()[CURRENT_LANGUAGE]} ${satTitle}`;
+  const description = `${getDescription()[CURRENT_LANGUAGE]} ${satTitle}`;
 
   return {
     title: metaTitle,
     description,
-    keywords: `${satTitle} ${getKeywords('ua')}`,
+    keywords: `${satTitle} ${getKeywords(CURRENT_LANGUAGE)}`,
     openGraph: {
       ...defaultMetaData.openGraph,
       title: metaTitle,
@@ -88,7 +88,7 @@ export default async function Page({ params }: IPageParams) {
   return (
     <>
       <Title>
-        {getH1(`${title} - ${satPosition}`).ua}
+        {getH1(`${title} - ${satPosition}`)[CURRENT_LANGUAGE]}
         <FillingValidImage
           image={{
             ...h1SatImage,
@@ -96,7 +96,7 @@ export default async function Page({ params }: IPageParams) {
           }}
           defaultImage={h1SatImage.defaultImage}
           alternativeImgString={h1SatImage.alternativeString}
-          alt={`${h1SatImage.alt.ua} ${title}`}
+          alt={`${h1SatImage.alt[CURRENT_LANGUAGE]} ${title}`}
           isBlur
         />
       </Title>

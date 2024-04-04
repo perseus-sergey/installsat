@@ -2,7 +2,7 @@ import Link from 'next/link';
 import styles from './Pagination.module.scss';
 import { EUrlSearchParam } from '@/models/url.model';
 import { ARTICLES } from '@/models/articles.model';
-import { TSearchParams } from '@/models/ui.model';
+import { CURRENT_LANGUAGE, TSearchParams } from '@/models/ui.model';
 import { makeUrlSearchParams } from '@/libs/utils';
 
 interface IPaginationProps {
@@ -88,8 +88,8 @@ const Pagination = ({
               <Link
                 className={styles.listItem}
                 href={firstPage}
-                aria-label={linkTitle.firstPage.ua}
-                title={linkTitle.firstPage.ua}
+                aria-label={linkTitle.firstPage[CURRENT_LANGUAGE]}
+                title={linkTitle.firstPage[CURRENT_LANGUAGE]}
               >
                 {firstPageTitle}
               </Link>
@@ -98,8 +98,8 @@ const Pagination = ({
               <Link
                 className={styles.listItem}
                 href={prevPage}
-                aria-label={linkTitle.previousPage.ua}
-                title={linkTitle.previousPage.ua}
+                aria-label={linkTitle.previousPage[CURRENT_LANGUAGE]}
+                title={linkTitle.previousPage[CURRENT_LANGUAGE]}
               >
                 {previousPageTitle}
               </Link>
@@ -114,8 +114,8 @@ const Pagination = ({
                 page === pageNumber ? styles.currentPageNumber : styles.listItem
               }
               href={setUrlSearchParamsStr(pageNumber)}
-              aria-label={`${linkTitle.pageStartStr.ua}${pageNumber}`}
-              title={`${linkTitle.pageStartStr.ua}${pageNumber}`}
+              aria-label={`${linkTitle.pageStartStr[CURRENT_LANGUAGE]}${pageNumber}`}
+              title={`${linkTitle.pageStartStr[CURRENT_LANGUAGE]}${pageNumber}`}
             >
               {pageNumber}
             </Link>
@@ -147,8 +147,8 @@ const Pagination = ({
               <Link
                 className={styles.listItem}
                 href={nextPage}
-                aria-label={linkTitle.nextPage.ua}
-                title={linkTitle.nextPage.ua}
+                aria-label={linkTitle.nextPage[CURRENT_LANGUAGE]}
+                title={linkTitle.nextPage[CURRENT_LANGUAGE]}
               >
                 {nextPageTitle}
               </Link>
@@ -157,8 +157,8 @@ const Pagination = ({
               <Link
                 className={styles.listItem}
                 href={lastPage}
-                aria-label={linkTitle.lastPage.ua}
-                title={linkTitle.lastPage.ua}
+                aria-label={linkTitle.lastPage[CURRENT_LANGUAGE]}
+                title={linkTitle.lastPage[CURRENT_LANGUAGE]}
               >
                 {lastPageTitle}
               </Link>

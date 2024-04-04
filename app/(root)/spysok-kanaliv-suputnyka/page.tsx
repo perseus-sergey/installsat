@@ -13,7 +13,11 @@ import StartArticleSection from '@/components/StartArticleSection/StartArticleSe
 import SatChannelsTable from '@/components/SatChannelsTable/SatChannelsTable';
 import FillingImg from '@/components/Images/FillingImage';
 import Fieldset from '@/components/Fieldset/Fieldset';
-import { TSearchParams, defaultMetaData } from '@/models/ui.model';
+import {
+  CURRENT_LANGUAGE,
+  TSearchParams,
+  defaultMetaData,
+} from '@/models/ui.model';
 import { getFormattedDateStr } from '@/libs/utils';
 import {
   EUrlBaseParam,
@@ -40,13 +44,13 @@ const {
 } = META_ALL_SAT_CHANNEL_LIST;
 
 export const metadata: Metadata = {
-  title: getTitle().ua,
-  description: getDescription().ua,
-  keywords: getKeywords().ua,
+  title: getTitle()[CURRENT_LANGUAGE],
+  description: getDescription()[CURRENT_LANGUAGE],
+  keywords: getKeywords()[CURRENT_LANGUAGE],
   openGraph: {
     ...defaultMetaData.openGraph,
-    title: getTitle().ua,
-    description: getDescription().ua,
+    title: getTitle()[CURRENT_LANGUAGE],
+    description: getDescription()[CURRENT_LANGUAGE],
     url: `${SITE_BASE_URL}/${EUrlBaseParam.SAT_CHANNEL_LIST}`,
     publishedTime: getFormattedDateStr(new Date()),
   },
@@ -86,16 +90,16 @@ export default async function Page({ searchParams }: IPageProps) {
   return (
     <>
       <Title>
-        {getH1().ua}
+        {getH1()[CURRENT_LANGUAGE]}
         <FillingImg
           src={h1ImageParams.path}
-          alt={h1ImageParams.alt.ua}
+          alt={h1ImageParams.alt[CURRENT_LANGUAGE]}
           width={h1ImageParams.width}
           height={h1ImageParams.height}
         />
       </Title>
-      <Fieldset legendText={anchors.legendTitle.ua}>
-        <nav className="text-center text-xl">
+      <Fieldset legendText={anchors.legendTitle[CURRENT_LANGUAGE]}>
+        <nav>
           <ul>
             {satLinks.map((satLink) => (
               <li key={satLink.slug}>
@@ -120,8 +124,8 @@ export default async function Page({ searchParams }: IPageProps) {
             ))}
           </ul>
           <Filter
-            placeholder={placeholder.ua}
-            labelTitle={labelTitle.ua}
+            placeholder={placeholder[CURRENT_LANGUAGE]}
+            labelTitle={labelTitle[CURRENT_LANGUAGE]}
             searchQueryTitle={EUrlSearchParam.CHANNEL}
           />
         </nav>

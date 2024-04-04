@@ -1,11 +1,12 @@
+import { ELanguage } from './ui.model';
 import { EUrlBaseParam } from './url.model';
 
 export const NUMBER_OF_LAST_NEWS_WIDGET = 5;
 
 export const WIDGET_LAST_NEWS = {
   title: {
-    ua: 'Останні новини',
-    en: 'Last news',
+    [ELanguage.UA]: 'Останні новини',
+    [ELanguage.EN]: 'Last news',
   },
   href: `/${EUrlBaseParam.NEWS_AND_ARTICLES}`,
   // href: '/novosti-i-statji/lastnews/',
@@ -14,8 +15,8 @@ export const WIDGET_LAST_NEWS = {
 
 export const WIDGET_ARTICLE_CATEGORY = {
   title: {
-    ua: 'Транспондерні новини',
-    en: 'Transponder news',
+    [ELanguage.UA]: 'Транспондерні новини',
+    [ELanguage.EN]: 'Transponder news',
   },
   href: `/${EUrlBaseParam.TRANSPONDER_NEWS}`,
   // href: '/novosti-i-statji/transpondernye-novosti/',

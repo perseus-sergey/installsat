@@ -1,4 +1,4 @@
-import { ILang } from './ui.model';
+import { ELanguage, ILang } from './ui.model';
 import { EUrlBaseParam } from './url.model';
 
 export const ARTICLES = {
@@ -6,8 +6,8 @@ export const ARTICLES = {
     meta: {
       getTitle() {
         return {
-          ua: 'Останні новини та статті про цифрове телебачення',
-          en: 'Latest news and articles about digital television',
+          [ELanguage.UA]: 'Останні новини та статті про цифрове телебачення',
+          [ELanguage.EN]: 'Latest news and articles about digital television',
         };
       },
       getKeywords(lang: keyof ILang) {
@@ -15,8 +15,10 @@ export const ARTICLES = {
       },
       getDescription() {
         return {
-          ua: 'Список статей про новини в сфері цифрового телебачення, статей про налаштування обладнання для прийому та перегляду телевізійних та радіо каналів, статей про новини від провайдерів платного телебачення',
-          en: 'List of articles about news in the field of digital television, articles about setting up equipment for receiving and viewing tv and radio channels, articles about news from pay TV providers',
+          [ELanguage.UA]:
+            'Список статей про новини в сфері цифрового телебачення, статей про налаштування обладнання для прийому та перегляду телевізійних та радіо каналів, статей про новини від провайдерів платного телебачення',
+          [ELanguage.EN]:
+            'List of articles about news in the field of digital television, articles about setting up equipment for receiving and viewing tv and radio channels, articles about news from pay TV providers',
         };
       },
     },
@@ -33,8 +35,8 @@ export const ARTICLES = {
         alternativeStr: { title: '🎞', fontSize: '6rem' },
         getAlt() {
           return {
-            ua: `Логотип до статті: `,
-            en: `Logo for article: `,
+            [ELanguage.UA]: `Логотип до статті: `,
+            [ELanguage.EN]: `Logo for article: `,
           };
         },
       },
@@ -44,14 +46,14 @@ export const ARTICLES = {
     meta: {
       getH1(date: string) {
         return {
-          ua: `Останні новини ТБ, статті та огляди на ${date}`,
-          en: `Latest TV news, articles and reviews as of ${date}`,
+          [ELanguage.UA]: `Останні новини ТБ, статті та огляди на ${date}`,
+          [ELanguage.EN]: `Latest TV news, articles and reviews as of ${date}`,
         };
       },
       getTitle() {
         return {
-          ua: 'Останні новини та статті про цифрове телебачення',
-          en: 'Latest news and articles about digital television',
+          [ELanguage.UA]: 'Останні новини та статті про цифрове телебачення',
+          [ELanguage.EN]: 'Latest news and articles about digital television',
         };
       },
       getKeywords(lang: keyof ILang) {
@@ -59,8 +61,10 @@ export const ARTICLES = {
       },
       getDescription() {
         return {
-          ua: 'Список статей про новини в сфері цифрового телебачення, статей про налаштування обладнання для прийому та перегляду телевізійних та радіо каналів, статей про новини від провайдерів платного телебачення',
-          en: 'List of articles about news in the field of digital television, articles about setting up equipment for receiving and viewing tv and radio channels, articles about news from pay TV providers',
+          [ELanguage.UA]:
+            'Список статей про новини в сфері цифрового телебачення, статей про налаштування обладнання для прийому та перегляду телевізійних та радіо каналів, статей про новини від провайдерів платного телебачення',
+          [ELanguage.EN]:
+            'List of articles about news in the field of digital television, articles about setting up equipment for receiving and viewing tv and radio channels, articles about news from pay TV providers',
         };
       },
     },
@@ -71,8 +75,8 @@ export const ARTICLES = {
         width: '64px',
         alternativeStr: { title: '📰', fontSize: '6rem' },
         alt: {
-          ua: 'Новини та статті про цифрове телебачення',
-          en: 'News and articles about digital television',
+          [ELanguage.UA]: 'Новини та статті про цифрове телебачення',
+          [ELanguage.EN]: 'News and articles about digital television',
         },
       },
       titleImg: {
@@ -96,38 +100,38 @@ export const ARTICLES = {
       nextPageTitle: '>',
       linkTitle: {
         pageStartStr: {
-          en: 'To page: ',
-          ua: 'На сторінку: ',
+          [ELanguage.EN]: 'To page: ',
+          [ELanguage.UA]: 'На сторінку: ',
         },
         firstPage: {
-          en: 'To first page',
-          ua: 'На першу сторінку',
+          [ELanguage.EN]: 'To first page',
+          [ELanguage.UA]: 'На першу сторінку',
         },
         nextPage: {
-          en: 'To next page',
-          ua: 'На наступну сторінку',
+          [ELanguage.EN]: 'To next page',
+          [ELanguage.UA]: 'На наступну сторінку',
         },
         previousPage: {
-          en: 'To previous page',
-          ua: 'На попередню сторінку',
+          [ELanguage.EN]: 'To previous page',
+          [ELanguage.UA]: 'На попередню сторінку',
         },
         lastPage: {
-          en: 'To last page',
-          ua: 'На останню сторінку',
+          [ELanguage.EN]: 'To last page',
+          [ELanguage.UA]: 'На останню сторінку',
         },
       },
     },
     articlesCountCaption: {
-      en: 'Number of articles in this category: ',
-      ua: 'Кількість статей в цієї категорії: ',
+      [ELanguage.EN]: 'Number of articles in this category: ',
+      [ELanguage.UA]: 'Кількість статей в цієї категорії: ',
     },
   },
   articleSingleCatList: {
     meta: {
       getH1(date: string, title: string) {
         return {
-          ua: `${title} на ${date}`,
-          en: `${title} as of ${date}`,
+          [ELanguage.UA]: `${title} на ${date}`,
+          [ELanguage.EN]: `${title} as of ${date}`,
         };
       },
     },
@@ -138,8 +142,8 @@ export const ARTICLES = {
         width: '64px',
         alternativeStr: { title: '📰', fontSize: '6rem' },
         alt: {
-          ua: 'Новини та статті про цифрове телебачення',
-          en: 'News and articles about digital television',
+          [ELanguage.UA]: 'Новини та статті про цифрове телебачення',
+          [ELanguage.EN]: 'News and articles about digital television',
         },
       },
       titleImg: {
@@ -156,10 +160,10 @@ export const ARTICLES = {
     },
   },
   infoPanelTitles: {
-    theme: { ua: 'Тема', en: 'Theme' },
-    views: { ua: 'Переглядів', en: 'Views' },
-    date: { ua: 'Дата', en: 'Date' },
-    comments: { ua: 'Коментарів', en: 'Comments' },
+    theme: { [ELanguage.UA]: 'Тема', [ELanguage.EN]: 'Theme' },
+    views: { [ELanguage.UA]: 'Переглядів', [ELanguage.EN]: 'Views' },
+    date: { [ELanguage.UA]: 'Дата', [ELanguage.EN]: 'Date' },
+    comments: { [ELanguage.UA]: 'Коментарів', [ELanguage.EN]: 'Comments' },
   },
 };
 

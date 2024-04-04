@@ -1,3 +1,5 @@
+import { ELanguage } from './ui.model';
+
 export const LAST_NEWS_INTERVAL = 30;
 
 export const META_TRANS_NEWS_LIST = {
@@ -24,21 +26,35 @@ export const META_TRANS_NEWS_LIST = {
     return 'Транспондерні новини популярних супутників за обраний період часу';
   },
   h2start: {
-    en: 'News of the satellite ',
-    ua: 'Новини супутника ',
+    [ELanguage.EN]: 'News of the satellite ',
+    [ELanguage.UA]: 'Новини супутника ',
   },
   fieldsetTitle: {
-    ua: 'Виберіть супутники та проміжок часу',
-    en: 'Select satellites and time slot',
+    [ELanguage.UA]: 'Виберіть супутники та проміжок часу',
+    [ELanguage.EN]: 'Select satellites and time slot',
+  },
+  satSelect: {
+    defaultLabel: {
+      [ELanguage.EN]: '--= All Satellites =--',
+      [ELanguage.UA]: '--= Всі Супутники =--',
+    },
+    westDirectionLabel: {
+      [ELanguage.EN]: 'West direction',
+      [ELanguage.UA]: 'Західний напрямок',
+    },
+    eastDirectionLabel: {
+      [ELanguage.EN]: 'East direction',
+      [ELanguage.UA]: 'Східний напрямок',
+    },
   },
   submitButton: {
     title: {
-      ua: 'Підтвердити',
-      en: 'Confirm',
+      [ELanguage.UA]: 'Підтвердити',
+      [ELanguage.EN]: 'Confirm',
     },
     ariaLabel: {
-      ua: 'Підтвердити зміни',
-      en: 'Confirm changes',
+      [ELanguage.UA]: 'Підтвердити зміни',
+      [ELanguage.EN]: 'Confirm changes',
     },
   },
   images: {
@@ -53,8 +69,8 @@ export const META_TRANS_NEWS_LIST = {
       },
       alternativeStr: { title: '🌏', fontSize: '4rem' },
       alt: {
-        ua: `Логотип супутника `,
-        en: `Satellite logo `,
+        [ELanguage.UA]: `Логотип супутника `,
+        [ELanguage.EN]: `Satellite logo `,
       },
     },
   },
@@ -64,8 +80,8 @@ export const META_TRANS_NEWS_SINGLE = {
   getH1() {
     // return `Транспондерні новини за ${dateStr}`;
     return {
-      ua: 'Транспондерні новини за ',
-      en: 'Transponder news for ',
+      [ELanguage.UA]: 'Транспондерні новини за ',
+      [ELanguage.EN]: 'Transponder news for ',
     };
   },
   getTitle(dateStr: string) {
@@ -96,12 +112,12 @@ export const rawSatDigest = {
 
 export type TSatDigest = typeof rawSatDigest;
 
-export interface StateOption {
+export interface IStateOption {
   readonly value: number;
   readonly label: string;
 }
 
-export const digestIntervals: readonly StateOption[] = [
+export const digestIntervals: readonly IStateOption[] = [
   { value: 7, label: 'Останні 7 днів' },
   { value: 30, label: 'Останні 30 днів' },
   { value: 90, label: 'Останні 90 днів' },

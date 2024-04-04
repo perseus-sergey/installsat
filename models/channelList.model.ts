@@ -1,17 +1,17 @@
-import { ILang } from './ui.model';
+import { ELanguage, ILang } from './ui.model';
 import { EUrlBaseParam, EUrlSearchParam } from './url.model';
 
 export const META_SAT_CHANNEL_LIST = {
   getH1(satTitle: string) {
     return {
-      ua: `Безкоштовні канали з супутника ${satTitle}`,
-      en: `Free satellite channels on ${satTitle}`,
+      [ELanguage.UA]: `Безкоштовні канали з супутника ${satTitle}`,
+      [ELanguage.EN]: `Free satellite channels on ${satTitle}`,
     };
   },
   getTitle() {
     return {
-      ua: 'Список каналів супутника',
-      en: 'List of satellite channels',
+      [ELanguage.UA]: 'Список каналів супутника',
+      [ELanguage.EN]: 'List of satellite channels',
     };
   },
   getKeywords(lang: keyof ILang) {
@@ -19,8 +19,10 @@ export const META_SAT_CHANNEL_LIST = {
   },
   getDescription() {
     return {
-      ua: 'Список доступних некодованих каналів, які ведуть мовлення з супутника',
-      en: 'List of available unencrypted channels broadcast from satellite',
+      [ELanguage.UA]:
+        'Список доступних некодованих каналів, які ведуть мовлення з супутника',
+      [ELanguage.EN]:
+        'List of available unencrypted channels broadcast from satellite',
     };
   },
   h1SatImage: {
@@ -29,8 +31,8 @@ export const META_SAT_CHANNEL_LIST = {
     height: '99px',
     width: '132px',
     alt: {
-      ua: `Безкоштовні канали супутника`,
-      en: `Free channels of`,
+      [ELanguage.UA]: `Безкоштовні канали супутника`,
+      [ELanguage.EN]: `Free channels of`,
     },
     defaultImage: {
       src: '/Images/satellite_7144.png',
@@ -43,37 +45,39 @@ export const META_SAT_CHANNEL_LIST = {
 export const META_ALL_SAT_CHANNEL_LIST = {
   getH1() {
     return {
-      ua: 'Безкоштовні канали на популярних супутниках',
-      en: 'Free channels on popular satellites',
+      [ELanguage.UA]: 'Безкоштовні канали на популярних супутниках',
+      [ELanguage.EN]: 'Free channels on popular satellites',
     };
   },
   getTitle() {
     return {
-      ua: 'Безкоштовні канали. Частоти супутникових каналів',
-      en: 'Free channels. Satellite channel frequencies',
+      [ELanguage.UA]: 'Безкоштовні канали. Частоти супутникових каналів',
+      [ELanguage.EN]: 'Free channels. Satellite channel frequencies',
     };
   },
   getKeywords() {
     return {
-      ua: `Безкоштовні канали Список каналів із програмою передач, доступних для вільного перегляду з найбільш популярних супутників без будь-яких зобов'язань та абонентської плати`,
-      en: 'Free channels List of channels with program guides available for free viewing from the most popular satellites without any obligations or subscription fees',
+      [ELanguage.UA]: `Безкоштовні канали Список каналів із програмою передач, доступних для вільного перегляду з найбільш популярних супутників без будь-яких зобов'язань та абонентської плати`,
+      [ELanguage.EN]:
+        'Free channels List of channels with program guides available for free viewing from the most popular satellites without any obligations or subscription fees',
     };
   },
   getDescription() {
     return {
-      ua: `Список каналів із програмою передач, доступних для вільного перегляду з найбільш популярних супутників без будь-яких зобов'язань та абонентської плати`,
-      en: 'List of channels with program guides available for free viewing from the most popular satellites without any obligations or subscription fees',
+      [ELanguage.UA]: `Список каналів із програмою передач, доступних для вільного перегляду з найбільш популярних супутників без будь-яких зобов'язань та абонентської плати`,
+      [ELanguage.EN]:
+        'List of channels with program guides available for free viewing from the most popular satellites without any obligations or subscription fees',
     };
   },
   anchors: {
     legendTitle: {
-      ua: 'Швидке переміщення',
-      en: 'Fast moving',
+      [ELanguage.UA]: 'Швидке переміщення',
+      [ELanguage.EN]: 'Fast moving',
     },
     goUpLink: {
       title: {
-        ua: 'На початок',
-        en: 'Go to top',
+        [ELanguage.UA]: 'На початок',
+        [ELanguage.EN]: 'Go to top',
       },
       img: '⇧',
     },
@@ -81,8 +85,8 @@ export const META_ALL_SAT_CHANNEL_LIST = {
   links: {
     satTitleLink: {
       tooltipTitle: {
-        ua: 'Дивитись мапи покриття супутника',
-        en: 'See satellite coverage maps',
+        [ELanguage.UA]: 'Дивитись мапи покриття супутника',
+        [ELanguage.EN]: 'See satellite coverage maps',
       },
       linkUrl: `/${EUrlBaseParam.SAT_COVERAGE_MAP}`,
     },
@@ -90,17 +94,17 @@ export const META_ALL_SAT_CHANNEL_LIST = {
   filtering: {
     filterByChannelName: {
       placeholder: {
-        ua: 'Назва каналу...',
-        en: 'Channel name...',
+        [ELanguage.UA]: 'Назва каналу...',
+        [ELanguage.EN]: 'Channel name...',
       },
       labelTitle: {
-        ua: 'Фільтр каналів по назві',
-        en: 'Filter channels by name',
+        [ELanguage.UA]: 'Фільтр каналів по назві',
+        [ELanguage.EN]: 'Filter channels by name',
       },
       cancelButton: {
         ariaLabel: {
-          ua: 'Скасувати',
-          en: 'Cancel',
+          [ELanguage.UA]: 'Скасувати',
+          [ELanguage.EN]: 'Cancel',
         },
         searchIconStr: '⏿',
         imgStr: 'x',
@@ -131,8 +135,8 @@ export const META_ALL_SAT_CHANNEL_LIST = {
       height: '150px',
       width: '239px',
       alt: {
-        ua: 'Безкоштовні канали популярних супутників',
-        en: 'Free channels of popular satellites',
+        [ELanguage.UA]: 'Безкоштовні канали популярних супутників',
+        [ELanguage.EN]: 'Free channels of popular satellites',
       },
     },
   },
@@ -198,9 +202,9 @@ export const MChanTheme = new Map([
 // 656D7D
 
 export const CHANNEL_TOOLTIP_TITLES = {
-  name: { ua: 'Назва', en: 'Name' },
-  genre: { ua: 'Жанр', en: 'Genre' },
-  language: { ua: 'Мова', en: 'Language' },
-  description: { ua: 'Опис', en: 'Description' },
-  compression: { ua: 'Формат', en: 'Compression' },
+  name: { [ELanguage.UA]: 'Назва', [ELanguage.EN]: 'Name' },
+  genre: { [ELanguage.UA]: 'Жанр', [ELanguage.EN]: 'Genre' },
+  language: { [ELanguage.UA]: 'Мова', [ELanguage.EN]: 'Language' },
+  description: { [ELanguage.UA]: 'Опис', [ELanguage.EN]: 'Description' },
+  compression: { [ELanguage.UA]: 'Формат', [ELanguage.EN]: 'Compression' },
 };

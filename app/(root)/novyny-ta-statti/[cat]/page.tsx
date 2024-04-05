@@ -22,7 +22,7 @@ import {
 } from '@/models/url.model';
 
 const {
-  articleList: { pagination, images },
+  articleList: { pagination, images, articlesCountCaption },
   articleSingleCatList: {
     meta: { getH1 },
   },
@@ -106,10 +106,22 @@ export default async function Page({
       ? searchParams[EUrlSearchParam.PAGE]
       : '1';
 
+  const searchQuery =
+    searchParams?.[EUrlSearchParam.ARTICLE] &&
+    typeof searchParams[EUrlSearchParam.ARTICLE] === 'string'
+      ? searchParams[EUrlSearchParam.ARTICLE]
+      : '';
+
   const pageNumber = parseInt(page, 10);
   if (isNaN(pageNumber)) notFound();
 
-  const allNews = await getChunkOfNews(perPage, (pageNumber - 1) * perPage, id);
+  const allNews = await getChunkOfNews(
+    perPage,
+    (pageNumber - 1) * perPage,
+    id,
+    searchQuery
+  );
+
   if (allNews instanceof Error)
     return <EmptyData description={allNews.message} />;
 
@@ -130,6 +142,8 @@ export default async function Page({
       </Title>
 
       <TextUnderH1>{text}</TextUnderH1>
+
+      <p className="text-blue-600 font-bold text-center text-lg">{`${articlesCountCaption[LANGUAGE]}${allNews[0].total_count}`}</p>
 
       {totalPages > 1 && (
         <Pagination

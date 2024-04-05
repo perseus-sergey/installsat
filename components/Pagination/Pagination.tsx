@@ -4,6 +4,7 @@ import { EUrlSearchParam } from '@/models/url.model';
 import { ARTICLES } from '@/models/articles.model';
 import { LANGUAGE, TSearchParams } from '@/models/ui.model';
 import { makeUrlSearchParams } from '@/libs/utils';
+import TooltipSimple from '../TooltipSimple/TooltipSimple';
 
 interface IPaginationProps {
   page: number;
@@ -36,19 +37,11 @@ const Pagination = ({
 }: IPaginationProps) => {
   const urlSearchParams = makeUrlSearchParams(searchParams);
 
-  const setUrlSearchParamsStr = (value: string | number): string => {
+  const setUrlPage = (value: string | number): string => {
     urlSearchParams.set(EUrlSearchParam.PAGE, `${value}`);
 
     return `?${urlSearchParams.toString()}`;
   };
-
-  const firstPage = setUrlSearchParamsStr('1');
-
-  const prevPage = setUrlSearchParamsStr(`${page - 1 || 1}`);
-
-  const nextPage = setUrlSearchParamsStr(`${page + 1}`);
-
-  const lastPage = setUrlSearchParamsStr(`${totalPages}`);
 
   const pageNumbers = getPageNumbers(page, offsetNumber, totalPages);
 
@@ -85,40 +78,50 @@ const Pagination = ({
         ) : (
           <>
             <li>
-              <Link
-                className={styles.listItem}
-                href={firstPage}
-                aria-label={linkTitle.firstPage[LANGUAGE]}
-                title={linkTitle.firstPage[LANGUAGE]}
-              >
-                {firstPageTitle}
-              </Link>
+              <TooltipSimple tooltipText={linkTitle.firstPage[LANGUAGE]}>
+                <Link
+                  className={styles.listItem}
+                  href={setUrlPage('1')}
+                  aria-label={linkTitle.firstPage[LANGUAGE]}
+                  title={linkTitle.firstPage[LANGUAGE]}
+                >
+                  {firstPageTitle}
+                </Link>
+              </TooltipSimple>
             </li>
             <li>
-              <Link
-                className={styles.listItem}
-                href={prevPage}
-                aria-label={linkTitle.previousPage[LANGUAGE]}
-                title={linkTitle.previousPage[LANGUAGE]}
-              >
-                {previousPageTitle}
-              </Link>
+              <TooltipSimple tooltipText={linkTitle.previousPage[LANGUAGE]}>
+                <Link
+                  className={styles.listItem}
+                  href={setUrlPage(`${page - 1 || 1}`)}
+                  aria-label={linkTitle.previousPage[LANGUAGE]}
+                  title={linkTitle.previousPage[LANGUAGE]}
+                >
+                  {previousPageTitle}
+                </Link>
+              </TooltipSimple>
             </li>
           </>
         )}
 
         {pageNumbers.map((pageNumber, index) => (
           <li key={index}>
-            <Link
-              className={
-                page === pageNumber ? styles.currentPageNumber : styles.listItem
-              }
-              href={setUrlSearchParamsStr(pageNumber)}
-              aria-label={`${linkTitle.pageStartStr[LANGUAGE]}${pageNumber}`}
-              title={`${linkTitle.pageStartStr[LANGUAGE]}${pageNumber}`}
+            <TooltipSimple
+              tooltipText={`${linkTitle.pageStartStr[LANGUAGE]}${pageNumber}`}
             >
-              {pageNumber}
-            </Link>
+              <Link
+                className={
+                  page === pageNumber
+                    ? styles.currentPageNumber
+                    : styles.listItem
+                }
+                href={setUrlPage(pageNumber)}
+                aria-label={`${linkTitle.pageStartStr[LANGUAGE]}${pageNumber}`}
+                title={`${linkTitle.pageStartStr[LANGUAGE]}${pageNumber}`}
+              >
+                {pageNumber}
+              </Link>
+            </TooltipSimple>
           </li>
         ))}
 
@@ -144,24 +147,28 @@ const Pagination = ({
         ) : (
           <>
             <li>
-              <Link
-                className={styles.listItem}
-                href={nextPage}
-                aria-label={linkTitle.nextPage[LANGUAGE]}
-                title={linkTitle.nextPage[LANGUAGE]}
-              >
-                {nextPageTitle}
-              </Link>
+              <TooltipSimple tooltipText={linkTitle.nextPage[LANGUAGE]}>
+                <Link
+                  className={styles.listItem}
+                  href={setUrlPage(`${page + 1}`)}
+                  aria-label={linkTitle.nextPage[LANGUAGE]}
+                  title={linkTitle.nextPage[LANGUAGE]}
+                >
+                  {nextPageTitle}
+                </Link>
+              </TooltipSimple>
             </li>
             <li>
-              <Link
-                className={styles.listItem}
-                href={lastPage}
-                aria-label={linkTitle.lastPage[LANGUAGE]}
-                title={linkTitle.lastPage[LANGUAGE]}
-              >
-                {lastPageTitle}
-              </Link>
+              <TooltipSimple tooltipText={linkTitle.lastPage[LANGUAGE]}>
+                <Link
+                  className={styles.listItem}
+                  href={setUrlPage(`${totalPages}`)}
+                  aria-label={linkTitle.lastPage[LANGUAGE]}
+                  title={linkTitle.lastPage[LANGUAGE]}
+                >
+                  {lastPageTitle}
+                </Link>
+              </TooltipSimple>
             </li>
           </>
         )}

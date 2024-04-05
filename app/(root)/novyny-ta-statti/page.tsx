@@ -91,6 +91,7 @@ export default async function Page({ searchParams }: IProps) {
       </Title>
 
       <p className="text-blue-600 font-bold text-center text-lg">{`${articlesCountCaption[LANGUAGE]}${allNews[0].total_count}`}</p>
+
       {totalPages > 1 && (
         <Pagination
           page={pageNumber || 1}

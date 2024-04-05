@@ -3,7 +3,7 @@ import React from 'react';
 import { EUrlBaseParam, SITE_BASE_URL } from '@/models/url.model';
 import { getFormattedDateStr } from '@/libs/utils';
 import {
-  CURRENT_LANGUAGE,
+  LANGUAGE,
   EDBTableTitles,
   SIMILAR_ARTICLES,
   defaultMetaData,
@@ -27,7 +27,7 @@ export const generateMetadata = async ({
   params: { article },
 }: IArticleLayoutParams): Promise<Metadata> => {
   const sqlResult = await getArticle(article);
-  if (sqlResult instanceof Error) return defaultMetaData[CURRENT_LANGUAGE];
+  if (sqlResult instanceof Error) return defaultMetaData[LANGUAGE];
 
   const { title, description, date, slug } = sqlResult[0];
 
@@ -81,7 +81,7 @@ export default async function layout({
 
       {similarArticles.length ? (
         <SimilarArticles
-          similarTitle={SIMILAR_ARTICLES.title[CURRENT_LANGUAGE]}
+          similarTitle={SIMILAR_ARTICLES.title[LANGUAGE]}
           similarArticlesMapped={similarArticles.map((art) => (
             <li key={art.cpu}>
               <Link href={`/${EUrlBaseParam.ARTICLE}/${art.cpu}`}>

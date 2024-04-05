@@ -10,7 +10,7 @@ import {
 } from '@/controllers/satDigest.controller';
 import EmptyData from '../EmptyData/EmptyData';
 import FillingValidImage from '../Images/FillingValidImage';
-import { CURRENT_LANGUAGE, TSearchParams } from '@/models/ui.model';
+import { LANGUAGE, TSearchParams } from '@/models/ui.model';
 
 interface ISatNewsListProps {
   searchParams: TSearchParams;
@@ -39,10 +39,10 @@ const SatNewsList = async ({
             }}
             defaultImage={satLogo.defaultImg}
             alternativeImgString={satLogo.alternativeStr}
-            alt={`${satLogo.alt[CURRENT_LANGUAGE]}${news[0]}`}
+            alt={`${satLogo.alt[LANGUAGE]}${news[0]}`}
           />
           <div>
-            {META_TRANS_NEWS_LIST.h2start[CURRENT_LANGUAGE]}
+            {META_TRANS_NEWS_LIST.h2start[LANGUAGE]}
             <span className={styles.groupTitleDate}>{news[0]}</span>
           </div>
         </h2>

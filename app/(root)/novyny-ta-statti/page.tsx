@@ -9,12 +9,25 @@ import ArticleList from '@/components/ArticleList/ArticleList';
 import Pagination from '@/components/Pagination/Pagination';
 import { notFound } from 'next/navigation';
 import { getFormattedDateStr } from '@/libs/utils';
-import { EUrlBaseParam, SITE_BASE_URL } from '@/models/url.model';
 import {
-  CURRENT_LANGUAGE,
+  EUrlBaseParam,
+  EUrlSearchParam,
+  SITE_BASE_URL,
+} from '@/models/url.model';
+import {
+  LANGUAGE as L,
   TSearchParams,
   defaultMetaData,
 } from '@/models/ui.model';
+
+const { meta, pagination, images } = ARTICLES.articleList;
+
+const currDate = new Date().toLocaleDateString('en-GB');
+
+const articleTitleImg = imagePathValidate(
+  images.titleImg,
+  images.titleImg.alternativeStr.title
+);
 
 export const dynamic = 'force-dynamic';
 
@@ -23,29 +36,41 @@ interface IProps {
 }
 
 export const metadata: Metadata = {
-  title: ARTICLES.articleList.meta.getTitle()[CURRENT_LANGUAGE],
-  description: ARTICLES.articleList.meta.getDescription()[CURRENT_LANGUAGE],
-  keywords: ARTICLES.articleList.meta.getKeywords(CURRENT_LANGUAGE),
+  title: meta.getTitle()[L],
+  description: meta.getDescription()[L],
+  keywords: meta.getKeywords(L),
   openGraph: {
     ...defaultMetaData.openGraph,
-    title: ARTICLES.articleList.meta.getTitle()[CURRENT_LANGUAGE],
-    description: ARTICLES.articleList.meta.getDescription()[CURRENT_LANGUAGE],
+    title: meta.getTitle()[L],
+    description: meta.getDescription()[L],
     url: `${SITE_BASE_URL}/${EUrlBaseParam.NEWS_AND_ARTICLES}`,
     publishedTime: getFormattedDateStr(new Date()),
   },
 };
 export default async function Page({ searchParams }: IProps) {
-  let page = 0;
-  let start = 0;
-  const { perPage } = ARTICLES.articleList.pagination;
+  const { perPage } = pagination;
 
-  if (searchParams && Object.keys(searchParams).length) {
-    page = parseInt(`${searchParams.page}`, 10);
-    if (isNaN(page)) notFound();
-    start = (page - 1) * perPage;
-  }
+  const page =
+    searchParams?.[EUrlSearchParam.PAGE] &&
+    typeof searchParams[EUrlSearchParam.PAGE] === 'string'
+      ? searchParams[EUrlSearchParam.PAGE]
+      : '1';
 
-  const allNews = await getChunkOfNews(perPage, start);
+  const searchQuery =
+    searchParams?.[EUrlSearchParam.ARTICLE] &&
+    typeof searchParams[EUrlSearchParam.ARTICLE] === 'string'
+      ? searchParams[EUrlSearchParam.ARTICLE]
+      : '';
+
+  const pageNumber = parseInt(page, 10);
+  if (isNaN(pageNumber)) notFound();
+
+  const allNews = await getChunkOfNews(
+    perPage,
+    (pageNumber - 1) * perPage,
+    undefined,
+    searchQuery
+  );
   if (allNews instanceof Error)
     return <EmptyData description={allNews.message} />;
 
@@ -53,33 +78,22 @@ export default async function Page({ searchParams }: IProps) {
 
   const totalPages = Math.ceil(allNews[0].total_count / perPage);
 
-  if (page > totalPages) notFound();
-
-  const currDate = new Date().toLocaleDateString('en-GB');
-
-  const articleTitleImg = imagePathValidate(
-    ARTICLES.articleList.images.titleImg,
-    ARTICLES.articleList.images.titleImg.alternativeStr.title
-  );
-
   return (
     <>
       <Title>
-        {ARTICLES.articleList.meta.getH1(currDate)[CURRENT_LANGUAGE]}
+        {meta.getH1(currDate)[L]}
         <FillingValidImage
-          image={ARTICLES.articleList.images.h1Image}
-          alternativeImgString={
-            ARTICLES.articleList.images.h1Image.alternativeStr
-          }
-          alt={ARTICLES.articleList.images.h1Image.alt[CURRENT_LANGUAGE]}
+          image={images.h1Image}
+          alternativeImgString={images.h1Image.alternativeStr}
+          alt={images.h1Image.alt[L]}
           isBlur
         />
       </Title>
 
       {totalPages > 1 && (
         <Pagination
-          page={page || 1}
-          offsetNumber={ARTICLES.articleList.pagination.offsetNumber}
+          page={pageNumber || 1}
+          offsetNumber={pagination.offsetNumber}
           totalPages={totalPages}
           searchParams={searchParams}
         />

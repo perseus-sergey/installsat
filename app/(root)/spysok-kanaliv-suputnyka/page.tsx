@@ -14,7 +14,7 @@ import SatChannelsTable from '@/components/SatChannelsTable/SatChannelsTable';
 import FillingImg from '@/components/Images/FillingImage';
 import Fieldset from '@/components/Fieldset/Fieldset';
 import {
-  CURRENT_LANGUAGE,
+  LANGUAGE as L,
   TSearchParams,
   defaultMetaData,
 } from '@/models/ui.model';
@@ -47,13 +47,13 @@ const {
 } = META_ALL_SAT_CHANNEL_LIST;
 
 export const metadata: Metadata = {
-  title: getTitle()[CURRENT_LANGUAGE],
-  description: getDescription()[CURRENT_LANGUAGE],
-  keywords: getKeywords()[CURRENT_LANGUAGE],
+  title: getTitle()[L],
+  description: getDescription()[L],
+  keywords: getKeywords()[L],
   openGraph: {
     ...defaultMetaData.openGraph,
-    title: getTitle()[CURRENT_LANGUAGE],
-    description: getDescription()[CURRENT_LANGUAGE],
+    title: getTitle()[L],
+    description: getDescription()[L],
     url: `${SITE_BASE_URL}/${EUrlBaseParam.SAT_CHANNEL_LIST}`,
     publishedTime: getFormattedDateStr(new Date()),
   },
@@ -93,15 +93,15 @@ export default async function Page({ searchParams }: IPageProps) {
   return (
     <>
       <Title>
-        {getH1()[CURRENT_LANGUAGE]}
+        {getH1()[L]}
         <FillingImg
           src={h1ImageParams.path}
-          alt={h1ImageParams.alt[CURRENT_LANGUAGE]}
+          alt={h1ImageParams.alt[L]}
           width={h1ImageParams.width}
           height={h1ImageParams.height}
         />
       </Title>
-      <Fieldset legendText={anchors.legendTitle[CURRENT_LANGUAGE]}>
+      <Fieldset legendText={anchors.legendTitle[L]}>
         <nav>
           <ul>
             {satLinks.map((satLink) => (
@@ -110,13 +110,13 @@ export default async function Page({ searchParams }: IPageProps) {
                   linkParams={{
                     title: satLink.title,
                     href: `#${satLink.slug}`,
-                    'aria-label': satAnchor.tooltip[CURRENT_LANGUAGE],
+                    'aria-label': satAnchor.tooltip[L],
                   }}
                   inputAttributes={{
                     value: satLink.slug,
                     id: `chb-${satLink.slug}`,
                     name: satLink.slug,
-                    'aria-label': satCheckBox.tooltip[CURRENT_LANGUAGE],
+                    'aria-label': satCheckBox.tooltip[L],
                   }}
                   searchQueryName={EUrlSearchParam.SAT}
                 />
@@ -129,11 +129,11 @@ export default async function Page({ searchParams }: IPageProps) {
             ))}
           </ul>
           <Filter
-            placeholder={placeholder[CURRENT_LANGUAGE]}
-            labelTitle={labelTitle[CURRENT_LANGUAGE]}
+            placeholder={placeholder[L]}
+            labelTitle={labelTitle[L]}
             searchQueryTitle={EUrlSearchParam.CHANNEL}
             resetButton={{
-              ariaLabel: resetAllFiltersButton.ariaLabel[CURRENT_LANGUAGE],
+              ariaLabel: resetAllFiltersButton.ariaLabel[L],
               content: resetAllFiltersButton.imgStr,
             }}
           />

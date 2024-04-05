@@ -16,7 +16,7 @@ import {
 import { getFormattedDateStr } from '@/libs/utils';
 import { META_CHANNEL } from '@/models/channel.model';
 import {
-  CURRENT_LANGUAGE,
+  LANGUAGE,
   EDBTableTitles,
   TSearchParams,
   defaultMetaData,
@@ -48,7 +48,7 @@ export const generateMetadata = async ({
   params: { slug },
 }: IPageProps): Promise<Metadata> => {
   const sqlResult = await getDBChannel(slug);
-  if (sqlResult instanceof Error) return defaultMetaData[CURRENT_LANGUAGE];
+  if (sqlResult instanceof Error) return defaultMetaData[LANGUAGE];
 
   const {
     title,
@@ -65,8 +65,8 @@ export const generateMetadata = async ({
   } = sqlResult[0];
   const metaTitle =
     cat_parent_id > 0
-      ? `${titleBefore[CURRENT_LANGUAGE]} ${title} | ${cat_parent_title} | ${cat_title}`
-      : `${titleBefore[CURRENT_LANGUAGE]} ${title} | ${sat_title} ${freq} ${polar} | ${cat_title}`;
+      ? `${titleBefore[LANGUAGE]} ${title} | ${cat_parent_title} | ${cat_title}`
+      : `${titleBefore[LANGUAGE]} ${title} | ${sat_title} ${freq} ${polar} | ${cat_title}`;
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [clearedCanonical, ..._] = canonical
@@ -83,7 +83,7 @@ export const generateMetadata = async ({
   return {
     title: metaTitle,
     description: description || title,
-    keywords: keywordsBefore[CURRENT_LANGUAGE] + description,
+    keywords: keywordsBefore[LANGUAGE] + description,
     alternates: {
       canonical: `${SITE_BASE_URL}/${EUrlBaseParam.CHANNEL_PARAMS}/${addCanonical}`,
     },
@@ -170,7 +170,7 @@ export default async function Page({
     <>
       <article className="article">
         <Title>
-          {`${titleBefore[CURRENT_LANGUAGE]} "${title}"`} on {date}
+          {`${titleBefore[LANGUAGE]} "${title}"`} on {date}
           <FillingValidImage
             image={{
               ...bigLogo,
@@ -178,7 +178,7 @@ export default async function Page({
             }}
             defaultImage={bigLogo.defaultImage}
             alternativeImgString={bigLogo.alternativeImgStr}
-            alt={`${bigLogo.alt[CURRENT_LANGUAGE]} "${title}"`}
+            alt={`${bigLogo.alt[LANGUAGE]} "${title}"`}
             isBlur
           />
         </Title>
@@ -188,7 +188,7 @@ export default async function Page({
         <BottomInfoPanel
           items={[
             {
-              name: packageTitle[CURRENT_LANGUAGE],
+              name: packageTitle[LANGUAGE],
               value: (
                 <Link
                   href={`/${EUrlBaseParam.PACKAGE_CHANNEL_LIST}/${catLink}`}
@@ -197,15 +197,15 @@ export default async function Page({
                 </Link>
               ),
             },
-            { name: viewsTitle[CURRENT_LANGUAGE], value: view + 1 },
-            { name: commentsTitle[CURRENT_LANGUAGE], value: comments.length },
+            { name: viewsTitle[LANGUAGE], value: view + 1 },
+            { name: commentsTitle[LANGUAGE], value: comments.length },
           ]}
         />
       </article>
 
       {similarChannels.length ? (
         <SimilarArticles
-          similarTitle={`${simChannelsBefore.title[CURRENT_LANGUAGE]}"${title}"`}
+          similarTitle={`${simChannelsBefore.title[LANGUAGE]}"${title}"`}
           similarArticlesMapped={similarChannels.map((chan) => (
             <li key={chan.cpu}>
               <SimilarChannel channelTitle={title} chanParams={chan} />
@@ -216,7 +216,7 @@ export default async function Page({
 
       {similarArticles.length ? (
         <SimilarArticles
-          similarTitle={simArticlesBefore.title[CURRENT_LANGUAGE]}
+          similarTitle={simArticlesBefore.title[LANGUAGE]}
           similarArticlesMapped={similarArticles.map((art) => (
             <li key={art.cpu}>
               <Link href={`/${EUrlBaseParam.ARTICLE}/${art.cpu}`}>

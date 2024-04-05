@@ -13,9 +13,13 @@ export const WRONG_CAT_IDS = '(2,8,0,11,12,13)';
 export const getChunkOfNews = async (
   quantity: number,
   start = 0,
-  catId?: number
+  catId?: number,
+  searchQuery = ''
 ) => {
   const catValue = catId ? `=${catId}` : `NOT IN ${WRONG_CAT_IDS}`;
+  const searchPart = searchQuery
+    ? `AND U.title LIKE "%${searchQuery}%" OR U.description LIKE "%${searchQuery}%"`
+    : '';
 
   const sql = `
 SELECT 
@@ -57,6 +61,7 @@ ON
     U.cat = C2.id
 WHERE 
     U.cat ${catValue}
+${searchPart}
 ORDER BY 
     U.date DESC, U.id 
 LIMIT ?, ?

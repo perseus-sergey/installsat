@@ -6,7 +6,7 @@ import {
   META_TRANS_NEWS_LIST,
   TSatDigest,
 } from '@/models/satDigest.model';
-import { CURRENT_LANGUAGE } from '@/models/ui.model';
+import { LANGUAGE } from '@/models/ui.model';
 
 export const getSatDigestNews = async (
   satellites?: string | string[] | undefined,
@@ -56,23 +56,23 @@ export const getGroupedSatelliteOptions = ([
   westSats,
 ]: TSatModel[][]): readonly IGroupedSatelliteOption[] => [
   {
-    label: META_TRANS_NEWS_LIST.satSelect.defaultLabel[CURRENT_LANGUAGE],
+    label: META_TRANS_NEWS_LIST.satSelect.defaultLabel[LANGUAGE],
     options: [
       {
         value: '',
-        label: META_TRANS_NEWS_LIST.satSelect.defaultLabel[CURRENT_LANGUAGE],
+        label: META_TRANS_NEWS_LIST.satSelect.defaultLabel[LANGUAGE],
       },
     ],
   },
   {
-    label: META_TRANS_NEWS_LIST.satSelect.westDirectionLabel[CURRENT_LANGUAGE],
+    label: META_TRANS_NEWS_LIST.satSelect.westDirectionLabel[LANGUAGE],
     options: westSats.map((sat) => ({
       value: sat.grade,
       label: `${sat.position} ..... ${sat.title}`,
     })),
   },
   {
-    label: META_TRANS_NEWS_LIST.satSelect.eastDirectionLabel[CURRENT_LANGUAGE],
+    label: META_TRANS_NEWS_LIST.satSelect.eastDirectionLabel[LANGUAGE],
     options: eastSats.map((sat) => ({
       value: sat.grade,
       label: `${sat.position} ..... ${sat.title}`,

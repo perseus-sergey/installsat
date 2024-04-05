@@ -1,7 +1,7 @@
 import { IChannel, META_CHANNEL } from '@/models/channel.model';
 import Link from 'next/link';
 import { EUrlBaseParam } from '@/models/url.model';
-import { CURRENT_LANGUAGE } from '@/models/ui.model';
+import { LANGUAGE } from '@/models/ui.model';
 
 interface IChannelParamsProps {
   channelDBParams: IChannel;
@@ -41,23 +41,23 @@ const ChannelParams = ({
 
   return (
     <section>
-      <h2>{getParamsTitle(title)[CURRENT_LANGUAGE]}</h2>
+      <h2>{getParamsTitle(title)[LANGUAGE]}</h2>
       <ul>
         {chan_lang && (
           <li>
-            {paramsLanguage[CURRENT_LANGUAGE]}
+            {paramsLanguage[LANGUAGE]}
             <strong>{chan_lang}</strong>
           </li>
         )}
         {compression && (
           <li>
-            {paramsFormat[CURRENT_LANGUAGE]}
+            {paramsFormat[LANGUAGE]}
             <strong>{compression}</strong>
           </li>
         )}
         {sat_title && (
           <li>
-            {paramsSatellite[CURRENT_LANGUAGE]}
+            {paramsSatellite[LANGUAGE]}
             <Link href={`/${EUrlBaseParam.SAT_COVERAGE_MAP}/${sat_slug}`}>
               <strong>{sat_title}</strong>
             </Link>
@@ -65,7 +65,7 @@ const ChannelParams = ({
         )}
         {freq && (
           <li>
-            {paramsFrequency[CURRENT_LANGUAGE]}
+            {paramsFrequency[LANGUAGE]}
             <strong>
               {freq} {polar} {sr}
             </strong>
@@ -73,7 +73,7 @@ const ChannelParams = ({
         )}
         {fec && (
           <li>
-            {paramsFEC[CURRENT_LANGUAGE]}
+            {paramsFEC[LANGUAGE]}
             <strong>{fec}</strong>
           </li>
         )}
@@ -81,14 +81,14 @@ const ChannelParams = ({
           <li>
             {bissLink ? (
               <>
-                {paramsEncryption[CURRENT_LANGUAGE]}
+                {paramsEncryption[LANGUAGE]}
                 <Link href={bissLink}>
                   <strong>{encryption}</strong>
                 </Link>
               </>
             ) : (
               <>
-                {paramsEncryption[CURRENT_LANGUAGE]}
+                {paramsEncryption[LANGUAGE]}
                 <strong>{encryption}</strong>
               </>
             )}
@@ -96,7 +96,7 @@ const ChannelParams = ({
         )}
         {url && (
           <li>
-            {getParamsSite(title)[CURRENT_LANGUAGE]} - <strong>{url}</strong>
+            {getParamsSite(title)[LANGUAGE]} - <strong>{url}</strong>
           </li>
         )}
       </ul>

@@ -9,7 +9,7 @@ import {
 import Link from 'next/link';
 import { AccordionMenuItem } from '../AccordionMenuItem/AccordionMenuItem';
 import { ADDED_ITEMS, MENU_ACCORDION } from '@/models/menuAccordion.model';
-import { CURRENT_LANGUAGE } from '@/models/ui.model';
+import { LANGUAGE } from '@/models/ui.model';
 
 const Accordion = async () => {
   const installationsList = await getInstallationsList();
@@ -32,11 +32,11 @@ const Accordion = async () => {
     <nav className={styles.Accordion} data-testid="Accordion">
       <ul>
         <AccordionMenuItem
-          language={CURRENT_LANGUAGE}
+          language={LANGUAGE}
           options={MENU_ACCORDION.SATELLITE_TV}
         />
         <AccordionMenuItem
-          language={CURRENT_LANGUAGE}
+          language={LANGUAGE}
           options={MENU_ACCORDION.INSTALLATIONS}
         >
           <ul className={styles.accordionContent}>
@@ -53,7 +53,7 @@ const Accordion = async () => {
           </ul>
         </AccordionMenuItem>
         <AccordionMenuItem
-          language={CURRENT_LANGUAGE}
+          language={LANGUAGE}
           options={MENU_ACCORDION.SATELLITES}
         >
           <ul className={styles.accordionContent}>
@@ -70,7 +70,7 @@ const Accordion = async () => {
           </ul>
         </AccordionMenuItem>
         <AccordionMenuItem
-          language={CURRENT_LANGUAGE}
+          language={LANGUAGE}
           options={MENU_ACCORDION.PACKAGES}
         >
           <ul className={styles.accordionContent}>
@@ -79,7 +79,7 @@ const Accordion = async () => {
                 href={ADDED_ITEMS.freeChannels.link}
                 className={styles.contentItemLink}
               >
-                {ADDED_ITEMS.freeChannels.title[CURRENT_LANGUAGE]}
+                {ADDED_ITEMS.freeChannels.title[LANGUAGE]}
               </Link>
             </li>
             {channelCatList.map((item) => (
@@ -94,10 +94,7 @@ const Accordion = async () => {
             ))}
           </ul>
         </AccordionMenuItem>
-        <AccordionMenuItem
-          language={CURRENT_LANGUAGE}
-          options={MENU_ACCORDION.USEFUL}
-        >
+        <AccordionMenuItem language={LANGUAGE} options={MENU_ACCORDION.USEFUL}>
           <ul className={styles.accordionContent}>
             {usefulArticleList.map((item) => (
               <li key={item.id} className={styles.contentItem}>
@@ -139,7 +136,7 @@ const Accordion = async () => {
             </li>
           ))} */}
         <AccordionMenuItem
-          language={CURRENT_LANGUAGE}
+          language={LANGUAGE}
           options={MENU_ACCORDION.ONLINE_TV}
         />
       </ul>

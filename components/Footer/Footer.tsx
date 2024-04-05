@@ -5,12 +5,12 @@ import {
 } from '@/models/footer.model';
 import styles from './Footer.module.scss';
 import Link from 'next/link';
-import { CURRENT_LANGUAGE } from '@/models/ui.model';
+import { LANGUAGE } from '@/models/ui.model';
 
 const Footer = () => (
   <footer className={styles.footer}>
     <section className={styles.Copyright}>
-      {COPYRIGHT_SECTION.title[CURRENT_LANGUAGE]}
+      {COPYRIGHT_SECTION.title[LANGUAGE]}
     </section>
 
     <nav className={styles.footerMenu}>
@@ -23,7 +23,7 @@ const Footer = () => (
               ) : null}
               <li key={i}>
                 <Link href={item.href} className={styles.navLink}>
-                  {item.title[CURRENT_LANGUAGE]}
+                  {item.title[LANGUAGE]}
                 </Link>
               </li>
             </>

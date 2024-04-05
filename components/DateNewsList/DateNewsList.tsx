@@ -10,7 +10,7 @@ import {
 import EmptyData from '../EmptyData/EmptyData';
 import { EUrlBaseParam } from '@/models/url.model';
 import { META_TRANS_NEWS_SINGLE } from '@/models/satDigest.model';
-import { CURRENT_LANGUAGE } from '@/models/ui.model';
+import { LANGUAGE } from '@/models/ui.model';
 
 const DateNewsList = async () => {
   const newsArray = await setGroupedNewsByDateMap();
@@ -25,7 +25,7 @@ const DateNewsList = async () => {
           <Link
             href={`/${EUrlBaseParam.TRANSPONDER_NEWS}/${getFormattedDateStr(news[0])}`}
           >
-            {META_TRANS_NEWS_SINGLE.getH1()[CURRENT_LANGUAGE]}
+            {META_TRANS_NEWS_SINGLE.getH1()[LANGUAGE]}
             <span className={styles.groupTitleDate}>{getDate(news[0])}</span>
           </Link>
         </h2>

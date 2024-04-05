@@ -15,7 +15,7 @@ import { getSatsForForm } from '@/controllers/satDigest.controller';
 import EmptyData from '../EmptyData/EmptyData';
 import { EUrlBaseParam, EUrlSearchParam } from '@/models/url.model';
 import Fieldset from '../Fieldset/Fieldset';
-import { CURRENT_LANGUAGE, TSearchParams } from '@/models/ui.model';
+import { LANGUAGE, TSearchParams } from '@/models/ui.model';
 
 const { fieldsetTitle, submitButton } = META_TRANS_NEWS_LIST;
 interface IFormDigestIntervalProps {
@@ -53,7 +53,7 @@ const FormDigestInterval = async ({
       id="formDigestInterval"
       className={styles.FormDigestInterval}
     >
-      <Fieldset legendText={fieldsetTitle[CURRENT_LANGUAGE]}>
+      <Fieldset legendText={fieldsetTitle[LANGUAGE]}>
         <div className={styles.formWrapper}>
           <div className={styles.selectsBlock}>
             {groupedSats[1] ? (
@@ -85,13 +85,13 @@ const FormDigestInterval = async ({
           </div>
 
           <TextButton
-            ariaLabel={submitButton.ariaLabel[CURRENT_LANGUAGE]}
+            ariaLabel={submitButton.ariaLabel[LANGUAGE]}
             type="submit"
             id="submitBtn"
             name="submitBtn"
             value="Submit"
           >
-            {submitButton.title[CURRENT_LANGUAGE]}
+            {submitButton.title[LANGUAGE]}
           </TextButton>
         </div>
       </Fieldset>

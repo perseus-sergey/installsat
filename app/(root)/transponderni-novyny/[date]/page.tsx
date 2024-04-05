@@ -3,7 +3,7 @@ import TransNewsSingle from '@/components/TransNewsSingle/TransNewsSingle';
 import { getTransNewsForSingleDay } from '@/controllers/satDigest.controller';
 import { getDate } from '@/libs/utils';
 import { META_TRANS_NEWS_SINGLE } from '@/models/satDigest.model';
-import { CURRENT_LANGUAGE, defaultMetaData } from '@/models/ui.model';
+import { LANGUAGE, defaultMetaData } from '@/models/ui.model';
 import { EUrlBaseParam, SITE_BASE_URL } from '@/models/url.model';
 import { notFound } from 'next/navigation';
 
@@ -43,7 +43,7 @@ export default async function Page({ params: { date } }: IPageParams) {
 
   return (
     <TransNewsSingle
-      title={`${META_TRANS_NEWS_SINGLE.getH1()[CURRENT_LANGUAGE]}${dateStr}`}
+      title={`${META_TRANS_NEWS_SINGLE.getH1()[LANGUAGE]}${dateStr}`}
       newsArray={newsArray}
     />
   );

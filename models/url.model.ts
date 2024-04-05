@@ -22,6 +22,7 @@ export enum EUrlBaseParam {
 }
 
 export enum EUrlSearchParam {
+  ARTICLE = 'q',
   SAT = 'sat',
   CHANNEL = 'channel',
   INTERVAL = 'interval',

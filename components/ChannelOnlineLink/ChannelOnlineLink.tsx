@@ -2,7 +2,7 @@ import Link from 'next/link';
 import styles from './ChannelOnlineLink.module.scss';
 import FillingValidImage from '../Images/FillingValidImage';
 import { META_CHANNEL } from '@/models/channel.model';
-import { CURRENT_LANGUAGE } from '@/models/ui.model';
+import { LANGUAGE } from '@/models/ui.model';
 
 const {
   images: { onlineLinkImg },
@@ -19,7 +19,7 @@ const ChannelOnlineLink = ({ children, href }: IChannelOnlineLinkProps) => (
       <FillingValidImage
         image={onlineLinkImg}
         alternativeImgString={onlineLinkImg.alternativeImgStr}
-        alt={onlineLinkImg.alt[CURRENT_LANGUAGE]}
+        alt={onlineLinkImg.alt[LANGUAGE]}
       />
       {children}
     </Link>

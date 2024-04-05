@@ -3,7 +3,7 @@ import EmptyData from '../EmptyData/EmptyData';
 import Link from 'next/link';
 import { WIDGET_ARTICLE_CATEGORY } from '@/models/widget.model';
 import { getArticleCatWidgetList } from '@/controllers/sidebar.controller';
-import { CURRENT_LANGUAGE } from '@/models/ui.model';
+import { LANGUAGE } from '@/models/ui.model';
 
 const WidgetArticleCategories = async () => {
   const articleCatWidgetList = await getArticleCatWidgetList();
@@ -13,7 +13,7 @@ const WidgetArticleCategories = async () => {
     <ul className="sidebar-widget" data-testid="WidgetArticleCategories">
       <li className={styles.listItem}>
         <Link className={styles.itemLink} href={WIDGET_ARTICLE_CATEGORY.href}>
-          {WIDGET_ARTICLE_CATEGORY.title[CURRENT_LANGUAGE]}
+          {WIDGET_ARTICLE_CATEGORY.title[LANGUAGE]}
         </Link>
         <br />
       </li>

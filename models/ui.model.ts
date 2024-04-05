@@ -28,8 +28,8 @@ export const SIDE_BAR_CLOSE_BTN = '⚔';
 
 export const ERRORS = {
   ERROR_EMPTY_DATA: {
-    [ELanguage.UA]: 'Не вдалося вилучити дані',
-    [ELanguage.EN]: 'Failed to retrieve data',
+    [ELanguage.UA]: 'На жаль, запит повернув порожній результат',
+    [ELanguage.EN]: 'Unfortunately, the query returned an empty result',
   },
   ERROR_PAGE_TITLE: {
     [ELanguage.UA]:

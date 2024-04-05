@@ -1,3 +1,4 @@
+import { RefObject } from 'react';
 import TooltipSimple from '../TooltipSimple/TooltipSimple';
 import BaseButton from '../buttons/BaseButton/BaseButton';
 import styles from './SearchInput.module.scss';
@@ -5,6 +6,7 @@ import styles from './SearchInput.module.scss';
 interface ISearchInputProps {
   cancelButton: { ariaLabel: string; content: string };
   handleSearch: (term: string) => void;
+  inputRef: RefObject<HTMLInputElement>;
   searchValue: string | undefined;
   placeholder: string;
   labelTitle: string;
@@ -16,6 +18,7 @@ interface ISearchInputProps {
 const SearchInput = ({
   handleSearch,
   cancelClick,
+  inputRef,
   searchValue,
   placeholder,
   labelTitle,
@@ -31,12 +34,14 @@ const SearchInput = ({
       <div className={styles.inputWrapper}>
         <div className={styles.inputBlock}>
           <input
+            ref={inputRef}
             className={styles.inputField}
             placeholder={placeholder}
             onChange={(e) => {
               handleSearch(e.target.value);
             }}
-            value={searchValue}
+            defaultValue={searchValue}
+            // value={searchValue}
           />
           <span className={styles.searchIcon}>{searchIconStr}</span>
         </div>

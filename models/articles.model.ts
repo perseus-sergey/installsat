@@ -122,8 +122,8 @@ export const ARTICLES = {
       },
     },
     articlesCountCaption: {
-      [ELanguage.EN]: 'Number of articles in this category: ',
-      [ELanguage.UA]: 'Кількість статей в цієї категорії: ',
+      [ELanguage.EN]: 'Number of articles found: ',
+      [ELanguage.UA]: 'Кількість знайдених статей: ',
     },
   },
   articleSingleCatList: {

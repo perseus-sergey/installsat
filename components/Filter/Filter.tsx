@@ -29,15 +29,12 @@ export default function Filter({
   const pathname = usePathname();
   const { replace } = useRouter();
 
-  const {
-    searchValue,
-    setSearchValue,
-    handleSearchDebounced,
-    cancelClickHandler,
-  } = useSearch(searchQueryTitle);
+  const { searchValue, inputRef, handleSearchDebounced, cancelClickHandler } =
+    useSearch(searchQueryTitle, 700);
 
   const resetAll = () => {
-    setSearchValue('');
+    if (inputRef.current) inputRef.current.value = '';
+    // setSearchValue('');
     replace(pathname);
   };
 
@@ -46,6 +43,7 @@ export default function Filter({
       <SearchInput
         handleSearch={handleSearchDebounced}
         cancelClick={cancelClickHandler}
+        inputRef={inputRef}
         searchValue={searchValue}
         placeholder={placeholder}
         labelTitle={labelTitle}

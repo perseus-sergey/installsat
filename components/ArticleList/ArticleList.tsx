@@ -89,9 +89,9 @@ const ArticleList = ({ articleList, articleTitleImg }: IArticleListProps) => (
         )
       )}
     </ul>
-    <p
+    {/* <p
       className={styles.articlesCount}
-    >{`${ARTICLES.articleList.articlesCountCaption[LANGUAGE]}${articleList[0].total_count}`}</p>
+    >{`${ARTICLES.articleList.articlesCountCaption[LANGUAGE]}${articleList[0].total_count}`}</p> */}
   </>
 );
 

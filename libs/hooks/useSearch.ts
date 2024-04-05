@@ -1,21 +1,19 @@
 import { EUrlSearchParam } from '@/models/url.model';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { useDebouncedCallback } from 'use-debounce';
 
-const useSearch = (
-  searchQueryTitle: EUrlSearchParam,
-  debounceTimeInterval = 300
-) => {
+const useSearch = (searchQueryTitle: EUrlSearchParam, debounceDelay = 300) => {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const { replace } = useRouter();
-  const [searchValue, setSearchValue] = useState(
+  const [searchValue] = useState(
     searchParams.get(searchQueryTitle)?.toString()
   );
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const handleSearch = (term: string) => {
-    setSearchValue(term);
+    // setSearchValue(term);
 
     const params = new URLSearchParams(searchParams);
     if (params.has(EUrlSearchParam.PAGE)) params.set(EUrlSearchParam.PAGE, '1');
@@ -30,19 +28,21 @@ const useSearch = (
 
   const handleSearchDebounced = useDebouncedCallback(
     handleSearch,
-    debounceTimeInterval
+    debounceDelay
   );
 
   const cancelClickHandler = () => {
-    if (!searchValue) return;
+    if (!inputRef.current) return;
 
     handleSearch('');
-    setSearchValue('');
+    inputRef.current.value = '';
+    // setSearchValue('');
   };
 
   return {
     searchValue,
-    setSearchValue,
+    inputRef,
+    // setSearchValue,
     handleSearchDebounced,
     cancelClickHandler,
   };

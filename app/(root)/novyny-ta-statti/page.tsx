@@ -16,11 +16,12 @@ import {
 } from '@/models/url.model';
 import {
   LANGUAGE as L,
+  LANGUAGE,
   TSearchParams,
   defaultMetaData,
 } from '@/models/ui.model';
 
-const { meta, pagination, images } = ARTICLES.articleList;
+const { meta, pagination, images, articlesCountCaption } = ARTICLES.articleList;
 
 const currDate = new Date().toLocaleDateString('en-GB');
 
@@ -75,7 +76,6 @@ export default async function Page({ searchParams }: IProps) {
     return <EmptyData description={allNews.message} />;
 
   if (!allNews.length) return <EmptyData description={`Couldn't find data`} />;
-
   const totalPages = Math.ceil(allNews[0].total_count / perPage);
 
   return (
@@ -90,6 +90,7 @@ export default async function Page({ searchParams }: IProps) {
         />
       </Title>
 
+      <p className="text-blue-600 font-bold text-center text-lg">{`${articlesCountCaption[LANGUAGE]}${allNews[0].total_count}`}</p>
       {totalPages > 1 && (
         <Pagination
           page={pageNumber || 1}

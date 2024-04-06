@@ -106,7 +106,7 @@ export default async function Page({ params }: IPageParams) {
         />
       </Title>
       <StartArticleSection>
-        <DangerHtmlUl wrapperTagName="p" text={START_CONTENT} />
+        <DangerHtmlUl wrapperTagName="p" text={START_CONTENT[LANGUAGE]} />
       </StartArticleSection>
       <SatChannelsTable
         isSingleSat

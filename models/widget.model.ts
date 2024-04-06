@@ -9,7 +9,6 @@ export const WIDGET_LAST_NEWS = {
     [ELanguage.EN]: 'Last news',
   },
   href: `/${EUrlBaseParam.NEWS_AND_ARTICLES}`,
-  // href: '/novosti-i-statji/lastnews/',
   baseHrefOfList: `/${EUrlBaseParam.ARTICLE}`,
 };
 
@@ -19,6 +18,5 @@ export const WIDGET_ARTICLE_CATEGORY = {
     [ELanguage.EN]: 'Transponder news',
   },
   href: `/${EUrlBaseParam.TRANSPONDER_NEWS}`,
-  // href: '/novosti-i-statji/transpondernye-novosti/',
   baseHrefOfList: `/${EUrlBaseParam.NEWS_AND_ARTICLES}`,
 };

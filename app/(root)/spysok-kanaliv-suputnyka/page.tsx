@@ -15,6 +15,7 @@ import FillingImg from '@/components/Images/FillingImage';
 import Fieldset from '@/components/Fieldset/Fieldset';
 import {
   LANGUAGE as L,
+  LANGUAGE,
   TSearchParams,
   defaultMetaData,
 } from '@/models/ui.model';
@@ -140,7 +141,7 @@ export default async function Page({ searchParams }: IPageProps) {
         </nav>
       </Fieldset>
       <StartArticleSection>
-        <p>{START_CONTENT}</p>
+        <p>{START_CONTENT[LANGUAGE]}</p>
       </StartArticleSection>
       <Suspense key={searchQueryChannel}>
         <SatChannelsTable satChannels={groupedChannelsAllSat} />

@@ -59,51 +59,6 @@ ORDER BY
   U.date DESC, U.id 
 LIMIT ?, ?
 `;
-  //   const sql = `
-  // SELECT
-  //     U.id,
-  //     U.cat,
-  //     U.title,
-  //     U.cpu,
-  //     U.description,
-  //     U.date,
-  //     U.author,
-  //     U.logo,
-  //     U.view,
-  //     C.comment_count,
-  //     T.total_count,
-  //     C2.title AS category_title,
-  //     C2.cpu AS category_cpu
-  // FROM
-  //     tbl_useful U
-  // LEFT JOIN
-  //     (SELECT
-  //          post,
-  //          COUNT(id) AS comment_count
-  //      FROM
-  //          tbl_comments
-  //      GROUP BY
-  //          post) C
-  // ON
-  //     U.id = C.post
-  // CROSS JOIN
-  //     (SELECT
-  //          COUNT(*) AS total_count
-  //      FROM
-  //          tbl_useful
-  //      WHERE
-  //          cat ${catValue}) T
-  // LEFT JOIN
-  //     tbl_categories C2
-  // ON
-  //     U.cat = C2.id
-  // WHERE
-  //     U.cat ${catValue}
-  // ${searchPart}
-  // ORDER BY
-  //     U.date DESC, U.id
-  // LIMIT ?, ?
-  // `;
 
   return await executeQuery<IAllNewsModel>(sql, [`${start}`, `${quantity}`]);
 };

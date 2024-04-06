@@ -172,7 +172,12 @@ export const META_ALL_SAT_CHANNEL_LIST = {
   },
 };
 
-export const START_CONTENT = `У наведеному списку показані ті канали, які транслюються без абонентської плати.`;
+export const START_CONTENT = {
+  [ELanguage.UA]:
+    'У наведеному списку показані ті канали, які транслюються без абонентської плати.',
+  [ELanguage.EN]:
+    'The list shows those channels that are broadcast without a subscription fee.',
+};
 
 export interface ISatChannelListEmptyModel {
   id: number;

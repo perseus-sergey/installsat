@@ -42,6 +42,16 @@ export const ARTICLES = {
       },
     },
   },
+  search: {
+    placeholder: {
+      [ELanguage.UA]: 'Пошук статті...',
+      [ELanguage.EN]: 'Search article...',
+    },
+    labelTitle: {
+      [ELanguage.UA]: 'Шукати статті по назві та опису',
+      [ELanguage.EN]: 'Search articles by title and description...',
+    },
+  },
   articleList: {
     meta: {
       getH1(date: string) {
@@ -166,8 +176,6 @@ export const ARTICLES = {
     comments: { [ELanguage.UA]: 'Коментарів', [ELanguage.EN]: 'Comments' },
   },
 };
-
-// export const START_CONTENT = `У наведеному списку показані ті канали, які транслюються без абонентської плати.`;
 
 export interface IAllNewsModel {
   id: number;

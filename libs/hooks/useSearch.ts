@@ -13,8 +13,6 @@ const useSearch = (searchQueryTitle: EUrlSearchParam, debounceDelay = 300) => {
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleSearch = (term: string) => {
-    // setSearchValue(term);
-
     const params = new URLSearchParams(searchParams);
     if (params.has(EUrlSearchParam.PAGE)) params.set(EUrlSearchParam.PAGE, '1');
 
@@ -36,13 +34,11 @@ const useSearch = (searchQueryTitle: EUrlSearchParam, debounceDelay = 300) => {
 
     handleSearch('');
     inputRef.current.value = '';
-    // setSearchValue('');
   };
 
   return {
     searchValue,
     inputRef,
-    // setSearchValue,
     handleSearchDebounced,
     cancelClickHandler,
   };

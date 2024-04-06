@@ -46,7 +46,6 @@ export default async function Page({ params: { article } }: IArticleParams) {
       <div className="article-text">
         <DangerHtml text={text} />
       </div>
-
       <BottomInfoPanel
         items={[
           {
@@ -64,6 +63,7 @@ export default async function Page({ params: { article } }: IArticleParams) {
           },
         ]}
       />
+      .
     </>
   );
 }

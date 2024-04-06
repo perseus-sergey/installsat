@@ -204,6 +204,7 @@ export const META_CHANNEL = {
         return {
           [ELanguage.UA]: `Супутник: ${satTitle} ${satPosition}`,
           [ELanguage.EN]: `Satellite: ${satTitle} ${satPosition}`,
+
         };
       },
       getFrequencyTitle(frequency: number) {

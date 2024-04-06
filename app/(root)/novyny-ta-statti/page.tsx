@@ -82,6 +82,7 @@ export default async function Page({ searchParams }: IProps) {
     <>
       <Title>
         {meta.getH1(currDate)[L]}
+
         <FillingValidImage
           image={images.h1Image}
           alternativeImgString={images.h1Image.alternativeStr}

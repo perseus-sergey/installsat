@@ -11,7 +11,6 @@ import {
 import EmptyData from '../EmptyData/EmptyData';
 import FillingValidImage from '../Images/FillingValidImage';
 import { LANGUAGE, TSearchParams } from '@/models/ui.model';
-
 interface ISatNewsListProps {
   searchParams: TSearchParams;
 }

@@ -133,6 +133,7 @@ export default async function Page({
     <>
       <Title>
         {getH1(currDateStr, description)[LANGUAGE]}
+
         <FillingValidImage
           image={images.h1Image}
           alternativeImgString={images.h1Image.alternativeStr}

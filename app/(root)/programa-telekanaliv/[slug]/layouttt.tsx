@@ -27,7 +27,6 @@
 // }: IChannelLayoutParams): Promise<Metadata> => {
 //   const sqlResult = await getDBChannel(slug);
 //   if (sqlResult instanceof Error) return defaultMetaData[LANGUAGE];
-
 //   const {
 //     title,
 //     description,

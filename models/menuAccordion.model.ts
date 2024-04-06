@@ -1,4 +1,4 @@
-import { ILang } from './ui.model';
+import { ELanguage, ILang } from './ui.model';
 import { EUrlBaseParam } from './url.model';
 
 export interface IAccordionItemOptions {
@@ -22,11 +22,14 @@ export const MENU_ACCORDION: { [key: string]: IAccordionItemOptions } = {
       width: 32,
       height: 32,
       alt: {
-        ua: 'Супутникове телебачення InstallSat',
-        en: 'Satellite TV Installsat',
+        [ELanguage.UA]: 'Супутникове телебачення InstallSat',
+        [ELanguage.EN]: 'Satellite TV Installsat',
       },
     },
-    title: { ua: 'Цифрове телебачення', en: 'Digital TV' },
+    title: {
+      [ELanguage.UA]: 'Цифрове телебачення',
+      [ELanguage.EN]: 'Digital TV',
+    },
     titleHref: `/${EUrlBaseParam.ARTICLE}/sputnikovoe-televidenie`,
   },
   INSTALLATIONS: {
@@ -36,11 +39,14 @@ export const MENU_ACCORDION: { [key: string]: IAccordionItemOptions } = {
       width: 32,
       height: 32,
       alt: {
-        ua: 'Варіанти встановлення супутникового тб',
-        en: 'Installing options for satellite TV',
+        [ELanguage.UA]: 'Варіанти встановлення супутникового тб',
+        [ELanguage.EN]: 'Installing options for satellite TV',
       },
     },
-    title: { ua: 'Варіанти встановлення', en: 'Installing options' },
+    title: {
+      [ELanguage.UA]: 'Варіанти встановлення',
+      [ELanguage.EN]: 'Installing options',
+    },
     baseHrefOfList: `/${EUrlBaseParam.INSTALLATION_OPTIONS}`,
   },
   SATELLITES: {
@@ -50,11 +56,14 @@ export const MENU_ACCORDION: { [key: string]: IAccordionItemOptions } = {
       width: 34,
       height: 32,
       alt: {
-        ua: 'Канали на супутниках',
-        en: 'Channels on satellites',
+        [ELanguage.UA]: 'Канали на супутниках',
+        [ELanguage.EN]: 'Channels on satellites',
       },
     },
-    title: { ua: 'Канали на супутниках', en: 'Channels on satellites' },
+    title: {
+      [ELanguage.UA]: 'Канали на супутниках',
+      [ELanguage.EN]: 'Channels on satellites',
+    },
     baseHrefOfList: `/${EUrlBaseParam.SAT_CHANNEL_LIST}`,
   },
   PACKAGES: {
@@ -64,11 +73,14 @@ export const MENU_ACCORDION: { [key: string]: IAccordionItemOptions } = {
       width: 32,
       height: 24,
       alt: {
-        ua: 'Пакети каналів',
-        en: 'Channels packages',
+        [ELanguage.UA]: 'Пакети каналів',
+        [ELanguage.EN]: 'Channels packages',
       },
     },
-    title: { ua: 'Пакети каналів', en: 'Channel packages' },
+    title: {
+      [ELanguage.UA]: 'Пакети каналів',
+      [ELanguage.EN]: 'Channel packages',
+    },
     baseHrefOfList: `/${EUrlBaseParam.PACKAGE_CHANNEL_LIST}`,
   },
   USEFUL: {
@@ -78,11 +90,14 @@ export const MENU_ACCORDION: { [key: string]: IAccordionItemOptions } = {
       width: 32,
       height: 32,
       alt: {
-        ua: 'Корисні статті',
-        en: 'Useful articles',
+        [ELanguage.UA]: 'Корисні статті',
+        [ELanguage.EN]: 'Useful articles',
       },
     },
-    title: { ua: 'Корисні статті', en: 'Useful articles' },
+    title: {
+      [ELanguage.UA]: 'Корисні статті',
+      [ELanguage.EN]: 'Useful articles',
+    },
     baseHrefOfList: `/${EUrlBaseParam.ARTICLE}`,
   },
   ONLINE_TV: {
@@ -92,11 +107,11 @@ export const MENU_ACCORDION: { [key: string]: IAccordionItemOptions } = {
       width: 37,
       height: 32,
       alt: {
-        ua: 'Онлайн ТБ',
-        en: 'Online TV',
+        [ELanguage.UA]: 'Онлайн ТБ',
+        [ELanguage.EN]: 'Online TV',
       },
     },
-    title: { ua: 'Онлайн ТБ', en: 'Online TV' },
+    title: { [ELanguage.UA]: 'Онлайн ТБ', [ELanguage.EN]: 'Online TV' },
     titleHref: `/${EUrlBaseParam.ONLINE_CHANNEL_LIST}`,
   },
 };
@@ -104,8 +119,8 @@ export const MENU_ACCORDION: { [key: string]: IAccordionItemOptions } = {
 export const ADDED_ITEMS = {
   freeChannels: {
     title: {
-      ua: 'Безкоштовні',
-      en: 'Free channels',
+      [ELanguage.UA]: 'Безкоштовні',
+      [ELanguage.EN]: 'Free channels',
     },
     link: `/${EUrlBaseParam.SAT_CHANNEL_LIST}`,
   },

@@ -1,4 +1,4 @@
-import TextButton from '../TextButton/TextButton';
+import TextButton from '../buttons/TextButton/TextButton';
 import styles from './FormDigestInterval.module.scss';
 import {
   LAST_NEWS_INTERVAL,
@@ -11,15 +11,13 @@ import {
   ReactSelectInterval,
   ReactSelectSat,
 } from '../ReactSelect/ReactSelect';
-import {
-  getGroupedSatelliteOptions,
-  getSatsForForm,
-} from '@/controllers/satDigest.controller';
+import { getSatsForForm } from '@/controllers/satDigest.controller';
 import EmptyData from '../EmptyData/EmptyData';
 import { EUrlBaseParam, EUrlSearchParam } from '@/models/url.model';
 import Fieldset from '../Fieldset/Fieldset';
-import { TSearchParams } from '@/models/ui.model';
+import { LANGUAGE, TSearchParams } from '@/models/ui.model';
 
+const { fieldsetTitle, submitButton } = META_TRANS_NEWS_LIST;
 interface IFormDigestIntervalProps {
   searchParams: TSearchParams;
 }
@@ -27,12 +25,10 @@ interface IFormDigestIntervalProps {
 const FormDigestInterval = async ({
   searchParams,
 }: IFormDigestIntervalProps) => {
-  const satsForForm = await getSatsForForm();
+  const groupedSats = await getSatsForForm();
 
-  if (satsForForm instanceof Error)
-    return <EmptyData description={satsForForm.message} />;
-
-  const groupedSats = getGroupedSatelliteOptions(satsForForm);
+  if (groupedSats instanceof Error)
+    return <EmptyData description={groupedSats.message} />;
 
   async function formAction(formData: FormData) {
     'use server';
@@ -57,7 +53,7 @@ const FormDigestInterval = async ({
       id="formDigestInterval"
       className={styles.FormDigestInterval}
     >
-      <Fieldset legendText={META_TRANS_NEWS_LIST.fieldsetTitle.ua}>
+      <Fieldset legendText={fieldsetTitle[LANGUAGE]}>
         <div className={styles.formWrapper}>
           <div className={styles.selectsBlock}>
             {groupedSats[1] ? (
@@ -89,13 +85,13 @@ const FormDigestInterval = async ({
           </div>
 
           <TextButton
+            ariaLabel={submitButton.ariaLabel[LANGUAGE]}
             type="submit"
             id="submitBtn"
             name="submitBtn"
             value="Submit"
-            // aria-disabled={pending}
           >
-            Submit
+            {submitButton.title[LANGUAGE]}
           </TextButton>
         </div>
       </Fieldset>

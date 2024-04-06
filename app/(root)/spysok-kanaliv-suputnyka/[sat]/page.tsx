@@ -15,9 +15,17 @@ import StartArticleSection from '@/components/StartArticleSection/StartArticleSe
 import SatChannelsTable from '@/components/SatChannelsTable/SatChannelsTable';
 import FillingValidImage from '@/components/Images/FillingValidImage';
 import { cache } from 'react';
-import { defaultMetaData } from '@/models/ui.model';
+import { LANGUAGE, defaultMetaData } from '@/models/ui.model';
 import { EUrlBaseParam, SITE_BASE_URL } from '@/models/url.model';
 import { getFormattedDateStr } from '@/libs/utils';
+
+const {
+  getTitle,
+  getDescription,
+  getKeywords,
+  getH1,
+  images: { h1SatImage },
+} = META_SAT_CHANNEL_LIST;
 
 export interface IPageParams {
   params: { sat: string };
@@ -44,14 +52,15 @@ const getCurrentSatParams = cache((satCpu: string) => {
 
 export const generateMetadata = ({ params }: IPageParams): Metadata => {
   const { title, satPosition, slug } = getCurrentSatParams(params.sat);
+
   const satTitle = `${title} - ${satPosition}`;
-  const metaTitle = `${META_SAT_CHANNEL_LIST.getTitle().ua} ${satTitle}`;
-  const description = `${META_SAT_CHANNEL_LIST.getDescription().ua} ${satTitle}`;
+  const metaTitle = `${getTitle()[LANGUAGE]} ${satTitle}`;
+  const description = `${getDescription()[LANGUAGE]} ${satTitle}`;
 
   return {
     title: metaTitle,
     description,
-    keywords: `${satTitle} ${META_SAT_CHANNEL_LIST.getKeywords('ua')}`,
+    keywords: `${satTitle} ${getKeywords(LANGUAGE)}`,
     openGraph: {
       ...defaultMetaData.openGraph,
       title: metaTitle,
@@ -74,8 +83,9 @@ export async function generateStaticParams(): Promise<
 
 export const dynamicParams = false;
 export default async function Page({ params }: IPageParams) {
-  const satParams = getCurrentSatParams(params.sat);
-  const satChannels = await getSatChannels(satParams.id);
+  const { id, title, logo, satPosition } = getCurrentSatParams(params.sat);
+
+  const satChannels = await getSatChannels('', id);
 
   if (satChannels instanceof Error)
     return <EmptyData description={satChannels.message} />;
@@ -83,28 +93,25 @@ export default async function Page({ params }: IPageParams) {
   return (
     <>
       <Title>
-        {
-          META_SAT_CHANNEL_LIST.getH1(
-            `${satParams.title} - ${satParams.satPosition}`
-          ).ua
-        }
+        {getH1(`${title} - ${satPosition}`)[LANGUAGE]}
         <FillingValidImage
           image={{
-            ...META_SAT_CHANNEL_LIST.h1SatImage,
-            src: `${META_SAT_CHANNEL_LIST.h1SatImage.path}${satParams.logo}`,
+            ...h1SatImage,
+            src: `${h1SatImage.path}${logo}`,
           }}
-          defaultImage={META_SAT_CHANNEL_LIST.h1SatImage.defaultImage}
-          alternativeImgString={
-            META_SAT_CHANNEL_LIST.h1SatImage.alternativeString
-          }
-          alt={`${META_SAT_CHANNEL_LIST.h1SatImage.alt.ua} ${satParams.title}`}
+          defaultImage={h1SatImage.defaultImage}
+          alternativeImgString={h1SatImage.alternativeString}
+          alt={`${h1SatImage.alt[LANGUAGE]} ${title}`}
           isBlur
         />
       </Title>
       <StartArticleSection>
-        <DangerHtmlUl wrapperTagName="p" text={START_CONTENT} />
+        <DangerHtmlUl wrapperTagName="p" text={START_CONTENT[LANGUAGE]} />
       </StartArticleSection>
-      <SatChannelsTable satChannels={getGroupedChannelsAllSat([satChannels])} />
+      <SatChannelsTable
+        isSingleSat
+        satChannels={getGroupedChannelsAllSat([satChannels])}
+      />
     </>
   );
 }

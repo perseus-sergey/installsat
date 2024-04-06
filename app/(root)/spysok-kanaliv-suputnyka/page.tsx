@@ -1,4 +1,3 @@
-import DangerHtmlUl from '@/components/DangerHtml/DangerHtml';
 import EmptyData from '@/components/EmptyData/EmptyData';
 import { Title } from '@/components/Title/Title';
 import {
@@ -13,69 +12,140 @@ import type { Metadata } from 'next';
 import StartArticleSection from '@/components/StartArticleSection/StartArticleSection';
 import SatChannelsTable from '@/components/SatChannelsTable/SatChannelsTable';
 import FillingImg from '@/components/Images/FillingImage';
-import Link from 'next/link';
 import Fieldset from '@/components/Fieldset/Fieldset';
-import { defaultMetaData } from '@/models/ui.model';
+import {
+  LANGUAGE as L,
+  LANGUAGE,
+  TSearchParams,
+  defaultMetaData,
+} from '@/models/ui.model';
 import { getFormattedDateStr } from '@/libs/utils';
-import { EUrlBaseParam, SITE_BASE_URL } from '@/models/url.model';
+import {
+  EUrlBaseParam,
+  EUrlSearchParam,
+  SITE_BASE_URL,
+} from '@/models/url.model';
+import Filter from '@/components/Filter/Filter';
+import { Suspense } from 'react';
+import AnchorListItem from '@/components/AnchorListItem/AnchorListItem';
+import { getChannelSatList } from '@/controllers/sidebar.controller';
+import ChannelFormatSliders from '@/components/ChannelFormatSliders/ChannelFormatSliders';
+
+const {
+  getTitle,
+  getDescription,
+  getKeywords,
+  getH1,
+  image: { h1ImageParams },
+  anchors,
+  filtering: {
+    filterByChannelName: { placeholder, labelTitle },
+    filterByChannelFormat: { formats },
+    resetAllFiltersButton,
+    satCheckBox,
+    satAnchor,
+  },
+} = META_ALL_SAT_CHANNEL_LIST;
 
 export const metadata: Metadata = {
-  title: META_ALL_SAT_CHANNEL_LIST.getTitle().ua,
-  description: META_ALL_SAT_CHANNEL_LIST.getDescription().ua,
-  keywords: META_ALL_SAT_CHANNEL_LIST.getKeywords().ua,
+  title: getTitle()[L],
+  description: getDescription()[L],
+  keywords: getKeywords()[L],
   openGraph: {
     ...defaultMetaData.openGraph,
-    title: META_ALL_SAT_CHANNEL_LIST.getTitle().ua,
-    description: META_ALL_SAT_CHANNEL_LIST.getDescription().ua,
+    title: getTitle()[L],
+    description: getDescription()[L],
     url: `${SITE_BASE_URL}/${EUrlBaseParam.SAT_CHANNEL_LIST}`,
     publishedTime: getFormattedDateStr(new Date()),
   },
 };
+interface IPageProps {
+  searchParams?: TSearchParams;
+}
 
-export default async function Page() {
-  const satChannels = await getSatChannels();
+export default async function Page({ searchParams }: IPageProps) {
+  const searchQueryChannel =
+    searchParams?.[EUrlSearchParam.CHANNEL] &&
+    typeof searchParams[EUrlSearchParam.CHANNEL] === 'string'
+      ? searchParams[EUrlSearchParam.CHANNEL]
+      : '';
+
+  const satChannels = await getSatChannels(
+    searchQueryChannel,
+    '',
+    searchParams?.[EUrlSearchParam.SAT],
+    !!searchParams?.[EUrlSearchParam.CHANNEL_FORMAT_MPG4],
+    !!searchParams?.[EUrlSearchParam.CHANNEL_FORMAT_T2MI]
+  );
 
   if (satChannels instanceof Error)
     return <EmptyData description={satChannels.message} />;
 
+  const satListResults = await getChannelSatList();
+  const satList = satListResults instanceof Error ? [] : satListResults;
+
   const groupedChannelsAllSat = getGroupedChannelsAllSat([satChannels]);
 
-  const satLinks = groupedChannelsAllSat.map((sat) => ({
-    title: `${sat[0][0].sat_title} - ${sat[0][0].sat_position}`,
-    slug: sat[0][0].sat_slug,
+  const satLinks = satList.map((sat) => ({
+    title: `${sat.title} - ${sat.position}`,
+    slug: sat.cpu,
   }));
 
   return (
     <>
       <Title>
-        {META_ALL_SAT_CHANNEL_LIST.getH1().ua}
+        {getH1()[L]}
         <FillingImg
-          src={META_ALL_SAT_CHANNEL_LIST.image.h1ImageParams.path}
-          alt={META_ALL_SAT_CHANNEL_LIST.image.h1ImageParams.alt.ua}
-          width={META_ALL_SAT_CHANNEL_LIST.image.h1ImageParams.width}
-          height={META_ALL_SAT_CHANNEL_LIST.image.h1ImageParams.height}
+          src={h1ImageParams.path}
+          alt={h1ImageParams.alt[L]}
+          width={h1ImageParams.width}
+          height={h1ImageParams.height}
         />
       </Title>
-      <Fieldset legendText={META_ALL_SAT_CHANNEL_LIST.anchors.legendTitle.ua}>
-        <nav className="text-center text-xl">
+      <Fieldset legendText={anchors.legendTitle[L]}>
+        <nav>
           <ul>
             {satLinks.map((satLink) => (
               <li key={satLink.slug}>
-                <Link
-                  href={`#${satLink.slug}`}
-                  className="text-indigo-800 hover:text-red-500"
-                >
-                  {satLink.title}
-                </Link>
+                <AnchorListItem
+                  linkParams={{
+                    title: satLink.title,
+                    href: `#${satLink.slug}`,
+                    'aria-label': satAnchor.tooltip[L],
+                  }}
+                  inputAttributes={{
+                    value: satLink.slug,
+                    id: `chb-${satLink.slug}`,
+                    name: satLink.slug,
+                    'aria-label': satCheckBox.tooltip[L],
+                  }}
+                  searchQueryName={EUrlSearchParam.SAT}
+                />
+              </li>
+            ))}
+            {formats.map((format) => (
+              <li key={format.searchQueryName}>
+                <ChannelFormatSliders {...format} />
               </li>
             ))}
           </ul>
+          <Filter
+            placeholder={placeholder[L]}
+            labelTitle={labelTitle[L]}
+            searchQueryTitle={EUrlSearchParam.CHANNEL}
+            resetButton={{
+              ariaLabel: resetAllFiltersButton.ariaLabel[L],
+              content: resetAllFiltersButton.imgStr,
+            }}
+          />
         </nav>
       </Fieldset>
       <StartArticleSection>
-        <DangerHtmlUl wrapperTagName="p" text={START_CONTENT} />
+        <p>{START_CONTENT[LANGUAGE]}</p>
       </StartArticleSection>
-      <SatChannelsTable satChannels={groupedChannelsAllSat} />
+      <Suspense key={searchQueryChannel}>
+        <SatChannelsTable satChannels={groupedChannelsAllSat} />
+      </Suspense>
     </>
   );
 }

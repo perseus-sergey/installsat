@@ -1,9 +1,31 @@
 import { executeQuery } from '@/libs/db/mysqldb';
-import { TSatChannelListModel } from '@/models/channelList.model';
+import { ISatChannelListEmptyModel } from '@/models/channelList.model';
 import { cache } from 'react';
 
-export const getSatChannels = cache(async (channelId = '') => {
-  const sql = `
+export const getSatChannels = cache(
+  async (
+    searchQuery = '',
+    channelId = '',
+    satellites?: string | string[] | undefined,
+    isMPG4 = false,
+    isT2MI = false
+  ) => {
+    let inSatList = '';
+
+    const searchPart = searchQuery
+      ? `AND 	ch.title LIKE "%${searchQuery}%"`
+      : '';
+
+    if (satellites && satellites[0]) {
+      const selectedSats =
+        typeof satellites === 'string' ? satellites : satellites.join('","');
+      inSatList = `AND sat.cpu IN ("${selectedSats}")`;
+    }
+
+    const notMpg4 = isMPG4 ? `AND co.id NOT IN(3,4,6,7)` : '';
+    const notT2mi = isT2MI ? `AND co.id NOT IN(8)` : '';
+
+    const sql = `
   SELECT ch.id, ch.title, ch.cpu, ch.frequency, ch.sat, ch.tema, ch.logo, ch.programma, ch.encryption, ch.biss, ch.description,
   sat.title AS sat_title,
   sat.position AS sat_position,
@@ -29,31 +51,40 @@ export const getSatChannels = cache(async (channelId = '') => {
   WHERE ch.sat ${channelId ? '= ?' : '!= 1'}
   AND  	ch.cat = 4
   AND 	en.id IN(1,2,10)
-  ORDER BY fr.freq, be.polar, ch.title;
+  ${searchPart}
+  ${inSatList}
+  ${notMpg4}
+  ${notT2mi}
+  ORDER BY fr.freq, be.polar, ch.title
   `;
 
-  return await executeQuery<TSatChannelListModel>(sql, [channelId]);
-});
+    return await executeQuery<ISatChannelListEmptyModel>(sql, [channelId]);
+  }
+);
 
 export const getGroupedChannelsAllSat = (
-  satChannels: TSatChannelListModel[][]
-): TSatChannelListModel[][][] => {
-  const grouped: { [sat: number]: { [freq: number]: TSatChannelListModel[] } } =
-    {};
+  satChannels: ISatChannelListEmptyModel[][]
+): ISatChannelListEmptyModel[][][] => {
+  const grouped: {
+    [sat: number]: { [freq: number]: ISatChannelListEmptyModel[] };
+  } = {};
 
   satChannels.forEach((satGroup) => {
     satGroup.forEach((channel) => {
-      if (!grouped[channel.sat]) {
-        grouped[channel.sat] = {};
+      const { sat, freq } = channel;
+      if (!grouped[sat]) {
+        grouped[sat] = {};
       }
-      if (!grouped[channel.sat][channel.freq]) {
-        grouped[channel.sat][channel.freq] = [];
+      if (!grouped[sat][freq]) {
+        grouped[sat][freq] = [];
       }
-      grouped[channel.sat][channel.freq].push(channel);
+      grouped[sat][freq].push(channel);
     });
   });
 
-  return Object.values(grouped)
+  const sortedGroups = Object.values(grouped)
     .map((satGroup) => Object.values(satGroup))
-    .sort((a, b) => a[0][0].sat_grade - b[1][0].sat_grade);
+    .sort((a, b) => a[0][0].sat_grade - b[0][0].sat_grade);
+
+  return sortedGroups;
 };

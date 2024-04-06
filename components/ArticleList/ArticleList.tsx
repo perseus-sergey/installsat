@@ -4,7 +4,7 @@ import ArticleCard from '../ArticleCard/ArticleCard';
 import FillingImg from '../Images/FillingImage';
 import FillingValidImage from '../Images/FillingValidImage';
 import Link from 'next/link';
-import { IImgParams } from '@/models/ui.model';
+import { LANGUAGE, IImgParams } from '@/models/ui.model';
 import { EUrlBaseParam } from '@/models/url.model';
 import { getFormattedDateStr } from '@/libs/utils';
 import DangerHtml from '../DangerHtml/DangerHtml';
@@ -58,7 +58,7 @@ const ArticleList = ({ articleList, articleTitleImg }: IArticleListProps) => (
                   }}
                   defaultImage={h1Image.defaultImg}
                   alternativeImgString={h1Image.alternativeStr}
-                  alt={`${h1Image.getAlt().ua}${title}`}
+                  alt={`${h1Image.getAlt()[LANGUAGE]}${title}`}
                   isBlur
                 />
               }
@@ -68,7 +68,7 @@ const ArticleList = ({ articleList, articleTitleImg }: IArticleListProps) => (
               href={`${ARTICLES.articleList.links.articleLink.path}${cpu}`}
               infoPanelItems={[
                 {
-                  name: themeTitle.ua,
+                  name: themeTitle[LANGUAGE],
                   value: (
                     <Link
                       href={`/${EUrlBaseParam.NEWS_AND_ARTICLES}/${category_cpu}`}
@@ -77,18 +77,18 @@ const ArticleList = ({ articleList, articleTitleImg }: IArticleListProps) => (
                     </Link>
                   ),
                 },
-                { name: viewsTitle.ua, value: view },
-                { name: dateTitle.ua, value: getFormattedDateStr(date) },
-                { name: commentsTitle.ua, value: comment_count },
+                { name: viewsTitle[LANGUAGE], value: view },
+                {
+                  name: dateTitle[LANGUAGE],
+                  value: getFormattedDateStr(date),
+                },
+                { name: commentsTitle[LANGUAGE], value: comment_count },
               ]}
             />
           </li>
         )
       )}
     </ul>
-    <p
-      className={styles.articlesCount}
-    >{`${ARTICLES.articleList.articlesCountCaption.ua}${articleList[0].total_count}`}</p>
   </>
 );
 

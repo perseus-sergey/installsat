@@ -1,4 +1,4 @@
-import { ILang } from './ui.model';
+import { ELanguage, ILang } from './ui.model';
 import { EUrlBaseParam } from './url.model';
 
 type IBreadCrumbs = Map<EUrlBaseParam, ILang>;
@@ -6,52 +6,82 @@ type IBreadCrumbs = Map<EUrlBaseParam, ILang>;
 export const BREAD_SEPARATOR = '჻';
 
 export const MBreadCrumbs: IBreadCrumbs = new Map([
-  [EUrlBaseParam.BASE_PATH, { ua: 'Дім', en: 'Home' }],
+  [EUrlBaseParam.BASE_PATH, { [ELanguage.UA]: 'Дім', [ELanguage.EN]: 'Home' }],
   [
     EUrlBaseParam.TRANSPONDER_NEWS,
-    { ua: 'Транспондерні новини', en: 'Transponder news' },
+    {
+      [ELanguage.UA]: 'Транспондерні новини',
+      [ELanguage.EN]: 'Transponder news',
+    },
   ],
   [
     EUrlBaseParam.SAT_CHANNEL_LIST,
     {
-      ua: 'Список безкоштовних каналів супутників',
-      en: 'List of satellite free channels',
+      [ELanguage.UA]: 'Список безкоштовних каналів супутників',
+      [ELanguage.EN]: 'List of satellite free channels',
     },
   ],
   [
     EUrlBaseParam.PACKAGE_CHANNEL_LIST,
-    { ua: 'Список каналів пакета', en: 'List of package channels' },
+    {
+      [ELanguage.UA]: 'Список каналів пакета',
+      [ELanguage.EN]: 'List of package channels',
+    },
   ],
   [
     EUrlBaseParam.INSTALLATION_OPTIONS,
-    { ua: 'Варіанти встановлення', en: 'Installation options' },
+    {
+      [ELanguage.UA]: 'Варіанти встановлення',
+      [ELanguage.EN]: 'Installation options',
+    },
   ],
-  [EUrlBaseParam.ARTICLE, { ua: 'Статті', en: 'Articles' }],
+  [
+    EUrlBaseParam.ARTICLE,
+    { [ELanguage.UA]: 'Статті', [ELanguage.EN]: 'Articles' },
+  ],
   [
     EUrlBaseParam.SAT_COVERAGE_MAP,
-    { ua: 'Мапа покриття супутника', en: 'Satellite coverage map' },
+    {
+      [ELanguage.UA]: 'Мапа покриття супутника',
+      [ELanguage.EN]: 'Satellite coverage map',
+    },
   ],
   [
     EUrlBaseParam.NEWS_AND_ARTICLES,
-    { ua: 'Новини та статті', en: 'News and articles' },
+    { [ELanguage.UA]: 'Новини та статті', [ELanguage.EN]: 'News and articles' },
   ],
   [
     EUrlBaseParam.CHANNEL_PARAMS,
-    { ua: 'Параметри каналів', en: 'Channel parameters' },
+    {
+      [ELanguage.UA]: 'Параметри каналів',
+      [ELanguage.EN]: 'Channel parameters',
+    },
   ],
   [
     EUrlBaseParam.ONLINE_CHANNEL_LIST,
-    { ua: 'Список онлайн каналів', en: 'Online channel list' },
+    {
+      [ELanguage.UA]: 'Список онлайн каналів',
+      [ELanguage.EN]: 'Online channel list',
+    },
   ],
-  // [EUrlBaseParam.TV_ONLINE, { ua: 'Канали онлайн', en: 'Online channels' }],
+  // [EUrlBaseParam.TV_ONLINE, { [ELanguage.UA]: 'Канали онлайн', [ELanguage.EN]: 'Online channels' }],
   [
     EUrlBaseParam.CHANNELS_TV_PROGRAM,
-    { ua: 'Програма каналів', en: 'Channel program' },
+    { [ELanguage.UA]: 'Програма каналів', [ELanguage.EN]: 'Channel program' },
   ],
-  [EUrlBaseParam.PRODUCT, { ua: 'Товари', en: 'Products' }],
-  [EUrlBaseParam.PRODUCT_LIST, { ua: 'Список товарів', en: 'Product list' }],
+  [
+    EUrlBaseParam.PRODUCT,
+    { [ELanguage.UA]: 'Товари', [ELanguage.EN]: 'Products' },
+  ],
+  [
+    EUrlBaseParam.PRODUCT_LIST,
+    { [ELanguage.UA]: 'Список товарів', [ELanguage.EN]: 'Product list' },
+  ],
   [
     EUrlBaseParam.PRODUCT_CATEGORIES,
-    { ua: 'Категорії товарів', en: 'Product categories' },
+    {
+      [ELanguage.UA]: 'Категорії товарів',
+      [ELanguage.EN]: 'Product categories',
+    },
   ],
 ]);

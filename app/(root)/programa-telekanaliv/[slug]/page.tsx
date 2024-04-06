@@ -16,6 +16,7 @@ import {
 import { getFormattedDateStr } from '@/libs/utils';
 import { META_CHANNEL } from '@/models/channel.model';
 import {
+  LANGUAGE,
   EDBTableTitles,
   TSearchParams,
   defaultMetaData,
@@ -47,7 +48,7 @@ export const generateMetadata = async ({
   params: { slug },
 }: IPageProps): Promise<Metadata> => {
   const sqlResult = await getDBChannel(slug);
-  if (sqlResult instanceof Error) return defaultMetaData.ua;
+  if (sqlResult instanceof Error) return defaultMetaData[LANGUAGE];
 
   const {
     title,
@@ -64,8 +65,8 @@ export const generateMetadata = async ({
   } = sqlResult[0];
   const metaTitle =
     cat_parent_id > 0
-      ? `${titleBefore.ua} ${title} | ${cat_parent_title} | ${cat_title}`
-      : `${titleBefore.ua} ${title} | ${sat_title} ${freq} ${polar} | ${cat_title}`;
+      ? `${titleBefore[LANGUAGE]} ${title} | ${cat_parent_title} | ${cat_title}`
+      : `${titleBefore[LANGUAGE]} ${title} | ${sat_title} ${freq} ${polar} | ${cat_title}`;
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [clearedCanonical, ..._] = canonical
@@ -82,7 +83,7 @@ export const generateMetadata = async ({
   return {
     title: metaTitle,
     description: description || title,
-    keywords: keywordsBefore.ua + description,
+    keywords: keywordsBefore[LANGUAGE] + description,
     alternates: {
       canonical: `${SITE_BASE_URL}/${EUrlBaseParam.CHANNEL_PARAMS}/${addCanonical}`,
     },
@@ -169,7 +170,7 @@ export default async function Page({
     <>
       <article className="article">
         <Title>
-          {`${titleBefore.ua} "${title}"`} on {date}
+          {`${titleBefore[LANGUAGE]} "${title}"`} on {date}
           <FillingValidImage
             image={{
               ...bigLogo,
@@ -177,7 +178,7 @@ export default async function Page({
             }}
             defaultImage={bigLogo.defaultImage}
             alternativeImgString={bigLogo.alternativeImgStr}
-            alt={`${bigLogo.alt.ua} "${title}"`}
+            alt={`${bigLogo.alt[LANGUAGE]} "${title}"`}
             isBlur
           />
         </Title>
@@ -187,7 +188,7 @@ export default async function Page({
         <BottomInfoPanel
           items={[
             {
-              name: packageTitle.ua,
+              name: packageTitle[LANGUAGE],
               value: (
                 <Link
                   href={`/${EUrlBaseParam.PACKAGE_CHANNEL_LIST}/${catLink}`}
@@ -196,15 +197,15 @@ export default async function Page({
                 </Link>
               ),
             },
-            { name: viewsTitle.ua, value: view + 1 },
-            { name: commentsTitle.ua, value: comments.length },
+            { name: viewsTitle[LANGUAGE], value: view + 1 },
+            { name: commentsTitle[LANGUAGE], value: comments.length },
           ]}
         />
       </article>
 
       {similarChannels.length ? (
         <SimilarArticles
-          similarTitle={`${simChannelsBefore.title.ua}"${title}"`}
+          similarTitle={`${simChannelsBefore.title[LANGUAGE]}"${title}"`}
           similarArticlesMapped={similarChannels.map((chan) => (
             <li key={chan.cpu}>
               <SimilarChannel channelTitle={title} chanParams={chan} />
@@ -215,7 +216,7 @@ export default async function Page({
 
       {similarArticles.length ? (
         <SimilarArticles
-          similarTitle={simArticlesBefore.title.ua}
+          similarTitle={simArticlesBefore.title[LANGUAGE]}
           similarArticlesMapped={similarArticles.map((art) => (
             <li key={art.cpu}>
               <Link href={`/${EUrlBaseParam.ARTICLE}/${art.cpu}`}>

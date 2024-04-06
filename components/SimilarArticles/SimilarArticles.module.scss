@@ -2,7 +2,6 @@
   margin: 4px auto;
   border-radius: 10px;
   border: thick inset #cccccc;
-  padding: 1rem 1rem 1rem 3rem;
   width: 100%;
   background: linear-gradient(
     to bottom,
@@ -24,6 +23,7 @@
 
   .list {
     list-style-image: url(/Images/galka_blue.png);
+    padding: 1rem 1rem 1rem 3rem;
     font:
       1.2rem / 1.5 Georgia,
       'Times New Roman',

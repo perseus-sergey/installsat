@@ -2,6 +2,7 @@ import { ISimilarChannel, META_CHANNEL } from '@/models/channel.model';
 import Link from 'next/link';
 import { EUrlBaseParam } from '@/models/url.model';
 import { LANGUAGE } from '@/models/ui.model';
+
 interface ISimilarChannelProps {
   chanParams: ISimilarChannel;
   channelTitle: string;

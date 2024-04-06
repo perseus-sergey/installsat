@@ -3,15 +3,15 @@ import Link from 'next/link';
 import { Title } from '../Title/Title';
 import Image from 'next/image';
 import { EUrlBaseParam } from '@/models/url.model';
-import { ERRORS } from '@/models/ui.model';
+import { LANGUAGE, ERRORS } from '@/models/ui.model';
 
 const NotFoundPage = () => (
   <div className={styles.NotFoundPage} data-testid="NotFoundPage">
     <Title className="text-center text-shadow-lg">
-      {ERRORS.NOT_FOUND_TITLE.ua}
+      {ERRORS.NOT_FOUND_TITLE[LANGUAGE]}
     </Title>
     <p className="text-center font-bold text-xl">
-      {ERRORS.NOT_FOUND_DESCRIPTION.ua}
+      {ERRORS.NOT_FOUND_DESCRIPTION[LANGUAGE]}
     </p>
     <Link href={EUrlBaseParam.BASE_PATH} className={styles.linkWrapper}>
       <Image
@@ -22,7 +22,7 @@ const NotFoundPage = () => (
         height={200}
         priority
       />
-      {ERRORS.NOT_FOUND_ACTION.ua}
+      {ERRORS.NOT_FOUND_ACTION[LANGUAGE]}
     </Link>
   </div>
 );

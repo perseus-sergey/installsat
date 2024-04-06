@@ -5,7 +5,7 @@ import {
   LAST_NEWS_INTERVAL,
   META_TRANS_NEWS_LIST,
 } from '@/models/satDigest.model';
-import { TSearchParams } from '@/models/ui.model';
+import { LANGUAGE, TSearchParams } from '@/models/ui.model';
 import { EUrlSearchParam } from '@/models/url.model';
 import { Suspense } from 'react';
 
@@ -23,7 +23,7 @@ export default function Page({ searchParams }: IProps) {
   return (
     <>
       <article className="article">
-        <Title>{META_TRANS_NEWS_LIST.getH1(intervalDays)}</Title>
+        <Title>{META_TRANS_NEWS_LIST.getH1(intervalDays)[LANGUAGE]}</Title>
         <nav>
           <Suspense>
             <FormDigestInterval searchParams={searchParams} />

@@ -13,52 +13,50 @@ export const WRONG_CAT_IDS = '(2,8,0,11,12,13)';
 export const getChunkOfNews = async (
   quantity: number,
   start = 0,
-  catId?: number
+  catId?: number,
+  searchQuery = ''
 ) => {
   const catValue = catId ? `=${catId}` : `NOT IN ${WRONG_CAT_IDS}`;
+  const searchText = searchQuery ? `LIKE "%${searchQuery}%"` : '!= ""';
 
   const sql = `
-SELECT 
-    U.id,
-    U.cat,
-    U.title,
-    U.cpu,
-    U.description,
-    U.date,
-    U.author,
-    U.logo,
-    U.view,
-    C.comment_count,
-    T.total_count,
-    C2.title AS category_title,
-    C2.cpu AS category_cpu
+  SELECT 
+  U.id,
+  U.cat,
+  U.title,
+  U.cpu,
+  U.description,
+  U.date,
+  U.author,
+  U.logo,
+  U.view,
+  C.comment_count,
+  T.total_count,
+  C2.title AS category_title,
+  C2.cpu AS category_cpu
 FROM 
-    tbl_useful U
+  tbl_useful U
 LEFT JOIN
-    (SELECT 
-         post, 
-         COUNT(id) AS comment_count 
-     FROM 
-         tbl_comments 
-     GROUP BY 
-         post) C
+  (SELECT 
+       post, 
+       COUNT(id) AS comment_count 
+   FROM 
+       tbl_comments 
+   GROUP BY 
+       post) C
 ON 
-    U.id = C.post
-CROSS JOIN
-    (SELECT 
-         COUNT(*) AS total_count 
-     FROM 
-         tbl_useful 
-     WHERE 
-         cat ${catValue}) T
+  U.id = C.post
 LEFT JOIN
-    tbl_categories C2
+  tbl_categories C2
 ON
-    U.cat = C2.id
+  U.cat = C2.id
+CROSS JOIN
+  (SELECT COUNT(id) AS total_count FROM tbl_useful WHERE cat ${catValue} AND (title ${searchText} OR description ${searchText})) T
 WHERE 
-    U.cat ${catValue}
+  U.cat ${catValue}
+  AND (U.title ${searchText} OR U.description ${searchText})
 ORDER BY 
-    U.date DESC, U.id 
+  U.date DESC, U.id 
 LIMIT ?, ?
 `;
 

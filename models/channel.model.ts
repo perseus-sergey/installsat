@@ -1,3 +1,5 @@
+import { ELanguage } from './ui.model';
+
 export interface IChannel {
   id: number;
   title: string;
@@ -48,38 +50,38 @@ export interface ISimilarChannel {
 export const META_CHANNEL = {
   getH1(satTitle: string) {
     return {
-      ua: `Безкоштовні канали з супутника ${satTitle}`,
-      en: `Free satellite channels on ${satTitle}`,
+      [ELanguage.UA]: `Безкоштовні канали з супутника ${satTitle}`,
+      [ELanguage.EN]: `Free satellite channels on ${satTitle}`,
     };
   },
   getTitle() {
     return {
-      ua: 'Список каналів супутника',
-      en: 'List of satellite channels',
+      [ELanguage.UA]: 'Список каналів супутника',
+      [ELanguage.EN]: 'List of satellite channels',
     };
   },
   titleBefore: {
-    ua: `Канал`,
-    en: `Channel`,
+    [ELanguage.UA]: `Канал`,
+    [ELanguage.EN]: `Channel`,
   },
   keywordsBefore: {
-    ua: `Телевізійний канал `,
-    en: `Television channel `,
+    [ELanguage.UA]: `Телевізійний канал `,
+    [ELanguage.EN]: `Television channel `,
   },
   scheduleLinkText: {
     channel: {
-      ua: 'Телепрограма на',
-      en: 'TV Schedule for',
+      [ELanguage.UA]: 'Телепрограма на',
+      [ELanguage.EN]: 'TV Schedule for',
     },
     onlineChannel: {
-      ua: 'Повна телепрограма',
-      en: 'Full TV Schedule',
+      [ELanguage.UA]: 'Повна телепрограма',
+      [ELanguage.EN]: 'Full TV Schedule',
     },
   },
   getOnlineLinkText(channelTitle: string) {
     return {
-      ua: `Канал "${channelTitle}" онлайн`,
-      en: `Channel "${channelTitle}" online`,
+      [ELanguage.UA]: `Канал "${channelTitle}" онлайн`,
+      [ELanguage.EN]: `Channel "${channelTitle}" online`,
     };
   },
   images: {
@@ -96,8 +98,8 @@ export const META_CHANNEL = {
           width: '132px',
         },
         alt: {
-          ua: `Логотип каналу`,
-          en: `Logo of the channel`,
+          [ELanguage.UA]: `Логотип каналу`,
+          [ELanguage.EN]: `Logo of the channel`,
         },
       },
       small: {
@@ -118,8 +120,8 @@ export const META_CHANNEL = {
       width: '96px',
       alternativeImgStr: { title: '📋', fontSize: '6rem' },
       alt: {
-        ua: `Перегляд розкладу телепередач`,
-        en: `View TV schedules`,
+        [ELanguage.UA]: `Перегляд розкладу телепередач`,
+        [ELanguage.EN]: `View TV schedules`,
       },
     },
     onlineLinkImg: {
@@ -128,97 +130,98 @@ export const META_CHANNEL = {
       width: '32px',
       alternativeImgStr: { title: '📺', fontSize: '2rem' },
       alt: {
-        ua: `Перехід до онлайн ТБ сторінки`,
-        en: `Go to the online TV page`,
+        [ELanguage.UA]: `Перехід до онлайн ТБ сторінки`,
+        [ELanguage.EN]: `Go to the online TV page`,
       },
     },
   },
   chanParamsBlock: {
     getParamsTitle(channelTitle: string) {
       return {
-        ua: `Параметри мовлення каналу "${channelTitle}"`,
-        en: `Broadcast options for channel "${channelTitle}"`,
+        [ELanguage.UA]: `Параметри мовлення каналу "${channelTitle}"`,
+        [ELanguage.EN]: `Broadcast options for channel "${channelTitle}"`,
       };
     },
     paramsLanguage: {
-      ua: `Мова мовлення (перекладу) : `,
-      en: `Broadcast (translation) language : `,
+      [ELanguage.UA]: `Мова мовлення (перекладу) : `,
+      [ELanguage.EN]: `Broadcast (translation) language : `,
     },
     paramsFormat: {
-      ua: `Формат мовлення : `,
-      en: `Broadcast format : `,
+      [ELanguage.UA]: `Формат мовлення : `,
+      [ELanguage.EN]: `Broadcast format : `,
     },
     paramsSatellite: {
-      ua: `Супутник : `,
-      en: `Satellite : `,
+      [ELanguage.UA]: `Супутник : `,
+      [ELanguage.EN]: `Satellite : `,
     },
     paramsFrequency: {
-      ua: `Частота : `,
-      en: `Frequency : `,
+      [ELanguage.UA]: `Частота : `,
+      [ELanguage.EN]: `Frequency : `,
     },
     paramsFEC: {
-      ua: `FEC : `,
-      en: `FEC : `,
+      [ELanguage.UA]: `FEC : `,
+      [ELanguage.EN]: `FEC : `,
     },
     paramsEncryption: {
-      ua: `Шифрування : `,
-      en: `Encryption : `,
+      [ELanguage.UA]: `Шифрування : `,
+      [ELanguage.EN]: `Encryption : `,
     },
     getParamsSite(channelTitle: string) {
       return {
-        ua: `Сайт каналу "${channelTitle}"`,
-        en: `Channel website "${channelTitle}"`,
+        [ELanguage.UA]: `Сайт каналу "${channelTitle}"`,
+        [ELanguage.EN]: `Channel website "${channelTitle}"`,
       };
     },
   },
   noteTitle: {
-    ua: 'Примітка',
-    en: 'Note',
+    [ELanguage.UA]: 'Примітка',
+    [ELanguage.EN]: 'Note',
   },
   getResponsibilityText(channelTitle: string) {
     return {
-      ua: `Шановні відвідувачі, ми не є власниками телеканалу «${channelTitle}». Ми не несемо відповідальності за трансльовані передачі та проблеми мовлення каналу.`,
-      en: `Dear visitors, we are not the owners of the «${channelTitle}» channel. We are not responsible for broadcast programs and channel broadcast problems.`,
+      [ELanguage.UA]: `Шановні відвідувачі, ми не є власниками телеканалу «${channelTitle}». Ми не несемо відповідальності за трансльовані передачі та проблеми мовлення каналу.`,
+      [ELanguage.EN]: `Dear visitors, we are not the owners of the «${channelTitle}» channel. We are not responsible for broadcast programs and channel broadcast problems.`,
     };
   },
   infoPanelTitles: {
-    package: { ua: 'Пакет', en: 'Package' },
-    views: { ua: 'Переглядів', en: 'Views' },
-    comments: { ua: 'Коментарів', en: 'Comments' },
+    package: { [ELanguage.UA]: 'Пакет', [ELanguage.EN]: 'Package' },
+    views: { [ELanguage.UA]: 'Переглядів', [ELanguage.EN]: 'Views' },
+    comments: { [ELanguage.UA]: 'Коментарів', [ELanguage.EN]: 'Comments' },
   },
   similar: {
     channels: {
       title: {
-        ua: 'Де дивитись',
-        en: 'Where to watch',
+        [ELanguage.UA]: 'Де дивитись',
+        [ELanguage.EN]: 'Where to watch',
       },
       getOnlineChannelTitle(channelTitle: string) {
         return {
-          ua: `Дивитись канал "${channelTitle}" у прямому ефірі онлайн`,
-          en: `Watch the channel "${channelTitle}" live online`,
+          [ELanguage.UA]: `Дивитись канал "${channelTitle}" у прямому ефірі онлайн`,
+          [ELanguage.EN]: `Watch the channel "${channelTitle}" live online`,
         };
       },
       getSatChannelTitle(satTitle: string, satPosition: number) {
         return {
-          ua: `Супутник: ${satTitle} ${satPosition}`,
-          en: `Satellite: ${satTitle} ${satPosition}`,
+          [ELanguage.UA]: `Супутник: ${satTitle} ${satPosition}`,
+          [ELanguage.EN]: `Satellite: ${satTitle} ${satPosition}`,
+
         };
       },
       getFrequencyTitle(frequency: number) {
         return {
-          ua: `| Частота: ${frequency}`,
-          en: `| Frequency: ${frequency}`,
+          [ELanguage.UA]: `| Частота: ${frequency}`,
+          [ELanguage.EN]: `| Frequency: ${frequency}`,
         };
       },
       packageTitle: {
-        ua: 'Пакет:',
-        en: 'Package:',
+        [ELanguage.UA]: 'Пакет:',
+        [ELanguage.EN]: 'Package:',
       },
     },
     articles: {
       title: {
-        ua: 'Новини каналу:',
-        en: 'Channel news:',
+        [ELanguage.UA]: 'Новини каналу:',
+        [ELanguage.EN]: 'Channel news:',
       },
     },
   },

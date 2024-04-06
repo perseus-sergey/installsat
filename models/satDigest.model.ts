@@ -1,35 +1,81 @@
+import { ELanguage, LANGUAGE } from './ui.model';
+
 export const LAST_NEWS_INTERVAL = 30;
 
 export const META_TRANS_NEWS_LIST = {
   getH1(interval: number) {
-    let addStr = '';
-    if (interval > 180) addStr = `${interval} рік`;
+    let addStr;
+    if (interval > 180)
+      addStr = {
+        [ELanguage.UA]: `${interval} рік`,
+        [ELanguage.EN]: `${interval} year`,
+      };
     else {
       const currDate = new Date();
       let startDate = new Date();
       startDate.setDate(currDate.getDate() - interval);
-      addStr = `останні ${interval} днів`;
-      // addStr = `останні ${interval} днів (з ${getFormattedDateStr(startDate)} по ${getFormattedDateStr(currDate)})`;
+      addStr = {
+        [ELanguage.UA]: `останні ${interval} днів`,
+        [ELanguage.EN]: `last ${interval} days`,
+      };
     }
 
-    return `Транспондерні новини популярних супутників за ${addStr}`;
+    return {
+      [ELanguage.UA]: `Транспондерні новини популярних супутників за ${addStr[LANGUAGE]}`,
+      [ELanguage.EN]: `Transponder news of popular satellites for ${addStr[LANGUAGE]}`,
+    };
   },
   getTitle() {
-    return 'Транспондері новини. Супутникові новини.';
+    return {
+      [ELanguage.UA]: 'Транспондері новини. Супутникові новини.',
+      [ELanguage.EN]: 'Transponder news. Satellite news.',
+    };
   },
   getKeywords() {
-    return `новини супутникового телебачення станом на ${new Date().toLocaleDateString('en-GB')}, супутникові транспондери частоти канали пакета без абонплати ефірні`;
+    return {
+      [ELanguage.EN]: `satellite television news as of ${new Date().toLocaleDateString('en-GB')}, satellite frequency transponders, channels of the package without a subscription fee, broadcast'`,
+      [ELanguage.UA]: `новини супутникового телебачення станом на ${new Date().toLocaleDateString('en-GB')}, супутникові транспондери частоти канали пакета без абонплати ефірні`,
+    };
   },
   getDescription() {
-    return 'Транспондерні новини популярних супутників за обраний період часу';
+    return {
+      [ELanguage.EN]:
+        'Transponder news of popular satellites for the selected time period',
+      [ELanguage.UA]:
+        'Транспондерні новини популярних супутників за обраний період часу',
+    };
   },
   h2start: {
-    en: 'News of the satellite ',
-    ua: 'Новини супутника ',
+    [ELanguage.EN]: 'News of the satellite ',
+    [ELanguage.UA]: 'Новини супутника ',
   },
   fieldsetTitle: {
-    ua: 'Виберіть супутники та проміжок часу',
-    en: 'Select satellites and time slot',
+    [ELanguage.UA]: 'Виберіть супутники та проміжок часу',
+    [ELanguage.EN]: 'Select satellites and time slot',
+  },
+  satSelect: {
+    defaultLabel: {
+      [ELanguage.EN]: '--= All Satellites =--',
+      [ELanguage.UA]: '--= Всі Супутники =--',
+    },
+    westDirectionLabel: {
+      [ELanguage.EN]: 'West direction',
+      [ELanguage.UA]: 'Західний напрямок',
+    },
+    eastDirectionLabel: {
+      [ELanguage.EN]: 'East direction',
+      [ELanguage.UA]: 'Східний напрямок',
+    },
+  },
+  submitButton: {
+    title: {
+      [ELanguage.UA]: 'Підтвердити',
+      [ELanguage.EN]: 'Confirm',
+    },
+    ariaLabel: {
+      [ELanguage.UA]: 'Підтвердити зміни',
+      [ELanguage.EN]: 'Confirm changes',
+    },
   },
   images: {
     satLogo: {
@@ -43,8 +89,8 @@ export const META_TRANS_NEWS_LIST = {
       },
       alternativeStr: { title: '🌏', fontSize: '4rem' },
       alt: {
-        ua: `Логотип супутника `,
-        en: `Satellite logo `,
+        [ELanguage.UA]: `Логотип супутника `,
+        [ELanguage.EN]: `Satellite logo `,
       },
     },
   },
@@ -52,20 +98,28 @@ export const META_TRANS_NEWS_LIST = {
 
 export const META_TRANS_NEWS_SINGLE = {
   getH1() {
-    // return `Транспондерні новини за ${dateStr}`;
     return {
-      ua: 'Транспондерні новини за ',
-      en: 'Transponder news for ',
+      [ELanguage.UA]: 'Транспондерні новини за ',
+      [ELanguage.EN]: 'Transponder news for ',
     };
   },
   getTitle(dateStr: string) {
-    return `Installsat - транспондерні новини за ${dateStr}`;
+    return {
+      [ELanguage.UA]: `Installsat - транспондерні новини за ${dateStr}`,
+      [ELanguage.EN]: `Installsat - Transponder news for ${dateStr}`,
+    };
   },
   getKeywords(dateStr: string) {
-    return `транспондерні супутникові новини ${dateStr}`;
+    return {
+      [ELanguage.UA]: `транспондерні супутникові новини ${dateStr}`,
+      [ELanguage.EN]: `transponder satellite news ${dateStr}`,
+    };
   },
   getDescription(dateStr: string) {
-    return `Супутникові новини за ${dateStr}`;
+    return {
+      [ELanguage.UA]: `Супутникові новини за ${dateStr}`,
+      [ELanguage.EN]: `Satellite news for ${dateStr}`,
+    };
   },
 };
 
@@ -86,12 +140,12 @@ export const rawSatDigest = {
 
 export type TSatDigest = typeof rawSatDigest;
 
-export interface StateOption {
+export interface IStateOption {
   readonly value: number;
   readonly label: string;
 }
 
-export const digestIntervals: readonly StateOption[] = [
+export const digestIntervals: readonly IStateOption[] = [
   { value: 7, label: 'Останні 7 днів' },
   { value: 30, label: 'Останні 30 днів' },
   { value: 90, label: 'Останні 90 днів' },

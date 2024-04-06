@@ -26,8 +26,7 @@
 //   params: { slug },
 // }: IChannelLayoutParams): Promise<Metadata> => {
 //   const sqlResult = await getDBChannel(slug);
-//   if (sqlResult instanceof Error) return defaultMetaData.ua;
-
+//   if (sqlResult instanceof Error) return defaultMetaData[LANGUAGE];
 //   const {
 //     title,
 //     description,
@@ -43,8 +42,8 @@
 //   } = sqlResult[0];
 //   const metaTitle =
 //     cat_parent_id > 0
-//       ? `${META_CHANNEL.titleBefore.ua}${title} | ${cat_parent_title} | ${cat_title}`
-//       : `${META_CHANNEL.titleBefore.ua}${title} | ${sat_title} ${freq} ${polar} | ${cat_title}`;
+//       ? `${META_CHANNEL.titleBefore[LANGUAGE]}${title} | ${cat_parent_title} | ${cat_title}`
+//       : `${META_CHANNEL.titleBefore[LANGUAGE]}${title} | ${sat_title} ${freq} ${polar} | ${cat_title}`;
 
 //   // eslint-disable-next-line @typescript-eslint/no-unused-vars
 //   const [clearedCanonical, ..._] = canonical
@@ -61,7 +60,7 @@
 //   return {
 //     title: metaTitle,
 //     description: description || title,
-//     keywords: META_CHANNEL.keywordsBefore.ua + description,
+//     keywords: META_CHANNEL.keywordsBefore[LANGUAGE] + description,
 //     alternates: {
 //       canonical: `${SITE_BASE_URL}/${EUrlBaseParam.CHANNEL_PARAMS}/${addCanonical}`,
 //     },
@@ -114,7 +113,7 @@
 
 //       {similarChannels.length ? (
 //         <SimilarArticles
-//           similarTitle={`${META_CHANNEL.similarArticlesTitle.ua}"${title}"`}
+//           similarTitle={`${META_CHANNEL.similarArticlesTitle[LANGUAGE]}"${title}"`}
 //           similarArticlesMapped={similarChannels.map((chan) => (
 //             <li key={chan.cpu}>
 //               <SimilarChannel channelTitle={title} chanParams={chan} />

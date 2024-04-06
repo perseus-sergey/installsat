@@ -1,4 +1,4 @@
-import { ILang } from './ui.model';
+import { ELanguage, ILang } from './ui.model';
 import { EUrlBaseParam } from './url.model';
 
 interface IFooterMenu {
@@ -8,9 +8,9 @@ interface IFooterMenu {
 
 export const COPYRIGHT_SECTION = {
   title: {
-    ua: `Copyright © 2009 - ${new Date().getFullYear()} Copyright in
+    [ELanguage.UA]: `Copyright © 2009 - ${new Date().getFullYear()} Copyright in
     Installsat. В разі копіюванні контенту, посилання на сайт є обов'язковим.`,
-    en: `Copyright © 2009 - ${new Date().getFullYear()} Copyright in
+    [ELanguage.EN]: `Copyright © 2009 - ${new Date().getFullYear()} Copyright in
     Installsat. The link to the site is required when copying content.`,
   },
 };
@@ -20,44 +20,47 @@ export const MENU_SEPARATOR = '▪';
 export const footerMenuList: IFooterMenu[] = [
   {
     title: {
-      ua: 'Як встановити супутникову антену',
-      en: 'How to install satellite antenna',
+      [ELanguage.UA]: 'Як встановити супутникову антену',
+      [ELanguage.EN]: 'How to install satellite antenna',
     },
     href: `/${EUrlBaseParam.ARTICLE}/samostoyatelnaya-ustanovka-sputnikovoi-antenni`,
   },
   {
     title: {
-      ua: 'Як визначити напрямок антени',
-      en: 'How to determine the direction of the antenna',
+      [ELanguage.UA]: 'Як визначити напрямок антени',
+      [ELanguage.EN]: 'How to determine the direction of the antenna',
     },
     href: `/${EUrlBaseParam.ARTICLE}/napravlenie-antenny-po-karte`,
   },
   {
     title: {
-      ua: 'Як налаштувати супутниковий приймач',
-      en: 'How to set up satellite receiver',
+      [ELanguage.UA]: 'Як налаштувати супутниковий приймач',
+      [ELanguage.EN]: 'How to set up satellite receiver',
     },
     href: `/${EUrlBaseParam.ARTICLE}/kak-sviazati-tuner-s-antennoi`,
   },
   {
-    title: { ua: 'Супутникове обладнання', en: 'Satellite equipment' },
+    title: {
+      [ELanguage.UA]: 'Супутникове обладнання',
+      [ELanguage.EN]: 'Satellite equipment',
+    },
     href: `${EUrlBaseParam.PRODUCT_CATEGORIES}`,
     // href: '/novosti-i-statji/satellite_equipments',
   },
   {
     title: {
-      ua: 'Теле-канали без щомісячної плати',
-      en: 'TV channels without a monthly fee',
+      [ELanguage.UA]: 'Теле-канали без щомісячної плати',
+      [ELanguage.EN]: 'TV channels without a monthly fee',
     },
     href: `${EUrlBaseParam.PACKAGE_CHANNEL_LIST}/bez-abonplati`,
   },
   {
-    title: { ua: 'ТБ Онлайн', en: 'Online TV' },
+    title: { [ELanguage.UA]: 'ТБ Онлайн', [ELanguage.EN]: 'Online TV' },
     href: `${EUrlBaseParam.ONLINE_CHANNEL_LIST}`,
     // href: `/spisok-online-kanalov/vse-tv`,
   },
   {
-    title: { ua: 'Biss Ключі', en: 'Biss Keys' },
+    title: { [ELanguage.UA]: 'Biss Ключі', [ELanguage.EN]: 'Biss Keys' },
     href: `/${EUrlBaseParam.ARTICLE}/key-biss`,
   },
 ];

@@ -1,8 +1,15 @@
 export const IS_PRODUCTION = true;
 
+export enum ELanguage {
+  UA = 'ua',
+  EN = 'en',
+}
+
+export const LANGUAGE = ELanguage.UA;
+
 export interface ILang {
-  ua: string;
-  en: string;
+  [ELanguage.UA]: string;
+  [ELanguage.EN]: string;
 }
 
 export type TSearchParams = { [key: string]: string | string[] | undefined };
@@ -21,29 +28,32 @@ export const SIDE_BAR_CLOSE_BTN = '⚔';
 
 export const ERRORS = {
   ERROR_EMPTY_DATA: {
-    ua: 'Не вдалося вилучити дані',
-    en: 'Failed to retrieve data',
+    [ELanguage.UA]: 'На жаль, запит повернув порожній результат',
+    [ELanguage.EN]: 'Unfortunately, the query returned an empty result',
   },
   ERROR_PAGE_TITLE: {
-    ua: '⚠ Не вдалося завантажити контент. Будь ласка, спробуйте пізніше.',
-    en: '⚠ Failed to load content. Please try again later.',
+    [ELanguage.UA]:
+      '⚠ Не вдалося завантажити контент. Будь ласка, спробуйте пізніше.',
+    [ELanguage.EN]: '⚠ Failed to load content. Please try again later.',
   },
   NOT_FOUND_TITLE: {
-    ua: 'Сторінку не знайдено.',
-    en: 'Page not found.',
+    [ELanguage.UA]: 'Сторінку не знайдено.',
+    [ELanguage.EN]: 'Page not found.',
   },
   NOT_FOUND_DESCRIPTION: {
-    ua: 'На жаль, зазначену сторінку не знайдено. Можливо, вона була видалена або переміщена.',
-    en: 'Unfortunately, the specified page was not found. It may have been deleted or moved.',
+    [ELanguage.UA]:
+      'На жаль, зазначену сторінку не знайдено. Можливо, вона була видалена або переміщена.',
+    [ELanguage.EN]:
+      'Unfortunately, the specified page was not found. It may have been deleted or moved.',
   },
   NOT_FOUND_ACTION: {
-    ua: 'Перейти на головну сторінку.',
-    en: 'Go to the main page.',
+    [ELanguage.UA]: 'Перейти на головну сторінку.',
+    [ELanguage.EN]: 'Go to the main page.',
   },
   EMPTY_DATE_NEWS_PAGE: {
     title: {
-      ua: 'Немає новин за вказаний період',
-      en: 'There are no news for the specified period',
+      [ELanguage.UA]: 'Немає новин за вказаний період',
+      [ELanguage.EN]: 'There are no news for the specified period',
     },
     img: {
       src: '/Images/empty_page.png',
@@ -55,14 +65,14 @@ export const ERRORS = {
 };
 
 export const defaultMetaData = {
-  ua: {
+  [ELanguage.UA]: {
     title: 'Сайт про цифрове телебачення',
     description:
       'Статті, новини, списки телеканалів в пакетах провайдерів цифрового телебачення. Програма телепередач',
     keywords:
       'Статті, новини, списки телеканалів, провайдери, цифрове телебачення, Програма телепередач, бісс ключі, мовлення',
   },
-  en: {
+  [ELanguage.EN]: {
     title: 'Site about digital television',
     description:
       'Articles, news, lists of TV channels in packages of digital television providers. TV program',
@@ -78,8 +88,8 @@ export const defaultMetaData = {
 
 export const SIMILAR_ARTICLES = {
   title: {
-    en: 'Similar articles',
-    ua: 'Схожі статті',
+    [ELanguage.EN]: 'Similar articles',
+    [ELanguage.UA]: 'Схожі статті',
   },
 };
 

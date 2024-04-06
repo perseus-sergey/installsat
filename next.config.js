@@ -78,6 +78,11 @@ const nextConfig = {
         permanent: true,
       },
       {
+        source: '/spysok-kanaliv-paketu/bez-abonplati',
+        destination: '/spysok-kanaliv-suputnyka',
+        permanent: true,
+      },
+      {
         source: '/spisok-kanalov-paketa/bez-abonplati/light',
         destination: '/spysok-kanaliv-suputnyka',
         permanent: true,

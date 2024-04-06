@@ -1,20 +1,12 @@
 import { TGroupedNews } from '@/components/SatNews/SatNews';
 import { executeQuery } from '@/libs/db/mysqldb';
 import { IGroupedSatelliteOption, TSatModel } from '@/models/tblSat.model';
-import { LAST_NEWS_INTERVAL, TSatDigest } from '@/models/satDigest.model';
-
-// export const singleDaySql = `
-// SELECT d.date, d.text, d.id,
-// 	sat.parent AS satPar,
-// 	sat.title AS satTitle,
-// 	sat.logo AS satLogo,
-// 	sat.grade AS satGrade,
-// 	sat.position AS satPosition
-// 	FROM tbl_digest AS d
-// 	LEFT JOIN tbl_chan_sat AS sat ON d.sat = sat.id
-// 	WHERE date = ?
-// 	ORDER BY satGrade, satTitle
-// `;
+import {
+  LAST_NEWS_INTERVAL,
+  META_TRANS_NEWS_LIST,
+  TSatDigest,
+} from '@/models/satDigest.model';
+import { LANGUAGE } from '@/models/ui.model';
 
 export const getSatDigestNews = async (
   satellites?: string | string[] | undefined,
@@ -22,12 +14,13 @@ export const getSatDigestNews = async (
 ) => {
   let orderBy = 'ORDER BY d.date DESC, satGrade, satTitle';
   let tblName = 'tbl_digest';
-  let where = '';
-  let inSatList = `WHERE d.date >= CURDATE() - INTERVAL ${LAST_NEWS_INTERVAL} DAY`;
+  let where = `WHERE date >= CURDATE() - INTERVAL ${LAST_NEWS_INTERVAL} DAY`;
+  let inSatList = '';
 
   if (timeInterval) {
     orderBy = 'ORDER BY satGrade, satTitle, d.date DESC';
     if (timeInterval > 180) {
+      where = '';
       if (timeInterval !== new Date().getFullYear())
         tblName += `_${timeInterval}`;
     } else {
@@ -38,7 +31,7 @@ export const getSatDigestNews = async (
   if (satellites && satellites[0]) {
     const selectedSats =
       typeof satellites === 'string' ? satellites : satellites.join('","');
-    inSatList = `AND sat.grade IN ("${selectedSats}")`;
+    inSatList = `${timeInterval > 180 ? 'WHERE' : 'AND'} sat.grade IN ("${selectedSats}")`;
   }
 
   const sql = `
@@ -58,19 +51,37 @@ export const getSatDigestNews = async (
   return await executeQuery<TSatDigest>(sql, []);
 };
 
-export const satSql = `
-  SELECT title, id, position, grade
-  FROM tbl_chan_sat
-  WHERE title!=''
-  ORDER BY grade
-`;
+export const getGroupedSatelliteOptions = ([
+  eastSats,
+  westSats,
+]: TSatModel[][]): readonly IGroupedSatelliteOption[] => [
+  {
+    label: META_TRANS_NEWS_LIST.satSelect.defaultLabel[LANGUAGE],
+    options: [
+      {
+        value: '',
+        label: META_TRANS_NEWS_LIST.satSelect.defaultLabel[LANGUAGE],
+      },
+    ],
+  },
+  {
+    label: META_TRANS_NEWS_LIST.satSelect.westDirectionLabel[LANGUAGE],
+    options: westSats.map((sat) => ({
+      value: sat.grade,
+      label: `${sat.position} ..... ${sat.title}`,
+    })),
+  },
+  {
+    label: META_TRANS_NEWS_LIST.satSelect.eastDirectionLabel[LANGUAGE],
+    options: eastSats.map((sat) => ({
+      value: sat.grade,
+      label: `${sat.position} ..... ${sat.title}`,
+    })),
+  },
+];
 
-export const getSatsForForm = async () => {
-  const satResult = await executeQuery<TSatModel>(satSql);
-
-  if (satResult instanceof Error) return satResult;
-
-  return satResult.reduce(
+export const splitSatellitesByDirection = (satellites: TSatModel[]) =>
+  satellites.reduce(
     (acc: TSatModel[][], curr) => {
       curr.grade > 0 ? acc[0].push(curr) : acc[1].push(curr);
 
@@ -78,6 +89,18 @@ export const getSatsForForm = async () => {
     },
     [[], []]
   );
+
+export const getSatsForForm = async () => {
+  const satResult = await executeQuery<TSatModel>(`
+  SELECT title, id, position, grade
+  FROM tbl_chan_sat
+  WHERE title!=''
+  ORDER BY grade
+`);
+
+  return satResult instanceof Error
+    ? satResult
+    : getGroupedSatelliteOptions(splitSatellitesByDirection(satResult));
 };
 
 export const getTransNewsForSingleDay = async (
@@ -147,32 +170,3 @@ export const setGroupedNewsBySatMap = (news: TSatDigest[]): TGroupedNews =>
 
 export const getDailyNews = (newsArray: TSatDigest[]) =>
   newsArray.reduce((acc, curr) => curr.text + acc, '');
-
-export const getGroupedSatelliteOptions = ([
-  eastSats,
-  westSats,
-]: TSatModel[][]): readonly IGroupedSatelliteOption[] => [
-  {
-    label: '--= Всі Супутники =--',
-    options: [
-      {
-        value: '',
-        label: '--= Всі Супутники =--',
-      },
-    ],
-  },
-  {
-    label: 'Західний напрямок',
-    options: westSats.map((sat) => ({
-      value: sat.grade,
-      label: `${sat.position} ..... ${sat.title}`,
-    })),
-  },
-  {
-    label: 'Східний напрямок',
-    options: eastSats.map((sat) => ({
-      value: sat.grade,
-      label: `${sat.position} ..... ${sat.title}`,
-    })),
-  },
-];

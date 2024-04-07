@@ -43,6 +43,16 @@ const nextConfig = {
         permanent: true,
       },
       {
+        source: '/statja/napravlenie-antenny-po-karte',
+        destination: '/satellite-finder',
+        permanent: true,
+      },
+      {
+        source: '/stattia/napravlenie-antenny-po-karte',
+        destination: '/satellite-finder',
+        permanent: true,
+      },
+      {
         source: '/novosti-i-statji/channel_list',
         destination: '/spysok-kanaliv-paketu',
         permanent: true,

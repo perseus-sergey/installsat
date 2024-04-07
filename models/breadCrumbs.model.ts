@@ -5,8 +5,14 @@ type IBreadCrumbs = Map<EUrlBaseParam, ILang>;
 
 export const BREAD_SEPARATOR = '჻';
 
+export const FIRST_ELEMENT_SIZE = '1.1rem';
+
 export const MBreadCrumbs: IBreadCrumbs = new Map([
-  [EUrlBaseParam.BASE_PATH, { [ELanguage.UA]: 'Дім', [ELanguage.EN]: 'Home' }],
+  [
+    EUrlBaseParam.BASE_PATH,
+    { [ELanguage.UA]: 'Старт', [ELanguage.EN]: 'Start' },
+  ],
+  // [EUrlBaseParam.BASE_PATH, { [ELanguage.UA]: '📡', [ELanguage.EN]: '📡' }],
   [
     EUrlBaseParam.TRANSPONDER_NEWS,
     {

@@ -15,13 +15,13 @@ export const initSat = {
 export type TSatModel = typeof initSat;
 
 export interface ISatelliteOption {
-  readonly value: number | string;
-  readonly label: string;
-  readonly isFixed?: boolean;
-  readonly isDisabled?: boolean;
+  value: number | string;
+  label: string;
+  isFixed?: boolean;
+  isDisabled?: boolean;
 }
 
 export interface IGroupedSatelliteOption {
-  readonly label: string;
-  readonly options: readonly ISatelliteOption[];
+  label: string;
+  options: ISatelliteOption[];
 }

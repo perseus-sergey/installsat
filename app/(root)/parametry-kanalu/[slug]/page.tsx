@@ -16,7 +16,6 @@ import {
 } from '@/controllers/articles.controller';
 import {
   getDBChannel,
-  getDBChannelSlugList,
   getSimilarChannels,
 } from '@/controllers/channel.controller';
 import { getFormattedDateStr } from '@/libs/utils';
@@ -29,6 +28,7 @@ import {
 } from '@/models/url.model';
 import { Metadata } from 'next';
 import Link from 'next/link';
+import { notFound } from 'next/navigation';
 
 const {
   images: {
@@ -56,7 +56,8 @@ export const generateMetadata = async ({
   params: { slug },
 }: IChannelProps): Promise<Metadata> => {
   const sqlResult = await getDBChannel(slug);
-  if (sqlResult instanceof Error) return defaultMetaData[LANGUAGE];
+  if (sqlResult instanceof Error || !sqlResult.length)
+    return defaultMetaData[LANGUAGE];
 
   const {
     title,
@@ -105,24 +106,12 @@ export const generateMetadata = async ({
   };
 };
 
-export async function generateStaticParams(): Promise<
-  {
-    slug: string;
-  }[]
-> {
-  const channelSlugList = await getDBChannelSlugList();
-
-  if (channelSlugList instanceof Error) return [{ slug: '' }];
-
-  return channelSlugList.map((channel) => ({ slug: channel.cpu }));
-}
-
-export const dynamicParams = false;
-
 export default async function Page({ params: { slug } }: IChannelProps) {
   const sqlResult = await getDBChannel(slug);
+
   if (sqlResult instanceof Error)
     return <EmptyData description={sqlResult.message} />;
+  if (!sqlResult.length) notFound();
 
   const {
     id,

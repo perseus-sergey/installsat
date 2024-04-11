@@ -5,6 +5,8 @@
 ## Tools:
 
 - [VPS Hostinger](https://www.hostinger.com/)
+- [GIT](https://github.com/perseus-sergey)
+  - GitHub Actions
 - [Next.js](https://nextjs.org/)
 - [TypeScript](https://www.typescriptlang.org/)
 - [MySQL2](https://sidorares.github.io/node-mysql2/docs)

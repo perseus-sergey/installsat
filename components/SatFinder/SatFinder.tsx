@@ -100,7 +100,7 @@ const SatFinder = ({
     urlSePar.delete(EUrlSearchParam.LONGITUDE);
     urlSePar.append(EUrlSearchParam.LATITUDE, `${lat}`);
     urlSePar.append(EUrlSearchParam.LONGITUDE, `${lng}`);
-    replace(`${pathname}?${urlSePar.toString()}`);
+    replace(`${pathname}?${urlSePar.toString()}`, { scroll: false });
   };
 
   const handleSelect = (selected: MultiValue<ISatelliteOption>) => {
@@ -117,7 +117,7 @@ const SatFinder = ({
     });
     setSatGradeList(gradeList);
 
-    replace(`${pathname}?${urlSePar.toString()}`);
+    replace(`${pathname}?${urlSePar.toString()}`, { scroll: false });
   };
 
   const formAction = async (formData: FormData) => {
@@ -187,10 +187,8 @@ const SatFinder = ({
               {submitButton.title[LANGUAGE]}
             </BaseButton>
           </div>
-          {/* </Fieldset> */}
         </form>
         {groupedSats.length > 0 ? (
-          // <Fieldset legendText={select.[LANGUAGE]}>
           <MySelect
             selectName={ESelectType.SELECT_SATS}
             isMulti

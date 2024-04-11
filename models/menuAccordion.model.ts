@@ -32,6 +32,23 @@ export const MENU_ACCORDION: { [key: string]: IAccordionItemOptions } = {
     },
     titleHref: `/${EUrlBaseParam.ARTICLE}/sputnikovoe-televidenie`,
   },
+  SAT_FINDER: {
+    name: 'SAT_FINDER',
+    img: {
+      src: '/Images/accordion/compass.png',
+      width: 32,
+      height: 32,
+      alt: {
+        [ELanguage.EN]: 'Satellite Finder',
+        [ELanguage.UA]: 'Пошук супутників',
+      },
+    },
+    title: {
+      [ELanguage.UA]: 'Пошук супутників',
+      [ELanguage.EN]: 'Satellite Finder',
+    },
+    titleHref: EUrlBaseParam.SAT_FINDER,
+  },
   INSTALLATIONS: {
     name: 'INSTALLATIONS',
     img: {

@@ -1,6 +1,10 @@
 import { TGroupedNews } from '@/components/SatNews/SatNews';
 import { executeQuery } from '@/libs/db/mysqldb';
-import { IGroupedSatelliteOption, TSatModel } from '@/models/tblSat.model';
+import {
+  IGroupedSatelliteOption,
+  ISatelliteOption,
+  TSatModel,
+} from '@/models/tblSat.model';
 import {
   LAST_NEWS_INTERVAL,
   META_TRANS_NEWS_LIST,
@@ -51,34 +55,40 @@ export const getSatDigestNews = async (
   return await executeQuery<TSatDigest>(sql, []);
 };
 
-export const getGroupedSatelliteOptions = ([
-  eastSats,
-  westSats,
-]: TSatModel[][]): readonly IGroupedSatelliteOption[] => [
-  {
-    label: META_TRANS_NEWS_LIST.satSelect.defaultLabel[LANGUAGE],
-    options: [
-      {
-        value: '',
-        label: META_TRANS_NEWS_LIST.satSelect.defaultLabel[LANGUAGE],
-      },
-    ],
-  },
-  {
-    label: META_TRANS_NEWS_LIST.satSelect.westDirectionLabel[LANGUAGE],
-    options: westSats.map((sat) => ({
+export const getGroupedSatelliteOptions = (
+  [eastSats, westSats]: TSatModel[][],
+  isDefaultValue = true
+): IGroupedSatelliteOption[] => {
+  const language = LANGUAGE;
+  const { westDirectionLabel, eastDirectionLabel, defaultLabel } =
+    META_TRANS_NEWS_LIST.select.satSelect;
+
+  const mapToOption = (sats: TSatModel[]): ISatelliteOption[] =>
+    sats.map((sat) => ({
       value: sat.grade,
       label: `${sat.position} ..... ${sat.title}`,
-    })),
-  },
-  {
-    label: META_TRANS_NEWS_LIST.satSelect.eastDirectionLabel[LANGUAGE],
-    options: eastSats.map((sat) => ({
-      value: sat.grade,
-      label: `${sat.position} ..... ${sat.title}`,
-    })),
-  },
-];
+    }));
+
+  const options: IGroupedSatelliteOption[] = [
+    {
+      label: westDirectionLabel[language],
+      options: mapToOption(westSats),
+    },
+    {
+      label: eastDirectionLabel[language],
+      options: mapToOption(eastSats),
+    },
+  ];
+
+  if (isDefaultValue) {
+    options.unshift({
+      label: defaultLabel[language],
+      options: [{ value: '', label: defaultLabel[language] }],
+    });
+  }
+
+  return options;
+};
 
 export const splitSatellitesByDirection = (satellites: TSatModel[]) =>
   satellites.reduce(
@@ -90,7 +100,8 @@ export const splitSatellitesByDirection = (satellites: TSatModel[]) =>
     [[], []]
   );
 
-export const getSatsForForm = async () => {
+//TODO: check the same function
+export const getSatsForForm = async (isDefaultValue = true) => {
   const satResult = await executeQuery<TSatModel>(`
   SELECT title, id, position, grade
   FROM tbl_chan_sat
@@ -100,7 +111,10 @@ export const getSatsForForm = async () => {
 
   return satResult instanceof Error
     ? satResult
-    : getGroupedSatelliteOptions(splitSatellitesByDirection(satResult));
+    : getGroupedSatelliteOptions(
+        splitSatellitesByDirection(satResult),
+        isDefaultValue
+      );
 };
 
 export const getTransNewsForSingleDay = async (

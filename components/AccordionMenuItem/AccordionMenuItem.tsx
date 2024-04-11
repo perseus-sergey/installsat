@@ -2,9 +2,9 @@ import { ILang } from '@/models/ui.model';
 import styles from '../Accordion/Accordion.module.scss';
 
 import { ReactNode } from 'react';
-import Image from 'next/image';
 import Link from 'next/link';
 import { IAccordionItemOptions } from '@/models/menuAccordion.model';
+import FillingImg from '../Images/FillingImage';
 
 interface IAccordionMenuItem {
   language: keyof ILang;
@@ -34,12 +34,11 @@ export const AccordionMenuItem = ({
         >
           <div className={styles.titleWrapper}>
             {img.src && (
-              <Image
-                width={0}
-                height={0}
+              <FillingImg
+                width={`${img.width}px`}
+                height={`${img.width}px`}
                 src={img.src}
                 alt={img.alt[language] || ''}
-                style={{ width: `${img.width}px`, height: 'auto' }}
               />
             )}
             {title[language]}
@@ -56,12 +55,11 @@ export const AccordionMenuItem = ({
     <li className={styles.accordionItem}>
       <Link className={styles.titleWrapper} href={titleHref || '#'}>
         {img.src && (
-          <Image
-            width={0}
-            height={0}
+          <FillingImg
+            width={`${img.width}px`}
+            height={`${img.width}px`}
             src={img.src}
             alt={img.alt[language] || ''}
-            style={{ width: `${img.width}px`, height: 'auto' }}
           />
         )}
         {title[language]}

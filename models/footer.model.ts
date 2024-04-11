@@ -30,7 +30,7 @@ export const footerMenuList: IFooterMenu[] = [
       [ELanguage.UA]: 'Як визначити напрямок антени',
       [ELanguage.EN]: 'How to determine the direction of the antenna',
     },
-    href: `/${EUrlBaseParam.ARTICLE}/napravlenie-antenny-po-karte`,
+    href: `/${EUrlBaseParam.SAT_FINDER}`,
   },
   {
     title: {
@@ -44,7 +44,7 @@ export const footerMenuList: IFooterMenu[] = [
       [ELanguage.UA]: 'Супутникове обладнання',
       [ELanguage.EN]: 'Satellite equipment',
     },
-    href: `${EUrlBaseParam.PRODUCT_CATEGORIES}`,
+    href: `/${EUrlBaseParam.PRODUCT_CATEGORIES}`,
     // href: '/novosti-i-statji/satellite_equipments',
   },
   {
@@ -52,11 +52,11 @@ export const footerMenuList: IFooterMenu[] = [
       [ELanguage.UA]: 'Теле-канали без щомісячної плати',
       [ELanguage.EN]: 'TV channels without a monthly fee',
     },
-    href: `${EUrlBaseParam.PACKAGE_CHANNEL_LIST}/bez-abonplati`,
+    href: `/${EUrlBaseParam.SAT_CHANNEL_LIST}`,
   },
   {
     title: { [ELanguage.UA]: 'ТБ Онлайн', [ELanguage.EN]: 'Online TV' },
-    href: `${EUrlBaseParam.ONLINE_CHANNEL_LIST}`,
+    href: `/${EUrlBaseParam.ONLINE_CHANNEL_LIST}`,
     // href: `/spisok-online-kanalov/vse-tv`,
   },
   {

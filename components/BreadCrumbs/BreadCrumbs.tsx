@@ -5,7 +5,11 @@ import styles from './BreadCrumbs.module.scss';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { capitalizedWord } from '@/libs/utils';
-import { BREAD_SEPARATOR, MBreadCrumbs } from '@/models/breadCrumbs.model';
+import {
+  BREAD_SEPARATOR,
+  FIRST_ELEMENT_SIZE,
+  MBreadCrumbs,
+} from '@/models/breadCrumbs.model';
 import { EUrlBaseParam } from '@/models/url.model';
 import { LANGUAGE, ILang } from '@/models/ui.model';
 
@@ -63,7 +67,12 @@ const BreadCrumb = ({
     >
       <ol className={styles.container}>
         <li className={`${styles.item} ${styles.firstItem}`}>
-          <Link href={EUrlBaseParam.BASE_PATH}>{homeElement}</Link>
+          <Link
+            href={EUrlBaseParam.BASE_PATH}
+            style={{ fontSize: FIRST_ELEMENT_SIZE }}
+          >
+            {homeElement}
+          </Link>
         </li>
         {pathNames.length > 0 && (
           <span className={styles.separator}> {separator} </span>

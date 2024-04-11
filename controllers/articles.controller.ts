@@ -89,6 +89,14 @@ WHERE U.cpu = ?
   return await executeQuery<IArticleModel>(sql, [slug]);
 });
 
+export const getSatFinderArticle = async () => {
+  const sql = `SELECT id, title, cpu, description, text, view, logo FROM tbl_useful WHERE cpu = ?`;
+
+  return await executeQuery<IArticleModel>(sql, [
+    'napravlenie-antenny-po-karte',
+  ]);
+};
+
 export const getSimilarArticles = async (logo: string, id = -1) => {
   const removeId = id > -1 ? `AND id != ${id}` : '';
 

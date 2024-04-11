@@ -10,6 +10,7 @@ export enum EUrlBaseParam {
   INSTALLATION_OPTIONS = 'varianty-vstanovlennia-anten',
   ARTICLE = 'stattia',
   SAT_COVERAGE_MAP = 'karty-pokryttia-suputnykiv',
+  SAT_FINDER = 'satellite-finder',
   NEWS_AND_ARTICLES = 'novyny-ta-statti',
   CHANNEL_PARAMS = 'parametry-kanalu',
   ONLINE_CHANNEL_LIST = 'telekanaly-onlain',
@@ -30,4 +31,6 @@ export enum EUrlSearchParam {
   DATE = 'date',
   CHANNEL_FORMAT_T2MI = 't2-mi',
   CHANNEL_FORMAT_MPG4 = 'mpeg4',
+  LATITUDE = 'lat',
+  LONGITUDE = 'lng',
 }

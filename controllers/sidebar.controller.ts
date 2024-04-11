@@ -28,11 +28,12 @@ export const getArticleCatWidgetList = async () =>
     `);
 
 export const getChannelSatList = cache(
-  async () =>
+  async (isFilling = true) =>
     await executeQuery<TSatModel>(`
   SELECT title,position,id,cpu,logo
   FROM tbl_chan_sat
-  WHERE id != 1 AND fill = 1
+  WHERE id != 1 
+  ${isFilling ? 'AND fill = 1' : ''}
   ORDER BY grade
   `)
 );

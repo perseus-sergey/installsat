@@ -1,7 +1,5 @@
 import { RefObject } from 'react';
-import TooltipSimple from '../TooltipSimple/TooltipSimple';
-import BaseButton from '../buttons/BaseButton/BaseButton';
-import styles from './SearchInput.module.scss';
+import StyledInputField from '../StyledInputField/StyledInputField';
 
 interface ISearchInputProps {
   cancelButton: { ariaLabel: string; content: string };
@@ -27,35 +25,18 @@ const SearchInput = ({
   cancelButton: { ariaLabel: cancelAriaLab, content: cancelContent },
 }: ISearchInputProps) => {
   return (
-    <div className={styles.SearchInput} data-testid="SearchInput">
-      <label htmlFor="search" className="sr-only">
-        {labelTitle}
-      </label>
-      <div className={styles.inputWrapper}>
-        <div className={styles.inputBlock}>
-          <input
-            ref={inputRef}
-            className={styles.inputField}
-            placeholder={placeholder}
-            onChange={(e) => {
-              handleSearch(e.target.value);
-            }}
-            defaultValue={searchValue}
-            // value={searchValue}
-          />
-          <span className={styles.searchIcon}>{searchIconStr}</span>
-        </div>
-        <TooltipSimple tooltipText={tooltipText}>
-          <BaseButton
-            onClick={cancelClick}
-            className={styles.cancelButton}
-            ariaLabel={cancelAriaLab}
-          >
-            {cancelContent}
-          </BaseButton>
-        </TooltipSimple>
-      </div>
-    </div>
+    <StyledInputField
+      idName="search"
+      handleOnChange={handleSearch}
+      cancelClick={cancelClick}
+      inputRef={inputRef}
+      value={searchValue}
+      placeholder={placeholder}
+      hiddenLabelTitle={labelTitle}
+      cancelTooltipText={tooltipText}
+      searchIconStr={searchIconStr}
+      cancelButton={{ ariaLabel: cancelAriaLab, content: cancelContent }}
+    />
   );
 };
 

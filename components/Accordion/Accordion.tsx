@@ -37,6 +37,10 @@ const Accordion = async () => {
         />
         <AccordionMenuItem
           language={LANGUAGE}
+          options={MENU_ACCORDION.SAT_FINDER}
+        />
+        <AccordionMenuItem
+          language={LANGUAGE}
           options={MENU_ACCORDION.INSTALLATIONS}
         >
           <ul className={styles.accordionContent}>

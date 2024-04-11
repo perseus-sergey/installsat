@@ -53,18 +53,30 @@ export const META_TRANS_NEWS_LIST = {
     [ELanguage.UA]: 'Виберіть супутники та проміжок часу',
     [ELanguage.EN]: 'Select satellites and time slot',
   },
-  satSelect: {
-    defaultLabel: {
-      [ELanguage.EN]: '--= All Satellites =--',
-      [ELanguage.UA]: '--= Всі Супутники =--',
+  select: {
+    satSelect: {
+      title: {
+        [ELanguage.UA]: 'Виберіть супутники',
+        [ELanguage.EN]: 'Select satellites',
+      },
+      defaultLabel: {
+        [ELanguage.EN]: '--= All Satellites =--',
+        [ELanguage.UA]: '--= Всі Супутники =--',
+      },
+      westDirectionLabel: {
+        [ELanguage.EN]: 'West direction',
+        [ELanguage.UA]: 'Західний напрямок',
+      },
+      eastDirectionLabel: {
+        [ELanguage.EN]: 'East direction',
+        [ELanguage.UA]: 'Східний напрямок',
+      },
     },
-    westDirectionLabel: {
-      [ELanguage.EN]: 'West direction',
-      [ELanguage.UA]: 'Західний напрямок',
-    },
-    eastDirectionLabel: {
-      [ELanguage.EN]: 'East direction',
-      [ELanguage.UA]: 'Східний напрямок',
+    timeIntervalSelect: {
+      title: {
+        [ELanguage.UA]: 'Виберіть проміжок часу',
+        [ELanguage.EN]: 'Choose a time frame',
+      },
     },
   },
   submitButton: {

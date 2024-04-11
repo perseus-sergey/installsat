@@ -1,91 +1,50 @@
-'use client';
-
-import {
-  IGroupedSatelliteOption,
-  ISatelliteOption,
-  TSatModel,
-} from '@/models/tblSat.model';
 import TextButton from '../buttons/TextButton/TextButton';
 import styles from './FormDigestInterval.module.scss';
-import Select, { components, GroupProps, ControlProps } from 'react-select';
-import { TSatDigest, digestIntervals } from '@/models/satDigest.model';
-import { useFormState, useFormStatus } from 'react-dom';
-import digestIntervalAction from '@/libs/serverActions/digestInterval.action';
+import {
+  LAST_NEWS_INTERVAL,
+  META_TRANS_NEWS_LIST,
+  digestIntervals,
+} from '@/models/satDigest.model';
 import { Loader } from '../loaders/Loader';
-import { useCallback, useEffect, useState } from 'react';
-import { getGroupedSatelliteOptions } from '@/controllers/satDigest.controller';
-import TooltipSimple from '../TooltipSimple/TooltipSimple';
+import { redirect } from 'next/navigation';
+import {
+  ReactSelectInterval,
+  ReactSelectSat,
+} from '../ReactSelect/ReactSelect';
+import { getSatsForForm } from '@/controllers/satDigest.controller';
+import EmptyData from '../EmptyData/EmptyData';
+import { EUrlBaseParam, EUrlSearchParam } from '@/models/url.model';
+import Fieldset from '../Fieldset/Fieldset';
+import { LANGUAGE, TSearchParams } from '@/models/ui.model';
 
+const { fieldsetTitle, submitButton } = META_TRANS_NEWS_LIST;
 interface IFormDigestIntervalProps {
-  satellites: TSatModel[][];
-  intervalSubmitHandler: (data: TSatDigest[]) => void;
-  newsResults: TSatDigest[];
+  searchParams: TSearchParams;
 }
 
-const ControlComponentSat = (props: ControlProps<ISatelliteOption, true>) => (
-  <div className={`${styles.selectHeader} ${styles.satSelectHeader}`}>
-    <p>Оберіть супутники</p>
-    <components.Control {...props} />
-  </div>
-);
-
-const ControlComponentInterval = (
-  props: ControlProps<ISatelliteOption, false>
-) => (
-  <div className={`${styles.selectHeader} ${styles.satSelectHeader}`}>
-    <p>Оберіть період</p>
-    <components.Control {...props} />
-  </div>
-);
-
-const formatGroupSatLabel = (group: IGroupedSatelliteOption) => (
-  <div className={styles.groupHeading}>
-    <span>{group.label}</span>
-    <span className={styles.groupBadgeStyles}>{group.options.length}</span>
-  </div>
-);
-
-const Group = (
-  props: GroupProps<ISatelliteOption, true, IGroupedSatelliteOption>
-) => (
-  <div className={styles.groupStyles}>
-    <components.Group {...props} aria-activedescendant={undefined} />
-  </div>
-);
-
-const FormDigestInterval = ({
-  satellites,
-  intervalSubmitHandler,
-  newsResults,
+const FormDigestInterval = async ({
+  searchParams,
 }: IFormDigestIntervalProps) => {
-  const [groupedSats, setGroupedSats] = useState<
-    readonly IGroupedSatelliteOption[]
-  >([]);
+  const groupedSats = await getSatsForForm();
 
-  const initialState = {
-    message: '',
-    newsIntervalResult: newsResults,
-  };
+  if (groupedSats instanceof Error)
+    return <EmptyData description={groupedSats.message} />;
 
-  const [formState, formAction] = useFormState(
-    digestIntervalAction,
-    initialState
-  );
+  async function formAction(formData: FormData) {
+    'use server';
 
-  const getGroupedSatOptions = useCallback(
-    () => getGroupedSatelliteOptions(satellites),
-    [satellites]
-  );
+    const selectSats = formData.getAll('selectSats') as string[] | null;
+    const timeInterval = formData.get('timeInterval') || LAST_NEWS_INTERVAL;
 
-  useEffect(() => {
-    intervalSubmitHandler(formState.newsIntervalResult);
-  }, [formState]);
+    const urlSePar = new URLSearchParams();
+    if (timeInterval) urlSePar.set(EUrlSearchParam.INTERVAL, `${timeInterval}`);
+    if (selectSats && selectSats[0])
+      selectSats.forEach((sat) =>
+        urlSePar.append(EUrlSearchParam.SAT, `${sat}`)
+      );
 
-  useEffect(() => {
-    setGroupedSats(getGroupedSatOptions());
-  }, [getGroupedSatOptions]);
-
-  const { pending } = useFormStatus();
+    redirect(`${EUrlBaseParam.BASE_PATH}?${urlSePar.toString()}`);
+  }
 
   return (
     <form
@@ -94,73 +53,48 @@ const FormDigestInterval = ({
       id="formDigestInterval"
       className={styles.FormDigestInterval}
     >
-      <fieldset className={styles.fieldset}>
-        <legend className={styles.legend}>
-          Виберіть супутники та проміжок часу
-        </legend>
+      <Fieldset legendText={fieldsetTitle[LANGUAGE]}>
+        <div className={styles.formWrapper}>
+          <div className={styles.selectsBlock}>
+            {groupedSats[1] ? (
+              <ReactSelectSat
+                defValue={groupedSats[0].options[0]}
+                groupedSats={groupedSats}
+              />
+            ) : (
+              <h2>
+                <Loader /> Loading...
+              </h2>
+            )}
 
-        <div className={styles.selectsBlock}>
-          {groupedSats[1] ? (
-            <Select
-              instanceId="selectSats"
-              id="selectSats"
-              name="selectSats"
-              isMulti
-              closeMenuOnSelect={false}
-              defaultValue={groupedSats[0].options[0]}
-              options={groupedSats}
-              components={{ Group, Control: ControlComponentSat }}
-              formatGroupLabel={formatGroupSatLabel}
-            />
-          ) : (
-            <h2>
-              <Loader /> Loading...
-            </h2>
-          )}
+            {digestIntervals[0] ? (
+              <ReactSelectInterval
+                defValue={
+                  digestIntervals.find(
+                    (interv) =>
+                      `${interv.value}` ===
+                      searchParams[EUrlSearchParam.INTERVAL]
+                  ) || digestIntervals[1]
+                }
+              />
+            ) : (
+              <h2>
+                <Loader /> Loading...
+              </h2>
+            )}
+          </div>
 
-          {digestIntervals[0] ? (
-            <Select
-              instanceId="timeInterval"
-              id="timeInterval"
-              name="timeInterval"
-              defaultValue={digestIntervals[1]}
-              options={digestIntervals}
-              components={{
-                Control: ControlComponentInterval,
-                Input: (props) => (
-                  <components.Input
-                    {...props}
-                    aria-activedescendant={undefined}
-                  />
-                ),
-              }}
-            />
-          ) : (
-            <h2>
-              <Loader /> Loading...
-            </h2>
-          )}
-        </div>
-
-        <TooltipSimple tooltipText={'Implement changes'}>
           <TextButton
-            ariaLabel="Implement changes"
+            ariaLabel={submitButton.ariaLabel[LANGUAGE]}
             type="submit"
             id="submitBtn"
             name="submitBtn"
             value="Submit"
-            aria-disabled={pending}
           >
-            Submit
+            {submitButton.title[LANGUAGE]}
           </TextButton>
-        </TooltipSimple>
-      </fieldset>
-      {pending ? (
-        <h2>
-          <Loader /> Loading...
-        </h2>
-      ) : null}
-      {formState.message ? <h3>{formState.message}</h3> : null}
+        </div>
+      </Fieldset>
     </form>
   );
 };

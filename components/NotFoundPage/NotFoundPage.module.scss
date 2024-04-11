@@ -4,6 +4,11 @@
   gap: 5vh;
   justify-content: space-between;
   align-items: center;
+  border-radius: 10px;
+  border: thick inset #cccccc;
+  background-color: var(--background-color);
+  min-height: 75vh;
+  padding: 0.7rem;
 
   .linkWrapper {
     display: flex;

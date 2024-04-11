@@ -55,42 +55,6 @@ export const getSatDigestNews = async (
   return await executeQuery<TSatDigest>(sql, []);
 };
 
-// export const getGroupedSatelliteOptions = (
-//   [eastSats, westSats]: TSatModel[][],
-//   isDefaultValue = true
-// ): readonly IGroupedSatelliteOption[] => {
-//   const { westDirectionLabel, eastDirectionLabel, defaultLabel } =
-//     META_TRANS_NEWS_LIST.satSelect;
-
-//   const arr = [
-//     {
-//       label: westDirectionLabel[LANGUAGE],
-//       options: westSats.map((sat) => ({
-//         value: sat.grade,
-//         label: `${sat.position} ..... ${sat.title}`,
-//       })),
-//     },
-//     {
-//       label: eastDirectionLabel[LANGUAGE],
-//       options: eastSats.map((sat) => ({
-//         value: sat.grade,
-//         label: `${sat.position} ..... ${sat.title}`,
-//       })),
-//     },
-//   ];
-//   if (isDefaultValue)
-//     arr.unshift({
-//       label: defaultLabel[LANGUAGE],
-//       options: [
-//         {
-//           value: '',
-//           label: defaultLabel[LANGUAGE],
-//         },
-//       ],
-//     });
-
-//   return arr;
-// };
 export const getGroupedSatelliteOptions = (
   [eastSats, westSats]: TSatModel[][],
   isDefaultValue = true

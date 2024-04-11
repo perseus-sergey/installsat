@@ -26,10 +26,6 @@ const articleData =
     ? { title: '', description: '', text: '', logo: '', view: 0 }
     : satFinderArticleDBResult[0];
 
-// const satListResults = await getChannelSatList(false);
-// const satList = satListResults instanceof Error ? [] : satListResults;
-// const { title, position, id, cpu, logo } = satList[0];
-
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_BASE_URL),
   title: articleData.title,

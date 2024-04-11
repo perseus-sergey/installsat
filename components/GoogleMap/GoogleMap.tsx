@@ -57,7 +57,6 @@ const GoogleMap = ({
       onClick={mapClickHandler}
       mapId={mapId}
       defaultCenter={markerPosition}
-      // center={markerPosition}
       defaultZoom={zoom}
       gestureHandling={'greedy'}
       mapTypeId="hybrid"

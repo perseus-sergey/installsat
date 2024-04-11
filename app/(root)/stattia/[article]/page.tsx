@@ -9,6 +9,7 @@ import { EUrlBaseParam } from '@/models/url.model';
 import BottomInfoPanel from '@/components/BottomInfoPanel/BottomInfoPanel';
 import Link from 'next/link';
 import { LANGUAGE } from '@/models/ui.model';
+import { notFound } from 'next/navigation';
 
 const { h1Image } = ARTICLES.article.images;
 
@@ -23,8 +24,10 @@ export interface IArticleParams {
 
 export default async function Page({ params: { article } }: IArticleParams) {
   const sqlResult = await getArticle(article);
+
   if (sqlResult instanceof Error)
     return <EmptyData description={sqlResult.message} />;
+  if (!sqlResult.length) notFound();
 
   const { title, logo, text, cat_slug, cat_name, date, view } = sqlResult[0];
 

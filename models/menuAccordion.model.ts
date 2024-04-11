@@ -47,7 +47,7 @@ export const MENU_ACCORDION: { [key: string]: IAccordionItemOptions } = {
       [ELanguage.UA]: 'Пошук супутників',
       [ELanguage.EN]: 'Satellite Finder',
     },
-    titleHref: EUrlBaseParam.SAT_FINDER,
+    titleHref: `/${EUrlBaseParam.SAT_FINDER}`,
   },
   INSTALLATIONS: {
     name: 'INSTALLATIONS',

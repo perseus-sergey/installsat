@@ -7,6 +7,23 @@ export const SAT_FINDER_META_DATA = {
     [ELanguage.EN]:
       'satellite dish direction, Google Maps, satellite antenna, accurate direction, antenna placement, store, satellite signal, signal obstacles, satellite antenna installation, DIY setup',
   },
+  googleMap: {
+    initialCamera: {
+      center: { lat: 49.064829, lng: 33.421671 },
+      zoom: 18,
+    },
+    marker: {
+      markerImage: {
+        src: '/Images/Installsat_googlemap.gif',
+        height: '25px',
+        width: '55px',
+        alt: {
+          [ELanguage.UA]: 'Installsat - Логотип нашої компанії на Google Maps',
+          [ELanguage.EN]: 'Installsat - Logo of our company on Google Maps',
+        },
+      },
+    },
+  },
   images: {
     h1Image: {
       src: '/Images/starthere_6100.png',

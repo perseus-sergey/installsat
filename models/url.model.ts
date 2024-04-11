@@ -31,4 +31,6 @@ export enum EUrlSearchParam {
   DATE = 'date',
   CHANNEL_FORMAT_T2MI = 't2-mi',
   CHANNEL_FORMAT_MPG4 = 'mpeg4',
+  LATITUDE = 'lat',
+  LONGITUDE = 'lng',
 }

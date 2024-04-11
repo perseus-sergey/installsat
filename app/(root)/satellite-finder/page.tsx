@@ -1,16 +1,17 @@
-import DangerHtml from '@/components/DangerHtml/DangerHtml';
 import FillingValidImage from '@/components/Images/FillingValidImage';
+import SatFinder from '@/components/SatFinder/SatFinder';
 import { Title } from '@/components/Title/Title';
 import { getSatFinderArticle } from '@/controllers/articles.controller';
+import { getSatsForForm } from '@/controllers/satDigest.controller';
 import { getFormattedDateStr } from '@/libs/utils';
 import { SAT_FINDER_META_DATA } from '@/models/satFinder.model';
-import { LANGUAGE, TSearchParams, defaultMetaData } from '@/models/ui.model';
-import { EUrlBaseParam, SITE_BASE_URL } from '@/models/url.model';
+import { LANGUAGE, defaultMetaData } from '@/models/ui.model';
+import {
+  EUrlBaseParam,
+  EUrlSearchParam,
+  SITE_BASE_URL,
+} from '@/models/url.model';
 import { Metadata } from 'next';
-
-interface IPageProps {
-  searchParams: TSearchParams;
-}
 
 const {
   keywords,
@@ -41,19 +42,8 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function Page({ searchParams }: IPageProps) {
-  console.log('🚀 ~ Page ~ searchParams:', searchParams);
-  // searchParams?.[EUrlSearchParam.SAT]
-
-  //   const urlSearchParams = makeUrlSearchParams(searchParams);
-
-  // const setUrlSearchParamsStr = (value: string | number): string => {
-  //   urlSearchParams.set(EUrlSearchParam.PAGE, `${value}`);
-
-  //   return `?${urlSearchParams.toString()}`;
-  // };
-
-  // const firstPage = setUrlSearchParamsStr('1');
+export default async function Page() {
+  const groupedSats = await getSatsForForm(false);
 
   // const commDbResult = await getComments(id, EDBTableTitles.COMMENTS_CHANNEL);
   // const comments = commDbResult instanceof Error ? [] : commDbResult;
@@ -71,7 +61,13 @@ export default async function Page({ searchParams }: IPageProps) {
         </Title>
 
         <div className="article-text">
-          <DangerHtml text={articleData.text} />
+          {/* <DangerHtml text={articleData.text} /> */}
+          <SatFinder
+            searchQueryName={EUrlSearchParam.SAT}
+            apiKey={process.env.GOOGLE_MAP_API_KEY || ''}
+            mapId={process.env.GOOGLE_MAP_ID || ''}
+            groupedSats={groupedSats}
+          />
         </div>
 
         <p>View: {articleData.view.toLocaleString('en-US')}</p>

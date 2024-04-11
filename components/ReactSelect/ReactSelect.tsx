@@ -14,7 +14,13 @@ import {
   IGroupedSatelliteOption,
   ISatelliteOption,
 } from '@/models/tblSat.model';
-import { digestIntervals } from '@/models/satDigest.model';
+import {
+  META_TRANS_NEWS_LIST,
+  digestIntervals,
+} from '@/models/satDigest.model';
+import { LANGUAGE } from '@/models/ui.model';
+
+const { satSelect, timeIntervalSelect } = META_TRANS_NEWS_LIST.select;
 
 export enum ESelectType {
   SELECT_SATS = 'selectSats',
@@ -25,9 +31,11 @@ interface IReactSelectProps {
   selectName: ESelectType;
 }
 
-const ControlComponentSat = (props: ControlProps<ISatelliteOption, true>) => (
+export const ControlComponentSat = (
+  props: ControlProps<ISatelliteOption, true>
+) => (
   <div className={`${styles.selectHeader} ${styles.satSelectHeader}`}>
-    <p>Оберіть супутники</p>
+    <p>{satSelect.title[LANGUAGE]}</p>
     <components.Control {...props} />
   </div>
 );
@@ -36,12 +44,12 @@ const ControlComponentInterval = (
   props: ControlProps<ISatelliteOption, false>
 ) => (
   <div className={`${styles.selectHeader} ${styles.satSelectHeader}`}>
-    <p>Оберіть період</p>
+    <p>{timeIntervalSelect.title[LANGUAGE]}</p>
     <components.Control {...props} />
   </div>
 );
 
-const Group = (
+export const Group = (
   props: GroupProps<ISatelliteOption, true, IGroupedSatelliteOption>
 ) => (
   <div className={styles.groupStyles}>
@@ -50,6 +58,26 @@ const Group = (
 );
 
 export const ReactSelect = <
+  Option,
+  IsMulti extends boolean = false,
+  Group extends GroupBase<Option> = GroupBase<Option>,
+>({
+  selectName,
+  ...rest
+}: Props<Option, IsMulti, Group> & IReactSelectProps) => {
+  return (
+    <Select
+      className={styles.ReactSelect}
+      instanceId={`inst-${selectName}`}
+      id={selectName}
+      name={selectName}
+      data-testid="ReactSelect"
+      {...rest}
+    />
+  );
+};
+
+export const MySelect = <
   Option,
   IsMulti extends boolean = false,
   Group extends GroupBase<Option> = GroupBase<Option>,
@@ -88,7 +116,7 @@ export const ReactSelectInterval = ({
   />
 );
 
-const formatGroupSatLabel = (group: IGroupedSatelliteOption) => (
+export const formatGroupSatLabel = (group: IGroupedSatelliteOption) => (
   <div className={styles.groupHeading}>
     <span>{group.label}</span>
     <span className={styles.groupBadgeStyles}>{group.options.length}</span>
@@ -98,6 +126,7 @@ const formatGroupSatLabel = (group: IGroupedSatelliteOption) => (
 interface IReactSelectSat {
   groupedSats: readonly IGroupedSatelliteOption[];
   defValue?: ISatelliteOption;
+  closeMenuOnSelect?: boolean;
 }
 
 export const ReactSelectSat = ({ groupedSats, defValue }: IReactSelectSat) => (
@@ -118,43 +147,3 @@ export const ReactSelectSat = ({ groupedSats, defValue }: IReactSelectSat) => (
     formatGroupLabel={formatGroupSatLabel}
   />
 );
-
-// export const ReactSelectInterval = ({
-//   defValue,
-// }: {
-//   defValue: ISatelliteOption;
-// }) => {
-//   const searchParams = useSearchParams();
-
-//   const getInterval = () => {
-//     const spInterval = searchParams.get(EUrlParam.SEARCH_PARAM_INTERVAL);
-//     return (
-//       digestIntervals.find((interv) => `${interv.value}` === spInterval) ||
-//       digestIntervals[1]
-//     );
-//   };
-
-//   const [value, setValue] =
-//     useState<SingleValue<ISatelliteOption>>(getInterval());
-//   const changeValue = (currentValue: SingleValue<ISatelliteOption>) => {
-//     setValue(currentValue);
-//   };
-
-//   return (
-//     <ReactSelect
-//       selectName={ESelectType.SELECT_TIME_INTERVAL}
-//       // defaultValue={getInterval()}
-//       // defaultValue={defValue}
-//       value={value}
-//       onChange={changeValue}
-//       // defaultValue={digestIntervals[1]}
-//       options={digestIntervals}
-//       components={{
-//         Control: ControlComponentInterval,
-//         Input: (props) => (
-//           <components.Input {...props} aria-activedescendant={undefined} />
-//         ),
-//       }}
-//     />
-//   );
-// };

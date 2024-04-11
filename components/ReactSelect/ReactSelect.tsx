@@ -91,7 +91,6 @@ export const MySelect = <
       instanceId={`inst-${selectName}`}
       id={selectName}
       name={selectName}
-      data-testid="ReactSelect"
       {...rest}
     />
   );

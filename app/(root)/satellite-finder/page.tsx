@@ -1,3 +1,4 @@
+import DangerHtml from '@/components/DangerHtml/DangerHtml';
 import FillingValidImage from '@/components/Images/FillingValidImage';
 import SatFinder from '@/components/SatFinder/SatFinder';
 import { Title } from '@/components/Title/Title';
@@ -12,6 +13,7 @@ import {
   SITE_BASE_URL,
 } from '@/models/url.model';
 import { Metadata } from 'next';
+import { Suspense } from 'react';
 
 const {
   keywords,
@@ -61,14 +63,17 @@ export default async function Page() {
         </Title>
 
         <div className="article-text">
-          {/* <DangerHtml text={articleData.text} /> */}
-          <SatFinder
-            searchQueryName={EUrlSearchParam.SAT}
-            apiKey={process.env.GOOGLE_MAP_API_KEY || ''}
-            mapId={process.env.GOOGLE_MAP_ID || ''}
-            groupedSats={groupedSats}
-          />
+          <Suspense>
+            <SatFinder
+              searchQueryName={EUrlSearchParam.SAT}
+              apiKey={process.env.GOOGLE_MAP_API_KEY || ''}
+              mapId={process.env.GOOGLE_MAP_ID || ''}
+              groupedSats={groupedSats instanceof Error ? [] : groupedSats}
+            />
+          </Suspense>
         </div>
+
+        <DangerHtml text={articleData.text} />
 
         <p>View: {articleData.view.toLocaleString('en-US')}</p>
       </article>

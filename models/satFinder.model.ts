@@ -24,6 +24,43 @@ export const SAT_FINDER_META_DATA = {
       },
     },
   },
+  searchForm: {
+    fieldsetTitle: {
+      [ELanguage.UA]: 'Виберіть адресу та супутники',
+      [ELanguage.EN]: 'Select address and satellites',
+    },
+    inputField: {
+      placeholder: {
+        [ELanguage.UA]: 'Місто вулиця будинок...',
+        [ELanguage.EN]: 'Address...',
+      },
+      labelName: {
+        [ELanguage.UA]: 'Введіть назву міста, вулицю, номер будинку',
+        [ELanguage.EN]: 'Enter the name of the city, street, house number',
+      },
+      cancelButton: {
+        [ELanguage.UA]: {
+          ariaLabel: 'Скасувати',
+          content: 'x',
+        },
+        [ELanguage.EN]: {
+          ariaLabel: 'Cancel',
+          content: 'x',
+        },
+      },
+      searchIconStr: '⏿',
+    },
+    submitButton: {
+      title: {
+        [ELanguage.UA]: '🔎',
+        [ELanguage.EN]: '🔎',
+      },
+      ariaLabel: {
+        [ELanguage.UA]: 'Підтвердити зміни',
+        [ELanguage.EN]: 'Confirm changes',
+      },
+    },
+  },
   images: {
     h1Image: {
       src: '/Images/starthere_6100.png',

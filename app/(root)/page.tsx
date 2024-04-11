@@ -1,4 +1,4 @@
-import FormDigestInterval from '@/components/FormDigestInterval1/FormDigestInterval';
+import FormDigestInterval from '@/components/FormDigestInterval/FormDigestInterval';
 import SatNews from '@/components/SatNews/SatNews';
 import { Title } from '@/components/Title/Title';
 import {

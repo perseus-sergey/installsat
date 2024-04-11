@@ -1,2 +1,36 @@
-.SatFinder {
+.fieldset {
+  padding: 1rem;
+  margin: 1rem auto;
+}
+
+.addressWrapper {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+  padding-bottom: 1rem;
+
+  @media (width < 470px) {
+    justify-content: center;
+  }
+}
+
+.submitButton {
+  line-height: 0;
+  font-size: 2rem;
+  width: 2.7rem;
+  height: 2.7rem;
+  color: #00ca28;
+  text-shadow: 0 1px 0px rgba(255, 255, 255, 0.6509803922);
+  background: linear-gradient(to bottom, #fcfff4 0%, #dfe5d7 40%, #b3bead 100%);
+  border-radius: 10px;
+  box-shadow:
+    inset 0px 1px 1px white,
+    0px 1px 3px rgba(0, 0, 0, 0.5);
+
+  &:hover {
+    box-shadow:
+      inset 0px 1px 1px white,
+      0px 0px 5px #006314;
+  }
 }

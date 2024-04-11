@@ -51,15 +51,9 @@ const GoogleMap = ({
   setIsMapInfoWindowOpened,
   markerMoved,
 }: IGoogleMapProps) => (
-  <APIProvider
-    // apiKey={process.env.GOOGLE_MAP_API_KEY || ''}
-    apiKey={apiKey}
-    data-testid="GoogleMap"
-  >
+  <APIProvider apiKey={apiKey} data-testid="GoogleMap">
     <Map
-      // mapId={process.env.GOOGLE_MAP_ID || ''}
       style={{ width: '100%', height: '80vh' }}
-      // onClick={() => setIsMapInfoWindowOpened(false)}
       onClick={mapClickHandler}
       mapId={mapId}
       defaultCenter={markerPosition}

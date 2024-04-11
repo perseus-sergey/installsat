@@ -25,15 +25,3 @@ export interface IGroupedSatelliteOption {
   label: string;
   options: ISatelliteOption[];
 }
-
-// export interface ISatelliteOption {
-//   readonly value: number | string;
-//   readonly label: string;
-//   readonly isFixed?: boolean;
-//   readonly isDisabled?: boolean;
-// }
-
-// export interface IGroupedSatelliteOption {
-//   readonly label: string;
-//   readonly options: readonly ISatelliteOption[];
-// }

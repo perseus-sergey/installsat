@@ -24,19 +24,23 @@ import {
 } from '../ReactSelect/ReactSelect';
 import { MultiValue, components } from 'react-select';
 import { Loader } from '../loaders/Loader';
-import EmptyData from '../EmptyData/EmptyData';
-import TextButton from '../buttons/TextButton/TextButton';
 import GoogleMap from '../GoogleMap/GoogleMap';
 import { makeSelectedOptions } from '@/controllers/satFinder.controller';
+import StyledInputField from '../StyledInputField/StyledInputField';
+import { LANGUAGE } from '@/models/ui.model';
+import BaseButton from '../buttons/BaseButton/BaseButton';
 
 interface ISatFinderProps {
   apiKey: string;
   mapId: string;
   searchQueryName: EUrlSearchParam;
-  groupedSats: Error | IGroupedSatelliteOption[];
+  groupedSats: IGroupedSatelliteOption[];
 }
 
-const { initialCamera } = SAT_FINDER_META_DATA.googleMap;
+const {
+  googleMap: { initialCamera },
+  searchForm: { inputField, submitButton, fieldsetTitle },
+} = SAT_FINDER_META_DATA;
 
 const SatFinder = ({
   apiKey,
@@ -137,9 +141,6 @@ const SatFinder = ({
     });
   };
 
-  if (groupedSats instanceof Error)
-    return <EmptyData description={groupedSats.message} />;
-
   const markerMoved = (e: google.maps.MapMouseEvent) => {
     const latLng = e.latLng;
     if (!latLng) return;
@@ -153,64 +154,68 @@ const SatFinder = ({
 
   return (
     <>
-      <form
-        action={formAction}
-        name="formDigestInterval"
-        id="formDigestInterval"
-        className={styles.FormDigestInterval}
-        data-testid="SatFinder"
+      <Fieldset
+        legendText={fieldsetTitle[LANGUAGE]}
+        className={styles.fieldset}
       >
-        <Fieldset legendText={'Address'}>
-          <input
-            type="text"
-            name="addressInput"
-            id="addressInput"
-            value={addressInputValue}
-            onChange={(e) => setAddressInputValue(e.target.value)}
-          />
-          <TextButton
-            ariaLabel={'Select'}
-            // ariaLabel={submitButton.ariaLabel[LANGUAGE]}
-            type="submit"
-            id="submitBtn"
-            name="submitBtn"
-            value="Submit"
-          >
-            {/* {submitButton.title[LANGUAGE]} */}
-            {'Submit'}
-          </TextButton>
-        </Fieldset>
-      </form>
-      {/* <Fieldset legendText={fieldsetTitle[LANGUAGE]}> */}
-      <div className={styles.formWrapper}>
-        <div className={styles.selectsBlock}>
-          {groupedSats.length > 0 ? (
-            <MySelect
-              selectName={ESelectType.SELECT_SATS}
-              isMulti
-              closeMenuOnSelect
-              value={selectedOptions}
-              onChange={(selected) => handleSelect(selected)}
-              options={groupedSats}
-              components={{
-                Group,
-                Control: ControlComponentSat,
-                Input: (props) => (
-                  <components.Input
-                    {...props}
-                    aria-activedescendant={undefined}
-                  />
-                ),
-              }}
-              formatGroupLabel={formatGroupSatLabel}
+        <form
+          action={formAction}
+          name="formDigestInterval"
+          id="formDigestInterval"
+          className={styles.FormDigestInterval}
+          data-testid="SatFinder"
+        >
+          <div className={styles.addressWrapper}>
+            <StyledInputField
+              idName="addressInput"
+              value={addressInputValue}
+              handleOnChange={setAddressInputValue}
+              placeholder={inputField.placeholder[LANGUAGE]}
+              hiddenLabelTitle={inputField.labelName[LANGUAGE]}
+              cancelTooltipText={inputField.cancelButton[LANGUAGE].ariaLabel}
+              cancelButton={inputField.cancelButton[LANGUAGE]}
+              searchIconStr={inputField.searchIconStr}
+              cancelClick={() => setAddressInputValue('')}
+              widthPx={280}
             />
-          ) : (
-            <h2>
-              <Loader /> Loading...
-            </h2>
-          )}
-        </div>
-      </div>
+            <BaseButton
+              className={styles.submitButton}
+              ariaLabel={submitButton.ariaLabel[LANGUAGE]}
+              type="submit"
+              id="submitBtn"
+            >
+              {submitButton.title[LANGUAGE]}
+            </BaseButton>
+          </div>
+          {/* </Fieldset> */}
+        </form>
+        {groupedSats.length > 0 ? (
+          // <Fieldset legendText={select.[LANGUAGE]}>
+          <MySelect
+            selectName={ESelectType.SELECT_SATS}
+            isMulti
+            closeMenuOnSelect
+            value={selectedOptions}
+            onChange={(selected) => handleSelect(selected)}
+            options={groupedSats}
+            components={{
+              Group,
+              Control: ControlComponentSat,
+              Input: (props) => (
+                <components.Input
+                  {...props}
+                  aria-activedescendant={undefined}
+                />
+              ),
+            }}
+            formatGroupLabel={formatGroupSatLabel}
+          />
+        ) : (
+          <h2>
+            <Loader /> Loading...
+          </h2>
+        )}
+      </Fieldset>
       <GoogleMap
         apiKey={apiKey}
         mapId={mapId}

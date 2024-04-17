@@ -1,5 +1,5 @@
-import EmptyData from '@/components/EmptyData/EmptyData';
-import { Title } from '@/components/Title/Title';
+import EmptyData from '@/components/errors/EmptyData/EmptyData';
+import { Title } from '@/components/ui/Title/Title';
 import type { Metadata } from 'next';
 import FillingValidImage from '@/components/Images/FillingValidImage';
 import { ARTICLES, ISingleCatArticlesModel } from '@/models/articles.model';
@@ -11,7 +11,7 @@ import { imagePathValidate } from '@/libs/utilsServer';
 import { getFormattedDateStr } from '@/libs/utils';
 import { cache } from 'react';
 import TextUnderH1 from '@/components/TextUnderH1/TextUnderH1';
-import ArticleList from '@/components/ArticleList/ArticleList';
+import ArticleList from '@/components/article/ArticleList/ArticleList';
 import { notFound } from 'next/navigation';
 import Pagination from '@/components/Pagination/Pagination';
 import { LANGUAGE, TSearchParams, defaultMetaData } from '@/models/ui.model';

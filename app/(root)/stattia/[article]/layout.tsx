@@ -14,7 +14,7 @@ import {
   updateViewCount,
 } from '@/controllers/articles.controller';
 import SimilarArticles from '@/components/SimilarArticles/SimilarArticles';
-import EmptyData from '@/components/EmptyData/EmptyData';
+import EmptyData from '@/components/errors/EmptyData/EmptyData';
 import { IArticleParams } from './page';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';

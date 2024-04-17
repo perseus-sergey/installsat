@@ -1,4 +1,4 @@
-import TextButton from '../buttons/TextButton/TextButton';
+import TextButton from '../ui/buttons/TextButton/TextButton';
 import styles from './FormDigestInterval.module.scss';
 import {
   LAST_NEWS_INTERVAL,
@@ -10,11 +10,11 @@ import { redirect } from 'next/navigation';
 import {
   ReactSelectInterval,
   ReactSelectSat,
-} from '../ReactSelect/ReactSelect';
+} from '../ui/ReactSelect/ReactSelect';
 import { getSatsForForm } from '@/controllers/satDigest.controller';
-import EmptyData from '../EmptyData/EmptyData';
+import EmptyData from '../errors/EmptyData/EmptyData';
 import { EUrlBaseParam, EUrlSearchParam } from '@/models/url.model';
-import Fieldset from '../Fieldset/Fieldset';
+import Fieldset from '../ui/Fieldset/Fieldset';
 import { LANGUAGE, TSearchParams } from '@/models/ui.model';
 
 const { fieldsetTitle, submitButton } = META_TRANS_NEWS_LIST;

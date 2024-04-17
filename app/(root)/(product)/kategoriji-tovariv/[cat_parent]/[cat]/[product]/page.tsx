@@ -8,7 +8,7 @@
 // import { EUrlSearchParam } from '@/models/url.model';
 // import { Suspense } from 'react';
 
-import { Title } from '@/components/Title/Title';
+import { Title } from '@/components/ui/Title/Title';
 
 interface IProps {
   params: { cat_parent: string; cat: string; product: string };

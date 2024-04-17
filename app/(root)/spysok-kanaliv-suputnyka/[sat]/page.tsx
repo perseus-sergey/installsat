@@ -1,6 +1,6 @@
-import DangerHtmlUl from '@/components/DangerHtml/DangerHtml';
-import EmptyData from '@/components/EmptyData/EmptyData';
-import { Title } from '@/components/Title/Title';
+import DangerHtmlUl from '@/components/ui/DangerHtml/DangerHtml';
+import EmptyData from '@/components/errors/EmptyData/EmptyData';
+import { Title } from '@/components/ui/Title/Title';
 import {
   getSatChannels,
   getGroupedChannelsAllSat,
@@ -11,7 +11,7 @@ import {
   START_CONTENT,
 } from '@/models/channelList.model';
 import type { Metadata } from 'next';
-import StartArticleSection from '@/components/StartArticleSection/StartArticleSection';
+import StartArticleSection from '@/components/article/StartArticleSection/StartArticleSection';
 import SatChannelsTable from '@/components/SatChannelsTable/SatChannelsTable';
 import FillingValidImage from '@/components/Images/FillingValidImage';
 import { cache } from 'react';

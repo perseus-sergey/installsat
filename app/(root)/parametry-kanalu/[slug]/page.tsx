@@ -1,13 +1,13 @@
 import BottomInfoPanel from '@/components/BottomInfoPanel/BottomInfoPanel';
-import ChannelOnlineLink from '@/components/ChannelOnlineLink/ChannelOnlineLink';
+import ChannelOnlineLink from '@/components/ui/ChannelOnlineLink/ChannelOnlineLink';
 import ChannelParams from '@/components/ChannelParams/ChannelParams';
-import DangerHtml from '@/components/DangerHtml/DangerHtml';
-import EmptyData from '@/components/EmptyData/EmptyData';
+import DangerHtml from '@/components/ui/DangerHtml/DangerHtml';
+import EmptyData from '@/components/errors/EmptyData/EmptyData';
 import FillingValidImage from '@/components/Images/FillingValidImage';
-import NoteBlock from '@/components/NoteBlock/NoteBlock';
+import NoteBlock from '@/components/ui/NoteBlock/NoteBlock';
 import SimilarArticles from '@/components/SimilarArticles/SimilarArticles';
 import SimilarChannel from '@/components/SimilarChannel/SimilarChannel';
-import { Title } from '@/components/Title/Title';
+import { Title } from '@/components/ui/Title/Title';
 import TvScheduleLink from '@/components/TvScheduleLink/TvScheduleLink';
 import {
   getComments,

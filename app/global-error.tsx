@@ -1,6 +1,6 @@
 'use client';
 
-import ErrorPage from '@/components/ErrorPage/ErrorPage';
+import ErrorPage from '@/components/errors/ErrorPage/ErrorPage';
 
 export default ({
   error,

@@ -1,6 +1,7 @@
 import './globals.scss';
 import Footer from '@/components/Footer/Footer';
 import Header from '@/components/Header/Header';
+import ToastProvider from '@/components/providers/ToastProvider/ToastProvider';
 
 export default function RootLayout({
   children,
@@ -12,7 +13,7 @@ export default function RootLayout({
       <body suppressHydrationWarning={true}>
         <input type="checkbox" id="toggle-sidebar" hidden />
         <Header />
-        {children}
+        <ToastProvider>{children}</ToastProvider>
         <Footer />
       </body>
     </html>

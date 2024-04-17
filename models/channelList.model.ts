@@ -124,14 +124,11 @@ export const META_ALL_SAT_CHANNEL_LIST = {
         [ELanguage.UA]: 'Фільтр каналів по назві',
         [ELanguage.EN]: 'Filter channels by name',
       },
-      cancelButton: {
-        ariaLabel: {
-          [ELanguage.UA]: 'Скасувати',
-          [ELanguage.EN]: 'Cancel',
-        },
-        searchIconStr: '⏿',
-        imgStr: 'x',
+      cancelBtnAriaLabel: {
+        [ELanguage.UA]: 'Скасувати',
+        [ELanguage.EN]: 'Cancel',
       },
+      searchIconStr: '⏿',
     },
     resetAllFiltersButton: {
       ariaLabel: {

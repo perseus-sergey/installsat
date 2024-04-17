@@ -1,4 +1,4 @@
-import EmptyData from '@/components/EmptyData/EmptyData';
+import EmptyData from '@/components/errors/EmptyData/EmptyData';
 import TransNewsSingle from '@/components/TransNewsSingle/TransNewsSingle';
 import { getTransNewsForSingleDay } from '@/controllers/satDigest.controller';
 import { getDate } from '@/libs/utils';

@@ -1,6 +1,6 @@
 import { SIDE_BAR_CLOSE_BTN } from '@/models/ui.model';
-import Accordion from '../Accordion/Accordion';
-import ToggleSidebarLabel from '../ToggleSidebarLabel/ToggleSidebarLabel';
+import Accordion from '../menuAccordion/Accordion/Accordion';
+import ToggleSidebarLabel from '../ui/ToggleSidebarLabel/ToggleSidebarLabel';
 import WidgetArticleCategories from '../WidgetArticleCategories/WidgetArticleCategories';
 import WidgetLastNews from '../WidgetLastNews/WidgetLastNews';
 import styles from './SideBar.module.scss';

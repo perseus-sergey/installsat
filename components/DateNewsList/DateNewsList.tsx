@@ -2,12 +2,12 @@ import Link from 'next/link';
 import styles from '../SatNewsList/SatNewsList.module.scss';
 import { getDate, getFormattedDateStr } from '@/libs/utils';
 import React from 'react';
-import DangerHtmlUl from '../DangerHtml/DangerHtml';
+import DangerHtmlUl from '../ui/DangerHtml/DangerHtml';
 import {
   getDailyNews,
   setGroupedNewsByDateMap,
 } from '@/controllers/satDigest.controller';
-import EmptyData from '../EmptyData/EmptyData';
+import EmptyData from '../errors/EmptyData/EmptyData';
 import { EUrlBaseParam } from '@/models/url.model';
 import { META_TRANS_NEWS_SINGLE } from '@/models/satDigest.model';
 import { LANGUAGE } from '@/models/ui.model';

@@ -4,7 +4,7 @@ import Link from 'next/link';
 import styles from './AnchorListItem.module.scss';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { EUrlSearchParam } from '@/models/url.model';
-import TooltipSimple from '../TooltipSimple/TooltipSimple';
+import TooltipSimple from '../ui/TooltipSimple/TooltipSimple';
 
 interface IAnchorListItemProps {
   linkParams: {

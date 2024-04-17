@@ -1,9 +1,9 @@
 import BottomInfoPanel from '@/components/BottomInfoPanel/BottomInfoPanel';
-import EmptyData from '@/components/EmptyData/EmptyData';
+import EmptyData from '@/components/errors/EmptyData/EmptyData';
 import FillingValidImage from '@/components/Images/FillingValidImage';
 import SimilarArticles from '@/components/SimilarArticles/SimilarArticles';
 import SimilarChannel from '@/components/SimilarChannel/SimilarChannel';
-import { Title } from '@/components/Title/Title';
+import { Title } from '@/components/ui/Title/Title';
 import {
   getComments,
   getSimilarArticles,

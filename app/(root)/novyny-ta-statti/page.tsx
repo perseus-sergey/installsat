@@ -1,11 +1,11 @@
-import EmptyData from '@/components/EmptyData/EmptyData';
-import { Title } from '@/components/Title/Title';
+import EmptyData from '@/components/errors/EmptyData/EmptyData';
+import { Title } from '@/components/ui/Title/Title';
 import type { Metadata } from 'next';
 import { ARTICLES } from '@/models/articles.model';
 import { getChunkOfNews } from '@/controllers/articles.controller';
 import { imagePathValidate } from '@/libs/utilsServer';
 import FillingValidImage from '@/components/Images/FillingValidImage';
-import ArticleList from '@/components/ArticleList/ArticleList';
+import ArticleList from '@/components/article/ArticleList/ArticleList';
 import Pagination from '@/components/Pagination/Pagination';
 import { notFound } from 'next/navigation';
 import { getFormattedDateStr } from '@/libs/utils';

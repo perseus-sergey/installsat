@@ -1,12 +1,12 @@
-import DangerHtml from '@/components/DangerHtml/DangerHtml';
+import DangerHtml from '@/components/ui/DangerHtml/DangerHtml';
 import FillingValidImage from '@/components/Images/FillingValidImage';
-import SatFinder from '@/components/SatFinder/SatFinder';
-import { Title } from '@/components/Title/Title';
+import SatFinder from '@/components/mapComponents/SatFinder/SatFinder';
+import { Title } from '@/components/ui/Title/Title';
 import { getSatFinderArticle } from '@/controllers/articles.controller';
 import { getSatsForForm } from '@/controllers/satDigest.controller';
 import { getFormattedDateStr } from '@/libs/utils';
 import { SAT_FINDER_META_DATA } from '@/models/satFinder.model';
-import { LANGUAGE, defaultMetaData } from '@/models/ui.model';
+import { EDBTableTitles, LANGUAGE, defaultMetaData } from '@/models/ui.model';
 import {
   EUrlBaseParam,
   EUrlSearchParam,
@@ -14,10 +14,13 @@ import {
 } from '@/models/url.model';
 import { Metadata } from 'next';
 import { Suspense } from 'react';
+import CommentList from '@/components/comments/CommentList/CommentList';
+import { getComments } from '@/controllers/comments.controller';
 
 const {
   keywords,
   images: { h1Image },
+  dbArticleId,
 } = SAT_FINDER_META_DATA;
 
 const satFinderArticleDBResult = await getSatFinderArticle();
@@ -42,9 +45,13 @@ export const metadata: Metadata = {
 
 export default async function Page() {
   const groupedSats = await getSatsForForm(false);
+  const commentsDbResult = await getComments(
+    EDBTableTitles.COMMENTS_ARTICLE,
+    dbArticleId
+  );
 
   // const commDbResult = await getComments(id, EDBTableTitles.COMMENTS_CHANNEL);
-  // const comments = commDbResult instanceof Error ? [] : commDbResult;
+  const comments = commentsDbResult instanceof Error ? [] : commentsDbResult;
 
   return (
     <>
@@ -87,6 +94,13 @@ export default async function Page() {
           ))}
         />
       ) : null} */}
+
+      <CommentList
+        comments={comments}
+        revalidateUrl={`/${EUrlBaseParam.SAT_FINDER}`}
+        dbCommentTableName={EDBTableTitles.COMMENTS_ARTICLE}
+        articleId={dbArticleId}
+      />
     </>
   );
 }

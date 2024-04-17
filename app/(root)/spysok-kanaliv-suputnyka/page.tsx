@@ -1,5 +1,5 @@
-import EmptyData from '@/components/EmptyData/EmptyData';
-import { Title } from '@/components/Title/Title';
+import EmptyData from '@/components/errors/EmptyData/EmptyData';
+import { Title } from '@/components/ui/Title/Title';
 import {
   getSatChannels,
   getGroupedChannelsAllSat,
@@ -9,10 +9,10 @@ import {
   START_CONTENT,
 } from '@/models/channelList.model';
 import type { Metadata } from 'next';
-import StartArticleSection from '@/components/StartArticleSection/StartArticleSection';
+import StartArticleSection from '@/components/article/StartArticleSection/StartArticleSection';
 import SatChannelsTable from '@/components/SatChannelsTable/SatChannelsTable';
 import FillingImg from '@/components/Images/FillingImage';
-import Fieldset from '@/components/Fieldset/Fieldset';
+import Fieldset from '@/components/ui/Fieldset/Fieldset';
 import {
   LANGUAGE as L,
   LANGUAGE,
@@ -25,11 +25,11 @@ import {
   EUrlSearchParam,
   SITE_BASE_URL,
 } from '@/models/url.model';
-import Filter from '@/components/Filter/Filter';
+import Filter from '@/components/ui/Filter/Filter';
 import { Suspense } from 'react';
 import AnchorListItem from '@/components/AnchorListItem/AnchorListItem';
 import { getChannelSatList } from '@/controllers/sidebar.controller';
-import ChannelFormatSliders from '@/components/ChannelFormatSliders/ChannelFormatSliders';
+import ChannelFormatSliders from '@/components/ui/ChannelFormatSliders/ChannelFormatSliders';
 
 const {
   getTitle,
@@ -130,6 +130,7 @@ export default async function Page({ searchParams }: IPageProps) {
             ))}
           </ul>
           <Filter
+            idName="channel-search-input"
             placeholder={placeholder[L]}
             labelTitle={labelTitle[L]}
             searchQueryTitle={EUrlSearchParam.CHANNEL}

@@ -4,7 +4,7 @@ import { EUrlSearchParam } from '@/models/url.model';
 import { ARTICLES } from '@/models/articles.model';
 import { LANGUAGE, TSearchParams } from '@/models/ui.model';
 import { makeUrlSearchParams } from '@/libs/utils';
-import TooltipSimple from '../TooltipSimple/TooltipSimple';
+import TooltipSimple from '../ui/TooltipSimple/TooltipSimple';
 
 interface IPaginationProps {
   page: number;

@@ -1,9 +1,9 @@
-import EmptyData from '@/components/EmptyData/EmptyData';
-import { Title } from '@/components/Title/Title';
+import EmptyData from '@/components/errors/EmptyData/EmptyData';
+import { Title } from '@/components/ui/Title/Title';
 import FillingValidImage from '@/components/Images/FillingValidImage';
 import { ARTICLES } from '@/models/articles.model';
 import { getArticle } from '@/controllers/articles.controller';
-import DangerHtml from '@/components/DangerHtml/DangerHtml';
+import DangerHtml from '@/components/ui/DangerHtml/DangerHtml';
 import { getFormattedDateStr } from '@/libs/utils';
 import { EUrlBaseParam } from '@/models/url.model';
 import BottomInfoPanel from '@/components/BottomInfoPanel/BottomInfoPanel';

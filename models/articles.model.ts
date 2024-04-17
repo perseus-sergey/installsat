@@ -209,6 +209,7 @@ export interface ISimilarArticleModel {
 }
 
 export interface ICommentsModel {
+  id: number;
   post: number;
   author: string;
   parent_id: number;

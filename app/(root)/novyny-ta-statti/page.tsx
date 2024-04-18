@@ -9,17 +9,15 @@ import ArticleList from '@/components/article/ArticleList/ArticleList';
 import Pagination from '@/components/Pagination/Pagination';
 import { notFound } from 'next/navigation';
 import { getFormattedDateStr } from '@/libs/utils';
-import {
-  EUrlBaseParam,
-  EUrlSearchParam,
-  SITE_BASE_URL,
-} from '@/models/url.model';
+import { EUrlBaseParam, EUrlSearchParam } from '@/models/url.model';
 import {
   LANGUAGE as L,
   LANGUAGE,
   TSearchParams,
   defaultMetaData,
 } from '@/models/ui.model';
+
+const { BASE_URL } = process.env;
 
 const { meta, pagination, images, articlesCountCaption } = ARTICLES.articleList;
 
@@ -44,7 +42,7 @@ export const metadata: Metadata = {
     ...defaultMetaData.openGraph,
     title: meta.getTitle()[L],
     description: meta.getDescription()[L],
-    url: `${SITE_BASE_URL}/${EUrlBaseParam.NEWS_AND_ARTICLES}`,
+    url: `${BASE_URL}/${EUrlBaseParam.NEWS_AND_ARTICLES}`,
     publishedTime: getFormattedDateStr(new Date()),
   },
 };

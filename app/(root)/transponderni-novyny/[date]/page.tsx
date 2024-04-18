@@ -4,8 +4,10 @@ import { getTransNewsForSingleDay } from '@/controllers/satDigest.controller';
 import { getDate } from '@/libs/utils';
 import { META_TRANS_NEWS_SINGLE } from '@/models/satDigest.model';
 import { LANGUAGE, defaultMetaData } from '@/models/ui.model';
-import { EUrlBaseParam, SITE_BASE_URL } from '@/models/url.model';
+import { EUrlBaseParam } from '@/models/url.model';
 import { notFound } from 'next/navigation';
+
+const { BASE_URL } = process.env;
 
 interface IPageParams {
   params: { date: string };
@@ -17,7 +19,7 @@ export const generateMetadata = async ({ params: { date } }: IPageParams) => {
   const description = META_TRANS_NEWS_SINGLE.getDescription(dateStr);
 
   return {
-    // metadataBase: new URL(SITE_BASE_URL),
+    // metadataBase: new URL(BASE_URL),
     title,
     description,
     keywords: META_TRANS_NEWS_SINGLE.getKeywords(dateStr),
@@ -25,7 +27,7 @@ export const generateMetadata = async ({ params: { date } }: IPageParams) => {
       ...defaultMetaData.openGraph,
       title,
       description,
-      url: `${SITE_BASE_URL}/${EUrlBaseParam.TRANSPONDER_NEWS}/${date}`,
+      url: `${BASE_URL}/${EUrlBaseParam.TRANSPONDER_NEWS}/${date}`,
       publishedTime: date,
     },
   };

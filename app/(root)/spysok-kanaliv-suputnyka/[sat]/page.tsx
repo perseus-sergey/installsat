@@ -16,8 +16,10 @@ import SatChannelsTable from '@/components/SatChannelsTable/SatChannelsTable';
 import FillingValidImage from '@/components/Images/FillingValidImage';
 import { cache } from 'react';
 import { LANGUAGE, defaultMetaData } from '@/models/ui.model';
-import { EUrlBaseParam, SITE_BASE_URL } from '@/models/url.model';
+import { EUrlBaseParam } from '@/models/url.model';
 import { getFormattedDateStr } from '@/libs/utils';
+
+const { BASE_URL } = process.env;
 
 const {
   getTitle,
@@ -65,7 +67,7 @@ export const generateMetadata = ({ params }: IPageParams): Metadata => {
       ...defaultMetaData.openGraph,
       title: metaTitle,
       description,
-      url: `${SITE_BASE_URL}/${EUrlBaseParam.SAT_CHANNEL_LIST}/${slug}`,
+      url: `${BASE_URL}/${EUrlBaseParam.SAT_CHANNEL_LIST}/${slug}`,
       publishedTime: getFormattedDateStr(new Date()),
     },
   };

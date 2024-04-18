@@ -20,16 +20,14 @@ import {
   defaultMetaData,
 } from '@/models/ui.model';
 import { getFormattedDateStr } from '@/libs/utils';
-import {
-  EUrlBaseParam,
-  EUrlSearchParam,
-  SITE_BASE_URL,
-} from '@/models/url.model';
+import { EUrlBaseParam, EUrlSearchParam } from '@/models/url.model';
 import Filter from '@/components/ui/Filter/Filter';
 import { Suspense } from 'react';
 import AnchorListItem from '@/components/AnchorListItem/AnchorListItem';
 import { getChannelSatList } from '@/controllers/sidebar.controller';
 import ChannelFormatSliders from '@/components/ui/ChannelFormatSliders/ChannelFormatSliders';
+
+const { BASE_URL } = process.env;
 
 const {
   getTitle,
@@ -55,7 +53,7 @@ export const metadata: Metadata = {
     ...defaultMetaData.openGraph,
     title: getTitle()[L],
     description: getDescription()[L],
-    url: `${SITE_BASE_URL}/${EUrlBaseParam.SAT_CHANNEL_LIST}`,
+    url: `${BASE_URL}/${EUrlBaseParam.SAT_CHANNEL_LIST}`,
     publishedTime: getFormattedDateStr(new Date()),
   },
 };

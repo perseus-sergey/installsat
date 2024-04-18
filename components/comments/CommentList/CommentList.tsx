@@ -5,6 +5,7 @@ import Comment from '../Comment/Comment';
 import FillingImg from '@/components/Images/FillingImage';
 import { ICommentsModel } from '@/models/articles.model';
 import { getFormattedDateStr } from '@/libs/utils';
+import { EDBTableTitles } from '@/models/ui.model';
 
 export interface IComments {
   id: number;
@@ -20,8 +21,9 @@ export const comments = {
 interface IProps {
   comments: ICommentsModel[];
   revalidateUrl: string;
-  dbCommentTableName: string;
+  dbCommentTableName: EDBTableTitles;
   articleId: number;
+  articleName: string;
 }
 
 const CommentList = ({
@@ -29,6 +31,7 @@ const CommentList = ({
   revalidateUrl,
   dbCommentTableName,
   articleId,
+  articleName,
 }: IProps) => {
   return (
     <section className={styles.CommentBlock} data-testid="CommentList">
@@ -37,6 +40,7 @@ const CommentList = ({
         revalidateUrl={revalidateUrl}
         dbCommentTableName={dbCommentTableName}
         articleId={articleId}
+        articleName={articleName}
       />
 
       <div className={styles.bansBlock}>
@@ -63,12 +67,12 @@ const CommentList = ({
             />
             Коментарі ({comments.length})
           </h3>
-          <div className={styles.CommentList}>
+          <ul className={styles.CommentList}>
             {comments.map((comment) => {
               const country = comment.country ? `(${comment.country})` : '';
 
               return (
-                <div key={comment.id} className={styles.commentContainer}>
+                <li key={comment.id} className={styles.commentContainer}>
                   <span
                     className={styles.commentDate}
                   >{`(${getFormattedDateStr(comment.date)})  `}</span>
@@ -76,10 +80,10 @@ const CommentList = ({
                     className={styles.commentAuthor}
                   >{`${comment.author} ${country}`}</span>
                   <p className={styles.commentText}>... {comment.text}</p>
-                </div>
+                </li>
               );
             })}
-          </div>
+          </ul>
         </>
       )}
     </section>

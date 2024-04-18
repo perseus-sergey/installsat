@@ -1,4 +1,11 @@
 import { IImgParams } from '@/models/ui.model';
+import {
+  randomBytes,
+  createCipheriv,
+  createDecipheriv,
+  scryptSync,
+} from 'crypto';
+
 import fs from 'fs';
 import path from 'path';
 
@@ -38,3 +45,28 @@ export const imagePathValidate = (
       ? alternativeImg
       : alternativeString;
 };
+
+// Функція для шифрування рядка
+export function encrypt(text: string, secretKey: string) {
+  const salt = randomBytes(16);
+  const key = scryptSync(secretKey, salt, 32);
+  const iv = randomBytes(16);
+  const cipher = createCipheriv('aes-256-cbc', key, iv);
+  let encrypted = cipher.update(text, 'utf8', 'hex');
+  encrypted += cipher.final('hex');
+
+  return `${salt.toString('hex')}:${iv.toString('hex')}:${encrypted}`;
+}
+
+// Функція для дешифрування рядка
+export function decrypt(text: string, secretKey: string) {
+  const [saltHex, ivHex, encrypted] = text.split(':');
+  const salt = Buffer.from(saltHex, 'hex');
+  const iv = Buffer.from(ivHex, 'hex');
+  const key = scryptSync(secretKey, salt, 32);
+  const decipher = createDecipheriv('aes-256-cbc', key, iv);
+  let decrypted = decipher.update(encrypted, 'hex', 'utf8');
+  decrypted += decipher.final('utf8');
+
+  return decrypted;
+}

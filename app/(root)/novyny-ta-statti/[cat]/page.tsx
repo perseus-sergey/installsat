@@ -15,11 +15,9 @@ import ArticleList from '@/components/article/ArticleList/ArticleList';
 import { notFound } from 'next/navigation';
 import Pagination from '@/components/Pagination/Pagination';
 import { LANGUAGE, TSearchParams, defaultMetaData } from '@/models/ui.model';
-import {
-  EUrlBaseParam,
-  EUrlSearchParam,
-  SITE_BASE_URL,
-} from '@/models/url.model';
+import { EUrlBaseParam, EUrlSearchParam } from '@/models/url.model';
+
+const { BASE_URL } = process.env;
 
 const {
   articleList: { pagination, images, articlesCountCaption },
@@ -74,7 +72,7 @@ export const generateMetadata = ({
       ...defaultMetaData.openGraph,
       title,
       description,
-      url: `${SITE_BASE_URL}/${EUrlBaseParam.NEWS_AND_ARTICLES}/${cpu}`,
+      url: `${BASE_URL}/${EUrlBaseParam.NEWS_AND_ARTICLES}/${cpu}`,
       publishedTime: getFormattedDateStr(currDateStr),
     },
   };

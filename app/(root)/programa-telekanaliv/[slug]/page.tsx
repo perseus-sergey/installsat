@@ -21,9 +21,11 @@ import {
   TSearchParams,
   defaultMetaData,
 } from '@/models/ui.model';
-import { EUrlBaseParam, SITE_BASE_URL } from '@/models/url.model';
+import { EUrlBaseParam } from '@/models/url.model';
 import { Metadata } from 'next';
 import Link from 'next/link';
+
+const { BASE_URL } = process.env;
 
 const {
   images: {
@@ -85,13 +87,13 @@ export const generateMetadata = async ({
     description: description || title,
     keywords: keywordsBefore[LANGUAGE] + description,
     alternates: {
-      canonical: `${SITE_BASE_URL}/${EUrlBaseParam.CHANNEL_PARAMS}/${addCanonical}`,
+      canonical: `${BASE_URL}/${EUrlBaseParam.CHANNEL_PARAMS}/${addCanonical}`,
     },
     openGraph: {
       ...defaultMetaData.openGraph,
       title: metaTitle,
       description: description || title,
-      url: `${SITE_BASE_URL}/${EUrlBaseParam.CHANNEL_PARAMS}/${chan_slug}`,
+      url: `${BASE_URL}/${EUrlBaseParam.CHANNEL_PARAMS}/${chan_slug}`,
       publishedTime: getFormattedDateStr(),
     },
   };

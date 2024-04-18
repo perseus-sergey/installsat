@@ -12,6 +12,7 @@ export default ({ ariaLabel, children, className, ...attributes }: IProps) => (
     className={className ? `${styles.Button} ${className}` : styles.Button}
     data-testid="TextButton"
     type="button"
+    role="button"
     {...attributes}
   >
     {children && children}

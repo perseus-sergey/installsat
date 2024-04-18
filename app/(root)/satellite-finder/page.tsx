@@ -7,15 +7,13 @@ import { getSatsForForm } from '@/controllers/satDigest.controller';
 import { getFormattedDateStr } from '@/libs/utils';
 import { SAT_FINDER_META_DATA } from '@/models/satFinder.model';
 import { EDBTableTitles, LANGUAGE, defaultMetaData } from '@/models/ui.model';
-import {
-  EUrlBaseParam,
-  EUrlSearchParam,
-  SITE_BASE_URL,
-} from '@/models/url.model';
+import { EUrlBaseParam, EUrlSearchParam } from '@/models/url.model';
 import { Metadata } from 'next';
 import { Suspense } from 'react';
 import CommentList from '@/components/comments/CommentList/CommentList';
 import { getComments } from '@/controllers/comments.controller';
+
+const { BASE_URL } = process.env;
 
 const {
   keywords,
@@ -24,21 +22,22 @@ const {
 } = SAT_FINDER_META_DATA;
 
 const satFinderArticleDBResult = await getSatFinderArticle();
-const articleData =
+
+const { title, description, text, view } =
   satFinderArticleDBResult instanceof Error
-    ? { title: '', description: '', text: '', logo: '', view: 0 }
+    ? { title: '', description: '', text: '', view: 0 }
     : satFinderArticleDBResult[0];
 
 export const metadata: Metadata = {
-  metadataBase: new URL(SITE_BASE_URL),
-  title: articleData.title,
-  description: articleData.description,
+  metadataBase: new URL(BASE_URL || ''),
+  title: title,
+  description: description,
   keywords: keywords[LANGUAGE],
   openGraph: {
     ...defaultMetaData.openGraph,
-    title: articleData.title,
-    description: articleData.description,
-    url: `${SITE_BASE_URL}/${EUrlBaseParam.SAT_FINDER}`,
+    title: title,
+    description: description,
+    url: `${BASE_URL}/${EUrlBaseParam.SAT_FINDER}`,
     publishedTime: getFormattedDateStr(new Date()),
   },
 };
@@ -57,7 +56,7 @@ export default async function Page() {
     <>
       <article className="article">
         <Title>
-          {articleData.title}
+          {title}
           <FillingValidImage
             image={h1Image}
             alternativeImgString={h1Image.alternativeStr}
@@ -76,9 +75,9 @@ export default async function Page() {
           </Suspense>
         </div>
 
-        <DangerHtml text={articleData.text} />
+        <DangerHtml text={text} />
 
-        <p>View: {articleData.view.toLocaleString('en-US')}</p>
+        <p>View: {view.toLocaleString('en-US')}</p>
       </article>
 
       {/* {similarArticles.length ? (
@@ -100,6 +99,7 @@ export default async function Page() {
         revalidateUrl={`/${EUrlBaseParam.SAT_FINDER}`}
         dbCommentTableName={EDBTableTitles.COMMENTS_ARTICLE}
         articleId={dbArticleId}
+        articleName={title}
       />
     </>
   );

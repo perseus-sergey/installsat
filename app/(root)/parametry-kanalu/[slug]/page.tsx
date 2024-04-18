@@ -21,14 +21,12 @@ import {
 import { getFormattedDateStr } from '@/libs/utils';
 import { META_CHANNEL } from '@/models/channel.model';
 import { LANGUAGE, EDBTableTitles, defaultMetaData } from '@/models/ui.model';
-import {
-  EUrlBaseParam,
-  EUrlSearchParam,
-  SITE_BASE_URL,
-} from '@/models/url.model';
+import { EUrlBaseParam, EUrlSearchParam } from '@/models/url.model';
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+
+const { BASE_URL } = process.env;
 
 const {
   images: {
@@ -94,13 +92,13 @@ export const generateMetadata = async ({
     description: description || title,
     keywords: keywordsBefore[LANGUAGE] + description,
     alternates: {
-      canonical: `${SITE_BASE_URL}/${EUrlBaseParam.CHANNEL_PARAMS}/${addCanonical}`,
+      canonical: `${BASE_URL}/${EUrlBaseParam.CHANNEL_PARAMS}/${addCanonical}`,
     },
     openGraph: {
       ...defaultMetaData.openGraph,
       title: metaTitle,
       description: description || title,
-      url: `${SITE_BASE_URL}/${EUrlBaseParam.CHANNEL_PARAMS}/${chan_slug}`,
+      url: `${BASE_URL}/${EUrlBaseParam.CHANNEL_PARAMS}/${chan_slug}`,
       publishedTime: getFormattedDateStr(),
     },
   };

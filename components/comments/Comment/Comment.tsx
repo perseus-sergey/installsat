@@ -9,23 +9,27 @@ import { ECommentFormNames, EMPTY_FORM_STATE } from '@/models/comments.model';
 import FieldError from '../FieldError/FieldError';
 import { useToastMessage } from '@/libs/hooks/useToastMessage';
 import { useFormReset } from '@/libs/hooks/useFormReset';
+import { EDBTableTitles } from '@/models/ui.model';
 
 const { AUTHOR, EMAIL, TEXT } = ECommentFormNames;
 
 interface ICommentProps {
   revalidateUrl: string;
-  dbCommentTableName: string;
+  dbCommentTableName: EDBTableTitles;
   articleId: number;
+  articleName: string;
 }
 
 const Comment = ({
   revalidateUrl,
   dbCommentTableName,
   articleId,
+  articleName,
 }: ICommentProps) => {
   const sendCommentHandler = formCommentAction.bind(
     null,
     articleId,
+    articleName,
     '',
     revalidateUrl,
     dbCommentTableName

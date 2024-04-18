@@ -1,7 +1,7 @@
 import './globals.scss';
 import Footer from '@/components/Footer/Footer';
 import Header from '@/components/Header/Header';
-import ToastProvider from '@/components/providers/ToastProvider/ToastProvider';
+import ToastProvider from '@/libs/ToastProvider/ToastProvider';
 
 export default function RootLayout({
   children,

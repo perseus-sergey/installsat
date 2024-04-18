@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import React from 'react';
-import { EUrlBaseParam, SITE_BASE_URL } from '@/models/url.model';
+import { EUrlBaseParam } from '@/models/url.model';
 import { getFormattedDateStr } from '@/libs/utils';
 import {
   LANGUAGE,
@@ -18,6 +18,8 @@ import EmptyData from '@/components/errors/EmptyData/EmptyData';
 import { IArticleParams } from './page';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+
+const { BASE_URL } = process.env;
 
 export interface IArticleLayoutParams extends IArticleParams {
   children: React.ReactNode;
@@ -41,7 +43,7 @@ export const generateMetadata = async ({
       ...defaultMetaData.openGraph,
       title,
       description,
-      url: `${SITE_BASE_URL}/${EUrlBaseParam.ARTICLE}/${slug}`,
+      url: `${BASE_URL}/${EUrlBaseParam.ARTICLE}/${slug}`,
       publishedTime: getFormattedDateStr(date),
     },
   };

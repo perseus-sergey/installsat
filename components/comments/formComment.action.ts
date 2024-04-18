@@ -8,6 +8,16 @@ import {
 import { ECommentFormNames, IFormState } from '@/models/comments.model';
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
+// import { Resend } from 'resend';
+import { render } from '@react-email/render';
+import { sendMail } from '@/libs/mail/sendMail';
+import {
+  CommentToAdminEmail,
+  CommentToUserEmail,
+} from '../EmailTemplate/EmailTemplate';
+import { EDBTableTitles } from '@/models/ui.model';
+
+const { MAIN_EMAIL } = process.env;
 
 const { AUTHOR, EMAIL, TEXT } = ECommentFormNames;
 
@@ -29,9 +39,10 @@ const commentSchema = z.object({
 
 export const formCommentAction = async (
   articleId: number,
+  articleName: string,
   userIp: string,
   revalidateUrl: string,
-  dbTableName: string,
+  dbTableName: EDBTableTitles,
   _formState: IFormState,
   formData: FormData
 ) => {
@@ -50,6 +61,56 @@ export const formCommentAction = async (
       validFormData[TEXT],
       userIp
     );
+
+    // const resend = new Resend(process.env.RESEND_API_KEY);
+    // await resend.emails.send({
+    //   from: 'Installsat <main@installsat.fun>',
+    //   // to: validFormData[EMAIL],
+    //   to: 'serubergey@gmail.com',
+    //   subject: 'Form Submission',
+    //   react: EmailTemplate({
+    //     name: validFormData[AUTHOR],
+    //     email: validFormData[EMAIL],
+    //     message: validFormData[TEXT],
+    //   }),
+    //   // html: render(
+    //   //   EmailTemplate({
+    //   //     name: validFormData[AUTHOR],
+    //   //     email: validFormData[EMAIL],
+    //   //     message: validFormData[TEXT],
+    //   //   })
+    //   // ),
+    // });
+
+    if (MAIN_EMAIL)
+      await sendMail({
+        to: MAIN_EMAIL,
+        subject: `Новий коментар до сторінки ${articleId}`,
+        body: render(
+          CommentToAdminEmail({
+            authorName: validFormData[AUTHOR],
+            authorEmail: validFormData[EMAIL],
+            commentText: validFormData[TEXT],
+          })
+        ),
+      });
+
+    if (validFormData[EMAIL])
+      await sendMail({
+        to: validFormData[EMAIL],
+        subject: `Новий коментар до сторінки ${articleId}`,
+        body: render(
+          CommentToUserEmail({
+            authorName: validFormData[AUTHOR],
+            authorEmail: validFormData[EMAIL],
+            commentText: validFormData[TEXT],
+            articleName: articleName,
+            articleId: articleId,
+            articlePath: revalidateUrl,
+            tblCommentName: dbTableName,
+          })
+        ),
+      });
   } catch (error) {
     return fromErrorToFormState(error);
   }
@@ -58,43 +119,3 @@ export const formCommentAction = async (
 
   return toFormState('SUCCESS', 'Comment created');
 };
-
-// 'use server';
-
-// import { LAST_NEWS_INTERVAL, rawSatDigest } from '@/models/satDigest.model';
-// import { revalidatePath } from 'next/cache';
-// import { getSatDigestNews } from '@/controllers/satDigest.controller';
-
-// const digestIntervalAction = async (
-//   _prevState: {
-//     message: string;
-//   },
-//   formData: FormData
-// ) => {
-//   const selectSats = formData.getAll('selectSats') as string[] | undefined;
-//   const timeInterval = formData.get('timeInterval') || LAST_NEWS_INTERVAL;
-//   const submitBtn = formData.get('submitBtn');
-
-//   if (submitBtn !== 'Submit')
-//     return {
-//       message: `The submit button was not clicked!`,
-//       newsIntervalResult: [rawSatDigest],
-//     };
-
-//   const newsIntervalResult = await getSatDigestNews(
-//     selectSats,
-//     Number(timeInterval)
-//   );
-
-//   if (newsIntervalResult instanceof Error)
-//     return {
-//       message: `Failed to fetch data. Error: ${newsIntervalResult.message}`,
-//       newsIntervalResult: [rawSatDigest],
-//     };
-
-//   revalidatePath('/');
-
-//   return { message: '', newsIntervalResult };
-// };
-
-// export default digestIntervalAction;

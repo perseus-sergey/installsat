@@ -5,19 +5,16 @@ import {
   insertComment,
   toFormState,
 } from '@/controllers/comments.controller';
-import { ECommentFormNames, IFormState } from '@/models/comments.model';
+import {
+  ECommentFormNames,
+  IFormState,
+  emptyFieldValues,
+} from '@/models/comments.model';
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
-// import { Resend } from 'resend';
-import { render } from '@react-email/render';
-import { sendMail } from '@/libs/mail/sendMail';
-import {
-  CommentToAdminEmail,
-  CommentToUserEmail,
-} from '../EmailTemplate/EmailTemplate';
 import { EDBTableTitles } from '@/models/ui.model';
 
-const { MAIN_EMAIL } = process.env;
+// const { MAIN_EMAIL } = process.env;
 
 const { AUTHOR, EMAIL, TEXT } = ECommentFormNames;
 
@@ -30,7 +27,6 @@ const commentSchema = z.object({
     z.literal(''),
     z.string().email('⛔ Не коректний формат електронної пошти!'),
   ]),
-  // [EMAIL]: z.string().email('⛔ Не коректний формат електронної пошти!'),
   [TEXT]: z
     .string()
     .min(2, '⛔ Введіть щонайменш 2 символи')
@@ -39,13 +35,14 @@ const commentSchema = z.object({
 
 export const formCommentAction = async (
   articleId: number,
-  articleName: string,
   userIp: string,
   revalidateUrl: string,
   dbTableName: EDBTableTitles,
   _formState: IFormState,
   formData: FormData
 ) => {
+  let fieldValues = emptyFieldValues;
+
   try {
     const validFormData = commentSchema.parse({
       [AUTHOR]: formData.get(AUTHOR),
@@ -61,6 +58,12 @@ export const formCommentAction = async (
       validFormData[TEXT],
       userIp
     );
+
+    fieldValues = {
+      authorName: validFormData[AUTHOR],
+      commentText: validFormData[TEXT],
+      authorEmail: validFormData[EMAIL],
+    };
 
     // const resend = new Resend(process.env.RESEND_API_KEY);
     // await resend.emails.send({
@@ -81,41 +84,11 @@ export const formCommentAction = async (
     //   //   })
     //   // ),
     // });
-
-    if (MAIN_EMAIL)
-      await sendMail({
-        to: MAIN_EMAIL,
-        subject: `Новий коментар до сторінки ${articleId}`,
-        body: render(
-          CommentToAdminEmail({
-            authorName: validFormData[AUTHOR],
-            authorEmail: validFormData[EMAIL],
-            commentText: validFormData[TEXT],
-          })
-        ),
-      });
-
-    if (validFormData[EMAIL])
-      await sendMail({
-        to: validFormData[EMAIL],
-        subject: `Новий коментар до сторінки ${articleId}`,
-        body: render(
-          CommentToUserEmail({
-            authorName: validFormData[AUTHOR],
-            authorEmail: validFormData[EMAIL],
-            commentText: validFormData[TEXT],
-            articleName: articleName,
-            articleId: articleId,
-            articlePath: revalidateUrl,
-            tblCommentName: dbTableName,
-          })
-        ),
-      });
   } catch (error) {
     return fromErrorToFormState(error);
   }
 
   revalidatePath(revalidateUrl);
 
-  return toFormState('SUCCESS', 'Comment created');
+  return toFormState('SUCCESS', 'Comment created', fieldValues);
 };

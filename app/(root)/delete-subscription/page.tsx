@@ -1,4 +1,7 @@
+import EmptyData from '@/components/errors/EmptyData/EmptyData';
 import { Title } from '@/components/ui/Title/Title';
+import { deleteSubscriptionEmail } from '@/controllers/comments.controller';
+import { validSearchParam } from '@/libs/utils';
 import { decrypt } from '@/libs/utilsServer';
 import { TSearchParams } from '@/models/ui.model';
 import { EUrlSearchParam } from '@/models/url.model';
@@ -6,20 +9,10 @@ import { EUrlSearchParam } from '@/models/url.model';
 const emailKey = process.env.MAIL_ENCRYPT_KEY || '';
 
 export interface IPageParams {
-  searchParams: TSearchParams;
+  searchParams?: TSearchParams;
 }
 
-const validSearchParam = (
-  paramName: EUrlSearchParam,
-  searchParams: TSearchParams
-) =>
-  searchParams &&
-  searchParams[paramName] &&
-  typeof searchParams[paramName] === 'string'
-    ? (searchParams[paramName] as string)
-    : '';
-
-export default function Page({ searchParams }: IPageParams) {
+export default async function Page({ searchParams }: IPageParams) {
   const articleIdEncrypted = validSearchParam(
     EUrlSearchParam.COMMENT_DEL_ARTICLE_ID,
     searchParams
@@ -37,21 +30,26 @@ export default function Page({ searchParams }: IPageParams) {
     searchParams
   );
 
-  const articleId = decrypt(articleIdEncrypted, emailKey);
-  const commentDbTable = decrypt(commentDbTableEncrypted, emailKey);
+  const articleId = await decrypt(articleIdEncrypted, emailKey);
+  const commentDbTable = await decrypt(commentDbTableEncrypted, emailKey);
+
+  const delResult = await deleteSubscriptionEmail(
+    commentDbTable,
+    articleId,
+    mail
+  );
+
+  if (delResult instanceof Error)
+    return <EmptyData description={delResult.message} />;
 
   return (
     <>
-      <article className="article">
-        <Title>Видалення підписки</Title>
-        <p style={{ fontWeight: 'bold', textAlign: 'center' }}>
-          Вашу E-Mail адресу ${mail} було вдало видалено із розсилки оновлень
-          коментарів до сторінки
-          <br />✧{articleTitle}✧
-        </p>
-        <p>ID: {articleId}</p>
-        <p>TBL: {commentDbTable}</p>
-      </article>
+      <Title>Видалення підписки</Title>
+      <p style={{ fontWeight: 'bold', textAlign: 'center' }}>
+        Вашу E-Mail адресу <span style={{ color: '#d30084' }}>{mail}</span> було
+        вдало видалено із розсилки оновлень коментарів до сторінки
+        <br />✧{articleTitle}✧
+      </p>
     </>
   );
 }

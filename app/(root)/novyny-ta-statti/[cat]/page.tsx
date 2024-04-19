@@ -8,7 +8,7 @@ import {
   getChunkOfNews,
 } from '@/controllers/articles.controller';
 import { imagePathValidate } from '@/libs/utilsServer';
-import { getFormattedDateStr } from '@/libs/utils';
+import { getFormattedDateStr, validSearchParam } from '@/libs/utils';
 import { cache } from 'react';
 import TextUnderH1 from '@/components/TextUnderH1/TextUnderH1';
 import ArticleList from '@/components/article/ArticleList/ArticleList';
@@ -98,17 +98,9 @@ export default async function Page({
 
   const { perPage } = pagination;
 
-  const page =
-    searchParams?.[EUrlSearchParam.PAGE] &&
-    typeof searchParams[EUrlSearchParam.PAGE] === 'string'
-      ? searchParams[EUrlSearchParam.PAGE]
-      : '1';
+  const page = validSearchParam(EUrlSearchParam.PAGE, searchParams) || '1';
 
-  const searchQuery =
-    searchParams?.[EUrlSearchParam.ARTICLE] &&
-    typeof searchParams[EUrlSearchParam.ARTICLE] === 'string'
-      ? searchParams[EUrlSearchParam.ARTICLE]
-      : '';
+  const searchQuery = validSearchParam(EUrlSearchParam.ARTICLE, searchParams);
 
   const pageNumber = parseInt(page, 10);
   if (isNaN(pageNumber)) notFound();

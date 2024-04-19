@@ -10,6 +10,7 @@ import FieldError from '../FieldError/FieldError';
 import { useToastMessage } from '@/libs/hooks/useToastMessage';
 import { useFormReset } from '@/libs/hooks/useFormReset';
 import { EDBTableTitles } from '@/models/ui.model';
+import { useFormCommentSendEmail } from '@/libs/hooks/useFormCommentSendEmail';
 
 const { AUTHOR, EMAIL, TEXT } = ECommentFormNames;
 
@@ -29,7 +30,6 @@ const Comment = ({
   const sendCommentHandler = formCommentAction.bind(
     null,
     articleId,
-    articleName,
     '',
     revalidateUrl,
     dbCommentTableName
@@ -41,6 +41,13 @@ const Comment = ({
   );
 
   const noScriptFallback = useToastMessage(formState);
+  useFormCommentSendEmail(
+    formState,
+    articleName,
+    revalidateUrl,
+    dbCommentTableName,
+    articleId
+  );
   const formRef = useFormReset(formState);
 
   return (

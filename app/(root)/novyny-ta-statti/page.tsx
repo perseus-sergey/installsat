@@ -8,7 +8,7 @@ import FillingValidImage from '@/components/Images/FillingValidImage';
 import ArticleList from '@/components/article/ArticleList/ArticleList';
 import Pagination from '@/components/Pagination/Pagination';
 import { notFound } from 'next/navigation';
-import { getFormattedDateStr } from '@/libs/utils';
+import { getFormattedDateStr, validSearchParam } from '@/libs/utils';
 import { EUrlBaseParam, EUrlSearchParam } from '@/models/url.model';
 import {
   LANGUAGE as L,
@@ -49,17 +49,9 @@ export const metadata: Metadata = {
 export default async function Page({ searchParams }: IProps) {
   const { perPage } = pagination;
 
-  const page =
-    searchParams?.[EUrlSearchParam.PAGE] &&
-    typeof searchParams[EUrlSearchParam.PAGE] === 'string'
-      ? searchParams[EUrlSearchParam.PAGE]
-      : '1';
+  const page = validSearchParam(EUrlSearchParam.PAGE, searchParams) || '1';
 
-  const searchQuery =
-    searchParams?.[EUrlSearchParam.ARTICLE] &&
-    typeof searchParams[EUrlSearchParam.ARTICLE] === 'string'
-      ? searchParams[EUrlSearchParam.ARTICLE]
-      : '';
+  const searchQuery = validSearchParam(EUrlSearchParam.ARTICLE, searchParams);
 
   const pageNumber = parseInt(page, 10);
   if (isNaN(pageNumber)) notFound();

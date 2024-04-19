@@ -1,11 +1,14 @@
+'use server';
+
 import nodemailer from 'nodemailer';
 
 interface IProps {
-  to: string;
+  to?: string;
   subject: string;
   body: string;
 }
 
+const { MAIN_EMAIL } = process.env;
 export async function sendMail({ to, subject, body }: IProps) {
   const { GOOGLE_APP_MAIL_SMTP, GOOGLE_APP_MAIL_SMTP_PASS } = process.env;
 
@@ -17,14 +20,24 @@ export async function sendMail({ to, subject, body }: IProps) {
     },
   });
 
-  const testResult = await transport.verify();
+  try {
+    const testResult = await transport.verify();
+    console.log(testResult);
+  } catch (error) {
+    console.error({ error });
 
-  if (testResult) {
-    await transport.sendMail({
-      from: GOOGLE_APP_MAIL_SMTP,
-      to,
+    return;
+  }
+
+  try {
+    const sendResult = await transport.sendMail({
+      from: `Installsat <${GOOGLE_APP_MAIL_SMTP}>`,
+      to: to || MAIN_EMAIL,
       subject,
       html: body,
     });
+    console.log(sendResult);
+  } catch (error) {
+    console.log(error);
   }
 }

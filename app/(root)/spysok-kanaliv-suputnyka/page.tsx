@@ -19,7 +19,7 @@ import {
   TSearchParams,
   defaultMetaData,
 } from '@/models/ui.model';
-import { getFormattedDateStr } from '@/libs/utils';
+import { getFormattedDateStr, validSearchParam } from '@/libs/utils';
 import { EUrlBaseParam, EUrlSearchParam } from '@/models/url.model';
 import Filter from '@/components/ui/Filter/Filter';
 import { Suspense } from 'react';
@@ -62,11 +62,10 @@ interface IPageProps {
 }
 
 export default async function Page({ searchParams }: IPageProps) {
-  const searchQueryChannel =
-    searchParams?.[EUrlSearchParam.CHANNEL] &&
-    typeof searchParams[EUrlSearchParam.CHANNEL] === 'string'
-      ? searchParams[EUrlSearchParam.CHANNEL]
-      : '';
+  const searchQueryChannel = validSearchParam(
+    EUrlSearchParam.CHANNEL,
+    searchParams
+  );
 
   const satChannels = await getSatChannels(
     searchQueryChannel,

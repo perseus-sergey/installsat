@@ -1,3 +1,5 @@
+'use server';
+
 import { makeUrlSearchParams } from '@/libs/utils';
 import { encrypt } from '@/libs/utilsServer';
 import { EDBTableTitles } from '@/models/ui.model';
@@ -54,7 +56,7 @@ export const CommentToAdminEmail = ({
   );
 };
 
-export const CommentToUserEmail = ({
+export const CommentToUserEmail = async ({
   authorName,
   authorEmail,
   commentText,
@@ -66,9 +68,9 @@ export const CommentToUserEmail = ({
   const previewText = `Read ${authorName}'s comment`;
   const delCommentSearchParams = makeUrlSearchParams({
     [COMMENT_DEL_AUTHOR_EMAIL]: authorEmail,
-    [COMMENT_DEL_ARTICLE_ID]: encrypt(`${articleId}`, emailKey),
+    [COMMENT_DEL_ARTICLE_ID]: await encrypt(`${articleId}`, emailKey),
     [COMMENT_DEL_ARTICLE_NAME]: articleName,
-    [COMMENT_DEL_DB_TABLE]: encrypt(tblCommentName || '', emailKey),
+    [COMMENT_DEL_DB_TABLE]: await encrypt(tblCommentName || '', emailKey),
   });
   const removeSubscriptionUrl = `${baseUrl}/${EUrlBaseParam.DELETE_COMMENT_SUBSCRIPTION}?${delCommentSearchParams}`;
 
@@ -190,8 +192,8 @@ export const CommentToUserEmail = ({
 
 const main = {
   backgroundColor: '#ffffff',
-  fontFamily:
-    '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif',
+  // fontFamily:
+  //   '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif',
 };
 
 const container = {
@@ -239,7 +241,7 @@ const reportLink = {
 };
 
 const hr = {
-  borderBottom: '2px groove #e2e2e2;',
+  borderBottom: '2px groove #e2e2e2',
   margin: '20px 0',
 };
 

@@ -2,7 +2,11 @@ import { ZodError } from 'zod';
 import { executeQuery } from '@/libs/db/mysqldb';
 import { getFormattedDateStr } from '@/libs/utils';
 import { ICommentsModel } from '@/models/articles.model';
-import { IFormState } from '@/models/comments.model';
+import {
+  TCommentFieldValues,
+  IFormState,
+  emptyFieldValues,
+} from '@/models/comments.model';
 
 export const getComments = async (tblName: string, postId: number) => {
   const sql = `
@@ -23,23 +27,30 @@ export const insertComment = async (
 ) =>
   await executeQuery(
     `INSERT INTO ${dbTableName} (post,author,mail,text,date,ip,country) VALUES (?,?,?,?,?,?,?)`,
-    [
-      `${articleId}`,
-      `${author}`,
-      `${email}`,
-      `${text}`,
-      `${getFormattedDateStr()}`,
-      `${ip}`,
-      `${country}`,
-    ]
+    [`${articleId}`, author, email, text, getFormattedDateStr(), ip, country]
   );
-export const fromErrorToFormState = (error: unknown): IFormState => {
+
+export const deleteSubscriptionEmail = async (
+  dbTableName: string,
+  articleId: string,
+  email: string
+) =>
+  await executeQuery(
+    `UPDATE ${dbTableName} SET mail='' WHERE post=? AND mail=?`,
+    [articleId, email]
+  );
+
+export const fromErrorToFormState = (
+  error: unknown,
+  fieldValues = emptyFieldValues
+): IFormState => {
   if (error instanceof ZodError) {
     return {
       status: 'ERROR' as const,
       message: '',
       fieldErrors: error.flatten().fieldErrors,
       timestamp: Date.now(),
+      fieldValues,
     };
   } else if (error instanceof Error) {
     return {
@@ -47,6 +58,7 @@ export const fromErrorToFormState = (error: unknown): IFormState => {
       message: error.message,
       fieldErrors: {},
       timestamp: Date.now(),
+      fieldValues,
     };
   } else {
     return {
@@ -54,18 +66,21 @@ export const fromErrorToFormState = (error: unknown): IFormState => {
       message: 'An unknown error occurred',
       fieldErrors: {},
       timestamp: Date.now(),
+      fieldValues,
     };
   }
 };
 
 export const toFormState = (
   status: IFormState['status'],
-  message: string
+  message: string,
+  fieldValues: TCommentFieldValues
 ): IFormState => {
   return {
     status,
     message,
     fieldErrors: {},
     timestamp: Date.now(),
+    fieldValues,
   };
 };

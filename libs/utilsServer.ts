@@ -1,4 +1,7 @@
+'use server';
+
 import { IImgParams } from '@/models/ui.model';
+// import { EUrlSearchParam } from '@/models/url.model';
 import {
   randomBytes,
   createCipheriv,
@@ -46,8 +49,17 @@ export const imagePathValidate = (
       : alternativeString;
 };
 
-// Функція для шифрування рядка
-export function encrypt(text: string, secretKey: string) {
+// export const validSearchParam = (
+//   paramName: EUrlSearchParam,
+//   searchParams?: TSearchParams
+// ) =>
+//   searchParams &&
+//   searchParams[paramName] &&
+//   typeof searchParams[paramName] === 'string'
+//     ? (searchParams[paramName] as string)
+//     : '';
+
+export const encrypt = async (text: string, secretKey: string) => {
   const salt = randomBytes(16);
   const key = scryptSync(secretKey, salt, 32);
   const iv = randomBytes(16);
@@ -56,10 +68,9 @@ export function encrypt(text: string, secretKey: string) {
   encrypted += cipher.final('hex');
 
   return `${salt.toString('hex')}:${iv.toString('hex')}:${encrypted}`;
-}
+};
 
-// Функція для дешифрування рядка
-export function decrypt(text: string, secretKey: string) {
+export const decrypt = async (text: string, secretKey: string) => {
   const [saltHex, ivHex, encrypted] = text.split(':');
   const salt = Buffer.from(saltHex, 'hex');
   const iv = Buffer.from(ivHex, 'hex');
@@ -69,4 +80,4 @@ export function decrypt(text: string, secretKey: string) {
   decrypted += decipher.final('utf8');
 
   return decrypted;
-}
+};

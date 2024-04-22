@@ -1,6 +1,4 @@
-// import useCommentNode from '@/libs/hooks/useCommentNode';
 import styles from './CommentList.module.scss';
-// import { useState } from 'react';
 import Comment from '../Comment/Comment';
 import FillingImg from '@/components/Images/FillingImage';
 import { ICommentsModel } from '@/models/articles.model';
@@ -100,28 +98,3 @@ const CommentList = ({
 };
 
 export default CommentList;
-
-// function printComments ($tbl_comm, $id, $db, $SxGeo) {
-//   $comment_query = mysql_query ("SELECT * FROM $tbl_comm WHERE post=$id ORDER BY `id` DESC",$db);
-//   if (mysql_num_rows($comment_query) > 0){
-//   $array_comment = mysql_fetch_array ($comment_query);
-//   do{
-//     if($array_comment["ip"]){
-//       //$country=tabgeo_country_v4($array_comment["ip"]);
-//       $country=$SxGeo->get($array_comment["ip"]);
-//       $country=" ($country)";
-//     }
-//     else $country="";
-//     $text=str_replace("\r","<br />",$array_comment["text"]);
-//     echo "
-//     <div class='comments'>
-//     <span class='date'>($array_comment[date])  </span>
-//     <span class = 'author'>$array_comment[author]$country</span>
-//     <p class = 'post'>... $text</p>
-//     </div>";
-//   }
-//   while ($array_comment = mysql_fetch_array ($comment_query));
-//   }
-//   else {echo "<p class = 'comments'>Если вас заинтересовала данная информация, напишите свой комментарий.<br />
-//   Предупреждение: Все комментарии оскорбительного характера будут удалены!</p>";}
-// } // function printComments

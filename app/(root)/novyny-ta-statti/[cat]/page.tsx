@@ -7,8 +7,8 @@ import {
   getArticleCatList,
   getChunkOfNews,
 } from '@/controllers/articles.controller';
-import { imagePathValidate } from '@/libs/utilsServer';
-import { getFormattedDateStr, validSearchParam } from '@/libs/utils';
+import { imagePathValidate, validSearchParam } from '@/libs/utilsServer';
+import { getFormattedDateStr } from '@/libs/utils';
 import { cache } from 'react';
 import TextUnderH1 from '@/components/TextUnderH1/TextUnderH1';
 import ArticleList from '@/components/article/ArticleList/ArticleList';

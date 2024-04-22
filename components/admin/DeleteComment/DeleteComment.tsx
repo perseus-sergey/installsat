@@ -1,8 +1,6 @@
 'use client';
 
 import TooltipSimple from '@/components/ui/TooltipSimple/TooltipSimple';
-// import styles from './DeleteComment.module.scss';
-// import BaseButton from '@/components/ui/buttons/BaseButton/BaseButton';
 import { useFormState } from 'react-dom';
 import { SubmitPendingButton } from '@/components/ui/buttons/SubmitPendingBtn';
 import { useToastMessage } from '@/libs/hooks/useToastMessage';
@@ -38,9 +36,9 @@ const DeleteComment = ({
       <TooltipSimple tooltipText="Remove comment">
         <SubmitPendingButton
           ariaLabel="Remove comment"
-          style={{ color: 'red' }}
+          style={{ color: 'red', minWidth: '3rem', textAlign: 'center' }}
           innerHtml="⌫"
-          pendingInnerHtml="⌫..."
+          pendingInnerHtml="🕓"
         />
       </TooltipSimple>
       {noScriptFallback}

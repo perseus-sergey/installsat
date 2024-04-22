@@ -3,7 +3,7 @@ import EmptyData from '@/components/errors/EmptyData/EmptyData';
 import { Title } from '@/components/ui/Title/Title';
 import TooltipSimple from '@/components/ui/TooltipSimple/TooltipSimple';
 import { getComments } from '@/controllers/comments.controller';
-import { validSearchParam } from '@/libs/utils';
+import { validSearchParam } from '@/libs/utilsServer';
 import { decrypt } from '@/libs/utilsServer';
 import { TSearchParams } from '@/models/ui.model';
 import { EUrlAdminParam, EUrlSearchParam } from '@/models/url.model';
@@ -32,17 +32,6 @@ export default async function Page({ searchParams }: IPageParams) {
 
   if (comments instanceof Error)
     return <EmptyData description={comments.message} />;
-
-  // const onDeleteComment = async (_e: MouseEvent, commentID: number) => {
-  //   await deleteComment(commentDbTable, `${commentID}`);
-
-  //   // if (delCommentResult instanceof Error)
-  //   //   return fromErrorToFormState(delCommentResult.message);
-
-  //   revalidatePath(
-  //     `/${EUrlAdminParam.BASE_PATH}/${EUrlAdminParam.EDIT_COMMENT}`
-  //   );
-  // };
 
   return (
     <>

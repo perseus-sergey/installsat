@@ -1,13 +1,8 @@
 'use client';
 
 import { Toaster } from 'react-hot-toast';
-// import styles from './ToastProvider.module.scss';
 
-interface IToastProviderProps {
-  children?: React.ReactNode;
-}
-
-const ToastProvider = ({ children }: IToastProviderProps) => (
+const ToastProvider = ({ children }: { children?: React.ReactNode }) => (
   <>
     {children}
     <Toaster />

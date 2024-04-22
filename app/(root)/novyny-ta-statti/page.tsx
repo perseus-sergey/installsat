@@ -3,12 +3,12 @@ import { Title } from '@/components/ui/Title/Title';
 import type { Metadata } from 'next';
 import { ARTICLES } from '@/models/articles.model';
 import { getChunkOfNews } from '@/controllers/articles.controller';
-import { imagePathValidate } from '@/libs/utilsServer';
+import { imagePathValidate, validSearchParam } from '@/libs/utilsServer';
 import FillingValidImage from '@/components/Images/FillingValidImage';
 import ArticleList from '@/components/article/ArticleList/ArticleList';
 import Pagination from '@/components/Pagination/Pagination';
 import { notFound } from 'next/navigation';
-import { getFormattedDateStr, validSearchParam } from '@/libs/utils';
+import { getFormattedDateStr } from '@/libs/utils';
 import { EUrlBaseParam, EUrlSearchParam } from '@/models/url.model';
 import {
   LANGUAGE as L,

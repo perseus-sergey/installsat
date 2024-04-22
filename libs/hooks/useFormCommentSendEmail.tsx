@@ -4,7 +4,7 @@ import { renderAsync } from '@react-email/render';
 import {
   CommentToAdminEmail,
   CommentToUserEmail,
-} from '@/components/EmailTemplate/EmailTemplate';
+} from '@/components/EmailTemplates/CommentEmail.template';
 import { EDBTableTitles } from '@/models/ui.model';
 import { getArticleSubscribers } from '@/controllers/comments.controller';
 import { IFormState } from '@/controllers/toast.controller';

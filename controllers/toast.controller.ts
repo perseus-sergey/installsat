@@ -16,18 +16,6 @@ export const EMPTY_FORM_STATE: IFormState = {
   timestamp: Date.now(),
 };
 
-// export interface IFormStateForToast {
-//   status: 'UNSET' | 'SUCCESS' | 'ERROR';
-//   message: string;
-//   timestamp: number;
-// }
-
-// export const EMPTY_FORM_STATE: IFormStateForToast = {
-//   status: 'UNSET' as const,
-//   message: '',
-//   timestamp: Date.now(),
-// };
-
 export const fromErrorToFormState = (error: unknown): IFormState => ({
   status: 'ERROR' as const,
   message: error instanceof Error ? error.message : 'An unknown error occurred',
@@ -35,46 +23,6 @@ export const fromErrorToFormState = (error: unknown): IFormState => ({
   timestamp: Date.now(),
   fieldValues: {},
 });
-
-// export const toFormState = (
-//   status: IFormState['status'],
-//   message: string
-// ): IFormState => ({
-//   status,
-//   message,
-//   timestamp: Date.now(),
-// });
-
-// export const fromErrorToFormState = (
-//   error: unknown,
-//   fieldValues = emptyFieldValues
-// ): IFormState => {
-//   if (error instanceof ZodError) {
-//     return {
-//       status: 'ERROR' as const,
-//       message: '',
-//       fieldErrors: error.flatten().fieldErrors,
-//       timestamp: Date.now(),
-//       fieldValues,
-//     };
-//   } else if (error instanceof Error) {
-//     return {
-//       status: 'ERROR' as const,
-//       message: error.message,
-//       fieldErrors: {},
-//       timestamp: Date.now(),
-//       fieldValues,
-//     };
-//   } else {
-//     return {
-//       status: 'ERROR' as const,
-//       message: 'An unknown error occurred',
-//       fieldErrors: {},
-//       timestamp: Date.now(),
-//       fieldValues,
-//     };
-//   }
-// };
 
 export const toFormState = (
   status: IFormState['status'],

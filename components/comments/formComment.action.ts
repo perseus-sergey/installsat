@@ -1,7 +1,7 @@
 'use server';
 
 import { insertComment } from '@/controllers/comments.controller';
-import { ECommentFormNames, emptyFieldValues } from '@/models/comments.model';
+import { ECommentFormNames } from '@/models/comments.model';
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
 import { EDBTableTitles } from '@/models/ui.model';
@@ -11,7 +11,11 @@ import {
   toFormState,
 } from '@/controllers/toast.controller';
 
-// const { MAIN_EMAIL } = process.env;
+const emptyFieldValues = {
+  authorName: '',
+  commentText: '',
+  authorEmail: '',
+};
 
 const { AUTHOR, EMAIL, TEXT } = ECommentFormNames;
 

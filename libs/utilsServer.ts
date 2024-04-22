@@ -1,6 +1,7 @@
 'use server';
 
-import { IImgParams } from '@/models/ui.model';
+import { IImgParams, TSearchParams } from '@/models/ui.model';
+import { EUrlSearchParam } from '@/models/url.model';
 // import { EUrlSearchParam } from '@/models/url.model';
 import {
   randomBytes,
@@ -49,15 +50,15 @@ export const imagePathValidate = (
       : alternativeString;
 };
 
-// export const validSearchParam = (
-//   paramName: EUrlSearchParam,
-//   searchParams?: TSearchParams
-// ) =>
-//   searchParams &&
-//   searchParams[paramName] &&
-//   typeof searchParams[paramName] === 'string'
-//     ? (searchParams[paramName] as string)
-//     : '';
+export const validSearchParam = (
+  paramName: EUrlSearchParam,
+  searchParams?: TSearchParams
+) =>
+  searchParams &&
+  searchParams[paramName] &&
+  typeof searchParams[paramName] === 'string'
+    ? (searchParams[paramName] as string)
+    : '';
 
 export const encrypt = async (text: string, secretKey: string) => {
   const salt = randomBytes(16);

@@ -22,8 +22,6 @@ export async function sendMail({ to, subject, body }: IProps) {
 
   try {
     await transport.verify();
-    // const testResult = await transport.verify();
-    // console.log(testResult);
   } catch (error) {
     console.error({ error });
 
@@ -37,7 +35,6 @@ export async function sendMail({ to, subject, body }: IProps) {
       subject,
       html: body,
     });
-    // console.log(sendResult);
   } catch (error) {
     console.error(error);
   }

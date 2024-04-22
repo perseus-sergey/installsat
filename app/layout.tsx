@@ -1,4 +1,4 @@
-import './globals.scss';
+import '../globals.scss';
 import Footer from '@/components/Footer/Footer';
 import Header from '@/components/Header/Header';
 import ToastProvider from '@/libs/ToastProvider/ToastProvider';

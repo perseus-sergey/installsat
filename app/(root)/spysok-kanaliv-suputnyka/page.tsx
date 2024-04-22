@@ -19,13 +19,14 @@ import {
   TSearchParams,
   defaultMetaData,
 } from '@/models/ui.model';
-import { getFormattedDateStr, validSearchParam } from '@/libs/utils';
+import { getFormattedDateStr } from '@/libs/utils';
 import { EUrlBaseParam, EUrlSearchParam } from '@/models/url.model';
 import Filter from '@/components/ui/Filter/Filter';
 import { Suspense } from 'react';
 import AnchorListItem from '@/components/AnchorListItem/AnchorListItem';
 import { getChannelSatList } from '@/controllers/sidebar.controller';
 import ChannelFormatSliders from '@/components/ui/ChannelFormatSliders/ChannelFormatSliders';
+import { validSearchParam } from '@/libs/utilsServer';
 
 const { BASE_URL } = process.env;
 

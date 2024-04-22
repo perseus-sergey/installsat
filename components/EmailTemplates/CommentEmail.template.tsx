@@ -30,9 +30,6 @@ const {
   COMMENT_DEL_DB_TABLE,
 } = EUrlSearchParam;
 
-// const baseUrl = process.env.BASE_URL || '';
-// const emailKey = process.env.MAIL_ENCRYPT_KEY || '';
-
 interface IEmailTemplateProps {
   authorName: string | undefined;
   commentText: string | undefined;
@@ -276,8 +273,8 @@ export const CommentToUserEmail = async ({
 
 const main = {
   backgroundColor: '#ffffff',
-  // fontFamily:
-  //   '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif',
+  fontFamily:
+    '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif',
 };
 
 const container = {

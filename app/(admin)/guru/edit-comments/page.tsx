@@ -5,7 +5,7 @@ import TooltipSimple from '@/components/ui/TooltipSimple/TooltipSimple';
 import { getComments } from '@/controllers/comments.controller';
 import { validSearchParam } from '@/libs/utilsServer';
 import { decrypt } from '@/libs/utilsServer';
-import { TSearchParams } from '@/models/ui.model';
+import { EDBTableTitles, TSearchParams } from '@/models/ui.model';
 import { EUrlAdminParam, EUrlSearchParam } from '@/models/url.model';
 import Link from 'next/link';
 
@@ -26,7 +26,10 @@ export default async function Page({ searchParams }: IPageParams) {
   );
 
   const articleId = await decrypt(articleIdEncrypted, emailKey);
-  const commentDbTable = await decrypt(commentDbTableEncrypted, emailKey);
+  const commentDbTable = (await decrypt(
+    commentDbTableEncrypted,
+    emailKey
+  )) as EDBTableTitles;
 
   const comments = await getComments(commentDbTable, +articleId);
 

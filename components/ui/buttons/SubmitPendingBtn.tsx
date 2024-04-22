@@ -17,11 +17,15 @@ export function SubmitPendingButton({
   ...attributes
 }: IProps) {
   const { pending } = useFormStatus();
+  const submitButtonStyle = {
+    cursor: pending ? 'wait' : 'pointer',
+  };
 
   return (
     <BaseButton
       type="submit"
       disabled={pending}
+      style={submitButtonStyle}
       ariaLabel={ariaLabel}
       {...attributes}
     >

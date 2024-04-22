@@ -9,7 +9,7 @@ import {
 import { getSatsForForm } from '@/controllers/satDigest.controller';
 import { getFormattedDateStr } from '@/libs/utils';
 import { SAT_FINDER_META_DATA } from '@/models/satFinder.model';
-import { EDBTableTitles, LANGUAGE, defaultMetaData } from '@/models/ui.model';
+import { EDBTableTitles, LANGUAGE, DEFAULT_META_DATA } from '@/models/ui.model';
 import { EUrlBaseParam, EUrlSearchParam } from '@/models/url.model';
 import { Metadata } from 'next';
 import { Suspense } from 'react';
@@ -35,13 +35,13 @@ const { title, description, text, view } =
 
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL || ''),
-  title: title,
-  description: description,
+  title,
+  description,
   keywords: keywords[LANGUAGE],
   openGraph: {
-    ...defaultMetaData.openGraph,
-    title: title,
-    description: description,
+    ...DEFAULT_META_DATA.openGraph,
+    title,
+    description,
     url: `${BASE_URL}/${EUrlBaseParam.SAT_FINDER}`,
     publishedTime: getFormattedDateStr(new Date()),
   },

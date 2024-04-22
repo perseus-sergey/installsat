@@ -1,6 +1,28 @@
-// import { ELanguage } from './ui.model';
+import { ELanguage } from './ui.model';
 
 export const COMMENTS_MODEL = {
+  deleteSubscriptionPage: {
+    meta: {
+      title: 'Delete Comment Subscription',
+      description: 'Remove Subscription for certain user',
+      keywords: 'installsat tv resource news remove subscription',
+    },
+    h1: {
+      [ELanguage.UA]: 'Видалення підписки для користувача',
+      [ELanguage.EN]: 'Delete Subscription for user',
+    },
+    askText: {
+      [ELanguage.UA]: 'Ви впевнені, що хочете видалити підписку до сторінки',
+      [ELanguage.EN]:
+        'Are you sure you want to delete the subscription to the page',
+    },
+    answerText: {
+      [ELanguage.UA]:
+        'Вашу E-Mail адресу було вдало видалено із розсилки оновлень коментарів до сторінки',
+      [ELanguage.EN]:
+        'Your E-Mail address has been successfully deleted from the newsletter updates to the page',
+    },
+  },
   // searchForm: {
   //   fieldsetTitle: {
   //     [ELanguage.UA]: 'Виберіть адресу та супутники',

@@ -19,7 +19,7 @@ import {
   LANGUAGE,
   EDBTableTitles,
   TSearchParams,
-  defaultMetaData,
+  DEFAULT_META_DATA,
 } from '@/models/ui.model';
 import { EUrlBaseParam } from '@/models/url.model';
 import { Metadata } from 'next';
@@ -50,7 +50,7 @@ export const generateMetadata = async ({
   params: { slug },
 }: IPageProps): Promise<Metadata> => {
   const sqlResult = await getDBChannel(slug);
-  if (sqlResult instanceof Error) return defaultMetaData[LANGUAGE];
+  if (sqlResult instanceof Error) return DEFAULT_META_DATA[LANGUAGE];
 
   const {
     title,
@@ -90,7 +90,7 @@ export const generateMetadata = async ({
       canonical: `${BASE_URL}/${EUrlBaseParam.CHANNEL_PARAMS}/${addCanonical}`,
     },
     openGraph: {
-      ...defaultMetaData.openGraph,
+      ...DEFAULT_META_DATA.openGraph,
       title: metaTitle,
       description: description || title,
       url: `${BASE_URL}/${EUrlBaseParam.CHANNEL_PARAMS}/${chan_slug}`,

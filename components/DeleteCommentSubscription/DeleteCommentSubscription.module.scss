@@ -1,0 +1,73 @@
+.DeleteCommentSubscription {
+}
+
+.responseBlock {
+  opacity: 0;
+  font-size: 0;
+  font-weight: bold;
+  text-align: center;
+  animation: fadeIn 1s ease forwards;
+
+  @keyframes fadeIn {
+    from {
+      font-size: 0;
+      opacity: 0;
+    }
+    to {
+      font-size: 100%;
+      opacity: 1;
+    }
+  }
+
+  .articleName {
+    color: #3c3f72;
+    font-size: 1.1rem;
+  }
+}
+
+.buttonsWrapper {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  padding: 2rem 1rem;
+
+  .confirmButton,
+  .cancelButton {
+    min-width: 7rem;
+    border: 1px solid;
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: 0.8rem;
+  }
+
+  .confirmButton {
+    .checkMark {
+      width: 6px;
+      height: 12px;
+      border-color: #00b400;
+      border-style: solid;
+      border-width: 0 2px 2px 0;
+      transform: rotate(45deg);
+      transition: transform 0.4s;
+    }
+    &:hover {
+      .checkMark {
+        transform: rotate(765deg);
+      }
+    }
+  }
+
+  .cancelButton {
+    .crossMark {
+      font-size: 0.7em;
+      transition: transform 0.4s;
+    }
+
+    &:hover {
+      .crossMark {
+        transform: rotate(360deg);
+      }
+    }
+  }
+}

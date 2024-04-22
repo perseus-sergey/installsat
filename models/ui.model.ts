@@ -64,7 +64,7 @@ export const ERRORS = {
   },
 };
 
-export const defaultMetaData = {
+export const DEFAULT_META_DATA = {
   [ELanguage.UA]: {
     title: 'Сайт про цифрове телебачення',
     description:

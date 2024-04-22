@@ -6,7 +6,7 @@ import {
   LANGUAGE,
   EDBTableTitles,
   SIMILAR_ARTICLES,
-  defaultMetaData,
+  DEFAULT_META_DATA,
 } from '@/models/ui.model';
 import {
   getArticle,
@@ -31,7 +31,7 @@ export const generateMetadata = async ({
   const sqlResult = await getArticle(article);
 
   if (sqlResult instanceof Error || !sqlResult.length)
-    return defaultMetaData[LANGUAGE];
+    return DEFAULT_META_DATA[LANGUAGE];
 
   const { title, description, date, slug } = sqlResult[0];
 
@@ -40,7 +40,7 @@ export const generateMetadata = async ({
     description,
     keywords: description,
     openGraph: {
-      ...defaultMetaData.openGraph,
+      ...DEFAULT_META_DATA.openGraph,
       title,
       description,
       url: `${BASE_URL}/${EUrlBaseParam.ARTICLE}/${slug}`,

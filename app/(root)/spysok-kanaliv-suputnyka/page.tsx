@@ -17,7 +17,7 @@ import {
   LANGUAGE as L,
   LANGUAGE,
   TSearchParams,
-  defaultMetaData,
+  DEFAULT_META_DATA,
 } from '@/models/ui.model';
 import { getFormattedDateStr } from '@/libs/utils';
 import { EUrlBaseParam, EUrlSearchParam } from '@/models/url.model';
@@ -51,7 +51,7 @@ export const metadata: Metadata = {
   description: getDescription()[L],
   keywords: getKeywords()[L],
   openGraph: {
-    ...defaultMetaData.openGraph,
+    ...DEFAULT_META_DATA.openGraph,
     title: getTitle()[L],
     description: getDescription()[L],
     url: `${BASE_URL}/${EUrlBaseParam.SAT_CHANNEL_LIST}`,

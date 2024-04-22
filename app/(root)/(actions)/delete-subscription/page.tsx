@@ -1,18 +1,44 @@
-import EmptyData from '@/components/errors/EmptyData/EmptyData';
+import DeleteCommentSubscription from '@/components/DeleteCommentSubscription/DeleteCommentSubscription';
 import { Title } from '@/components/ui/Title/Title';
-import { deleteSubscriptionEmail } from '@/controllers/comments.controller';
+import { getFormattedDateStr } from '@/libs/utils';
 import { decrypt, validSearchParam } from '@/libs/utilsServer';
-import { TSearchParams } from '@/models/ui.model';
-import { EUrlSearchParam } from '@/models/url.model';
+import { COMMENTS_MODEL } from '@/models/comments.model';
+import {
+  DEFAULT_META_DATA,
+  EDBTableTitles,
+  LANGUAGE,
+  TSearchParams,
+} from '@/models/ui.model';
+import { EUrlBaseParam, EUrlSearchParam } from '@/models/url.model';
+import { Metadata } from 'next';
 
 const emailKey = process.env.MAIL_ENCRYPT_KEY || '';
+const { BASE_URL = '' } = process.env;
 
+const {
+  deleteSubscriptionPage: {
+    meta: { title, description, keywords },
+    h1,
+  },
+} = COMMENTS_MODEL;
 export interface IPageParams {
   searchParams?: TSearchParams;
 }
 
-// TODO: Make METADATA
-// =================================================================================================
+export const metadata: Metadata = {
+  metadataBase: new URL(BASE_URL),
+  title,
+  description,
+  keywords,
+  openGraph: {
+    ...DEFAULT_META_DATA.openGraph,
+    title,
+    description,
+    url: `${BASE_URL}/${EUrlBaseParam.DELETE_COMMENT_SUBSCRIPTION}`,
+    publishedTime: getFormattedDateStr(new Date()),
+  },
+};
+
 export default async function Page({ searchParams }: IPageParams) {
   const articleIdEncrypted = validSearchParam(
     EUrlSearchParam.COMMENT_DEL_ARTICLE_ID,
@@ -31,26 +57,21 @@ export default async function Page({ searchParams }: IPageParams) {
     searchParams
   );
 
-  const articleId = await decrypt(articleIdEncrypted, emailKey);
-  const commentDbTable = await decrypt(commentDbTableEncrypted, emailKey);
-
-  const delResult = await deleteSubscriptionEmail(
-    commentDbTable,
-    articleId,
-    mail
-  );
-
-  if (delResult instanceof Error)
-    return <EmptyData description={delResult.message} />;
-
   return (
     <>
-      <Title>Видалення підписки</Title>
-      <p style={{ fontWeight: 'bold', textAlign: 'center' }}>
-        Вашу E-Mail адресу <span style={{ color: '#d30084' }}>{mail}</span> було
-        вдало видалено із розсилки оновлень коментарів до сторінки
-        <br />✧{articleTitle}✧
-      </p>
+      <Title style={{ flexDirection: 'column' }}>
+        {h1[LANGUAGE]}
+        <br />
+        <span style={{ color: '#d30084', fontSize: '0.7em' }}>{mail}</span>
+      </Title>
+      <DeleteCommentSubscription
+        articleTitle={articleTitle}
+        articleId={await decrypt(articleIdEncrypted, emailKey)}
+        commentDbTable={
+          (await decrypt(commentDbTableEncrypted, emailKey)) as EDBTableTitles
+        }
+        mail={mail}
+      />
     </>
   );
 }

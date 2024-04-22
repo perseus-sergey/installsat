@@ -19,6 +19,7 @@ const NotFoundPage = () => (
         alt="Installsat TV Logo"
         width="400px"
         height="200px"
+        isPriority
       />
       {ERRORS.NOT_FOUND_ACTION[LANGUAGE]}
     </Link>

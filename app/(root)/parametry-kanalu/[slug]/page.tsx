@@ -20,7 +20,7 @@ import {
 } from '@/controllers/channel.controller';
 import { getFormattedDateStr } from '@/libs/utils';
 import { META_CHANNEL } from '@/models/channel.model';
-import { LANGUAGE, EDBTableTitles, defaultMetaData } from '@/models/ui.model';
+import { LANGUAGE, EDBTableTitles, DEFAULT_META_DATA } from '@/models/ui.model';
 import { EUrlBaseParam, EUrlSearchParam } from '@/models/url.model';
 import { Metadata } from 'next';
 import Link from 'next/link';
@@ -55,7 +55,7 @@ export const generateMetadata = async ({
 }: IChannelProps): Promise<Metadata> => {
   const sqlResult = await getDBChannel(slug);
   if (sqlResult instanceof Error || !sqlResult.length)
-    return defaultMetaData[LANGUAGE];
+    return DEFAULT_META_DATA[LANGUAGE];
 
   const {
     title,
@@ -95,7 +95,7 @@ export const generateMetadata = async ({
       canonical: `${BASE_URL}/${EUrlBaseParam.CHANNEL_PARAMS}/${addCanonical}`,
     },
     openGraph: {
-      ...defaultMetaData.openGraph,
+      ...DEFAULT_META_DATA.openGraph,
       title: metaTitle,
       description: description || title,
       url: `${BASE_URL}/${EUrlBaseParam.CHANNEL_PARAMS}/${chan_slug}`,

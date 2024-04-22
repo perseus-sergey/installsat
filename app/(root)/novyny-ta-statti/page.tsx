@@ -14,7 +14,7 @@ import {
   LANGUAGE as L,
   LANGUAGE,
   TSearchParams,
-  defaultMetaData,
+  DEFAULT_META_DATA,
 } from '@/models/ui.model';
 
 const { BASE_URL } = process.env;
@@ -39,7 +39,7 @@ export const metadata: Metadata = {
   description: meta.getDescription()[L],
   keywords: meta.getKeywords(L),
   openGraph: {
-    ...defaultMetaData.openGraph,
+    ...DEFAULT_META_DATA.openGraph,
     title: meta.getTitle()[L],
     description: meta.getDescription()[L],
     url: `${BASE_URL}/${EUrlBaseParam.NEWS_AND_ARTICLES}`,

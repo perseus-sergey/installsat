@@ -5,11 +5,12 @@ import { useFormState } from 'react-dom';
 import { SubmitPendingButton } from '@/components/ui/buttons/SubmitPendingBtn';
 import { useToastMessage } from '@/libs/hooks/useToastMessage';
 import { EMPTY_FORM_STATE } from '@/controllers/toast.controller';
-import { deleteCommentAction } from '@/libs/actions/deleteComment.action';
+import { deleteCommentAction } from '@/libs/actions/comments.action';
+import { EDBTableTitles } from '@/models/ui.model';
 
 interface IDeleteCommentProps {
   commentID: string;
-  dbTableName: string;
+  dbTableName: EDBTableTitles;
   revalidateUrl: string;
 }
 

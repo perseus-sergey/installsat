@@ -12,6 +12,8 @@ export interface IPageParams {
   searchParams?: TSearchParams;
 }
 
+// TODO: Make METADATA
+// =================================================================================================
 export default async function Page({ searchParams }: IPageParams) {
   const articleIdEncrypted = validSearchParam(
     EUrlSearchParam.COMMENT_DEL_ARTICLE_ID,

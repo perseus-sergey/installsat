@@ -1,4 +1,5 @@
-import { ECommentFormNames, IFormState } from '@/models/comments.model';
+import { IFormState } from '@/controllers/toast.controller';
+import { ECommentFormNames } from '@/models/comments.model';
 // import styles from './FieldError.module.scss';
 
 interface IFieldErrorProps {

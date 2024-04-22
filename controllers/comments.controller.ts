@@ -1,12 +1,9 @@
-import { ZodError } from 'zod';
+'use server';
+
 import { executeQuery } from '@/libs/db/mysqldb';
 import { getFormattedDateStr } from '@/libs/utils';
 import { ICommentsModel } from '@/models/articles.model';
-import {
-  TCommentFieldValues,
-  IFormState,
-  emptyFieldValues,
-} from '@/models/comments.model';
+import { ISubscribersEmails } from '@/models/comments.model';
 
 export const getComments = async (tblName: string, postId: number) => {
   const sql = `
@@ -40,47 +37,21 @@ export const deleteSubscriptionEmail = async (
     [articleId, email]
   );
 
-export const fromErrorToFormState = (
-  error: unknown,
-  fieldValues = emptyFieldValues
-): IFormState => {
-  if (error instanceof ZodError) {
-    return {
-      status: 'ERROR' as const,
-      message: '',
-      fieldErrors: error.flatten().fieldErrors,
-      timestamp: Date.now(),
-      fieldValues,
-    };
-  } else if (error instanceof Error) {
-    return {
-      status: 'ERROR' as const,
-      message: error.message,
-      fieldErrors: {},
-      timestamp: Date.now(),
-      fieldValues,
-    };
-  } else {
-    return {
-      status: 'ERROR' as const,
-      message: 'An unknown error occurred',
-      fieldErrors: {},
-      timestamp: Date.now(),
-      fieldValues,
-    };
-  }
-};
+export const deleteComment = async (dbTableName: string, commentID: string) =>
+  await executeQuery(`DELETE FROM ${dbTableName} WHERE id=?`, [commentID]);
 
-export const toFormState = (
-  status: IFormState['status'],
-  message: string,
-  fieldValues: TCommentFieldValues
-): IFormState => {
-  return {
-    status,
-    message,
-    fieldErrors: {},
-    timestamp: Date.now(),
-    fieldValues,
-  };
-};
+export const getArticleSubscribers = async (
+  dbTableName: string,
+  articleId: string
+) =>
+  await executeQuery<ISubscribersEmails>(
+    `
+    SELECT mail, MAX(author) AS author, MAX(ip) AS ip, MAX(date) AS date
+    FROM ${dbTableName}
+    WHERE post=?
+    AND date >= DATE_SUB( NOW( ) , INTERVAL 6 MONTH )
+    AND mail!=''
+    GROUP BY mail
+    `,
+    [articleId]
+  );

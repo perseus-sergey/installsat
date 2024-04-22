@@ -1,9 +1,9 @@
 import styles from './NotFoundPage.module.scss';
 import Link from 'next/link';
 import { Title } from '../../ui/Title/Title';
-import Image from 'next/image';
 import { EUrlBaseParam } from '@/models/url.model';
 import { LANGUAGE, ERRORS } from '@/models/ui.model';
+import FillingImg from '@/components/Images/FillingImage';
 
 const NotFoundPage = () => (
   <div className={styles.NotFoundPage} data-testid="NotFoundPage">
@@ -14,13 +14,11 @@ const NotFoundPage = () => (
       {ERRORS.NOT_FOUND_DESCRIPTION[LANGUAGE]}
     </p>
     <Link href={EUrlBaseParam.BASE_PATH} className={styles.linkWrapper}>
-      <Image
-        className=""
+      <FillingImg
         src="/Images/InstallsatOrig_400.png"
         alt="Installsat TV Logo"
-        width={400}
-        height={200}
-        priority
+        width="400px"
+        height="200px"
       />
       {ERRORS.NOT_FOUND_ACTION[LANGUAGE]}
     </Link>

@@ -21,8 +21,9 @@ export async function sendMail({ to, subject, body }: IProps) {
   });
 
   try {
-    const testResult = await transport.verify();
-    console.log(testResult);
+    await transport.verify();
+    // const testResult = await transport.verify();
+    // console.log(testResult);
   } catch (error) {
     console.error({ error });
 
@@ -30,14 +31,14 @@ export async function sendMail({ to, subject, body }: IProps) {
   }
 
   try {
-    const sendResult = await transport.sendMail({
+    await transport.sendMail({
       from: `Installsat <${GOOGLE_APP_MAIL_SMTP}>`,
       to: to || MAIN_EMAIL,
       subject,
       html: body,
     });
-    console.log(sendResult);
+    // console.log(sendResult);
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 }

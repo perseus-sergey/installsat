@@ -12,6 +12,7 @@ import { Metadata } from 'next';
 import { Suspense } from 'react';
 import CommentList from '@/components/comments/CommentList/CommentList';
 import { getComments } from '@/controllers/comments.controller';
+import { headers } from 'next/headers';
 
 const { BASE_URL } = process.env;
 
@@ -41,8 +42,15 @@ export const metadata: Metadata = {
     publishedTime: getFormattedDateStr(new Date()),
   },
 };
-
+// TODO: Add view counter
+// =================================================================
 export default async function Page() {
+  const header = headers();
+  const userIP = (header.get('x-forwarded-for') ?? '127.0.0.1').split(',')[0];
+
+  const baseUrl = process.env.BASE_URL || '';
+  const emailKey = process.env.MAIL_ENCRYPT_KEY || '';
+
   const groupedSats = await getSatsForForm(false);
   const commentsDbResult = await getComments(
     EDBTableTitles.COMMENTS_ARTICLE,
@@ -100,6 +108,9 @@ export default async function Page() {
         dbCommentTableName={EDBTableTitles.COMMENTS_ARTICLE}
         articleId={dbArticleId}
         articleName={title}
+        userIP={userIP}
+        baseUrl={baseUrl}
+        emailKey={emailKey}
       />
     </>
   );

@@ -54,6 +54,13 @@ export enum ECommentFormNames {
   TEXT = 'comment-text',
 }
 
+export interface ISubscribersEmails {
+  mail: string;
+  author: string;
+  ip: string;
+  date: Date;
+}
+
 export const emptyFieldValues = {
   authorName: '',
   commentText: '',
@@ -61,19 +68,3 @@ export const emptyFieldValues = {
 };
 
 export type TCommentFieldValues = typeof emptyFieldValues;
-
-export interface IFormState {
-  status: 'UNSET' | 'SUCCESS' | 'ERROR';
-  message: string;
-  fieldErrors: Record<string, string[] | undefined>;
-  fieldValues: TCommentFieldValues;
-  timestamp: number;
-}
-
-export const EMPTY_FORM_STATE: IFormState = {
-  status: 'UNSET' as const,
-  message: '',
-  fieldErrors: {},
-  fieldValues: emptyFieldValues,
-  timestamp: Date.now(),
-};

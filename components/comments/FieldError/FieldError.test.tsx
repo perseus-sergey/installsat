@@ -2,7 +2,8 @@ import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import FieldError from './FieldError';
 import test, { describe } from 'node:test';
-import { ECommentFormNames, EMPTY_FORM_STATE } from '@/models/comments.model';
+import { ECommentFormNames } from '@/models/comments.model';
+import { EMPTY_FORM_STATE } from '@/controllers/toast.controller';
 
 describe('<FieldError />', () => {
   test('it should mount', () => {

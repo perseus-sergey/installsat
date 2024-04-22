@@ -20,6 +20,10 @@ export enum EUrlBaseParam {
   PRODUCT_CATEGORIES = 'kategoriji-tovariv',
   DELETE_COMMENT_SUBSCRIPTION = 'delete-subscription',
 }
+export enum EUrlAdminParam {
+  BASE_PATH = '/guru',
+  EDIT_COMMENT = 'edit-comments',
+}
 
 export enum EUrlSearchParam {
   ARTICLE = 'q',

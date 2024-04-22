@@ -1,4 +1,4 @@
-import { IFormState } from '@/models/comments.model';
+import { IFormState } from '@/controllers/toast.controller';
 import { useRef, useEffect } from 'react';
 import { toast } from 'react-hot-toast';
 
@@ -6,7 +6,7 @@ const useToastMessage = (formState: IFormState) => {
   const prevTimestamp = useRef(formState.timestamp);
 
   const isShowToast =
-    formState.message && formState.timestamp !== prevTimestamp.current;
+    !!formState.message && formState.timestamp !== prevTimestamp.current;
 
   useEffect(() => {
     if (isShowToast) {
@@ -23,11 +23,15 @@ const useToastMessage = (formState: IFormState) => {
   return (
     <noscript>
       {formState.status === 'ERROR' && (
-        <div style={{ color: 'red' }}>{formState.message}</div>
+        <div style={{ color: 'red' }} aria-live="polite" role="status">
+          {formState.message}
+        </div>
       )}
 
       {formState.status === 'SUCCESS' && (
-        <div style={{ color: 'green' }}>{formState.message}</div>
+        <div style={{ color: 'green' }} aria-live="polite" role="status">
+          {formState.message}
+        </div>
       )}
     </noscript>
   );

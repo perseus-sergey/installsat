@@ -1,9 +1,12 @@
-'use server';
-
-import { makeUrlSearchParams } from '@/libs/utils';
+import { getFormattedDateStr, makeUrlSearchParams } from '@/libs/utils';
 import { encrypt } from '@/libs/utilsServer';
+import { ISubscribersEmails } from '@/models/comments.model';
 import { EDBTableTitles } from '@/models/ui.model';
-import { EUrlBaseParam, EUrlSearchParam } from '@/models/url.model';
+import {
+  EUrlAdminParam,
+  EUrlBaseParam,
+  EUrlSearchParam,
+} from '@/models/url.model';
 import {
   Heading,
   Body,
@@ -27,31 +30,107 @@ const {
   COMMENT_DEL_DB_TABLE,
 } = EUrlSearchParam;
 
-const baseUrl = process.env.BASE_URL || '';
-const emailKey = process.env.MAIL_ENCRYPT_KEY || '';
+// const baseUrl = process.env.BASE_URL || '';
+// const emailKey = process.env.MAIL_ENCRYPT_KEY || '';
 
 interface IEmailTemplateProps {
-  authorName: string;
-  commentText: string;
-  authorEmail: string;
-  articleId?: number;
-  articleName?: string;
-  articlePath?: string;
-  tblCommentName?: EDBTableTitles;
+  authorName: string | undefined;
+  commentText: string | undefined;
+  authorEmail: string | undefined;
+  articleName: string;
+  articleId: number;
+  articlePath: string;
+  baseUrl: string;
+  emailKey: string;
+  tblCommentName: EDBTableTitles;
+  subscribers?: ISubscribersEmails[];
+  userIP?: string;
 }
 
-export const CommentToAdminEmail = ({
-  authorName,
-  authorEmail,
-  commentText,
+export const CommentToAdminEmail = async ({
+  authorName = '',
+  authorEmail = '',
+  commentText = '',
+  articleName,
+  articlePath,
+  articleId,
+  tblCommentName,
+  subscribers,
+  userIP,
+  baseUrl,
+  emailKey,
 }: IEmailTemplateProps) => {
+  const commentSearchParams = makeUrlSearchParams({
+    [COMMENT_DEL_ARTICLE_ID]: await encrypt(`${articleId}`, emailKey),
+    [COMMENT_DEL_DB_TABLE]: await encrypt(tblCommentName || '', emailKey),
+  });
+  const commentEditUrl = `${baseUrl}/${EUrlAdminParam.BASE_PATH}/${EUrlAdminParam.EDIT_COMMENT}?${commentSearchParams}`;
+
   return (
-    <Html lang="en">
-      <Heading as="h1">New Form Submission</Heading>
-      <Text>You just submitted a form. Here are the details:</Text>
-      <Text>Name: {authorName}</Text>
-      <Text>Email: {authorEmail}</Text>
-      <Text>Message: {commentText}</Text>
+    <Html>
+      <Heading as="h1">
+        New Comment to:
+        <br />
+        <Link
+          href={`${baseUrl}${articlePath}`}
+          style={{ ...link, fontSize: '20px' }}
+          target="_blank"
+        >
+          {`✧${articleName}✧`}
+        </Link>
+      </Heading>
+
+      <Hr style={hr} />
+
+      <Text style={heading}>
+        Author:
+        <span style={coloredText}> {authorName}</span>
+      </Text>
+
+      <Text style={heading}>
+        EMAIL:
+        <span style={coloredText}> {authorEmail}</span>
+      </Text>
+
+      <Text style={heading}>
+        IP:
+        <span style={coloredText}> {userIP}</span>
+      </Text>
+
+      <Hr style={hr} />
+
+      <Text style={heading}>Content:</Text>
+      <Text style={review}>
+        <em>{commentText}</em>
+      </Text>
+
+      <Hr style={hr} />
+
+      {subscribers && subscribers.length > 0 && (
+        <>
+          <Text style={heading}>Sent to subscribers:</Text>
+          <Text>
+            <ul>
+              {subscribers.map(({ author, date, mail }) => (
+                <li key={mail}>
+                  {author}: {mail} ({getFormattedDateStr(date)})
+                </li>
+              ))}
+            </ul>
+          </Text>
+          <Hr style={hr} />
+        </>
+      )}
+
+      <Text style={footer}>
+        <Link
+          href={commentEditUrl}
+          target="_blank"
+          style={{ ...reportLink, color: '#267f00' }}
+        >
+          Edit comments for this page
+        </Link>
+      </Text>
     </Html>
   );
 };
@@ -64,10 +143,13 @@ export const CommentToUserEmail = async ({
   articleName,
   articlePath,
   tblCommentName,
+  baseUrl,
+  emailKey,
 }: IEmailTemplateProps) => {
-  const previewText = `Read ${authorName}'s comment`;
+  const styledArticleName = `✧${articleName}✧`;
+  const previewText = `Залишено новий коментар від ${authorName || ''}' на сторінці ${styledArticleName}`;
   const delCommentSearchParams = makeUrlSearchParams({
-    [COMMENT_DEL_AUTHOR_EMAIL]: authorEmail,
+    [COMMENT_DEL_AUTHOR_EMAIL]: authorEmail || '',
     [COMMENT_DEL_ARTICLE_ID]: await encrypt(`${articleId}`, emailKey),
     [COMMENT_DEL_ARTICLE_NAME]: articleName,
     [COMMENT_DEL_DB_TABLE]: await encrypt(tblCommentName || '', emailKey),
@@ -75,9 +157,11 @@ export const CommentToUserEmail = async ({
   const removeSubscriptionUrl = `${baseUrl}/${EUrlBaseParam.DELETE_COMMENT_SUBSCRIPTION}?${delCommentSearchParams}`;
 
   return (
-    <Html>
-      <Head />
+    <Html lang="uk">
       <Preview>{previewText}</Preview>
+      <Head>
+        <title>{`Новий коментар до сторінки: ${styledArticleName}`}</title>
+      </Head>
 
       <Body style={main}>
         <Container style={container}>
@@ -105,7 +189,7 @@ export const CommentToUserEmail = async ({
                   style={{ ...link, fontSize: '20px' }}
                   target="_blank"
                 >
-                  {`✧${articleName}✧`}
+                  {styledArticleName}
                 </Link>
               </Text>
 
@@ -118,7 +202,7 @@ export const CommentToUserEmail = async ({
 
               <Text style={heading}>Зміст:</Text>
               <Text style={review}>
-                <em>{commentText}</em>
+                <em>{commentText || ''}</em>
               </Text>
 
               <Hr style={hr} />

@@ -24,6 +24,9 @@ interface IProps {
   dbCommentTableName: EDBTableTitles;
   articleId: number;
   articleName: string;
+  userIP: string;
+  baseUrl: string;
+  emailKey: string;
 }
 
 const CommentList = ({
@@ -32,6 +35,9 @@ const CommentList = ({
   dbCommentTableName,
   articleId,
   articleName,
+  userIP,
+  baseUrl,
+  emailKey,
 }: IProps) => {
   return (
     <section className={styles.CommentBlock} data-testid="CommentList">
@@ -41,6 +47,9 @@ const CommentList = ({
         dbCommentTableName={dbCommentTableName}
         articleId={articleId}
         articleName={articleName}
+        userIP={userIP}
+        baseUrl={baseUrl}
+        emailKey={emailKey}
       />
 
       <div className={styles.bansBlock}>

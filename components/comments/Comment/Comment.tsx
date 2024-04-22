@@ -5,12 +5,13 @@ import styles from './Comment.module.scss';
 import { SubmitPendingButton } from '@/components/ui/buttons/SubmitPendingBtn';
 import { formCommentAction } from '../formComment.action';
 import { useFormState } from 'react-dom';
-import { ECommentFormNames, EMPTY_FORM_STATE } from '@/models/comments.model';
+import { ECommentFormNames } from '@/models/comments.model';
 import FieldError from '../FieldError/FieldError';
 import { useToastMessage } from '@/libs/hooks/useToastMessage';
 import { useFormReset } from '@/libs/hooks/useFormReset';
 import { EDBTableTitles } from '@/models/ui.model';
 import { useFormCommentSendEmail } from '@/libs/hooks/useFormCommentSendEmail';
+import { EMPTY_FORM_STATE } from '@/controllers/toast.controller';
 
 const { AUTHOR, EMAIL, TEXT } = ECommentFormNames;
 
@@ -19,6 +20,9 @@ interface ICommentProps {
   dbCommentTableName: EDBTableTitles;
   articleId: number;
   articleName: string;
+  userIP: string;
+  baseUrl: string;
+  emailKey: string;
 }
 
 const Comment = ({
@@ -26,6 +30,9 @@ const Comment = ({
   dbCommentTableName,
   articleId,
   articleName,
+  userIP,
+  baseUrl,
+  emailKey,
 }: ICommentProps) => {
   const sendCommentHandler = formCommentAction.bind(
     null,
@@ -41,12 +48,16 @@ const Comment = ({
   );
 
   const noScriptFallback = useToastMessage(formState);
+
   useFormCommentSendEmail(
     formState,
     articleName,
     revalidateUrl,
     dbCommentTableName,
-    articleId
+    articleId,
+    userIP,
+    baseUrl,
+    emailKey
   );
   const formRef = useFormReset(formState);
 

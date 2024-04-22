@@ -1,4 +1,4 @@
-import { IFormState } from '@/models/comments.model';
+import { IFormState } from '@/controllers/toast.controller';
 import { useRef, useEffect } from 'react';
 
 const useFormReset = (formState: IFormState) => {

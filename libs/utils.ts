@@ -1,5 +1,4 @@
 import { TSearchParams } from '@/models/ui.model';
-import { EUrlSearchParam } from '@/models/url.model';
 
 export const cutText = (text: string, length: number) => {
   const trimmedText = text.trim();
@@ -20,7 +19,6 @@ export const arrayShift = <T>(array: T[][]): T[][] => {
 export const getDate = (date: string | Date = new Date(), lang?: string) => {
   const currDate = date instanceof Date ? date : new Date(date);
   if (currDate.toString() === 'Invalid Date') return '';
-  // if (currDate.toString() === 'Invalid Date') currDate = new Date('1900-01-01');
 
   return currDate.toLocaleDateString(lang, {
     year: 'numeric',
@@ -42,8 +40,6 @@ export const getFormattedDateStr = (
 
   return isYearFirst ? `${year}-${month}-${day}` : `${day}-${month}-${year}`;
 };
-
-// export const uniqueArray = <T>(array: T[]): T[] => [...new Set(array)];
 
 export const isUniqDeepArray = <T>(arr: T[][]): boolean =>
   new Set(arr.map((item) => item.join('|'))).size === arr.length;
@@ -87,13 +83,3 @@ export const makeUrlSearchParams = (
 
   return params;
 };
-
-export const validSearchParam = (
-  paramName: EUrlSearchParam,
-  searchParams?: TSearchParams
-) =>
-  searchParams &&
-  searchParams[paramName] &&
-  typeof searchParams[paramName] === 'string'
-    ? (searchParams[paramName] as string)
-    : '';

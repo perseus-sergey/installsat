@@ -2,7 +2,6 @@
 
 import { IImgParams, TSearchParams } from '@/models/ui.model';
 import { EUrlSearchParam } from '@/models/url.model';
-// import { EUrlSearchParam } from '@/models/url.model';
 import {
   randomBytes,
   createCipheriv,
@@ -11,10 +10,8 @@ import {
 } from 'crypto';
 
 import fs from 'fs';
+import { headers } from 'next/headers';
 import path from 'path';
-
-// export const isFileExists = (filePath: string): boolean =>
-//   fs.existsSync(path.join(process.cwd(), 'public', filePath));
 
 export const isFileExists = (filePath: string): boolean => {
   const fullPath = path.join(process.cwd(), 'public', filePath);
@@ -59,6 +56,9 @@ export const validSearchParam = (
   typeof searchParams[paramName] === 'string'
     ? (searchParams[paramName] as string)
     : '';
+
+export const getUserIP = () =>
+  (headers().get('x-forwarded-for') ?? '127.0.0.1').split(',')[0];
 
 export const encrypt = async (text: string, secretKey: string) => {
   const salt = randomBytes(16);

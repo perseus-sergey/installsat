@@ -13,7 +13,7 @@ import { EDBTableTitles, LANGUAGE, DEFAULT_META_DATA } from '@/models/ui.model';
 import { EUrlBaseParam, EUrlSearchParam } from '@/models/url.model';
 import { Metadata } from 'next';
 import { Suspense } from 'react';
-import CommentList from '@/components/comments/CommentList/CommentList';
+import CommentList from '@/components/comments/CommentBlock/CommentBlock';
 import { getComments } from '@/controllers/comments.controller';
 import { getUserIP } from '@/libs/utilsServer';
 import BottomInfoPanel from '@/components/BottomInfoPanel/BottomInfoPanel';

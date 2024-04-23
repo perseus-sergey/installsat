@@ -1,15 +1,17 @@
 'use server';
 
 import { insertComment } from '@/controllers/comments.controller';
-import { ECommentFormNames } from '@/models/comments.model';
+import { COMMENTS_MODEL, ECommentFormNames } from '@/models/comments.model';
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
-import { EDBTableTitles } from '@/models/ui.model';
+import { EDBTableTitles, LANGUAGE } from '@/models/ui.model';
 import {
   IFormState,
   fromErrorToFormState,
   toFormState,
 } from '@/controllers/toast.controller';
+
+const { authorName, authorEmail, commentText } = COMMENTS_MODEL.commentForm;
 
 const emptyFieldValues = {
   authorName: '',
@@ -22,20 +24,20 @@ const { AUTHOR, EMAIL, TEXT } = ECommentFormNames;
 const commentSchema = z.object({
   [AUTHOR]: z
     .string()
-    .min(1, '⛔ Введіть щонайменш 1 символ')
-    .max(30, '⛔ Не більше 30 символів'),
+    .min(authorName.minSize.value, authorName.minSize.warningText[LANGUAGE])
+    .max(authorName.maxSize.value, authorName.maxSize.warningText[LANGUAGE]),
   [EMAIL]: z.union([
     z.literal(''),
-    z.string().email('⛔ Не коректний формат електронної пошти!'),
+    z.string().email(authorEmail.warningText[LANGUAGE]),
   ]),
   [TEXT]: z
     .string()
-    .min(2, '⛔ Введіть щонайменш 2 символи')
-    .max(450, '⛔ Не більше 450 символів'),
+    .min(commentText.minSize.value, commentText.minSize.warningText[LANGUAGE])
+    .max(commentText.maxSize.value, commentText.maxSize.warningText[LANGUAGE]),
 });
 
 export const formCommentAction = async (
-  articleId: number,
+  articleId: string,
   userIp: string,
   revalidateUrl: string,
   dbTableName: EDBTableTitles,
@@ -65,26 +67,6 @@ export const formCommentAction = async (
       commentText: validFormData[TEXT],
       authorEmail: validFormData[EMAIL],
     };
-
-    // const resend = new Resend(process.env.RESEND_API_KEY);
-    // await resend.emails.send({
-    //   from: 'Installsat <main@installsat.fun>',
-    //   // to: validFormData[EMAIL],
-    //   to: 'serubergey@gmail.com',
-    //   subject: 'Form Submission',
-    //   react: EmailTemplate({
-    //     name: validFormData[AUTHOR],
-    //     email: validFormData[EMAIL],
-    //     message: validFormData[TEXT],
-    //   }),
-    //   // html: render(
-    //   //   EmailTemplate({
-    //   //     name: validFormData[AUTHOR],
-    //   //     email: validFormData[EMAIL],
-    //   //     message: validFormData[TEXT],
-    //   //   })
-    //   // ),
-    // });
   } catch (error) {
     return fromErrorToFormState(error);
   }

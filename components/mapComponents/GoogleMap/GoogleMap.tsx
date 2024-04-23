@@ -33,7 +33,6 @@ interface IGoogleMapProps {
 }
 
 const {
-  // initialCamera,
   marker: { markerImage },
 } = SAT_FINDER_META_DATA.googleMap;
 
@@ -51,7 +50,7 @@ const GoogleMap = ({
   setIsMapInfoWindowOpened,
   markerMoved,
 }: IGoogleMapProps) => (
-  <APIProvider apiKey={apiKey} data-testid="GoogleMap">
+  <APIProvider apiKey={apiKey}>
     <Map
       style={{ width: '100%', height: '80vh' }}
       onClick={mapClickHandler}

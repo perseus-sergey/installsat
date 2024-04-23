@@ -3,11 +3,14 @@ import EmptyData from '@/components/errors/EmptyData/EmptyData';
 import { Title } from '@/components/ui/Title/Title';
 import TooltipSimple from '@/components/ui/TooltipSimple/TooltipSimple';
 import { getComments } from '@/controllers/comments.controller';
+import { makeUrlSearchParams } from '@/libs/utils';
 import { validSearchParam } from '@/libs/utilsServer';
 import { decrypt } from '@/libs/utilsServer';
 import { EDBTableTitles, TSearchParams } from '@/models/ui.model';
 import { EUrlAdminParam, EUrlSearchParam } from '@/models/url.model';
 import Link from 'next/link';
+
+const { BASE_PATH, EDIT_COMMENT } = EUrlAdminParam;
 
 const emailKey = process.env.MAIL_ENCRYPT_KEY || '';
 
@@ -16,6 +19,8 @@ export interface IPageParams {
 }
 
 export default async function Page({ searchParams }: IPageParams) {
+  if (!searchParams) return;
+
   const articleIdEncrypted = validSearchParam(
     EUrlSearchParam.COMMENT_DEL_ARTICLE_ID,
     searchParams
@@ -31,7 +36,7 @@ export default async function Page({ searchParams }: IPageParams) {
     emailKey
   )) as EDBTableTitles;
 
-  const comments = await getComments(commentDbTable, +articleId);
+  const comments = await getComments(commentDbTable, articleId);
 
   if (comments instanceof Error)
     return <EmptyData description={comments.message} />;
@@ -49,7 +54,7 @@ export default async function Page({ searchParams }: IPageParams) {
               <td>
                 <TooltipSimple tooltipText="Edit comment">
                   <Link
-                    href={`&id=${comment.id}`}
+                    href={`${BASE_PATH}/${EDIT_COMMENT}/${comment.id}?${makeUrlSearchParams(searchParams).toString()}`}
                     style={{ fontSize: '1.5rem', color: 'green' }}
                   >
                     ✐

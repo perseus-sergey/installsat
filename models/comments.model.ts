@@ -1,6 +1,120 @@
 import { ELanguage } from './ui.model';
 
 export const COMMENTS_MODEL = {
+  commentForm: {
+    title: {
+      [ELanguage.UA]: 'Додати коментар',
+      [ELanguage.EN]: 'Add comment',
+    },
+    authorName: {
+      placeholder: {
+        [ELanguage.UA]: `Ім'я...`,
+        [ELanguage.EN]: 'Name...',
+      },
+      ariaLabel: {
+        [ELanguage.UA]: `Введіть своє Ім'я`,
+        [ELanguage.EN]: 'Enter your name',
+      },
+      labelText: {
+        [ELanguage.UA]: `Ваше Ім'я`,
+        [ELanguage.EN]: 'Your name',
+      },
+      minSize: {
+        value: 1,
+        warningText: {
+          [ELanguage.UA]: '⛔ Введіть щонайменш 1 символ',
+          [ELanguage.EN]: '⛔ Enter at least 1 character',
+        },
+      },
+      maxSize: {
+        value: 30,
+        warningText: {
+          [ELanguage.UA]: '⛔ Не більше 30 символів',
+          [ELanguage.EN]: '⛔ Maximum 30 characters allowed',
+        },
+      },
+    },
+    commentText: {
+      placeholder: {
+        [ELanguage.UA]: `Введіть коментар...`,
+        [ELanguage.EN]: 'Enter your comment...',
+      },
+      ariaLabel: {
+        [ELanguage.UA]: 'Введіть коментар',
+        [ELanguage.EN]: 'Enter your comment',
+      },
+      labelText: {
+        [ELanguage.UA]: 'Зміст',
+        [ELanguage.EN]: 'Content',
+      },
+      minSize: {
+        value: 2,
+        warningText: {
+          [ELanguage.UA]: '⛔ Введіть щонайменш 2 символи',
+          [ELanguage.EN]: '⛔ Enter at least 2 characters',
+        },
+      },
+      maxSize: {
+        value: 450,
+        warningText: {
+          [ELanguage.UA]: '⛔ Не більше 450 символів',
+          [ELanguage.EN]: '⛔ Maximum 450 characters allowed',
+        },
+      },
+    },
+    authorEmail: {
+      placeholder: 'your@email.com',
+      ariaLabel: {
+        [ELanguage.UA]: 'Введіть свою електронну пошту',
+        [ELanguage.EN]: 'Enter your email',
+      },
+      labelText: {
+        [ELanguage.UA]: 'Адреса електронної пошти (ніде не відображається)',
+        [ELanguage.EN]: 'Email address (will not be displayed)',
+      },
+      warningText: {
+        [ELanguage.UA]: '⛔ Не коректний формат електронної пошти!',
+        [ELanguage.EN]: '⛔ Incorrect email format!',
+      },
+    },
+    submit: {
+      ariaLabel: {
+        [ELanguage.UA]: 'Відправити коментар',
+        [ELanguage.EN]: 'Send comment',
+      },
+      innerText: {
+        [ELanguage.UA]: 'Відправити',
+        [ELanguage.EN]: 'Send',
+      },
+      pendingInnerText: {
+        [ELanguage.UA]: 'Відправлення...',
+        [ELanguage.EN]: 'Sending...',
+      },
+    },
+  },
+  commentList: {
+    title: {
+      [ELanguage.UA]: 'Коментарі',
+      [ELanguage.EN]: 'Comments',
+    },
+    image: {
+      width: '60px',
+      height: '60px',
+      alt: {
+        [ELanguage.UA]: 'Секція коментарів',
+        [ELanguage.EN]: 'Comments section',
+      },
+      src: '/Images/mail_post_to_5295.png',
+    },
+  },
+
+  email: {
+    subjectPreTitle: {
+      [ELanguage.UA]: 'Новий коментар до сторінки:',
+      [ELanguage.EN]: 'New comment on the page:',
+    },
+  },
+
   deleteSubscriptionPage: {
     meta: {
       title: 'Delete Comment Subscription',
@@ -22,52 +136,32 @@ export const COMMENTS_MODEL = {
       [ELanguage.EN]:
         'Your E-Mail address has been successfully deleted from the newsletter updates to the page',
     },
+    confirmButton: {
+      ariaLabel: {
+        [ELanguage.UA]: 'Видалити поштову адресу зі списку розсилки',
+        [ELanguage.EN]: 'Delete E-Mail address from the newsletter list',
+      },
+      pendingText: {
+        [ELanguage.UA]: 'Видалення...',
+        [ELanguage.EN]: 'Deleting...',
+      },
+      title: {
+        [ELanguage.UA]: 'Так',
+        [ELanguage.EN]: 'Yes',
+      },
+    },
+    cancelButton: {
+      ariaLabel: {
+        [ELanguage.UA]: 'Не видаляти мою поштову адресу зі списку розсилки',
+        [ELanguage.EN]:
+          "Don't delete my E-Mail address from the newsletter list",
+      },
+      title: {
+        [ELanguage.UA]: 'Ні',
+        [ELanguage.EN]: 'No',
+      },
+    },
   },
-  // searchForm: {
-  //   fieldsetTitle: {
-  //     [ELanguage.UA]: 'Виберіть адресу та супутники',
-  //     [ELanguage.EN]: 'Select address and satellites',
-  //   },
-  //   inputField: {
-  //     placeholder: {
-  //       [ELanguage.UA]: 'Місто вулиця будинок...',
-  //       [ELanguage.EN]: 'Address...',
-  //     },
-  //     labelName: {
-  //       [ELanguage.UA]: 'Введіть назву міста, вулицю, номер будинку',
-  //       [ELanguage.EN]: 'Enter the name of the city, street, house number',
-  //     },
-  //     cancelBtnAriaLabel: {
-  //       [ELanguage.UA]: 'Скасувати',
-  //       [ELanguage.EN]: 'Cancel',
-  //     },
-  //     searchIconStr: '⏿',
-  //   },
-  //   submitButton: {
-  //     title: {
-  //       [ELanguage.UA]: '🔎',
-  //       [ELanguage.EN]: '🔎',
-  //     },
-  //     ariaLabel: {
-  //       [ELanguage.UA]: 'Підтвердити зміни',
-  //       [ELanguage.EN]: 'Confirm changes',
-  //     },
-  //   },
-  // },
-  // images: {
-  //   h1Image: {
-  //     src: '/Images/starthere_6100.png',
-  //     height: '128px',
-  //     width: '128px',
-  //     alternativeStr: { title: '🧭', fontSize: '8rem' },
-  //     alt: {
-  //       [ELanguage.UA]:
-  //         'Компас на карті Google, який вказує напрям антени на супутник',
-  //       [ELanguage.EN]:
-  //         'Compass on Google Map indicating antenna direction towards satellite',
-  //     },
-  //   },
-  // },
 };
 
 export enum ECommentFormNames {

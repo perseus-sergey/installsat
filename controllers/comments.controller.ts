@@ -4,18 +4,27 @@ import { executeQuery } from '@/libs/db/mysqldb';
 import { getFormattedDateStr } from '@/libs/utils';
 import { ICommentsModel } from '@/models/articles.model';
 import { ISubscribersEmails } from '@/models/comments.model';
+import { cache } from 'react';
 
-export const getComments = async (tblName: string, postId: number) => {
+export const getComments = cache(async (tblName: string, postId: string) => {
   const sql = `
   SELECT * FROM ${tblName} WHERE post = ? ORDER BY id DESC
 `;
 
-  return await executeQuery<ICommentsModel>(sql, [`${postId}`]);
+  return await executeQuery<ICommentsModel>(sql, [postId]);
+});
+
+export const getCommentFromDB = async (tblName: string, commentId: string) => {
+  const sql = `
+  SELECT text FROM ${tblName} WHERE id = ?
+`;
+
+  return await executeQuery<{ text: string }>(sql, [commentId]);
 };
 
 export const insertComment = async (
   dbTableName: string,
-  articleId: number,
+  articleId: string,
   author: string,
   email: string,
   text: string,
@@ -24,8 +33,18 @@ export const insertComment = async (
 ) =>
   await executeQuery(
     `INSERT INTO ${dbTableName} (post,author,mail,text,date,ip,country) VALUES (?,?,?,?,?,?,?)`,
-    [`${articleId}`, author, email, text, getFormattedDateStr(), ip, country]
+    [articleId, author, email, text, getFormattedDateStr(), ip, country]
   );
+
+export const editCommentDB = async (
+  dbTableName: string,
+  commentId: number,
+  text: string
+) =>
+  await executeQuery(`UPDATE ${dbTableName} SET text = ? WHERE id = ?`, [
+    text,
+    `${commentId}`,
+  ]);
 
 export const deleteSubscriptionEmail = async (
   dbTableName: string,

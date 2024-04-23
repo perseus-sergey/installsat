@@ -61,6 +61,8 @@ export const getUserIP = () =>
   (headers().get('x-forwarded-for') ?? '127.0.0.1').split(',')[0];
 
 export const encrypt = async (text: string, secretKey: string) => {
+  if (!text || !secretKey) return '';
+
   const salt = randomBytes(16);
   const key = scryptSync(secretKey, salt, 32);
   const iv = randomBytes(16);
@@ -72,6 +74,8 @@ export const encrypt = async (text: string, secretKey: string) => {
 };
 
 export const decrypt = async (text: string, secretKey: string) => {
+  if (!text || !secretKey) return '';
+
   const [saltHex, ivHex, encrypted] = text.split(':');
   const salt = Buffer.from(saltHex, 'hex');
   const iv = Buffer.from(ivHex, 'hex');

@@ -5,16 +5,17 @@ import {
   CommentToAdminEmail,
   CommentToUserEmail,
 } from '@/components/EmailTemplates/CommentEmail.template';
-import { EDBTableTitles } from '@/models/ui.model';
+import { EDBTableTitles, LANGUAGE } from '@/models/ui.model';
 import { getArticleSubscribers } from '@/controllers/comments.controller';
 import { IFormState } from '@/controllers/toast.controller';
+import { COMMENTS_MODEL } from '@/models/comments.model';
 
 export const useFormCommentSendEmail = (
   formState: IFormState,
   articleName: string,
   articlePath: string,
   tblCommentName: EDBTableTitles,
-  articleId: number,
+  articleId: string,
   userIP: string,
   baseUrl: string,
   emailKey: string
@@ -65,8 +66,8 @@ export const useFormCommentSendEmail = (
         };
         const body = await renderAsync(<CommentToUserEmail {...attributes} />);
         await sendMail({
-          to: authorEmail,
-          subject: `Новий коментар до сторінки: ${articleName}`,
+          to: mail,
+          subject: `${COMMENTS_MODEL.email.subjectPreTitle[LANGUAGE]} ${articleName}`,
           body,
         });
       });
@@ -82,3 +83,23 @@ export const useFormCommentSendEmail = (
     }
   }, [formState.status, formState.timestamp]);
 };
+
+// const resend = new Resend(process.env.RESEND_API_KEY);
+// await resend.emails.send({
+//   from: 'Installsat <main@installsat.fun>',
+//   // to: validFormData[EMAIL],
+//   to: 'serubergey@gmail.com',
+//   subject: 'Form Submission',
+//   react: EmailTemplate({
+//     name: validFormData[AUTHOR],
+//     email: validFormData[EMAIL],
+//     message: validFormData[TEXT],
+//   }),
+//   // html: render(
+//   //   EmailTemplate({
+//   //     name: validFormData[AUTHOR],
+//   //     email: validFormData[EMAIL],
+//   //     message: validFormData[TEXT],
+//   //   })
+//   // ),
+// });

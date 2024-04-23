@@ -1,15 +1,20 @@
 'use server';
 
+import { EEditCommentFieldNames } from '@/app/(admin)/guru/edit-comments/[id]/page';
 import {
   deleteComment,
   deleteSubscriptionEmail,
+  editCommentDB,
 } from '@/controllers/comments.controller';
 import {
+  IFormState,
   fromErrorToFormState,
   toFormState,
 } from '@/controllers/toast.controller';
 import { EDBTableTitles } from '@/models/ui.model';
 import { revalidatePath } from 'next/cache';
+import { redirect } from 'next/navigation';
+import { z } from 'zod';
 
 export const deleteCommentAction = async (
   commentID: string,
@@ -23,16 +28,13 @@ export const deleteCommentAction = async (
 
   revalidatePath(revalidateUrl);
 
-  const fState = toFormState('SUCCESS', 'Comment deleted successfully');
-
-  return fState;
+  return toFormState('SUCCESS', 'Comment deleted successfully');
 };
 
 export const delSubscriptionAction = async (
   articleId: string,
   commentDbTable: EDBTableTitles,
   mail: string
-  // revalidateUrl: string
 ) => {
   const delResult = await deleteSubscriptionEmail(
     commentDbTable,
@@ -40,12 +42,37 @@ export const delSubscriptionAction = async (
     mail
   );
 
-  if (delResult instanceof Error)
-    return fromErrorToFormState(delResult.message);
+  return delResult instanceof Error
+    ? fromErrorToFormState(delResult.message)
+    : toFormState('SUCCESS', 'Subscription deleted successfully');
+};
 
-  // revalidatePath(revalidateUrl);
+export const editCommentAction = async (
+  commentID: number,
+  dbTableName: EDBTableTitles,
+  revalidateUrl: string,
+  _formState: IFormState,
+  formData: FormData
+) => {
+  const { COMMENT_TEXT } = EEditCommentFieldNames;
 
-  const fState = toFormState('SUCCESS', 'Subscription deleted successfully');
+  const commentSchema = z.object({
+    [COMMENT_TEXT]: z
+      .string()
+      .min(2, '⛔ At least 2 characters')
+      .max(450, '⛔ 450 characters maximum'),
+  });
 
-  return fState;
+  try {
+    const validFormData = commentSchema.parse({
+      [COMMENT_TEXT]: formData.get(COMMENT_TEXT),
+    });
+
+    editCommentDB(dbTableName, commentID, validFormData[COMMENT_TEXT]);
+  } catch (error) {
+    return fromErrorToFormState(error);
+  }
+
+  revalidatePath(revalidateUrl);
+  redirect(revalidateUrl);
 };

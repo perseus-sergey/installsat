@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import styles from './ChannelOnlineLink.module.scss';
-import FillingValidImage from '../../Images/FillingValidImage';
+import FillingValidImage from '../../../Images/FillingValidImage';
 import { META_CHANNEL } from '@/models/channel.model';
 import { LANGUAGE } from '@/models/ui.model';
 

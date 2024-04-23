@@ -2,18 +2,19 @@
 
 import { useFormState } from 'react-dom';
 import styles from './DeleteCommentSubscription.module.scss';
-import { SubmitPendingButton } from '../ui/buttons/SubmitPendingBtn';
 import { useToastMessage } from '@/libs/hooks/useToastMessage';
 import { EMPTY_FORM_STATE } from '@/controllers/toast.controller';
 import { delSubscriptionAction } from '@/libs/actions/comments.action';
 import { EDBTableTitles, LANGUAGE } from '@/models/ui.model';
-import TooltipSimple from '../ui/TooltipSimple/TooltipSimple';
-import Link from 'next/link';
 import { EUrlBaseParam } from '@/models/url.model';
 import { COMMENTS_MODEL } from '@/models/comments.model';
+import {
+  CancelLinkButton,
+  ConfirmSubmitButton,
+} from '../ConfirmCancelButtons/ConfirmCancelButtons';
 
 const {
-  deleteSubscriptionPage: { askText, answerText },
+  deleteSubscriptionPage: { askText, answerText, confirmButton, cancelButton },
 } = COMMENTS_MODEL;
 
 interface IDeleteCommentSubscriptionProps {
@@ -44,10 +45,7 @@ const DeleteCommentSubscription = ({
   const noScriptFallback = useToastMessage(formState);
 
   return (
-    <div
-      className={styles.DeleteCommentSubscription}
-      data-testid="DeleteCommentSubscription"
-    >
+    <>
       {formState.status === 'SUCCESS' ? (
         <p className={styles.responseBlock}>
           {answerText[LANGUAGE]}
@@ -62,33 +60,21 @@ const DeleteCommentSubscription = ({
             <em className={styles.articleName}>✧{articleTitle}✧</em>?
           </p>
           <div className={styles.buttonsWrapper}>
-            <TooltipSimple tooltipText="Видалити поштову адресу зі списку розсилки">
-              <SubmitPendingButton
-                className={styles.confirmButton}
-                ariaLabel="Видалити поштову адресу зі списку розсилки"
-                innerHtml={
-                  <>
-                    <span className={styles.checkMark}></span>
-                    Так
-                  </>
-                }
-                pendingInnerHtml="Видалення..."
-              />
-            </TooltipSimple>
-            <TooltipSimple tooltipText="Не видаляти мою поштову адресу зі списку розсилки">
-              <Link
-                className={styles.cancelButton}
-                aria-label="Не видаляти мою поштову адресу зі списку розсилки"
-                href={EUrlBaseParam.BASE_PATH}
-              >
-                <span className={styles.crossMark}>❌</span>Ні
-              </Link>
-            </TooltipSimple>
+            <ConfirmSubmitButton
+              ariaLabel={confirmButton.ariaLabel[LANGUAGE]}
+              pendingInnerHtml={confirmButton.pendingText[LANGUAGE]}
+              title={confirmButton.title[LANGUAGE]}
+            />
+            <CancelLinkButton
+              ariaLabel={cancelButton.ariaLabel[LANGUAGE]}
+              href={EUrlBaseParam.BASE_PATH}
+              title={cancelButton.title[LANGUAGE]}
+            />
           </div>
           {noScriptFallback}
         </form>
       )}
-    </div>
+    </>
   );
 };
 

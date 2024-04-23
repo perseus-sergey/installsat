@@ -136,10 +136,10 @@ export const getComments = async (
 
 export const updateViewCount = async (
   dbTableTitle: string,
-  articleId: number,
+  articleId: string,
   oldViewNumber: number
 ) =>
   await executeQuery(`UPDATE ${dbTableTitle} SET view = ? WHERE id = ?`, [
     `${oldViewNumber + 1}`,
-    `${articleId}`,
+    articleId,
   ]);

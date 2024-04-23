@@ -65,7 +65,7 @@ export default async function layout({
   if (similarArticles instanceof Error)
     return <EmptyData description={similarArticles.message} />;
 
-  updateViewCount(EDBTableTitles.ARTICLE, id, view);
+  updateViewCount(EDBTableTitles.ARTICLE, `${id}`, view);
 
   return (
     <>

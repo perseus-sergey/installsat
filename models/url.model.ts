@@ -36,6 +36,7 @@ export enum EUrlSearchParam {
   CHANNEL_FORMAT_MPG4 = 'mpeg4',
   LATITUDE = 'lat',
   LONGITUDE = 'lng',
+  COMMENT_ID = 'comm-id',
   COMMENT_DEL_DB_TABLE = 't',
   COMMENT_DEL_ARTICLE_ID = 'i',
   COMMENT_DEL_ARTICLE_NAME = 'n',

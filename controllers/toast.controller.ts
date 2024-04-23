@@ -18,7 +18,12 @@ export const EMPTY_FORM_STATE: IFormState = {
 
 export const fromErrorToFormState = (error: unknown): IFormState => ({
   status: 'ERROR' as const,
-  message: error instanceof Error ? error.message : 'An unknown error occurred',
+  message:
+    error instanceof ZodError
+      ? ''
+      : error instanceof Error
+        ? error.message
+        : 'An unknown error occurred',
   fieldErrors: error instanceof ZodError ? error.flatten().fieldErrors : {},
   timestamp: Date.now(),
   fieldValues: {},

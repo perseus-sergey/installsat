@@ -1,5 +1,5 @@
 import BottomInfoPanel from '@/components/BottomInfoPanel/BottomInfoPanel';
-import ChannelOnlineLink from '@/components/ui/ChannelOnlineLink/ChannelOnlineLink';
+import ChannelOnlineLink from '@/components/ui/buttons/ChannelOnlineLink/ChannelOnlineLink';
 import ChannelParams from '@/components/ChannelParams/ChannelParams';
 import DangerHtml from '@/components/ui/DangerHtml/DangerHtml';
 import EmptyData from '@/components/errors/EmptyData/EmptyData';
@@ -139,7 +139,7 @@ export default async function Page({ params: { slug } }: IChannelProps) {
   const similarArticles =
     similarArticlesResult instanceof Error ? [] : similarArticlesResult;
 
-  updateViewCount(EDBTableTitles.CHANNELS, id, view);
+  updateViewCount(EDBTableTitles.CHANNELS, `${id}`, view);
 
   const commDbResult = await getComments(id, EDBTableTitles.COMMENTS_CHANNEL);
   const comments = commDbResult instanceof Error ? [] : commDbResult;

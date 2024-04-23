@@ -24,7 +24,7 @@ export const SAT_FINDER_META_DATA = {
       },
     },
   },
-  dbArticleId: 74,
+  dbArticleId: '74',
   searchForm: {
     fieldsetTitle: {
       [ELanguage.UA]: 'Виберіть адресу та супутники',

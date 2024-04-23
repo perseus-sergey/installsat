@@ -1,31 +1,33 @@
 'use client';
 
-import styles from './Comment.module.scss';
+import styles from './CommentForm.module.scss';
 // import '../styles.css';
 import { SubmitPendingButton } from '@/components/ui/buttons/SubmitPendingBtn';
 import { formCommentAction } from '../formComment.action';
 import { useFormState } from 'react-dom';
-import { ECommentFormNames } from '@/models/comments.model';
+import { COMMENTS_MODEL, ECommentFormNames } from '@/models/comments.model';
 import FieldError from '../FieldError/FieldError';
 import { useToastMessage } from '@/libs/hooks/useToastMessage';
 import { useFormReset } from '@/libs/hooks/useFormReset';
-import { EDBTableTitles } from '@/models/ui.model';
+import { EDBTableTitles, LANGUAGE } from '@/models/ui.model';
 import { useFormCommentSendEmail } from '@/libs/hooks/useFormCommentSendEmail';
 import { EMPTY_FORM_STATE } from '@/controllers/toast.controller';
 
 const { AUTHOR, EMAIL, TEXT } = ECommentFormNames;
+const { authorEmail, authorName, commentText, submit } =
+  COMMENTS_MODEL.commentForm;
 
 interface ICommentProps {
   revalidateUrl: string;
   dbCommentTableName: EDBTableTitles;
-  articleId: number;
+  articleId: string;
   articleName: string;
   userIP: string;
   baseUrl: string;
   emailKey: string;
 }
 
-const Comment = ({
+const CommentForm = ({
   revalidateUrl,
   dbCommentTableName,
   articleId,
@@ -65,8 +67,7 @@ const Comment = ({
     <form
       id="comment-form"
       ref={formRef}
-      className={styles.Comment}
-      data-testid="Comment"
+      className={styles.CommentForm}
       action={formAction}
     >
       <FieldError formState={formState} name={AUTHOR} />
@@ -75,13 +76,15 @@ const Comment = ({
         name={AUTHOR}
         className={styles.inputField}
         autoFocus
-        maxLength={20}
+        maxLength={authorName.maxSize.value}
         size={20}
         required
-        placeholder="Ім'я..."
-        aria-label="Введіть своє Ім'я"
+        placeholder={authorName.placeholder[LANGUAGE]}
+        aria-label={authorName.ariaLabel[LANGUAGE]}
       />
-      <label htmlFor={AUTHOR} className={styles.required}>{`Ваше Ім'я`}</label>
+      <label htmlFor={AUTHOR} className={styles.required}>
+        {authorName.labelText[LANGUAGE]}
+      </label>
 
       <FieldError formState={formState} name={EMAIL} />
       <input
@@ -91,12 +94,10 @@ const Comment = ({
         maxLength={40}
         className={styles.inputField}
         size={30}
-        placeholder="your@email.com"
-        aria-label="Введіть свою електронну пошту"
+        placeholder={authorEmail.placeholder}
+        aria-label={authorEmail.ariaLabel[LANGUAGE]}
       />
-      <label htmlFor={EMAIL}>
-        Адреса електронної пошти (ніде не відображається)
-      </label>
+      <label htmlFor={EMAIL}>{authorEmail.labelText[LANGUAGE]}</label>
 
       <FieldError formState={formState} name={TEXT} />
       <textarea
@@ -104,20 +105,20 @@ const Comment = ({
         name={TEXT}
         className={styles.inputField}
         autoFocus
-        placeholder="Введіть коментар..."
-        aria-label="Введіть коментар"
+        placeholder={commentText.placeholder[LANGUAGE]}
+        aria-label={commentText.ariaLabel[LANGUAGE]}
         rows={4}
         cols={60}
-        maxLength={450}
+        maxLength={commentText.maxSize.value}
         required
       />
       <label htmlFor={TEXT} className={styles.required}>
-        Зміст
+        {commentText.labelText[LANGUAGE]}
       </label>
       <SubmitPendingButton
-        ariaLabel="Відправити коментар"
-        innerHtml="Відправити"
-        pendingInnerHtml="Відправлення"
+        ariaLabel={submit.ariaLabel[LANGUAGE]}
+        innerHtml={submit.innerText[LANGUAGE]}
+        pendingInnerHtml={submit.pendingInnerText[LANGUAGE]}
         className={styles.submitCommentButton}
       />
       {noScriptFallback}
@@ -125,4 +126,4 @@ const Comment = ({
   );
 };
 
-export default Comment;
+export default CommentForm;

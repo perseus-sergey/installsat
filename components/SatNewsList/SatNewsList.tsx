@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from './SatNewsList.module.scss';
 import DangerHtml from '../ui/DangerHtml/DangerHtml';
-import { getDate } from '@/libs/utils';
+import { getDate } from '@/libs/utils/utils';
 import { META_TRANS_NEWS_LIST } from '@/models/satDigest.model';
 import {
   getDailyNews,

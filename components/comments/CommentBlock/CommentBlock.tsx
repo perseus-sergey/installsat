@@ -1,45 +1,43 @@
 import styles from './CommentBlock.module.scss';
-import Comment from '../CommentForm/CommentForm';
-import FillingImg from '@/components/Images/FillingImage';
-import { ICommentsModel } from '@/models/articles.model';
-import { getFormattedDateStr } from '@/libs/utils';
+import CommentForm from '../CommentForm/CommentForm';
 import { EDBTableTitles, ELanguage, LANGUAGE } from '@/models/ui.model';
 import { COMMENTS_MODEL } from '@/models/comments.model';
+import { EUrlSearchParam } from '@/models/url.model';
+import { getUserIP } from '@/libs/utils/getUserIP';
+import PaginationComments from '@/components/ui/PaginationComments/PaginationComments';
 
-const { commentForm, commentList } = COMMENTS_MODEL;
+const { commentForm } = COMMENTS_MODEL;
 
 interface IProps {
-  comments: ICommentsModel[];
   revalidateUrl: string;
   dbCommentTableName: EDBTableTitles;
   articleId: string;
   articleName: string;
-  userIP: string;
   baseUrl: string;
   emailKey: string;
+  numberOfComments: number;
 }
 
 const CommentBlock = ({
-  comments,
   revalidateUrl,
   dbCommentTableName,
   articleId,
   articleName,
-  userIP,
   baseUrl,
   emailKey,
+  numberOfComments,
 }: IProps) => {
   return (
-    <section className={styles.CommentBlock}>
+    <section className={styles.CommentBlock} id={EUrlSearchParam.COMMENT_ID}>
       <h2 className={styles.commentBlockTitle}>
         {commentForm.title[LANGUAGE]}
       </h2>
-      <Comment
+      <CommentForm
         revalidateUrl={revalidateUrl}
         dbCommentTableName={dbCommentTableName}
         articleId={articleId}
         articleName={articleName}
-        userIP={userIP}
+        userIP={getUserIP()}
         baseUrl={baseUrl}
         emailKey={emailKey}
       />
@@ -48,34 +46,13 @@ const CommentBlock = ({
         <BansBlock lang={LANGUAGE} />
       </div>
 
-      {comments.length > 0 && (
-        <>
-          <h3 className={styles.commentsTitle}>
-            <FillingImg
-              {...commentList.image}
-              alt={commentList.image.alt[LANGUAGE]}
-            />
-            {commentList.title[LANGUAGE]} ({comments.length})
-          </h3>
-          <ul className={styles.CommentList}>
-            {comments.map((comment) => {
-              const country = comment.country ? `(${comment.country})` : '';
-
-              return (
-                <li key={comment.id} className={styles.commentContainer}>
-                  <span
-                    className={styles.commentDate}
-                  >{`(${getFormattedDateStr(comment.date)})  `}</span>
-                  <span
-                    className={styles.commentAuthor}
-                  >{`${comment.author} ${country}`}</span>
-                  <p className={styles.commentText}>... {comment.text}</p>
-                </li>
-              );
-            })}
-          </ul>
-        </>
-      )}
+      <PaginationComments
+        numberOfComments={numberOfComments}
+        offsetNumber={3}
+        commentsPerPage={2}
+        commentsDBTblName={dbCommentTableName}
+        articleId={articleId}
+      />
     </section>
   );
 };

@@ -1,7 +1,8 @@
 import DeleteCommentSubscription from '@/components/DeleteCommentSubscription/DeleteCommentSubscription';
 import { Title } from '@/components/ui/Title/Title';
-import { getFormattedDateStr } from '@/libs/utils';
-import { decrypt, validSearchParam } from '@/libs/utilsServer';
+import { decrypt } from '@/libs/utils/decrypt';
+import { getFormattedDateStr } from '@/libs/utils/utils';
+import { validSearchParam } from '@/libs/utils/validSearchParam';
 import { COMMENTS_MODEL } from '@/models/comments.model';
 import {
   DEFAULT_META_DATA,

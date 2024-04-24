@@ -10,7 +10,6 @@ import SimilarChannel from '@/components/SimilarChannel/SimilarChannel';
 import { Title } from '@/components/ui/Title/Title';
 import TvScheduleLink from '@/components/TvScheduleLink/TvScheduleLink';
 import {
-  getComments,
   getSimilarArticles,
   updateViewCount,
 } from '@/controllers/articles.controller';
@@ -18,13 +17,15 @@ import {
   getDBChannel,
   getSimilarChannels,
 } from '@/controllers/channel.controller';
-import { getFormattedDateStr } from '@/libs/utils';
+import { getFormattedDateStr } from '@/libs/utils/utils';
 import { META_CHANNEL } from '@/models/channel.model';
 import { LANGUAGE, EDBTableTitles, DEFAULT_META_DATA } from '@/models/ui.model';
 import { EUrlBaseParam, EUrlSearchParam } from '@/models/url.model';
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
+import { getCommentsNumber } from '@/controllers/comments.controller';
 
 const { BASE_URL } = process.env;
 
@@ -117,6 +118,7 @@ export default async function Page({ params: { slug } }: IChannelProps) {
     logo,
     text,
     view,
+    chan_slug,
     cat_title,
     cat_parent_title,
     cat_parent_id,
@@ -139,10 +141,12 @@ export default async function Page({ params: { slug } }: IChannelProps) {
   const similarArticles =
     similarArticlesResult instanceof Error ? [] : similarArticlesResult;
 
-  updateViewCount(EDBTableTitles.CHANNELS, `${id}`, view);
+  const numberOfComments = await getCommentsNumber(
+    EDBTableTitles.COMMENTS_CHANNEL,
+    `${id}`
+  );
 
-  const commDbResult = await getComments(id, EDBTableTitles.COMMENTS_CHANNEL);
-  const comments = commDbResult instanceof Error ? [] : commDbResult;
+  updateViewCount(EDBTableTitles.CHANNELS, `${id}`, view);
 
   return (
     <>
@@ -197,8 +201,11 @@ export default async function Page({ params: { slug } }: IChannelProps) {
                 </Link>
               ),
             },
-            { name: viewsTitle[LANGUAGE], value: view + 1 },
-            { name: commentsTitle[LANGUAGE], value: comments.length },
+            {
+              name: viewsTitle[LANGUAGE],
+              value: (view + 1).toLocaleString('en-US'),
+            },
+            { name: commentsTitle[LANGUAGE], value: numberOfComments },
           ]}
         />
       </article>
@@ -227,6 +234,16 @@ export default async function Page({ params: { slug } }: IChannelProps) {
           ))}
         />
       ) : null}
+
+      <CommentBlock
+        numberOfComments={numberOfComments}
+        revalidateUrl={`/${EUrlBaseParam.CHANNEL_PARAMS}/${chan_slug}`}
+        dbCommentTableName={EDBTableTitles.COMMENTS_CHANNEL}
+        articleId={`${id}`}
+        articleName={title}
+        baseUrl={process.env.BASE_URL || ''}
+        emailKey={process.env.MAIL_ENCRYPT_KEY || ''}
+      />
     </>
   );
 }

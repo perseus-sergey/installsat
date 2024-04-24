@@ -3,12 +3,11 @@ import { Title } from '@/components/ui/Title/Title';
 import type { Metadata } from 'next';
 import { ARTICLES } from '@/models/articles.model';
 import { getChunkOfNews } from '@/controllers/articles.controller';
-import { imagePathValidate, validSearchParam } from '@/libs/utilsServer';
 import FillingValidImage from '@/components/Images/FillingValidImage';
 import ArticleList from '@/components/article/ArticleList/ArticleList';
-import Pagination from '@/components/Pagination/Pagination';
+import Pagination from '@/components/ui/Pagination/Pagination';
 import { notFound } from 'next/navigation';
-import { getFormattedDateStr } from '@/libs/utils';
+import { getFormattedDateStr } from '@/libs/utils/utils';
 import { EUrlBaseParam, EUrlSearchParam } from '@/models/url.model';
 import {
   LANGUAGE as L,
@@ -16,6 +15,8 @@ import {
   TSearchParams,
   DEFAULT_META_DATA,
 } from '@/models/ui.model';
+import { imagePathValidate } from '@/libs/utils/imagePathValidate';
+import { validSearchParam } from '@/libs/utils/validSearchParam';
 
 const { BASE_URL } = process.env;
 
@@ -83,14 +84,12 @@ export default async function Page({ searchParams }: IProps) {
 
       <p className="text-blue-600 font-bold text-center text-lg">{`${articlesCountCaption[LANGUAGE]}${allNews[0].total_count}`}</p>
 
-      {totalPages > 1 && (
-        <Pagination
-          page={pageNumber || 1}
-          offsetNumber={pagination.offsetNumber}
-          totalPages={totalPages}
-          searchParams={searchParams}
-        />
-      )}
+      <Pagination
+        page={pageNumber || 1}
+        offsetNumber={pagination.offsetNumber}
+        totalPages={totalPages}
+        searchParams={searchParams}
+      />
 
       <ArticleList articleList={allNews} articleTitleImg={articleTitleImg} />
     </>

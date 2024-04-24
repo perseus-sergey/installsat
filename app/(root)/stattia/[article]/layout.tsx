@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import React from 'react';
 import { EUrlBaseParam } from '@/models/url.model';
-import { getFormattedDateStr } from '@/libs/utils';
+import { getFormattedDateStr } from '@/libs/utils/utils';
 import {
   LANGUAGE,
   EDBTableTitles,

@@ -7,16 +7,15 @@ import {
   updateViewCount,
 } from '@/controllers/articles.controller';
 import { getSatsForForm } from '@/controllers/satDigest.controller';
-import { getFormattedDateStr } from '@/libs/utils';
+import { getFormattedDateStr } from '@/libs/utils/utils';
 import { SAT_FINDER_META_DATA } from '@/models/satFinder.model';
 import { EDBTableTitles, LANGUAGE, DEFAULT_META_DATA } from '@/models/ui.model';
 import { EUrlBaseParam, EUrlSearchParam } from '@/models/url.model';
 import { Metadata } from 'next';
 import { Suspense } from 'react';
-import CommentList from '@/components/comments/CommentBlock/CommentBlock';
-import { getComments } from '@/controllers/comments.controller';
-import { getUserIP } from '@/libs/utilsServer';
+import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
 import BottomInfoPanel from '@/components/BottomInfoPanel/BottomInfoPanel';
+import { getCommentsNumber } from '@/controllers/comments.controller';
 
 const { BASE_URL } = process.env;
 
@@ -48,14 +47,12 @@ export const metadata: Metadata = {
 };
 
 export default async function Page() {
-  const userIP = getUserIP();
-
   const groupedSats = await getSatsForForm(false);
-  const commentsDbResult = await getComments(
+
+  const numberOfComments = await getCommentsNumber(
     EDBTableTitles.COMMENTS_ARTICLE,
     dbArticleId
   );
-  const comments = commentsDbResult instanceof Error ? [] : commentsDbResult;
 
   updateViewCount(EDBTableTitles.ARTICLE, dbArticleId, view);
 
@@ -89,13 +86,12 @@ export default async function Page() {
         />
       </article>
 
-      <CommentList
-        comments={comments}
+      <CommentBlock
+        numberOfComments={numberOfComments}
         revalidateUrl={`/${EUrlBaseParam.SAT_FINDER}`}
         dbCommentTableName={EDBTableTitles.COMMENTS_ARTICLE}
         articleId={dbArticleId}
         articleName={title}
-        userIP={userIP}
         baseUrl={process.env.BASE_URL || ''}
         emailKey={process.env.MAIL_ENCRYPT_KEY || ''}
       />

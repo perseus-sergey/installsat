@@ -2,9 +2,9 @@ import EditComment from '@/components/admin/EditComment/EditComment';
 import EmptyData from '@/components/errors/EmptyData/EmptyData';
 import { Title } from '@/components/ui/Title/Title';
 import { getCommentFromDB } from '@/controllers/comments.controller';
-import { makeUrlSearchParams } from '@/libs/utils';
-import { validSearchParam } from '@/libs/utilsServer';
-import { decrypt } from '@/libs/utilsServer';
+import { decrypt } from '@/libs/utils/decrypt';
+import { makeUrlSearchParams } from '@/libs/utils/utils';
+import { validSearchParam } from '@/libs/utils/validSearchParam';
 import { EDBTableTitles, TSearchParams } from '@/models/ui.model';
 import { EUrlAdminParam, EUrlSearchParam } from '@/models/url.model';
 

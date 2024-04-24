@@ -176,3 +176,16 @@ export interface ISubscribersEmails {
   ip: string;
   date: Date;
 }
+
+export interface ICommentsModel {
+  id: number;
+  total_count: number;
+  post: number;
+  author: string;
+  parent_id: number;
+  mail: string;
+  text: string;
+  date: Date;
+  ip: string;
+  country: string;
+}

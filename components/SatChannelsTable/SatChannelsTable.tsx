@@ -9,7 +9,7 @@ import {
 import styles from './SatChannelsTable.module.scss';
 import Link from 'next/link';
 import { EUrlBaseParam } from '@/models/url.model';
-import { cutText } from '@/libs/utils';
+import { cutText } from '@/libs/utils/utils';
 import Tooltip from '../ui/Tooltip/Tooltip';
 import FillingImg from '../Images/FillingImage';
 import TooltipSimple from '../ui/TooltipSimple/TooltipSimple';

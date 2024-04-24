@@ -17,7 +17,7 @@ import FillingValidImage from '@/components/Images/FillingValidImage';
 import { cache } from 'react';
 import { LANGUAGE, DEFAULT_META_DATA } from '@/models/ui.model';
 import { EUrlBaseParam } from '@/models/url.model';
-import { getFormattedDateStr } from '@/libs/utils';
+import { getFormattedDateStr } from '@/libs/utils/utils';
 
 const { BASE_URL } = process.env;
 

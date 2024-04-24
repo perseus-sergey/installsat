@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import styles from '../SatNewsList/SatNewsList.module.scss';
-import { getDate, getFormattedDateStr } from '@/libs/utils';
+import { getDate, getFormattedDateStr } from '@/libs/utils/utils';
 import React from 'react';
 import DangerHtmlUl from '../ui/DangerHtml/DangerHtml';
 import {

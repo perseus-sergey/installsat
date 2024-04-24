@@ -1,5 +1,5 @@
-import { getFormattedDateStr, makeUrlSearchParams } from '@/libs/utils';
-import { encrypt } from '@/libs/utilsServer';
+import { encrypt } from '@/libs/utils/encrypt';
+import { getFormattedDateStr, makeUrlSearchParams } from '@/libs/utils/utils';
 import { ISubscribersEmails } from '@/models/comments.model';
 import { EDBTableTitles, ELanguage } from '@/models/ui.model';
 import {
@@ -267,7 +267,10 @@ export const CommentToUserEmail = async ({
                   ? 'Для відповіді на коментар, будь ласка, перейдіть на відповідну сторінку сайту'
                   : 'To respond to a comment, please go to the relevant page of the site'}
                 :{' '}
-                <Link href={`${baseUrl}${articlePath}`} target="_blank">
+                <Link
+                  href={`${baseUrl}${articlePath}#${EUrlSearchParam.COMMENT_ID}`}
+                  target="_blank"
+                >
                   <span style={coloredText}>{articleName}</span>
                 </Link>
               </Text>

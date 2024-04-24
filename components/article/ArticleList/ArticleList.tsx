@@ -6,7 +6,7 @@ import FillingValidImage from '../../Images/FillingValidImage';
 import Link from 'next/link';
 import { LANGUAGE, IImgParams } from '@/models/ui.model';
 import { EUrlBaseParam } from '@/models/url.model';
-import { getFormattedDateStr } from '@/libs/utils';
+import { getFormattedDateStr } from '@/libs/utils/utils';
 import DangerHtml from '../../ui/DangerHtml/DangerHtml';
 
 const { h1Image } = ARTICLES.article.images;

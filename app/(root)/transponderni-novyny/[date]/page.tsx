@@ -1,7 +1,7 @@
 import EmptyData from '@/components/errors/EmptyData/EmptyData';
 import TransNewsSingle from '@/components/TransNewsSingle/TransNewsSingle';
 import { getTransNewsForSingleDay } from '@/controllers/satDigest.controller';
-import { getDate } from '@/libs/utils';
+import { getDate } from '@/libs/utils/utils';
 import { META_TRANS_NEWS_SINGLE } from '@/models/satDigest.model';
 import { LANGUAGE, DEFAULT_META_DATA } from '@/models/ui.model';
 import { EUrlBaseParam } from '@/models/url.model';

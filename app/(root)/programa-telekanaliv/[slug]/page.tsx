@@ -4,16 +4,14 @@ import FillingValidImage from '@/components/Images/FillingValidImage';
 import SimilarArticles from '@/components/SimilarArticles/SimilarArticles';
 import SimilarChannel from '@/components/SimilarChannel/SimilarChannel';
 import { Title } from '@/components/ui/Title/Title';
-import {
-  getComments,
-  getSimilarArticles,
-} from '@/controllers/articles.controller';
+import { getSimilarArticles } from '@/controllers/articles.controller';
 import {
   getDBChannel,
   getDBChannelSlugList,
   getSimilarChannels,
 } from '@/controllers/channel.controller';
-import { getFormattedDateStr } from '@/libs/utils';
+import { getComments } from '@/controllers/comments.controller';
+import { getFormattedDateStr } from '@/libs/utils/utils';
 import { META_CHANNEL } from '@/models/channel.model';
 import {
   LANGUAGE,
@@ -147,25 +145,10 @@ export default async function Page({
   const similarArticles =
     similarArticlesResult instanceof Error ? [] : similarArticlesResult;
 
-  //   const urlSearchParams = makeUrlSearchParams(searchParams);
-
-  // const setUrlSearchParamsStr = (value: string | number): string => {
-  //   urlSearchParams.set(EUrlSearchParam.PAGE, `${value}`);
-
-  //   return `?${urlSearchParams.toString()}`;
-  // };
-
-  // const firstPage = setUrlSearchParamsStr('1');
-
-  // const prevPage = setUrlSearchParamsStr(`${page - 1 || 1}`);
-
-  // const nextPage = setUrlSearchParamsStr(`${page + 1}`);
-
-  // const lastPage = setUrlSearchParamsStr(`${totalPages}`);
-
-  // updateViewCount(EDBTableTitles.CHANNELS, id, view);
-
-  const commDbResult = await getComments(id, EDBTableTitles.COMMENTS_CHANNEL);
+  const commDbResult = await getComments(
+    EDBTableTitles.COMMENTS_CHANNEL,
+    `${id}`
+  );
   const comments = commDbResult instanceof Error ? [] : commDbResult;
 
   return (

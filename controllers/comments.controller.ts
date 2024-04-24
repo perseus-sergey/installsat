@@ -1,20 +1,46 @@
 'use server';
 
 import { executeQuery } from '@/libs/db/mysqldb';
-import { getFormattedDateStr } from '@/libs/utils';
-import { ICommentsModel } from '@/models/articles.model';
-import { ISubscribersEmails } from '@/models/comments.model';
+import { getFormattedDateStr } from '@/libs/utils/utils';
+import { ICommentsModel, ISubscribersEmails } from '@/models/comments.model';
+import { EDBTableTitles } from '@/models/ui.model';
 import { cache } from 'react';
 
-export const getComments = cache(async (tblName: string, postId: string) => {
-  const sql = `
-  SELECT * FROM ${tblName} WHERE post = ? ORDER BY id DESC
+export const getComments = cache(
+  async (tblName: EDBTableTitles, postId: string, start = 0, perPage = 20) => {
+    const sql = `
+  SELECT * FROM ${tblName} WHERE post = ? ORDER BY id DESC LIMIT ?, ?
 `;
 
-  return await executeQuery<ICommentsModel>(sql, [postId]);
-});
+    return await executeQuery<ICommentsModel>(sql, [
+      postId,
+      `${start}`,
+      `${perPage}`,
+    ]);
+  }
+);
 
-export const getCommentFromDB = async (tblName: string, commentId: string) => {
+export const getCommentsNumber = cache(
+  async (tblName: EDBTableTitles, postId: string) => {
+    const sql = `
+    SELECT COUNT(id) AS total_count FROM ${tblName} WHERE post = ?
+`;
+
+    const respCommentsNumber = await executeQuery<{ total_count: number }>(
+      sql,
+      [postId]
+    );
+
+    return respCommentsNumber instanceof Error
+      ? 0
+      : respCommentsNumber[0].total_count;
+  }
+);
+
+export const getCommentFromDB = async (
+  tblName: EDBTableTitles,
+  commentId: string
+) => {
   const sql = `
   SELECT text FROM ${tblName} WHERE id = ?
 `;
@@ -23,7 +49,7 @@ export const getCommentFromDB = async (tblName: string, commentId: string) => {
 };
 
 export const insertComment = async (
-  dbTableName: string,
+  dbTableName: EDBTableTitles,
   articleId: string,
   author: string,
   email: string,
@@ -37,7 +63,7 @@ export const insertComment = async (
   );
 
 export const editCommentDB = async (
-  dbTableName: string,
+  dbTableName: EDBTableTitles,
   commentId: number,
   text: string
 ) =>
@@ -47,7 +73,7 @@ export const editCommentDB = async (
   ]);
 
 export const deleteSubscriptionEmail = async (
-  dbTableName: string,
+  dbTableName: EDBTableTitles,
   articleId: string,
   email: string
 ) =>
@@ -56,11 +82,13 @@ export const deleteSubscriptionEmail = async (
     [articleId, email]
   );
 
-export const deleteComment = async (dbTableName: string, commentID: string) =>
-  await executeQuery(`DELETE FROM ${dbTableName} WHERE id=?`, [commentID]);
+export const deleteComment = async (
+  dbTableName: EDBTableTitles,
+  commentID: string
+) => await executeQuery(`DELETE FROM ${dbTableName} WHERE id=?`, [commentID]);
 
 export const getArticleSubscribers = async (
-  dbTableName: string,
+  dbTableName: EDBTableTitles,
   articleId: string
 ) =>
   await executeQuery<ISubscribersEmails>(

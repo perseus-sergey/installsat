@@ -4,7 +4,7 @@ import FillingValidImage from '@/components/Images/FillingValidImage';
 import { ARTICLES } from '@/models/articles.model';
 import { getArticle } from '@/controllers/articles.controller';
 import DangerHtml from '@/components/ui/DangerHtml/DangerHtml';
-import { getFormattedDateStr } from '@/libs/utils';
+import { getFormattedDateStr } from '@/libs/utils/utils';
 import { EUrlBaseParam } from '@/models/url.model';
 import BottomInfoPanel from '@/components/BottomInfoPanel/BottomInfoPanel';
 import Link from 'next/link';

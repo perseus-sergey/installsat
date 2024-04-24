@@ -208,18 +208,6 @@ export interface ISimilarArticleModel {
   date: Date;
 }
 
-export interface ICommentsModel {
-  id: number;
-  post: number;
-  author: string;
-  parent_id: number;
-  mail: string;
-  text: string;
-  date: Date;
-  ip: string;
-  country: string;
-}
-
 export interface IArticleModel {
   id: number;
   title: string;

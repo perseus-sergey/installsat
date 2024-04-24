@@ -2,7 +2,6 @@ import { executeQuery } from '@/libs/db/mysqldb';
 import {
   IAllNewsModel,
   IArticleModel,
-  ICommentsModel,
   ISimilarArticleModel,
   ISingleCatArticlesModel,
 } from '@/models/articles.model';
@@ -124,15 +123,6 @@ export const getArticleSlugList = cache(async () => {
 
   return await executeQuery<{ cpu: string }>(sql);
 });
-
-export const getComments = async (
-  articleId: number,
-  dbCommentTableTitle: string
-) => {
-  const sql = `SELECT * FROM ${dbCommentTableTitle} WHERE post = ?`;
-
-  return await executeQuery<ICommentsModel>(sql, [`${articleId}`]);
-};
 
 export const updateViewCount = async (
   dbTableTitle: string,

@@ -4,7 +4,7 @@ import React, { ReactNode, useEffect, useState } from 'react';
 import styles from './BreadCrumbs.module.scss';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { capitalizedWord } from '@/libs/utils';
+import { capitalizedWord } from '@/libs/utils/utils';
 import {
   BREAD_SEPARATOR,
   FIRST_ELEMENT_SIZE,

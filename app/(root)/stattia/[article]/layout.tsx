@@ -18,6 +18,8 @@ import EmptyData from '@/components/errors/EmptyData/EmptyData';
 import { IArticleParams } from './page';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import { getCommentsNumber } from '@/controllers/comments.controller';
+import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
 
 const { BASE_URL } = process.env;
 
@@ -59,11 +61,16 @@ export default async function layout({
     return <EmptyData description={sqlResult.message} />;
   if (!sqlResult.length) notFound();
 
-  const { id, logo, view } = sqlResult[0];
+  const { id, logo, view, title, slug } = sqlResult[0];
 
   const similarArticles = await getSimilarArticles(logo, id);
   if (similarArticles instanceof Error)
     return <EmptyData description={similarArticles.message} />;
+
+  const numberOfComments = await getCommentsNumber(
+    EDBTableTitles.COMMENTS_ARTICLE,
+    `${id}`
+  );
 
   updateViewCount(EDBTableTitles.ARTICLE, `${id}`, view);
 
@@ -84,6 +91,14 @@ export default async function layout({
           ))}
         />
       ) : null}
+
+      <CommentBlock
+        numberOfComments={numberOfComments}
+        revalidateUrl={`/${EUrlBaseParam.ARTICLE}/${slug}`}
+        dbCommentTableName={EDBTableTitles.COMMENTS_ARTICLE}
+        articleId={`${id}`}
+        articleName={title}
+      />
     </>
   );
 }

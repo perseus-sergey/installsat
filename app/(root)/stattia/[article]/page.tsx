@@ -66,7 +66,6 @@ export default async function Page({ params: { article } }: IArticleParams) {
           },
         ]}
       />
-      .
     </>
   );
 }

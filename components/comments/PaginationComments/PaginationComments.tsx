@@ -3,9 +3,9 @@
 import styles from './PaginationComments.module.scss';
 import { ARTICLES } from '@/models/articles.model';
 import { EDBTableTitles, LANGUAGE } from '@/models/ui.model';
-import TooltipSimple from '../TooltipSimple/TooltipSimple';
+import TooltipSimple from '../../ui/TooltipSimple/TooltipSimple';
 import { useEffect, useState } from 'react';
-import BaseButton from '../buttons/BaseButton/BaseButton';
+import BaseButton from '../../ui/buttons/BaseButton/BaseButton';
 import { getComments } from '@/controllers/comments.controller';
 import FillingImg from '@/components/Images/FillingImage';
 import { COMMENTS_MODEL, ICommentsModel } from '@/models/comments.model';

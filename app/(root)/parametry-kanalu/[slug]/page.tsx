@@ -241,8 +241,6 @@ export default async function Page({ params: { slug } }: IChannelProps) {
         dbCommentTableName={EDBTableTitles.COMMENTS_CHANNEL}
         articleId={`${id}`}
         articleName={title}
-        baseUrl={process.env.BASE_URL || ''}
-        emailKey={process.env.MAIL_ENCRYPT_KEY || ''}
       />
     </>
   );

@@ -4,17 +4,18 @@ import { EDBTableTitles, ELanguage, LANGUAGE } from '@/models/ui.model';
 import { COMMENTS_MODEL } from '@/models/comments.model';
 import { EUrlSearchParam } from '@/models/url.model';
 import { getUserIP } from '@/libs/utils/getUserIP';
-import PaginationComments from '@/components/ui/PaginationComments/PaginationComments';
+import PaginationComments from '@/components/comments/PaginationComments/PaginationComments';
 
-const { commentForm } = COMMENTS_MODEL;
+const {
+  commentForm,
+  commentList: { commentsPerPage, paginationOffset },
+} = COMMENTS_MODEL;
 
 interface IProps {
   revalidateUrl: string;
   dbCommentTableName: EDBTableTitles;
   articleId: string;
   articleName: string;
-  baseUrl: string;
-  emailKey: string;
   numberOfComments: number;
 }
 
@@ -23,8 +24,6 @@ const CommentBlock = ({
   dbCommentTableName,
   articleId,
   articleName,
-  baseUrl,
-  emailKey,
   numberOfComments,
 }: IProps) => {
   return (
@@ -38,8 +37,8 @@ const CommentBlock = ({
         articleId={articleId}
         articleName={articleName}
         userIP={getUserIP()}
-        baseUrl={baseUrl}
-        emailKey={emailKey}
+        baseUrl={process.env.BASE_URL || ''}
+        emailKey={process.env.MAIL_ENCRYPT_KEY || ''}
       />
 
       <div className={styles.bansBlock}>
@@ -48,8 +47,8 @@ const CommentBlock = ({
 
       <PaginationComments
         numberOfComments={numberOfComments}
-        offsetNumber={3}
-        commentsPerPage={2}
+        offsetNumber={paginationOffset}
+        commentsPerPage={commentsPerPage}
         commentsDBTblName={dbCommentTableName}
         articleId={articleId}
       />

@@ -93,6 +93,8 @@ export const COMMENTS_MODEL = {
     },
   },
   commentList: {
+    commentsPerPage: 15,
+    paginationOffset: 3,
     title: {
       [ELanguage.UA]: 'Коментарі',
       [ELanguage.EN]: 'Comments',

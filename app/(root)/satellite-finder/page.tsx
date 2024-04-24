@@ -92,8 +92,6 @@ export default async function Page() {
         dbCommentTableName={EDBTableTitles.COMMENTS_ARTICLE}
         articleId={dbArticleId}
         articleName={title}
-        baseUrl={process.env.BASE_URL || ''}
-        emailKey={process.env.MAIL_ENCRYPT_KEY || ''}
       />
     </>
   );

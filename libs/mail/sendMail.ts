@@ -10,14 +10,14 @@ interface IProps {
 
 const MAIN_EMAIL = process.env.MAIN_EMAIL;
 export async function sendMail({ to, subject, body }: IProps) {
-  const GOOGLE_APP_MAIL_SMTP = process.env.GOOGLE_APP_MAIL_SMTP;
-  const GOOGLE_APP_MAIL_SMTP_PASS = process.env.GOOGLE_APP_MAIL_SMTP_PASS;
+  const MAIL_SMTP = process.env.MAIL_SMTP;
+  const MAIL_SMTP_PASS = process.env.MAIL_SMTP_PASS;
 
   const transport = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-      user: GOOGLE_APP_MAIL_SMTP,
-      pass: GOOGLE_APP_MAIL_SMTP_PASS,
+      user: MAIL_SMTP,
+      pass: MAIL_SMTP_PASS,
     },
   });
 
@@ -31,7 +31,7 @@ export async function sendMail({ to, subject, body }: IProps) {
 
   try {
     await transport.sendMail({
-      from: `Installsat <${GOOGLE_APP_MAIL_SMTP}>`,
+      from: `Installsat <${MAIL_SMTP}>`,
       to: to || MAIN_EMAIL,
       subject,
       html: body,

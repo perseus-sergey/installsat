@@ -42,7 +42,7 @@ export default async function Page({
 
   return (
     <>
-      <Title>Edit comment</Title>
+      <Title>Edit comment.</Title>
       <EditComment
         text={comment[0].text}
         commentID={id}

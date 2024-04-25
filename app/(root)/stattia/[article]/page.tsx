@@ -11,13 +11,12 @@ import Link from 'next/link';
 import { DEFAULT_META_DATA, LANGUAGE } from '@/models/ui.model';
 import { notFound } from 'next/navigation';
 import { IArticleLayoutParams } from './layout';
-import { Metadata } from 'next';
 
 const BASE_URL = process.env.BASE_URL || '';
 
-export const generateMetadata = async ({
+export async function generateMetadata({
   params: { article },
-}: IArticleLayoutParams): Promise<Metadata> => {
+}: IArticleLayoutParams) {
   const sqlResult = await getArticle(article);
 
   if (sqlResult instanceof Error || !sqlResult.length)
@@ -37,7 +36,7 @@ export const generateMetadata = async ({
       publishedTime: getFormattedDateStr(date),
     },
   };
-};
+}
 
 const { h1Image } = ARTICLES.article.images;
 

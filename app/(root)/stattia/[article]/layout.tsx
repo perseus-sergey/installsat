@@ -15,14 +15,14 @@ import {
 } from '@/controllers/articles.controller';
 import SimilarArticles from '@/components/SimilarArticles/SimilarArticles';
 import EmptyData from '@/components/errors/EmptyData/EmptyData';
-import { IArticleParams } from './page';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { getCommentsNumber } from '@/controllers/comments.controller';
 import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
 
-export interface IArticleLayoutParams extends IArticleParams {
+interface IArticleParams {
   children: React.ReactNode;
+  params: { article: string };
 }
 
 // const BASE_URL = process.env.BASE_URL || '';
@@ -54,7 +54,7 @@ export interface IArticleLayoutParams extends IArticleParams {
 export default async function layout({
   children,
   params: { article },
-}: IArticleLayoutParams) {
+}: IArticleParams) {
   const sqlResult = await getArticle(article);
 
   if (sqlResult instanceof Error)

@@ -10,13 +10,17 @@ import BottomInfoPanel from '@/components/BottomInfoPanel/BottomInfoPanel';
 import Link from 'next/link';
 import { DEFAULT_META_DATA, LANGUAGE } from '@/models/ui.model';
 import { notFound } from 'next/navigation';
-import { IArticleLayoutParams } from './layout';
+import { Metadata } from 'next';
+
+interface IArticleParams {
+  params: { article: string };
+}
 
 const BASE_URL = process.env.BASE_URL || '';
 
-export async function generateMetadata({
+export const generateMetadata = async ({
   params: { article },
-}: IArticleLayoutParams) {
+}: IArticleParams): Promise<Metadata> => {
   const sqlResult = await getArticle(article);
 
   if (sqlResult instanceof Error || !sqlResult.length)
@@ -36,7 +40,7 @@ export async function generateMetadata({
       publishedTime: getFormattedDateStr(date),
     },
   };
-}
+};
 
 const { h1Image } = ARTICLES.article.images;
 
@@ -45,9 +49,6 @@ const {
   theme: themeTitle,
   views: viewsTitle,
 } = ARTICLES.infoPanelTitles;
-export interface IArticleParams {
-  params: { article: string };
-}
 
 export default async function Page({ params: { article } }: IArticleParams) {
   const sqlResult = await getArticle(article);

@@ -8,15 +8,11 @@ import { validSearchParam } from '@/libs/utils/validSearchParam';
 import { EDBTableTitles, TSearchParams } from '@/models/ui.model';
 import { EUrlAdminParam, EUrlSearchParam } from '@/models/url.model';
 
-export enum EEditCommentFieldNames {
-  COMMENT_TEXT = 'comment-text',
-}
-
 const emailKey = process.env.MAIL_ENCRYPT_KEY || '';
 
 const { BASE_PATH, EDIT_COMMENT } = EUrlAdminParam;
 
-export interface IPageParams {
+interface IPageParams {
   params: { id: string };
   searchParams?: TSearchParams;
 }

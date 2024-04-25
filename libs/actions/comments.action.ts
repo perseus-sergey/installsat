@@ -1,6 +1,5 @@
 'use server';
 
-import { EEditCommentFieldNames } from '@/app/(admin)/guru/edit-comments/[id]/page';
 import {
   deleteComment,
   deleteSubscriptionEmail,
@@ -11,6 +10,7 @@ import {
   fromErrorToFormState,
   toFormState,
 } from '@/controllers/toast.controller';
+import { EEditCommentFieldNames } from '@/models/admin.model';
 import { EDBTableTitles } from '@/models/ui.model';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';

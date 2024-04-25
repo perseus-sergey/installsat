@@ -9,7 +9,7 @@ import {
   CancelLinkButton,
   ConfirmSubmitButton,
 } from '@/components/ConfirmCancelButtons/ConfirmCancelButtons';
-import { EEditCommentFieldNames } from '@/app/(admin)/guru/edit-comments/[id]/page';
+import { EEditCommentFieldNames } from '@/models/admin.model';
 
 const { COMMENT_TEXT } = EEditCommentFieldNames;
 

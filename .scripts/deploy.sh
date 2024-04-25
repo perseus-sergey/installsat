@@ -8,7 +8,7 @@ git pull origin main
 echo "New changes copied to server !"
 
 echo "Removing yarn.lock file..."
-rm -f installsat/yarn.lock
+rm -f yarn.lock
 
 echo "Installing Dependencies..."
 yarn

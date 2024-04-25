@@ -174,7 +174,7 @@ export const CommentToUserEmail = async ({
               style={{ display: 'inline-block' }}
             >
               <Img
-                src={`${baseUrl}/Images/installsat_mail.jpg`}
+                src={`${baseUrl}/public/Images/installsat_mail.jpg`}
                 width="212"
                 height="90"
                 alt="Installsat logo"

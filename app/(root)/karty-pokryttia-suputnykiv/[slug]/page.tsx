@@ -13,13 +13,13 @@ import { EUrlBaseParam } from '@/models/url.model';
 
 import { Metadata } from 'next';
 
-// import { Title } from '@/components/ui/Title/Title';
-
-const BASE_URL = process.env.BASE_URL || '';
+import { Title } from '@/components/ui/Title/Title';
 
 interface IProps {
   params: { slug: string };
 }
+
+const BASE_URL = process.env.BASE_URL || '';
 
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
@@ -45,10 +45,9 @@ export default function Page({ params: { slug } }: IProps) {
   return (
     <>
       <article className="article">
-        <h1>Супутник {slug}. Карти покриття країн Європи та ближньої Азії</h1>
-        {/* <Title>
+        <Title>
           Супутник {slug}. Карти покриття країн Європи та ближньої Азії
-        </Title> */}
+        </Title>
       </article>
     </>
   );

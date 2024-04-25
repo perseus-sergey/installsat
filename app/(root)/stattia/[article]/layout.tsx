@@ -1,4 +1,4 @@
-// import type { Metadata } from 'next';
+import type { Metadata } from 'next';
 import React from 'react';
 import { EUrlBaseParam } from '@/models/url.model';
 import { getFormattedDateStr } from '@/libs/utils/utils';
@@ -6,7 +6,7 @@ import {
   LANGUAGE,
   EDBTableTitles,
   SIMILAR_ARTICLES,
-  // DEFAULT_META_DATA,
+  DEFAULT_META_DATA,
 } from '@/models/ui.model';
 import {
   getArticle,
@@ -25,31 +25,31 @@ interface IArticleParams {
   params: { article: string };
 }
 
-// const BASE_URL = process.env.BASE_URL || '';
+const BASE_URL = process.env.BASE_URL || '';
 
-// export const generateMetadata = async ({
-//   params: { article },
-// }: IArticleLayoutParams): Promise<Metadata> => {
-//   const sqlResult = await getArticle(article);
+export const generateMetadata = async ({
+  params: { article },
+}: IArticleParams): Promise<Metadata> => {
+  const sqlResult = await getArticle(article);
 
-//   if (sqlResult instanceof Error || !sqlResult.length)
-//     return DEFAULT_META_DATA[LANGUAGE];
+  if (sqlResult instanceof Error || !sqlResult.length)
+    return DEFAULT_META_DATA[LANGUAGE];
 
-//   const { title, description, date, slug } = sqlResult[0];
+  const { title, description, date, slug } = sqlResult[0];
 
-//   return {
-//     title,
-//     description,
-//     keywords: description,
-//     openGraph: {
-//       ...DEFAULT_META_DATA.openGraph,
-//       title,
-//       description,
-//       url: `${BASE_URL}/${EUrlBaseParam.ARTICLE}/${slug}`,
-//       publishedTime: getFormattedDateStr(date),
-//     },
-//   };
-// };
+  return {
+    title,
+    description,
+    keywords: description,
+    openGraph: {
+      ...DEFAULT_META_DATA.openGraph,
+      title,
+      description,
+      url: `${BASE_URL}/${EUrlBaseParam.ARTICLE}/${slug}`,
+      publishedTime: getFormattedDateStr(date),
+    },
+  };
+};
 
 export default async function layout({
   children,

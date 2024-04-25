@@ -7,7 +7,7 @@ import { LANGUAGE, DEFAULT_META_DATA } from '@/models/ui.model';
 import { EUrlBaseParam } from '@/models/url.model';
 import { notFound } from 'next/navigation';
 
-const { BASE_URL } = process.env;
+const BASE_URL = process.env.BASE_URL;
 
 interface IPageParams {
   params: { date: string };

@@ -17,7 +17,7 @@ import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
 import BottomInfoPanel from '@/components/BottomInfoPanel/BottomInfoPanel';
 import { getCommentsNumber } from '@/controllers/comments.controller';
 
-const { BASE_URL } = process.env;
+const BASE_URL = process.env.BASE_URL;
 
 const {
   keywords,

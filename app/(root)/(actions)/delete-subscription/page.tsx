@@ -14,7 +14,7 @@ import { EUrlBaseParam, EUrlSearchParam } from '@/models/url.model';
 import { Metadata } from 'next';
 
 const emailKey = process.env.MAIL_ENCRYPT_KEY || '';
-const { BASE_URL = '' } = process.env;
+const BASE_URL = process.env.BASE_URL || '';
 
 const {
   deleteSubscriptionPage: {

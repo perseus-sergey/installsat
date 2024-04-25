@@ -31,7 +31,7 @@ import { validSearchParam } from '@/libs/utils/validSearchParam';
 import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
 import { getCommentsNumber } from '@/controllers/comments.controller';
 
-const { BASE_URL } = process.env;
+const BASE_URL = process.env.BASE_URL;
 
 const {
   getTitle,

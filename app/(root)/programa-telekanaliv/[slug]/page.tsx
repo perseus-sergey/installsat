@@ -23,7 +23,7 @@ import { EUrlBaseParam } from '@/models/url.model';
 import { Metadata } from 'next';
 import Link from 'next/link';
 
-const { BASE_URL } = process.env;
+const BASE_URL = process.env.BASE_URL;
 
 const {
   images: {

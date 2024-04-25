@@ -21,7 +21,7 @@ import { getFormattedDateStr } from '@/libs/utils/utils';
 import { getCommentsNumber } from '@/controllers/comments.controller';
 import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
 
-const { BASE_URL } = process.env;
+const BASE_URL = process.env.BASE_URL;
 
 const {
   getTitle,

@@ -18,7 +18,7 @@ import { EUrlBaseParam, EUrlSearchParam } from '@/models/url.model';
 import { imagePathValidate } from '@/libs/utils/imagePathValidate';
 import { validSearchParam } from '@/libs/utils/validSearchParam';
 
-const { BASE_URL } = process.env;
+const BASE_URL = process.env.BASE_URL;
 
 const {
   articleList: { pagination, images, articlesCountCaption },

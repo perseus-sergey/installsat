@@ -5,7 +5,7 @@ import { META_TRANS_NEWS_LIST } from '@/models/satDigest.model';
 import { LANGUAGE, DEFAULT_META_DATA } from '@/models/ui.model';
 import { getFormattedDateStr } from '@/libs/utils/utils';
 
-const { BASE_URL } = process.env;
+const BASE_URL = process.env.BASE_URL;
 
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL || ''),

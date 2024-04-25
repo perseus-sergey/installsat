@@ -21,6 +21,8 @@ interface IProps {
 
 const BASE_URL = process.env.BASE_URL || '';
 
+// TODO: Change MetaData
+// =================================================================
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
   title: 'maps',
@@ -34,7 +36,6 @@ export const metadata: Metadata = {
     publishedTime: getFormattedDateStr(new Date()),
   },
 };
-
 export default function Page({ params: { slug } }: IProps) {
   //   const searchInterval = searchParams[EUrlSearchParam.INTERVAL];
   //   const intervalDays =

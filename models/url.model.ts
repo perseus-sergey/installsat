@@ -1,5 +1,3 @@
-export const SITE_BASE_URL = 'https://www.installsat.tv';
-
 export enum EUrlBaseParam {
   BASE_PATH = '/',
   TRANSPONDER_NEWS = 'transponderni-novyny',
@@ -20,6 +18,11 @@ export enum EUrlBaseParam {
   PRODUCT = 'tovar',
   PRODUCT_LIST = 'spysok-tovariv',
   PRODUCT_CATEGORIES = 'kategoriji-tovariv',
+  DELETE_COMMENT_SUBSCRIPTION = 'delete-subscription',
+}
+export enum EUrlAdminParam {
+  BASE_PATH = '/guru',
+  EDIT_COMMENT = 'edit-comments',
 }
 
 export enum EUrlSearchParam {
@@ -33,4 +36,9 @@ export enum EUrlSearchParam {
   CHANNEL_FORMAT_MPG4 = 'mpeg4',
   LATITUDE = 'lat',
   LONGITUDE = 'lng',
+  COMMENT_ID = 'comm-id',
+  COMMENT_DEL_DB_TABLE = 't',
+  COMMENT_DEL_ARTICLE_ID = 'i',
+  COMMENT_DEL_ARTICLE_NAME = 'n',
+  COMMENT_DEL_AUTHOR_EMAIL = 'm',
 }

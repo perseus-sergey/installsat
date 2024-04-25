@@ -8,6 +8,7 @@ interface IFillingImgProps {
   alt?: string;
   isBlur?: boolean;
   blurImgPath?: string;
+  isPriority?: boolean;
 }
 
 const FillingImg = ({
@@ -16,6 +17,7 @@ const FillingImg = ({
   src,
   alt = '',
   isBlur = false,
+  isPriority = false,
   blurImgPath = IMG_PROPERTIES.defaultImgBlur,
 }: IFillingImgProps) => (
   <div
@@ -33,6 +35,7 @@ const FillingImg = ({
       blurDataURL={blurImgPath}
       src={src}
       alt={alt}
+      priority={isPriority}
     />
   </div>
 );

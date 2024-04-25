@@ -24,6 +24,7 @@ export const SAT_FINDER_META_DATA = {
       },
     },
   },
+  dbArticleId: '74',
   searchForm: {
     fieldsetTitle: {
       [ELanguage.UA]: 'Виберіть адресу та супутники',
@@ -38,15 +39,9 @@ export const SAT_FINDER_META_DATA = {
         [ELanguage.UA]: 'Введіть назву міста, вулицю, номер будинку',
         [ELanguage.EN]: 'Enter the name of the city, street, house number',
       },
-      cancelButton: {
-        [ELanguage.UA]: {
-          ariaLabel: 'Скасувати',
-          content: 'x',
-        },
-        [ELanguage.EN]: {
-          ariaLabel: 'Cancel',
-          content: 'x',
-        },
+      cancelBtnAriaLabel: {
+        [ELanguage.UA]: 'Скасувати',
+        [ELanguage.EN]: 'Cancel',
       },
       searchIconStr: '⏿',
     },

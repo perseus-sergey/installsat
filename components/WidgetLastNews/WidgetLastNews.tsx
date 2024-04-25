@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import styles from './WidgetLastNews.module.scss';
 import { getLastNewsWidgetList } from '@/controllers/sidebar.controller';
-import EmptyData from '../EmptyData/EmptyData';
+import EmptyData from '../errors/EmptyData/EmptyData';
 import { WIDGET_LAST_NEWS } from '@/models/widget.model';
 import { LANGUAGE } from '@/models/ui.model';
 

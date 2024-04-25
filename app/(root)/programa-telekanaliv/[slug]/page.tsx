@@ -1,29 +1,29 @@
 import BottomInfoPanel from '@/components/BottomInfoPanel/BottomInfoPanel';
-import EmptyData from '@/components/EmptyData/EmptyData';
+import EmptyData from '@/components/errors/EmptyData/EmptyData';
 import FillingValidImage from '@/components/Images/FillingValidImage';
 import SimilarArticles from '@/components/SimilarArticles/SimilarArticles';
 import SimilarChannel from '@/components/SimilarChannel/SimilarChannel';
-import { Title } from '@/components/Title/Title';
-import {
-  getComments,
-  getSimilarArticles,
-} from '@/controllers/articles.controller';
+import { Title } from '@/components/ui/Title/Title';
+import { getSimilarArticles } from '@/controllers/articles.controller';
 import {
   getDBChannel,
   getDBChannelSlugList,
   getSimilarChannels,
 } from '@/controllers/channel.controller';
-import { getFormattedDateStr } from '@/libs/utils';
+import { getComments } from '@/controllers/comments.controller';
+import { getFormattedDateStr } from '@/libs/utils/utils';
 import { META_CHANNEL } from '@/models/channel.model';
 import {
   LANGUAGE,
   EDBTableTitles,
   TSearchParams,
-  defaultMetaData,
+  DEFAULT_META_DATA,
 } from '@/models/ui.model';
-import { EUrlBaseParam, SITE_BASE_URL } from '@/models/url.model';
+import { EUrlBaseParam } from '@/models/url.model';
 import { Metadata } from 'next';
 import Link from 'next/link';
+
+const { BASE_URL } = process.env;
 
 const {
   images: {
@@ -48,7 +48,7 @@ export const generateMetadata = async ({
   params: { slug },
 }: IPageProps): Promise<Metadata> => {
   const sqlResult = await getDBChannel(slug);
-  if (sqlResult instanceof Error) return defaultMetaData[LANGUAGE];
+  if (sqlResult instanceof Error) return DEFAULT_META_DATA[LANGUAGE];
 
   const {
     title,
@@ -85,13 +85,13 @@ export const generateMetadata = async ({
     description: description || title,
     keywords: keywordsBefore[LANGUAGE] + description,
     alternates: {
-      canonical: `${SITE_BASE_URL}/${EUrlBaseParam.CHANNEL_PARAMS}/${addCanonical}`,
+      canonical: `${BASE_URL}/${EUrlBaseParam.CHANNEL_PARAMS}/${addCanonical}`,
     },
     openGraph: {
-      ...defaultMetaData.openGraph,
+      ...DEFAULT_META_DATA.openGraph,
       title: metaTitle,
       description: description || title,
-      url: `${SITE_BASE_URL}/${EUrlBaseParam.CHANNEL_PARAMS}/${chan_slug}`,
+      url: `${BASE_URL}/${EUrlBaseParam.CHANNEL_PARAMS}/${chan_slug}`,
       publishedTime: getFormattedDateStr(),
     },
   };
@@ -145,25 +145,10 @@ export default async function Page({
   const similarArticles =
     similarArticlesResult instanceof Error ? [] : similarArticlesResult;
 
-  //   const urlSearchParams = makeUrlSearchParams(searchParams);
-
-  // const setUrlSearchParamsStr = (value: string | number): string => {
-  //   urlSearchParams.set(EUrlSearchParam.PAGE, `${value}`);
-
-  //   return `?${urlSearchParams.toString()}`;
-  // };
-
-  // const firstPage = setUrlSearchParamsStr('1');
-
-  // const prevPage = setUrlSearchParamsStr(`${page - 1 || 1}`);
-
-  // const nextPage = setUrlSearchParamsStr(`${page + 1}`);
-
-  // const lastPage = setUrlSearchParamsStr(`${totalPages}`);
-
-  // updateViewCount(EDBTableTitles.CHANNELS, id, view);
-
-  const commDbResult = await getComments(id, EDBTableTitles.COMMENTS_CHANNEL);
+  const commDbResult = await getComments(
+    EDBTableTitles.COMMENTS_CHANNEL,
+    `${id}`
+  );
   const comments = commDbResult instanceof Error ? [] : commDbResult;
 
   return (

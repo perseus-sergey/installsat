@@ -1,0 +1,32 @@
+@use '../../../var.scss' as *;
+
+.CommentBlock {
+  @include blockBorder;
+  width: 100%;
+  color: #ffffff;
+  margin: 4px auto;
+  padding: 10px;
+  background: rgb(10, 46, 84);
+  background: linear-gradient(
+    to bottom,
+    rgb(10, 46, 84) 0%,
+    rgb(32, 124, 202) 45%,
+    rgb(125, 185, 232) 100%
+  );
+
+  .commentBlockTitle {
+    color: #ffffff;
+    font-family: arial, verdana, helvetica, sans-serif;
+    font-style: italic;
+    font-size: 1.5rem;
+    font-weight: bold;
+    padding: 5px;
+    text-align: center;
+    text-shadow: 1px 1px 0px black;
+  }
+
+  .bansBlock {
+    text-shadow: 1px 1px 0px black;
+    padding: 0.5rem;
+  }
+}

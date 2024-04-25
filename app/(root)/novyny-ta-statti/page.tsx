@@ -1,25 +1,24 @@
-import EmptyData from '@/components/EmptyData/EmptyData';
-import { Title } from '@/components/Title/Title';
+import EmptyData from '@/components/errors/EmptyData/EmptyData';
+import { Title } from '@/components/ui/Title/Title';
 import type { Metadata } from 'next';
 import { ARTICLES } from '@/models/articles.model';
 import { getChunkOfNews } from '@/controllers/articles.controller';
-import { imagePathValidate } from '@/libs/utilsServer';
 import FillingValidImage from '@/components/Images/FillingValidImage';
-import ArticleList from '@/components/ArticleList/ArticleList';
-import Pagination from '@/components/Pagination/Pagination';
+import ArticleList from '@/components/article/ArticleList/ArticleList';
+import Pagination from '@/components/ui/Pagination/Pagination';
 import { notFound } from 'next/navigation';
-import { getFormattedDateStr } from '@/libs/utils';
-import {
-  EUrlBaseParam,
-  EUrlSearchParam,
-  SITE_BASE_URL,
-} from '@/models/url.model';
+import { getFormattedDateStr } from '@/libs/utils/utils';
+import { EUrlBaseParam, EUrlSearchParam } from '@/models/url.model';
 import {
   LANGUAGE as L,
   LANGUAGE,
   TSearchParams,
-  defaultMetaData,
+  DEFAULT_META_DATA,
 } from '@/models/ui.model';
+import { imagePathValidate } from '@/libs/utils/imagePathValidate';
+import { validSearchParam } from '@/libs/utils/validSearchParam';
+
+const { BASE_URL } = process.env;
 
 const { meta, pagination, images, articlesCountCaption } = ARTICLES.articleList;
 
@@ -41,27 +40,19 @@ export const metadata: Metadata = {
   description: meta.getDescription()[L],
   keywords: meta.getKeywords(L),
   openGraph: {
-    ...defaultMetaData.openGraph,
+    ...DEFAULT_META_DATA.openGraph,
     title: meta.getTitle()[L],
     description: meta.getDescription()[L],
-    url: `${SITE_BASE_URL}/${EUrlBaseParam.NEWS_AND_ARTICLES}`,
+    url: `${BASE_URL}/${EUrlBaseParam.NEWS_AND_ARTICLES}`,
     publishedTime: getFormattedDateStr(new Date()),
   },
 };
 export default async function Page({ searchParams }: IProps) {
   const { perPage } = pagination;
 
-  const page =
-    searchParams?.[EUrlSearchParam.PAGE] &&
-    typeof searchParams[EUrlSearchParam.PAGE] === 'string'
-      ? searchParams[EUrlSearchParam.PAGE]
-      : '1';
+  const page = validSearchParam(EUrlSearchParam.PAGE, searchParams) || '1';
 
-  const searchQuery =
-    searchParams?.[EUrlSearchParam.ARTICLE] &&
-    typeof searchParams[EUrlSearchParam.ARTICLE] === 'string'
-      ? searchParams[EUrlSearchParam.ARTICLE]
-      : '';
+  const searchQuery = validSearchParam(EUrlSearchParam.ARTICLE, searchParams);
 
   const pageNumber = parseInt(page, 10);
   if (isNaN(pageNumber)) notFound();
@@ -93,14 +84,12 @@ export default async function Page({ searchParams }: IProps) {
 
       <p className="text-blue-600 font-bold text-center text-lg">{`${articlesCountCaption[LANGUAGE]}${allNews[0].total_count}`}</p>
 
-      {totalPages > 1 && (
-        <Pagination
-          page={pageNumber || 1}
-          offsetNumber={pagination.offsetNumber}
-          totalPages={totalPages}
-          searchParams={searchParams}
-        />
-      )}
+      <Pagination
+        page={pageNumber || 1}
+        offsetNumber={pagination.offsetNumber}
+        totalPages={totalPages}
+        searchParams={searchParams}
+      />
 
       <ArticleList articleList={allNews} articleTitleImg={articleTitleImg} />
     </>

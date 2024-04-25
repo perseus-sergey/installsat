@@ -1,14 +1,14 @@
 import React from 'react';
 import styles from './SatNewsList.module.scss';
-import DangerHtml from '../DangerHtml/DangerHtml';
-import { getDate } from '@/libs/utils';
+import DangerHtml from '../ui/DangerHtml/DangerHtml';
+import { getDate } from '@/libs/utils/utils';
 import { META_TRANS_NEWS_LIST } from '@/models/satDigest.model';
 import {
   getDailyNews,
   getSatDigestNews,
   setGroupedNewsBySatMap,
 } from '@/controllers/satDigest.controller';
-import EmptyData from '../EmptyData/EmptyData';
+import EmptyData from '../errors/EmptyData/EmptyData';
 import FillingValidImage from '../Images/FillingValidImage';
 import { LANGUAGE, TSearchParams } from '@/models/ui.model';
 

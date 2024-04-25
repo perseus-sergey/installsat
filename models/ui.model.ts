@@ -64,7 +64,7 @@ export const ERRORS = {
   },
 };
 
-export const defaultMetaData = {
+export const DEFAULT_META_DATA = {
   [ELanguage.UA]: {
     title: 'Сайт про цифрове телебачення',
     description:
@@ -96,5 +96,20 @@ export const SIMILAR_ARTICLES = {
 export enum EDBTableTitles {
   ARTICLE = 'tbl_useful',
   CHANNELS = 'tbl_channals',
+  COMMENTS_ARTICLE = 'tbl_comments',
   COMMENTS_CHANNEL = 'tbl_comments_chan',
+  COMMENTS_CHAT = 'tbl_comments_chat',
+  COMMENTS_INSTALLATION = 'tbl_comments_instal',
+  COMMENTS_MAPS = 'tbl_comments_maps',
+  COMMENTS_ONLINE = 'tbl_comments_online',
+  COMMENTS_PACKAGES = 'tbl_comments_packs',
+  COMMENTS_SATELLITE = 'tbl_comments_sat',
+  COMMENTS_GENRE = 'tbl_comments_tema',
 }
+
+// lastnews: tbl_comments
+// channel_list:  tbl_comments_packs
+// karty-pokrytija-telesputnikov: tbl_comments_maps
+// installations: tbl_comments_instal
+// nastrojka-oborudovanija: tbl_comments
+// satellite_equipments: tbl_eqp_comments

@@ -1,5 +1,5 @@
-import EmptyData from '@/components/EmptyData/EmptyData';
-import { Title } from '@/components/Title/Title';
+import EmptyData from '@/components/errors/EmptyData/EmptyData';
+import { Title } from '@/components/ui/Title/Title';
 import type { Metadata } from 'next';
 import FillingValidImage from '@/components/Images/FillingValidImage';
 import { ARTICLES, ISingleCatArticlesModel } from '@/models/articles.model';
@@ -7,19 +7,18 @@ import {
   getArticleCatList,
   getChunkOfNews,
 } from '@/controllers/articles.controller';
-import { imagePathValidate } from '@/libs/utilsServer';
-import { getFormattedDateStr } from '@/libs/utils';
+import { getFormattedDateStr } from '@/libs/utils/utils';
 import { cache } from 'react';
 import TextUnderH1 from '@/components/TextUnderH1/TextUnderH1';
-import ArticleList from '@/components/ArticleList/ArticleList';
+import ArticleList from '@/components/article/ArticleList/ArticleList';
 import { notFound } from 'next/navigation';
-import Pagination from '@/components/Pagination/Pagination';
-import { LANGUAGE, TSearchParams, defaultMetaData } from '@/models/ui.model';
-import {
-  EUrlBaseParam,
-  EUrlSearchParam,
-  SITE_BASE_URL,
-} from '@/models/url.model';
+import Pagination from '@/components/ui/Pagination/Pagination';
+import { LANGUAGE, TSearchParams, DEFAULT_META_DATA } from '@/models/ui.model';
+import { EUrlBaseParam, EUrlSearchParam } from '@/models/url.model';
+import { imagePathValidate } from '@/libs/utils/imagePathValidate';
+import { validSearchParam } from '@/libs/utils/validSearchParam';
+
+const { BASE_URL } = process.env;
 
 const {
   articleList: { pagination, images, articlesCountCaption },
@@ -71,10 +70,10 @@ export const generateMetadata = ({
     description,
     keywords: description,
     openGraph: {
-      ...defaultMetaData.openGraph,
+      ...DEFAULT_META_DATA.openGraph,
       title,
       description,
-      url: `${SITE_BASE_URL}/${EUrlBaseParam.NEWS_AND_ARTICLES}/${cpu}`,
+      url: `${BASE_URL}/${EUrlBaseParam.NEWS_AND_ARTICLES}/${cpu}`,
       publishedTime: getFormattedDateStr(currDateStr),
     },
   };
@@ -100,17 +99,9 @@ export default async function Page({
 
   const { perPage } = pagination;
 
-  const page =
-    searchParams?.[EUrlSearchParam.PAGE] &&
-    typeof searchParams[EUrlSearchParam.PAGE] === 'string'
-      ? searchParams[EUrlSearchParam.PAGE]
-      : '1';
+  const page = validSearchParam(EUrlSearchParam.PAGE, searchParams) || '1';
 
-  const searchQuery =
-    searchParams?.[EUrlSearchParam.ARTICLE] &&
-    typeof searchParams[EUrlSearchParam.ARTICLE] === 'string'
-      ? searchParams[EUrlSearchParam.ARTICLE]
-      : '';
+  const searchQuery = validSearchParam(EUrlSearchParam.ARTICLE, searchParams);
 
   const pageNumber = parseInt(page, 10);
   if (isNaN(pageNumber)) notFound();
@@ -146,14 +137,13 @@ export default async function Page({
 
       <p className="text-blue-600 font-bold text-center text-lg">{`${articlesCountCaption[LANGUAGE]}${allNews[0].total_count}`}</p>
 
-      {totalPages > 1 && (
-        <Pagination
-          page={pageNumber || 1}
-          offsetNumber={pagination.offsetNumber}
-          totalPages={totalPages}
-          searchParams={searchParams}
-        />
-      )}
+      <Pagination
+        page={pageNumber || 1}
+        offsetNumber={pagination.offsetNumber}
+        totalPages={totalPages}
+        searchParams={searchParams}
+      />
+
       <ArticleList articleList={allNews} articleTitleImg={articleTitleImg} />
     </>
   );

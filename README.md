@@ -10,6 +10,8 @@
 - [Next.js](https://nextjs.org/)
 - [TypeScript](https://www.typescriptlang.org/)
 - [MySQL2](https://sidorares.github.io/node-mysql2/docs)
+- [Zod](https://zod.dev/)
+- [React-Hot-Toast](https://react-hot-toast.com/)
 - [use-debounce](https://www.npmjs.com/package/use-debounce)
 - [React Select](https://react-select.com/home)
 - [React Google Maps](https://visgl.github.io/react-google-maps/)

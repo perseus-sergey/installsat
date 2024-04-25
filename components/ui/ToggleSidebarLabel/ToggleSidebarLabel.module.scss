@@ -1,0 +1,7 @@
+@use '../../../var.scss' as *;
+
+.ToggleSidebarLabel {
+  @media (min-width: calc($widthScreenForBurgerMenu + 1px)) {
+    display: none;
+  }
+}

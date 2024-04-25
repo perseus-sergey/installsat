@@ -1,12 +1,12 @@
-import { Title } from '../Title/Title';
+import { Title } from '../ui/Title/Title';
 import satNewsStyles from '../SatNewsList/SatNewsList.module.scss';
 import React from 'react';
-import DangerHtmlUl from '../DangerHtml/DangerHtml';
+import DangerHtmlUl from '../ui/DangerHtml/DangerHtml';
 import { META_TRANS_NEWS_LIST, TSatDigest } from '@/models/satDigest.model';
 import { getDailyNews } from '@/controllers/satDigest.controller';
 import FillingValidImage from '../Images/FillingValidImage';
 import { LANGUAGE, ERRORS } from '@/models/ui.model';
-import EmptyPage from '../EmptyPage/EmptyPage';
+import EmptyPage from '../errors/EmptyPage/EmptyPage';
 
 interface ITransNewsSingleProps {
   newsArray: [string, TSatDigest[]][];

@@ -8,7 +8,7 @@
 // import { EUrlSearchParam } from '@/models/url.model';
 // import { Suspense } from 'react';
 
-import { Title } from '@/components/ui/Title/Title';
+// import { Title } from '@/components/ui/Title/Title';
 
 interface IProps {
   params: { slug: string };
@@ -24,9 +24,10 @@ export default function Page({ params: { slug } }: IProps) {
   return (
     <>
       <article className="article">
-        <Title>
+        <h1>Супутник {slug}. Карти покриття країн Європи та ближньої Азії</h1>
+        {/* <Title>
           Супутник {slug}. Карти покриття країн Європи та ближньої Азії
-        </Title>
+        </Title> */}
       </article>
     </>
   );

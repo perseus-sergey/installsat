@@ -24,6 +24,7 @@ export default function Page({ searchParams }: IProps) {
     <>
       <article className="article">
         <Title>{META_TRANS_NEWS_LIST.getH1(intervalDays)[LANGUAGE]}</Title>
+
         <nav>
           <Suspense>
             <FormDigestInterval searchParams={searchParams} />

@@ -54,6 +54,7 @@ export const META_SAT_CHANNEL_LIST = {
 };
 
 export const META_ALL_SAT_CHANNEL_LIST = {
+  CHANNEL_LIST_DB_ID: '4',
   getH1() {
     return {
       [ELanguage.UA]: 'Безкоштовні канали на популярних супутниках',

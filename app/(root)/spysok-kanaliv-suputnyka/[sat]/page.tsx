@@ -15,9 +15,11 @@ import StartArticleSection from '@/components/article/StartArticleSection/StartA
 import SatChannelsTable from '@/components/SatChannelsTable/SatChannelsTable';
 import FillingValidImage from '@/components/Images/FillingValidImage';
 import { cache } from 'react';
-import { LANGUAGE, DEFAULT_META_DATA } from '@/models/ui.model';
+import { LANGUAGE, DEFAULT_META_DATA, EDBTableTitles } from '@/models/ui.model';
 import { EUrlBaseParam } from '@/models/url.model';
 import { getFormattedDateStr } from '@/libs/utils/utils';
+import { getCommentsNumber } from '@/controllers/comments.controller';
+import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
 
 const { BASE_URL } = process.env;
 
@@ -84,35 +86,53 @@ export async function generateStaticParams(): Promise<
 }
 
 export const dynamicParams = false;
+
 export default async function Page({ params }: IPageParams) {
-  const { id, title, logo, satPosition } = getCurrentSatParams(params.sat);
+  const { id, slug, title, logo, satPosition } = getCurrentSatParams(
+    params.sat
+  );
 
   const satChannels = await getSatChannels('', id);
 
   if (satChannels instanceof Error)
     return <EmptyData description={satChannels.message} />;
 
+  const numberOfComments = await getCommentsNumber(
+    EDBTableTitles.COMMENTS_SATELLITE,
+    id
+  );
+
   return (
     <>
-      <Title>
-        {getH1(`${title} - ${satPosition}`)[LANGUAGE]}
-        <FillingValidImage
-          image={{
-            ...h1SatImage,
-            src: `${h1SatImage.path}${logo}`,
-          }}
-          defaultImage={h1SatImage.defaultImage}
-          alternativeImgString={h1SatImage.alternativeString}
-          alt={`${h1SatImage.alt[LANGUAGE]} ${title}`}
-          isBlur
+      <article className="article">
+        <Title>
+          {getH1(`${title} - ${satPosition}`)[LANGUAGE]}
+          <FillingValidImage
+            image={{
+              ...h1SatImage,
+              src: `${h1SatImage.path}${logo}`,
+            }}
+            defaultImage={h1SatImage.defaultImage}
+            alternativeImgString={h1SatImage.alternativeString}
+            alt={`${h1SatImage.alt[LANGUAGE]} ${title}`}
+            isBlur
+          />
+        </Title>
+        <StartArticleSection>
+          <DangerHtmlUl wrapperTagName="p" text={START_CONTENT[LANGUAGE]} />
+        </StartArticleSection>
+        <SatChannelsTable
+          isSingleSat
+          satChannels={getGroupedChannelsAllSat([satChannels])}
         />
-      </Title>
-      <StartArticleSection>
-        <DangerHtmlUl wrapperTagName="p" text={START_CONTENT[LANGUAGE]} />
-      </StartArticleSection>
-      <SatChannelsTable
-        isSingleSat
-        satChannels={getGroupedChannelsAllSat([satChannels])}
+      </article>
+
+      <CommentBlock
+        numberOfComments={numberOfComments}
+        revalidateUrl={`/${EUrlBaseParam.SAT_CHANNEL_LIST}/${slug}`}
+        dbCommentTableName={EDBTableTitles.COMMENTS_SATELLITE}
+        articleId={id}
+        articleName={title}
       />
     </>
   );

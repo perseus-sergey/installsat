@@ -48,7 +48,6 @@ export interface ISimilarChannel {
 }
 
 export const META_CHANNEL = {
-  CHANNEL_LIST_DB_ID: '4',
   getH1(satTitle: string) {
     return {
       [ELanguage.UA]: `Безкоштовні канали з супутника ${satTitle}`,

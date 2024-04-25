@@ -18,6 +18,7 @@ import {
   LANGUAGE,
   TSearchParams,
   DEFAULT_META_DATA,
+  EDBTableTitles,
 } from '@/models/ui.model';
 import { getFormattedDateStr } from '@/libs/utils/utils';
 import { EUrlBaseParam, EUrlSearchParam } from '@/models/url.model';
@@ -27,6 +28,8 @@ import AnchorListItem from '@/components/AnchorListItem/AnchorListItem';
 import { getChannelSatList } from '@/controllers/sidebar.controller';
 import ChannelFormatSliders from '@/components/ui/ChannelFormatSliders/ChannelFormatSliders';
 import { validSearchParam } from '@/libs/utils/validSearchParam';
+import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
+import { getCommentsNumber } from '@/controllers/comments.controller';
 
 const { BASE_URL } = process.env;
 
@@ -44,6 +47,7 @@ const {
     satCheckBox,
     satAnchor,
   },
+  CHANNEL_LIST_DB_ID,
 } = META_ALL_SAT_CHANNEL_LIST;
 
 export const metadata: Metadata = {
@@ -89,62 +93,77 @@ export default async function Page({ searchParams }: IPageProps) {
     slug: sat.cpu,
   }));
 
+  const numberOfComments = await getCommentsNumber(
+    EDBTableTitles.COMMENTS_PACKAGES,
+    CHANNEL_LIST_DB_ID
+  );
+
   return (
     <>
-      <Title>
-        {getH1()[L]}
-        <FillingImg
-          src={h1ImageParams.path}
-          alt={h1ImageParams.alt[L]}
-          width={h1ImageParams.width}
-          height={h1ImageParams.height}
-        />
-      </Title>
-      <Fieldset legendText={anchors.legendTitle[L]}>
-        <nav>
-          <ul>
-            {satLinks.map((satLink) => (
-              <li key={satLink.slug}>
-                <AnchorListItem
-                  linkParams={{
-                    title: satLink.title,
-                    href: `#${satLink.slug}`,
-                    'aria-label': satAnchor.tooltip[L],
-                  }}
-                  inputAttributes={{
-                    value: satLink.slug,
-                    id: `chb-${satLink.slug}`,
-                    name: satLink.slug,
-                    'aria-label': satCheckBox.tooltip[L],
-                  }}
-                  searchQueryName={EUrlSearchParam.SAT}
-                />
-              </li>
-            ))}
-            {formats.map((format) => (
-              <li key={format.searchQueryName}>
-                <ChannelFormatSliders {...format} />
-              </li>
-            ))}
-          </ul>
-          <Filter
-            idName="channel-search-input"
-            placeholder={placeholder[L]}
-            labelTitle={labelTitle[L]}
-            searchQueryTitle={EUrlSearchParam.CHANNEL}
-            resetButton={{
-              ariaLabel: resetAllFiltersButton.ariaLabel[L],
-              content: resetAllFiltersButton.imgStr,
-            }}
+      <article className="article">
+        <Title>
+          {getH1()[L]}
+          <FillingImg
+            src={h1ImageParams.path}
+            alt={h1ImageParams.alt[L]}
+            width={h1ImageParams.width}
+            height={h1ImageParams.height}
           />
-        </nav>
-      </Fieldset>
-      <StartArticleSection>
-        <p>{START_CONTENT[LANGUAGE]}</p>
-      </StartArticleSection>
-      <Suspense key={searchQueryChannel}>
-        <SatChannelsTable satChannels={groupedChannelsAllSat} />
-      </Suspense>
+        </Title>
+        <Fieldset legendText={anchors.legendTitle[L]}>
+          <nav>
+            <ul>
+              {satLinks.map((satLink) => (
+                <li key={satLink.slug}>
+                  <AnchorListItem
+                    linkParams={{
+                      title: satLink.title,
+                      href: `#${satLink.slug}`,
+                      'aria-label': satAnchor.tooltip[L],
+                    }}
+                    inputAttributes={{
+                      value: satLink.slug,
+                      id: `chb-${satLink.slug}`,
+                      name: satLink.slug,
+                      'aria-label': satCheckBox.tooltip[L],
+                    }}
+                    searchQueryName={EUrlSearchParam.SAT}
+                  />
+                </li>
+              ))}
+              {formats.map((format) => (
+                <li key={format.searchQueryName}>
+                  <ChannelFormatSliders {...format} />
+                </li>
+              ))}
+            </ul>
+            <Filter
+              idName="channel-search-input"
+              placeholder={placeholder[L]}
+              labelTitle={labelTitle[L]}
+              searchQueryTitle={EUrlSearchParam.CHANNEL}
+              resetButton={{
+                ariaLabel: resetAllFiltersButton.ariaLabel[L],
+                content: resetAllFiltersButton.imgStr,
+              }}
+            />
+          </nav>
+        </Fieldset>
+        <StartArticleSection>
+          <p>{START_CONTENT[LANGUAGE]}</p>
+        </StartArticleSection>
+        <Suspense key={searchQueryChannel}>
+          <SatChannelsTable satChannels={groupedChannelsAllSat} />
+        </Suspense>
+      </article>
+
+      <CommentBlock
+        numberOfComments={numberOfComments}
+        revalidateUrl={`/${EUrlBaseParam.SAT_CHANNEL_LIST}`}
+        dbCommentTableName={EDBTableTitles.COMMENTS_PACKAGES}
+        articleId={CHANNEL_LIST_DB_ID}
+        articleName={getTitle()[LANGUAGE]}
+      />
     </>
   );
 }

@@ -7,9 +7,6 @@ echo "Deployment started..."
 git pull origin main
 echo "New changes copied to server !"
 
-echo "Removing yarn.lock file..."
-rm -f yarn.lock
-
 echo "Installing Dependencies..."
 yarn
 

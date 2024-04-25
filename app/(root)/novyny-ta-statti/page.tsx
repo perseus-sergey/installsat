@@ -18,7 +18,7 @@ import {
 import { imagePathValidate } from '@/libs/utils/imagePathValidate';
 import { validSearchParam } from '@/libs/utils/validSearchParam';
 
-const { BASE_URL } = process.env;
+const BASE_URL = process.env.BASE_URL;
 
 const { meta, pagination, images, articlesCountCaption } = ARTICLES.articleList;
 

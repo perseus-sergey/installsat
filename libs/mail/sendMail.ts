@@ -8,9 +8,10 @@ interface IProps {
   body: string;
 }
 
-const { MAIN_EMAIL } = process.env;
+const MAIN_EMAIL = process.env.MAIN_EMAIL;
 export async function sendMail({ to, subject, body }: IProps) {
-  const { GOOGLE_APP_MAIL_SMTP, GOOGLE_APP_MAIL_SMTP_PASS } = process.env;
+  const GOOGLE_APP_MAIL_SMTP = process.env.GOOGLE_APP_MAIL_SMTP;
+  const GOOGLE_APP_MAIL_SMTP_PASS = process.env.GOOGLE_APP_MAIL_SMTP_PASS;
 
   const transport = nodemailer.createTransport({
     service: 'gmail',

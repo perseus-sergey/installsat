@@ -14,7 +14,7 @@ interface IProps {
   params: { slug: string };
 }
 
-export default async function Page({ params: { slug } }: IProps) {
+export default function Page({ params: { slug } }: IProps) {
   //   const searchInterval = searchParams[EUrlSearchParam.INTERVAL];
   //   const intervalDays =
   //     typeof searchInterval === 'string' && searchInterval

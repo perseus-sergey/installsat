@@ -8,39 +8,12 @@ import { getFormattedDateStr } from '@/libs/utils/utils';
 import { EUrlBaseParam } from '@/models/url.model';
 import BottomInfoPanel from '@/components/BottomInfoPanel/BottomInfoPanel';
 import Link from 'next/link';
-import { DEFAULT_META_DATA, LANGUAGE } from '@/models/ui.model';
+import { LANGUAGE } from '@/models/ui.model';
 import { notFound } from 'next/navigation';
-import { Metadata } from 'next';
 
 interface IArticleParams {
   params: { article: string };
 }
-
-const BASE_URL = process.env.BASE_URL || '';
-
-export const generateMetadata = async ({
-  params: { article },
-}: IArticleParams): Promise<Metadata> => {
-  const sqlResult = await getArticle(article);
-
-  if (sqlResult instanceof Error || !sqlResult.length)
-    return DEFAULT_META_DATA[LANGUAGE];
-
-  const { title, description, date, slug } = sqlResult[0];
-
-  return {
-    title,
-    description,
-    keywords: description,
-    openGraph: {
-      ...DEFAULT_META_DATA.openGraph,
-      title,
-      description,
-      url: `${BASE_URL}/${EUrlBaseParam.ARTICLE}/${slug}`,
-      publishedTime: getFormattedDateStr(date),
-    },
-  };
-};
 
 const { h1Image } = ARTICLES.article.images;
 

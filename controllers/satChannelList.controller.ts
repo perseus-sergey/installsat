@@ -11,7 +11,6 @@ export const getSatChannels = cache(
     isT2MI = false
   ) => {
     let inSatList = '';
-
     const searchPart = searchQuery
       ? `AND 	ch.title LIKE "%${searchQuery}%"`
       : '';
@@ -58,7 +57,11 @@ export const getSatChannels = cache(
   ORDER BY fr.freq, be.polar, ch.title
   `;
 
-    return await executeQuery<ISatChannelListEmptyModel>(sql, [channelId]);
+    const resp = await executeQuery<ISatChannelListEmptyModel>(sql, [
+      channelId,
+    ]);
+
+    return resp;
   }
 );
 

@@ -1,5 +1,5 @@
 import styles from './WidgetArticleCategories.module.scss';
-import EmptyData from '../EmptyData/EmptyData';
+import EmptyData from '../errors/EmptyData/EmptyData';
 import Link from 'next/link';
 import { WIDGET_ARTICLE_CATEGORY } from '@/models/widget.model';
 import { getArticleCatWidgetList } from '@/controllers/sidebar.controller';

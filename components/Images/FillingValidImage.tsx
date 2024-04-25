@@ -1,6 +1,6 @@
 import { IImgParams, IMG_PROPERTIES } from '@/models/ui.model';
-import { imagePathValidate } from '@/libs/utilsServer';
 import FillingImg from './FillingImage';
+import { imagePathValidate } from '@/libs/utils/imagePathValidate';
 
 interface IFillingImgProps {
   image: IImgParams;

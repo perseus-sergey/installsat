@@ -8,7 +8,7 @@
 // import { EUrlSearchParam } from '@/models/url.model';
 // import { Suspense } from 'react';
 
-import { Title } from '@/components/Title/Title';
+import { Title } from '@/components/ui/Title/Title';
 
 export default function Page() {
   //   const searchInterval = searchParams[EUrlSearchParam.INTERVAL];

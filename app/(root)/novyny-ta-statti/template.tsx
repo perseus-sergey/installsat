@@ -1,5 +1,5 @@
 import BreadCrumbs from '@/components/BreadCrumbs/BreadCrumbs';
-import Filter from '@/components/Filter/Filter';
+import Filter from '@/components/ui/Filter/Filter';
 import { ARTICLES } from '@/models/articles.model';
 import { LANGUAGE } from '@/models/ui.model';
 import { EUrlSearchParam } from '@/models/url.model';
@@ -17,6 +17,7 @@ export default function Template({ children }: IProps) {
     <>
       <BreadCrumbs />
       <Filter
+        idName="article-search-input"
         placeholder={placeholder[LANGUAGE]}
         labelTitle={labelTitle[LANGUAGE]}
         searchQueryTitle={EUrlSearchParam.ARTICLE}

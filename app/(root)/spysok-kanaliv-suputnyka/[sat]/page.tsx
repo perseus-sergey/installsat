@@ -1,6 +1,6 @@
-import DangerHtmlUl from '@/components/DangerHtml/DangerHtml';
-import EmptyData from '@/components/EmptyData/EmptyData';
-import { Title } from '@/components/Title/Title';
+import DangerHtmlUl from '@/components/ui/DangerHtml/DangerHtml';
+import EmptyData from '@/components/errors/EmptyData/EmptyData';
+import { Title } from '@/components/ui/Title/Title';
 import {
   getSatChannels,
   getGroupedChannelsAllSat,
@@ -11,13 +11,17 @@ import {
   START_CONTENT,
 } from '@/models/channelList.model';
 import type { Metadata } from 'next';
-import StartArticleSection from '@/components/StartArticleSection/StartArticleSection';
+import StartArticleSection from '@/components/article/StartArticleSection/StartArticleSection';
 import SatChannelsTable from '@/components/SatChannelsTable/SatChannelsTable';
 import FillingValidImage from '@/components/Images/FillingValidImage';
 import { cache } from 'react';
-import { LANGUAGE, defaultMetaData } from '@/models/ui.model';
-import { EUrlBaseParam, SITE_BASE_URL } from '@/models/url.model';
-import { getFormattedDateStr } from '@/libs/utils';
+import { LANGUAGE, DEFAULT_META_DATA, EDBTableTitles } from '@/models/ui.model';
+import { EUrlBaseParam } from '@/models/url.model';
+import { getFormattedDateStr } from '@/libs/utils/utils';
+import { getCommentsNumber } from '@/controllers/comments.controller';
+import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
+
+const { BASE_URL } = process.env;
 
 const {
   getTitle,
@@ -62,10 +66,10 @@ export const generateMetadata = ({ params }: IPageParams): Metadata => {
     description,
     keywords: `${satTitle} ${getKeywords(LANGUAGE)}`,
     openGraph: {
-      ...defaultMetaData.openGraph,
+      ...DEFAULT_META_DATA.openGraph,
       title: metaTitle,
       description,
-      url: `${SITE_BASE_URL}/${EUrlBaseParam.SAT_CHANNEL_LIST}/${slug}`,
+      url: `${BASE_URL}/${EUrlBaseParam.SAT_CHANNEL_LIST}/${slug}`,
       publishedTime: getFormattedDateStr(new Date()),
     },
   };
@@ -82,35 +86,53 @@ export async function generateStaticParams(): Promise<
 }
 
 export const dynamicParams = false;
+
 export default async function Page({ params }: IPageParams) {
-  const { id, title, logo, satPosition } = getCurrentSatParams(params.sat);
+  const { id, slug, title, logo, satPosition } = getCurrentSatParams(
+    params.sat
+  );
 
   const satChannels = await getSatChannels('', id);
 
   if (satChannels instanceof Error)
     return <EmptyData description={satChannels.message} />;
 
+  const numberOfComments = await getCommentsNumber(
+    EDBTableTitles.COMMENTS_SATELLITE,
+    id
+  );
+
   return (
     <>
-      <Title>
-        {getH1(`${title} - ${satPosition}`)[LANGUAGE]}
-        <FillingValidImage
-          image={{
-            ...h1SatImage,
-            src: `${h1SatImage.path}${logo}`,
-          }}
-          defaultImage={h1SatImage.defaultImage}
-          alternativeImgString={h1SatImage.alternativeString}
-          alt={`${h1SatImage.alt[LANGUAGE]} ${title}`}
-          isBlur
+      <article className="article">
+        <Title>
+          {getH1(`${title} - ${satPosition}`)[LANGUAGE]}
+          <FillingValidImage
+            image={{
+              ...h1SatImage,
+              src: `${h1SatImage.path}${logo}`,
+            }}
+            defaultImage={h1SatImage.defaultImage}
+            alternativeImgString={h1SatImage.alternativeString}
+            alt={`${h1SatImage.alt[LANGUAGE]} ${title}`}
+            isBlur
+          />
+        </Title>
+        <StartArticleSection>
+          <DangerHtmlUl wrapperTagName="p" text={START_CONTENT[LANGUAGE]} />
+        </StartArticleSection>
+        <SatChannelsTable
+          isSingleSat
+          satChannels={getGroupedChannelsAllSat([satChannels])}
         />
-      </Title>
-      <StartArticleSection>
-        <DangerHtmlUl wrapperTagName="p" text={START_CONTENT[LANGUAGE]} />
-      </StartArticleSection>
-      <SatChannelsTable
-        isSingleSat
-        satChannels={getGroupedChannelsAllSat([satChannels])}
+      </article>
+
+      <CommentBlock
+        numberOfComments={numberOfComments}
+        revalidateUrl={`/${EUrlBaseParam.SAT_CHANNEL_LIST}/${slug}`}
+        dbCommentTableName={EDBTableTitles.COMMENTS_SATELLITE}
+        articleId={id}
+        articleName={title}
       />
     </>
   );

@@ -1,41 +1,47 @@
-import DangerHtml from '@/components/DangerHtml/DangerHtml';
+import DangerHtml from '@/components/ui/DangerHtml/DangerHtml';
 import FillingValidImage from '@/components/Images/FillingValidImage';
-import SatFinder from '@/components/SatFinder/SatFinder';
-import { Title } from '@/components/Title/Title';
-import { getSatFinderArticle } from '@/controllers/articles.controller';
-import { getSatsForForm } from '@/controllers/satDigest.controller';
-import { getFormattedDateStr } from '@/libs/utils';
-import { SAT_FINDER_META_DATA } from '@/models/satFinder.model';
-import { LANGUAGE, defaultMetaData } from '@/models/ui.model';
+import SatFinder from '@/components/mapComponents/SatFinder/SatFinder';
+import { Title } from '@/components/ui/Title/Title';
 import {
-  EUrlBaseParam,
-  EUrlSearchParam,
-  SITE_BASE_URL,
-} from '@/models/url.model';
+  getSatFinderArticle,
+  updateViewCount,
+} from '@/controllers/articles.controller';
+import { getSatsForForm } from '@/controllers/satDigest.controller';
+import { getFormattedDateStr } from '@/libs/utils/utils';
+import { SAT_FINDER_META_DATA } from '@/models/satFinder.model';
+import { EDBTableTitles, LANGUAGE, DEFAULT_META_DATA } from '@/models/ui.model';
+import { EUrlBaseParam, EUrlSearchParam } from '@/models/url.model';
 import { Metadata } from 'next';
 import { Suspense } from 'react';
+import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
+import BottomInfoPanel from '@/components/BottomInfoPanel/BottomInfoPanel';
+import { getCommentsNumber } from '@/controllers/comments.controller';
+
+const { BASE_URL } = process.env;
 
 const {
   keywords,
   images: { h1Image },
+  dbArticleId,
 } = SAT_FINDER_META_DATA;
 
 const satFinderArticleDBResult = await getSatFinderArticle();
-const articleData =
+
+const { title, description, text, view } =
   satFinderArticleDBResult instanceof Error
-    ? { title: '', description: '', text: '', logo: '', view: 0 }
+    ? { title: '', description: '', text: '', view: 0 }
     : satFinderArticleDBResult[0];
 
 export const metadata: Metadata = {
-  metadataBase: new URL(SITE_BASE_URL),
-  title: articleData.title,
-  description: articleData.description,
+  metadataBase: new URL(BASE_URL || ''),
+  title,
+  description,
   keywords: keywords[LANGUAGE],
   openGraph: {
-    ...defaultMetaData.openGraph,
-    title: articleData.title,
-    description: articleData.description,
-    url: `${SITE_BASE_URL}/${EUrlBaseParam.SAT_FINDER}`,
+    ...DEFAULT_META_DATA.openGraph,
+    title,
+    description,
+    url: `${BASE_URL}/${EUrlBaseParam.SAT_FINDER}`,
     publishedTime: getFormattedDateStr(new Date()),
   },
 };
@@ -43,14 +49,18 @@ export const metadata: Metadata = {
 export default async function Page() {
   const groupedSats = await getSatsForForm(false);
 
-  // const commDbResult = await getComments(id, EDBTableTitles.COMMENTS_CHANNEL);
-  // const comments = commDbResult instanceof Error ? [] : commDbResult;
+  const numberOfComments = await getCommentsNumber(
+    EDBTableTitles.COMMENTS_ARTICLE,
+    dbArticleId
+  );
+
+  updateViewCount(EDBTableTitles.ARTICLE, dbArticleId, view);
 
   return (
     <>
       <article className="article">
         <Title>
-          {articleData.title}
+          {title}
           <FillingValidImage
             image={h1Image}
             alternativeImgString={h1Image.alternativeStr}
@@ -69,24 +79,20 @@ export default async function Page() {
           </Suspense>
         </div>
 
-        <DangerHtml text={articleData.text} />
+        <DangerHtml text={text} />
 
-        <p>View: {articleData.view.toLocaleString('en-US')}</p>
+        <BottomInfoPanel
+          items={[{ name: 'View', value: view.toLocaleString('en-US') }]}
+        />
       </article>
 
-      {/* {similarArticles.length ? (
-        <SimilarArticles
-          similarTitle={simArticlesBefore.title[LANGUAGE]}
-          similarArticlesMapped={similarArticles.map((art) => (
-            <li key={art.cpu}>
-              <Link href={`/${EUrlBaseParam.ARTICLE}/${art.cpu}`}>
-                {art.title}
-              </Link>
-              <span>{` (${getFormattedDateStr(art.date)})`}</span>
-            </li>
-          ))}
-        />
-      ) : null} */}
+      <CommentBlock
+        numberOfComments={numberOfComments}
+        revalidateUrl={`/${EUrlBaseParam.SAT_FINDER}`}
+        dbCommentTableName={EDBTableTitles.COMMENTS_ARTICLE}
+        articleId={dbArticleId}
+        articleName={title}
+      />
     </>
   );
 }

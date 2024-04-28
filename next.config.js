@@ -159,16 +159,6 @@ const nextConfig = {
       },
     ];
   },
-  // images: {
-  //   remotePatterns: [
-  //     {
-  //       protocol: 'https',
-  //       hostname: 'installsat.fun',
-  //       port: '',
-  //       pathname: '/public/Images/**',
-  //     },
-  //   ],
-  // },
 };
 
 module.exports = nextConfig;

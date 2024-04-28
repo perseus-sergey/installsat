@@ -1,5 +1,5 @@
 import EmptyData from '@/components/errors/EmptyData/EmptyData';
-import { Title } from '@/components/ui/Title/Title';
+import { Title } from '@/components/ui/Titles/Title';
 import type { Metadata } from 'next';
 import FillingValidImage from '@/components/Images/FillingValidImage';
 import { ARTICLES, ISingleCatArticlesModel } from '@/models/articles.model';

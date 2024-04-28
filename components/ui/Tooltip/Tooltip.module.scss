@@ -1,6 +1,7 @@
 .Tooltip {
   display: inline-block;
   border-bottom: 1px dotted #666;
+  line-height: 0;
 
   .hint {
     display: flex;

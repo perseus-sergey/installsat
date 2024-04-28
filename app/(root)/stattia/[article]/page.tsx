@@ -1,5 +1,5 @@
 import EmptyData from '@/components/errors/EmptyData/EmptyData';
-import { Title } from '@/components/ui/Title/Title';
+import { Title } from '@/components/ui/Titles/Title';
 import FillingValidImage from '@/components/Images/FillingValidImage';
 import { ARTICLES } from '@/models/articles.model';
 import { getArticle } from '@/controllers/articles.controller';

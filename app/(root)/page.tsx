@@ -1,6 +1,6 @@
 import FormDigestInterval from '@/components/FormDigestInterval/FormDigestInterval';
 import SatNews from '@/components/SatNews/SatNews';
-import { Title } from '@/components/ui/Title/Title';
+import { Title } from '@/components/ui/Titles/Title';
 import {
   LAST_NEWS_INTERVAL,
   META_TRANS_NEWS_LIST,

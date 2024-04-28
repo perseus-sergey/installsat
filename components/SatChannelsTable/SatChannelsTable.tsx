@@ -10,15 +10,16 @@ import styles from './SatChannelsTable.module.scss';
 import Link from 'next/link';
 import { EUrlBaseParam } from '@/models/url.model';
 import { cutText } from '@/libs/utils/utils';
-import Tooltip from '../ui/Tooltip/Tooltip';
 import FillingImg from '../Images/FillingImage';
 import TooltipSimple from '../ui/TooltipSimple/TooltipSimple';
 import FillingValidImage from '../Images/FillingValidImage';
 import { META_CHANNEL } from '@/models/channel.model';
 import { LANGUAGE } from '@/models/ui.model';
+import ChannelCardTooltip from '../ChannelCardTooltip/ChannelCardTooltip';
+import GoUpLink from '../ui/GoUpLink/GoUpLink';
+import { TitleH2 } from '../ui/Titles/TitleH2';
 
 const {
-  anchors: { goUpLink },
   links: { satTitleLink },
 } = META_ALL_SAT_CHANNEL_LIST;
 
@@ -59,60 +60,51 @@ const FrequencySegment = ({
           {compr}
         </td>
         <td className={styles.tdChanLogo}>
-          <Tooltip
-            hintHtml={
-              <>
-                <FillingValidImage
-                  image={{
-                    ...META_CHANNEL.images.channelLogo.big,
-                    src: `${META_CHANNEL.images.channelLogo.big.path}${logo}`,
-                  }}
-                  defaultImage={
-                    META_CHANNEL.images.channelLogo.big.defaultImage
-                  }
-                  alternativeImgString={
-                    META_CHANNEL.images.channelLogo.big.alternativeImgStr
-                  }
-                />
-                <div className="py-2.5 px-5">
-                  <ul>
-                    <li>
-                      {CHANNEL_TOOLTIP_TITLES.name[LANGUAGE]}:{' '}
-                      <strong>{title}</strong>
-                    </li>
-                    <li>
-                      {CHANNEL_TOOLTIP_TITLES.genre[LANGUAGE]}:{' '}
-                      <strong>{tem}</strong>
-                    </li>
-                    <li>
-                      {CHANNEL_TOOLTIP_TITLES.language[LANGUAGE]}:{' '}
-                      <strong>{lan}</strong>
-                    </li>
-                    <li>
-                      {CHANNEL_TOOLTIP_TITLES.description[LANGUAGE]}:{' '}
-                      <strong>{cutText(description, 100)}</strong>
-                    </li>
-                    <li>
-                      {CHANNEL_TOOLTIP_TITLES.name[LANGUAGE]}:{' '}
-                      <strong>{compr}</strong>
-                    </li>
-                  </ul>
-                </div>
-              </>
+          <ChannelCardTooltip
+            mainImage={{
+              ...META_CHANNEL.images.channelLogo.small,
+              src: `${META_CHANNEL.images.channelLogo.small.path}${logo}`,
+            }}
+            mainDefaultImage={
+              META_CHANNEL.images.channelLogo.small.defaultImage
             }
-          >
-            <FillingValidImage
-              image={{
-                ...META_CHANNEL.images.channelLogo.small,
-                src: `${META_CHANNEL.images.channelLogo.small.path}${logo}`,
-              }}
-              defaultImage={META_CHANNEL.images.channelLogo.small.defaultImage}
-              alternativeImgString={
-                META_CHANNEL.images.channelLogo.small.alternativeImgStr
-              }
-              isChangeToGif
-            />
-          </Tooltip>
+            mainAlternativeImgString={
+              META_CHANNEL.images.channelLogo.small.alternativeImgStr
+            }
+            mainIsChangeToGif
+            tooltipImage={{
+              ...META_CHANNEL.images.channelLogo.big,
+              src: `${META_CHANNEL.images.channelLogo.big.path}${logo}`,
+            }}
+            tooltipDefaultImage={
+              META_CHANNEL.images.channelLogo.big.defaultImage
+            }
+            tooltipAlternativeImgString={
+              META_CHANNEL.images.channelLogo.big.alternativeImgStr
+            }
+            tooltipTextList={[
+              {
+                title: CHANNEL_TOOLTIP_TITLES.name[LANGUAGE],
+                description: title,
+              },
+              {
+                title: CHANNEL_TOOLTIP_TITLES.genre[LANGUAGE],
+                description: tem,
+              },
+              {
+                title: CHANNEL_TOOLTIP_TITLES.language[LANGUAGE],
+                description: lan,
+              },
+              {
+                title: CHANNEL_TOOLTIP_TITLES.description[LANGUAGE],
+                description: cutText(description, 100),
+              },
+              {
+                title: CHANNEL_TOOLTIP_TITLES.compression[LANGUAGE],
+                description: compr,
+              },
+            ]}
+          />
         </td>
         <td className={styles.tdTitle}>
           <Link id={cpu} href={`/${EUrlBaseParam.CHANNEL_PARAMS}/${cpu}`}>
@@ -139,19 +131,14 @@ const SatChannelsTable = ({
   isSingleSat = false,
 }: ISatChannelsTableProps) => (
   <>
-    {satChannels.map((sat, i) => (
+    {satChannels.map((sat) => (
       <>
         {!isSingleSat && (
-          <h2 key={i} className={styles.satTitle} id={sat[0][0].sat_slug}>
-            <TooltipSimple tooltipText={goUpLink.title[LANGUAGE]}>
-              <Link
-                href={`#`}
-                title={goUpLink.title[LANGUAGE]}
-                className={styles.goUpLink}
-              >
-                {goUpLink.img}
-              </Link>
-            </TooltipSimple>
+          <TitleH2
+            id={sat[0][0].sat_slug}
+            style={{ justifyContent: 'space-between' }}
+          >
+            <GoUpLink />
 
             <TooltipSimple tooltipText={satTitleLink.tooltipTitle[LANGUAGE]}>
               <Link
@@ -178,7 +165,7 @@ const SatChannelsTable = ({
                 />
               </Link>
             </TooltipSimple>
-          </h2>
+          </TitleH2>
         )}
         <table
           className={styles.SatChannelsTable}

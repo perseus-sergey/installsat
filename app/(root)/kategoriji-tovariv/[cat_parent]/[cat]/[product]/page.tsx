@@ -1,6 +1,6 @@
 // import FormDigestInterval from '@/components/FormDigestInterval1/FormDigestInterval';
 // import SatNews from '@/components/SatNews/SatNews';
-// import { Title } from '@/components/Title/Title';
+// import { Title } from '@/components/Titles/Title';
 // import {
 //   LAST_NEWS_INTERVAL,
 //   META_TRANS_NEWS_LIST,
@@ -8,7 +8,7 @@
 // import { EUrlSearchParam } from '@/models/url.model';
 // import { Suspense } from 'react';
 
-import { Title } from '@/components/ui/Title/Title';
+import { Title } from '@/components/ui/Titles/Title';
 import { getFormattedDateStr } from '@/libs/utils/utils';
 import { EUrlBaseParam } from '@/models/url.model';
 import { Metadata } from 'next';

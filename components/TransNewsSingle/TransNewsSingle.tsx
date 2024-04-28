@@ -1,4 +1,4 @@
-import { Title } from '../ui/Title/Title';
+import { Title } from '../ui/Titles/Title';
 import satNewsStyles from '../SatNewsList/SatNewsList.module.scss';
 import React from 'react';
 import DangerHtmlUl from '../ui/DangerHtml/DangerHtml';

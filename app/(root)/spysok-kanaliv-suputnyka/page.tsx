@@ -1,9 +1,9 @@
 import EmptyData from '@/components/errors/EmptyData/EmptyData';
-import { Title } from '@/components/ui/Title/Title';
+import { Title } from '@/components/ui/Titles/Title';
 import {
   getSatChannels,
   getGroupedChannelsAllSat,
-} from '@/controllers/satChannelList.controller';
+} from '@/controllers/channelList.controller';
 import {
   META_ALL_SAT_CHANNEL_LIST,
   START_CONTENT,

@@ -1,10 +1,10 @@
 import DangerHtmlUl from '@/components/ui/DangerHtml/DangerHtml';
 import EmptyData from '@/components/errors/EmptyData/EmptyData';
-import { Title } from '@/components/ui/Title/Title';
+import { Title } from '@/components/ui/Titles/Title';
 import {
   getSatChannels,
   getGroupedChannelsAllSat,
-} from '@/controllers/satChannelList.controller';
+} from '@/controllers/channelList.controller';
 import { getChannelSatList } from '@/controllers/sidebar.controller';
 import {
   META_SAT_CHANNEL_LIST,

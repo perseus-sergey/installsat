@@ -3,7 +3,7 @@ import ChannelOnlineLink from '@/components/ui/buttons/ChannelOnlineLink/Channel
 import ChannelParams from '@/components/ChannelParams/ChannelParams';
 import DangerHtml from '@/components/ui/DangerHtml/DangerHtml';
 import EmptyData from '@/components/errors/EmptyData/EmptyData';
-import FillingValidImage from '@/components/Images/FillingValidImage';
+import FillingValidImage from '@/components/ui/Images/FillingValidImage';
 import NoteBlock from '@/components/ui/NoteBlock/NoteBlock';
 import SimilarArticles from '@/components/SimilarArticles/SimilarArticles';
 import SimilarChannel from '@/components/SimilarChannel/SimilarChannel';
@@ -26,6 +26,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
 import { getCommentsNumber } from '@/controllers/comments.controller';
+import GrooveLine from '@/components/ui/GrooveLine';
 
 const BASE_URL = process.env.BASE_URL;
 
@@ -168,7 +169,7 @@ export default async function Page({ params: { slug } }: IChannelProps) {
         <div className="article-text">
           <DangerHtml text={text} />
 
-          <div className="groove-border"></div>
+          <GrooveLine />
 
           <TvScheduleLink
             title={`${scheduleTitle[LANGUAGE]} "${title}"`}

@@ -10,9 +10,9 @@ import styles from './SatChannelsTable.module.scss';
 import Link from 'next/link';
 import { EUrlBaseParam } from '@/models/url.model';
 import { cutText } from '@/libs/utils/utils';
-import FillingImg from '../Images/FillingImage';
+import FillingImg from '../ui/Images/FillingImage';
 import TooltipSimple from '../ui/TooltipSimple/TooltipSimple';
-import FillingValidImage from '../Images/FillingValidImage';
+import FillingValidImage from '../ui/Images/FillingValidImage';
 import { META_CHANNEL } from '@/models/channel.model';
 import { LANGUAGE } from '@/models/ui.model';
 import ChannelCardTooltip from '../ChannelCardTooltip/ChannelCardTooltip';
@@ -118,7 +118,7 @@ const FrequencySegment = ({
               width={genreImage.width}
               height={genreImage.height}
               alt={`${genreImage.altPre} ${tem}`}
-              src={`/Images/genre/${MChanTheme.get(tema)}`}
+              src={`${genreImage.path}${MChanTheme.get(tema)}`}
             />
           </TooltipSimple>
         </td>
@@ -134,10 +134,7 @@ const SatChannelsTable = ({
     {satChannels.map((sat) => (
       <>
         {!isSingleSat && (
-          <TitleH2
-            id={sat[0][0].sat_slug}
-            style={{ justifyContent: 'space-between' }}
-          >
+          <TitleH2 id={sat[0][0].sat_slug}>
             <GoUpLink />
 
             <TooltipSimple tooltipText={satTitleLink.tooltipTitle[LANGUAGE]}>

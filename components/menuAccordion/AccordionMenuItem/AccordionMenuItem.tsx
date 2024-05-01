@@ -1,25 +1,21 @@
-import { ILang } from '@/models/ui.model';
+import { LANGUAGE } from '@/models/ui.model';
 import styles from '../Accordion/Accordion.module.scss';
 
 import { ReactNode } from 'react';
 import Link from 'next/link';
 import { IAccordionItemOptions } from '@/models/menuAccordion.model';
-import FillingImg from '../../Images/FillingImage';
+import FillingImg from '../../ui/Images/FillingImage';
 
 interface IAccordionMenuItem {
-  language: keyof ILang;
   options: IAccordionItemOptions;
   children?: ReactNode;
 }
 
 export const AccordionMenuItem = ({
-  language,
-  options,
+  options: { name, title, img, titleHref },
   children,
-}: IAccordionMenuItem) => {
-  const { name, title, img, titleHref } = options;
-
-  return children ? (
+}: IAccordionMenuItem) =>
+  children ? (
     <>
       <input
         type="radio"
@@ -38,10 +34,10 @@ export const AccordionMenuItem = ({
                 width={`${img.width}px`}
                 height={`${img.width}px`}
                 src={img.src}
-                alt={img.alt[language] || ''}
+                alt={img.alt[LANGUAGE] || ''}
               />
             )}
-            {title[language]}
+            {title[LANGUAGE]}
           </div>
         </label>
         <label
@@ -59,11 +55,10 @@ export const AccordionMenuItem = ({
             width={`${img.width}px`}
             height={`${img.width}px`}
             src={img.src}
-            alt={img.alt[language] || ''}
+            alt={img.alt[LANGUAGE] || ''}
           />
         )}
-        {title[language]}
+        {title[LANGUAGE]}
       </Link>
     </li>
   );
-};

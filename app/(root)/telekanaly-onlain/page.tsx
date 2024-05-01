@@ -4,11 +4,9 @@ import { getOnlineChannels } from '@/controllers/channelList.controller';
 import {
   META_ALL_SAT_CHANNEL_LIST,
   META_ONLINE_CHANNEL_LIST,
-  START_CONTENT,
 } from '@/models/channelList.model';
 import type { Metadata } from 'next';
-import StartArticleSection from '@/components/article/StartArticleSection/StartArticleSection';
-import FillingImg from '@/components/Images/FillingImage';
+import FillingImg from '@/components/ui/Images/FillingImage';
 import Fieldset from '@/components/ui/Fieldset/Fieldset';
 import {
   LANGUAGE as L,
@@ -27,6 +25,8 @@ import { getCommentsNumber } from '@/controllers/comments.controller';
 import OnlineChannelList from '@/components/OnlineChannelList/OnlineChannelList';
 import TooltipSimple from '@/components/ui/TooltipSimple/TooltipSimple';
 import Link from 'next/link';
+import GenreImage from '@/components/ui/Images/GenreImage/GenreImage';
+import OnlineChannelListAfterText from '@/components/OnlineChannelListAfterText/OnlineChannelListAfterText';
 
 const BASE_URL = process.env.BASE_URL;
 
@@ -92,7 +92,12 @@ export default async function Page({ searchParams }: IPageProps) {
           <nav className="p-2 md:p-4">
             <ul>
               {onlineChannels.map(([genreTitle, chanList]) => (
-                <li key={genreTitle}>
+                <li key={genreTitle} className="flex items-center gap-4">
+                  <GenreImage
+                    tooltipText={genreTitle}
+                    genreMapPosition={chanList[0].tema}
+                    // className={styles.genreImage}
+                  />
                   <TooltipSimple
                     tooltipText={`Перейти до жанру: ${genreTitle}`}
                   >
@@ -115,13 +120,12 @@ export default async function Page({ searchParams }: IPageProps) {
             />
           </nav>
         </Fieldset>
-        <StartArticleSection>
-          <p>{START_CONTENT[LANGUAGE]}</p>
-        </StartArticleSection>
 
         <Suspense key={searchQueryChannel}>
           <OnlineChannelList onlineChannels={onlineChannels} />
         </Suspense>
+
+        <OnlineChannelListAfterText lang={LANGUAGE} />
       </article>
 
       <CommentBlock

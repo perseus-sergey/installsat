@@ -11,6 +11,7 @@ import { META_CHANNEL } from '@/models/channel.model';
 import { TitleH2 } from '../ui/Titles/TitleH2';
 import GoUpLink from '../ui/GoUpLink/GoUpLink';
 import Link from 'next/link';
+import GenreImage from '../ui/Images/GenreImage/GenreImage';
 
 const {
   name: tName,
@@ -32,9 +33,18 @@ interface IOnlineChannelListProps {
 const OnlineChannelList = ({ onlineChannels }: IOnlineChannelListProps) =>
   onlineChannels.map(([genreTitle, chanList]) => (
     <>
-      <TitleH2 style={{ padding: '1rem' }} id={`genre-${chanList[0].tema}`}>
+      <TitleH2
+        style={{ padding: '1rem' }}
+        id={`genre-${chanList[0].tema}`}
+        className="flex-col md:flex-row"
+      >
         <GoUpLink />
         {genreTitle}
+        <GenreImage
+          tooltipText={genreTitle}
+          genreMapPosition={chanList[0].tema}
+          className={styles.genreImage}
+        />
       </TitleH2>
       <ul className={styles.OnlineChannelList}>
         {chanList.map(({ logo, title, view, lan, description, id, cpu }) => (

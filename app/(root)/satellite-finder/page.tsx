@@ -1,5 +1,5 @@
 import DangerHtml from '@/components/ui/DangerHtml/DangerHtml';
-import FillingValidImage from '@/components/Images/FillingValidImage';
+import FillingValidImage from '@/components/ui/Images/FillingValidImage';
 import SatFinder from '@/components/mapComponents/SatFinder/SatFinder';
 import { Title } from '@/components/ui/Titles/Title';
 import {

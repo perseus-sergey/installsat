@@ -38,15 +38,15 @@ $labelHeight: 54px;
 .accordionLabel {
   justify-content: space-between;
   padding-right: 10px;
-}
 
-.accordionLabel.arrow {
-  &::after {
-    content: '';
-    display: block;
-    border-style: solid;
-    border-width: 6px 0 6px 10px;
-    border-color: transparent transparent transparent #ffffff;
+  &.arrow {
+    &::after {
+      content: '';
+      display: block;
+      border-style: solid;
+      border-width: 6px 0 6px 10px;
+      border-color: transparent transparent transparent #ffffff;
+    }
   }
 }
 

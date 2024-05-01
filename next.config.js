@@ -1,4 +1,8 @@
 /** @type {import('next').NextConfig} */
+// const { withNextVideo } = require('next-video/process');
+// import { withNextVideo } from 'next-video/process';
+
+// module.exports = withNextVideo(nextConfig);
 const nextConfig = {
   async redirects() {
     return [
@@ -162,6 +166,7 @@ const nextConfig = {
 };
 
 module.exports = nextConfig;
+// module.exports = withNextVideo(nextConfig);
 
 // RewriteRule 	^price/([-a-zA-Z0-9_]+)/$ 									product_price.php?cat=$1 			[QSA,L]
 // RewriteRule 	^nashi-kontakty/?$ 											contacts.php 						[QSA,L]

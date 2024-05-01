@@ -13,7 +13,7 @@ import {
 import type { Metadata } from 'next';
 import StartArticleSection from '@/components/article/StartArticleSection/StartArticleSection';
 import SatChannelsTable from '@/components/SatChannelsTable/SatChannelsTable';
-import FillingValidImage from '@/components/Images/FillingValidImage';
+import FillingValidImage from '@/components/ui/Images/FillingValidImage';
 import { cache } from 'react';
 import { LANGUAGE, DEFAULT_META_DATA, EDBTableTitles } from '@/models/ui.model';
 import { EUrlBaseParam } from '@/models/url.model';

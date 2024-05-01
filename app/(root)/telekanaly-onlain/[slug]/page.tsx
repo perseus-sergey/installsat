@@ -1,9 +1,7 @@
 import BottomInfoPanel from '@/components/BottomInfoPanel/BottomInfoPanel';
-import ChannelOnlineLink from '@/components/ui/buttons/ChannelOnlineLink/ChannelOnlineLink';
-import ChannelParams from '@/components/ChannelParams/ChannelParams';
 import DangerHtml from '@/components/ui/DangerHtml/DangerHtml';
 import EmptyData from '@/components/errors/EmptyData/EmptyData';
-import FillingValidImage from '@/components/Images/FillingValidImage';
+import FillingValidImage from '@/components/ui/Images/FillingValidImage';
 import NoteBlock from '@/components/ui/NoteBlock/NoteBlock';
 import SimilarArticles from '@/components/SimilarArticles/SimilarArticles';
 import SimilarChannel from '@/components/SimilarChannel/SimilarChannel';
@@ -14,11 +12,11 @@ import {
   updateViewCount,
 } from '@/controllers/articles.controller';
 import {
-  getDBChannel,
+  getDBOnlineChannel,
   getSimilarChannels,
 } from '@/controllers/channel.controller';
 import { getFormattedDateStr } from '@/libs/utils/utils';
-import { META_CHANNEL } from '@/models/channel.model';
+import { META_CHANNEL, META_CHANNEL_ONLINE } from '@/models/channel.model';
 import { LANGUAGE, EDBTableTitles, DEFAULT_META_DATA } from '@/models/ui.model';
 import { EUrlBaseParam, EUrlSearchParam } from '@/models/url.model';
 import { Metadata } from 'next';
@@ -26,6 +24,10 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
 import { getCommentsNumber } from '@/controllers/comments.controller';
+import ChannelOnlineParams from '@/components/ChannelParams/ChannelOnlineParams';
+import { headers } from 'next/headers';
+import OnlinePlayerTabs from '@/components/OnlinePlayerTabs/OnlinePlayerTabs';
+import GrooveLine from '@/components/ui/GrooveLine';
 
 const BASE_URL = process.env.BASE_URL;
 
@@ -33,19 +35,14 @@ const {
   images: {
     channelLogo: { big: bigLogo },
   },
-  infoPanelTitles: {
-    package: packageTitle,
-    comments: commentsTitle,
-    views: viewsTitle,
-  },
-  titleBefore,
-  keywordsBefore,
+  infoPanelTitles: { comments: commentsTitle, views: viewsTitle },
   scheduleLinkText: { channel: scheduleTitle },
   noteTitle,
-  getOnlineLinkText,
   getResponsibilityText,
   similar: { channels: simChannelsBefore, articles: simArticlesBefore },
 } = META_CHANNEL;
+
+const { getDescription, getH1, getKeywords, getTitle } = META_CHANNEL_ONLINE;
 
 export interface IChannelProps {
   params: { slug: string };
@@ -54,84 +51,35 @@ export interface IChannelProps {
 export const generateMetadata = async ({
   params: { slug },
 }: IChannelProps): Promise<Metadata> => {
-  const sqlResult = await getDBChannel(slug);
+  const sqlResult = await getDBOnlineChannel(slug);
   if (sqlResult instanceof Error || !sqlResult.length)
     return DEFAULT_META_DATA[LANGUAGE];
 
-  const {
-    title,
-    description,
-    chan_slug,
-    cat_parent_id,
-    cat_parent_title,
-    cat_title,
-    cat_id,
-    sat_title,
-    freq,
-    polar,
-    canonical,
-  } = sqlResult[0];
-  const metaTitle =
-    cat_parent_id > 0
-      ? `${titleBefore[LANGUAGE]} ${title} | ${cat_parent_title} | ${cat_title}`
-      : `${titleBefore[LANGUAGE]} ${title} | ${sat_title} ${freq} ${polar} | ${cat_title}`;
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [clearedCanonical, ..._] = canonical
-    .replace(/\/$/, '')
-    .split('/')
-    .reverse();
-
-  // if it is encrypted channel or category lybid || UA TV then canonical, else native url
-  const addCanonical =
-    canonical && (cat_id === 23 || cat_parent_id === 2 || cat_parent_id === 25)
-      ? clearedCanonical
-      : chan_slug;
+  const { title, description, chan_slug } = sqlResult[0];
 
   return {
-    title: metaTitle,
-    description: description || title,
-    keywords: keywordsBefore[LANGUAGE] + description,
-    alternates: {
-      canonical: `${BASE_URL}/${EUrlBaseParam.CHANNEL_PARAMS}/${addCanonical}`,
-    },
+    title: getTitle(title)[LANGUAGE],
+    description: getDescription(title, description)[LANGUAGE],
+    keywords: getKeywords(title)[LANGUAGE],
     openGraph: {
       ...DEFAULT_META_DATA.openGraph,
-      title: metaTitle,
-      description: description || title,
-      url: `${BASE_URL}/${EUrlBaseParam.CHANNEL_PARAMS}/${chan_slug}`,
+      title: getTitle(title)[LANGUAGE],
+      description: getDescription(title, description)[LANGUAGE],
+      url: `${BASE_URL}/${EUrlBaseParam.ONLINE_CHANNEL_LIST}/${chan_slug}`,
       publishedTime: getFormattedDateStr(),
     },
   };
 };
 
 export default async function Page({ params: { slug } }: IChannelProps) {
-  const sqlResult = await getDBChannel(slug);
+  const sqlResult = await getDBOnlineChannel(slug);
 
   if (sqlResult instanceof Error)
     return <EmptyData description={sqlResult.message} />;
   if (!sqlResult.length) notFound();
 
-  const {
-    id,
-    title,
-    logo,
-    text,
-    view,
-    chan_slug,
-    cat_title,
-    cat_parent_title,
-    cat_parent_id,
-    cat_parent_cpu,
-    cat_slug,
-    tvforsite_net,
-  } = sqlResult[0];
-
-  const catLink =
-    cat_parent_id > 0 ? `${cat_parent_cpu}#${cat_slug}` : cat_slug;
-
-  const catTitle =
-    cat_parent_id > 0 ? `${cat_parent_title} - ${cat_title}` : cat_title;
+  const { id, title, logo, text, view, chan_slug, tvforsite_net, potok } =
+    sqlResult[0];
 
   const similarChannelsResult = await getSimilarChannels(logo);
   const similarChannels =
@@ -148,11 +96,15 @@ export default async function Page({ params: { slug } }: IChannelProps) {
 
   updateViewCount(EDBTableTitles.CHANNELS, `${id}`, view);
 
+  const forwarded = headers();
+  console.log('🚀 ~ Page ~ forwarded:', forwarded.get('x-forwarded-for'));
+  // console.log('🚀 ~ requestIp:', requestIp.getClientIp('x-forwarded-for'));
+
   return (
     <>
       <article className="article">
         <Title>
-          {`${titleBefore[LANGUAGE]} "${title}"`}
+          {getH1(title)[LANGUAGE]}
           <FillingValidImage
             image={{
               ...bigLogo,
@@ -165,24 +117,27 @@ export default async function Page({ params: { slug } }: IChannelProps) {
           />
         </Title>
 
+        {[tvforsite_net, potok].map((src, i) => (
+          <p key={i}>
+            {i}: {src}
+          </p>
+        ))}
+
+        <OnlinePlayerTabs channelData={sqlResult[0]} allowedCountryCode="UA" />
+
+        {/* <FakePlayer url={tvforsite_net} chanTitles={title} /> */}
+
         <div className="article-text">
           <DangerHtml text={text} />
 
-          <div className="groove-border"></div>
+          <GrooveLine />
 
           <TvScheduleLink
             title={`${scheduleTitle[LANGUAGE]} "${title}"`}
             href={`/${EUrlBaseParam.CHANNELS_TV_PROGRAM}/${slug}?${EUrlSearchParam.DATE}=${getFormattedDateStr()}`}
           />
 
-          {tvforsite_net && (
-            <ChannelOnlineLink
-              href={`/${EUrlBaseParam.ONLINE_CHANNEL_LIST}/${slug}`}
-            >
-              {getOnlineLinkText(title)[LANGUAGE]}
-            </ChannelOnlineLink>
-          )}
-          <ChannelParams channelDBParams={sqlResult[0]} />
+          <ChannelOnlineParams channelDBParams={sqlResult[0]} />
 
           <NoteBlock noteTitle={noteTitle[LANGUAGE]}>
             {getResponsibilityText(title)[LANGUAGE]}
@@ -191,16 +146,6 @@ export default async function Page({ params: { slug } }: IChannelProps) {
 
         <BottomInfoPanel
           items={[
-            {
-              name: packageTitle[LANGUAGE],
-              value: (
-                <Link
-                  href={`/${EUrlBaseParam.PACKAGE_CHANNEL_LIST}/${catLink}`}
-                >
-                  {catTitle}
-                </Link>
-              ),
-            },
             {
               name: viewsTitle[LANGUAGE],
               value: (view + 1).toLocaleString('en-US'),

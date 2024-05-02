@@ -1,6 +1,6 @@
 import EmptyData from '@/components/errors/EmptyData/EmptyData';
-import { Title } from '@/components/ui/Title/Title';
-import FillingValidImage from '@/components/Images/FillingValidImage';
+import { Title } from '@/components/ui/Titles/Title';
+import FillingValidImage from '@/components/ui/Images/FillingValidImage';
 import { ARTICLES } from '@/models/articles.model';
 import { getArticle } from '@/controllers/articles.controller';
 import DangerHtml from '@/components/ui/DangerHtml/DangerHtml';

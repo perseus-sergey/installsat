@@ -1,6 +1,6 @@
 import DeleteComment from '@/components/admin/DeleteComment/DeleteComment';
 import EmptyData from '@/components/errors/EmptyData/EmptyData';
-import { Title } from '@/components/ui/Title/Title';
+import { Title } from '@/components/ui/Titles/Title';
 import TooltipSimple from '@/components/ui/TooltipSimple/TooltipSimple';
 import { getComments } from '@/controllers/comments.controller';
 import { decrypt } from '@/libs/utils/decrypt';

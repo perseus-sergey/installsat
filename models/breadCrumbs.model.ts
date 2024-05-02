@@ -10,7 +10,7 @@ export const FIRST_ELEMENT_SIZE = '1.1rem';
 export const MBreadCrumbs: IBreadCrumbs = new Map([
   [
     EUrlBaseParam.BASE_PATH,
-    { [ELanguage.UA]: 'Старт', [ELanguage.EN]: 'Start' },
+    { [ELanguage.UA]: 'На головну', [ELanguage.EN]: 'Home' },
   ],
   // [EUrlBaseParam.BASE_PATH, { [ELanguage.UA]: '📡', [ELanguage.EN]: '📡' }],
   [

@@ -1,9 +1,9 @@
 import EmptyData from '@/components/errors/EmptyData/EmptyData';
-import { Title } from '@/components/ui/Title/Title';
+import { Title } from '@/components/ui/Titles/Title';
 import type { Metadata } from 'next';
 import { ARTICLES } from '@/models/articles.model';
 import { getChunkOfNews } from '@/controllers/articles.controller';
-import FillingValidImage from '@/components/Images/FillingValidImage';
+import FillingValidImage from '@/components/ui/Images/FillingValidImage';
 import ArticleList from '@/components/article/ArticleList/ArticleList';
 import Pagination from '@/components/ui/Pagination/Pagination';
 import { notFound } from 'next/navigation';

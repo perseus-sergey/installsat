@@ -1,12 +1,21 @@
 import styles from './TooltipSimple.module.scss';
 
-interface ITooltipSimpleProps {
+interface ITooltipSimpleProps extends React.HTMLAttributes<HTMLElement> {
   children: React.ReactNode;
   tooltipText: React.ReactNode;
 }
 
-const TooltipSimple = ({ children, tooltipText }: ITooltipSimpleProps) => (
-  <div className={styles.TooltipSimple} data-testid="TooltipSimple">
+const TooltipSimple = ({
+  children,
+  tooltipText,
+  className,
+  ...attributes
+}: ITooltipSimpleProps) => (
+  <div
+    className={`${styles.TooltipSimple}${className ? ` ${className}` : ''}`}
+    data-testid="TooltipSimple"
+    {...attributes}
+  >
     {children}
     <span className={styles.tooltipText}>{tooltipText}</span>
   </div>

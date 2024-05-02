@@ -1,6 +1,6 @@
 import { ERRORS } from '@/models/ui.model';
 import styles from './EmptyPage.module.scss';
-import FillingValidImage from '../../Images/FillingValidImage';
+import FillingValidImage from '../../ui/Images/FillingValidImage';
 
 const EmptyPage = ({ title }: { title: string }) => (
   <div className={styles.EmptyPage}>

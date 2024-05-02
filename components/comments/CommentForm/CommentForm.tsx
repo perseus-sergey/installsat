@@ -12,6 +12,7 @@ import { useFormReset } from '@/libs/hooks/useFormReset';
 import { EDBTableTitles, LANGUAGE } from '@/models/ui.model';
 import { useFormCommentSendEmail } from '@/libs/hooks/useFormCommentSendEmail';
 import { EMPTY_FORM_STATE } from '@/controllers/toast.controller';
+import { IUserLocation } from '@/libs/utils/getUserIP';
 
 const { AUTHOR, EMAIL, TEXT } = ECommentFormNames;
 const { authorEmail, authorName, commentText, submit } =
@@ -22,7 +23,7 @@ interface ICommentProps {
   dbCommentTableName: EDBTableTitles;
   articleId: string;
   articleName: string;
-  userIP: string;
+  userLocation: IUserLocation | null;
   baseUrl: string;
   emailKey: string;
 }
@@ -32,14 +33,14 @@ const CommentForm = ({
   dbCommentTableName,
   articleId,
   articleName,
-  userIP,
+  userLocation,
   baseUrl,
   emailKey,
 }: ICommentProps) => {
   const sendCommentHandler = formCommentAction.bind(
     null,
     articleId,
-    '',
+    userLocation ? userLocation.query : '',
     revalidateUrl,
     dbCommentTableName
   );
@@ -57,7 +58,7 @@ const CommentForm = ({
     revalidateUrl,
     dbCommentTableName,
     articleId,
-    userIP,
+    userLocation,
     baseUrl,
     emailKey
   );

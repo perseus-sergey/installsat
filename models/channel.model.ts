@@ -11,9 +11,7 @@ export interface IChannel {
   url: string;
   view: number;
   canonical: string;
-  vsetv: number;
-  vipiko: number;
-  tvforsite_net: number;
+  tvforsite_net: string;
   freq: number;
   sr: number;
   fec: string;
@@ -29,6 +27,19 @@ export interface IChannel {
   cat_parent_title: string;
   cat_parent_cpu: string;
   chan_lang: string;
+}
+
+export interface IOnlineChannel extends IChannel {
+  vsetv: number;
+  vipiko: number;
+  programma: string;
+  telegid_id: string;
+  aspect: string;
+  no_googlads: string;
+  potok: string;
+  other_stream: string;
+  tem_slug: string;
+  country: string;
 }
 
 export interface ISimilarChannel {
@@ -223,5 +234,32 @@ export const META_CHANNEL = {
         [ELanguage.EN]: 'Channel news:',
       },
     },
+  },
+};
+
+export const META_CHANNEL_ONLINE = {
+  getTitle(channelTitle: string) {
+    return {
+      [ELanguage.UA]: `${channelTitle} онлайн`,
+      [ELanguage.EN]: `${channelTitle} online`,
+    };
+  },
+  getH1(channelTitle: string) {
+    return {
+      [ELanguage.UA]: `Канал «${channelTitle}» онлайн`,
+      [ELanguage.EN]: `${channelTitle} channel online`,
+    };
+  },
+  getDescription(channelTitle: string, description: string) {
+    return {
+      [ELanguage.UA]: `Дивіться онлайн канал ${channelTitle} безкоштовно у прямому ефірі. ${description.slice(0, 120)}`,
+      [ELanguage.EN]: `Watch the online channel ${channelTitle} for free live.  ${description.slice(0, 120)}`,
+    };
+  },
+  getKeywords(channelTitle: string) {
+    return {
+      [ELanguage.UA]: `${channelTitle} дивитись, онлайн, online, безкоштовно, тб, канал, прямий ефір, інтернет тб`,
+      [ELanguage.EN]: `${channelTitle} watch, online, free, live, tv, channel, satellite, internet tv`,
+    };
   },
 };

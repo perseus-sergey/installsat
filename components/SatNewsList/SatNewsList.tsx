@@ -9,7 +9,7 @@ import {
   setGroupedNewsBySatMap,
 } from '@/controllers/satDigest.controller';
 import EmptyData from '../errors/EmptyData/EmptyData';
-import FillingValidImage from '../Images/FillingValidImage';
+import FillingValidImage from '../ui/Images/FillingValidImage';
 import { LANGUAGE, TSearchParams } from '@/models/ui.model';
 
 interface ISatNewsListProps {

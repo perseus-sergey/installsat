@@ -78,8 +78,17 @@ export default async function Page({ params: { slug } }: IChannelProps) {
     return <EmptyData description={sqlResult.message} />;
   if (!sqlResult.length) notFound();
 
-  const { id, title, logo, text, view, chan_slug, tvforsite_net, potok } =
-    sqlResult[0];
+  const {
+    id,
+    title,
+    logo,
+    text,
+    view,
+    chan_slug,
+    tvforsite_net,
+    other_stream,
+    potok,
+  } = sqlResult[0];
 
   const similarChannelsResult = await getSimilarChannels(logo);
   const similarChannels =
@@ -117,7 +126,7 @@ export default async function Page({ params: { slug } }: IChannelProps) {
           />
         </Title>
 
-        {[tvforsite_net, potok].map((src, i) => (
+        {[tvforsite_net, potok, other_stream].map((src, i) => (
           <p key={i}>
             {i}: {src}
           </p>

@@ -4,7 +4,7 @@ import styles from './OnlinePlayerTabs.module.scss';
 import Video from 'next-video';
 import FakePlayer from '../FakePlayer/FakePlayer';
 import BaseButton from '../ui/buttons/BaseButton/BaseButton';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { IOnlineChannel } from '../../models/channel.model';
 
 interface IOnlinePlayerTabsProps {
@@ -13,37 +13,32 @@ interface IOnlinePlayerTabsProps {
 }
 
 const OnlinePlayerTabs = ({
-  channelData: { country, url, title },
-  // channelData: { potok, tvforsite_net, country, url, title },
+  channelData: { potok, tvforsite_net, country, url, title },
   allowedCountryCode,
 }: IOnlinePlayerTabsProps) => {
   const [playerN, setPlayerN] = useState(0);
-  // const streams = [
-  //   () => ONLINE_PLAYERS.MAIN_STREAM(potok),
-  //   () => ONLINE_PLAYERS.TV_FOR_SITE_NET(tvforsite_net, title),
-  // ];
 
   const streams = [
     {
-      stream: 'https://spas.mediacdn.ru/cdn/spas/tracks-v1a1/mono.m3u8',
-      player: ONLINE_PLAYERS.MAIN_STREAM(
-        'https://spas.mediacdn.ru/cdn/spas/tracks-v1a1/mono.m3u8'
-      ),
+      stream: potok,
+      player: ONLINE_PLAYERS.MAIN_STREAM(potok),
     },
     {
-      stream: 'tvforsite_net',
-      player: ONLINE_PLAYERS.TV_FOR_SITE_NET('tvforsite_net', title),
+      stream: tvforsite_net,
+      player: ONLINE_PLAYERS.TV_FOR_SITE_NET(tvforsite_net, title),
     },
+    // {
+    //   stream: other_stream,
+    //   player: ONLINE_PLAYERS.OTHER_STREAM(other_stream),
+    // },
   ];
-  // const streams = ['potok', 'tvforsite_net'];
-  // const streams = [potok, tvforsite_net];
   const numberOfTabs = streams.reduce(
     (acc, curr) => (curr.stream ? acc + 1 : acc),
     0
   );
 
   return (
-    <div className={styles.OnlinePlayerTabs} data-testid="OnlinePlayerTabs">
+    <div className={styles.OnlinePlayerTabs}>
       <p>country: {country}</p>
       {numberOfTabs > 0 ? (
         !country || country === allowedCountryCode ? (
@@ -70,7 +65,10 @@ const OnlinePlayerTabs = ({
                 <div>{streams[playerN].player}</div>
               </>
             ) : (
-              streams.map(({ stream, player }) => stream && player)
+              streams.map(
+                ({ stream, player }, i) =>
+                  stream && <React.Fragment key={i}>{player}</React.Fragment>
+              )
             )}
           </>
         ) : (
@@ -106,4 +104,7 @@ const ONLINE_PLAYERS = {
   TV_FOR_SITE_NET(stream: string, chanTitle: string) {
     return !stream ? null : <FakePlayer chanTitle={chanTitle} url={stream} />;
   },
+  // OTHER_STREAM(stream: string) {
+  //   return !stream ? null : <DangerHtml text={stream} />;
+  // },
 };

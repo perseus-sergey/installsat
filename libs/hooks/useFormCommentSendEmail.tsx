@@ -9,6 +9,7 @@ import { EDBTableTitles, LANGUAGE } from '@/models/ui.model';
 import { getArticleSubscribers } from '@/controllers/comments.controller';
 import { IFormState } from '@/controllers/toast.controller';
 import { COMMENTS_MODEL } from '@/models/comments.model';
+import { IUserLocation } from '../utils/getUserIP';
 
 export const useFormCommentSendEmail = (
   formState: IFormState,
@@ -16,7 +17,7 @@ export const useFormCommentSendEmail = (
   articlePath: string,
   tblCommentName: EDBTableTitles,
   articleId: string,
-  userIP: string,
+  userLocation: IUserLocation | null,
   baseUrl: string,
   emailKey: string
 ) => {
@@ -43,7 +44,7 @@ export const useFormCommentSendEmail = (
         articlePath,
         tblCommentName,
         subscribers,
-        userIP,
+        userLocation,
         baseUrl,
         emailKey,
       };

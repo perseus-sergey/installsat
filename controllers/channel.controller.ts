@@ -67,7 +67,7 @@ export const getDBOnlineChannel = cache(async (slug: string) => {
   const sql = `
   SELECT 
 C.id, C.title, C.cpu AS chan_slug, C.logo, C.description, C.text, C.url, C.view, C.canonical, C.programma, C.potok, C.aspect, C.no_googlads, 
-C.tvforsite_net, C.vipiko, C.telegid_id, C.vsetv,
+C.tvforsite_net, C.other_stream, C.vipiko, C.telegid_id, C.vsetv,
 T.cpu as tem_slug,
 COMP.title as compression,
 L.title as chan_lang,

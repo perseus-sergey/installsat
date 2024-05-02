@@ -86,7 +86,6 @@ export const getOnlineChannels = cache(async (searchQuery = '') => {
   `;
 
   const resp = await executeQuery<IOnlineChannelListModel>(sql);
-  console.log('🚀 ~ getOnlineChannels ~ sql:', sql);
 
   if (resp instanceof Error) return resp;
 

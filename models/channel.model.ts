@@ -37,6 +37,7 @@ export interface IOnlineChannel extends IChannel {
   aspect: string;
   no_googlads: string;
   potok: string;
+  other_stream: string;
   tem_slug: string;
   country: string;
 }

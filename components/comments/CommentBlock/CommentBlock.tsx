@@ -3,7 +3,7 @@ import CommentForm from '../CommentForm/CommentForm';
 import { EDBTableTitles, ELanguage, LANGUAGE } from '@/models/ui.model';
 import { COMMENTS_MODEL } from '@/models/comments.model';
 import { EUrlSearchParam } from '@/models/url.model';
-import { getUserIP } from '@/libs/utils/getUserIP';
+import { fetchUserLocation, getUserIP } from '@/libs/utils/getUserIP';
 import PaginationComments from '@/components/comments/PaginationComments/PaginationComments';
 
 const {
@@ -19,15 +19,18 @@ interface IProps {
   numberOfComments: number;
 }
 
-const CommentBlock = ({
+const CommentBlock = async ({
   revalidateUrl,
   dbCommentTableName,
   articleId,
   articleName,
   numberOfComments,
 }: IProps) => {
+  const userLocation = await fetchUserLocation();
+
   return (
     <section className={styles.CommentBlock} id={EUrlSearchParam.COMMENT_ID}>
+      userIP={getUserIP()}
       <h2 className={styles.commentBlockTitle}>
         {commentForm.title[LANGUAGE]}
       </h2>
@@ -36,15 +39,13 @@ const CommentBlock = ({
         dbCommentTableName={dbCommentTableName}
         articleId={articleId}
         articleName={articleName}
-        userIP={getUserIP()}
+        userLocation={userLocation}
         baseUrl={process.env.BASE_URL || ''}
         emailKey={process.env.MAIL_ENCRYPT_KEY || ''}
       />
-
       <div className={styles.bansBlock}>
         <BansBlock lang={LANGUAGE} />
       </div>
-
       <PaginationComments
         numberOfComments={numberOfComments}
         offsetNumber={paginationOffset}

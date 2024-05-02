@@ -1,10 +1,10 @@
 import DangerHtmlUl from '@/components/ui/DangerHtml/DangerHtml';
 import EmptyData from '@/components/errors/EmptyData/EmptyData';
-import { Title } from '@/components/ui/Title/Title';
+import { Title } from '@/components/ui/Titles/Title';
 import {
   getSatChannels,
   getGroupedChannelsAllSat,
-} from '@/controllers/satChannelList.controller';
+} from '@/controllers/channelList.controller';
 import { getChannelSatList } from '@/controllers/sidebar.controller';
 import {
   META_SAT_CHANNEL_LIST,
@@ -13,7 +13,7 @@ import {
 import type { Metadata } from 'next';
 import StartArticleSection from '@/components/article/StartArticleSection/StartArticleSection';
 import SatChannelsTable from '@/components/SatChannelsTable/SatChannelsTable';
-import FillingValidImage from '@/components/Images/FillingValidImage';
+import FillingValidImage from '@/components/ui/Images/FillingValidImage';
 import { cache } from 'react';
 import { LANGUAGE, DEFAULT_META_DATA, EDBTableTitles } from '@/models/ui.model';
 import { EUrlBaseParam } from '@/models/url.model';

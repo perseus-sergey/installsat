@@ -10,8 +10,11 @@
 - [Next.js](https://nextjs.org/)
 - [TypeScript](https://www.typescriptlang.org/)
 - [MySQL2](https://sidorares.github.io/node-mysql2/docs)
-- [Zod](https://zod.dev/)
+- [Zod](https://zod.dev/) - TypeScript-first schema validation with static type inference
+  - [Next.js Forms with Server Actions](https://www.robinwieruch.de/next-forms/)
+  - [Basic usage](https://zod.dev/?id=basic-usage)
 - [React-Hot-Toast](https://react-hot-toast.com/)
+  - [TOAST MESSAGE WITH SERVER ACTIONS IN NEXT](https://www.robinwieruch.de/next-forms/)
 - [use-debounce](https://www.npmjs.com/package/use-debounce)
 - [React Select](https://react-select.com/home)
 - [React Google Maps](https://visgl.github.io/react-google-maps/)
@@ -24,9 +27,17 @@
 - [Husky](https://typicode.github.io/husky/)
 - [Jest](https://jestjs.io/uk/)
 - [Flaticon](https://www.flaticon.com/)
+- [Nodemailer](https://nodemailer.com/usage/)
+  - [Send email using Nodemailer](https://react.email/docs/integrations/nodemailer)
+  - [YouTube](https://www.youtube.com/watch?v=81lt0qcXtHE&ab_channel=SakuraDev) - How to Send Emails In Next.JS 14 With Dynamic Templates
+  - [GitHub: nextjs14-send-emails-with-dynamic-templates](https://github.com/vahid-nejad/nextjs14-send-emails-with-dynamic-templates/blob/main/src/lib/mail.ts)
+  - [Email contact form using NextJS (App router)](https://medium.com/@abilsavio/email-contact-form-using-nextjs-app-router-60c29fe70644)
+- [React Email - components for creating beautiful emails using React](https://react.email/)
+  - [Examples](https://react.email/examples)
 
 ---
 
 ## DEPLOY
 
 [INSTALLSAT-TV](https://installsat.tv/)
+[INSTALLSAT-FUN](https://installsat.fun/)

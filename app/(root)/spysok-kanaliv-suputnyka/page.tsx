@@ -1,9 +1,9 @@
 import EmptyData from '@/components/errors/EmptyData/EmptyData';
-import { Title } from '@/components/ui/Title/Title';
+import { Title } from '@/components/ui/Titles/Title';
 import {
   getSatChannels,
   getGroupedChannelsAllSat,
-} from '@/controllers/satChannelList.controller';
+} from '@/controllers/channelList.controller';
 import {
   META_ALL_SAT_CHANNEL_LIST,
   START_CONTENT,
@@ -11,7 +11,7 @@ import {
 import type { Metadata } from 'next';
 import StartArticleSection from '@/components/article/StartArticleSection/StartArticleSection';
 import SatChannelsTable from '@/components/SatChannelsTable/SatChannelsTable';
-import FillingImg from '@/components/Images/FillingImage';
+import FillingImg from '@/components/ui/Images/FillingImage';
 import Fieldset from '@/components/ui/Fieldset/Fieldset';
 import {
   LANGUAGE as L,

@@ -1,5 +1,9 @@
 import { executeQuery } from '@/libs/db/mysqldb';
-import { IChannel, ISimilarChannel } from '@/models/channel.model';
+import {
+  IChannel,
+  IOnlineChannel,
+  ISimilarChannel,
+} from '@/models/channel.model';
 import { cache } from 'react';
 
 export const getDBChannel = cache(async (slug: string) => {
@@ -57,6 +61,27 @@ LIMIT 1
 `;
 
   return await executeQuery<IChannel>(sql, [slug]);
+});
+
+export const getDBOnlineChannel = cache(async (slug: string) => {
+  const sql = `
+  SELECT 
+C.id, C.title, C.cpu AS chan_slug, C.logo, C.description, C.text, C.url, C.view, C.canonical, C.programma, C.potok, C.aspect, C.no_googlads, 
+C.tvforsite_net, C.other_stream, C.vipiko, C.telegid_id, C.vsetv,
+T.cpu as tem_slug,
+COMP.title as compression,
+L.title as chan_lang,
+COUNT.title as country 
+FROM tbl_channals AS C 
+LEFT JOIN tbl_chan_tema AS T ON C.tema = T.id 
+LEFT JOIN tbl_chan_compress AS COMP ON C.compress = COMP.id 
+LEFT JOIN tbl_country AS COUNT ON C.country_id = COUNT.id 
+LEFT JOIN tbl_language AS L ON C.lang = L.id 
+WHERE C.cpu =  ?
+LIMIT 1
+`;
+
+  return await executeQuery<IOnlineChannel>(sql, [slug]);
 });
 
 export const getDBChannelSlugList = async () =>

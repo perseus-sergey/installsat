@@ -1,5 +1,5 @@
 import DeleteCommentSubscription from '@/components/DeleteCommentSubscription/DeleteCommentSubscription';
-import { Title } from '@/components/ui/Title/Title';
+import { Title } from '@/components/ui/Titles/Title';
 import { decrypt } from '@/libs/utils/decrypt';
 import { getFormattedDateStr } from '@/libs/utils/utils';
 import { validSearchParam } from '@/libs/utils/validSearchParam';

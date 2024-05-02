@@ -1,45 +1,6 @@
-.satTitle {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  text-align: center;
-  gap: 1rem;
-  padding: 0.5rem 0;
-
-  .satTitleLink {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 2rem;
-    font-size: 2rem;
-    font-family: Verdana, Geneva, sans-serif;
-    font-weight: 600;
-    color: #0000cc;
-    text-shadow: 1px 1px 1px #ffffff;
-
-    @media (width < 700px) {
-      font-size: 1.5rem;
-    }
-    &:hover {
-      color: red;
-    }
-  }
-
-  .goUpLink {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 2rem;
-    width: 2.5rem;
-    height: 2.5rem;
-    border-radius: 2rem;
-    color: rgb(203 218 250);
-    background-color: #a7a7a7;
-
-    &:hover {
-      color: #ffffff;
-      background-color: rgb(255 0 0 / 37%);
-    }
+.satTitleLink {
+  &:hover {
+    color: red;
   }
 }
 

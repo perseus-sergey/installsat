@@ -2,10 +2,14 @@ import { IImgParams, IMG_PROPERTIES } from '@/models/ui.model';
 import FillingImg from './FillingImage';
 import { imagePathValidate } from '@/libs/utils/imagePathValidate';
 
+export interface IAlternativeImgProps {
+  title: string;
+  fontSize: string;
+}
 interface IFillingImgProps {
   image: IImgParams;
   defaultImage?: IImgParams;
-  alternativeImgString: { title: string; fontSize: string };
+  alternativeImgString: IAlternativeImgProps;
   alt?: string;
   isBlur?: boolean;
   blurImgPath?: string;

@@ -1,0 +1,29 @@
+.tabButtonList {
+  display: flex;
+}
+
+.tabButton {
+  max-width: 8rem;
+  width: fit-content;
+  display: flex;
+  align-items: center;
+  padding: 0.3rem 1rem;
+  color: #777;
+  cursor: pointer;
+  background: #f9f9f9;
+  border: 1px solid #c6c6c6;
+  border-radius: 2px 15px 0 0;
+
+  &:hover {
+    color: #f70;
+    background: #ffffdf;
+    border: 1px solid #ffca95;
+  }
+
+  &.currentTab {
+    color: #fff;
+    background: #006;
+    border: 1px solid #d4d4d4;
+    border-bottom: 1px solid #f00;
+  }
+}

@@ -1,7 +1,7 @@
 // import styles from './WrongSegment.module.scss';
 import Link from 'next/link';
 import TextButton from '../../ui/buttons/TextButton/TextButton';
-import { Title } from '../../ui/Title/Title';
+import { Title } from '../../ui/Titles/Title';
 
 type TWrongSegmentProps = {
   wrongMessage: string;

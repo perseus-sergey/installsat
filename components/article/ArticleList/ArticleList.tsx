@@ -1,8 +1,8 @@
 import { ARTICLES, IAllNewsModel } from '@/models/articles.model';
 import styles from './ArticleList.module.scss';
 import ArticleCard from '../ArticleCard/ArticleCard';
-import FillingImg from '../../Images/FillingImage';
-import FillingValidImage from '../../Images/FillingValidImage';
+import FillingImg from '../../ui/Images/FillingImage';
+import FillingValidImage from '../../ui/Images/FillingValidImage';
 import Link from 'next/link';
 import { LANGUAGE, IImgParams } from '@/models/ui.model';
 import { EUrlBaseParam } from '@/models/url.model';

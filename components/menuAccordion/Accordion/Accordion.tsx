@@ -31,18 +31,9 @@ const Accordion = async () => {
   return (
     <nav className={styles.Accordion} data-testid="Accordion">
       <ul>
-        <AccordionMenuItem
-          language={LANGUAGE}
-          options={MENU_ACCORDION.SATELLITE_TV}
-        />
-        <AccordionMenuItem
-          language={LANGUAGE}
-          options={MENU_ACCORDION.SAT_FINDER}
-        />
-        <AccordionMenuItem
-          language={LANGUAGE}
-          options={MENU_ACCORDION.INSTALLATIONS}
-        >
+        <AccordionMenuItem options={MENU_ACCORDION.SATELLITE_TV} />
+        <AccordionMenuItem options={MENU_ACCORDION.SAT_FINDER} />
+        <AccordionMenuItem options={MENU_ACCORDION.INSTALLATIONS}>
           <ul className={styles.accordionContent}>
             {installationsList.map((item) => (
               <li key={item.id} className={styles.contentItem}>
@@ -56,10 +47,7 @@ const Accordion = async () => {
             ))}
           </ul>
         </AccordionMenuItem>
-        <AccordionMenuItem
-          language={LANGUAGE}
-          options={MENU_ACCORDION.SATELLITES}
-        >
+        <AccordionMenuItem options={MENU_ACCORDION.SATELLITES}>
           <ul className={styles.accordionContent}>
             {channelSatList.map((item) => (
               <li key={item.id} className={styles.contentItem}>
@@ -73,10 +61,7 @@ const Accordion = async () => {
             ))}
           </ul>
         </AccordionMenuItem>
-        <AccordionMenuItem
-          language={LANGUAGE}
-          options={MENU_ACCORDION.PACKAGES}
-        >
+        <AccordionMenuItem options={MENU_ACCORDION.PACKAGES}>
           <ul className={styles.accordionContent}>
             <li className={styles.contentItem}>
               <Link
@@ -98,7 +83,7 @@ const Accordion = async () => {
             ))}
           </ul>
         </AccordionMenuItem>
-        <AccordionMenuItem language={LANGUAGE} options={MENU_ACCORDION.USEFUL}>
+        <AccordionMenuItem options={MENU_ACCORDION.USEFUL}>
           <ul className={styles.accordionContent}>
             {usefulArticleList.map((item) => (
               <li key={item.id} className={styles.contentItem}>
@@ -139,10 +124,7 @@ const Accordion = async () => {
               </ul>
             </li>
           ))} */}
-        <AccordionMenuItem
-          language={LANGUAGE}
-          options={MENU_ACCORDION.ONLINE_TV}
-        />
+        <AccordionMenuItem options={MENU_ACCORDION.ONLINE_TV} />
       </ul>
       <input
         type="radio"

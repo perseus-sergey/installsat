@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import styles from './TvScheduleLink.module.scss';
 import { META_CHANNEL } from '@/models/channel.model';
-import FillingValidImage from '../Images/FillingValidImage';
+import FillingValidImage from '../ui/Images/FillingValidImage';
 import { LANGUAGE } from '@/models/ui.model';
 
 interface ITvScheduleLinkProps {

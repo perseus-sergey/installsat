@@ -3,7 +3,7 @@ import styles from './Header.module.scss';
 import Link from 'next/link';
 import ToggleSidebarLabel from '../ui/ToggleSidebarLabel/ToggleSidebarLabel';
 import { LOGO, TOGGLE_SIDEBAR_BUTTON_TITLE } from '@/models/header.model';
-import FillingImg from '../Images/FillingImage';
+import FillingImg from '../ui/Images/FillingImage';
 import { LANGUAGE } from '@/models/ui.model';
 
 const { href, title, siteLogo } = LOGO.link;

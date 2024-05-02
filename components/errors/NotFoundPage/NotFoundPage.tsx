@@ -1,9 +1,9 @@
 import styles from './NotFoundPage.module.scss';
 import Link from 'next/link';
-import { Title } from '../../ui/Title/Title';
+import { Title } from '../../ui/Titles/Title';
 import { EUrlBaseParam } from '@/models/url.model';
 import { LANGUAGE, ERRORS } from '@/models/ui.model';
-import FillingImg from '@/components/Images/FillingImage';
+import FillingImg from '@/components/ui/Images/FillingImage';
 
 const NotFoundPage = () => (
   <div className={styles.NotFoundPage} data-testid="NotFoundPage">

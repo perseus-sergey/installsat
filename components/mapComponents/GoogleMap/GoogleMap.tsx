@@ -10,7 +10,7 @@ import {
 } from '@vis.gl/react-google-maps';
 // import styles from './GoogleMap.module.scss';
 import { Polyline } from '@/components/mapComponents/Polyline';
-import FillingImg from '../../Images/FillingImage';
+import FillingImg from '../../ui/Images/FillingImage';
 import { SAT_FINDER_META_DATA } from '@/models/satFinder.model';
 import { LANGUAGE } from '@/models/ui.model';
 import { MultiValue } from 'react-select';

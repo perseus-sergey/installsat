@@ -31,6 +31,8 @@ const CommentBlock = async ({
   return (
     <section className={styles.CommentBlock} id={EUrlSearchParam.COMMENT_ID}>
       userIP={getUserIP()}
+      <br />
+      fetchUserLocation={JSON.stringify(userLocation)}
       <h2 className={styles.commentBlockTitle}>
         {commentForm.title[LANGUAGE]}
       </h2>

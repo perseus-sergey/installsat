@@ -95,7 +95,19 @@ export const CommentToAdminEmail = async ({
         IP:
         <span style={coloredText}>
           {' '}
-          {userLocation ? userLocation.query : 'Not defined'}
+          {userLocation && userLocation.status === 'success'
+            ? userLocation.query
+            : 'Not defined'}
+        </span>
+      </Text>
+
+      <Text style={heading}>
+        Country:
+        <span style={coloredText}>
+          {' '}
+          {userLocation && userLocation.status === 'success'
+            ? `${userLocation.country} / ${userLocation.city}`
+            : 'Not defined'}
         </span>
       </Text>
 

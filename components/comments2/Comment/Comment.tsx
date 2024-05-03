@@ -66,7 +66,6 @@ const Comment = ({
               id="parentCommentName"
               name="parentCommentName"
               className={`${styles.inputContainer__input} ${styles.first_input}`}
-              autoFocus
               // value={inputValue}
               // onChange={(e) => setInputValue(e.target.value)}
               placeholder="Ім'я..."
@@ -76,7 +75,6 @@ const Comment = ({
               id="parentCommentMail"
               name="parentCommentMail"
               className={`${styles.inputContainer__input} ${styles.first_input}`}
-              autoFocus
               // value={inputValue}
               // onChange={(e) => setInputValue(e.target.value)}
               placeholder="your@email.com"
@@ -87,7 +85,6 @@ const Comment = ({
               cancelClick={() => setInputValue('')}
               cancelBtnAriaLabel="Очистити поле введення"
               className={`${styles.inputContainer__input} ${styles.first_input}`}
-              autoFocus
               value={inputValue}
               handleOnChange={setInputValue}
               placeholder="your@email.com"
@@ -97,7 +94,6 @@ const Comment = ({
               id="parentComment"
               name="parentComment"
               className={`${styles.inputContainer__input} ${styles.first_input}`}
-              autoFocus
               placeholder="Введіть коментар..."
               aria-label="Введіть коментар"
               rows={4}
@@ -107,7 +103,6 @@ const Comment = ({
               cancelClick={() => setInputValue('')}
               cancelBtnAriaLabel="Очистити поле введення"
               className={`${styles.inputContainer__input} ${styles.first_input}`}
-              autoFocus
               value={inputValue}
               handleOnChange={setInputValue}
               placeholder="Введіть коментар..."
@@ -192,7 +187,6 @@ const Comment = ({
             <input
               type="text"
               className={styles.inputContainer__input}
-              autoFocus
               onChange={(e) => setInputValue(e.target.value)}
             />
             <CommentActionButton

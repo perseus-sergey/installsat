@@ -38,6 +38,7 @@ const Accordion = async () => {
             {installationsList.map((item) => (
               <li key={item.id} className={styles.contentItem}>
                 <Link
+                  scroll
                   href={`${MENU_ACCORDION.INSTALLATIONS.baseHrefOfList}/${item.cpu}/`}
                   className={styles.contentItemLink}
                 >
@@ -52,6 +53,7 @@ const Accordion = async () => {
             {channelSatList.map((item) => (
               <li key={item.id} className={styles.contentItem}>
                 <Link
+                  scroll
                   href={`${MENU_ACCORDION.SATELLITES.baseHrefOfList}/${item.cpu}/`}
                   className={styles.contentItemLink}
                 >
@@ -65,6 +67,7 @@ const Accordion = async () => {
           <ul className={styles.accordionContent}>
             <li className={styles.contentItem}>
               <Link
+                scroll
                 href={ADDED_ITEMS.freeChannels.link}
                 className={styles.contentItemLink}
               >
@@ -74,6 +77,7 @@ const Accordion = async () => {
             {channelCatList.map((item) => (
               <li key={item.id} className={styles.contentItem}>
                 <Link
+                  scroll
                   href={`${MENU_ACCORDION.PACKAGES.baseHrefOfList}/${item.cpu}/`}
                   className={styles.contentItemLink}
                 >
@@ -88,6 +92,7 @@ const Accordion = async () => {
             {usefulArticleList.map((item) => (
               <li key={item.id} className={styles.contentItem}>
                 <Link
+                  scroll
                   href={`${MENU_ACCORDION.USEFUL.baseHrefOfList}/${item.cpu}/`}
                   className={styles.contentItemLink}
                 >

@@ -1,5 +1,3 @@
-'use server';
-
 import { IUserLocation } from '@/models/userLocation.model';
 import { headers } from 'next/headers';
 

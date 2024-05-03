@@ -38,7 +38,7 @@ const commentSchema = z.object({
 
 export const formCommentAction = async (
   articleId: string,
-  userIp: string,
+  userCountryCode: string,
   revalidateUrl: string,
   dbTableName: EDBTableTitles,
   _formState: IFormState,
@@ -59,7 +59,7 @@ export const formCommentAction = async (
       validFormData[AUTHOR],
       validFormData[EMAIL],
       validFormData[TEXT],
-      userIp
+      userCountryCode
     );
 
     fieldValues = {

@@ -9,7 +9,7 @@ import { EDBTableTitles, LANGUAGE } from '@/models/ui.model';
 import { getArticleSubscribers } from '@/controllers/comments.controller';
 import { IFormState } from '@/controllers/toast.controller';
 import { COMMENTS_MODEL } from '@/models/comments.model';
-import { IUserLocation } from '../utils/getUserIP';
+import { IUserLocation } from '@/models/userLocation.model';
 
 export const useFormCommentSendEmail = (
   formState: IFormState,

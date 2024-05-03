@@ -65,6 +65,14 @@ const SatFinder = ({
   const [cameraProps, setCameraProps] = useState<MapCameraProps>(initialCamera);
 
   useEffect(() => {
+    // const setUserLocation = async () => {
+    //   const location = await fetchUserLocation();
+    //   if (!location) return;
+    //   const { lat, lon: lng } = location;
+    //   setMarkerPosition({ lat, lng });
+    //   setCameraProps({ center: { lat, lng }, zoom: zoom });
+    // };
+
     setSelectedOptions(makeSelectedOptions(satGradeList, groupedSats));
     const urlLat = searchParams.get(EUrlSearchParam.LATITUDE);
     const urlLng = searchParams.get(EUrlSearchParam.LONGITUDE);

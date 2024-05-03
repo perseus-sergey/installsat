@@ -1,21 +1,7 @@
-import { headers } from 'next/headers';
+'use server';
 
-export interface IUserLocation {
-  query: string;
-  status: 'success' | 'fail';
-  country: string;
-  countryCode: string;
-  region: string;
-  regionName: string;
-  city: string;
-  zip: string;
-  lat: number;
-  lon: number;
-  timezone: string;
-  isp: string;
-  org: string;
-  as: string;
-}
+import { IUserLocation } from '@/models/userLocation.model';
+import { headers } from 'next/headers';
 
 export const getUserIP = () =>
   (headers().get('x-forwarded-for') ?? '127.0.0.1').split(',')[0];

@@ -1,5 +1,4 @@
 import { encrypt } from '@/libs/utils/encrypt';
-import { IUserLocation } from '@/libs/utils/getUserIP';
 import { getFormattedDateStr, makeUrlSearchParams } from '@/libs/utils/utils';
 import { ISubscribersEmails } from '@/models/comments.model';
 import { EDBTableTitles, ELanguage } from '@/models/ui.model';
@@ -8,6 +7,7 @@ import {
   EUrlBaseParam,
   EUrlSearchParam,
 } from '@/models/url.model';
+import { IUserLocation } from '@/models/userLocation.model';
 import {
   Heading,
   Body,

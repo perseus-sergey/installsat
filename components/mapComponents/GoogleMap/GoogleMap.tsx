@@ -8,7 +8,6 @@ import {
   MapCameraChangedEvent,
   MapMouseEvent,
 } from '@vis.gl/react-google-maps';
-// import styles from './GoogleMap.module.scss';
 import { Polyline } from '@/components/mapComponents/Polyline';
 import FillingImg from '../../ui/Images/FillingImage';
 import { SAT_FINDER_META_DATA } from '@/models/satFinder.model';

@@ -40,6 +40,7 @@ const CommentForm = ({
   const sendCommentHandler = formCommentAction.bind(
     null,
     articleId,
+    userLocation ? userLocation.query : '',
     userLocation ? userLocation.countryCode : '',
     revalidateUrl,
     dbCommentTableName

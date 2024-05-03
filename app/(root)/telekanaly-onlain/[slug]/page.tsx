@@ -25,7 +25,6 @@ import { notFound } from 'next/navigation';
 import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
 import { getCommentsNumber } from '@/controllers/comments.controller';
 import ChannelOnlineParams from '@/components/ChannelParams/ChannelOnlineParams';
-import { headers } from 'next/headers';
 import OnlinePlayerTabs from '@/components/OnlinePlayerTabs/OnlinePlayerTabs';
 import GrooveLine from '@/components/ui/GrooveLine';
 
@@ -78,17 +77,7 @@ export default async function Page({ params: { slug } }: IChannelProps) {
     return <EmptyData description={sqlResult.message} />;
   if (!sqlResult.length) notFound();
 
-  const {
-    id,
-    title,
-    logo,
-    text,
-    view,
-    chan_slug,
-    tvforsite_net,
-    other_stream,
-    potok,
-  } = sqlResult[0];
+  const { id, title, logo, text, view, chan_slug } = sqlResult[0];
 
   const similarChannelsResult = await getSimilarChannels(logo);
   const similarChannels =
@@ -104,10 +93,6 @@ export default async function Page({ params: { slug } }: IChannelProps) {
   );
 
   updateViewCount(EDBTableTitles.CHANNELS, `${id}`, view);
-
-  const forwarded = headers();
-  console.log('🚀 ~ Page ~ forwarded:', forwarded.get('x-forwarded-for'));
-  // console.log('🚀 ~ requestIp:', requestIp.getClientIp('x-forwarded-for'));
 
   return (
     <>
@@ -126,15 +111,7 @@ export default async function Page({ params: { slug } }: IChannelProps) {
           />
         </Title>
 
-        {[tvforsite_net, potok, other_stream].map((src, i) => (
-          <p key={i}>
-            {i}: {src}
-          </p>
-        ))}
-
         <OnlinePlayerTabs channelData={sqlResult[0]} allowedCountryCode="UA" />
-
-        {/* <FakePlayer url={tvforsite_net} chanTitles={title} /> */}
 
         <div className="article-text">
           <DangerHtml text={text} />

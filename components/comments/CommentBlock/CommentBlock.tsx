@@ -3,7 +3,7 @@ import CommentForm from '../CommentForm/CommentForm';
 import { EDBTableTitles, ELanguage, LANGUAGE } from '@/models/ui.model';
 import { COMMENTS_MODEL } from '@/models/comments.model';
 import { EUrlSearchParam } from '@/models/url.model';
-import { fetchUserLocation, getUserIP } from '@/libs/utils/getUserIP';
+import { fetchUserLocation } from '@/libs/utils/getUserIP';
 import PaginationComments from '@/components/comments/PaginationComments/PaginationComments';
 
 const {
@@ -30,9 +30,6 @@ const CommentBlock = async ({
 
   return (
     <section className={styles.CommentBlock} id={EUrlSearchParam.COMMENT_ID}>
-      userIP={getUserIP()}
-      <br />
-      fetchUserLocation={JSON.stringify(userLocation)}
       <h2 className={styles.commentBlockTitle}>
         {commentForm.title[LANGUAGE]}
       </h2>

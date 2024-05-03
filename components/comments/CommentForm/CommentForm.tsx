@@ -79,7 +79,6 @@ const CommentForm = ({
         id={AUTHOR}
         name={AUTHOR}
         className={styles.inputField}
-        autoFocus
         maxLength={authorName.maxSize.value}
         size={20}
         required
@@ -108,7 +107,6 @@ const CommentForm = ({
         id={TEXT}
         name={TEXT}
         className={styles.inputField}
-        autoFocus
         placeholder={commentText.placeholder[LANGUAGE]}
         aria-label={commentText.ariaLabel[LANGUAGE]}
         rows={4}

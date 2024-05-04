@@ -8,7 +8,7 @@ import ChannelCardTooltip from '../ChannelCardTooltip/ChannelCardTooltip';
 import { LANGUAGE } from '@/models/ui.model';
 import { cutText } from '@/libs/utils/utils';
 import { META_CHANNEL } from '@/models/channel.model';
-import { TitleH2 } from '../ui/Titles/TitleH2';
+import { TitleH2List } from '../ui/Titles/TitleH2List';
 import GoUpLink from '../ui/GoUpLink/GoUpLink';
 import Link from 'next/link';
 import GenreImage from '../ui/Images/GenreImage/GenreImage';
@@ -33,7 +33,7 @@ interface IOnlineChannelListProps {
 const OnlineChannelList = ({ onlineChannels }: IOnlineChannelListProps) =>
   onlineChannels.map(([genreTitle, chanList]) => (
     <>
-      <TitleH2
+      <TitleH2List
         style={{ padding: '1rem' }}
         id={`genre-${chanList[0].tema}`}
         className="flex-col md:flex-row"
@@ -45,7 +45,7 @@ const OnlineChannelList = ({ onlineChannels }: IOnlineChannelListProps) =>
           genreMapPosition={chanList[0].tema}
           className={styles.genreImage}
         />
-      </TitleH2>
+      </TitleH2List>
       <ul className={styles.OnlineChannelList}>
         {chanList.map(({ logo, title, view, lan, description, id, cpu }) => (
           <li key={id} className={styles.listItem}>

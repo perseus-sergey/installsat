@@ -33,12 +33,12 @@ export interface IOnlineChannel extends IChannel {
   vsetv: number;
   vipiko: number;
   programma: string;
-  telegid_id: string;
+  telegid_id: number;
   aspect: string;
   no_googlads: string;
   potok: string;
   other_stream: string;
-  tem_slug: string;
+  genre_id: number;
   country: string;
 }
 
@@ -85,8 +85,8 @@ export const META_CHANNEL = {
       [ELanguage.EN]: 'TV Schedule for',
     },
     onlineChannel: {
-      [ELanguage.UA]: 'Повна телепрограма',
-      [ELanguage.EN]: 'Full TV Schedule',
+      [ELanguage.UA]: 'Повна програма',
+      [ELanguage.EN]: 'Full Schedule',
     },
   },
   getOnlineLinkText(channelTitle: string) {

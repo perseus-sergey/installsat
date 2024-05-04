@@ -105,6 +105,9 @@ export enum EDBTableTitles {
   COMMENTS_PACKAGES = 'tbl_comments_packs',
   COMMENTS_SATELLITE = 'tbl_comments_sat',
   COMMENTS_GENRE = 'tbl_comments_tema',
+  TV_SCHEDULE_VIPIKO = 'tv_shedule_vipiko',
+  TV_SCHEDULE_VSE_TV = 'tv_shedule_vsetv',
+  TV_SCHEDULE = 'tv_shedule',
 }
 
 // lastnews: tbl_comments

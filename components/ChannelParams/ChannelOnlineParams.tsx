@@ -1,5 +1,6 @@
 import { IChannel, META_CHANNEL } from '@/models/channel.model';
 import { LANGUAGE } from '@/models/ui.model';
+import { TitleH2 } from '../ui/Titles/TitleH2';
 
 interface IChannelParamsProps {
   channelDBParams: IChannel;
@@ -13,7 +14,7 @@ const ChannelOnlineParams = ({
 }: IChannelParamsProps) => {
   return (
     <section>
-      <h2>{getParamsTitle(title)[LANGUAGE]}</h2>
+      <TitleH2>{getParamsTitle(title)[LANGUAGE]}</TitleH2>
       <ul>
         {chan_lang && (
           <li>

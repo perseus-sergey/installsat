@@ -33,6 +33,7 @@ const BASE_URL = process.env.BASE_URL;
 const {
   metaDescription,
   metaH1,
+  getH1After,
   metaKeywords,
   metaTitle,
   images: { h1Image },
@@ -82,9 +83,7 @@ export default async function Page({ searchParams }: IPageProps) {
       <article className="article">
         <Title>
           {metaH1[L]}
-          {searchQueryChannel
-            ? ` назва яких містить «${searchQueryChannel}»`
-            : '.'}
+          {getH1After(searchQueryChannel)[L]}
           <FillingImg {...h1Image} alt={h1Image.alt[L]} />
         </Title>
 
@@ -96,7 +95,6 @@ export default async function Page({ searchParams }: IPageProps) {
                   <GenreImage
                     tooltipText={genreTitle}
                     genreMapPosition={chanList[0].tema}
-                    // className={styles.genreImage}
                   />
                   <TooltipSimple
                     tooltipText={`Перейти до жанру: ${genreTitle}`}

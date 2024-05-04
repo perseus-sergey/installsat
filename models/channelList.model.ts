@@ -59,6 +59,16 @@ export const META_ONLINE_CHANNEL_LIST = {
     [ELanguage.UA]: 'Телеканали онлайн',
     [ELanguage.EN]: 'Online TV channels',
   },
+  getH1After(searchQuery: string) {
+    return {
+      [ELanguage.UA]: searchQuery
+        ? ` назва яких містить «${searchQuery}»`
+        : '.',
+      [ELanguage.EN]: searchQuery
+        ? ` the name of which contains «${searchQuery}»`
+        : '.',
+    };
+  },
   metaTitle: {
     [ELanguage.UA]:
       'Телеканали онлайн. Дивитися безкоштовне телебачення у прямому ефірі.',

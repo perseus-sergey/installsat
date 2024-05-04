@@ -17,7 +17,7 @@ import { META_CHANNEL } from '@/models/channel.model';
 import { LANGUAGE } from '@/models/ui.model';
 import ChannelCardTooltip from '../ChannelCardTooltip/ChannelCardTooltip';
 import GoUpLink from '../ui/GoUpLink/GoUpLink';
-import { TitleH2 } from '../ui/Titles/TitleH2';
+import { TitleH2List } from '../ui/Titles/TitleH2List';
 
 const {
   links: { satTitleLink },
@@ -134,7 +134,7 @@ const SatChannelsTable = ({
     {satChannels.map((sat) => (
       <>
         {!isSingleSat && (
-          <TitleH2 id={sat[0][0].sat_slug}>
+          <TitleH2List id={sat[0][0].sat_slug}>
             <GoUpLink />
 
             <TooltipSimple tooltipText={satTitleLink.tooltipTitle[LANGUAGE]}>
@@ -162,7 +162,7 @@ const SatChannelsTable = ({
                 />
               </Link>
             </TooltipSimple>
-          </TitleH2>
+          </TitleH2List>
         )}
         <table
           className={styles.SatChannelsTable}

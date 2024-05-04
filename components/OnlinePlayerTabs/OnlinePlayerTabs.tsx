@@ -9,12 +9,12 @@ import { IOnlineChannel } from '../../models/channel.model';
 
 interface IOnlinePlayerTabsProps {
   channelData: IOnlineChannel;
-  allowedCountryCode: string;
+  userCountryCode: string;
 }
 
 const OnlinePlayerTabs = ({
   channelData: { potok, tvforsite_net, country, url, title },
-  allowedCountryCode,
+  userCountryCode,
 }: IOnlinePlayerTabsProps) => {
   const [playerN, setPlayerN] = useState(0);
 
@@ -38,10 +38,9 @@ const OnlinePlayerTabs = ({
   );
 
   return (
-    <div className={styles.OnlinePlayerTabs}>
-      <p>country: {country}</p>
+    <div className="py-4 px-0">
       {numberOfTabs > 0 ? (
-        !country || country === allowedCountryCode ? (
+        !country || country === userCountryCode ? (
           <>
             {numberOfTabs > 1 ? (
               <>

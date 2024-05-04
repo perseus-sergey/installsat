@@ -21,7 +21,7 @@ interface IAnchorListItemProps {
   searchQueryName: EUrlSearchParam;
 }
 
-const AnchorListItem = ({
+const AnchorListItemWithCheckbox = ({
   linkParams,
   inputAttributes,
   searchQueryName,
@@ -47,7 +47,7 @@ const AnchorListItem = ({
   };
 
   return (
-    <div className={styles.AnchorListItem}>
+    <div className={styles.AnchorListItemWithCheckbox}>
       <TooltipSimple tooltipText={inputAttributes['aria-label']}>
         <div className={styles.checkboxWrapper}>
           <input
@@ -72,4 +72,4 @@ const AnchorListItem = ({
   );
 };
 
-export default AnchorListItem;
+export default AnchorListItemWithCheckbox;

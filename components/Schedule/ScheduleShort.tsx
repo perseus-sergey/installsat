@@ -5,6 +5,16 @@ import { getDBChannelScheduleShort } from '@/controllers/schedule.controller';
 import { cutText } from '@/libs/utils/utils';
 import { IOnlineChannel } from '@/models/channel.model';
 import { TitleH2 } from '../ui/Titles/TitleH2';
+import { SCHEDULE } from '@/models/scheduleTV.model';
+
+const {
+  descriptionMaxLength,
+  defaultHoursBeforeNow,
+  defaultRowsLimit,
+  exceptGenreIDs,
+  exceptHoursBeforeNow,
+  exceptRowsLimit,
+} = SCHEDULE.scheduleShort;
 
 interface IScheduleShortProps {
   channelData: IOnlineChannel;
@@ -14,17 +24,16 @@ const ScheduleShort = async ({
   channelData: { vsetv, vipiko, telegid_id, genre_id, title },
 }: IScheduleShortProps) => {
   const now = DateTime.local();
-  // let addHour = 1;
   let addHour = 0;
 
   let timeBefore, limitShed;
-  // 'tematika-novosti' 'detskiye' 'tematika-muzikalnyie' 'tematika-fashion'
-  if ([2, 6, 8, 14].some((id) => id === genre_id)) {
-    timeBefore = addHour + 2;
-    limitShed = 20;
+
+  if (exceptGenreIDs.some((id) => id === genre_id)) {
+    timeBefore = addHour + exceptHoursBeforeNow;
+    limitShed = exceptRowsLimit;
   } else {
-    timeBefore = addHour + 4;
-    limitShed = 15;
+    timeBefore = addHour + defaultHoursBeforeNow;
+    limitShed = defaultRowsLimit;
   }
 
   let scheduleList = await getDBChannelScheduleShort(
@@ -89,7 +98,7 @@ const ScheduleShort = async ({
                 </div>
                 {shed.prog_desc && (
                   <p className={`${titleClass} ${styles.tvProgDescription}`}>
-                    {cutText(shed.prog_desc, 250)}
+                    {cutText(shed.prog_desc, descriptionMaxLength)}
                   </p>
                 )}
               </>

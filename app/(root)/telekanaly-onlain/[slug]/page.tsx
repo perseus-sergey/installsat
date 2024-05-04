@@ -129,6 +129,7 @@ export default async function Page({ params: { slug } }: IChannelProps) {
         />
 
         <GrooveLine />
+
         <ScheduleShort channelData={sqlResult[0]} />
 
         <div className="article-text">

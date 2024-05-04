@@ -17,6 +17,7 @@ const {
   views: viewsTitle,
   comments: commentsTitle,
 } = ARTICLES.infoPanelTitles;
+
 interface IArticleListProps {
   articleList: IAllNewsModel[];
   articleTitleImg: string | IImgParams;

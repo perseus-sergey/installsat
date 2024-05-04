@@ -1,7 +1,15 @@
 'use client';
 
+import { META_CHANNEL_ONLINE } from '@/models/channel.model';
 import BaseButton from '../ui/buttons/BaseButton/BaseButton';
 import styles from './FakePlayer.module.scss';
+import { LANGUAGE } from '@/models/ui.model';
+
+const {
+  button: { ariaLabel, titleStart: btnTitleStart },
+  getCopyrightText,
+  openNewWindowFeatures,
+} = META_CHANNEL_ONLINE.fakePlayer;
 
 interface IFakePlayerProps {
   chanTitle: string;
@@ -10,25 +18,23 @@ interface IFakePlayerProps {
 
 const FakePlayer = ({ url, chanTitle }: IFakePlayerProps) => {
   const openNewWindow = () => {
-    const windowFeatures =
-      'left=0,top=0,width=665,height=550,status=no,toolbar=yes,menubar=no,scrollbars=yes';
+    const windowFeatures = openNewWindowFeatures;
     window.open(url, windowFeatures);
   };
 
   return url ? (
-    <div className={styles.FakePlayer} data-testid="FakePlayer">
+    <nav className={styles.FakePlayer} data-testid="FakePlayer">
       <BaseButton
-        ariaLabel="Перейти до перегляду"
+        ariaLabel={ariaLabel[LANGUAGE]}
         onClick={openNewWindow}
         className={styles.goButton}
       >
-        Дивитись онлайн «{chanTitle}»
+        {btnTitleStart[LANGUAGE]} «{chanTitle}»
       </BaseButton>
-    </div>
+    </nav>
   ) : (
     <strong className="text-red-700 text-center p-4">
-      Онлайн трансляція телеканалу {chanTitle} призупинена за вимогою власника
-      авторських прав.
+      {getCopyrightText(chanTitle)[LANGUAGE]}
     </strong>
   );
 };

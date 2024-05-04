@@ -38,6 +38,10 @@ const {
   metaTitle,
   images: { h1Image },
   ONLINE_CHANNEL_LIST_DB_ID,
+  fieldsetFilters: {
+    legendText,
+    anchorLink: { ariaLabel, hrefStart },
+  },
 } = META_ONLINE_CHANNEL_LIST;
 
 const {
@@ -87,7 +91,7 @@ export default async function Page({ searchParams }: IPageProps) {
           <FillingImg {...h1Image} alt={h1Image.alt[L]} />
         </Title>
 
-        <Fieldset legendText="Фільтри">
+        <Fieldset legendText={legendText[L]}>
           <nav className="p-2 md:p-4">
             <ul>
               {onlineChannels.map(([genreTitle, chanList]) => (
@@ -96,13 +100,12 @@ export default async function Page({ searchParams }: IPageProps) {
                     tooltipText={genreTitle}
                     genreMapPosition={chanList[0].tema}
                   />
-                  <TooltipSimple
-                    tooltipText={`Перейти до жанру: ${genreTitle}`}
-                  >
+                  <TooltipSimple tooltipText={`${ariaLabel[L]} ${genreTitle}`}>
                     <Link
                       title={genreTitle}
-                      href={`#genre-${chanList[0].tema}`}
+                      href={`#${hrefStart}${chanList[0].tema}`}
                       className="text-indigo-800 text-lg hover:text-red-500"
+                      aria-label={`${ariaLabel[L]} ${genreTitle}`}
                     >
                       {genreTitle}
                     </Link>

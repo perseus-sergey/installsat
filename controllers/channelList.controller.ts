@@ -1,5 +1,6 @@
 import { executeQuery } from '@/libs/db/mysqldb';
 import {
+  IChannelPackagesModel,
   IOnlineChannelListModel,
   ISatChannelListEmptyModel,
 } from '@/models/channelList.model';
@@ -68,6 +69,28 @@ export const getSatChannels = cache(
   }
 );
 
+export const getChannelPackages = async () => {
+  const sql = `
+  SELECT 
+    C.id, 
+    C.title, 
+    C.cpu, 
+    C.description, 
+    C.logo, 
+    C.view, 
+    (SELECT COUNT(id) FROM tbl_comments_packs WHERE post=C.id) AS comment_count
+  FROM 
+      tbl_chan_categ AS C
+  WHERE 
+      C.parent = 0 
+      AND C.id NOT IN (2,23,25) 
+  ORDER BY 
+      C.title
+  `;
+
+  return await executeQuery<IChannelPackagesModel>(sql);
+};
+// SELECT COUNT(id) FROM tbl_comments_packs WHERE post=C.id
 export const getOnlineChannels = cache(async (searchQuery = '') => {
   const searchPart = searchQuery ? `AND 	C.title LIKE "%${searchQuery}%"` : '';
 
@@ -148,26 +171,3 @@ export const getGroupedChannelsAllSat = (
 
   return sortedGroups;
 };
-
-// "
-// 							SELECT `ch`.id, `ch`.title, `ch`.cpu, `ch`.logo, `ch`.encryption, `ch`.description, `ch`.view, `ch`.tema,
-// 							`co`.title as compr,
-// 							`la`.title as lan
-// 							FROM `tbl_channals` AS ch
-// 							LEFT JOIN `tbl_chan_compress` AS co ON `ch`.compress = `co`.id
-// 							LEFT JOIN `tbl_language` AS la ON `ch`.lang = `la`.id
-// 							WHERE compress  = 5
-// 							AND `ch`.tema != 15
-// 							ORDER BY `ch`.tema, `ch`.view DESC
-// 						  ",
-//               "
-// 							SELECT `ch`.id, `ch`.title, `ch`.cpu, `ch`.logo, `ch`.encryption, `ch`.description, `ch`.view, `ch`.tema, `ch`.tvforsite_net,
-// 							`co`.title as compr,
-// 							`la`.title as lan
-// 							FROM `tbl_channals` AS ch
-// 							LEFT JOIN `tbl_chan_compress` AS co ON `ch`.compress = `co`.id
-// 							LEFT JOIN `tbl_language` AS la ON `ch`.lang = `la`.id
-// 							WHERE compress != 5 AND `ch`.tema != 15 AND `ch`.tvforsite_net != '' AND `ch`.cat != 23
-// 							GROUP BY `ch`.tvforsite_net
-// 							ORDER BY `ch`.tema, `ch`.view DESC
-// 							"

@@ -114,6 +114,64 @@ export const META_ONLINE_CHANNEL_LIST = {
       [ELanguage.EN]: 'Go to channel',
     },
   },
+  fieldsetFilters: {
+    legendText: {
+      [ELanguage.UA]: 'Швидкий пошук',
+      [ELanguage.EN]: 'Quick search',
+    },
+    anchorLink: {
+      ariaLabel: {
+        [ELanguage.UA]: 'Перейти до жанру:',
+        [ELanguage.EN]: 'Go to genre:',
+      },
+      hrefStart: 'genre-',
+    },
+  },
+};
+
+export const META_PACKAGE_CHANNEL_LIST = {
+  metaH1: {
+    [ELanguage.UA]:
+      'Пакети каналів цифрового супутникового та ефірного телебачення',
+    [ELanguage.EN]: 'Digital satellite and television packages',
+  },
+  metaTitle: {
+    [ELanguage.UA]: 'Пакети каналів',
+    [ELanguage.EN]: 'TV channel packages',
+  },
+  metaDescription: {
+    [ELanguage.UA]:
+      'Пакети каналів цифрового супутникового та ефірного телебачення',
+    [ELanguage.EN]: 'Digital satellite and television packages',
+  },
+  metaKeywords: {
+    [ELanguage.UA]:
+      'канали пакета без абонплати, віасат, viasat, xtra tv, t2, ua тв, ефірні',
+    [ELanguage.EN]:
+      'package channels without subscription, viasat, viasat, xtra tv, t2, ua tv, television',
+  },
+  packageImage: {
+    path: '/Images/packages/',
+    width: '100px',
+    height: '86px',
+    altPre: {
+      [ELanguage.UA]: `Логотип до пакету:`,
+      [ELanguage.EN]: `Logo for package:`,
+    },
+    defaultImg: {
+      src: '/Images/channelsOptimized/zastavka.jpg',
+      height: '100px',
+      width: '100px',
+    },
+    alternativeStr: { title: '🎞', fontSize: '6rem' },
+  },
+  // linkChannel: {
+  //   path: `/${EUrlBaseParam.ONLINE_CHANNEL_LIST}`,
+  //   ariaLabel: {
+  //     [ELanguage.UA]: 'Перейти до каналу',
+  //     [ELanguage.EN]: 'Go to channel',
+  //   },
+  // },
 };
 
 export const META_ALL_SAT_CHANNEL_LIST = {
@@ -283,6 +341,16 @@ export interface IOnlineChannelListModel {
   compr: string;
   lan: string;
   tvforsite_net: string;
+}
+
+export interface IChannelPackagesModel {
+  id: number;
+  title: string;
+  cpu: string;
+  view: number;
+  comment_count: number;
+  logo: string;
+  description: string;
 }
 
 export const MCompressionColors = new Map([

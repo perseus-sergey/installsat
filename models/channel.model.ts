@@ -1,3 +1,4 @@
+import { cutText } from '@/libs/utils/utils';
 import { ELanguage } from './ui.model';
 
 export interface IChannel {
@@ -252,8 +253,8 @@ export const META_CHANNEL_ONLINE = {
   },
   getDescription(channelTitle: string, description: string) {
     return {
-      [ELanguage.UA]: `Дивіться онлайн канал ${channelTitle} безкоштовно у прямому ефірі. ${description.slice(0, 120)}`,
-      [ELanguage.EN]: `Watch the online channel ${channelTitle} for free live.  ${description.slice(0, 120)}`,
+      [ELanguage.UA]: `Дивіться онлайн канал ${channelTitle} безкоштовно у прямому ефірі. ${cutText(description, 120)}`,
+      [ELanguage.EN]: `Watch the online channel ${channelTitle} for free live.  ${cutText(description, 120)}`,
     };
   },
   getKeywords(channelTitle: string) {
@@ -261,5 +262,48 @@ export const META_CHANNEL_ONLINE = {
       [ELanguage.UA]: `${channelTitle} дивитись, онлайн, online, безкоштовно, тб, канал, прямий ефір, інтернет тб`,
       [ELanguage.EN]: `${channelTitle} watch, online, free, live, tv, channel, satellite, internet tv`,
     };
+  },
+  fakePlayer: {
+    button: {
+      ariaLabel: {
+        [ELanguage.UA]: 'Перейти до перегляду',
+        [ELanguage.EN]: 'Go to playback',
+      },
+      titleStart: {
+        [ELanguage.UA]: 'Дивитись онлайн',
+        [ELanguage.EN]: 'Watch online',
+      },
+    },
+    getCopyrightText(chanTitle: string) {
+      return {
+        [ELanguage.UA]: `Онлайн трансляція телеканалу ${chanTitle} призупинена за вимогою власника
+        авторських прав.`,
+        [ELanguage.EN]: `The online broadcast of the ${chanTitle} channel has been suspended due to the owner's
+        copyrights.`,
+      };
+    },
+    openNewWindowFeatures:
+      'left=0,top=0,width=665,height=550,status=no,toolbar=yes,menubar=no,scrollbars=yes',
+  },
+  youtubePlayer: {
+    width: 700,
+    height: 395,
+    embedPath: 'https://www.youtube.com/embed/',
+  },
+  tabs: {
+    button: {
+      getAriaLabel(streamNumber: number) {
+        return {
+          [ELanguage.UA]: `Дивитись із ${streamNumber}-го Джерела`,
+          [ELanguage.EN]: `Watch from ${streamNumber} source`,
+        };
+      },
+      getTitle(streamNumber: number) {
+        return {
+          [ELanguage.UA]: `${streamNumber} Канал`,
+          [ELanguage.EN]: `Channel ${streamNumber}`,
+        };
+      },
+    },
   },
 };

@@ -22,6 +22,9 @@ const {
 
 const {
   linkChannel: { ariaLabel, path },
+  fieldsetFilters: {
+    anchorLink: { hrefStart },
+  },
 } = META_ONLINE_CHANNEL_LIST;
 
 const { channelLogo } = META_CHANNEL.images;
@@ -35,7 +38,7 @@ const OnlineChannelList = ({ onlineChannels }: IOnlineChannelListProps) =>
     <>
       <TitleH2List
         style={{ padding: '1rem' }}
-        id={`genre-${chanList[0].tema}`}
+        id={`${hrefStart}${chanList[0].tema}`}
         className="flex-col md:flex-row"
       >
         <GoUpLink />

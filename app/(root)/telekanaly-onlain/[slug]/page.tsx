@@ -17,7 +17,11 @@ import {
 } from '@/controllers/channel.controller';
 import { getFormattedDateStr } from '@/libs/utils/utils';
 import { META_CHANNEL, META_CHANNEL_ONLINE } from '@/models/channel.model';
-import { LANGUAGE, EDBTableTitles, DEFAULT_META_DATA } from '@/models/ui.model';
+import {
+  LANGUAGE as L,
+  EDBTableTitles,
+  DEFAULT_META_DATA,
+} from '@/models/ui.model';
 import { EUrlBaseParam, EUrlSearchParam } from '@/models/url.model';
 import { Metadata } from 'next';
 import Link from 'next/link';
@@ -25,8 +29,10 @@ import { notFound } from 'next/navigation';
 import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
 import { getCommentsNumber } from '@/controllers/comments.controller';
 import ChannelOnlineParams from '@/components/ChannelParams/ChannelOnlineParams';
-import OnlinePlayerTabs from '@/components/OnlinePlayerTabs/OnlinePlayerTabs';
+import OnlinePlayerTabs from '@/components/online/OnlinePlayerTabs/OnlinePlayerTabs';
 import GrooveLine from '@/components/ui/GrooveLine';
+import ScheduleShort from '@/components/Schedule/ScheduleShort';
+import { fetchUserLocation } from '@/libs/utils/getUserIP';
 
 const BASE_URL = process.env.BASE_URL;
 
@@ -35,7 +41,7 @@ const {
     channelLogo: { big: bigLogo },
   },
   infoPanelTitles: { comments: commentsTitle, views: viewsTitle },
-  scheduleLinkText: { channel: scheduleTitle },
+  scheduleLinkText: { onlineChannel: scheduleTitle },
   noteTitle,
   getResponsibilityText,
   similar: { channels: simChannelsBefore, articles: simArticlesBefore },
@@ -52,18 +58,18 @@ export const generateMetadata = async ({
 }: IChannelProps): Promise<Metadata> => {
   const sqlResult = await getDBOnlineChannel(slug);
   if (sqlResult instanceof Error || !sqlResult.length)
-    return DEFAULT_META_DATA[LANGUAGE];
+    return DEFAULT_META_DATA[L];
 
   const { title, description, chan_slug } = sqlResult[0];
 
   return {
-    title: getTitle(title)[LANGUAGE],
-    description: getDescription(title, description)[LANGUAGE],
-    keywords: getKeywords(title)[LANGUAGE],
+    title: getTitle(title)[L],
+    description: getDescription(title, description)[L],
+    keywords: getKeywords(title)[L],
     openGraph: {
       ...DEFAULT_META_DATA.openGraph,
-      title: getTitle(title)[LANGUAGE],
-      description: getDescription(title, description)[LANGUAGE],
+      title: getTitle(title)[L],
+      description: getDescription(title, description)[L],
       url: `${BASE_URL}/${EUrlBaseParam.ONLINE_CHANNEL_LIST}/${chan_slug}`,
       publishedTime: getFormattedDateStr(),
     },
@@ -92,13 +98,20 @@ export default async function Page({ params: { slug } }: IChannelProps) {
     `${id}`
   );
 
+  const userLocation = await fetchUserLocation();
+
+  const userCountryCode =
+    userLocation && userLocation.status === 'success'
+      ? userLocation.countryCode
+      : '';
+
   updateViewCount(EDBTableTitles.CHANNELS, `${id}`, view);
 
   return (
     <>
       <article className="article">
         <Title>
-          {getH1(title)[LANGUAGE]}
+          {getH1(title)[L]}
           <FillingValidImage
             image={{
               ...bigLogo,
@@ -106,12 +119,18 @@ export default async function Page({ params: { slug } }: IChannelProps) {
             }}
             defaultImage={bigLogo.defaultImage}
             alternativeImgString={bigLogo.alternativeImgStr}
-            alt={`${bigLogo.alt[LANGUAGE]} "${title}"`}
+            alt={`${bigLogo.alt[L]} "${title}"`}
             isBlur
           />
         </Title>
+        <OnlinePlayerTabs
+          channelData={sqlResult[0]}
+          userCountryCode={userCountryCode}
+        />
 
-        <OnlinePlayerTabs channelData={sqlResult[0]} allowedCountryCode="UA" />
+        <GrooveLine />
+
+        <ScheduleShort channelData={sqlResult[0]} />
 
         <div className="article-text">
           <DangerHtml text={text} />
@@ -119,31 +138,31 @@ export default async function Page({ params: { slug } }: IChannelProps) {
           <GrooveLine />
 
           <TvScheduleLink
-            title={`${scheduleTitle[LANGUAGE]} "${title}"`}
+            title={`${scheduleTitle[L]} "${title}"`}
             href={`/${EUrlBaseParam.CHANNELS_TV_PROGRAM}/${slug}?${EUrlSearchParam.DATE}=${getFormattedDateStr()}`}
           />
 
           <ChannelOnlineParams channelDBParams={sqlResult[0]} />
 
-          <NoteBlock noteTitle={noteTitle[LANGUAGE]}>
-            {getResponsibilityText(title)[LANGUAGE]}
+          <NoteBlock noteTitle={noteTitle[L]}>
+            {getResponsibilityText(title)[L]}
           </NoteBlock>
         </div>
 
         <BottomInfoPanel
           items={[
             {
-              name: viewsTitle[LANGUAGE],
+              name: viewsTitle[L],
               value: (view + 1).toLocaleString('en-US'),
             },
-            { name: commentsTitle[LANGUAGE], value: numberOfComments },
+            { name: commentsTitle[L], value: numberOfComments },
           ]}
         />
       </article>
 
       {similarChannels.length ? (
         <SimilarArticles
-          similarTitle={`${simChannelsBefore.title[LANGUAGE]} "${title}"`}
+          similarTitle={`${simChannelsBefore.title[L]} "${title}"`}
           similarArticlesMapped={similarChannels.map((chan) => (
             <li key={chan.cpu}>
               <SimilarChannel channelTitle={title} chanParams={chan} />
@@ -154,7 +173,7 @@ export default async function Page({ params: { slug } }: IChannelProps) {
 
       {similarArticles.length ? (
         <SimilarArticles
-          similarTitle={simArticlesBefore.title[LANGUAGE]}
+          similarTitle={simArticlesBefore.title[L]}
           similarArticlesMapped={similarArticles.map((art) => (
             <li key={art.cpu}>
               <Link href={`/${EUrlBaseParam.ARTICLE}/${art.cpu}`}>

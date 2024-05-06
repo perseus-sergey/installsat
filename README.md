@@ -34,6 +34,8 @@
   - [Email contact form using NextJS (App router)](https://medium.com/@abilsavio/email-contact-form-using-nextjs-app-router-60c29fe70644)
 - [React Email - components for creating beautiful emails using React](https://react.email/)
   - [Examples](https://react.email/examples)
+- IP Geolocation - [JSON endpoint](https://ip-api.com/docs/api:json)
+  - How to get the client Ip address in app router - [GitHub](https://github.com/vercel/next.js/discussions/55037)
 
 ---
 

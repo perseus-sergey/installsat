@@ -8,8 +8,7 @@ import {
 } from '@/controllers/sidebar.controller';
 import Link from 'next/link';
 import { AccordionMenuItem } from '../AccordionMenuItem/AccordionMenuItem';
-import { ADDED_ITEMS, MENU_ACCORDION } from '@/models/menuAccordion.model';
-import { LANGUAGE } from '@/models/ui.model';
+import { MENU_ACCORDION } from '@/models/menuAccordion.model';
 
 const Accordion = async () => {
   const installationsList = await getInstallationsList();
@@ -38,7 +37,6 @@ const Accordion = async () => {
             {installationsList.map((item) => (
               <li key={item.id} className={styles.contentItem}>
                 <Link
-                  scroll
                   href={`${MENU_ACCORDION.INSTALLATIONS.baseHrefOfList}/${item.cpu}/`}
                   className={styles.contentItemLink}
                 >
@@ -53,7 +51,6 @@ const Accordion = async () => {
             {channelSatList.map((item) => (
               <li key={item.id} className={styles.contentItem}>
                 <Link
-                  scroll
                   href={`${MENU_ACCORDION.SATELLITES.baseHrefOfList}/${item.cpu}/`}
                   className={styles.contentItemLink}
                 >
@@ -65,19 +62,17 @@ const Accordion = async () => {
         </AccordionMenuItem>
         <AccordionMenuItem options={MENU_ACCORDION.PACKAGES}>
           <ul className={styles.accordionContent}>
-            <li className={styles.contentItem}>
+            {/* <li className={styles.contentItem}>
               <Link
-                scroll
                 href={ADDED_ITEMS.freeChannels.link}
                 className={styles.contentItemLink}
               >
                 {ADDED_ITEMS.freeChannels.title[LANGUAGE]}
               </Link>
-            </li>
+            </li> */}
             {channelCatList.map((item) => (
               <li key={item.id} className={styles.contentItem}>
                 <Link
-                  scroll
                   href={`${MENU_ACCORDION.PACKAGES.baseHrefOfList}/${item.cpu}/`}
                   className={styles.contentItemLink}
                 >
@@ -92,7 +87,6 @@ const Accordion = async () => {
             {usefulArticleList.map((item) => (
               <li key={item.id} className={styles.contentItem}>
                 <Link
-                  scroll
                   href={`${MENU_ACCORDION.USEFUL.baseHrefOfList}/${item.cpu}/`}
                   className={styles.contentItemLink}
                 >

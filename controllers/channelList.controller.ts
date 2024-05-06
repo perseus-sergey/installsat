@@ -1,9 +1,47 @@
 import { executeQuery } from '@/libs/db/mysqldb';
 import {
+  IChannelPackagesModel,
   IOnlineChannelListModel,
-  ISatChannelListEmptyModel,
+  IPackageChannelListModel,
+  ISatChannelListModel,
 } from '@/models/channelList.model';
 import { cache } from 'react';
+
+const groupeChannelsBy = <T>(
+  channelList: T[],
+  groupChanBy: keyof T,
+  sortChanBy?: keyof T
+) => {
+  const groupedData = channelList.reduce(
+    (acc, channel) => {
+      const groupedField = channel[groupChanBy] as unknown as string;
+      if (!acc[groupedField]) {
+        acc[groupedField] = [];
+      }
+      acc[groupedField].push(channel);
+
+      return acc;
+    },
+    {} as { [key: string]: T[] }
+  );
+
+  const result = Object.entries(groupedData).map(([groupedField, channels]) => [
+    groupedField,
+    sortChanBy
+      ? (channels as T[]).sort((a, b) => {
+          if (typeof a[sortChanBy] === 'string') {
+            return (a[sortChanBy] as string).localeCompare(
+              b[sortChanBy] as string
+            );
+          } else {
+            return (b[sortChanBy] as number) - (a[sortChanBy] as number);
+          }
+        })
+      : channels,
+  ]) as [keyof T, T[]][];
+
+  return result;
+};
 
 export const getSatChannels = cache(
   async (
@@ -60,20 +98,40 @@ export const getSatChannels = cache(
   ORDER BY fr.freq, be.polar, ch.title
   `;
 
-    const resp = await executeQuery<ISatChannelListEmptyModel>(sql, [
-      channelId,
-    ]);
+    const resp = await executeQuery<ISatChannelListModel>(sql, [channelId]);
 
     return resp;
   }
 );
 
+export const getChannelPackages = async () => {
+  const sql = `
+  SELECT 
+    C.id, 
+    C.title, 
+    C.cpu, 
+    C.description, 
+    C.logo, 
+    C.view, 
+    (SELECT COUNT(id) FROM tbl_comments_packs WHERE post=C.id) AS comment_count
+  FROM 
+      tbl_chan_categ AS C
+  WHERE 
+      C.parent = 0 
+      AND C.id NOT IN (2,23,25) 
+  ORDER BY 
+      C.title
+  `;
+
+  return await executeQuery<IChannelPackagesModel>(sql);
+};
+
 export const getOnlineChannels = cache(async (searchQuery = '') => {
-  const searchPart = searchQuery ? `AND 	C.title LIKE "%${searchQuery}%"` : '';
+  const searchPart = searchQuery ? `AND C.title LIKE "%${searchQuery}%"` : '';
 
   const sql = `
-    SELECT C.id, C.title, C.cpu, C.logo, C.encryption, C.description, C.view, C.tema, C.compress, C.potok,
-          CO.title AS compr, L.title AS lan, C.tvforsite_net, T.title AS genre
+    SELECT C.id AS chan_id, C.title AS chan_title, C.cpu AS chan_cpu, C.logo AS chan_logo, C.encryption, C.description AS chan_description, C.view, C.tema AS genre_id, C.compress, C.potok,
+          CO.title AS compr, L.title AS lan, C.tvforsite_net, T.title AS genre_title
     FROM tbl_channals AS C
     LEFT JOIN tbl_chan_compress AS CO ON C.compress = CO.id 
     LEFT JOIN tbl_language AS L ON C.lang = L.id
@@ -91,13 +149,13 @@ export const getOnlineChannels = cache(async (searchQuery = '') => {
 
   const groupedData = resp.reduce(
     (acc, channel) => {
-      const { title, genre, potok, tvforsite_net } = channel;
-      if (!acc[genre]) {
-        acc[genre] = [];
+      const { chan_title, genre_title, potok, tvforsite_net } = channel;
+      if (!acc[genre_title]) {
+        acc[genre_title] = [];
       }
-      const shouldAdd = !acc[genre].some(
+      const shouldAdd = !acc[genre_title].some(
         (otherChannel) =>
-          otherChannel.title === title ||
+          otherChannel.chan_title === chan_title ||
           (otherChannel.compress === 5 &&
             otherChannel.potok &&
             otherChannel.potok === potok) ||
@@ -106,7 +164,7 @@ export const getOnlineChannels = cache(async (searchQuery = '') => {
       );
 
       if (shouldAdd) {
-        acc[genre].push(channel);
+        acc[genre_title].push(channel);
       }
 
       return acc;
@@ -114,19 +172,98 @@ export const getOnlineChannels = cache(async (searchQuery = '') => {
     {} as { [key: string]: IOnlineChannelListModel[] }
   );
 
-  const result = Object.entries(groupedData).map(([genre, channels]) => [
-    genre,
+  const result = Object.entries(groupedData).map(([genre_title, channels]) => [
+    genre_title,
     channels.sort((a, b) => b.view - a.view),
   ]) as [string, IOnlineChannelListModel[]][];
 
   return result;
 });
 
+export const getT2Channels = cache(async (searchQuery = '') => {
+  const searchPart = searchQuery ? `AND C.title LIKE "%${searchQuery}%"` : '';
+
+  const sql = `
+    SELECT C.id AS chan_id, C.title AS chan_title, C.cpu AS chan_cpu, C.logo AS chan_logo, C.encryption, C.description AS chan_description, C.tema AS genre_id, C.cat AS cat_id,
+      CO.title AS compr, L.title AS lan, T.title AS genre_title, cat.logo AS cat_logo, cat.title AS cat_title, cat.cpu AS cat_slug, cat.description AS cat_description
+    FROM tbl_channals AS C
+    LEFT JOIN tbl_chan_categ AS cat ON C.cat = cat.id 
+    LEFT JOIN tbl_chan_compress AS CO ON C.compress = CO.id 
+    LEFT JOIN tbl_language AS L ON C.lang = L.id
+    LEFT JOIN tbl_chan_tema AS T ON C.tema = T.id 
+    WHERE C.cat = 22 AND C.tema != 15
+    ${searchPart}
+    ORDER BY C.tema, C.title
+  `;
+
+  const resp = await executeQuery<
+    IOnlineChannelListModel & IPackageChannelListModel
+  >(sql);
+
+  return resp instanceof Error
+    ? resp
+    : groupeChannelsBy<IOnlineChannelListModel & IPackageChannelListModel>(
+        resp,
+        'genre_title'
+      );
+});
+
+export const getPackageChannels = cache(
+  async (packageSlug: string, searchQuery = '') => {
+    const searchPart = searchQuery ? `AND C.title LIKE "%${searchQuery}%"` : '';
+
+    const sql = `
+  SELECT 
+    cat.id AS cat_id,
+    cat.title AS cat_title,
+    cat.cpu AS cat_slug,
+    cat.logo AS cat_logo, 
+    cat.description AS cat_description,
+    subcat.cpu AS genre_slug,
+    subcat.title AS genre_title,
+    subcat.h1 AS genre_h1,
+    subcat.logo AS genre_logo,
+    subcat.description AS genre_description,
+    subcat.price,
+    subcat.h1,
+    subcat.id AS genre_id,
+    C.id AS chan_id,
+    C.title AS chan_title,
+    C.cpu AS chan_cpu,
+    C.logo AS chan_logo,
+    C.description AS chan_description,
+    la.title AS lan
+  FROM 
+    tbl_chan_categ AS cat
+  JOIN 
+    tbl_chan_categ AS subcat ON cat.id = subcat.parent
+  JOIN 
+    tbl_channals AS C ON subcat.id = C.cat
+  LEFT JOIN 
+    tbl_language AS la ON C.lang = la.id
+  WHERE 
+    cat.cpu = ?
+    AND C.sat != 1
+    ${searchPart}
+  ORDER BY 
+    subcat.location, C.tema
+  `;
+
+    const resp = await executeQuery<IPackageChannelListModel>(sql, [
+      packageSlug,
+    ]);
+
+    return resp instanceof Error
+      ? resp
+      : groupeChannelsBy<IPackageChannelListModel>(resp, 'genre_title');
+  }
+);
+
 export const getGroupedChannelsAllSat = (
-  satChannels: ISatChannelListEmptyModel[][]
-): ISatChannelListEmptyModel[][][] => {
+  satChannels: ISatChannelListModel[][]
+): ISatChannelListModel[][][] => {
   const grouped: {
-    [sat: number]: { [freq: number]: ISatChannelListEmptyModel[] };
+    [sat: number]: { [freq: number]: ISatChannelListModel[] };
   } = {};
 
   satChannels.forEach((satGroup) => {
@@ -148,26 +285,3 @@ export const getGroupedChannelsAllSat = (
 
   return sortedGroups;
 };
-
-// "
-// 							SELECT `ch`.id, `ch`.title, `ch`.cpu, `ch`.logo, `ch`.encryption, `ch`.description, `ch`.view, `ch`.tema,
-// 							`co`.title as compr,
-// 							`la`.title as lan
-// 							FROM `tbl_channals` AS ch
-// 							LEFT JOIN `tbl_chan_compress` AS co ON `ch`.compress = `co`.id
-// 							LEFT JOIN `tbl_language` AS la ON `ch`.lang = `la`.id
-// 							WHERE compress  = 5
-// 							AND `ch`.tema != 15
-// 							ORDER BY `ch`.tema, `ch`.view DESC
-// 						  ",
-//               "
-// 							SELECT `ch`.id, `ch`.title, `ch`.cpu, `ch`.logo, `ch`.encryption, `ch`.description, `ch`.view, `ch`.tema, `ch`.tvforsite_net,
-// 							`co`.title as compr,
-// 							`la`.title as lan
-// 							FROM `tbl_channals` AS ch
-// 							LEFT JOIN `tbl_chan_compress` AS co ON `ch`.compress = `co`.id
-// 							LEFT JOIN `tbl_language` AS la ON `ch`.lang = `la`.id
-// 							WHERE compress != 5 AND `ch`.tema != 15 AND `ch`.tvforsite_net != '' AND `ch`.cat != 23
-// 							GROUP BY `ch`.tvforsite_net
-// 							ORDER BY `ch`.tema, `ch`.view DESC
-// 							"

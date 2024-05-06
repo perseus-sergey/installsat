@@ -18,7 +18,7 @@ export const getInstallationsList = cache(
 export const getChannelCatList = cache(
   async () =>
     await executeQuery<TChannelCatsModel>(
-      `SELECT title, id, parent, cpu FROM tbl_chan_categ WHERE parent=0 AND title != '' AND id NOT IN (2,4,23,25) ORDER BY title`
+      `SELECT title, id, parent, cpu FROM tbl_chan_categ WHERE parent=0 AND title != '' AND id NOT IN (2,23,25) ORDER BY title`
     )
 );
 

@@ -150,7 +150,7 @@ export const META_PACKAGE_CHANNEL_LIST = {
   images: {
     h1Image: {
       path: '/Images/packages/',
-      height: '99px',
+      height: '120px',
       width: '132px',
       alternativeImgStr: { title: '💠', fontSize: '7rem' },
       defaultImage: {
@@ -191,6 +191,22 @@ export const META_PACKAGE_CHANNEL_LIST = {
         [ELanguage.UA]: 'Перейти до пакету:',
         [ELanguage.EN]: 'Go to package:',
       },
+    },
+  },
+  getPriceString(price: number) {
+    return {
+      [ELanguage.UA]: `Вартість пакету ${price} грн/міс`,
+      [ELanguage.EN]: `Package price ${price} UAH/month`,
+    };
+  },
+  similarLinks: {
+    title: {
+      [ELanguage.UA]: 'Корисні посилання:',
+      [ELanguage.EN]: 'Useful links:',
+    },
+    beforeLinkText: {
+      [ELanguage.UA]: 'Пакет каналів',
+      [ELanguage.EN]: 'Channel package',
     },
   },
 };
@@ -410,8 +426,10 @@ export interface IPackageChannelListModel extends IChannelListModel {
   cat_logo: string;
   cat_description: string;
   genre_slug: string;
+  genre_description: string;
+  genre_h1: string;
   genre_logo: string;
-  price: string;
+  price: number;
   h1: string;
 }
 

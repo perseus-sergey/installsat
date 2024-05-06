@@ -31,6 +31,8 @@ import Link from 'next/link';
 import PackageChannelList from '@/components/channelList/PackageChannelList';
 import FillingValidImage from '@/components/ui/Images/FillingValidImage';
 import GenreImage from '@/components/ui/Images/GenreImage/GenreImage';
+import SimilarArticles from '@/components/SimilarArticles/SimilarArticles';
+import { getChannelCatList } from '@/controllers/sidebar.controller';
 
 const BASE_URL = process.env.BASE_URL;
 
@@ -45,6 +47,7 @@ const {
     legendText,
     anchorLink: { ariaLabel },
   },
+  similarLinks: { title: similarLinksTitle, beforeLinkText },
 } = META_PACKAGE_CHANNEL_LIST;
 
 const {
@@ -118,6 +121,12 @@ export default async function Page({
     `${cat_id}`
   );
 
+  const packagesResp = await getChannelCatList();
+  const similarLinks =
+    packagesResp instanceof Error
+      ? []
+      : packagesResp.filter((pack) => pack.cpu !== slug);
+
   return (
     <>
       <article className="article">
@@ -175,6 +184,19 @@ export default async function Page({
 
         {/* <OnlineChannelListAfterText lang={LANGUAGE} /> */}
       </article>
+
+      {similarLinks.length ? (
+        <SimilarArticles
+          similarTitle={similarLinksTitle[LANGUAGE]}
+          similarArticlesMapped={similarLinks.map((link) => (
+            <li key={link.cpu}>
+              <Link href={`/${EUrlBaseParam.PACKAGE_CHANNEL_LIST}/${link.cpu}`}>
+                {beforeLinkText[L]} {link.title}
+              </Link>
+            </li>
+          ))}
+        />
+      ) : null}
 
       <CommentBlock
         numberOfComments={numberOfComments}

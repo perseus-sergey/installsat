@@ -26,6 +26,7 @@ const {
 const {
   linkChannel: { ariaLabel, path },
   images: { subCatImage },
+  getPriceString,
 } = META_PACKAGE_CHANNEL_LIST;
 
 const { channelLogo } = META_CHANNEL.images;
@@ -62,6 +63,11 @@ const PackageChannelList = ({ channels }: IProps) =>
           />
         )}
       </TitleH2List>
+      {'price' in chanList[0] && chanList[0].price && (
+        <p className="thhead_small">
+          {getPriceString(chanList[0].price)[LANGUAGE]}
+        </p>
+      )}
       <ul className={styles.channelList}>
         {chanList.map((channel) => (
           <li key={channel.chan_id} className={styles.listItem}>
@@ -102,6 +108,9 @@ const PackageChannelList = ({ channels }: IProps) =>
             </Link>
           </li>
         ))}
+        {'genre_h1' in chanList[0] && chanList[0].genre_h1 && (
+          <p className="thhead_small">{chanList[0].genre_h1}</p>
+        )}
       </ul>
     </>
   ));

@@ -175,7 +175,7 @@ export const META_PACKAGE_CHANNEL_LIST = {
     },
   },
   linkChannel: {
-    path: `/${EUrlBaseParam.ONLINE_CHANNEL_LIST}`,
+    path: `/${EUrlBaseParam.CHANNEL_PARAMS}`,
     ariaLabel: {
       [ELanguage.UA]: 'Деталі каналу',
       [ELanguage.EN]: 'Channel details',

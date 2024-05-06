@@ -26,10 +26,7 @@ const ArticleCard = ({
       </Link>
     </h2>
     <div className={styles.descriptionWrapper}>
-      <div className={styles.text}>
-        {articleDescription}
-        <span>...</span>
-      </div>
+      <div className={styles.text}>{articleDescription}</div>
       <Link href={href} className={styles.image}>
         {image && image}
       </Link>

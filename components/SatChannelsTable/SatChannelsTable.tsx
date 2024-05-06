@@ -4,7 +4,7 @@ import {
   META_ALL_SAT_CHANNEL_LIST,
   META_SAT_CHANNEL_LIST,
   CHANNEL_TOOLTIP_TITLES,
-  ISatChannelListEmptyModel,
+  ISatChannelListModel,
 } from '@/models/channelList.model';
 import styles from './SatChannelsTable.module.scss';
 import Link from 'next/link';
@@ -17,7 +17,7 @@ import { META_CHANNEL } from '@/models/channel.model';
 import { LANGUAGE } from '@/models/ui.model';
 import ChannelCardTooltip from '../ChannelCardTooltip/ChannelCardTooltip';
 import GoUpLink from '../ui/GoUpLink/GoUpLink';
-import { TitleH2 } from '../ui/Titles/TitleH2';
+import { TitleH2List } from '../ui/Titles/TitleH2List';
 
 const {
   links: { satTitleLink },
@@ -28,14 +28,14 @@ const {
 } = META_SAT_CHANNEL_LIST;
 
 interface ISatChannelsTableProps {
-  satChannels: ISatChannelListEmptyModel[][][];
+  satChannels: ISatChannelListModel[][][];
   isSingleSat?: boolean;
 }
 
 const FrequencySegment = ({
   frequencyChannels,
 }: {
-  frequencyChannels: ISatChannelListEmptyModel[];
+  frequencyChannels: ISatChannelListModel[];
 }) =>
   frequencyChannels.map(
     ({ logo, compr, title, tem, lan, description, cpu, biss, tema }, idx) => (
@@ -134,7 +134,7 @@ const SatChannelsTable = ({
     {satChannels.map((sat) => (
       <>
         {!isSingleSat && (
-          <TitleH2 id={sat[0][0].sat_slug}>
+          <TitleH2List id={sat[0][0].sat_slug}>
             <GoUpLink />
 
             <TooltipSimple tooltipText={satTitleLink.tooltipTitle[LANGUAGE]}>
@@ -162,7 +162,7 @@ const SatChannelsTable = ({
                 />
               </Link>
             </TooltipSimple>
-          </TitleH2>
+          </TitleH2List>
         )}
         <table
           className={styles.SatChannelsTable}

@@ -5,7 +5,7 @@ import {
   META_TRANS_NEWS_LIST,
   digestIntervals,
 } from '@/models/satDigest.model';
-import { Loader } from '../loaders/Loader';
+import { Loader } from '../ui/loaders/Loader';
 import { redirect } from 'next/navigation';
 import {
   ReactSelectInterval,

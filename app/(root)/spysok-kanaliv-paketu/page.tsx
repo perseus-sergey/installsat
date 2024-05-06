@@ -1,49 +1,49 @@
-// import FormDigestInterval from '@/components/FormDigestInterval1/FormDigestInterval';
-// import SatNews from '@/components/SatNews/SatNews';
-// import { Title } from '@/components/Titles/Title';
-// import {
-//   LAST_NEWS_INTERVAL,
-//   META_TRANS_NEWS_LIST,
-// } from '@/models/satDigest.model';
-// import { EUrlSearchParam } from '@/models/url.model';
-// import { Suspense } from 'react';
-
+import EmptyData from '@/components/errors/EmptyData/EmptyData';
 import { Title } from '@/components/ui/Titles/Title';
-import { EUrlBaseParam } from '@/models/url.model';
-import { Metadata } from 'next';
-import { DEFAULT_META_DATA } from '@/models/ui.model';
+import type { Metadata } from 'next';
 import { getFormattedDateStr } from '@/libs/utils/utils';
+import { EUrlBaseParam } from '@/models/url.model';
+import { LANGUAGE as L, DEFAULT_META_DATA } from '@/models/ui.model';
+import { getChannelPackages } from '@/controllers/channelList.controller';
+import PackageList from '@/components/article/ArticleList/PackageList';
+import { META_PACKAGES } from '@/models/channelList.model';
 
-const BASE_URL = process.env.BASE_URL || '';
+const BASE_URL = process.env.BASE_URL;
 
-// TODO: Change MetaData
-// =================================================================
+const { metaDescription, metaH1, metaKeywords, metaTitle } = META_PACKAGES;
+
+// const articleTitleImg = imagePathValidate(
+//   images.titleImg,
+//   images.titleImg.alternativeStr.title
+// );
+//================================================================
+// Add static pages
+//================================================================
 export const metadata: Metadata = {
-  metadataBase: new URL(BASE_URL),
-  title: 'maps',
-  description: 'maps description',
-  keywords: 'maps keywords',
+  title: metaTitle[L],
+  description: metaDescription[L],
+  keywords: metaKeywords[L],
   openGraph: {
     ...DEFAULT_META_DATA.openGraph,
-    title: 'maps',
-    description: 'maps description',
-    url: `${BASE_URL}/${EUrlBaseParam.DELETE_COMMENT_SUBSCRIPTION}`,
+    title: metaTitle[L],
+    description: metaDescription[L],
+    url: `${BASE_URL}/${EUrlBaseParam.PACKAGE_CHANNEL_LIST}`,
     publishedTime: getFormattedDateStr(new Date()),
   },
 };
+export default async function Page() {
+  const packages = await getChannelPackages();
 
-export default function Page() {
-  //   const searchInterval = searchParams[EUrlSearchParam.INTERVAL];
-  //   const intervalDays =
-  //     typeof searchInterval === 'string' && searchInterval
-  //       ? +searchInterval
-  //       : LAST_NEWS_INTERVAL;
+  if (packages instanceof Error)
+    return <EmptyData description={packages.message} />;
+
+  if (!packages.length) return <EmptyData description={`Couldn't find data`} />;
 
   return (
-    <>
-      <article className="article">
-        <Title>Пакети цифрового супутникового та ефірного телебачення</Title>
-      </article>
-    </>
+    <article className="article">
+      <Title>{metaH1[L]}</Title>
+
+      <PackageList packageList={packages} />
+    </article>
   );
 }

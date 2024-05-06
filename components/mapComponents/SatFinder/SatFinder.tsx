@@ -23,7 +23,7 @@ import {
   formatGroupSatLabel,
 } from '../../ui/ReactSelect/ReactSelect';
 import { MultiValue, components } from 'react-select';
-import { Loader } from '../../loaders/Loader';
+import { Loader } from '../../ui/loaders/Loader';
 import GoogleMap from '../GoogleMap/GoogleMap';
 import { makeSelectedOptions } from '@/controllers/satFinder.controller';
 import StyledInputField from '../../ui/StyledInputField/StyledInputField';

@@ -2,6 +2,7 @@ import EmptyData from '@/components/errors/EmptyData/EmptyData';
 import { Title } from '@/components/ui/Titles/Title';
 import { getOnlineChannels } from '@/controllers/channelList.controller';
 import {
+  CHANNEL_LIST_ANCHOR_START,
   META_ALL_SAT_CHANNEL_LIST,
   META_ONLINE_CHANNEL_LIST,
 } from '@/models/channelList.model';
@@ -22,21 +23,26 @@ import { Suspense } from 'react';
 import { validSearchParam } from '@/libs/utils/validSearchParam';
 import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
 import { getCommentsNumber } from '@/controllers/comments.controller';
-import OnlineChannelList from '@/components/OnlineChannelList/OnlineChannelList';
 import TooltipSimple from '@/components/ui/TooltipSimple/TooltipSimple';
 import Link from 'next/link';
 import GenreImage from '@/components/ui/Images/GenreImage/GenreImage';
-import OnlineChannelListAfterText from '@/components/OnlineChannelListAfterText/OnlineChannelListAfterText';
+import OnlineChannelListAfterText from '@/components/online/OnlineChannelListAfterText/OnlineChannelListAfterText';
+import PackageChannelList from '@/components/channelList/PackageChannelList';
 
 const BASE_URL = process.env.BASE_URL;
 
 const {
   metaDescription,
   metaH1,
+  getH1After,
   metaKeywords,
   metaTitle,
   images: { h1Image },
   ONLINE_CHANNEL_LIST_DB_ID,
+  fieldsetFilters: {
+    legendText,
+    anchorLink: { ariaLabel },
+  },
 } = META_ONLINE_CHANNEL_LIST;
 
 const {
@@ -82,29 +88,25 @@ export default async function Page({ searchParams }: IPageProps) {
       <article className="article">
         <Title>
           {metaH1[L]}
-          {searchQueryChannel
-            ? ` назва яких містить «${searchQueryChannel}»`
-            : '.'}
+          {getH1After(searchQueryChannel)[L]}
           <FillingImg {...h1Image} alt={h1Image.alt[L]} />
         </Title>
 
-        <Fieldset legendText="Фільтри">
+        <Fieldset legendText={legendText[L]}>
           <nav className="p-2 md:p-4">
             <ul>
               {onlineChannels.map(([genreTitle, chanList]) => (
                 <li key={genreTitle} className="flex items-center gap-4">
                   <GenreImage
                     tooltipText={genreTitle}
-                    genreMapPosition={chanList[0].tema}
-                    // className={styles.genreImage}
+                    genreMapPosition={chanList[0].genre_id}
                   />
-                  <TooltipSimple
-                    tooltipText={`Перейти до жанру: ${genreTitle}`}
-                  >
+                  <TooltipSimple tooltipText={`${ariaLabel[L]} ${genreTitle}`}>
                     <Link
                       title={genreTitle}
-                      href={`#genre-${chanList[0].tema}`}
+                      href={`#${CHANNEL_LIST_ANCHOR_START}${chanList[0].genre_id}`}
                       className="text-indigo-800 text-lg hover:text-red-500"
+                      aria-label={`${ariaLabel[L]} ${genreTitle}`}
                     >
                       {genreTitle}
                     </Link>
@@ -122,7 +124,7 @@ export default async function Page({ searchParams }: IPageProps) {
         </Fieldset>
 
         <Suspense key={searchQueryChannel}>
-          <OnlineChannelList onlineChannels={onlineChannels} />
+          <PackageChannelList channels={onlineChannels} />
         </Suspense>
 
         <OnlineChannelListAfterText lang={LANGUAGE} />
@@ -138,114 +140,3 @@ export default async function Page({ searchParams }: IPageProps) {
     </>
   );
 }
-
-// const inputData: Channel[] = [
-//   {
-//     title: 'Obieqtivi TV',
-//     compress: 3,
-//     tvforsite_net: 'http://tv.myvideo.ge',
-//     genre: '22',
-//   },
-//   { title: 'РЕН ТВ', compress: 5, tvforsite_net: '', genre: '22' },
-//   { title: 'ICTV', compress: 5, tvforsite_net: '', genre: '22' },
-//   {
-//     title: 'ТРК Украина',
-//     compress: 4,
-//     tvforsite_net: 'https://kanalukraina.tv/online',
-//     genre: '22',
-//   },
-//   {
-//     title: 'ТРК Украина',
-//     compress: 5,
-//     tvforsite_net: 'https://kanalukraina.tv/5',
-//     genre: '22',
-//   },
-//   {
-//     title: 'Санкт Петербург',
-//     compress: 5,
-//     tvforsite_net: 'https://topspb.tv/live/',
-//     genre: '22',
-//   },
-//   {
-//     title: 'ТВ Центр',
-//     compress: 3,
-//     tvforsite_net: 'http://www.tvc.ru/channel/onair',
-//     genre: '33',
-//   },
-//   {
-//     title: 'ТВ Центр',
-//     compress: 5,
-//     tvforsite_net: '',
-//     genre: '33',
-//   },
-//   {
-//     title: 'ТВ Центр',
-//     compress: 4,
-//     tvforsite_net: 'http://www.tvc.ru/channel/onair',
-//     genre: '33',
-//   },
-//   { title: 'Мир (+4ч)', compress: 5, tvforsite_net: '', genre: '33' },
-//   {
-//     title: 'Белсат ТВ',
-//     compress: 4,
-//     tvforsite_net: 'https://belsat.eu/online/',
-//     genre: '33',
-//   },
-// ];
-
-// console.log("🚀 ~ grouped(inputData):", grouped(inputData)) =>
-// [
-//   [
-//     '22',
-//     [
-//       {
-//         title: 'Obieqtivi TV',
-//         compress: 3,
-//         tvforsite_net: 'http://tv.myvideo.ge',
-//         genre: '22',
-//       },
-//       { title: 'РЕН ТВ', compress: 5, tvforsite_net: '', genre: '22' },
-//       {
-//         title: 'ICTV',
-//         compress: 5,
-//         tvforsite_net: '',
-//         genre: '22',
-//       },
-//       {
-//         title: 'ТРК Украина',
-//         compress: 4,
-//         tvforsite_net: 'https://kanalukraina.tv/online',
-//         genre: '22',
-//       },
-//       {
-//         title: 'Санкт Петербург',
-//         compress: 5,
-//         tvforsite_net: 'https://topspb.tv/live/',
-//         genre: '22',
-//       },
-//     ],
-//   ],
-//   [
-//     '33',
-//     [
-//       {
-//         title: 'ТВ Центр',
-//         compress: 3,
-//         tvforsite_net: 'http://www.tvc.ru/channel/onair',
-//         genre: '33',
-//       },
-//       {
-//         title: 'Мир (+4ч)',
-//         compress: 5,
-//         tvforsite_net: '',
-//         genre: '33',
-//       },
-//       {
-//         title: 'Белсат ТВ',
-//         compress: 4,
-//         tvforsite_net: 'https://belsat.eu/online/',
-//         genre: '33',
-//       },
-//     ],
-//   ],
-// ];

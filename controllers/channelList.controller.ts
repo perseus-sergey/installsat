@@ -145,7 +145,7 @@ export const getOnlineChannels = cache(async (searchQuery = '') => {
 
   const resp = await executeQuery<IOnlineChannelListModel>(sql);
 
-  if (resp instanceof Error) return resp;
+  if (resp instanceof Error || !resp.length) return null;
 
   const groupedData = resp.reduce(
     (acc, channel) => {
@@ -200,8 +200,8 @@ export const getT2Channels = cache(async (searchQuery = '') => {
     IOnlineChannelListModel & IPackageChannelListModel
   >(sql);
 
-  return resp instanceof Error
-    ? resp
+  return resp instanceof Error || !resp.length
+    ? null
     : groupeChannelsBy<IOnlineChannelListModel & IPackageChannelListModel>(
         resp,
         'genre_title'
@@ -253,8 +253,8 @@ export const getPackageChannels = cache(
       packageSlug,
     ]);
 
-    return resp instanceof Error
-      ? resp
+    return resp instanceof Error || !resp.length
+      ? null
       : groupeChannelsBy<IPackageChannelListModel>(resp, 'genre_title');
   }
 );

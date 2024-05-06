@@ -12,13 +12,6 @@ const BASE_URL = process.env.BASE_URL;
 
 const { metaDescription, metaH1, metaKeywords, metaTitle } = META_PACKAGES;
 
-// const articleTitleImg = imagePathValidate(
-//   images.titleImg,
-//   images.titleImg.alternativeStr.title
-// );
-//================================================================
-// Add static pages
-//================================================================
 export const metadata: Metadata = {
   title: metaTitle[L],
   description: metaDescription[L],

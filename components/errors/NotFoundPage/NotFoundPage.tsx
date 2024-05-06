@@ -21,7 +21,9 @@ const NotFoundPage = () => (
         height="200px"
         isPriority
       />
-      {ERRORS.NOT_FOUND_ACTION[LANGUAGE]}
+      <p className="text-blue-900 hover:text-red-500">
+        {ERRORS.NOT_FOUND_ACTION[LANGUAGE]}
+      </p>
     </Link>
   </div>
 );

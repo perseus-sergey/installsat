@@ -1,4 +1,3 @@
-import EmptyData from '@/components/errors/EmptyData/EmptyData';
 import { Title } from '@/components/ui/Titles/Title';
 import { getOnlineChannels } from '@/controllers/channelList.controller';
 import {
@@ -73,10 +72,7 @@ export default async function Page({ searchParams }: IPageProps) {
     searchParams
   );
 
-  const onlineChannels = await getOnlineChannels(searchQueryChannel);
-
-  if (onlineChannels instanceof Error)
-    return <EmptyData description={onlineChannels.message} />;
+  const onlineChannels = (await getOnlineChannels(searchQueryChannel)) || [];
 
   const numberOfComments = await getCommentsNumber(
     EDBTableTitles.COMMENTS_GENRE,

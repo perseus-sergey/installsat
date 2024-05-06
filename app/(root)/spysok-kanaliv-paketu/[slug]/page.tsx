@@ -67,7 +67,7 @@ export const generateMetadata = async ({
   const res =
     slug === T2_SLUG ? await getT2Channels() : await getPackageChannels(slug);
 
-  if (res instanceof Error || !res.length) return DEFAULT_META_DATA[LANGUAGE];
+  if (!res || !res.length) return DEFAULT_META_DATA[LANGUAGE];
 
   const { cat_title, cat_description, cat_slug } = res[0][1][0];
 
@@ -85,17 +85,19 @@ export const generateMetadata = async ({
   };
 };
 
-// export async function generateStaticParams(): Promise<
-//   {
-//     cat: string;
-//   }[]
-// > {
-//   if (allCatResponse instanceof Error) return [{ cat: '' }];
+export async function generateStaticParams(): Promise<
+  {
+    slug: string;
+  }[]
+> {
+  const allCatResponse = await getChannelCatList();
 
-//   return allCatResponse.map((cat) => ({ cat: cat.cpu }));
-// }
+  if (allCatResponse instanceof Error) return [{ slug: '' }];
 
-// export const dynamicParams = false;
+  return allCatResponse.map((cat) => ({ slug: cat.cpu }));
+}
+
+export const dynamicParams = false;
 
 export default async function Page({
   params: { slug },
@@ -111,15 +113,12 @@ export default async function Page({
       ? await getT2Channels(searchQueryChannel)
       : await getPackageChannels(slug, searchQueryChannel);
 
-  if (channels instanceof Error)
-    return <EmptyData description={channels.message} />;
-
-  const { cat_logo, cat_slug, cat_title, cat_id } = channels[0][1][0];
-
-  const numberOfComments = await getCommentsNumber(
-    EDBTableTitles.COMMENTS_PACKAGES,
-    `${cat_id}`
-  );
+  const numberOfComments = channels
+    ? await getCommentsNumber(
+        EDBTableTitles.COMMENTS_PACKAGES,
+        `${channels[0][1][0].cat_id}`
+      )
+    : 0;
 
   const packagesResp = await getChannelCatList();
   const similarLinks =
@@ -130,59 +129,67 @@ export default async function Page({
   return (
     <>
       <article className="article">
-        <Title>
-          {getH1(cat_title, searchQueryChannel)[L]}
-          <FillingValidImage
-            image={{
-              width: h1Image.width,
-              height: h1Image.height,
-              src: `${h1Image.path}${cat_logo}`,
-            }}
-            defaultImage={h1Image.defaultImage}
-            alternativeImgString={h1Image.alternativeImgStr}
-            alt={h1Image.alt[L]}
-            isBlur
-          />
-        </Title>
+        {channels ? (
+          <>
+            <Title>
+              {getH1(channels[0][1][0].cat_title, searchQueryChannel)[L]}
+              <FillingValidImage
+                image={{
+                  width: h1Image.width,
+                  height: h1Image.height,
+                  src: `${h1Image.path}${channels[0][1][0].cat_logo}`,
+                }}
+                defaultImage={h1Image.defaultImage}
+                alternativeImgString={h1Image.alternativeImgStr}
+                alt={h1Image.alt[L]}
+                isBlur
+              />
+            </Title>
 
-        <Fieldset legendText={legendText[L]}>
-          <nav className="p-2 md:p-4">
-            <ul>
-              {channels.map(([subCatTitle, chanList]) => (
-                <li key={subCatTitle} className="flex items-center gap-4">
-                  {slug === 't2-efir' && (
-                    <GenreImage
-                      tooltipText={subCatTitle}
-                      genreMapPosition={chanList[0].genre_id}
-                    />
-                  )}
-                  <TooltipSimple tooltipText={`${ariaLabel[L]} ${subCatTitle}`}>
-                    <Link
-                      title={subCatTitle}
-                      href={`#${CHANNEL_LIST_ANCHOR_START}${chanList[0].genre_id}`}
-                      className="text-indigo-800 text-lg hover:text-red-500"
-                      aria-label={`${ariaLabel[L]} ${subCatTitle}`}
-                    >
-                      {subCatTitle}
-                    </Link>
-                  </TooltipSimple>
-                </li>
-              ))}
-            </ul>
-            <Filter
-              idName="channel-search-input"
-              placeholder={placeholder[L]}
-              labelTitle={labelTitle[L]}
-              searchQueryTitle={EUrlSearchParam.CHANNEL}
-            />
-          </nav>
-        </Fieldset>
+            <Fieldset legendText={legendText[L]}>
+              <nav className="p-2 md:p-4">
+                <ul>
+                  {channels.map(([subCatTitle, chanList]) => (
+                    <li key={subCatTitle} className="flex items-center gap-4">
+                      {slug === 't2-efir' && (
+                        <GenreImage
+                          tooltipText={subCatTitle}
+                          genreMapPosition={chanList[0].genre_id}
+                        />
+                      )}
+                      <TooltipSimple
+                        tooltipText={`${ariaLabel[L]} ${subCatTitle}`}
+                      >
+                        <Link
+                          title={subCatTitle}
+                          href={`#${CHANNEL_LIST_ANCHOR_START}${chanList[0].genre_id}`}
+                          className="text-indigo-800 text-lg hover:text-red-500"
+                          aria-label={`${ariaLabel[L]} ${subCatTitle}`}
+                        >
+                          {subCatTitle}
+                        </Link>
+                      </TooltipSimple>
+                    </li>
+                  ))}
+                </ul>
+                <Filter
+                  idName="channel-search-input"
+                  placeholder={placeholder[L]}
+                  labelTitle={labelTitle[L]}
+                  searchQueryTitle={EUrlSearchParam.CHANNEL}
+                />
+              </nav>
+            </Fieldset>
 
-        <Suspense key={searchQueryChannel}>
-          <PackageChannelList channels={channels} />
-        </Suspense>
+            <Suspense key={searchQueryChannel}>
+              <PackageChannelList channels={channels} />
+            </Suspense>
 
-        {/* <OnlineChannelListAfterText lang={LANGUAGE} /> */}
+            {/* <OnlineChannelListAfterText lang={LANGUAGE} /> */}
+          </>
+        ) : (
+          <EmptyData />
+        )}
       </article>
 
       {similarLinks.length ? (
@@ -198,13 +205,17 @@ export default async function Page({
         />
       ) : null}
 
-      <CommentBlock
-        numberOfComments={numberOfComments}
-        revalidateUrl={`/${EUrlBaseParam.PACKAGE_CHANNEL_LIST}/${cat_slug}`}
-        dbCommentTableName={EDBTableTitles.COMMENTS_PACKAGES}
-        articleId={`${cat_id}`}
-        articleName={`${cat_title}. ${metaTitle[L]}`}
-      />
+      {channels ? (
+        <CommentBlock
+          numberOfComments={numberOfComments}
+          revalidateUrl={`/${EUrlBaseParam.PACKAGE_CHANNEL_LIST}/${channels[0][1][0].cat_slug}`}
+          dbCommentTableName={EDBTableTitles.COMMENTS_PACKAGES}
+          articleId={`${channels[0][1][0].cat_id}`}
+          articleName={`${channels[0][1][0].cat_title}. ${metaTitle[L]}`}
+        />
+      ) : (
+        <EmptyData />
+      )}
     </>
   );
 }

@@ -14,10 +14,6 @@ export const getArticleCatList = cache(async () => {
 
   return await executeQuery<ISingleCatArticlesModel>(sql);
 });
-// export const getArticleCatWidgetList = async () =>
-//   await executeQuery<TCategories>(`
-//     SELECT id,title, cpu FROM tbl_categories WHERE id != 2 AND id!=12 AND title!=''
-//     `);
 
 export const getCurrentCatParams = cache(
   async (catCpu: string): Promise<ISingleCatArticlesModel> => {

@@ -15,7 +15,6 @@ import FillingImg from '@/components/ui/Images/FillingImage';
 import Fieldset from '@/components/ui/Fieldset/Fieldset';
 import {
   LANGUAGE as L,
-  LANGUAGE,
   TSearchParams,
   DEFAULT_META_DATA,
   EDBTableTitles,
@@ -150,7 +149,7 @@ export default async function Page({ searchParams }: IPageProps) {
           </nav>
         </Fieldset>
         <StartArticleSection>
-          <p>{START_CONTENT[LANGUAGE]}</p>
+          <p>{START_CONTENT[L]}</p>
         </StartArticleSection>
         <Suspense key={searchQueryChannel}>
           <SatChannelsTable satChannels={groupedChannelsAllSat} />
@@ -162,7 +161,7 @@ export default async function Page({ searchParams }: IPageProps) {
         revalidateUrl={`/${EUrlBaseParam.SAT_CHANNEL_LIST}`}
         dbCommentTableName={EDBTableTitles.COMMENTS_PACKAGES}
         articleId={CHANNEL_LIST_DB_ID}
-        articleName={getTitle()[LANGUAGE]}
+        articleName={getTitle()[L]}
       />
     </>
   );

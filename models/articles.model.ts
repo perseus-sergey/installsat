@@ -137,14 +137,6 @@ export const ARTICLES = {
     },
   },
   articleSingleCatList: {
-    meta: {
-      getH1(date: string, title: string) {
-        return {
-          [ELanguage.UA]: `${title} на ${date}`,
-          [ELanguage.EN]: `${title} as of ${date}`,
-        };
-      },
-    },
     images: {
       h1Image: {
         src: '/Images/articles/all_news_64.png',

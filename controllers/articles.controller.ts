@@ -7,7 +7,31 @@ import {
 } from '@/models/articles.model';
 import { cache } from 'react';
 
-export const WRONG_CAT_IDS = '(2,8,0,11,12,13)';
+export const WRONG_CAT_IDS = '(2,0,11,12,13)';
+
+export const getArticleCatList = cache(async () => {
+  const sql = `SELECT id, title, cpu, description, text FROM tbl_categories WHERE id NOT IN ${WRONG_CAT_IDS}`;
+
+  return await executeQuery<ISingleCatArticlesModel>(sql);
+});
+// export const getArticleCatWidgetList = async () =>
+//   await executeQuery<TCategories>(`
+//     SELECT id,title, cpu FROM tbl_categories WHERE id != 2 AND id!=12 AND title!=''
+//     `);
+
+export const getCurrentCatParams = cache(
+  async (catCpu: string): Promise<ISingleCatArticlesModel> => {
+    const allCatResponse = await getArticleCatList();
+    const catParams =
+      allCatResponse instanceof Error
+        ? ''
+        : allCatResponse.find((cat) => cat.cpu === catCpu);
+
+    return (
+      catParams || { title: '', description: '', id: -1, cpu: '', text: '' }
+    );
+  }
+);
 
 export const getChunkOfNews = async (
   quantity: number,
@@ -111,12 +135,6 @@ export const getSimilarArticles = async (logo: string, id = -1) => {
 
   return await executeQuery<ISimilarArticleModel>(sql, [logo]);
 };
-
-export const getArticleCatList = cache(async () => {
-  const sql = `SELECT id, title, cpu, description, text FROM tbl_categories WHERE id NOT IN ${WRONG_CAT_IDS}`;
-
-  return await executeQuery<ISingleCatArticlesModel>(sql);
-});
 
 export const getArticleSlugList = cache(async () => {
   const sql = `SELECT cpu FROM tbl_useful`;

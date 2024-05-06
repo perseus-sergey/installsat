@@ -132,7 +132,7 @@ export default async function Page({ params }: IPageParams) {
         revalidateUrl={`/${EUrlBaseParam.SAT_CHANNEL_LIST}/${slug}`}
         dbCommentTableName={EDBTableTitles.COMMENTS_SATELLITE}
         articleId={id}
-        articleName={title}
+        articleName={`${getTitle()[LANGUAGE]} ${title} - ${satPosition}`}
       />
     </>
   );

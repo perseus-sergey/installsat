@@ -2,13 +2,13 @@ import EmptyData from '@/components/errors/EmptyData/EmptyData';
 import { Title } from '@/components/ui/Titles/Title';
 import type { Metadata } from 'next';
 import FillingValidImage from '@/components/ui/Images/FillingValidImage';
-import { ARTICLES, ISingleCatArticlesModel } from '@/models/articles.model';
+import { ARTICLES } from '@/models/articles.model';
 import {
   getArticleCatList,
   getChunkOfNews,
+  getCurrentCatParams,
 } from '@/controllers/articles.controller';
 import { getFormattedDateStr } from '@/libs/utils/utils';
-import { cache } from 'react';
 import TextUnderH1 from '@/components/TextUnderH1/TextUnderH1';
 import ArticleList from '@/components/article/ArticleList/ArticleList';
 import { notFound } from 'next/navigation';
@@ -22,9 +22,6 @@ const BASE_URL = process.env.BASE_URL;
 
 const {
   articleList: { pagination, images, articlesCountCaption },
-  articleSingleCatList: {
-    meta: { getH1 },
-  },
 } = ARTICLES;
 
 const articleTitleImg = imagePathValidate(
@@ -41,29 +38,10 @@ export interface IPageParams {
 
 const currDateStr = getFormattedDateStr(new Date());
 
-const allCatResponse = await getArticleCatList();
-
-const getCurrentCatParams = cache((catCpu: string): ISingleCatArticlesModel => {
-  const catParams =
-    allCatResponse instanceof Error
-      ? ''
-      : allCatResponse.find((cat) => cat.cpu === catCpu);
-
-  return catParams
-    ? {
-        title: catParams.title,
-        id: catParams.id,
-        cpu: catParams.cpu,
-        description: catParams.description,
-        text: catParams.text,
-      }
-    : { title: '', description: '', id: -1, cpu: '', text: '' };
-});
-
-export const generateMetadata = ({
+export const generateMetadata = async ({
   params: { cat },
-}: IPageParams): Metadata => {
-  const { title, description, cpu } = getCurrentCatParams(cat);
+}: IPageParams): Promise<Metadata> => {
+  const { title, description, cpu } = await getCurrentCatParams(cat);
 
   return {
     title,
@@ -84,6 +62,7 @@ export async function generateStaticParams(): Promise<
     cat: string;
   }[]
 > {
+  const allCatResponse = await getArticleCatList();
   if (allCatResponse instanceof Error) return [{ cat: '' }];
 
   return allCatResponse.map((cat) => ({ cat: cat.cpu }));
@@ -95,7 +74,7 @@ export default async function Page({
   params: { cat },
   searchParams,
 }: IPageParams) {
-  const { id, description, text } = getCurrentCatParams(cat);
+  const { id, description, text } = await getCurrentCatParams(cat);
 
   const { perPage } = pagination;
 
@@ -123,7 +102,7 @@ export default async function Page({
   return (
     <>
       <Title>
-        {getH1(currDateStr, description)[LANGUAGE]}
+        {description}
 
         <FillingValidImage
           image={images.h1Image}

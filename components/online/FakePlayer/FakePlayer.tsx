@@ -1,7 +1,7 @@
 'use client';
 
 import { META_CHANNEL_ONLINE } from '@/models/channel.model';
-import BaseButton from '../ui/buttons/BaseButton/BaseButton';
+import BaseButton from '../../ui/buttons/BaseButton/BaseButton';
 import styles from './FakePlayer.module.scss';
 import { LANGUAGE } from '@/models/ui.model';
 

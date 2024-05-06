@@ -7,10 +7,10 @@ import { cutText } from '@/libs/utils/utils';
 import DangerHtml from '../../ui/DangerHtml/DangerHtml';
 import {
   IChannelPackagesModel,
-  META_PACKAGE_CHANNEL_LIST,
+  META_PACKAGES,
 } from '@/models/channelList.model';
 
-const { packageImage } = META_PACKAGE_CHANNEL_LIST;
+const { packageImage } = META_PACKAGES;
 
 const { views: viewsTitle, comments: commentsTitle } = ARTICLES.infoPanelTitles;
 

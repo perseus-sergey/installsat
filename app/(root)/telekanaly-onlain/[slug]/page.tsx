@@ -29,7 +29,7 @@ import { notFound } from 'next/navigation';
 import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
 import { getCommentsNumber } from '@/controllers/comments.controller';
 import ChannelOnlineParams from '@/components/ChannelParams/ChannelOnlineParams';
-import OnlinePlayerTabs from '@/components/OnlinePlayerTabs/OnlinePlayerTabs';
+import OnlinePlayerTabs from '@/components/online/OnlinePlayerTabs/OnlinePlayerTabs';
 import GrooveLine from '@/components/ui/GrooveLine';
 import ScheduleShort from '@/components/Schedule/ScheduleShort';
 import { fetchUserLocation } from '@/libs/utils/getUserIP';

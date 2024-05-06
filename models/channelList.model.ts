@@ -1,6 +1,8 @@
 import { ELanguage, ILang } from './ui.model';
 import { EUrlBaseParam, EUrlSearchParam } from './url.model';
 
+export const CHANNEL_LIST_ANCHOR_START = 'genre-';
+
 export const META_SAT_CHANNEL_LIST = {
   getH1(satTitle: string) {
     return {
@@ -124,12 +126,76 @@ export const META_ONLINE_CHANNEL_LIST = {
         [ELanguage.UA]: 'Перейти до жанру:',
         [ELanguage.EN]: 'Go to genre:',
       },
-      hrefStart: 'genre-',
     },
   },
 };
 
 export const META_PACKAGE_CHANNEL_LIST = {
+  getH1(packageName: string, searchQuery: string) {
+    return {
+      [ELanguage.UA]: `Список каналів телебачення «${packageName}»${searchQuery && ` назва яких містить «${searchQuery}»`}`,
+      [ELanguage.EN]: `List of channels «${searchQuery}» TV${searchQuery && ` the name of which contains «${searchQuery}»`}`,
+    };
+  },
+  metaTitle: {
+    [ELanguage.UA]: 'Список каналів',
+    [ELanguage.EN]: 'List of channels',
+  },
+  metaKeywords: {
+    [ELanguage.UA]:
+      'телебачення, трансляція каналів, високоякісне телебачення, цифрове, компанія, провайдер, пакет, телевізійні антени',
+    [ELanguage.EN]:
+      'television, channel streaming, high-quality television, digital, company, provider, package, TV antennas',
+  },
+  images: {
+    h1Image: {
+      path: '/Images/packages/',
+      height: '99px',
+      width: '132px',
+      alternativeImgStr: { title: '💠', fontSize: '7rem' },
+      defaultImage: {
+        src: '/Images/1not_found_chan.png',
+        height: '100px',
+        width: '120px',
+      },
+      alt: {
+        [ELanguage.UA]: `Логотип компанії`,
+        [ELanguage.EN]: `Company logo`,
+      },
+    },
+    subCatImage: {
+      path: '/Images/packages/',
+      height: '82px',
+      width: '82px',
+      altPre: {
+        [ELanguage.UA]: 'Пакет:',
+        [ELanguage.EN]: 'Package:',
+      },
+      alternativeImgStr: { title: '🌀', fontSize: '5rem' },
+    },
+  },
+  linkChannel: {
+    path: `/${EUrlBaseParam.ONLINE_CHANNEL_LIST}`,
+    ariaLabel: {
+      [ELanguage.UA]: 'Деталі каналу',
+      [ELanguage.EN]: 'Channel details',
+    },
+  },
+  fieldsetFilters: {
+    legendText: {
+      [ELanguage.UA]: 'Швидкий пошук',
+      [ELanguage.EN]: 'Quick search',
+    },
+    anchorLink: {
+      ariaLabel: {
+        [ELanguage.UA]: 'Перейти до пакету:',
+        [ELanguage.EN]: 'Go to package:',
+      },
+    },
+  },
+};
+
+export const META_PACKAGES = {
   metaH1: {
     [ELanguage.UA]:
       'Пакети каналів цифрового супутникового та ефірного телебачення',
@@ -165,13 +231,6 @@ export const META_PACKAGE_CHANNEL_LIST = {
     },
     alternativeStr: { title: '🎞', fontSize: '6rem' },
   },
-  // linkChannel: {
-  //   path: `/${EUrlBaseParam.ONLINE_CHANNEL_LIST}`,
-  //   ariaLabel: {
-  //     [ELanguage.UA]: 'Перейти до каналу',
-  //     [ELanguage.EN]: 'Go to channel',
-  //   },
-  // },
 };
 
 export const META_ALL_SAT_CHANNEL_LIST = {
@@ -298,7 +357,7 @@ export const START_CONTENT = {
     'The list shows those channels that are broadcast without a subscription fee.',
 };
 
-export interface ISatChannelListEmptyModel {
+export interface ISatChannelListModel {
   id: number;
   title: string;
   cpu: string;
@@ -325,22 +384,35 @@ export interface ISatChannelListEmptyModel {
   lan: string;
 }
 
-export interface IOnlineChannelListModel {
-  id: number;
-  title: string;
-  cpu: string;
-  genre: string;
+export interface IChannelListModel {
+  chan_id: number;
+  chan_title: string;
+  chan_cpu: string;
+  chan_logo: string;
+  chan_description: string;
+  genre_id: number;
+  genre_title: string;
+  lan: string;
+}
+
+export interface IOnlineChannelListModel extends IChannelListModel {
   potok: string;
-  tema: number;
   view: number;
   compress: number;
-  logo: string;
   encryption: string;
-  description: string;
-  tem: string;
   compr: string;
-  lan: string;
   tvforsite_net: string;
+}
+export interface IPackageChannelListModel extends IChannelListModel {
+  cat_id: number;
+  cat_title: string;
+  cat_slug: string;
+  cat_logo: string;
+  cat_description: string;
+  genre_slug: string;
+  genre_logo: string;
+  price: string;
+  h1: string;
 }
 
 export interface IChannelPackagesModel {

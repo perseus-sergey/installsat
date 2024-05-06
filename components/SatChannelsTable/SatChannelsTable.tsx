@@ -4,7 +4,7 @@ import {
   META_ALL_SAT_CHANNEL_LIST,
   META_SAT_CHANNEL_LIST,
   CHANNEL_TOOLTIP_TITLES,
-  ISatChannelListEmptyModel,
+  ISatChannelListModel,
 } from '@/models/channelList.model';
 import styles from './SatChannelsTable.module.scss';
 import Link from 'next/link';
@@ -28,14 +28,14 @@ const {
 } = META_SAT_CHANNEL_LIST;
 
 interface ISatChannelsTableProps {
-  satChannels: ISatChannelListEmptyModel[][][];
+  satChannels: ISatChannelListModel[][][];
   isSingleSat?: boolean;
 }
 
 const FrequencySegment = ({
   frequencyChannels,
 }: {
-  frequencyChannels: ISatChannelListEmptyModel[];
+  frequencyChannels: ISatChannelListModel[];
 }) =>
   frequencyChannels.map(
     ({ logo, compr, title, tem, lan, description, cpu, biss, tema }, idx) => (

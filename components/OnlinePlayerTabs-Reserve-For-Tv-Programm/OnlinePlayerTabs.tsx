@@ -1,7 +1,7 @@
 import { IOnlineChannel } from '@/models/channel.model';
 import styles from './OnlinePlayerTabs.module.scss';
 import Video from 'next-video';
-import FakePlayer from '../FakePlayer/FakePlayer';
+import FakePlayer from '../online/FakePlayer/FakePlayer';
 
 interface IOnlinePlayerTabsProps {
   channelData: IOnlineChannel;

@@ -46,11 +46,15 @@ const ChannelCardTooltip = ({
           />
           <div className="py-2.5 px-5">
             <ul>
-              {tooltipTextList.map(({ title, description }, i) => (
-                <li key={`${title}${i}`}>
-                  {title}: <strong>{description}</strong>
-                </li>
-              ))}
+              {tooltipTextList.map(
+                ({ title, description }, i) =>
+                  title &&
+                  description && (
+                    <li key={`${title}${i}`}>
+                      {title}: <strong>{description}</strong>
+                    </li>
+                  )
+              )}
             </ul>
           </div>
         </>

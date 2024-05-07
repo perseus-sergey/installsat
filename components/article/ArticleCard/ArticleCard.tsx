@@ -8,6 +8,7 @@ interface IArticleCardProps {
   articleTitle: React.ReactNode;
   href: string;
   image?: React.ReactNode;
+  isTitleCentered?: boolean;
   articleDescription: React.ReactNode;
   infoPanelItems: IBottomInfoPanelItem[];
 }
@@ -18,19 +19,21 @@ const ArticleCard = ({
   image,
   infoPanelItems,
   href,
+  isTitleCentered = false,
 }: IArticleCardProps) => (
   <section className={styles.ArticleCard} data-testid="ArticleCard">
-    <h2>
-      <Link className={styles.h2Title} href={href}>
+    <Link href={href}>
+      <h2
+        style={isTitleCentered ? { justifyContent: 'center' } : {}}
+        className={styles.h2Title}
+      >
         {articleTitle}
-      </Link>
-    </h2>
-    <div className={styles.descriptionWrapper}>
-      <div className={styles.text}>{articleDescription}</div>
-      <Link href={href} className={styles.image}>
+      </h2>
+      <div className="flex flex-col md:flex-row items-center gap-4 p-4">
+        {articleDescription}
         {image && image}
-      </Link>
-    </div>
+      </div>
+    </Link>
     <BottomInfoPanel items={infoPanelItems} />
   </section>
 );

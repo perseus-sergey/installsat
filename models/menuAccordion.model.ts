@@ -49,23 +49,40 @@ export const MENU_ACCORDION: { [key: string]: IAccordionItemOptions } = {
     },
     titleHref: `/${EUrlBaseParam.SAT_FINDER}`,
   },
-  INSTALLATIONS: {
-    name: 'INSTALLATIONS',
+  MAPS: {
+    name: 'MAPS',
     img: {
-      src: '/Images/accordion/advancedsettings_2775.png',
+      src: '/Images/accordion/point.png',
       width: 32,
       height: 32,
       alt: {
-        [ELanguage.UA]: 'Варіанти встановлення супутникового тб',
-        [ELanguage.EN]: 'Installing options for satellite TV',
+        [ELanguage.UA]: 'Карти покриття телевізійних супутників',
+        [ELanguage.EN]: 'Satellite coverage maps',
       },
     },
     title: {
-      [ELanguage.UA]: 'Варіанти встановлення',
-      [ELanguage.EN]: 'Installing options',
+      [ELanguage.UA]: 'Карти покриття',
+      [ELanguage.EN]: 'Satellite Maps',
     },
-    baseHrefOfList: `/${EUrlBaseParam.INSTALLATION_OPTIONS}`,
+    baseHrefOfList: `/${EUrlBaseParam.SAT_COVERAGE_MAP}`,
   },
+  // INSTALLATIONS: {
+  //   name: 'INSTALLATIONS',
+  //   img: {
+  //     src: '/Images/accordion/advancedsettings_2775.png',
+  //     width: 32,
+  //     height: 32,
+  //     alt: {
+  //       [ELanguage.UA]: 'Варіанти встановлення супутникового тб',
+  //       [ELanguage.EN]: 'Installing options for satellite TV',
+  //     },
+  //   },
+  //   title: {
+  //     [ELanguage.UA]: 'Варіанти встановлення',
+  //     [ELanguage.EN]: 'Installing options',
+  //   },
+  //   baseHrefOfList: `/${EUrlBaseParam.INSTALLATION_OPTIONS}`,
+  // },
   SATELLITES: {
     name: 'SATELLITES',
     img: {

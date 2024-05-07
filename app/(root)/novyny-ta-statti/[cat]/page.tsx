@@ -1,4 +1,3 @@
-import EmptyData from '@/components/errors/EmptyData/EmptyData';
 import { Title } from '@/components/ui/Titles/Title';
 import type { Metadata } from 'next';
 import FillingValidImage from '@/components/ui/Images/FillingValidImage';
@@ -92,12 +91,9 @@ export default async function Page({
     searchQuery
   );
 
-  if (allNews instanceof Error)
-    return <EmptyData description={allNews.message} />;
+  const mapsCount = !allNews.length ? 0 : allNews[0].total_count;
 
-  if (!allNews.length) return <EmptyData description={`Couldn't find data`} />;
-
-  const totalPages = Math.ceil(allNews[0].total_count / perPage);
+  const totalPages = Math.ceil(mapsCount / perPage);
 
   return (
     <>
@@ -114,7 +110,7 @@ export default async function Page({
 
       <TextUnderH1>{text}</TextUnderH1>
 
-      <p className="text-blue-600 font-bold text-center text-lg">{`${articlesCountCaption[LANGUAGE]}${allNews[0].total_count}`}</p>
+      <p className="text-blue-600 font-bold text-center text-lg">{`${articlesCountCaption[LANGUAGE]}${mapsCount}`}</p>
 
       <Pagination
         page={pageNumber || 1}

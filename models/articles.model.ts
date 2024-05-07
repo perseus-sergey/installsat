@@ -169,6 +169,69 @@ export const ARTICLES = {
   },
 };
 
+export const SAT_MAPS_MODEL = {
+  metaAllMaps: {
+    metaTitle: {
+      [ELanguage.UA]: 'Карти покриття супутників',
+      [ELanguage.EN]: 'Satellite coverage maps',
+    },
+    metaDescription: {
+      [ELanguage.UA]:
+        'Карти покриття телевізійних супутників на території Європи та ближньої Азії',
+      [ELanguage.EN]:
+        'Satellite coverage maps of television satellites in Europe and the Far East',
+    },
+    metaKeywords: {
+      [ELanguage.UA]:
+        'Карти покриття телевізійні супутники територія Європа Азії промінь напрямок сигнал',
+      [ELanguage.EN]:
+        'Coverage maps television satellites territory Europe Asia beam direction signal',
+    },
+  },
+  metaSingleMap: {
+    metaTitle: {
+      [ELanguage.UA]: 'Карта покриття супутника',
+      [ELanguage.EN]: 'Satellite coverage map',
+    },
+    // metaDescription: {
+    //   [ELanguage.UA]:
+    //     'Карти покриття телевізійних супутників на території Європи та ближньої Азії',
+    //   [ELanguage.EN]:
+    //     'Satellite coverage maps of television satellites in Europe and the Far East',
+    // },
+    // metaKeywords: {
+    //   [ELanguage.UA]:
+    //     'Карти покриття телевізійні супутники територія Європа Азії промінь напрямок сигнал',
+    //   [ELanguage.EN]:
+    //     'Coverage maps television satellites territory Europe Asia beam direction signal',
+    // },
+  },
+  makePostDescription(satTitle: string) {
+    return {
+      [ELanguage.UA]: `Карта покриття телевізійного супутника ${satTitle} на території країн Європи та ближньої азії.`,
+      [ELanguage.EN]: `Coverage map of the ${satTitle} television satellite in Europe and Middle Asia`,
+    };
+  },
+  images: {
+    h1Image: {
+      src: '/Images/articles/signal-satellite.png',
+      height: '128px',
+      width: '128px',
+      alternativeStr: { title: '🗺', fontSize: '8rem' },
+      alt: {
+        [ELanguage.UA]: 'Карти покриття телевізійних супутників',
+        [ELanguage.EN]: 'Satellite coverage maps',
+      },
+    },
+    titleImg: {
+      src: '/Images/articles/package_network_4729.png',
+      height: '32px',
+      width: '32px',
+      alternativeStr: { title: '🌎', fontSize: '2rem' },
+    },
+  },
+};
+
 export interface IAllNewsModel {
   id: number;
   cat: number;
@@ -183,6 +246,18 @@ export interface IAllNewsModel {
   total_count: number;
   category_title: string;
   category_cpu: string;
+}
+
+export interface IAllMapsModel {
+  id: number;
+  title: string;
+  cpu: string;
+  description: string;
+  logo: string;
+  view: number;
+  beam_id: number;
+  position: string;
+  comment_count: number | null;
 }
 
 export interface ISingleCatArticlesModel {

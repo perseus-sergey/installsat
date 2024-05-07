@@ -36,12 +36,11 @@ import { getChannelCatList } from '@/controllers/sidebar.controller';
 
 const BASE_URL = process.env.BASE_URL;
 
-const T2_SLUG = 't2-efir';
-
 const {
   getH1,
   metaKeywords,
   metaTitle,
+  T2_SLUG,
   images: { h1Image },
   fieldsetFilters: {
     legendText,

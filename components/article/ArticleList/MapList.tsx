@@ -1,47 +1,38 @@
-import { ARTICLES, IAllNewsModel } from '@/models/articles.model';
+import {
+  ARTICLES,
+  IAllMapsModel,
+  SAT_MAPS_MODEL,
+} from '@/models/articles.model';
 import styles from './ArticleList.module.scss';
 import ArticleCard from '../ArticleCard/ArticleCard';
 import FillingImg from '../../ui/Images/FillingImage';
 import FillingValidImage from '../../ui/Images/FillingValidImage';
-import Link from 'next/link';
 import { LANGUAGE, IImgParams } from '@/models/ui.model';
 import { EUrlBaseParam } from '@/models/url.model';
-import { cutText, getFormattedDateStr } from '@/libs/utils/utils';
-import DangerHtml from '../../ui/DangerHtml/DangerHtml';
 import EmptyData from '@/components/errors/EmptyData/EmptyData';
 
 const { h1Image } = ARTICLES.article.images;
 
 const {
-  date: dateTitle,
-  theme: themeTitle,
-  views: viewsTitle,
-  comments: commentsTitle,
-} = ARTICLES.infoPanelTitles;
+  makePostDescription,
+  metaSingleMap: { metaTitle },
+} = SAT_MAPS_MODEL;
+
+const { views: viewsTitle, comments: commentsTitle } = ARTICLES.infoPanelTitles;
 
 interface IArticleListProps {
-  articleList: IAllNewsModel[];
+  articleList: IAllMapsModel[];
   articleTitleImg: string | IImgParams;
 }
 
-const ArticleList = ({ articleList, articleTitleImg }: IArticleListProps) =>
+const MapList = ({ articleList, articleTitleImg }: IArticleListProps) =>
   articleList.length > 0 ? (
     <ul className={styles.ArticleList} data-testid="ArticleList">
       {articleList.map(
-        ({
-          id,
-          title,
-          description,
-          category_title,
-          view,
-          date,
-          comment_count,
-          category_cpu,
-          logo,
-          cpu,
-        }) => (
+        ({ id, title, description, view, comment_count, logo, cpu }) => (
           <li key={id}>
             <ArticleCard
+              isTitleCentered
               articleTitle={
                 <>
                   {typeof articleTitleImg !== 'string' ? (
@@ -60,33 +51,16 @@ const ArticleList = ({ articleList, articleTitleImg }: IArticleListProps) =>
                   }}
                   defaultImage={h1Image.defaultImg}
                   alternativeImgString={h1Image.alternativeStr}
-                  alt={`${h1Image.getAlt()[LANGUAGE]}${title}`}
+                  alt={`${h1Image.getAlt()[LANGUAGE]}${metaTitle[LANGUAGE]} ${title}`}
                   isBlur
                 />
               }
               articleDescription={
-                <DangerHtml
-                  text={cutText(description, 250)}
-                  wrapperTagName="span"
-                />
+                <p>{makePostDescription(description)[LANGUAGE]}</p>
               }
-              href={`${ARTICLES.articleList.links.articleLink.path}${cpu}`}
+              href={`/${EUrlBaseParam.SAT_COVERAGE_MAP}/${cpu}`}
               infoPanelItems={[
-                {
-                  name: themeTitle[LANGUAGE],
-                  value: (
-                    <Link
-                      href={`/${EUrlBaseParam.NEWS_AND_ARTICLES}/${category_cpu}`}
-                    >
-                      {category_title}
-                    </Link>
-                  ),
-                },
                 { name: viewsTitle[LANGUAGE], value: view },
-                {
-                  name: dateTitle[LANGUAGE],
-                  value: getFormattedDateStr(date),
-                },
                 { name: commentsTitle[LANGUAGE], value: comment_count },
               ]}
             />
@@ -98,4 +72,4 @@ const ArticleList = ({ articleList, articleTitleImg }: IArticleListProps) =>
     <EmptyData />
   );
 
-export default ArticleList;
+export default MapList;

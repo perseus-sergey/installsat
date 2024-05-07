@@ -1,43 +1,54 @@
-import EmptyData from '../../errors/EmptyData/EmptyData';
 import styles from './Accordion.module.scss';
 import {
   getChannelCatList,
   getChannelSatList,
-  getInstallationsList,
   getUsefulArticleList,
 } from '@/controllers/sidebar.controller';
 import Link from 'next/link';
 import { AccordionMenuItem } from '../AccordionMenuItem/AccordionMenuItem';
 import { MENU_ACCORDION } from '@/models/menuAccordion.model';
+import { getSatMapList } from '@/controllers/articles.controller';
+
+const {
+  SATELLITE_TV,
+  SATELLITES,
+  SAT_FINDER,
+  MAPS,
+  PACKAGES,
+  USEFUL,
+  ONLINE_TV,
+} = MENU_ACCORDION;
 
 const Accordion = async () => {
-  const installationsList = await getInstallationsList();
+  // const installationsList = await getInstallationsList();
 
-  const channelCatList = await getChannelCatList();
+  const channelCatListResp = await getChannelCatList();
+  const channelSatListResp = await getChannelSatList();
+  const usefulArticleListResp = await getUsefulArticleList();
+  const mapsResp = await getSatMapList();
 
-  const channelSatList = await getChannelSatList();
+  const maps = mapsResp instanceof Error ? [] : mapsResp;
 
-  const usefulArticleList = await getUsefulArticleList();
+  const channelCatList =
+    channelCatListResp instanceof Error ? [] : channelCatListResp;
 
-  if (
-    installationsList instanceof Error ||
-    usefulArticleList instanceof Error ||
-    channelSatList instanceof Error ||
-    channelCatList instanceof Error
-  )
-    return <EmptyData />;
+  const channelSatList =
+    channelSatListResp instanceof Error ? [] : channelSatListResp;
+
+  const usefulArticleList =
+    usefulArticleListResp instanceof Error ? [] : usefulArticleListResp;
 
   return (
     <nav className={styles.Accordion} data-testid="Accordion">
       <ul>
-        <AccordionMenuItem options={MENU_ACCORDION.SATELLITE_TV} />
-        <AccordionMenuItem options={MENU_ACCORDION.SAT_FINDER} />
-        <AccordionMenuItem options={MENU_ACCORDION.INSTALLATIONS}>
+        <AccordionMenuItem options={SATELLITE_TV} />
+        <AccordionMenuItem options={SAT_FINDER} />
+        {/* <AccordionMenuItem options={INSTALLATIONS}>
           <ul className={styles.accordionContent}>
             {installationsList.map((item) => (
               <li key={item.id} className={styles.contentItem}>
                 <Link
-                  href={`${MENU_ACCORDION.INSTALLATIONS.baseHrefOfList}/${item.cpu}/`}
+                  href={`${INSTALLATIONS.baseHrefOfList}/${item.cpu}/`}
                   className={styles.contentItemLink}
                 >
                   {item.title}
@@ -45,13 +56,13 @@ const Accordion = async () => {
               </li>
             ))}
           </ul>
-        </AccordionMenuItem>
-        <AccordionMenuItem options={MENU_ACCORDION.SATELLITES}>
+        </AccordionMenuItem> */}
+        <AccordionMenuItem options={SATELLITES}>
           <ul className={styles.accordionContent}>
             {channelSatList.map((item) => (
               <li key={item.id} className={styles.contentItem}>
                 <Link
-                  href={`${MENU_ACCORDION.SATELLITES.baseHrefOfList}/${item.cpu}/`}
+                  href={`${SATELLITES.baseHrefOfList}/${item.cpu}/`}
                   className={styles.contentItemLink}
                 >
                   {item.title} {item.position}
@@ -60,7 +71,21 @@ const Accordion = async () => {
             ))}
           </ul>
         </AccordionMenuItem>
-        <AccordionMenuItem options={MENU_ACCORDION.PACKAGES}>
+        <AccordionMenuItem options={MAPS}>
+          <ul className={styles.accordionContent}>
+            {maps.map((item) => (
+              <li key={item.beam_id} className={styles.contentItem}>
+                <Link
+                  href={`${MAPS.baseHrefOfList}/${item.cpu}`}
+                  className={styles.contentItemLink}
+                >
+                  {item.title} {item.position}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </AccordionMenuItem>
+        <AccordionMenuItem options={PACKAGES}>
           <ul className={styles.accordionContent}>
             {/* <li className={styles.contentItem}>
               <Link
@@ -73,7 +98,7 @@ const Accordion = async () => {
             {channelCatList.map((item) => (
               <li key={item.id} className={styles.contentItem}>
                 <Link
-                  href={`${MENU_ACCORDION.PACKAGES.baseHrefOfList}/${item.cpu}/`}
+                  href={`${PACKAGES.baseHrefOfList}/${item.cpu}/`}
                   className={styles.contentItemLink}
                 >
                   {item.title}
@@ -82,12 +107,12 @@ const Accordion = async () => {
             ))}
           </ul>
         </AccordionMenuItem>
-        <AccordionMenuItem options={MENU_ACCORDION.USEFUL}>
+        <AccordionMenuItem options={USEFUL}>
           <ul className={styles.accordionContent}>
             {usefulArticleList.map((item) => (
               <li key={item.id} className={styles.contentItem}>
                 <Link
-                  href={`${MENU_ACCORDION.USEFUL.baseHrefOfList}/${item.cpu}/`}
+                  href={`${USEFUL.baseHrefOfList}/${item.cpu}/`}
                   className={styles.contentItemLink}
                 >
                   {item.title}
@@ -123,7 +148,7 @@ const Accordion = async () => {
               </ul>
             </li>
           ))} */}
-        <AccordionMenuItem options={MENU_ACCORDION.ONLINE_TV} />
+        <AccordionMenuItem options={ONLINE_TV} />
       </ul>
       <input
         type="radio"

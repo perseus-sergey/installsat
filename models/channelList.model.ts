@@ -1,4 +1,4 @@
-import { ELanguage, ILang } from './ui.model';
+import { ELanguage } from './ui.model';
 import { EUrlBaseParam, EUrlSearchParam } from './url.model';
 
 export const CHANNEL_LIST_ANCHOR_START = 'genre-';
@@ -16,7 +16,7 @@ export const META_SAT_CHANNEL_LIST = {
       [ELanguage.EN]: 'List of satellite channels',
     };
   },
-  getKeywords(lang: keyof ILang) {
+  getKeywords(lang: ELanguage) {
     return `${META_SAT_CHANNEL_LIST.getTitle()[lang]} ${META_SAT_CHANNEL_LIST.getDescription()[lang]}`;
   },
   getDescription() {
@@ -131,6 +131,7 @@ export const META_ONLINE_CHANNEL_LIST = {
 };
 
 export const META_PACKAGE_CHANNEL_LIST = {
+  T2_SLUG: 't2-efir',
   getH1(packageName: string, searchQuery: string) {
     return {
       [ELanguage.UA]: `Список каналів телебачення «${packageName}»${searchQuery && ` назва яких містить «${searchQuery}»`}`,

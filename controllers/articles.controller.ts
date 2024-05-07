@@ -1,5 +1,6 @@
 import { executeQuery } from '@/libs/db/mysqldb';
 import {
+  IAllMapsModel,
   IAllNewsModel,
   IArticleModel,
   ISimilarArticleModel,
@@ -53,22 +54,9 @@ export const getChunkOfNews = async (
   T.total_count,
   C2.title AS category_title,
   C2.cpu AS category_cpu
-FROM 
-  tbl_useful U
-LEFT JOIN
-  (SELECT 
-       post, 
-       COUNT(id) AS comment_count 
-   FROM 
-       tbl_comments 
-   GROUP BY 
-       post) C
-ON 
-  U.id = C.post
-LEFT JOIN
-  tbl_categories C2
-ON
-  U.cat = C2.id
+FROM tbl_useful U
+LEFT JOIN (SELECT post, COUNT(id) AS comment_count FROM tbl_comments GROUP BY post) C ON U.id = C.post
+LEFT JOIN tbl_categories C2 ON U.cat = C2.id
 CROSS JOIN
   (SELECT COUNT(id) AS total_count FROM tbl_useful WHERE cat ${catValue} AND (title ${searchText} OR description ${searchText})) T
 WHERE 
@@ -78,8 +66,47 @@ ORDER BY
   U.date DESC, U.id 
 LIMIT ?, ?
 `;
+  const res = await executeQuery<IAllNewsModel>(sql, [
+    `${start}`,
+    `${quantity}`,
+  ]);
 
-  return await executeQuery<IAllNewsModel>(sql, [`${start}`, `${quantity}`]);
+  return res instanceof Error ? [] : res;
+};
+
+export const getSatMapList = async () => {
+  const sql = `
+  SELECT 
+      MAX(b.id) AS beam_id,
+      s.id,
+      s.title,
+      s.description,
+      s.cpu,
+      s.logo,
+      s.view,
+      s.position,
+      MAX(C.comment_count) AS comment_count
+  FROM (
+      SELECT * 
+      FROM tbl_chan_beam
+      WHERE map_img != ''
+  ) AS b
+  LEFT JOIN tbl_chan_sat AS s ON b.sat = s.id
+  LEFT JOIN (
+      SELECT post, COUNT(id) AS comment_count 
+      FROM tbl_comments_maps 
+      GROUP BY post
+  ) C ON s.id = C.post
+  GROUP BY s.id, s.title, s.description, s.cpu, s.logo, s.view, s.position
+  ORDER BY (
+      SELECT grade 
+      FROM tbl_chan_sat
+      WHERE id = s.id
+  );
+`;
+  const res = await executeQuery<IAllMapsModel>(sql);
+
+  return res instanceof Error ? [] : res;
 };
 
 export const getArticle = cache(async (slug: string) => {

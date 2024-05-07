@@ -1,51 +1,60 @@
-// import FormDigestInterval from '@/components/FormDigestInterval1/FormDigestInterval';
-// import SatNews from '@/components/SatNews/SatNews';
-// import { Title } from '@/components/Titles/Title';
-// import {
-//   LAST_NEWS_INTERVAL,
-//   META_TRANS_NEWS_LIST,
-// } from '@/models/satDigest.model';
-// import { EUrlSearchParam } from '@/models/url.model';
-// import { Suspense } from 'react';
-
 import { Title } from '@/components/ui/Titles/Title';
+import type { Metadata } from 'next';
+import { SAT_MAPS_MODEL } from '@/models/articles.model';
+import { getSatMapList } from '@/controllers/articles.controller';
 import { getFormattedDateStr } from '@/libs/utils/utils';
-import { DEFAULT_META_DATA } from '@/models/ui.model';
 import { EUrlBaseParam } from '@/models/url.model';
-import { Metadata } from 'next';
+import { LANGUAGE as L, DEFAULT_META_DATA } from '@/models/ui.model';
+import FillingImg from '@/components/ui/Images/FillingImage';
+import MapList from '@/components/article/ArticleList/MapList';
 
-const BASE_URL = process.env.BASE_URL || '';
+const BASE_URL = process.env.BASE_URL;
 
-// TODO: Change MetaData
-// =================================================================
+// const { meta, pagination, images, articlesCountCaption } = ARTICLES.articleList;
+const {
+  metaAllMaps: { metaDescription, metaKeywords, metaTitle },
+  images: { h1Image, titleImg },
+} = SAT_MAPS_MODEL;
+
+// const currDate = new Date().toLocaleDateString('en-GB');
+
+// const articleTitleImg = imagePathValidate(
+//   images.titleImg,
+//   images.titleImg.alternativeStr.title
+// );
+
+// export const dynamic = 'force-dynamic';
+
 export const metadata: Metadata = {
-  metadataBase: new URL(BASE_URL),
-  title: 'maps',
-  description: 'maps description',
-  keywords: 'maps keywords',
+  title: metaTitle[L],
+  description: metaDescription[L],
+  keywords: metaKeywords[L],
   openGraph: {
     ...DEFAULT_META_DATA.openGraph,
-    title: 'maps',
-    description: 'maps description',
-    url: `${BASE_URL}/${EUrlBaseParam.DELETE_COMMENT_SUBSCRIPTION}`,
-    publishedTime: getFormattedDateStr(new Date()),
+    title: metaTitle[L],
+    description: metaDescription[L],
+    url: `${BASE_URL}/${EUrlBaseParam.SAT_COVERAGE_MAP}`,
+    publishedTime: getFormattedDateStr(),
   },
 };
-export default function Page() {
-  //   const searchInterval = searchParams[EUrlSearchParam.INTERVAL];
-  //   const intervalDays =
-  //     typeof searchInterval === 'string' && searchInterval
-  //       ? +searchInterval
-  //       : LAST_NEWS_INTERVAL;
+export default async function Page() {
+  const allMaps = await getSatMapList();
 
   return (
-    <>
-      <article className="article">
-        <Title>
-          Карти покриття телевізійних супутників на території Європи та ближньої
-          Азії
-        </Title>
-      </article>
-    </>
+    <article className="article">
+      <Title>
+        {metaDescription[L]}
+
+        <FillingImg
+          width={h1Image.width}
+          height={h1Image.height}
+          src={h1Image.src}
+          alt={h1Image.alt[L]}
+          isBlur
+        />
+      </Title>
+
+      <MapList articleList={allMaps} articleTitleImg={titleImg} />
+    </article>
   );
 }

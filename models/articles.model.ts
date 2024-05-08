@@ -3,18 +3,6 @@ import { EUrlBaseParam } from './url.model';
 
 export const ARTICLES = {
   article: {
-    meta: {
-      metaTitle: {
-        [ELanguage.UA]: 'Останні новини та статті про цифрове телебачення',
-        [ELanguage.EN]: 'Latest news and articles about digital television',
-      },
-      metaDescription: {
-        [ELanguage.UA]:
-          'Список статей про новини в сфері цифрового телебачення, статей про налаштування обладнання для прийому та перегляду телевізійних та радіо каналів, статей про новини від провайдерів платного телебачення',
-        [ELanguage.EN]:
-          'List of articles about news in the field of digital television, articles about setting up equipment for receiving and viewing tv and radio channels, articles about news from pay TV providers',
-      },
-    },
     images: {
       h1Image: {
         path: '/Images/channelsOptimized/',

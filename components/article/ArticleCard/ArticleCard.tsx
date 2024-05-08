@@ -29,7 +29,7 @@ const ArticleCard = ({
       >
         {articleTitle}
       </h2>
-      <div className="flex flex-col md:flex-row items-center gap-4 p-4">
+      <div className="flex flex-col md:flex-row items-center justify-between gap-4 p-4">
         {articleDescription}
         {image && image}
       </div>

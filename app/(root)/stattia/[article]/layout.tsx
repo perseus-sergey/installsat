@@ -19,6 +19,8 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { getCommentsNumber } from '@/controllers/comments.controller';
 import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
+import BreadCrumbServer from '@/components/BreadCrumbs/BreadCrumbsServer';
+import { BREAD_CRUMBS } from '@/models/breadCrumbs.model';
 
 interface IArticleParams {
   children: React.ReactNode;
@@ -61,7 +63,7 @@ export default async function layout({
     return <EmptyData description={sqlResult.message} />;
   if (!sqlResult.length) notFound();
 
-  const { id, logo, view, title, slug } = sqlResult[0];
+  const { id, logo, view, title, slug, cat_slug, cat_name } = sqlResult[0];
 
   const similarArticles = await getSimilarArticles(logo, id);
   if (similarArticles instanceof Error)
@@ -76,6 +78,16 @@ export default async function layout({
 
   return (
     <>
+      <BreadCrumbServer
+        breadCrumbList={[
+          BREAD_CRUMBS.NEWS_AND_ARTICLES,
+          {
+            title: cat_name,
+            href: `${EUrlBaseParam.NEWS_AND_ARTICLES}/${cat_slug}`,
+          },
+          title,
+        ]}
+      />
       <article className="article">{children}</article>
 
       {similarArticles.length ? (

@@ -96,6 +96,8 @@ export const SIMILAR_ARTICLES = {
 export enum EDBTableTitles {
   ARTICLE = 'tbl_useful',
   CHANNELS = 'tbl_channals',
+  CHANNEL_SAT = 'tbl_chan_sat',
+  CHANNEL_CATEGORY = 'tbl_chan_categ',
   COMMENTS_ARTICLE = 'tbl_comments',
   COMMENTS_CHANNEL = 'tbl_comments_chan',
   COMMENTS_CHAT = 'tbl_comments_chat',

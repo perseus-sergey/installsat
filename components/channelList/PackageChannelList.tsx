@@ -16,6 +16,7 @@ import { cutText } from '@/libs/utils/utils';
 import FillingValidImage from '../ui/Images/FillingValidImage';
 import GenreImage from '../ui/Images/GenreImage/GenreImage';
 import EmptyData from '../errors/EmptyData/EmptyData';
+import { EUrlBaseParam } from '@/models/url.model';
 
 const {
   name: tName,
@@ -25,7 +26,7 @@ const {
 } = ONLINE_CHANNEL_TOOLTIP_TITLES;
 
 const {
-  linkChannel: { ariaLabel, path },
+  linkChannel: { ariaLabel },
   images: { subCatImage },
   getPriceString,
 } = META_PACKAGE_CHANNEL_LIST;
@@ -34,9 +35,10 @@ const { channelLogo } = META_CHANNEL.images;
 
 interface IProps {
   channels: [string, (IPackageChannelListModel | IOnlineChannelListModel)[]][];
+  pathToChannelDetails: EUrlBaseParam;
 }
 
-const PackageChannelList = ({ channels }: IProps) =>
+const PackageChannelList = ({ channels, pathToChannelDetails }: IProps) =>
   channels.length > 0 ? (
     channels.map(([genreTitle, chanList]) => (
       <>
@@ -74,7 +76,7 @@ const PackageChannelList = ({ channels }: IProps) =>
           {chanList.map((channel) => (
             <li key={channel.chan_id} className={styles.listItem}>
               <Link
-                href={`${path}/${channel.chan_cpu}`}
+                href={`/${pathToChannelDetails}/${channel.chan_cpu}`}
                 aria-label={ariaLabel[LANGUAGE]}
               >
                 <ChannelCardTooltip

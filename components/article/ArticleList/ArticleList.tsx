@@ -60,7 +60,7 @@ const ArticleList = ({ articleList, articleTitleImg }: IArticleListProps) =>
                   }}
                   defaultImage={h1Image.defaultImg}
                   alternativeImgString={h1Image.alternativeStr}
-                  alt={`${h1Image.getAlt()[LANGUAGE]}${title}`}
+                  alt={`${h1Image.altStart[LANGUAGE]} ${title}`}
                   isBlur
                 />
               }

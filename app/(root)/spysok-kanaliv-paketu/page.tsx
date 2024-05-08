@@ -7,6 +7,7 @@ import { LANGUAGE as L, DEFAULT_META_DATA } from '@/models/ui.model';
 import { getChannelPackages } from '@/controllers/channelList.controller';
 import PackageList from '@/components/article/ArticleList/PackageList';
 import { META_PACKAGES } from '@/models/channelList.model';
+import BreadCrumbServer from '@/components/BreadCrumbs/BreadCrumbsServer';
 
 const BASE_URL = process.env.BASE_URL;
 
@@ -33,10 +34,13 @@ export default async function Page() {
   if (!packages.length) return <EmptyData description={`Couldn't find data`} />;
 
   return (
-    <article className="article">
-      <Title>{metaH1[L]}</Title>
+    <>
+      <BreadCrumbServer />
+      <article className="article">
+        <Title>{metaH1[L]}</Title>
 
-      <PackageList packageList={packages} />
-    </article>
+        <PackageList packageList={packages} />
+      </article>
+    </>
   );
 }

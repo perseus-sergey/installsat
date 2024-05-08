@@ -7,6 +7,7 @@ import { EUrlBaseParam } from '@/models/url.model';
 import { LANGUAGE as L, DEFAULT_META_DATA } from '@/models/ui.model';
 import FillingImg from '@/components/ui/Images/FillingImage';
 import MapList from '@/components/article/ArticleList/MapList';
+import BreadCrumbServer from '@/components/BreadCrumbs/BreadCrumbsServer';
 
 const BASE_URL = process.env.BASE_URL;
 
@@ -15,15 +16,6 @@ const {
   metaAllMaps: { metaDescription, metaKeywords, metaTitle },
   images: { h1Image, titleImg },
 } = SAT_MAPS_MODEL;
-
-// const currDate = new Date().toLocaleDateString('en-GB');
-
-// const articleTitleImg = imagePathValidate(
-//   images.titleImg,
-//   images.titleImg.alternativeStr.title
-// );
-
-// export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
   title: metaTitle[L],
@@ -41,20 +33,23 @@ export default async function Page() {
   const allMaps = await getSatMapList();
 
   return (
-    <article className="article">
-      <Title>
-        {metaDescription[L]}
+    <>
+      <BreadCrumbServer />
+      <article className="article">
+        <Title>
+          {metaDescription[L]}
 
-        <FillingImg
-          width={h1Image.width}
-          height={h1Image.height}
-          src={h1Image.src}
-          alt={h1Image.alt[L]}
-          isBlur
-        />
-      </Title>
+          <FillingImg
+            width={h1Image.width}
+            height={h1Image.height}
+            src={h1Image.src}
+            alt={h1Image.alt[L]}
+            isBlur
+          />
+        </Title>
 
-      <MapList articleList={allMaps} articleTitleImg={titleImg} />
-    </article>
+        <MapList articleList={allMaps} articleTitleImg={titleImg} />
+      </article>
+    </>
   );
 }

@@ -21,18 +21,22 @@ import {
 import { getFormattedDateStr } from '@/libs/utils/utils';
 import { EUrlBaseParam, EUrlSearchParam } from '@/models/url.model';
 import Filter from '@/components/ui/Filter/Filter';
-import { Suspense } from 'react';
+import { Suspense, cache } from 'react';
 import { validSearchParam } from '@/libs/utils/validSearchParam';
 import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
 import { getCommentsNumber } from '@/controllers/comments.controller';
 import TooltipSimple from '@/components/ui/TooltipSimple/TooltipSimple';
 import Link from 'next/link';
-// import OnlineChannelListAfterText from '@/components/online/OnlineChannelListAfterText/OnlineChannelListAfterText';
 import PackageChannelList from '@/components/channelList/PackageChannelList';
 import FillingValidImage from '@/components/ui/Images/FillingValidImage';
 import GenreImage from '@/components/ui/Images/GenreImage/GenreImage';
 import SimilarArticles from '@/components/SimilarArticles/SimilarArticles';
 import { getChannelCatList } from '@/controllers/sidebar.controller';
+import { updateViewCount } from '@/controllers/articles.controller';
+import BreadCrumbServer, {
+  IBreadCrumbLink,
+} from '@/components/BreadCrumbs/BreadCrumbsServer';
+import { BREAD_CRUMBS } from '@/models/breadCrumbs.model';
 
 const BASE_URL = process.env.BASE_URL;
 
@@ -54,6 +58,8 @@ const {
     filterByChannelName: { placeholder, labelTitle },
   },
 } = META_ALL_SAT_CHANNEL_LIST;
+
+const getH1Cached = cache(getH1);
 
 interface IPageProps {
   params: { slug: string };
@@ -125,13 +131,29 @@ export default async function Page({
       ? []
       : packagesResp.filter((pack) => pack.cpu !== slug);
 
+  channels &&
+    updateViewCount(
+      EDBTableTitles.CHANNEL_CATEGORY,
+      `${channels[0][1][0].cat_id}`,
+      channels[0][1][0].cat_view
+    );
+
+  const breadCrumbList: (IBreadCrumbLink | string)[] = [
+    BREAD_CRUMBS.PACKAGE_CHANNEL_LIST,
+  ];
+  channels &&
+    breadCrumbList.push(
+      getH1Cached(channels[0][1][0].cat_title, searchQueryChannel)[L]
+    );
+
   return (
     <>
+      <BreadCrumbServer breadCrumbList={breadCrumbList} />
       <article className="article">
         {channels ? (
           <>
             <Title>
-              {getH1(channels[0][1][0].cat_title, searchQueryChannel)[L]}
+              {getH1Cached(channels[0][1][0].cat_title, searchQueryChannel)[L]}
               <FillingValidImage
                 image={{
                   width: h1Image.width,
@@ -181,7 +203,10 @@ export default async function Page({
             </Fieldset>
 
             <Suspense key={searchQueryChannel}>
-              <PackageChannelList channels={channels} />
+              <PackageChannelList
+                channels={channels}
+                pathToChannelDetails={EUrlBaseParam.CHANNEL_PARAMS}
+              />
             </Suspense>
 
             {/* <OnlineChannelListAfterText lang={LANGUAGE} /> */}

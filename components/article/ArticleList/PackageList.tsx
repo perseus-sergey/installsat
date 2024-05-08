@@ -25,6 +25,7 @@ const PackageList = ({ packageList }: IProps) => (
         ({ id, title, description, view, comment_count, logo, cpu }) => (
           <li key={id}>
             <ArticleCard
+              isTitleCentered
               articleTitle={title}
               image={
                 <FillingValidImage

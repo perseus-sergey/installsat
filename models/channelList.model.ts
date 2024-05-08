@@ -176,7 +176,6 @@ export const META_PACKAGE_CHANNEL_LIST = {
     },
   },
   linkChannel: {
-    path: `/${EUrlBaseParam.CHANNEL_PARAMS}`,
     ariaLabel: {
       [ELanguage.UA]: 'Деталі каналу',
       [ELanguage.EN]: 'Channel details',
@@ -426,6 +425,7 @@ export interface IPackageChannelListModel extends IChannelListModel {
   cat_slug: string;
   cat_logo: string;
   cat_description: string;
+  cat_view: number;
   genre_slug: string;
   genre_description: string;
   genre_h1: string;

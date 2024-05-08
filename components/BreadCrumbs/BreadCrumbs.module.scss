@@ -21,11 +21,6 @@ $separatorColor: #4a4d5d;
 
   .item {
     list-style: none;
-    transition: all 0.3s;
-
-    &:hover {
-      text-decoration: underline;
-    }
   }
 
   .activeItem {

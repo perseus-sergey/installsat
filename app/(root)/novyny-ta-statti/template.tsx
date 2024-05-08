@@ -1,4 +1,3 @@
-import BreadCrumbs from '@/components/BreadCrumbs/BreadCrumbs';
 import Filter from '@/components/ui/Filter/Filter';
 import { ARTICLES } from '@/models/articles.model';
 import { LANGUAGE } from '@/models/ui.model';
@@ -15,7 +14,6 @@ interface IProps {
 export default function Template({ children }: IProps) {
   return (
     <>
-      <BreadCrumbs />
       <Filter
         idName="article-search-input"
         placeholder={placeholder[LANGUAGE]}

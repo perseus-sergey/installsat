@@ -1,25 +1,18 @@
-import { ELanguage, ILang } from './ui.model';
+import { ELanguage } from './ui.model';
 import { EUrlBaseParam } from './url.model';
 
 export const ARTICLES = {
   article: {
     meta: {
-      getTitle() {
-        return {
-          [ELanguage.UA]: 'Останні новини та статті про цифрове телебачення',
-          [ELanguage.EN]: 'Latest news and articles about digital television',
-        };
+      metaTitle: {
+        [ELanguage.UA]: 'Останні новини та статті про цифрове телебачення',
+        [ELanguage.EN]: 'Latest news and articles about digital television',
       },
-      getKeywords(lang: keyof ILang) {
-        return `${this.getDescription()[lang]}`;
-      },
-      getDescription() {
-        return {
-          [ELanguage.UA]:
-            'Список статей про новини в сфері цифрового телебачення, статей про налаштування обладнання для прийому та перегляду телевізійних та радіо каналів, статей про новини від провайдерів платного телебачення',
-          [ELanguage.EN]:
-            'List of articles about news in the field of digital television, articles about setting up equipment for receiving and viewing tv and radio channels, articles about news from pay TV providers',
-        };
+      metaDescription: {
+        [ELanguage.UA]:
+          'Список статей про новини в сфері цифрового телебачення, статей про налаштування обладнання для прийому та перегляду телевізійних та радіо каналів, статей про новини від провайдерів платного телебачення',
+        [ELanguage.EN]:
+          'List of articles about news in the field of digital television, articles about setting up equipment for receiving and viewing tv and radio channels, articles about news from pay TV providers',
       },
     },
     images: {
@@ -33,11 +26,9 @@ export const ARTICLES = {
           width: '100px',
         },
         alternativeStr: { title: '🎞', fontSize: '6rem' },
-        getAlt() {
-          return {
-            [ELanguage.UA]: `Логотип до статті: `,
-            [ELanguage.EN]: `Logo for article: `,
-          };
+        altStart: {
+          [ELanguage.UA]: `Логотип до статті:`,
+          [ELanguage.EN]: `Logo for article:`,
         },
       },
     },
@@ -54,28 +45,19 @@ export const ARTICLES = {
   },
   articleList: {
     meta: {
-      getH1(date: string) {
-        return {
-          [ELanguage.UA]: `Останні новини ТБ, статті та огляди на ${date}`,
-          [ELanguage.EN]: `Latest TV news, articles and reviews as of ${date}`,
-        };
+      h1Start: {
+        [ELanguage.UA]: `Останні новини ТБ, статті та огляди на`,
+        [ELanguage.EN]: `Latest TV news, articles and reviews as of`,
       },
-      getTitle() {
-        return {
-          [ELanguage.UA]: 'Останні новини та статті про цифрове телебачення',
-          [ELanguage.EN]: 'Latest news and articles about digital television',
-        };
+      title: {
+        [ELanguage.UA]: 'Останні новини та статті про цифрове телебачення',
+        [ELanguage.EN]: 'Latest news and articles about digital television',
       },
-      getKeywords(lang: keyof ILang) {
-        return `${this.getDescription()[lang]}`;
-      },
-      getDescription() {
-        return {
-          [ELanguage.UA]:
-            'Список статей про новини в сфері цифрового телебачення, статей про налаштування обладнання для прийому та перегляду телевізійних та радіо каналів, статей про новини від провайдерів платного телебачення',
-          [ELanguage.EN]:
-            'List of articles about news in the field of digital television, articles about setting up equipment for receiving and viewing tv and radio channels, articles about news from pay TV providers',
-        };
+      description: {
+        [ELanguage.UA]:
+          'Список статей про новини в сфері цифрового телебачення, статей про налаштування обладнання для прийому та перегляду телевізійних та радіо каналів, статей про новини від провайдерів платного телебачення',
+        [ELanguage.EN]:
+          'List of articles about news in the field of digital television, articles about setting up equipment for receiving and viewing tv and radio channels, articles about news from pay TV providers',
       },
     },
     images: {
@@ -193,18 +175,33 @@ export const SAT_MAPS_MODEL = {
       [ELanguage.UA]: 'Карта покриття супутника',
       [ELanguage.EN]: 'Satellite coverage map',
     },
-    // metaDescription: {
-    //   [ELanguage.UA]:
-    //     'Карти покриття телевізійних супутників на території Європи та ближньої Азії',
-    //   [ELanguage.EN]:
-    //     'Satellite coverage maps of television satellites in Europe and the Far East',
-    // },
-    // metaKeywords: {
-    //   [ELanguage.UA]:
-    //     'Карти покриття телевізійні супутники територія Європа Азії промінь напрямок сигнал',
-    //   [ELanguage.EN]:
-    //     'Coverage maps television satellites territory Europe Asia beam direction signal',
-    // },
+    getDescription(satTitle: string) {
+      return {
+        [ELanguage.UA]: `Детальна карта покриття телевізійного супутника ${satTitle} на території Європейських та Близькосхідних країн Євразії.`,
+        [ELanguage.EN]: `Detailed coverage map of the ${satTitle} television satellite in Europe and the Far East.`,
+      };
+    },
+    getH1(satTitle: string) {
+      return {
+        [ELanguage.UA]: `Супутник ${satTitle}. Карти покриття країн Європи та ближньої Азії`,
+        [ELanguage.EN]: `${satTitle} satellite. Coverage maps of Europe and Middle Asia`,
+      };
+    },
+    metaKeywords: {
+      [ELanguage.UA]:
+        'карта покриття телевізійний супутник тв промінь Європа Азія',
+      [ELanguage.EN]: 'coverage map television satellite TV beam Europe Asia',
+    },
+  },
+  similar: {
+    similarTitle: {
+      [ELanguage.UA]: 'До уваги',
+      [ELanguage.EN]: 'To note',
+    },
+    similarStart: {
+      [ELanguage.UA]: 'Список доступних телеканалів супутника',
+      [ELanguage.EN]: 'List of available television channels from',
+    },
   },
   makePostDescription(satTitle: string) {
     return {
@@ -258,6 +255,18 @@ export interface IAllMapsModel {
   beam_id: number;
   position: string;
   comment_count: number | null;
+}
+
+export interface IMapModel {
+  sat_id: number;
+  sat_title: string;
+  position: string;
+  logo: string;
+  view: number;
+  beam_title: string;
+  beam_description: string;
+  beam_slug: string;
+  map_img: string;
 }
 
 export interface ISingleCatArticlesModel {

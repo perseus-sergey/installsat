@@ -33,6 +33,9 @@ import OnlinePlayerTabs from '@/components/online/OnlinePlayerTabs/OnlinePlayerT
 import GrooveLine from '@/components/ui/GrooveLine';
 import ScheduleShort from '@/components/Schedule/ScheduleShort';
 import { fetchUserLocation } from '@/libs/utils/getUserIP';
+import BreadCrumbServer from '@/components/BreadCrumbs/BreadCrumbsServer';
+import { BREAD_CRUMBS } from '@/models/breadCrumbs.model';
+import { cache } from 'react';
 
 const BASE_URL = process.env.BASE_URL;
 
@@ -49,6 +52,8 @@ const {
 
 const { getDescription, getH1, getKeywords, getTitle } = META_CHANNEL_ONLINE;
 
+const getH1Cached = cache(getH1);
+
 export interface IChannelProps {
   params: { slug: string };
 }
@@ -60,16 +65,18 @@ export const generateMetadata = async ({
   if (sqlResult instanceof Error || !sqlResult.length)
     return DEFAULT_META_DATA[L];
 
-  const { title, description, chan_slug } = sqlResult[0];
+  const { title: chTitle, description: descr, chan_slug } = sqlResult[0];
+  const description = getDescription(chTitle, descr)[L];
+  const title = getTitle(chTitle)[L];
 
   return {
-    title: getTitle(title)[L],
-    description: getDescription(title, description)[L],
+    title,
+    description,
     keywords: getKeywords(title)[L],
     openGraph: {
       ...DEFAULT_META_DATA.openGraph,
-      title: getTitle(title)[L],
-      description: getDescription(title, description)[L],
+      title,
+      description,
       url: `${BASE_URL}/${EUrlBaseParam.ONLINE_CHANNEL_LIST}/${chan_slug}`,
       publishedTime: getFormattedDateStr(),
     },
@@ -109,9 +116,15 @@ export default async function Page({ params: { slug } }: IChannelProps) {
 
   return (
     <>
+      <BreadCrumbServer
+        breadCrumbList={[
+          BREAD_CRUMBS.ONLINE_CHANNEL_LIST,
+          getH1Cached(title)[L],
+        ]}
+      />
       <article className="article">
         <Title>
-          {getH1(title)[L]}
+          {getH1Cached(title)[L]}
           <FillingValidImage
             image={{
               ...bigLogo,

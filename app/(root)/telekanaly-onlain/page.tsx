@@ -27,6 +27,7 @@ import Link from 'next/link';
 import GenreImage from '@/components/ui/Images/GenreImage/GenreImage';
 import OnlineChannelListAfterText from '@/components/online/OnlineChannelListAfterText/OnlineChannelListAfterText';
 import PackageChannelList from '@/components/channelList/PackageChannelList';
+import BreadCrumbServer from '@/components/BreadCrumbs/BreadCrumbsServer';
 
 const BASE_URL = process.env.BASE_URL;
 
@@ -81,6 +82,7 @@ export default async function Page({ searchParams }: IPageProps) {
 
   return (
     <>
+      <BreadCrumbServer />
       <article className="article">
         <Title>
           {metaH1[L]}
@@ -120,7 +122,10 @@ export default async function Page({ searchParams }: IPageProps) {
         </Fieldset>
 
         <Suspense key={searchQueryChannel}>
-          <PackageChannelList channels={onlineChannels} />
+          <PackageChannelList
+            pathToChannelDetails={EUrlBaseParam.ONLINE_CHANNEL_LIST}
+            channels={onlineChannels}
+          />
         </Suspense>
 
         <OnlineChannelListAfterText lang={LANGUAGE} />

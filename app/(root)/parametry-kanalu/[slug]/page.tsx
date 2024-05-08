@@ -27,6 +27,8 @@ import { notFound } from 'next/navigation';
 import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
 import { getCommentsNumber } from '@/controllers/comments.controller';
 import GrooveLine from '@/components/ui/GrooveLine';
+import BreadCrumbServer from '@/components/BreadCrumbs/BreadCrumbsServer';
+import { CHANNEL_LIST_ANCHOR_START } from '@/models/channelList.model';
 
 const BASE_URL = process.env.BASE_URL;
 
@@ -120,6 +122,7 @@ export default async function Page({ params: { slug } }: IChannelProps) {
     text,
     view,
     chan_slug,
+    cat_id,
     cat_title,
     cat_parent_title,
     cat_parent_id,
@@ -129,7 +132,9 @@ export default async function Page({ params: { slug } }: IChannelProps) {
   } = sqlResult[0];
 
   const catLink =
-    cat_parent_id > 0 ? `${cat_parent_cpu}#${cat_slug}` : cat_slug;
+    cat_parent_id > 0
+      ? `${cat_parent_cpu}#${CHANNEL_LIST_ANCHOR_START}${cat_id}`
+      : cat_slug;
 
   const catTitle =
     cat_parent_id > 0 ? `${cat_parent_title} - ${cat_title}` : cat_title;
@@ -151,6 +156,15 @@ export default async function Page({ params: { slug } }: IChannelProps) {
 
   return (
     <>
+      <BreadCrumbServer
+        breadCrumbList={[
+          {
+            href: `${EUrlBaseParam.PACKAGE_CHANNEL_LIST}/${catLink}`,
+            title: catTitle,
+          },
+          `${titleBefore[LANGUAGE]} "${title}"`,
+        ]}
+      />
       <article className="article">
         <Title>
           {`${titleBefore[LANGUAGE]} "${title}"`}

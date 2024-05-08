@@ -185,7 +185,7 @@ export const getT2Channels = cache(async (searchQuery = '') => {
 
   const sql = `
     SELECT C.id AS chan_id, C.title AS chan_title, C.cpu AS chan_cpu, C.logo AS chan_logo, C.encryption, C.description AS chan_description, C.tema AS genre_id, C.cat AS cat_id,
-      CO.title AS compr, L.title AS lan, T.title AS genre_title, cat.logo AS cat_logo, cat.title AS cat_title, cat.cpu AS cat_slug, cat.description AS cat_description
+      CO.title AS compr, L.title AS lan, T.title AS genre_title, cat.logo AS cat_logo, cat.title AS cat_title, cat.cpu AS cat_slug, cat.description AS cat_description, cat.view AS cat_view
     FROM tbl_channals AS C
     LEFT JOIN tbl_chan_categ AS cat ON C.cat = cat.id 
     LEFT JOIN tbl_chan_compress AS CO ON C.compress = CO.id 
@@ -202,10 +202,7 @@ export const getT2Channels = cache(async (searchQuery = '') => {
 
   return resp instanceof Error || !resp.length
     ? null
-    : groupeChannelsBy<IOnlineChannelListModel & IPackageChannelListModel>(
-        resp,
-        'genre_title'
-      );
+    : groupeChannelsBy<IPackageChannelListModel>(resp, 'genre_title');
 });
 
 export const getPackageChannels = cache(
@@ -219,6 +216,7 @@ export const getPackageChannels = cache(
     cat.cpu AS cat_slug,
     cat.logo AS cat_logo, 
     cat.description AS cat_description,
+    cat.view AS cat_view,
     subcat.cpu AS genre_slug,
     subcat.title AS genre_title,
     subcat.h1 AS genre_h1,

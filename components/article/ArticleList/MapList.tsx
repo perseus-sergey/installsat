@@ -51,7 +51,7 @@ const MapList = ({ articleList, articleTitleImg }: IArticleListProps) =>
                   }}
                   defaultImage={h1Image.defaultImg}
                   alternativeImgString={h1Image.alternativeStr}
-                  alt={`${h1Image.getAlt()[LANGUAGE]}${metaTitle[LANGUAGE]} ${title}`}
+                  alt={`${h1Image.altStart[LANGUAGE]} ${metaTitle[LANGUAGE]} ${title}`}
                   isBlur
                 />
               }

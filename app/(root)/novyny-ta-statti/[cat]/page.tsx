@@ -16,6 +16,8 @@ import { LANGUAGE, TSearchParams, DEFAULT_META_DATA } from '@/models/ui.model';
 import { EUrlBaseParam, EUrlSearchParam } from '@/models/url.model';
 import { imagePathValidate } from '@/libs/utils/imagePathValidate';
 import { validSearchParam } from '@/libs/utils/validSearchParam';
+import BreadCrumbServer from '@/components/BreadCrumbs/BreadCrumbsServer';
+import { BREAD_CRUMBS } from '@/models/breadCrumbs.model';
 
 const BASE_URL = process.env.BASE_URL;
 
@@ -35,8 +37,6 @@ export interface IPageParams {
   searchParams: TSearchParams;
 }
 
-const currDateStr = getFormattedDateStr(new Date());
-
 export const generateMetadata = async ({
   params: { cat },
 }: IPageParams): Promise<Metadata> => {
@@ -51,7 +51,7 @@ export const generateMetadata = async ({
       title,
       description,
       url: `${BASE_URL}/${EUrlBaseParam.NEWS_AND_ARTICLES}/${cpu}`,
-      publishedTime: getFormattedDateStr(currDateStr),
+      publishedTime: getFormattedDateStr(),
     },
   };
 };
@@ -97,6 +97,9 @@ export default async function Page({
 
   return (
     <>
+      <BreadCrumbServer
+        breadCrumbList={[BREAD_CRUMBS.NEWS_AND_ARTICLES, description]}
+      />
       <Title>
         {description}
 

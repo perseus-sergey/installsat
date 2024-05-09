@@ -29,6 +29,7 @@ import { getCommentsNumber } from '@/controllers/comments.controller';
 import GrooveLine from '@/components/ui/GrooveLine';
 import BreadCrumbServer from '@/components/BreadCrumbs/BreadCrumbsServer';
 import { CHANNEL_LIST_ANCHOR_START } from '@/models/channelList.model';
+import { BREAD_CRUMBS } from '@/models/breadCrumbs.model';
 
 const BASE_URL = process.env.BASE_URL;
 
@@ -49,6 +50,8 @@ const {
   getResponsibilityText,
   similar: { channels: simChannelsBefore, articles: simArticlesBefore },
 } = META_CHANNEL;
+
+const currentDate = getFormattedDateStr();
 
 export interface IChannelProps {
   params: { slug: string };
@@ -103,7 +106,7 @@ export const generateMetadata = async ({
       title: metaTitle,
       description: description || title,
       url: `${BASE_URL}/${EUrlBaseParam.CHANNEL_PARAMS}/${chan_slug}`,
-      publishedTime: getFormattedDateStr(),
+      publishedTime: currentDate,
     },
   };
 };
@@ -128,6 +131,8 @@ export default async function Page({ params: { slug } }: IChannelProps) {
     cat_parent_id,
     cat_parent_cpu,
     cat_slug,
+    sat_slug,
+    sat_title,
     tvforsite_net,
   } = sqlResult[0];
 
@@ -158,9 +163,14 @@ export default async function Page({ params: { slug } }: IChannelProps) {
     <>
       <BreadCrumbServer
         breadCrumbList={[
+          BREAD_CRUMBS.PACKAGE_CHANNEL_LIST,
           {
             href: `${EUrlBaseParam.PACKAGE_CHANNEL_LIST}/${catLink}`,
             title: catTitle,
+          },
+          {
+            href: `${EUrlBaseParam.SAT_CHANNEL_LIST}/${sat_slug}`,
+            title: sat_title,
           },
           `${titleBefore[LANGUAGE]} "${title}"`,
         ]}
@@ -187,7 +197,7 @@ export default async function Page({ params: { slug } }: IChannelProps) {
 
           <TvScheduleLink
             title={`${scheduleTitle[LANGUAGE]} "${title}"`}
-            href={`/${EUrlBaseParam.CHANNELS_TV_PROGRAM}/${slug}?${EUrlSearchParam.DATE}=${getFormattedDateStr()}`}
+            href={`/${EUrlBaseParam.CHANNELS_TV_PROGRAM}/${slug}?${EUrlSearchParam.DATE}=${currentDate}`}
           />
 
           {tvforsite_net && (

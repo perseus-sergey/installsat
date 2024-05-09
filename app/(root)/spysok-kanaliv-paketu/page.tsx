@@ -1,4 +1,3 @@
-import EmptyData from '@/components/errors/EmptyData/EmptyData';
 import { Title } from '@/components/ui/Titles/Title';
 import type { Metadata } from 'next';
 import { getFormattedDateStr } from '@/libs/utils/utils';
@@ -22,16 +21,11 @@ export const metadata: Metadata = {
     title: metaTitle[L],
     description: metaDescription[L],
     url: `${BASE_URL}/${EUrlBaseParam.PACKAGE_CHANNEL_LIST}`,
-    publishedTime: getFormattedDateStr(new Date()),
+    publishedTime: getFormattedDateStr(),
   },
 };
 export default async function Page() {
   const packages = await getChannelPackages();
-
-  if (packages instanceof Error)
-    return <EmptyData description={packages.message} />;
-
-  if (!packages.length) return <EmptyData description={`Couldn't find data`} />;
 
   return (
     <>
@@ -39,7 +33,7 @@ export default async function Page() {
       <article className="article">
         <Title>{metaH1[L]}</Title>
 
-        <PackageList packageList={packages} />
+        <PackageList packageList={packages instanceof Error ? [] : packages} />
       </article>
     </>
   );

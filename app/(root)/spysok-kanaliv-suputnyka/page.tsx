@@ -1,4 +1,3 @@
-import EmptyData from '@/components/errors/EmptyData/EmptyData';
 import { Title } from '@/components/ui/Titles/Title';
 import {
   getSatChannels,
@@ -29,14 +28,16 @@ import ChannelFormatSliders from '@/components/ui/ChannelFormatSliders/ChannelFo
 import { validSearchParam } from '@/libs/utils/validSearchParam';
 import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
 import { getCommentsNumber } from '@/controllers/comments.controller';
+import BreadCrumbServer from '@/components/BreadCrumbs/BreadCrumbsServer';
+import { BREAD_CRUMBS } from '@/models/breadCrumbs.model';
 
 const BASE_URL = process.env.BASE_URL;
 
 const {
-  getTitle,
-  getDescription,
-  getKeywords,
-  getH1,
+  metaH1,
+  metaDescription,
+  metaKeywords,
+  metaTitle,
   image: { h1ImageParams },
   anchors,
   filtering: {
@@ -50,15 +51,15 @@ const {
 } = META_ALL_SAT_CHANNEL_LIST;
 
 export const metadata: Metadata = {
-  title: getTitle()[L],
-  description: getDescription()[L],
-  keywords: getKeywords()[L],
+  title: metaTitle[L],
+  description: metaDescription[L],
+  keywords: metaKeywords[L],
   openGraph: {
     ...DEFAULT_META_DATA.openGraph,
-    title: getTitle()[L],
-    description: getDescription()[L],
+    title: metaTitle[L],
+    description: metaDescription[L],
     url: `${BASE_URL}/${EUrlBaseParam.SAT_CHANNEL_LIST}`,
-    publishedTime: getFormattedDateStr(new Date()),
+    publishedTime: getFormattedDateStr(),
   },
 };
 interface IPageProps {
@@ -79,13 +80,12 @@ export default async function Page({ searchParams }: IPageProps) {
     !!searchParams?.[EUrlSearchParam.CHANNEL_FORMAT_T2MI]
   );
 
-  if (satChannels instanceof Error)
-    return <EmptyData description={satChannels.message} />;
-
   const satListResults = await getChannelSatList();
   const satList = satListResults instanceof Error ? [] : satListResults;
 
-  const groupedChannelsAllSat = getGroupedChannelsAllSat([satChannels]);
+  const groupedChannelsAllSat = getGroupedChannelsAllSat([
+    satChannels instanceof Error ? [] : satChannels,
+  ]);
 
   const satLinks = satList.map((sat) => ({
     title: `${sat.title} - ${sat.position}`,
@@ -99,9 +99,12 @@ export default async function Page({ searchParams }: IPageProps) {
 
   return (
     <>
+      <BreadCrumbServer
+        breadCrumbList={[BREAD_CRUMBS.PACKAGE_CHANNEL_LIST, metaH1[L]]}
+      />
       <article className="article">
         <Title>
-          {getH1()[L]}
+          {metaH1[L]}
           <FillingImg
             src={h1ImageParams.path}
             alt={h1ImageParams.alt[L]}
@@ -161,7 +164,7 @@ export default async function Page({ searchParams }: IPageProps) {
         revalidateUrl={`/${EUrlBaseParam.SAT_CHANNEL_LIST}`}
         dbCommentTableName={EDBTableTitles.COMMENTS_PACKAGES}
         articleId={CHANNEL_LIST_DB_ID}
-        articleName={getTitle()[L]}
+        articleName={metaTitle[L]}
       />
     </>
   );

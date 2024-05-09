@@ -180,6 +180,10 @@ export const SAT_MAPS_MODEL = {
         'карта покриття телевізійний супутник тв промінь Європа Азія',
       [ELanguage.EN]: 'coverage map television satellite TV beam Europe Asia',
     },
+    h2Start: {
+      [ELanguage.UA]: 'Промінь:',
+      [ELanguage.EN]: 'Beam:',
+    },
   },
   similar: {
     similarTitle: {
@@ -198,21 +202,52 @@ export const SAT_MAPS_MODEL = {
     };
   },
   images: {
-    h1Image: {
-      src: '/Images/articles/signal-satellite.png',
-      height: '128px',
-      width: '128px',
-      alternativeStr: { title: '🗺', fontSize: '8rem' },
-      alt: {
-        [ELanguage.UA]: 'Карти покриття телевізійних супутників',
-        [ELanguage.EN]: 'Satellite coverage maps',
+    allMaps: {
+      h1Image: {
+        src: '/Images/articles/signal-satellite.png',
+        height: '128px',
+        width: '128px',
+        alternativeStr: { title: '🗺', fontSize: '8rem' },
+        alt: {
+          [ELanguage.UA]: 'Карти покриття телевізійних супутників',
+          [ELanguage.EN]: 'Satellite coverage maps',
+        },
+      },
+      titleImg: {
+        src: '/Images/articles/package_network_4729.png',
+        height: '32px',
+        width: '32px',
+        alternativeStr: { title: '🌎', fontSize: '2rem' },
       },
     },
-    titleImg: {
-      src: '/Images/articles/package_network_4729.png',
-      height: '32px',
-      width: '32px',
-      alternativeStr: { title: '🌎', fontSize: '2rem' },
+    singleMap: {
+      h1Image: {
+        path: '/Images/satellites/',
+        height: '100px',
+        width: '140px',
+        defaultImg: {
+          src: '/Images/channelsOptimized/zastavka.jpg',
+          height: '100px',
+          width: '100px',
+        },
+        alternativeStr: { title: '🎞', fontSize: '6rem' },
+        altStart: {
+          [ELanguage.UA]: `Логотип до статті:`,
+          [ELanguage.EN]: `Logo for article:`,
+        },
+      },
+      mapParams: {
+        path: '/Images/News/setting_eqp/maps/',
+        height: '350px',
+        width: '80%',
+        getAlt(satTitle: string) {
+          return {
+            [ELanguage.UA]: `Карта покриття телевізійного супутника ${satTitle} луч`,
+            [ELanguage.EN]: `Coverage map of the television satellite ${satTitle} beam`,
+          };
+        },
+        alternativeStr: { title: '🗺', fontSize: '20rem' },
+      },
     },
   },
 };

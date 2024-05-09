@@ -7,14 +7,13 @@ import styles from './ArticleList.module.scss';
 import ArticleCard from '../ArticleCard/ArticleCard';
 import FillingImg from '../../ui/Images/FillingImage';
 import FillingValidImage from '../../ui/Images/FillingValidImage';
-import { LANGUAGE, IImgParams } from '@/models/ui.model';
+import { LANGUAGE } from '@/models/ui.model';
 import { EUrlBaseParam } from '@/models/url.model';
 import EmptyData from '@/components/errors/EmptyData/EmptyData';
 
-const { h1Image } = ARTICLES.article.images;
-
 const {
   makePostDescription,
+  images: { allMaps: allMapsImg, singleMap },
   metaSingleMap: { metaTitle },
 } = SAT_MAPS_MODEL;
 
@@ -22,10 +21,10 @@ const { views: viewsTitle, comments: commentsTitle } = ARTICLES.infoPanelTitles;
 
 interface IArticleListProps {
   articleList: IAllMapsModel[];
-  articleTitleImg: string | IImgParams;
+  // articleTitleImg: string | IImgParams;
 }
 
-const MapList = ({ articleList, articleTitleImg }: IArticleListProps) =>
+const MapList = ({ articleList }: IArticleListProps) =>
   articleList.length > 0 ? (
     <ul className={styles.ArticleList} data-testid="ArticleList">
       {articleList.map(
@@ -35,10 +34,12 @@ const MapList = ({ articleList, articleTitleImg }: IArticleListProps) =>
               isTitleCentered
               articleTitle={
                 <>
-                  {typeof articleTitleImg !== 'string' ? (
-                    <FillingImg {...articleTitleImg} />
+                  {typeof allMapsImg.titleImg !== 'string' ? (
+                    <FillingImg {...allMapsImg.titleImg} />
                   ) : (
-                    <span style={{ fontSize: '2rem' }}>{articleTitleImg}</span>
+                    <span style={{ fontSize: '2rem' }}>
+                      {allMapsImg.titleImg}
+                    </span>
                   )}
                   {title}
                 </>
@@ -46,12 +47,12 @@ const MapList = ({ articleList, articleTitleImg }: IArticleListProps) =>
               image={
                 <FillingValidImage
                   image={{
-                    ...h1Image,
-                    src: `${h1Image.path}${logo}`,
+                    ...singleMap.h1Image,
+                    src: `${singleMap.h1Image.path}${logo}`,
                   }}
-                  defaultImage={h1Image.defaultImg}
-                  alternativeImgString={h1Image.alternativeStr}
-                  alt={`${h1Image.altStart[LANGUAGE]} ${metaTitle[LANGUAGE]} ${title}`}
+                  defaultImage={singleMap.h1Image.defaultImg}
+                  alternativeImgString={singleMap.h1Image.alternativeStr}
+                  alt={`${singleMap.h1Image.altStart[LANGUAGE]} ${metaTitle[LANGUAGE]} ${title}`}
                   isBlur
                 />
               }

@@ -10,22 +10,15 @@ export const META_SAT_CHANNEL_LIST = {
       [ELanguage.EN]: `Free satellite channels on ${satTitle}`,
     };
   },
-  getTitle() {
-    return {
-      [ELanguage.UA]: 'Список каналів супутника',
-      [ELanguage.EN]: 'List of satellite channels',
-    };
+  metaTitle: {
+    [ELanguage.UA]: 'Список каналів супутника',
+    [ELanguage.EN]: 'List of satellite channels',
   },
-  getKeywords(lang: ELanguage) {
-    return `${META_SAT_CHANNEL_LIST.getTitle()[lang]} ${META_SAT_CHANNEL_LIST.getDescription()[lang]}`;
-  },
-  getDescription() {
-    return {
-      [ELanguage.UA]:
-        'Список доступних некодованих каналів, які ведуть мовлення з супутника',
-      [ELanguage.EN]:
-        'List of available unencrypted channels broadcast from satellite',
-    };
+  metaDescription: {
+    [ELanguage.UA]:
+      'Список доступних некодованих каналів, які ведуть мовлення з супутника',
+    [ELanguage.EN]:
+      'List of available unencrypted channels broadcast from satellite',
   },
   images: {
     h1SatImage: {
@@ -251,31 +244,23 @@ export const META_PACKAGES = {
 
 export const META_ALL_SAT_CHANNEL_LIST = {
   CHANNEL_LIST_DB_ID: '4',
-  getH1() {
-    return {
-      [ELanguage.UA]: 'Безкоштовні канали на популярних супутниках',
-      [ELanguage.EN]: 'Free channels on popular satellites',
-    };
+  metaH1: {
+    [ELanguage.UA]: 'Безкоштовні канали на популярних супутниках',
+    [ELanguage.EN]: 'Free channels on popular satellites',
   },
-  getTitle() {
-    return {
-      [ELanguage.UA]: 'Безкоштовні канали. Частоти супутникових каналів',
-      [ELanguage.EN]: 'Free channels. Satellite channel frequencies',
-    };
+  metaTitle: {
+    [ELanguage.UA]: 'Безкоштовні канали. Частоти супутникових каналів',
+    [ELanguage.EN]: 'Free channels. Satellite channel frequencies',
   },
-  getKeywords() {
-    return {
-      [ELanguage.UA]: `Безкоштовні канали Список каналів із програмою передач, доступних для вільного перегляду з найбільш популярних супутників без будь-яких зобов'язань та абонентської плати`,
-      [ELanguage.EN]:
-        'Free channels List of channels with program guides available for free viewing from the most popular satellites without any obligations or subscription fees',
-    };
+  metaKeywords: {
+    [ELanguage.UA]: `Безкоштовні канали Список каналів із програмою передач, доступних для вільного перегляду з найбільш популярних супутників без будь-яких зобов'язань та абонентської плати`,
+    [ELanguage.EN]:
+      'Free channels List of channels with program guides available for free viewing from the most popular satellites without any obligations or subscription fees',
   },
-  getDescription() {
-    return {
-      [ELanguage.UA]: `Список каналів із програмою передач, доступних для вільного перегляду з найбільш популярних супутників без будь-яких зобов'язань та абонентської плати`,
-      [ELanguage.EN]:
-        'List of channels with program guides available for free viewing from the most popular satellites without any obligations or subscription fees',
-    };
+  metaDescription: {
+    [ELanguage.UA]: `Список каналів із програмою передач, доступних для вільного перегляду з найбільш популярних супутників без будь-яких зобов'язань та абонентської плати`,
+    [ELanguage.EN]:
+      'List of channels with program guides available for free viewing from the most popular satellites without any obligations or subscription fees',
   },
   anchors: {
     legendTitle: {

@@ -2,14 +2,17 @@ import React, { ReactNode } from 'react';
 import styles from './BreadCrumbs.module.scss';
 import Link from 'next/link';
 import {
+  BREAD_CRUMBS,
   BREAD_SEPARATOR,
-  BREAD_START_ELEMENT_TITLE,
+  CUT_LAST_ELEMENT,
   FIRST_ELEMENT_SIZE,
-  MBreadCrumbs,
 } from '@/models/breadCrumbs.model';
-import { EUrlBaseParam } from '@/models/url.model';
 import { ELanguage, LANGUAGE } from '@/models/ui.model';
 import { cutMiddleOfText } from '@/libs/utils/utils';
+import TooltipSimple from '../ui/TooltipSimple/TooltipSimple';
+
+const { lengthThreshold, numberOfEndWords, numberOfStartWords } =
+  CUT_LAST_ELEMENT;
 
 export interface IBreadCrumbLink {
   title: { [ELanguage.UA]: string; [ELanguage.EN]: string } | string;
@@ -30,13 +33,6 @@ const BreadCrumbServer = ({
   homeTitle,
   separator = BREAD_SEPARATOR,
 }: IProps) => {
-  const homeObj = MBreadCrumbs.get(EUrlBaseParam.BASE_PATH);
-  const homeElement = homeTitle
-    ? homeTitle
-    : homeObj
-      ? homeObj[LANGUAGE]
-      : BREAD_START_ELEMENT_TITLE;
-
   return (
     <nav
       aria-label="Breadcrumb"
@@ -48,11 +44,11 @@ const BreadCrumbServer = ({
       <ol className={styles.container}>
         <li className={`${styles.item} ${styles.firstItem}`}>
           <Link
-            href={EUrlBaseParam.BASE_PATH}
+            href={BREAD_CRUMBS.BASE_PATH.href}
             style={{ fontSize: FIRST_ELEMENT_SIZE }}
             className="hover:underline"
           >
-            {homeElement}
+            {homeTitle || BREAD_CRUMBS.BASE_PATH.title[LANGUAGE]}
           </Link>
         </li>
         {breadCrumbList && breadCrumbList.length > 0 && (
@@ -74,9 +70,14 @@ const BreadCrumbServer = ({
                 ? `${styles.item} ${styles.activeItem}`
                 : styles.item;
 
-              const truncatedLinkText = cutMiddleOfText(linkText, 35, 2, 1);
+              const truncatedLinkText = cutMiddleOfText(
+                linkText,
+                lengthThreshold,
+                numberOfStartWords,
+                numberOfEndWords
+              );
 
-              return (
+              return !isCurrentUrl ? (
                 <React.Fragment key={index}>
                   <li className={itemClassName} style={itemStyle}>
                     {typeof item !== 'string' && item.href ? (
@@ -84,12 +85,29 @@ const BreadCrumbServer = ({
                         {linkText}
                       </Link>
                     ) : (
-                      <div>{truncatedLinkText}</div>
+                      <div>{linkText}</div>
                     )}
                   </li>
-                  {!isCurrentUrl && (
-                    <span className={styles.separator}> {separator} </span>
-                  )}
+                  <span className={styles.separator}> {separator} </span>
+                </React.Fragment>
+              ) : (
+                <React.Fragment key={index}>
+                  <li className={itemClassName} style={itemStyle}>
+                    {typeof item !== 'string' && item.href ? (
+                      <TooltipSimple tooltipText={linkText}>
+                        <Link
+                          href={`/${item.href}`}
+                          className="hover:underline"
+                        >
+                          {truncatedLinkText}
+                        </Link>
+                      </TooltipSimple>
+                    ) : (
+                      <TooltipSimple tooltipText={linkText}>
+                        <div>{truncatedLinkText}</div>
+                      </TooltipSimple>
+                    )}
+                  </li>
                 </React.Fragment>
               );
             })}

@@ -9,16 +9,16 @@ import { LANGUAGE, ERRORS } from '@/models/ui.model';
 import EmptyPage from '../errors/EmptyPage/EmptyPage';
 
 interface ITransNewsSingleProps {
-  newsArray: [string, TSatDigest[]][];
+  newsArray: [string, TSatDigest[]][] | null;
   title: string;
 }
 
 const TransNewsSingle = ({ newsArray, title }: ITransNewsSingleProps) => (
   <>
     <Title>{title}</Title>
-    <div className={satNewsStyles.newsBlock}>
-      {newsArray.length ? (
-        newsArray.map((satNews) => {
+    {newsArray && newsArray.length > 0 ? (
+      <div className={satNewsStyles.newsBlock}>
+        {newsArray.map((satNews) => {
           const { satLogo } = META_TRANS_NEWS_LIST.images;
 
           return (
@@ -43,11 +43,11 @@ const TransNewsSingle = ({ newsArray, title }: ITransNewsSingleProps) => (
               </div>
             </>
           );
-        })
-      ) : (
-        <EmptyPage title={ERRORS.EMPTY_DATE_NEWS_PAGE.title[LANGUAGE]} />
-      )}
-    </div>
+        })}
+      </div>
+    ) : (
+      <EmptyPage title={ERRORS.EMPTY_DATE_NEWS_PAGE.title[LANGUAGE]} />
+    )}
   </>
 );
 

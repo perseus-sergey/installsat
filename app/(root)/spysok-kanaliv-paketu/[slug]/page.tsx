@@ -85,7 +85,7 @@ export const generateMetadata = async ({
       title: `${cat_title}. ${metaTitle[L]}`,
       description: cat_description,
       url: `${BASE_URL}/${EUrlBaseParam.PACKAGE_CHANNEL_LIST}/${cat_slug}`,
-      publishedTime: getFormattedDateStr(new Date()),
+      publishedTime: getFormattedDateStr(),
     },
   };
 };
@@ -208,8 +208,6 @@ export default async function Page({
                 pathToChannelDetails={EUrlBaseParam.CHANNEL_PARAMS}
               />
             </Suspense>
-
-            {/* <OnlineChannelListAfterText lang={LANGUAGE} /> */}
           </>
         ) : (
           <EmptyData />

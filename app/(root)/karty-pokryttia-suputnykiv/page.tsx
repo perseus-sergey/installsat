@@ -14,7 +14,7 @@ const BASE_URL = process.env.BASE_URL;
 // const { meta, pagination, images, articlesCountCaption } = ARTICLES.articleList;
 const {
   metaAllMaps: { metaDescription, metaKeywords, metaTitle },
-  images: { h1Image, titleImg },
+  images: { allMaps: allMapsImg },
 } = SAT_MAPS_MODEL;
 
 export const metadata: Metadata = {
@@ -40,15 +40,15 @@ export default async function Page() {
           {metaDescription[L]}
 
           <FillingImg
-            width={h1Image.width}
-            height={h1Image.height}
-            src={h1Image.src}
-            alt={h1Image.alt[L]}
+            width={allMapsImg.h1Image.width}
+            height={allMapsImg.h1Image.height}
+            src={allMapsImg.h1Image.src}
+            alt={allMapsImg.h1Image.alt[L]}
             isBlur
           />
         </Title>
 
-        <MapList articleList={allMaps} articleTitleImg={titleImg} />
+        <MapList articleList={allMaps} />
       </article>
     </>
   );

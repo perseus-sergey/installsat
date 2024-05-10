@@ -9,6 +9,7 @@ import {
   IChannelPackagesModel,
   META_PACKAGES,
 } from '@/models/channelList.model';
+import EmptyData from '@/components/errors/EmptyData/EmptyData';
 
 const { packageImage } = META_PACKAGES;
 
@@ -18,44 +19,48 @@ interface IProps {
   packageList: IChannelPackagesModel[];
 }
 
-const PackageList = ({ packageList }: IProps) => (
-  <>
-    <ul>
-      {packageList.map(
-        ({ id, title, description, view, comment_count, logo, cpu }) => (
-          <li key={id}>
-            <ArticleCard
-              articleTitle={title}
-              image={
-                <FillingValidImage
-                  image={{
-                    width: packageImage.width,
-                    height: packageImage.height,
-                    src: `${packageImage.path}${logo}`,
-                  }}
-                  defaultImage={packageImage.defaultImg}
-                  alternativeImgString={packageImage.alternativeStr}
-                  alt={`${packageImage.altPre[LANGUAGE]} ${title}`}
-                  isBlur
-                />
-              }
-              articleDescription={
-                <DangerHtml
-                  text={cutText(description, 250)}
-                  wrapperTagName="span"
-                />
-              }
-              href={`/${EUrlBaseParam.PACKAGE_CHANNEL_LIST}/${cpu}`}
-              infoPanelItems={[
-                { name: viewsTitle[LANGUAGE], value: view },
-                { name: commentsTitle[LANGUAGE], value: comment_count },
-              ]}
-            />
-          </li>
-        )
-      )}
-    </ul>
-  </>
-);
+const PackageList = ({ packageList }: IProps) =>
+  packageList.length > 0 ? (
+    <>
+      <ul>
+        {packageList.map(
+          ({ id, title, description, view, comment_count, logo, cpu }) => (
+            <li key={id}>
+              <ArticleCard
+                isTitleCentered
+                articleTitle={title}
+                image={
+                  <FillingValidImage
+                    image={{
+                      width: packageImage.width,
+                      height: packageImage.height,
+                      src: `${packageImage.path}${logo}`,
+                    }}
+                    defaultImage={packageImage.defaultImg}
+                    alternativeImgString={packageImage.alternativeStr}
+                    alt={`${packageImage.altPre[LANGUAGE]} ${title}`}
+                    isBlur
+                  />
+                }
+                articleDescription={
+                  <DangerHtml
+                    text={cutText(description, 250)}
+                    wrapperTagName="span"
+                  />
+                }
+                href={`/${EUrlBaseParam.PACKAGE_CHANNEL_LIST}/${cpu}`}
+                infoPanelItems={[
+                  { name: viewsTitle[LANGUAGE], value: view },
+                  { name: commentsTitle[LANGUAGE], value: comment_count },
+                ]}
+              />
+            </li>
+          )
+        )}
+      </ul>
+    </>
+  ) : (
+    <EmptyData />
+  );
 
 export default PackageList;

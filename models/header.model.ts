@@ -12,8 +12,8 @@ export const LOGO = {
     },
     siteLogo: {
       src: '/Images/InstallsatOrigBlue_200.png',
-      width: '200px',
-      height: '85px',
+      width: 200,
+      height: 85,
       alt: {
         [ELanguage.EN]: 'Installsat TV Logo',
         [ELanguage.UA]: 'Installsat TV Логотип',

@@ -1,4 +1,4 @@
-import { ELanguage, ILang } from './ui.model';
+import { ELanguage } from './ui.model';
 import { EUrlBaseParam, EUrlSearchParam } from './url.model';
 
 export const CHANNEL_LIST_ANCHOR_START = 'genre-';
@@ -10,43 +10,36 @@ export const META_SAT_CHANNEL_LIST = {
       [ELanguage.EN]: `Free satellite channels on ${satTitle}`,
     };
   },
-  getTitle() {
-    return {
-      [ELanguage.UA]: 'Список каналів супутника',
-      [ELanguage.EN]: 'List of satellite channels',
-    };
+  metaTitle: {
+    [ELanguage.UA]: 'Список каналів супутника',
+    [ELanguage.EN]: 'List of satellite channels',
   },
-  getKeywords(lang: keyof ILang) {
-    return `${META_SAT_CHANNEL_LIST.getTitle()[lang]} ${META_SAT_CHANNEL_LIST.getDescription()[lang]}`;
-  },
-  getDescription() {
-    return {
-      [ELanguage.UA]:
-        'Список доступних некодованих каналів, які ведуть мовлення з супутника',
-      [ELanguage.EN]:
-        'List of available unencrypted channels broadcast from satellite',
-    };
+  metaDescription: {
+    [ELanguage.UA]:
+      'Список доступних некодованих каналів, які ведуть мовлення з супутника',
+    [ELanguage.EN]:
+      'List of available unencrypted channels broadcast from satellite',
   },
   images: {
     h1SatImage: {
       path: '/Images/satellites/',
       alternativeString: { title: '🛰', fontSize: '5rem' },
-      height: '99px',
-      width: '132px',
+      height: 99,
+      width: 132,
       alt: {
         [ELanguage.UA]: `Безкоштовні канали супутника`,
         [ELanguage.EN]: `Free channels of`,
       },
       defaultImage: {
         src: '/Images/satellite_7144.png',
-        height: '99px',
-        width: '132px',
+        height: 99,
+        width: 132,
       },
     },
     genreImage: {
       path: '/Images/genre/',
-      height: '24px',
-      width: '24px',
+      height: 24,
+      width: 24,
       altPre: {
         [ELanguage.UA]: 'Жанр:',
         [ELanguage.EN]: 'Genre:',
@@ -92,8 +85,8 @@ export const META_ONLINE_CHANNEL_LIST = {
     h1Image: {
       src: '/Images/packages/Popcorn-icon.png',
       alternativeString: { title: '📺', fontSize: '7rem' },
-      height: '128px',
-      width: '128px',
+      height: 128,
+      width: 128,
       alt: {
         [ELanguage.UA]: `Дивитися телеканали онлайн`,
         [ELanguage.EN]: `Watch free TV live.`,
@@ -101,8 +94,8 @@ export const META_ONLINE_CHANNEL_LIST = {
     },
     genreImage: {
       path: '/Images/genre/',
-      height: '24px',
-      width: '24px',
+      height: 24,
+      width: 24,
       altPre: {
         [ELanguage.UA]: 'Жанр:',
         [ELanguage.EN]: 'Genre:',
@@ -131,6 +124,7 @@ export const META_ONLINE_CHANNEL_LIST = {
 };
 
 export const META_PACKAGE_CHANNEL_LIST = {
+  T2_SLUG: 't2-efir',
   getH1(packageName: string, searchQuery: string) {
     return {
       [ELanguage.UA]: `Список каналів телебачення «${packageName}»${searchQuery && ` назва яких містить «${searchQuery}»`}`,
@@ -150,13 +144,13 @@ export const META_PACKAGE_CHANNEL_LIST = {
   images: {
     h1Image: {
       path: '/Images/packages/',
-      height: '120px',
-      width: '132px',
+      height: 120,
+      width: 132,
       alternativeImgStr: { title: '💠', fontSize: '7rem' },
       defaultImage: {
         src: '/Images/1not_found_chan.png',
-        height: '100px',
-        width: '120px',
+        height: 100,
+        width: 120,
       },
       alt: {
         [ELanguage.UA]: `Логотип компанії`,
@@ -165,8 +159,8 @@ export const META_PACKAGE_CHANNEL_LIST = {
     },
     subCatImage: {
       path: '/Images/packages/',
-      height: '82px',
-      width: '82px',
+      height: 82,
+      width: 82,
       altPre: {
         [ELanguage.UA]: 'Пакет:',
         [ELanguage.EN]: 'Package:',
@@ -175,7 +169,6 @@ export const META_PACKAGE_CHANNEL_LIST = {
     },
   },
   linkChannel: {
-    path: `/${EUrlBaseParam.ONLINE_CHANNEL_LIST}`,
     ariaLabel: {
       [ELanguage.UA]: 'Деталі каналу',
       [ELanguage.EN]: 'Channel details',
@@ -234,16 +227,16 @@ export const META_PACKAGES = {
   },
   packageImage: {
     path: '/Images/packages/',
-    width: '100px',
-    height: '86px',
+    width: 100,
+    height: 86,
     altPre: {
       [ELanguage.UA]: `Логотип до пакету:`,
       [ELanguage.EN]: `Logo for package:`,
     },
     defaultImg: {
       src: '/Images/channelsOptimized/zastavka.jpg',
-      height: '100px',
-      width: '100px',
+      height: 100,
+      width: 100,
     },
     alternativeStr: { title: '🎞', fontSize: '6rem' },
   },
@@ -251,31 +244,23 @@ export const META_PACKAGES = {
 
 export const META_ALL_SAT_CHANNEL_LIST = {
   CHANNEL_LIST_DB_ID: '4',
-  getH1() {
-    return {
-      [ELanguage.UA]: 'Безкоштовні канали на популярних супутниках',
-      [ELanguage.EN]: 'Free channels on popular satellites',
-    };
+  metaH1: {
+    [ELanguage.UA]: 'Безкоштовні канали на популярних супутниках',
+    [ELanguage.EN]: 'Free channels on popular satellites',
   },
-  getTitle() {
-    return {
-      [ELanguage.UA]: 'Безкоштовні канали. Частоти супутникових каналів',
-      [ELanguage.EN]: 'Free channels. Satellite channel frequencies',
-    };
+  metaTitle: {
+    [ELanguage.UA]: 'Безкоштовні канали. Частоти супутникових каналів',
+    [ELanguage.EN]: 'Free channels. Satellite channel frequencies',
   },
-  getKeywords() {
-    return {
-      [ELanguage.UA]: `Безкоштовні канали Список каналів із програмою передач, доступних для вільного перегляду з найбільш популярних супутників без будь-яких зобов'язань та абонентської плати`,
-      [ELanguage.EN]:
-        'Free channels List of channels with program guides available for free viewing from the most popular satellites without any obligations or subscription fees',
-    };
+  metaKeywords: {
+    [ELanguage.UA]: `Безкоштовні канали Список каналів із програмою передач, доступних для вільного перегляду з найбільш популярних супутників без будь-яких зобов'язань та абонентської плати`,
+    [ELanguage.EN]:
+      'Free channels List of channels with program guides available for free viewing from the most popular satellites without any obligations or subscription fees',
   },
-  getDescription() {
-    return {
-      [ELanguage.UA]: `Список каналів із програмою передач, доступних для вільного перегляду з найбільш популярних супутників без будь-яких зобов'язань та абонентської плати`,
-      [ELanguage.EN]:
-        'List of channels with program guides available for free viewing from the most popular satellites without any obligations or subscription fees',
-    };
+  metaDescription: {
+    [ELanguage.UA]: `Список каналів із програмою передач, доступних для вільного перегляду з найбільш популярних супутників без будь-яких зобов'язань та абонентської плати`,
+    [ELanguage.EN]:
+      'List of channels with program guides available for free viewing from the most popular satellites without any obligations or subscription fees',
   },
   anchors: {
     legendTitle: {
@@ -349,15 +334,15 @@ export const META_ALL_SAT_CHANNEL_LIST = {
   },
   image: {
     satTitleImgParams: {
-      height: '60px',
-      width: '80px',
+      height: 60,
+      width: 80,
     },
     h1ImageParams: {
       path: '/Images/packages/money_free.jpg',
       defaultImage: '/Images/satellite_7144.png',
       alternativeSymbol: '🛰',
-      height: '150px',
-      width: '239px',
+      height: 150,
+      width: 239,
       alt: {
         [ELanguage.UA]: 'Безкоштовні канали популярних супутників',
         [ELanguage.EN]: 'Free channels of popular satellites',
@@ -425,6 +410,7 @@ export interface IPackageChannelListModel extends IChannelListModel {
   cat_slug: string;
   cat_logo: string;
   cat_description: string;
+  cat_view: number;
   genre_slug: string;
   genre_description: string;
   genre_h1: string;

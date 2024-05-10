@@ -145,7 +145,7 @@ export const getOnlineChannels = cache(async (searchQuery = '') => {
 
   const resp = await executeQuery<IOnlineChannelListModel>(sql);
 
-  if (resp instanceof Error) return resp;
+  if (resp instanceof Error || !resp.length) return null;
 
   const groupedData = resp.reduce(
     (acc, channel) => {
@@ -185,7 +185,7 @@ export const getT2Channels = cache(async (searchQuery = '') => {
 
   const sql = `
     SELECT C.id AS chan_id, C.title AS chan_title, C.cpu AS chan_cpu, C.logo AS chan_logo, C.encryption, C.description AS chan_description, C.tema AS genre_id, C.cat AS cat_id,
-      CO.title AS compr, L.title AS lan, T.title AS genre_title, cat.logo AS cat_logo, cat.title AS cat_title, cat.cpu AS cat_slug, cat.description AS cat_description
+      CO.title AS compr, L.title AS lan, T.title AS genre_title, cat.logo AS cat_logo, cat.title AS cat_title, cat.cpu AS cat_slug, cat.description AS cat_description, cat.view AS cat_view
     FROM tbl_channals AS C
     LEFT JOIN tbl_chan_categ AS cat ON C.cat = cat.id 
     LEFT JOIN tbl_chan_compress AS CO ON C.compress = CO.id 
@@ -200,12 +200,9 @@ export const getT2Channels = cache(async (searchQuery = '') => {
     IOnlineChannelListModel & IPackageChannelListModel
   >(sql);
 
-  return resp instanceof Error
-    ? resp
-    : groupeChannelsBy<IOnlineChannelListModel & IPackageChannelListModel>(
-        resp,
-        'genre_title'
-      );
+  return resp instanceof Error || !resp.length
+    ? null
+    : groupeChannelsBy<IPackageChannelListModel>(resp, 'genre_title');
 });
 
 export const getPackageChannels = cache(
@@ -219,6 +216,7 @@ export const getPackageChannels = cache(
     cat.cpu AS cat_slug,
     cat.logo AS cat_logo, 
     cat.description AS cat_description,
+    cat.view AS cat_view,
     subcat.cpu AS genre_slug,
     subcat.title AS genre_title,
     subcat.h1 AS genre_h1,
@@ -253,8 +251,8 @@ export const getPackageChannels = cache(
       packageSlug,
     ]);
 
-    return resp instanceof Error
-      ? resp
+    return resp instanceof Error || !resp.length
+      ? null
       : groupeChannelsBy<IPackageChannelListModel>(resp, 'genre_title');
   }
 );

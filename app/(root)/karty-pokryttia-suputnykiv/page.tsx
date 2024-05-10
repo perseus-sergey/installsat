@@ -1,50 +1,53 @@
-// import FormDigestInterval from '@/components/FormDigestInterval1/FormDigestInterval';
-// import SatNews from '@/components/SatNews/SatNews';
-// import { Title } from '@/components/Titles/Title';
-// import {
-//   LAST_NEWS_INTERVAL,
-//   META_TRANS_NEWS_LIST,
-// } from '@/models/satDigest.model';
-// import { EUrlSearchParam } from '@/models/url.model';
-// import { Suspense } from 'react';
-
 import { Title } from '@/components/ui/Titles/Title';
+import type { Metadata } from 'next';
+import { SAT_MAPS_MODEL } from '@/models/articles.model';
+import { getSatMapList } from '@/controllers/articles.controller';
 import { getFormattedDateStr } from '@/libs/utils/utils';
-import { DEFAULT_META_DATA } from '@/models/ui.model';
 import { EUrlBaseParam } from '@/models/url.model';
-import { Metadata } from 'next';
+import { LANGUAGE as L, DEFAULT_META_DATA } from '@/models/ui.model';
+import FillingImg from '@/components/ui/Images/FillingImage';
+import MapList from '@/components/article/ArticleList/MapList';
+import BreadCrumbServer from '@/components/BreadCrumbs/BreadCrumbsServer';
 
-const BASE_URL = process.env.BASE_URL || '';
+const BASE_URL = process.env.BASE_URL;
 
-// TODO: Change MetaData
-// =================================================================
+const {
+  metaAllMaps: { metaDescription, metaKeywords, metaTitle },
+  images: { allMaps: allMapsImg },
+} = SAT_MAPS_MODEL;
+
 export const metadata: Metadata = {
-  metadataBase: new URL(BASE_URL),
-  title: 'maps',
-  description: 'maps description',
-  keywords: 'maps keywords',
+  title: metaTitle[L],
+  description: metaDescription[L],
+  keywords: metaKeywords[L],
   openGraph: {
     ...DEFAULT_META_DATA.openGraph,
-    title: 'maps',
-    description: 'maps description',
-    url: `${BASE_URL}/${EUrlBaseParam.DELETE_COMMENT_SUBSCRIPTION}`,
-    publishedTime: getFormattedDateStr(new Date()),
+    title: metaTitle[L],
+    description: metaDescription[L],
+    url: `${BASE_URL}/${EUrlBaseParam.SAT_COVERAGE_MAP}`,
+    publishedTime: getFormattedDateStr(),
   },
 };
-export default function Page() {
-  //   const searchInterval = searchParams[EUrlSearchParam.INTERVAL];
-  //   const intervalDays =
-  //     typeof searchInterval === 'string' && searchInterval
-  //       ? +searchInterval
-  //       : LAST_NEWS_INTERVAL;
+export default async function Page() {
+  const allMaps = await getSatMapList();
 
   return (
     <>
+      <BreadCrumbServer />
       <article className="article">
         <Title>
-          Карти покриття телевізійних супутників на території Європи та ближньої
-          Азії
+          {metaDescription[L]}
+
+          <FillingImg
+            width={allMapsImg.h1Image.width}
+            height={allMapsImg.h1Image.height}
+            src={allMapsImg.h1Image.src}
+            alt={allMapsImg.h1Image.alt[L]}
+            isBlur
+          />
         </Title>
+
+        <MapList articleList={allMaps} />
       </article>
     </>
   );

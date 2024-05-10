@@ -1,5 +1,4 @@
 import DangerHtmlUl from '@/components/ui/DangerHtml/DangerHtml';
-import EmptyData from '@/components/errors/EmptyData/EmptyData';
 import { Title } from '@/components/ui/Titles/Title';
 import {
   getSatChannels,
@@ -20,14 +19,15 @@ import { EUrlBaseParam } from '@/models/url.model';
 import { getFormattedDateStr } from '@/libs/utils/utils';
 import { getCommentsNumber } from '@/controllers/comments.controller';
 import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
+import BreadCrumbServer from '@/components/BreadCrumbs/BreadCrumbsServer';
+import { BREAD_CRUMBS } from '@/models/breadCrumbs.model';
 
 const BASE_URL = process.env.BASE_URL;
 
 const {
-  getTitle,
-  getDescription,
-  getKeywords,
   getH1,
+  metaDescription,
+  metaTitle,
   images: { h1SatImage },
 } = META_SAT_CHANNEL_LIST;
 
@@ -58,19 +58,19 @@ export const generateMetadata = ({ params }: IPageParams): Metadata => {
   const { title, satPosition, slug } = getCurrentSatParams(params.sat);
 
   const satTitle = `${title} - ${satPosition}`;
-  const metaTitle = `${getTitle()[LANGUAGE]} ${satTitle}`;
-  const description = `${getDescription()[LANGUAGE]} ${satTitle}`;
+  const fullMetaTitle = `${metaTitle[LANGUAGE]} ${satTitle}`;
+  const description = `${metaDescription[LANGUAGE]} ${satTitle}`;
 
   return {
-    title: metaTitle,
+    title: fullMetaTitle,
     description,
-    keywords: `${satTitle} ${getKeywords(LANGUAGE)}`,
+    keywords: description,
     openGraph: {
       ...DEFAULT_META_DATA.openGraph,
-      title: metaTitle,
+      title: fullMetaTitle,
       description,
       url: `${BASE_URL}/${EUrlBaseParam.SAT_CHANNEL_LIST}/${slug}`,
-      publishedTime: getFormattedDateStr(new Date()),
+      publishedTime: getFormattedDateStr(),
     },
   };
 };
@@ -94,9 +94,6 @@ export default async function Page({ params }: IPageParams) {
 
   const satChannels = await getSatChannels('', id);
 
-  if (satChannels instanceof Error)
-    return <EmptyData description={satChannels.message} />;
-
   const numberOfComments = await getCommentsNumber(
     EDBTableTitles.COMMENTS_SATELLITE,
     id
@@ -104,6 +101,12 @@ export default async function Page({ params }: IPageParams) {
 
   return (
     <>
+      <BreadCrumbServer
+        breadCrumbList={[
+          BREAD_CRUMBS.SAT_CHANNEL_LIST,
+          `${title} - ${satPosition}`,
+        ]}
+      />
       <article className="article">
         <Title>
           {getH1(`${title} - ${satPosition}`)[LANGUAGE]}
@@ -123,7 +126,9 @@ export default async function Page({ params }: IPageParams) {
         </StartArticleSection>
         <SatChannelsTable
           isSingleSat
-          satChannels={getGroupedChannelsAllSat([satChannels])}
+          satChannels={getGroupedChannelsAllSat([
+            satChannels instanceof Error ? [] : satChannels,
+          ])}
         />
       </article>
 
@@ -132,7 +137,7 @@ export default async function Page({ params }: IPageParams) {
         revalidateUrl={`/${EUrlBaseParam.SAT_CHANNEL_LIST}/${slug}`}
         dbCommentTableName={EDBTableTitles.COMMENTS_SATELLITE}
         articleId={id}
-        articleName={title}
+        articleName={`${metaTitle[LANGUAGE]} ${title} - ${satPosition}`}
       />
     </>
   );

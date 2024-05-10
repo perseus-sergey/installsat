@@ -5,7 +5,6 @@ import { TSatModel } from '@/models/tblSat.model';
 import { NUMBER_OF_LAST_NEWS_WIDGET } from '@/models/widget.model';
 import { cache } from 'react';
 import { WRONG_CAT_IDS } from './articles.controller';
-import { TCategories } from '@/models/tblCategories.model';
 import { IAllNewsModel } from '@/models/articles.model';
 
 export const getInstallationsList = cache(
@@ -21,11 +20,6 @@ export const getChannelCatList = cache(
       `SELECT title, id, parent, cpu FROM tbl_chan_categ WHERE parent=0 AND title != '' AND id NOT IN (2,23,25) ORDER BY title`
     )
 );
-
-export const getArticleCatWidgetList = async () =>
-  await executeQuery<TCategories>(`
-    SELECT id,title, cpu FROM tbl_categories WHERE id != 2 AND id!=12 AND title!=''
-    `);
 
 export const getChannelSatList = cache(
   async (isFilling = true) =>

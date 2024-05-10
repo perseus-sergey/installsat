@@ -1,4 +1,3 @@
-import EmptyData from '@/components/errors/EmptyData/EmptyData';
 import { Title } from '@/components/ui/Titles/Title';
 import type { Metadata } from 'next';
 import { ARTICLES } from '@/models/articles.model';
@@ -17,12 +16,18 @@ import {
 } from '@/models/ui.model';
 import { imagePathValidate } from '@/libs/utils/imagePathValidate';
 import { validSearchParam } from '@/libs/utils/validSearchParam';
+import BreadCrumbServer from '@/components/BreadCrumbs/BreadCrumbsServer';
 
 const BASE_URL = process.env.BASE_URL;
 
-const { meta, pagination, images, articlesCountCaption } = ARTICLES.articleList;
+const {
+  meta: { description, h1Start, title },
+  pagination,
+  images,
+  articlesCountCaption,
+} = ARTICLES.articleList;
 
-const currDate = new Date().toLocaleDateString('en-GB');
+const currDate = getFormattedDateStr();
 
 const articleTitleImg = imagePathValidate(
   images.titleImg,
@@ -36,15 +41,15 @@ interface IProps {
 }
 
 export const metadata: Metadata = {
-  title: meta.getTitle()[L],
-  description: meta.getDescription()[L],
-  keywords: meta.getKeywords(L),
+  title: title[L],
+  description: description[L],
+  keywords: description[L],
   openGraph: {
     ...DEFAULT_META_DATA.openGraph,
-    title: meta.getTitle()[L],
-    description: meta.getDescription()[L],
+    title: title[L],
+    description: description[L],
     url: `${BASE_URL}/${EUrlBaseParam.NEWS_AND_ARTICLES}`,
-    publishedTime: getFormattedDateStr(new Date()),
+    publishedTime: currDate,
   },
 };
 export default async function Page({ searchParams }: IProps) {
@@ -63,35 +68,36 @@ export default async function Page({ searchParams }: IProps) {
     undefined,
     searchQuery
   );
-  if (allNews instanceof Error)
-    return <EmptyData description={allNews.message} />;
 
-  if (!allNews.length) return <EmptyData description={`Couldn't find data`} />;
-  const totalPages = Math.ceil(allNews[0].total_count / perPage);
+  const mapsCount = !allNews.length ? 0 : allNews[0].total_count;
+
+  const totalPages = Math.ceil(mapsCount / perPage);
 
   return (
     <>
-      <Title>
-        {meta.getH1(currDate)[L]}
+      <BreadCrumbServer />
+      <article className="article">
+        <Title>
+          {h1Start[L]} {currDate}
+          <FillingValidImage
+            image={images.h1Image}
+            alternativeImgString={images.h1Image.alternativeStr}
+            alt={images.h1Image.alt[L]}
+            isBlur
+          />
+        </Title>
 
-        <FillingValidImage
-          image={images.h1Image}
-          alternativeImgString={images.h1Image.alternativeStr}
-          alt={images.h1Image.alt[L]}
-          isBlur
+        <p className="text-blue-600 font-bold text-center text-lg">{`${articlesCountCaption[LANGUAGE]}${mapsCount}`}</p>
+
+        <Pagination
+          page={pageNumber || 1}
+          offsetNumber={pagination.offsetNumber}
+          totalPages={totalPages}
+          searchParams={searchParams}
         />
-      </Title>
 
-      <p className="text-blue-600 font-bold text-center text-lg">{`${articlesCountCaption[LANGUAGE]}${allNews[0].total_count}`}</p>
-
-      <Pagination
-        page={pageNumber || 1}
-        offsetNumber={pagination.offsetNumber}
-        totalPages={totalPages}
-        searchParams={searchParams}
-      />
-
-      <ArticleList articleList={allNews} articleTitleImg={articleTitleImg} />
+        <ArticleList articleList={allNews} articleTitleImg={articleTitleImg} />
+      </article>
     </>
   );
 }

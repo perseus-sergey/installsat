@@ -25,8 +25,8 @@ const DateNewsList = async () => {
           <Link
             href={`/${EUrlBaseParam.TRANSPONDER_NEWS}/${getFormattedDateStr(news[0])}`}
           >
-            {META_TRANS_NEWS_SINGLE.getH1()[LANGUAGE]}
-            <span className={styles.groupTitleDate}>{getDate(news[0])}</span>
+            {META_TRANS_NEWS_SINGLE.metaH1start[LANGUAGE]}
+            <span className={styles.groupTitleDate}> {getDate(news[0])}</span>
           </Link>
         </h2>
         {[...news[1]].map((satNews) => {

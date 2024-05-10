@@ -27,6 +27,9 @@ import { notFound } from 'next/navigation';
 import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
 import { getCommentsNumber } from '@/controllers/comments.controller';
 import GrooveLine from '@/components/ui/GrooveLine';
+import BreadCrumbServer from '@/components/BreadCrumbs/BreadCrumbsServer';
+import { CHANNEL_LIST_ANCHOR_START } from '@/models/channelList.model';
+import { BREAD_CRUMBS } from '@/models/breadCrumbs.model';
 
 const BASE_URL = process.env.BASE_URL;
 
@@ -47,6 +50,8 @@ const {
   getResponsibilityText,
   similar: { channels: simChannelsBefore, articles: simArticlesBefore },
 } = META_CHANNEL;
+
+const currentDate = getFormattedDateStr();
 
 export interface IChannelProps {
   params: { slug: string };
@@ -101,7 +106,7 @@ export const generateMetadata = async ({
       title: metaTitle,
       description: description || title,
       url: `${BASE_URL}/${EUrlBaseParam.CHANNEL_PARAMS}/${chan_slug}`,
-      publishedTime: getFormattedDateStr(),
+      publishedTime: currentDate,
     },
   };
 };
@@ -120,16 +125,21 @@ export default async function Page({ params: { slug } }: IChannelProps) {
     text,
     view,
     chan_slug,
+    cat_id,
     cat_title,
     cat_parent_title,
     cat_parent_id,
     cat_parent_cpu,
     cat_slug,
+    sat_slug,
+    sat_title,
     tvforsite_net,
   } = sqlResult[0];
 
   const catLink =
-    cat_parent_id > 0 ? `${cat_parent_cpu}#${cat_slug}` : cat_slug;
+    cat_parent_id > 0
+      ? `${cat_parent_cpu}#${CHANNEL_LIST_ANCHOR_START}${cat_id}`
+      : cat_slug;
 
   const catTitle =
     cat_parent_id > 0 ? `${cat_parent_title} - ${cat_title}` : cat_title;
@@ -151,6 +161,20 @@ export default async function Page({ params: { slug } }: IChannelProps) {
 
   return (
     <>
+      <BreadCrumbServer
+        breadCrumbList={[
+          BREAD_CRUMBS.PACKAGE_CHANNEL_LIST,
+          {
+            href: `${EUrlBaseParam.PACKAGE_CHANNEL_LIST}/${catLink}`,
+            title: catTitle,
+          },
+          {
+            href: `${EUrlBaseParam.SAT_CHANNEL_LIST}/${sat_slug}`,
+            title: sat_title,
+          },
+          `${titleBefore[LANGUAGE]} "${title}"`,
+        ]}
+      />
       <article className="article">
         <Title>
           {`${titleBefore[LANGUAGE]} "${title}"`}
@@ -173,7 +197,7 @@ export default async function Page({ params: { slug } }: IChannelProps) {
 
           <TvScheduleLink
             title={`${scheduleTitle[LANGUAGE]} "${title}"`}
-            href={`/${EUrlBaseParam.CHANNELS_TV_PROGRAM}/${slug}?${EUrlSearchParam.DATE}=${getFormattedDateStr()}`}
+            href={`/${EUrlBaseParam.CHANNELS_TV_PROGRAM}/${slug}?${EUrlSearchParam.DATE}=${currentDate}`}
           />
 
           {tvforsite_net && (

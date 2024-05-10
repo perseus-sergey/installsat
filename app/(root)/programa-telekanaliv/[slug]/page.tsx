@@ -22,6 +22,7 @@ import {
 import { EUrlBaseParam } from '@/models/url.model';
 import { Metadata } from 'next';
 import Link from 'next/link';
+import BreadCrumbServer from '@/components/BreadCrumbs/BreadCrumbsServer';
 
 const BASE_URL = process.env.BASE_URL;
 
@@ -153,6 +154,7 @@ export default async function Page({
 
   return (
     <>
+      <BreadCrumbServer />
       <article className="article">
         <Title>
           {`${titleBefore[LANGUAGE]} "${title}"`} on {date}

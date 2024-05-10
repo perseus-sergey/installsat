@@ -1,12 +1,12 @@
 'use client';
 
-import { MouseEvent, useRef, useState } from 'react';
+import { MouseEvent, ReactNode, useRef, useState } from 'react';
 import styles from './Tooltip.module.scss';
 import { tooltipSetPosition } from './utilsTooltip';
 
 interface ITooltipProps {
-  children: React.ReactNode;
-  hintHtml: React.ReactNode;
+  children: ReactNode;
+  hintHtml: ReactNode;
 }
 
 const Tooltip = ({ children, hintHtml }: ITooltipProps) => {

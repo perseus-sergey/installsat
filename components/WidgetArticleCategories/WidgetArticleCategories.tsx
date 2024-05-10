@@ -2,11 +2,11 @@ import styles from './WidgetArticleCategories.module.scss';
 import EmptyData from '../errors/EmptyData/EmptyData';
 import Link from 'next/link';
 import { WIDGET_ARTICLE_CATEGORY } from '@/models/widget.model';
-import { getArticleCatWidgetList } from '@/controllers/sidebar.controller';
 import { LANGUAGE } from '@/models/ui.model';
+import { getArticleCatList } from '@/controllers/articles.controller';
 
 const WidgetArticleCategories = async () => {
-  const articleCatWidgetList = await getArticleCatWidgetList();
+  const articleCatWidgetList = await getArticleCatList();
   if (articleCatWidgetList instanceof Error) return <EmptyData />;
 
   return (

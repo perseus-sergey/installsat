@@ -8,6 +8,7 @@ import { LANGUAGE, IImgParams } from '@/models/ui.model';
 import { EUrlBaseParam } from '@/models/url.model';
 import { cutText, getFormattedDateStr } from '@/libs/utils/utils';
 import DangerHtml from '../../ui/DangerHtml/DangerHtml';
+import EmptyData from '@/components/errors/EmptyData/EmptyData';
 
 const { h1Image } = ARTICLES.article.images;
 
@@ -23,8 +24,8 @@ interface IArticleListProps {
   articleTitleImg: string | IImgParams;
 }
 
-const ArticleList = ({ articleList, articleTitleImg }: IArticleListProps) => (
-  <>
+const ArticleList = ({ articleList, articleTitleImg }: IArticleListProps) =>
+  articleList.length > 0 ? (
     <ul className={styles.ArticleList} data-testid="ArticleList">
       {articleList.map(
         ({
@@ -59,7 +60,7 @@ const ArticleList = ({ articleList, articleTitleImg }: IArticleListProps) => (
                   }}
                   defaultImage={h1Image.defaultImg}
                   alternativeImgString={h1Image.alternativeStr}
-                  alt={`${h1Image.getAlt()[LANGUAGE]}${title}`}
+                  alt={`${h1Image.altStart[LANGUAGE]} ${title}`}
                   isBlur
                 />
               }
@@ -93,7 +94,8 @@ const ArticleList = ({ articleList, articleTitleImg }: IArticleListProps) => (
         )
       )}
     </ul>
-  </>
-);
+  ) : (
+    <EmptyData />
+  );
 
 export default ArticleList;

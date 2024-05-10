@@ -119,14 +119,17 @@ export const getSatsForForm = async (isDefaultValue = true) => {
 
 export const getTransNewsForSingleDay = async (
   date: string
-): Promise<[string, TSatDigest[]][] | Error> => {
+): Promise<[string, TSatDigest[]][] | null> => {
   const sql = `
-  SELECT d.date, d.text, d.id,
-	sat.parent AS satPar,
-	sat.title AS satTitle,
-	sat.logo AS satLogo,
-	sat.grade AS satGrade,
-	sat.position AS satPosition
+  SELECT 
+    d.date, 
+    d.text, 
+    d.id,
+    sat.parent AS satPar,
+    sat.title AS satTitle,
+    sat.logo AS satLogo,
+    sat.grade AS satGrade,
+    sat.position AS satPosition
 	FROM tbl_digest AS d
 	LEFT JOIN tbl_chan_sat AS sat ON d.sat = sat.id
 	WHERE date = ?
@@ -134,7 +137,7 @@ export const getTransNewsForSingleDay = async (
 `;
   const newsResult = await executeQuery<TSatDigest>(sql, [date]);
 
-  if (newsResult instanceof Error) return newsResult;
+  if (newsResult instanceof Error) return null;
 
   return Array.from(
     newsResult.reduce((acc, currObj) => {

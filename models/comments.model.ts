@@ -100,8 +100,8 @@ export const COMMENTS_MODEL = {
       [ELanguage.EN]: 'Comments',
     },
     image: {
-      width: '60px',
-      height: '60px',
+      width: 60,
+      height: 60,
       alt: {
         [ELanguage.UA]: 'Секція коментарів',
         [ELanguage.EN]: 'Comments section',

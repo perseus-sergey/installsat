@@ -1,11 +1,12 @@
-import Image, { StaticImageData } from 'next/image';
+import Image from 'next/image';
 import { IMG_PROPERTIES } from '@/models/ui.model';
 
-interface IFillingImgProps {
-  width: string;
-  height: string;
-  src: string | StaticImageData;
+interface IFillingImgProps extends React.ImgHTMLAttributes<HTMLImageElement> {
+  width: number;
+  height: number;
+  src: string;
   alt?: string;
+  isFillParent?: boolean;
   isBlur?: boolean;
   blurImgPath?: string;
   isPriority?: boolean;
@@ -16,28 +17,44 @@ const FillingImg = ({
   height,
   src,
   alt = '',
+  isFillParent = false,
   isBlur = false,
   isPriority = false,
   blurImgPath = IMG_PROPERTIES.defaultImgBlur,
-}: IFillingImgProps) => (
-  <div
-    style={{
-      minWidth: width,
-      height,
-      position: 'relative',
-      display: 'inline-block',
-    }}
-  >
+}: IFillingImgProps) =>
+  isFillParent ? (
+    <div
+      style={{
+        position: 'relative',
+        height: `${height}px`,
+        maxHeight: '80vh',
+        // width: `${width}px`,
+      }}
+    >
+      <Image
+        src={src}
+        alt={alt}
+        sizes={`${width}px`}
+        fill
+        style={{
+          objectFit: 'contain',
+        }}
+        placeholder={isBlur ? 'blur' : 'empty'}
+        blurDataURL={blurImgPath}
+        priority={isPriority}
+      />
+    </div>
+  ) : (
     <Image
-      fill
-      sizes={width}
+      width={width}
+      height={height}
+      style={{ minWidth: width, height: 'auto' }}
       placeholder={isBlur ? 'blur' : 'empty'}
       blurDataURL={blurImgPath}
       src={src}
       alt={alt}
       priority={isPriority}
     />
-  </div>
-);
+  );
 
 export default FillingImg;

@@ -18,6 +18,7 @@ import { LANGUAGE } from '@/models/ui.model';
 import ChannelCardTooltip from '../ChannelCardTooltip/ChannelCardTooltip';
 import GoUpLink from '../ui/GoUpLink/GoUpLink';
 import { TitleH2List } from '../ui/Titles/TitleH2List';
+import EmptyData from '../errors/EmptyData/EmptyData';
 
 const {
   links: { satTitleLink },
@@ -129,54 +130,57 @@ const FrequencySegment = ({
 const SatChannelsTable = ({
   satChannels,
   isSingleSat = false,
-}: ISatChannelsTableProps) => (
-  <>
-    {satChannels.map((sat) => (
-      <>
-        {!isSingleSat && (
-          <TitleH2List id={sat[0][0].sat_slug}>
-            <GoUpLink />
+}: ISatChannelsTableProps) =>
+  satChannels.length > 0 && satChannels[0].length > 0 ? (
+    <>
+      {satChannels.map((sat) => (
+        <>
+          {!isSingleSat && (
+            <TitleH2List id={sat[0][0].sat_slug}>
+              <GoUpLink />
 
-            <TooltipSimple tooltipText={satTitleLink.tooltipTitle[LANGUAGE]}>
-              <Link
-                className={styles.satTitleLink}
-                href={`${satTitleLink.linkUrl}/${sat[0][0].sat_slug}`}
-              >
-                {`${sat[0][0].sat_title} - ${sat[0][0].sat_position}`}
-              </Link>
-            </TooltipSimple>
-            <TooltipSimple tooltipText={satTitleLink.tooltipTitle[LANGUAGE]}>
-              <Link
-                className={styles.satTitleLink}
-                href={`${satTitleLink.linkUrl}/${sat[0][0].sat_slug}`}
-              >
-                <FillingValidImage
-                  image={{
-                    ...h1SatImage,
-                    src: `${h1SatImage.path}${sat[0][0].sat_logo}`,
-                  }}
-                  defaultImage={h1SatImage.defaultImage}
-                  alternativeImgString={h1SatImage.alternativeString}
-                  alt={`${h1SatImage.alt[LANGUAGE]} ${sat[0][0].sat_title}`}
-                  isBlur
-                />
-              </Link>
-            </TooltipSimple>
-          </TitleH2List>
-        )}
-        <table
-          className={styles.SatChannelsTable}
-          data-testid="SatChannelsTable"
-        >
-          <tbody>
-            {sat.map((freqChannels, idx) => (
-              <FrequencySegment key={idx} frequencyChannels={freqChannels} />
-            ))}
-          </tbody>
-        </table>
-      </>
-    ))}
-  </>
-);
+              <TooltipSimple tooltipText={satTitleLink.tooltipTitle[LANGUAGE]}>
+                <Link
+                  className={styles.satTitleLink}
+                  href={`${satTitleLink.linkUrl}/${sat[0][0].sat_slug}`}
+                >
+                  {`${sat[0][0].sat_title} - ${sat[0][0].sat_position}`}
+                </Link>
+              </TooltipSimple>
+              <TooltipSimple tooltipText={satTitleLink.tooltipTitle[LANGUAGE]}>
+                <Link
+                  className={styles.satTitleLink}
+                  href={`${satTitleLink.linkUrl}/${sat[0][0].sat_slug}`}
+                >
+                  <FillingValidImage
+                    image={{
+                      ...h1SatImage,
+                      src: `${h1SatImage.path}${sat[0][0].sat_logo}`,
+                    }}
+                    defaultImage={h1SatImage.defaultImage}
+                    alternativeImgString={h1SatImage.alternativeString}
+                    alt={`${h1SatImage.alt[LANGUAGE]} ${sat[0][0].sat_title}`}
+                    isBlur
+                  />
+                </Link>
+              </TooltipSimple>
+            </TitleH2List>
+          )}
+          <table
+            className={styles.SatChannelsTable}
+            data-testid="SatChannelsTable"
+          >
+            <tbody>
+              {sat.map((freqChannels, idx) => (
+                <FrequencySegment key={idx} frequencyChannels={freqChannels} />
+              ))}
+            </tbody>
+          </table>
+        </>
+      ))}
+    </>
+  ) : (
+    <EmptyData />
+  );
 
 export default SatChannelsTable;

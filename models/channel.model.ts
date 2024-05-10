@@ -101,13 +101,13 @@ export const META_CHANNEL = {
     channelLogo: {
       big: {
         path: '/Images/channelsOptimized/',
-        height: '99px',
-        width: '132px',
+        height: 99,
+        width: 132,
         alternativeImgStr: { title: '🎞', fontSize: '6rem' },
         defaultImage: {
           src: '/Images/1not_found_chan.png',
-          height: '99px',
-          width: '132px',
+          height: 99,
+          width: 132,
         },
         alt: {
           [ELanguage.UA]: `Логотип каналу`,
@@ -116,20 +116,20 @@ export const META_CHANNEL = {
       },
       small: {
         path: '/Images/channel_55/',
-        height: '42px',
-        width: '55px',
+        height: 42,
+        width: 55,
         alternativeImgStr: { title: '🎞', fontSize: '2rem' },
         defaultImage: {
           src: '/Images/1not_found_chan.png',
-          height: '42px',
-          width: '55px',
+          height: 42,
+          width: 55,
         },
       },
     },
     scheduleImg: {
       src: '/Images/schedule-icon96.png',
-      height: '96px',
-      width: '96px',
+      height: 96,
+      width: 96,
       alternativeImgStr: { title: '📋', fontSize: '6rem' },
       alt: {
         [ELanguage.UA]: `Перегляд розкладу телепередач`,
@@ -138,8 +138,8 @@ export const META_CHANNEL = {
     },
     onlineLinkImg: {
       src: '/Images/network-wireless_32.png',
-      height: '32px',
-      width: '32px',
+      height: 32,
+      width: 32,
       alternativeImgStr: { title: '📺', fontSize: '2rem' },
       alt: {
         [ELanguage.UA]: `Перехід до онлайн ТБ сторінки`,

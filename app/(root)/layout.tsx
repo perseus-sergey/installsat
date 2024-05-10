@@ -7,15 +7,17 @@ import { getFormattedDateStr } from '@/libs/utils/utils';
 
 const BASE_URL = process.env.BASE_URL;
 
+const { metaDescription, metaKeywords, metaTitle } = META_TRANS_NEWS_LIST;
+
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL || ''),
-  title: META_TRANS_NEWS_LIST.getTitle()[LANGUAGE],
-  description: META_TRANS_NEWS_LIST.getDescription()[LANGUAGE],
-  keywords: META_TRANS_NEWS_LIST.getKeywords()[LANGUAGE],
+  title: metaTitle[LANGUAGE],
+  description: metaDescription[LANGUAGE],
+  keywords: metaKeywords[LANGUAGE],
   openGraph: {
     ...DEFAULT_META_DATA.openGraph,
-    title: META_TRANS_NEWS_LIST.getTitle()[LANGUAGE],
-    description: META_TRANS_NEWS_LIST.getDescription()[LANGUAGE],
+    title: metaTitle[LANGUAGE],
+    description: metaDescription[LANGUAGE],
     url: BASE_URL,
     publishedTime: getFormattedDateStr(new Date()),
   },

@@ -16,6 +16,7 @@ import { Suspense } from 'react';
 import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
 import BottomInfoPanel from '@/components/BottomInfoPanel/BottomInfoPanel';
 import { getCommentsNumber } from '@/controllers/comments.controller';
+import BreadCrumbServer from '@/components/BreadCrumbs/BreadCrumbsServer';
 
 const BASE_URL = process.env.BASE_URL;
 
@@ -42,7 +43,7 @@ export const metadata: Metadata = {
     title,
     description,
     url: `${BASE_URL}/${EUrlBaseParam.SAT_FINDER}`,
-    publishedTime: getFormattedDateStr(new Date()),
+    publishedTime: getFormattedDateStr(),
   },
 };
 
@@ -58,6 +59,7 @@ export default async function Page() {
 
   return (
     <>
+      <BreadCrumbServer breadCrumbList={[title]} />
       <article className="article">
         <Title>
           {title}

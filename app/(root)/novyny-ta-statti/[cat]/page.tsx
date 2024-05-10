@@ -1,14 +1,13 @@
-import EmptyData from '@/components/errors/EmptyData/EmptyData';
 import { Title } from '@/components/ui/Titles/Title';
 import type { Metadata } from 'next';
 import FillingValidImage from '@/components/ui/Images/FillingValidImage';
-import { ARTICLES, ISingleCatArticlesModel } from '@/models/articles.model';
+import { ARTICLES } from '@/models/articles.model';
 import {
   getArticleCatList,
   getChunkOfNews,
+  getCurrentCatParams,
 } from '@/controllers/articles.controller';
 import { getFormattedDateStr } from '@/libs/utils/utils';
-import { cache } from 'react';
 import TextUnderH1 from '@/components/TextUnderH1/TextUnderH1';
 import ArticleList from '@/components/article/ArticleList/ArticleList';
 import { notFound } from 'next/navigation';
@@ -17,14 +16,13 @@ import { LANGUAGE, TSearchParams, DEFAULT_META_DATA } from '@/models/ui.model';
 import { EUrlBaseParam, EUrlSearchParam } from '@/models/url.model';
 import { imagePathValidate } from '@/libs/utils/imagePathValidate';
 import { validSearchParam } from '@/libs/utils/validSearchParam';
+import BreadCrumbServer from '@/components/BreadCrumbs/BreadCrumbsServer';
+import { BREAD_CRUMBS } from '@/models/breadCrumbs.model';
 
 const BASE_URL = process.env.BASE_URL;
 
 const {
   articleList: { pagination, images, articlesCountCaption },
-  articleSingleCatList: {
-    meta: { getH1 },
-  },
 } = ARTICLES;
 
 const articleTitleImg = imagePathValidate(
@@ -39,31 +37,10 @@ export interface IPageParams {
   searchParams: TSearchParams;
 }
 
-const currDateStr = getFormattedDateStr(new Date());
-
-const allCatResponse = await getArticleCatList();
-
-const getCurrentCatParams = cache((catCpu: string): ISingleCatArticlesModel => {
-  const catParams =
-    allCatResponse instanceof Error
-      ? ''
-      : allCatResponse.find((cat) => cat.cpu === catCpu);
-
-  return catParams
-    ? {
-        title: catParams.title,
-        id: catParams.id,
-        cpu: catParams.cpu,
-        description: catParams.description,
-        text: catParams.text,
-      }
-    : { title: '', description: '', id: -1, cpu: '', text: '' };
-});
-
-export const generateMetadata = ({
+export const generateMetadata = async ({
   params: { cat },
-}: IPageParams): Metadata => {
-  const { title, description, cpu } = getCurrentCatParams(cat);
+}: IPageParams): Promise<Metadata> => {
+  const { title, description, cpu } = await getCurrentCatParams(cat);
 
   return {
     title,
@@ -74,7 +51,7 @@ export const generateMetadata = ({
       title,
       description,
       url: `${BASE_URL}/${EUrlBaseParam.NEWS_AND_ARTICLES}/${cpu}`,
-      publishedTime: getFormattedDateStr(currDateStr),
+      publishedTime: getFormattedDateStr(),
     },
   };
 };
@@ -84,6 +61,7 @@ export async function generateStaticParams(): Promise<
     cat: string;
   }[]
 > {
+  const allCatResponse = await getArticleCatList();
   if (allCatResponse instanceof Error) return [{ cat: '' }];
 
   return allCatResponse.map((cat) => ({ cat: cat.cpu }));
@@ -95,7 +73,7 @@ export default async function Page({
   params: { cat },
   searchParams,
 }: IPageParams) {
-  const { id, description, text } = getCurrentCatParams(cat);
+  const { id, description, text } = await getCurrentCatParams(cat);
 
   const { perPage } = pagination;
 
@@ -113,38 +91,40 @@ export default async function Page({
     searchQuery
   );
 
-  if (allNews instanceof Error)
-    return <EmptyData description={allNews.message} />;
+  const mapsCount = !allNews.length ? 0 : allNews[0].total_count;
 
-  if (!allNews.length) return <EmptyData description={`Couldn't find data`} />;
-
-  const totalPages = Math.ceil(allNews[0].total_count / perPage);
+  const totalPages = Math.ceil(mapsCount / perPage);
 
   return (
     <>
-      <Title>
-        {getH1(currDateStr, description)[LANGUAGE]}
-
-        <FillingValidImage
-          image={images.h1Image}
-          alternativeImgString={images.h1Image.alternativeStr}
-          alt={images.h1Image.alt[LANGUAGE]}
-          isBlur
-        />
-      </Title>
-
-      <TextUnderH1>{text}</TextUnderH1>
-
-      <p className="text-blue-600 font-bold text-center text-lg">{`${articlesCountCaption[LANGUAGE]}${allNews[0].total_count}`}</p>
-
-      <Pagination
-        page={pageNumber || 1}
-        offsetNumber={pagination.offsetNumber}
-        totalPages={totalPages}
-        searchParams={searchParams}
+      <BreadCrumbServer
+        breadCrumbList={[BREAD_CRUMBS.NEWS_AND_ARTICLES, description]}
       />
+      <article className="article">
+        <Title>
+          {description}
 
-      <ArticleList articleList={allNews} articleTitleImg={articleTitleImg} />
+          <FillingValidImage
+            image={images.h1Image}
+            alternativeImgString={images.h1Image.alternativeStr}
+            alt={images.h1Image.alt[LANGUAGE]}
+            isBlur
+          />
+        </Title>
+
+        <TextUnderH1>{text}</TextUnderH1>
+
+        <p className="text-blue-600 font-bold text-center text-lg">{`${articlesCountCaption[LANGUAGE]}${mapsCount}`}</p>
+
+        <Pagination
+          page={pageNumber || 1}
+          offsetNumber={pagination.offsetNumber}
+          totalPages={totalPages}
+          searchParams={searchParams}
+        />
+
+        <ArticleList articleList={allNews} articleTitleImg={articleTitleImg} />
+      </article>
     </>
   );
 }

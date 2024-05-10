@@ -1,6 +1,12 @@
 .ArticleCard {
   margin-bottom: 1rem;
   box-shadow: 2px 2px 5px #999999;
+  transition: transform 0.1s;
+
+  &:hover {
+    box-shadow: 2px 2px 5px #5a5a5a;
+    transform: translateY(2px);
+  }
 }
 
 .h2Title {
@@ -15,15 +21,4 @@
   text-shadow:
     0 1px 0 #ffffff,
     1px 3px 3px #999999;
-}
-
-.descriptionWrapper {
-  display: flex;
-  justify-content: space-between;
-  padding-bottom: 1rem;
-}
-
-.text,
-.image {
-  padding: 0 1rem;
 }

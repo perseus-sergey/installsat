@@ -15,8 +15,8 @@ export interface ILang {
 export type TSearchParams = { [key: string]: string | string[] | undefined };
 export interface IImgParams {
   src: string;
-  width: string;
-  height: string;
+  width: number;
+  height: number;
 }
 
 export const IMG_PROPERTIES = {
@@ -57,8 +57,8 @@ export const ERRORS = {
     },
     img: {
       src: '/Images/empty_page.png',
-      height: '128px',
-      width: '128px',
+      height: 128,
+      width: 128,
       alternativeImgStr: { title: '📂', fontSize: '9rem' },
     },
   },
@@ -96,6 +96,8 @@ export const SIMILAR_ARTICLES = {
 export enum EDBTableTitles {
   ARTICLE = 'tbl_useful',
   CHANNELS = 'tbl_channals',
+  CHANNEL_SAT = 'tbl_chan_sat',
+  CHANNEL_CATEGORY = 'tbl_chan_categ',
   COMMENTS_ARTICLE = 'tbl_comments',
   COMMENTS_CHANNEL = 'tbl_comments_chan',
   COMMENTS_CHAT = 'tbl_comments_chat',
@@ -110,9 +112,4 @@ export enum EDBTableTitles {
   TV_SCHEDULE = 'tv_shedule',
 }
 
-// lastnews: tbl_comments
-// channel_list:  tbl_comments_packs
-// karty-pokrytija-telesputnikov: tbl_comments_maps
-// installations: tbl_comments_instal
-// nastrojka-oborudovanija: tbl_comments
 // satellite_equipments: tbl_eqp_comments

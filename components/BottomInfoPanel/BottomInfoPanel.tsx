@@ -15,9 +15,9 @@ const BottomInfoPanel = ({ items }: IBottomInfoPanel) => {
   const lastId = filteredItems.length - 1;
 
   return (
-    <section className={styles.BottomInfoPanel} data-testid="BottomInfoPanel">
+    <ul className={styles.BottomInfoPanel} data-testid="BottomInfoPanel">
       {filteredItems.map(({ name, value }, i) => (
-        <>
+        <li key={name}>
           <figure
             className={`${styles.infoPanelItem}${i !== lastId ? ` ${styles.bordered}` : ''}`}
             key={name}
@@ -25,9 +25,9 @@ const BottomInfoPanel = ({ items }: IBottomInfoPanel) => {
             <span className={styles.itemName}>{name}: </span>
             <figcaption className={styles.itemValue}>{value}</figcaption>
           </figure>
-        </>
+        </li>
       ))}
-    </section>
+    </ul>
   );
 };
 

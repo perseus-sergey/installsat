@@ -43,7 +43,7 @@ const nextConfig = {
       },
       {
         source: '/novosti-i-statji/installations',
-        destination: '/varianty-vstanovlennia-anten',
+        destination: '/spysok-kanaliv-paketu',
         permanent: true,
       },
       {
@@ -113,7 +113,7 @@ const nextConfig = {
       },
       {
         source: '/varianty-ustanovki-anten/:slug',
-        destination: '/varianty-vstanovlennia-anten/:slug',
+        destination: '/spysok-kanaliv-paketu',
         permanent: true,
       },
       {

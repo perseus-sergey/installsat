@@ -23,6 +23,30 @@ export const cutText = (text: string, cutLength: number) => {
 
   return `${trimmedText}...`;
 };
+export const cutMiddleOfText = (
+  text: string,
+  lengthThreshold: number,
+  numberOfStartWords: number,
+  numberOfEndWords: number
+): string => {
+  if (!text) return '';
+
+  let trimmedText = text.trim();
+
+  if (trimmedText.length <= lengthThreshold) return trimmedText;
+
+  trimmedText = trimmedText.replace(/[^а-яА-Яa-zA-Z]*$/, '');
+
+  const words = trimmedText.split(/\s+/);
+  const totalWords = words.length;
+
+  if (totalWords <= numberOfStartWords + numberOfEndWords) return trimmedText;
+
+  const startWords = words.slice(0, numberOfStartWords).join(' ');
+  const endWords = words.slice(totalWords - numberOfEndWords).join(' ');
+
+  return `${startWords} ... ${endWords}`;
+};
 
 export const createArray = (length: number) => [...Array(length)];
 

@@ -248,6 +248,11 @@ export const SAT_MAPS_MODEL = {
         },
         alternativeStr: { title: '🗺', fontSize: '20rem' },
       },
+      bigMapParams: {
+        path: '/Images/News/setting_eqp/maps/big_',
+        height: 630,
+        width: 1000,
+      },
     },
   },
 };

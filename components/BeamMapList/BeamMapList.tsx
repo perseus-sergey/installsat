@@ -30,9 +30,9 @@ const BeamMapList = ({ beamList }: IBeamMapListProps) => {
           hintDescription={altText}
           hintImg={
             <FillingImg
-              width={1000}
-              height={630}
-              src={`/Images/News/setting_eqp/maps/big_${item.map_img}`}
+              width={singleMap.bigMapParams.width}
+              height={singleMap.bigMapParams.height}
+              src={`${singleMap.bigMapParams.path}${item.map_img}`}
               alt={altText}
               isFillParent
             />

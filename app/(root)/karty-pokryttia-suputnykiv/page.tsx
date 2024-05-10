@@ -11,7 +11,6 @@ import BreadCrumbServer from '@/components/BreadCrumbs/BreadCrumbsServer';
 
 const BASE_URL = process.env.BASE_URL;
 
-// const { meta, pagination, images, articlesCountCaption } = ARTICLES.articleList;
 const {
   metaAllMaps: { metaDescription, metaKeywords, metaTitle },
   images: { allMaps: allMapsImg },

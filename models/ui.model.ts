@@ -112,9 +112,4 @@ export enum EDBTableTitles {
   TV_SCHEDULE = 'tv_shedule',
 }
 
-// lastnews: tbl_comments
-// channel_list:  tbl_comments_packs
-// karty-pokrytija-telesputnikov: tbl_comments_maps
-// installations: tbl_comments_instal
-// nastrojka-oborudovanija: tbl_comments
 // satellite_equipments: tbl_eqp_comments

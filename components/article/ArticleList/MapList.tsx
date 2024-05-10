@@ -22,9 +22,6 @@ const { views: viewsTitle, comments: commentsTitle } = ARTICLES.infoPanelTitles;
 interface IArticleListProps {
   articleList: IAllMapsModel[];
 }
-// =================================================================
-// Add highslide to increase images
-// =================================================================
 const MapList = ({ articleList }: IArticleListProps) =>
   articleList.length > 0 ? (
     <ul className={styles.ArticleList} data-testid="ArticleList">

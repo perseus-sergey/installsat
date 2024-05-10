@@ -15,8 +15,8 @@ export interface ILang {
 export type TSearchParams = { [key: string]: string | string[] | undefined };
 export interface IImgParams {
   src: string;
-  width: string;
-  height: string;
+  width: number;
+  height: number;
 }
 
 export const IMG_PROPERTIES = {
@@ -57,8 +57,8 @@ export const ERRORS = {
     },
     img: {
       src: '/Images/empty_page.png',
-      height: '128px',
-      width: '128px',
+      height: 128,
+      width: 128,
       alternativeImgStr: { title: '📂', fontSize: '9rem' },
     },
   },

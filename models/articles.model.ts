@@ -6,12 +6,12 @@ export const ARTICLES = {
     images: {
       h1Image: {
         path: '/Images/channelsOptimized/',
-        height: '100px',
-        width: '140px',
+        height: 90,
+        width: 100,
         defaultImg: {
           src: '/Images/channelsOptimized/zastavka.jpg',
-          height: '100px',
-          width: '100px',
+          height: 100,
+          width: 100,
         },
         alternativeStr: { title: '🎞', fontSize: '6rem' },
         altStart: {
@@ -51,8 +51,8 @@ export const ARTICLES = {
     images: {
       h1Image: {
         src: '/Images/articles/all_news_64.png',
-        height: '64px',
-        width: '64px',
+        height: 64,
+        width: 64,
         alternativeStr: { title: '📰', fontSize: '6rem' },
         alt: {
           [ELanguage.UA]: 'Новини та статті про цифрове телебачення',
@@ -61,8 +61,8 @@ export const ARTICLES = {
       },
       titleImg: {
         src: '/Images/articles/package_network_4729.png',
-        height: '32px',
-        width: '32px',
+        height: 32,
+        width: 32,
         alternativeStr: { title: '🌎', fontSize: '2rem' },
       },
     },
@@ -110,8 +110,8 @@ export const ARTICLES = {
     images: {
       h1Image: {
         src: '/Images/articles/all_news_64.png',
-        height: '64px',
-        width: '64px',
+        height: 64,
+        width: 64,
         alternativeStr: { title: '📰', fontSize: '6rem' },
         alt: {
           [ELanguage.UA]: 'Новини та статті про цифрове телебачення',
@@ -120,8 +120,8 @@ export const ARTICLES = {
       },
       titleImg: {
         src: '/Images/articles/package_network_4729.png',
-        height: '32px',
-        width: '32px',
+        height: 32,
+        width: 32,
         alternativeStr: { title: '🌎', fontSize: '2rem' },
       },
     },
@@ -205,8 +205,8 @@ export const SAT_MAPS_MODEL = {
     allMaps: {
       h1Image: {
         src: '/Images/articles/signal-satellite.png',
-        height: '128px',
-        width: '128px',
+        height: 128,
+        width: 128,
         alternativeStr: { title: '🗺', fontSize: '8rem' },
         alt: {
           [ELanguage.UA]: 'Карти покриття телевізійних супутників',
@@ -215,20 +215,20 @@ export const SAT_MAPS_MODEL = {
       },
       titleImg: {
         src: '/Images/articles/package_network_4729.png',
-        height: '32px',
-        width: '32px',
+        height: 32,
+        width: 32,
         alternativeStr: { title: '🌎', fontSize: '2rem' },
       },
     },
     singleMap: {
       h1Image: {
         path: '/Images/satellites/',
-        height: '100px',
-        width: '140px',
+        height: 100,
+        width: 140,
         defaultImg: {
           src: '/Images/channelsOptimized/zastavka.jpg',
-          height: '100px',
-          width: '100px',
+          height: 100,
+          width: 100,
         },
         alternativeStr: { title: '🎞', fontSize: '6rem' },
         altStart: {
@@ -238,12 +238,12 @@ export const SAT_MAPS_MODEL = {
       },
       mapParams: {
         path: '/Images/News/setting_eqp/maps/',
-        height: '350px',
-        width: '80%',
-        getAlt(satTitle: string) {
+        height: 350,
+        width: 600,
+        getAlt(satTitle: string, beamTitle: string) {
           return {
-            [ELanguage.UA]: `Карта покриття телевізійного супутника ${satTitle} луч`,
-            [ELanguage.EN]: `Coverage map of the television satellite ${satTitle} beam`,
+            [ELanguage.UA]: `Карта покриття телевізійного супутника ${satTitle}. Промінь ${beamTitle}`,
+            [ELanguage.EN]: `Coverage map of the ${satTitle} television satellite. Beam ${beamTitle}`,
           };
         },
         alternativeStr: { title: '🗺', fontSize: '20rem' },

@@ -31,8 +31,8 @@ export const AccordionMenuItem = ({
           <div className={styles.titleWrapper}>
             {img.src && (
               <FillingImg
-                width={`${img.width}px`}
-                height={`${img.width}px`}
+                width={img.width}
+                height={img.height}
                 src={img.src}
                 alt={img.alt[LANGUAGE] || ''}
               />
@@ -52,8 +52,8 @@ export const AccordionMenuItem = ({
       <Link className={styles.titleWrapper} href={titleHref || '#'}>
         {img.src && (
           <FillingImg
-            width={`${img.width}px`}
-            height={`${img.width}px`}
+            width={img.width}
+            height={img.height}
             src={img.src}
             alt={img.alt[LANGUAGE] || ''}
           />

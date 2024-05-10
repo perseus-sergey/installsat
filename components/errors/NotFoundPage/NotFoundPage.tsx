@@ -17,8 +17,8 @@ const NotFoundPage = () => (
       <FillingImg
         src="/Images/InstallsatOrig_400.png"
         alt="Installsat TV Logo"
-        width="400px"
-        height="200px"
+        width={400}
+        height={200}
         isPriority
       />
       <p className="text-blue-900 hover:text-red-500">

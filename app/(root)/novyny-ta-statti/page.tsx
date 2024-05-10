@@ -76,26 +76,28 @@ export default async function Page({ searchParams }: IProps) {
   return (
     <>
       <BreadCrumbServer />
-      <Title>
-        {h1Start[L]} {currDate}
-        <FillingValidImage
-          image={images.h1Image}
-          alternativeImgString={images.h1Image.alternativeStr}
-          alt={images.h1Image.alt[L]}
-          isBlur
+      <article className="article">
+        <Title>
+          {h1Start[L]} {currDate}
+          <FillingValidImage
+            image={images.h1Image}
+            alternativeImgString={images.h1Image.alternativeStr}
+            alt={images.h1Image.alt[L]}
+            isBlur
+          />
+        </Title>
+
+        <p className="text-blue-600 font-bold text-center text-lg">{`${articlesCountCaption[LANGUAGE]}${mapsCount}`}</p>
+
+        <Pagination
+          page={pageNumber || 1}
+          offsetNumber={pagination.offsetNumber}
+          totalPages={totalPages}
+          searchParams={searchParams}
         />
-      </Title>
 
-      <p className="text-blue-600 font-bold text-center text-lg">{`${articlesCountCaption[LANGUAGE]}${mapsCount}`}</p>
-
-      <Pagination
-        page={pageNumber || 1}
-        offsetNumber={pagination.offsetNumber}
-        totalPages={totalPages}
-        searchParams={searchParams}
-      />
-
-      <ArticleList articleList={allNews} articleTitleImg={articleTitleImg} />
+        <ArticleList articleList={allNews} articleTitleImg={articleTitleImg} />
+      </article>
     </>
   );
 }

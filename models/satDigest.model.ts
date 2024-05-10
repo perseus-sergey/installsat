@@ -1,6 +1,9 @@
 import { getFormattedDateStr } from '@/libs/utils/utils';
 import { ELanguage, LANGUAGE } from './ui.model';
 
+// =================================================================
+// Need to change to 30
+// =================================================================
 export const LAST_NEWS_INTERVAL = 90;
 
 export const META_TRANS_NEWS_LIST = {
@@ -91,12 +94,12 @@ export const META_TRANS_NEWS_LIST = {
   images: {
     satLogo: {
       path: '/Images/satellites/',
-      height: '50px',
-      width: '67px',
+      height: 50,
+      width: 67,
       defaultImg: {
         src: '/Images/satellites/wrong_sat_64.png',
-        height: '64px',
-        width: '64px',
+        height: 64,
+        width: 64,
       },
       alternativeStr: { title: '🌏', fontSize: '4rem' },
       alt: {

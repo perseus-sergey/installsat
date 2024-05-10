@@ -18,8 +18,8 @@ import { BREAD_CRUMBS } from '@/models/breadCrumbs.model';
 import { Title } from '@/components/ui/Titles/Title';
 import FillingValidImage from '@/components/ui/Images/FillingValidImage';
 import BottomInfoPanel from '@/components/BottomInfoPanel/BottomInfoPanel';
-import { TitleH2 } from '@/components/ui/Titles/TitleH2';
 import EmptyData from '@/components/errors/EmptyData/EmptyData';
+import BeamMapList from '@/components/BeamMapList/BeamMapList';
 
 interface IArticleParams {
   params: { slug: string };
@@ -28,7 +28,7 @@ interface IArticleParams {
 const BASE_URL = process.env.BASE_URL || '';
 
 const {
-  metaSingleMap: { metaKeywords, metaTitle, h2Start, getDescription, getH1 },
+  metaSingleMap: { metaKeywords, metaTitle, getDescription, getH1 },
   similar: { similarStart, similarTitle },
   images: { singleMap },
 } = SAT_MAPS_MODEL;
@@ -85,9 +85,7 @@ export default async function layout({ params: { slug } }: IArticleParams) {
   );
 
   const h1Title = getH1(`${sat_title}, ${position}`)[LANGUAGE];
-  //================================================
-  // Check view in Packages
-  //================================================
+
   updateViewCount(EDBTableTitles.CHANNEL_SAT, `${sat_id}`, view);
 
   return (
@@ -113,28 +111,7 @@ export default async function layout({ params: { slug } }: IArticleParams) {
           />
         </Title>
         {sqlResult.length > 0 ? (
-          sqlResult.map((item) => (
-            <>
-              <TitleH2>
-                {h2Start[LANGUAGE]} «{item.beam_title}»
-              </TitleH2>
-              <p>{item.beam_description}</p>
-              <FillingValidImage
-                image={{
-                  width: singleMap.mapParams.width,
-                  height: singleMap.mapParams.height,
-                  src: `${singleMap.mapParams.path}${item.map_img}`,
-                }}
-                alternativeImgString={singleMap.mapParams.alternativeStr}
-                alt={
-                  singleMap.mapParams.getAlt(`${h1Title}, ${item.beam_title}`)[
-                    LANGUAGE
-                  ]
-                }
-                isBlur
-              />
-            </>
-          ))
+          <BeamMapList beamList={sqlResult} />
         ) : (
           <EmptyData />
         )}

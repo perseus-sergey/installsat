@@ -15,8 +15,8 @@ export const SAT_FINDER_META_DATA = {
     marker: {
       markerImage: {
         src: '/Images/Installsat_googlemap.gif',
-        height: '25px',
-        width: '55px',
+        height: 25,
+        width: 55,
         alt: {
           [ELanguage.UA]: 'Installsat - Логотип нашої компанії на Google Maps',
           [ELanguage.EN]: 'Installsat - Logo of our company on Google Maps',
@@ -59,8 +59,8 @@ export const SAT_FINDER_META_DATA = {
   images: {
     h1Image: {
       src: '/Images/starthere_6100.png',
-      height: '128px',
-      width: '128px',
+      height: 128,
+      width: 128,
       alternativeStr: { title: '🧭', fontSize: '8rem' },
       alt: {
         [ELanguage.UA]:

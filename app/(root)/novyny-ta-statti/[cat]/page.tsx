@@ -100,29 +100,31 @@ export default async function Page({
       <BreadCrumbServer
         breadCrumbList={[BREAD_CRUMBS.NEWS_AND_ARTICLES, description]}
       />
-      <Title>
-        {description}
+      <article className="article">
+        <Title>
+          {description}
 
-        <FillingValidImage
-          image={images.h1Image}
-          alternativeImgString={images.h1Image.alternativeStr}
-          alt={images.h1Image.alt[LANGUAGE]}
-          isBlur
+          <FillingValidImage
+            image={images.h1Image}
+            alternativeImgString={images.h1Image.alternativeStr}
+            alt={images.h1Image.alt[LANGUAGE]}
+            isBlur
+          />
+        </Title>
+
+        <TextUnderH1>{text}</TextUnderH1>
+
+        <p className="text-blue-600 font-bold text-center text-lg">{`${articlesCountCaption[LANGUAGE]}${mapsCount}`}</p>
+
+        <Pagination
+          page={pageNumber || 1}
+          offsetNumber={pagination.offsetNumber}
+          totalPages={totalPages}
+          searchParams={searchParams}
         />
-      </Title>
 
-      <TextUnderH1>{text}</TextUnderH1>
-
-      <p className="text-blue-600 font-bold text-center text-lg">{`${articlesCountCaption[LANGUAGE]}${mapsCount}`}</p>
-
-      <Pagination
-        page={pageNumber || 1}
-        offsetNumber={pagination.offsetNumber}
-        totalPages={totalPages}
-        searchParams={searchParams}
-      />
-
-      <ArticleList articleList={allNews} articleTitleImg={articleTitleImg} />
+        <ArticleList articleList={allNews} articleTitleImg={articleTitleImg} />
+      </article>
     </>
   );
 }

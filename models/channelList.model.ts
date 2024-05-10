@@ -24,22 +24,22 @@ export const META_SAT_CHANNEL_LIST = {
     h1SatImage: {
       path: '/Images/satellites/',
       alternativeString: { title: '🛰', fontSize: '5rem' },
-      height: '99px',
-      width: '132px',
+      height: 99,
+      width: 132,
       alt: {
         [ELanguage.UA]: `Безкоштовні канали супутника`,
         [ELanguage.EN]: `Free channels of`,
       },
       defaultImage: {
         src: '/Images/satellite_7144.png',
-        height: '99px',
-        width: '132px',
+        height: 99,
+        width: 132,
       },
     },
     genreImage: {
       path: '/Images/genre/',
-      height: '24px',
-      width: '24px',
+      height: 24,
+      width: 24,
       altPre: {
         [ELanguage.UA]: 'Жанр:',
         [ELanguage.EN]: 'Genre:',
@@ -85,8 +85,8 @@ export const META_ONLINE_CHANNEL_LIST = {
     h1Image: {
       src: '/Images/packages/Popcorn-icon.png',
       alternativeString: { title: '📺', fontSize: '7rem' },
-      height: '128px',
-      width: '128px',
+      height: 128,
+      width: 128,
       alt: {
         [ELanguage.UA]: `Дивитися телеканали онлайн`,
         [ELanguage.EN]: `Watch free TV live.`,
@@ -94,8 +94,8 @@ export const META_ONLINE_CHANNEL_LIST = {
     },
     genreImage: {
       path: '/Images/genre/',
-      height: '24px',
-      width: '24px',
+      height: 24,
+      width: 24,
       altPre: {
         [ELanguage.UA]: 'Жанр:',
         [ELanguage.EN]: 'Genre:',
@@ -144,13 +144,13 @@ export const META_PACKAGE_CHANNEL_LIST = {
   images: {
     h1Image: {
       path: '/Images/packages/',
-      height: '120px',
-      width: '132px',
+      height: 120,
+      width: 132,
       alternativeImgStr: { title: '💠', fontSize: '7rem' },
       defaultImage: {
         src: '/Images/1not_found_chan.png',
-        height: '100px',
-        width: '120px',
+        height: 100,
+        width: 120,
       },
       alt: {
         [ELanguage.UA]: `Логотип компанії`,
@@ -159,8 +159,8 @@ export const META_PACKAGE_CHANNEL_LIST = {
     },
     subCatImage: {
       path: '/Images/packages/',
-      height: '82px',
-      width: '82px',
+      height: 82,
+      width: 82,
       altPre: {
         [ELanguage.UA]: 'Пакет:',
         [ELanguage.EN]: 'Package:',
@@ -227,16 +227,16 @@ export const META_PACKAGES = {
   },
   packageImage: {
     path: '/Images/packages/',
-    width: '100px',
-    height: '86px',
+    width: 100,
+    height: 86,
     altPre: {
       [ELanguage.UA]: `Логотип до пакету:`,
       [ELanguage.EN]: `Logo for package:`,
     },
     defaultImg: {
       src: '/Images/channelsOptimized/zastavka.jpg',
-      height: '100px',
-      width: '100px',
+      height: 100,
+      width: 100,
     },
     alternativeStr: { title: '🎞', fontSize: '6rem' },
   },
@@ -334,15 +334,15 @@ export const META_ALL_SAT_CHANNEL_LIST = {
   },
   image: {
     satTitleImgParams: {
-      height: '60px',
-      width: '80px',
+      height: 60,
+      width: 80,
     },
     h1ImageParams: {
       path: '/Images/packages/money_free.jpg',
       defaultImage: '/Images/satellite_7144.png',
       alternativeSymbol: '🛰',
-      height: '150px',
-      width: '239px',
+      height: 150,
+      width: 239,
       alt: {
         [ELanguage.UA]: 'Безкоштовні канали популярних супутників',
         [ELanguage.EN]: 'Free channels of popular satellites',

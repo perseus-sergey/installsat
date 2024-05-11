@@ -3,7 +3,8 @@ import { TitleH2 } from '../ui/Titles/TitleH2';
 import { IMG_PROPERTIES, LANGUAGE } from '@/models/ui.model';
 import FillingImg from '../ui/Images/FillingImage';
 import React, { Fragment } from 'react';
-import TooltipBigImg from '../ui/tooltips/TooltipBigImg/TooltipBigImg';
+// import TooltipBigImg from '../ui/tooltips/TooltipBigImg/TooltipBigImg';
+import TooltipClient from '../ui/tooltips/TooltipClient/TooltipClient';
 
 const {
   metaSingleMap: { h2Start },
@@ -26,9 +27,10 @@ const BeamMapList = ({ beamList }: IBeamMapListProps) => {
           {h2Start[LANGUAGE]} «{item.beam_title}»
         </TitleH2>
         {item.beam_description && <p>{item.beam_description}</p>}
-        <TooltipBigImg
+        <TooltipClient
+          className="p-4"
           hintDescription={altText}
-          hintImg={
+          hintContent={
             <FillingImg
               width={singleMap.bigMapParams.width}
               height={singleMap.bigMapParams.height}
@@ -47,7 +49,7 @@ const BeamMapList = ({ beamList }: IBeamMapListProps) => {
             isBlur
             isFillParent
           />
-        </TooltipBigImg>
+        </TooltipClient>
       </Fragment>
     );
   });

@@ -1,7 +1,6 @@
 import React from 'react';
 import styles from './SatNewsList.module.scss';
 import DangerHtml from '../ui/DangerHtml/DangerHtml';
-import { getDate } from '@/libs/utils/utils';
 import { META_TRANS_NEWS_LIST } from '@/models/satDigest.model';
 import {
   getDailyNews,
@@ -11,6 +10,7 @@ import {
 import EmptyData from '../errors/EmptyData/EmptyData';
 import FillingValidImage from '../ui/Images/FillingValidImage';
 import { LANGUAGE, TSearchParams } from '@/models/ui.model';
+import { getDate } from '@/libs/utils/dates';
 
 interface ISatNewsListProps {
   searchParams: TSearchParams;

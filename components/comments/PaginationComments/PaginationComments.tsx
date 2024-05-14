@@ -9,7 +9,7 @@ import BaseButton from '../../ui/buttons/BaseButton/BaseButton';
 import { getComments } from '@/controllers/comments.controller';
 import FillingImg from '@/components/ui/Images/FillingImage';
 import { COMMENTS_MODEL, ICommentsModel } from '@/models/comments.model';
-import { getFormattedDateStr } from '@/libs/utils/utils';
+import { getFormattedDateStr } from '@/libs/utils/dates';
 
 const { commentList } = COMMENTS_MODEL;
 

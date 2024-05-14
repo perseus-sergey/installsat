@@ -15,7 +15,6 @@ import {
   DEFAULT_META_DATA,
   EDBTableTitles,
 } from '@/models/ui.model';
-import { getFormattedDateStr } from '@/libs/utils/utils';
 import { EUrlBaseParam, EUrlSearchParam } from '@/models/url.model';
 import Filter from '@/components/ui/Filter/Filter';
 import { Suspense } from 'react';
@@ -28,6 +27,7 @@ import GenreImage from '@/components/ui/Images/GenreImage/GenreImage';
 import OnlineChannelListAfterText from '@/components/online/OnlineChannelListAfterText/OnlineChannelListAfterText';
 import PackageChannelList from '@/components/channelList/PackageChannelList';
 import BreadCrumbServer from '@/components/BreadCrumbs/BreadCrumbsServer';
+import { getFormattedDateStr } from '@/libs/utils/dates';
 
 const BASE_URL = process.env.BASE_URL;
 

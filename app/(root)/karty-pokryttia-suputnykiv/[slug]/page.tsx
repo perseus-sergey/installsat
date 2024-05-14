@@ -1,7 +1,6 @@
 import type { Metadata } from 'next';
 import React from 'react';
 import { EUrlBaseParam } from '@/models/url.model';
-import { getFormattedDateStr } from '@/libs/utils/utils';
 import { LANGUAGE, EDBTableTitles, DEFAULT_META_DATA } from '@/models/ui.model';
 import {
   getSatMap,
@@ -20,6 +19,7 @@ import FillingValidImage from '@/components/ui/Images/FillingValidImage';
 import BottomInfoPanel from '@/components/BottomInfoPanel/BottomInfoPanel';
 import EmptyData from '@/components/errors/EmptyData/EmptyData';
 import BeamMapList from '@/components/BeamMapList/BeamMapList';
+import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
 
 interface IArticleParams {
   params: { slug: string };
@@ -55,7 +55,7 @@ export const generateMetadata = async ({
       title: `${metaTitle[LANGUAGE]} ${sat_title} ${position}`,
       description,
       url: `${BASE_URL}/${EUrlBaseParam.SAT_COVERAGE_MAP}/${slug}`,
-      publishedTime: getFormattedDateStr(),
+      publishedTime: getFormattedDateStrYearFirst(),
     },
   };
 };

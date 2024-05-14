@@ -1,7 +1,7 @@
 import BreadCrumbServer from '@/components/BreadCrumbs/BreadCrumbsServer';
 import TransNewsSingle from '@/components/TransNewsSingle/TransNewsSingle';
 import { getTransNewsForSingleDay } from '@/controllers/satDigest.controller';
-import { getFormattedDateStr } from '@/libs/utils/utils';
+import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
 import { META_TRANS_NEWS_SINGLE } from '@/models/satDigest.model';
 import { LANGUAGE as L, DEFAULT_META_DATA } from '@/models/ui.model';
 import { EUrlBaseParam } from '@/models/url.model';
@@ -13,7 +13,7 @@ const BASE_URL = process.env.BASE_URL;
 const { metaDescriptionStart, metaH1start, metaKeywordsStart, metaTitleStart } =
   META_TRANS_NEWS_SINGLE;
 
-const getCurrDateCached = cache(getFormattedDateStr);
+const getCurrDateCached = cache(getFormattedDateStrYearFirst);
 
 interface IPageParams {
   params: { date: string };

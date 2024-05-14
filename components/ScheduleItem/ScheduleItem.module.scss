@@ -1,9 +1,3 @@
-.ScheduleBlock {
-  padding: 20px;
-  width: 90%;
-  text-shadow: 0 0.7px 0 #fff;
-}
-
 .titleBlock {
   padding: 0.1rem 0;
 }
@@ -51,8 +45,20 @@
 }
 
 .tvProgDescription {
+  cursor: pointer;
   margin-left: 3rem;
   border-left: solid #7ba5ce;
   font-size: 0.95rem;
   color: #0c3a67;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-height: 1.5em;
+  transition: max-height 0.5s ease-in-out;
+
+  &:hover {
+    background: #f0f0f0;
+    white-space: normal;
+    max-height: 1000px;
+  }
 }

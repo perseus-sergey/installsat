@@ -1,7 +1,7 @@
 'use server';
 
 import { executeQuery } from '@/libs/db/mysqldb';
-import { getFormattedDateStr } from '@/libs/utils/utils';
+import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
 import { ICommentsModel, ISubscribersEmails } from '@/models/comments.model';
 import { EDBTableTitles } from '@/models/ui.model';
 import { cache } from 'react';
@@ -59,7 +59,15 @@ export const insertComment = async (
 ) =>
   await executeQuery(
     `INSERT INTO ${dbTableName} (post,author,mail,text,date,ip,country) VALUES (?,?,?,?,?,?,?)`,
-    [articleId, author, email, text, getFormattedDateStr(), ip, country]
+    [
+      articleId,
+      author,
+      email,
+      text,
+      getFormattedDateStrYearFirst(),
+      ip,
+      country,
+    ]
   );
 
 export const editCommentDB = async (

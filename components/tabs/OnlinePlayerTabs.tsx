@@ -2,13 +2,13 @@
 
 import styles from './OnlinePlayerTabs.module.scss';
 import Video from 'next-video';
-import FakePlayer from '../FakePlayer/FakePlayer';
-import BaseButton from '../../ui/buttons/BaseButton/BaseButton';
+import FakePlayer from '../online/FakePlayer/FakePlayer';
+import BaseButton from '../ui/buttons/BaseButton/BaseButton';
 import React, { useState } from 'react';
 import {
   IOnlineChannel,
   META_CHANNEL_ONLINE,
-} from '../../../models/channel.model';
+} from '../../models/channel.model';
 import { LANGUAGE } from '@/models/ui.model';
 
 const {

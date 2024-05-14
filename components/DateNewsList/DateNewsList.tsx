@@ -1,6 +1,5 @@
 import Link from 'next/link';
 import styles from '../SatNewsList/SatNewsList.module.scss';
-import { getDate, getFormattedDateStr } from '@/libs/utils/utils';
 import React from 'react';
 import DangerHtmlUl from '../ui/DangerHtml/DangerHtml';
 import {
@@ -11,6 +10,7 @@ import EmptyData from '../errors/EmptyData/EmptyData';
 import { EUrlBaseParam } from '@/models/url.model';
 import { META_TRANS_NEWS_SINGLE } from '@/models/satDigest.model';
 import { LANGUAGE } from '@/models/ui.model';
+import { getDate, getFormattedDateStrYearFirst } from '@/libs/utils/dates';
 
 const DateNewsList = async () => {
   const newsArray = await setGroupedNewsByDateMap();
@@ -23,7 +23,7 @@ const DateNewsList = async () => {
       <div className={styles.newsBlock} key={news[0]}>
         <h2 className={`${styles.groupTitle} ${styles.alignCenter}`}>
           <Link
-            href={`/${EUrlBaseParam.TRANSPONDER_NEWS}/${getFormattedDateStr(news[0])}`}
+            href={`/${EUrlBaseParam.TRANSPONDER_NEWS}/${getFormattedDateStrYearFirst(news[0])}`}
           >
             {META_TRANS_NEWS_SINGLE.metaH1start[LANGUAGE]}
             <span className={styles.groupTitleDate}> {getDate(news[0])}</span>

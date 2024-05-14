@@ -1,7 +1,6 @@
 import type { Metadata } from 'next';
 import React from 'react';
 import { EUrlBaseParam } from '@/models/url.model';
-import { getFormattedDateStr } from '@/libs/utils/utils';
 import {
   LANGUAGE,
   EDBTableTitles,
@@ -21,6 +20,7 @@ import { getCommentsNumber } from '@/controllers/comments.controller';
 import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
 import BreadCrumbServer from '@/components/BreadCrumbs/BreadCrumbsServer';
 import { BREAD_CRUMBS } from '@/models/breadCrumbs.model';
+import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
 
 interface IArticleParams {
   children: React.ReactNode;
@@ -48,7 +48,7 @@ export const generateMetadata = async ({
       title,
       description,
       url: `${BASE_URL}/${EUrlBaseParam.ARTICLE}/${slug}`,
-      publishedTime: getFormattedDateStr(date),
+      publishedTime: getFormattedDateStrYearFirst(date),
     },
   };
 };
@@ -98,7 +98,7 @@ export default async function layout({
               <Link href={`/${EUrlBaseParam.ARTICLE}/${art.cpu}`}>
                 {art.title}
               </Link>
-              <span>{` (${getFormattedDateStr(art.date)})`}</span>
+              <span>{` (${getFormattedDateStrYearFirst(art.date)})`}</span>
             </li>
           ))}
         />

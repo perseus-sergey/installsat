@@ -18,7 +18,6 @@ import {
   DEFAULT_META_DATA,
   EDBTableTitles,
 } from '@/models/ui.model';
-import { getFormattedDateStr } from '@/libs/utils/utils';
 import { EUrlBaseParam, EUrlSearchParam } from '@/models/url.model';
 import Filter from '@/components/ui/Filter/Filter';
 import { Suspense, cache } from 'react';
@@ -37,6 +36,7 @@ import BreadCrumbServer, {
   IBreadCrumbLink,
 } from '@/components/BreadCrumbs/BreadCrumbsServer';
 import { BREAD_CRUMBS } from '@/models/breadCrumbs.model';
+import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
 
 const BASE_URL = process.env.BASE_URL;
 
@@ -85,7 +85,7 @@ export const generateMetadata = async ({
       title: `${cat_title}. ${metaTitle[L]}`,
       description: cat_description,
       url: `${BASE_URL}/${EUrlBaseParam.PACKAGE_CHANNEL_LIST}/${cat_slug}`,
-      publishedTime: getFormattedDateStr(),
+      publishedTime: getFormattedDateStrYearFirst(),
     },
   };
 };

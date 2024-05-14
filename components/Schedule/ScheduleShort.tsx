@@ -1,20 +1,19 @@
-import { EDBTableTitles } from '@/models/ui.model';
-import styles from './Schedule.module.scss';
+import { EDBTableTitles, LANGUAGE } from '@/models/ui.model';
 import { DateTime } from 'luxon';
 import { getDBChannelScheduleShort } from '@/controllers/schedule.controller';
-import { cutText } from '@/libs/utils/utils';
 import { IOnlineChannel } from '@/models/channel.model';
 import { TitleH2 } from '../ui/Titles/TitleH2';
-import { SCHEDULE } from '@/models/scheduleTV.model';
+import { SCHEDULE_META } from '@/models/scheduleTV.model';
+import ScheduleItem from '../ScheduleItem/ScheduleItem';
 
 const {
-  descriptionMaxLength,
   defaultHoursBeforeNow,
   defaultRowsLimit,
   exceptGenreIDs,
   exceptHoursBeforeNow,
   exceptRowsLimit,
-} = SCHEDULE.scheduleShort;
+  h2Start,
+} = SCHEDULE_META.scheduleShort;
 
 interface IScheduleShortProps {
   channelData: IOnlineChannel;
@@ -65,45 +64,26 @@ const ScheduleShort = async ({
   if (scheduleList instanceof Error || !scheduleList.length) return null;
 
   return (
-    <div className={styles.ScheduleShort} data-testid="ScheduleShort">
+    <div>
       <>
-        <TitleH2>Розклад передач каналу ✧{title}✧</TitleH2>
-        <div className={styles.ScheduleBlock}>
-          {scheduleList.map((shed) => {
-            const dateStart = DateTime.fromJSDate(shed.start).minus({
-              hours: addHour,
-            });
-            const dateEnd = DateTime.fromJSDate(shed.end).minus({
-              hours: addHour,
-            });
-
-            let timeClass = styles.timeFuture;
-            let titleClass = styles.titleFuture;
-
-            if (dateStart <= now && dateEnd >= now) {
-              timeClass = styles.timeNow;
-              titleClass = styles.titleNow;
-            } else if (dateStart < now) {
-              timeClass = styles.timePast;
-              titleClass = styles.titlePast;
-            }
-
-            return (
-              <>
-                <div key={shed.id} className={styles.titleBlock}>
-                  <span className={timeClass}>
-                    {dateStart.toFormat('HH:mm')}
-                  </span>
-                  <span className={titleClass}>{shed.title}</span>
-                </div>
-                {shed.prog_desc && (
-                  <p className={`${titleClass} ${styles.tvProgDescription}`}>
-                    {cutText(shed.prog_desc, descriptionMaxLength)}
-                  </p>
-                )}
-              </>
-            );
-          })}
+        <TitleH2>
+          {h2Start[LANGUAGE]} ✧{title}✧
+        </TitleH2>
+        <div
+          style={{
+            padding: '20px',
+            width: '90%',
+            textShadow: '0 0.7px 0 #ffffff',
+          }}
+        >
+          {scheduleList.map((schedule) => (
+            <ScheduleItem
+              schedule={schedule}
+              now={now}
+              addHour={addHour}
+              key={schedule.id}
+            />
+          ))}
         </div>
       </>
     </div>

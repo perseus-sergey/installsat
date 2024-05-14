@@ -7,7 +7,6 @@ import {
   getChunkOfNews,
   getCurrentCatParams,
 } from '@/controllers/articles.controller';
-import { getFormattedDateStr } from '@/libs/utils/utils';
 import TextUnderH1 from '@/components/TextUnderH1/TextUnderH1';
 import ArticleList from '@/components/article/ArticleList/ArticleList';
 import { notFound } from 'next/navigation';
@@ -18,11 +17,14 @@ import { imagePathValidate } from '@/libs/utils/imagePathValidate';
 import { validSearchParam } from '@/libs/utils/validSearchParam';
 import BreadCrumbServer from '@/components/BreadCrumbs/BreadCrumbsServer';
 import { BREAD_CRUMBS } from '@/models/breadCrumbs.model';
+import Filter from '@/components/ui/Filter/Filter';
+import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
 
 const BASE_URL = process.env.BASE_URL;
 
 const {
   articleList: { pagination, images, articlesCountCaption },
+  search: { placeholder, labelTitle },
 } = ARTICLES;
 
 const articleTitleImg = imagePathValidate(
@@ -51,7 +53,7 @@ export const generateMetadata = async ({
       title,
       description,
       url: `${BASE_URL}/${EUrlBaseParam.NEWS_AND_ARTICLES}/${cpu}`,
-      publishedTime: getFormattedDateStr(),
+      publishedTime: getFormattedDateStrYearFirst(),
     },
   };
 };
@@ -111,6 +113,13 @@ export default async function Page({
             isBlur
           />
         </Title>
+
+        <Filter
+          idName="article-search-input"
+          placeholder={placeholder[LANGUAGE]}
+          labelTitle={labelTitle[LANGUAGE]}
+          searchQueryTitle={EUrlSearchParam.ARTICLE}
+        />
 
         <TextUnderH1>{text}</TextUnderH1>
 

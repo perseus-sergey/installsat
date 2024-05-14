@@ -1,4 +1,4 @@
-import { getFormattedDateStr } from '@/libs/utils/utils';
+import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
 import { ELanguage, LANGUAGE } from './ui.model';
 
 // =================================================================
@@ -19,8 +19,8 @@ export const META_TRANS_NEWS_LIST = {
       const startDate = new Date();
       startDate.setDate(currDate.getDate() - interval);
       addStr = {
-        [ELanguage.UA]: `з ${getFormattedDateStr(startDate)} по ${getFormattedDateStr()}`,
-        [ELanguage.EN]: `from ${getFormattedDateStr(startDate)} to ${getFormattedDateStr()}`,
+        [ELanguage.UA]: `з ${getFormattedDateStrYearFirst(startDate)} по ${getFormattedDateStrYearFirst()}`,
+        [ELanguage.EN]: `from ${getFormattedDateStrYearFirst(startDate)} to ${getFormattedDateStrYearFirst()}`,
       };
       // addStr = {
       //   [ELanguage.UA]: `останні ${interval} днів`,

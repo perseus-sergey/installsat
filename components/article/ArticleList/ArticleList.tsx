@@ -6,9 +6,10 @@ import FillingValidImage from '../../ui/Images/FillingValidImage';
 import Link from 'next/link';
 import { LANGUAGE, IImgParams } from '@/models/ui.model';
 import { EUrlBaseParam } from '@/models/url.model';
-import { cutText, getFormattedDateStr } from '@/libs/utils/utils';
+import { cutText } from '@/libs/utils/utils';
 import DangerHtml from '../../ui/DangerHtml/DangerHtml';
 import EmptyData from '@/components/errors/EmptyData/EmptyData';
+import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
 
 const { h1Image } = ARTICLES.article.images;
 
@@ -85,7 +86,7 @@ const ArticleList = ({ articleList, articleTitleImg }: IArticleListProps) =>
                 { name: viewsTitle[LANGUAGE], value: view },
                 {
                   name: dateTitle[LANGUAGE],
-                  value: getFormattedDateStr(date),
+                  value: getFormattedDateStrYearFirst(date),
                 },
                 { name: commentsTitle[LANGUAGE], value: comment_count },
               ]}

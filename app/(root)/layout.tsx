@@ -3,7 +3,7 @@ import React from 'react';
 import SideBar from '@/components/SideBar/SideBar';
 import { META_TRANS_NEWS_LIST } from '@/models/satDigest.model';
 import { LANGUAGE, DEFAULT_META_DATA } from '@/models/ui.model';
-import { getFormattedDateStr } from '@/libs/utils/utils';
+import { getFormattedDateStr } from '@/libs/utils/dates';
 
 const BASE_URL = process.env.BASE_URL;
 

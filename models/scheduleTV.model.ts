@@ -24,7 +24,12 @@ export const SCHEDULE_META = {
     [ELanguage.UA]: 'Актуальна програма передач каналу',
     [ELanguage.EN]: 'Actual TV schedule of the channel',
   },
-  tabsWeek: {},
+  tabsWeek: {
+    tabsTitles: {
+      [ELanguage.UA]: ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Нд'],
+      [ELanguage.EN]: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+    },
+  },
   tabsSource: {
     tabCaptionStart: {
       [ELanguage.UA]: 'Програма',

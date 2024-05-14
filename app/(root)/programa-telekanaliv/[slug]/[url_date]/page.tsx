@@ -147,6 +147,10 @@ export default async function Page({
       tblName: EDBTableTitles.TV_SCHEDULE_VSE_TV,
       scheduleId: vsetv,
     },
+    {
+      tblName: EDBTableTitles.TV_SCHEDULE_VIPIKO,
+      scheduleId: vipiko,
+    },
   ];
   const filteredSchedules = dbScheduleDataArr.filter((t) => t.scheduleId);
   const schedules = await getChanOneDaySchedule(filteredSchedules, url_date);

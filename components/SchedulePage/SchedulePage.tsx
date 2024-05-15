@@ -31,7 +31,7 @@ const SchedulePage = ({
     ? 0
     : scheduleList?.filter((scheduleList) => scheduleList.length).length;
 
-  return scheduleList ? (
+  return scheduleList && availableSchedulesLength > 0 ? (
     <div className={'flex flex-wrap flex-col items-center'}>
       <TitleH2>{h2TitleForDate(channelTitle, dayStr)[LANGUAGE]}</TitleH2>
 

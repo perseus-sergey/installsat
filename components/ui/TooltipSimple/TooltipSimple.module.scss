@@ -5,6 +5,10 @@ $tooltipWidth: 140px;
   display: inline-block;
 }
 
+// =========================================================================
+// Tooltip and overflow hidden
+// =========================================================================
+
 .tooltipText {
   visibility: hidden;
   position: absolute;

@@ -1,5 +1,5 @@
 import { Title } from '@/components/ui/Titles/Title';
-import { getOnlineChannels } from '@/controllers/channelList.controller';
+import { getChannelsWithSchedule } from '@/controllers/channelList.controller';
 import {
   CHANNEL_LIST_ANCHOR_START,
   META_ALL_SAT_CHANNEL_LIST,
@@ -12,32 +12,29 @@ import {
   LANGUAGE as L,
   TSearchParams,
   DEFAULT_META_DATA,
-  EDBTableTitles,
 } from '@/models/ui.model';
 import { EUrlBaseParam, EUrlSearchParam } from '@/models/url.model';
 import Filter from '@/components/ui/Filter/Filter';
 import { Suspense } from 'react';
 import { validSearchParam } from '@/libs/utils/validSearchParam';
-import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
-import { getCommentsNumber } from '@/controllers/comments.controller';
 import TooltipSimple from '@/components/ui/TooltipSimple/TooltipSimple';
 import Link from 'next/link';
 import GenreImage from '@/components/ui/Images/GenreImage/GenreImage';
-import OnlineChannelListAfterText from '@/components/online/OnlineChannelListAfterText/OnlineChannelListAfterText';
 import PackageChannelList from '@/components/channelList/PackageChannelList';
 import BreadCrumbServer from '@/components/BreadCrumbs/BreadCrumbsServer';
 import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
+import { SCHEDULE_META } from '@/models/scheduleTV.model';
+import { BREAD_CRUMBS } from '@/models/breadCrumbs.model';
 
 const BASE_URL = process.env.BASE_URL;
 
+const todayStr = getFormattedDateStrYearFirst();
+
+const { metaDescription, metaH1, metaKeywords } = SCHEDULE_META.channelList;
+
 const {
-  metaDescription,
-  metaH1,
   getH1After,
-  metaKeywords,
-  metaTitle,
   images: { h1Image },
-  ONLINE_CHANNEL_LIST_DB_ID,
   fieldsetFilters: {
     legendText,
     anchorLink: { ariaLabel },
@@ -51,15 +48,15 @@ const {
 } = META_ALL_SAT_CHANNEL_LIST;
 
 export const metadata: Metadata = {
-  title: metaTitle[L],
+  title: metaH1[L],
   description: metaDescription[L],
   keywords: metaKeywords[L],
   openGraph: {
     ...DEFAULT_META_DATA.openGraph,
-    title: metaTitle[L],
+    title: metaH1[L],
     description: metaDescription[L],
-    url: `${BASE_URL}/${EUrlBaseParam.ONLINE_CHANNEL_LIST}`,
-    publishedTime: getFormattedDateStrYearFirst(),
+    url: `${BASE_URL}/${EUrlBaseParam.CHANNELS_TV_PROGRAM}`,
+    publishedTime: todayStr,
   },
 };
 interface IPageProps {
@@ -72,16 +69,14 @@ export default async function Page({ searchParams }: IPageProps) {
     searchParams
   );
 
-  const onlineChannels = (await getOnlineChannels(searchQueryChannel)) || [];
-
-  const numberOfComments = await getCommentsNumber(
-    EDBTableTitles.COMMENTS_GENRE,
-    ONLINE_CHANNEL_LIST_DB_ID
-  );
+  const onlineChannels =
+    (await getChannelsWithSchedule(searchQueryChannel)) || [];
 
   return (
     <>
-      <BreadCrumbServer />
+      <BreadCrumbServer
+        breadCrumbList={[BREAD_CRUMBS.ONLINE_CHANNEL_LIST, metaH1[L]]}
+      />
       <article className="article">
         <Title>
           {metaH1[L]}
@@ -122,21 +117,12 @@ export default async function Page({ searchParams }: IPageProps) {
 
         <Suspense key={searchQueryChannel}>
           <PackageChannelList
-            pathToChannelDetails={EUrlBaseParam.ONLINE_CHANNEL_LIST}
+            pathToChannelDetails={EUrlBaseParam.CHANNELS_TV_PROGRAM}
             channels={onlineChannels}
+            todayStr={todayStr}
           />
         </Suspense>
-
-        <OnlineChannelListAfterText lang={L} />
       </article>
-
-      <CommentBlock
-        numberOfComments={numberOfComments}
-        revalidateUrl={`/${EUrlBaseParam.ONLINE_CHANNEL_LIST}`}
-        dbCommentTableName={EDBTableTitles.COMMENTS_GENRE}
-        articleId={ONLINE_CHANNEL_LIST_DB_ID}
-        articleName={metaTitle[L]}
-      />
     </>
   );
 }

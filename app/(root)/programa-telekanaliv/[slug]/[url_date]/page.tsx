@@ -7,7 +7,7 @@ import {
   getDBOnlineChannel,
   getSimilarChannels,
 } from '@/controllers/channel.controller';
-import { getComments } from '@/controllers/comments.controller';
+import { getCommentsNumber } from '@/controllers/comments.controller';
 import { cutText } from '@/libs/utils/utils';
 import { META_CHANNEL } from '@/models/channel.model';
 import { LANGUAGE, EDBTableTitles, DEFAULT_META_DATA } from '@/models/ui.model';
@@ -19,8 +19,11 @@ import { getChanOneDaySchedule } from '@/controllers/schedule.controller';
 import { notFound } from 'next/navigation';
 import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
 import SchedulePage from '@/components/SchedulePage/SchedulePage';
-import { getFormattedDateStr } from '@/libs/utils/dates';
+import { getFormattedDateStr, getValidDate } from '@/libs/utils/dates';
 import WeekScheduleTabs from '@/components/tabs/WeekScheduleTabs';
+import NoteBlock from '@/components/ui/NoteBlock/NoteBlock';
+import GrooveLine from '@/components/ui/GrooveLine';
+import { BREAD_CRUMBS } from '@/models/breadCrumbs.model';
 
 const BASE_URL = process.env.BASE_URL;
 
@@ -30,6 +33,8 @@ const {
   },
   infoPanelTitles: { comments: commentsTitle, views: viewsTitle },
   similar: { channels: simChannelsBefore },
+  noteTitle,
+  getResponsibilityText,
 } = META_CHANNEL;
 
 const { getKeywords, getTitle, h1Start, descriptionStart } = SCHEDULE_META;
@@ -97,16 +102,7 @@ export default async function Page({
   // searchParams: { date },
 }: IPageProps) {
   const sqlResult = await getDBOnlineChannel(slug);
-  if (!sqlResult || !sqlResult.length) notFound();
-
-  // =================================================================
-  // Check url_date
-  // =================================================================
-
-  // =================================================================
-  // warn-once.js:16 Image with src "/Images/accordion/film24.png" has either width or height modified, but not the other.
-  // If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
-  // =================================================================
+  if (!sqlResult || !sqlResult.length || !getValidDate(url_date)) notFound();
 
   const {
     id,
@@ -147,10 +143,6 @@ export default async function Page({
       tblName: EDBTableTitles.TV_SCHEDULE_VSE_TV,
       scheduleId: vsetv,
     },
-    {
-      tblName: EDBTableTitles.TV_SCHEDULE_VIPIKO,
-      scheduleId: vipiko,
-    },
   ];
   const filteredSchedules = dbScheduleDataArr.filter((t) => t.scheduleId);
   const schedules = await getChanOneDaySchedule(filteredSchedules, url_date);
@@ -159,15 +151,19 @@ export default async function Page({
   const similarChannels =
     similarChannelsResult instanceof Error ? [] : similarChannelsResult;
 
-  const commDbResult = await getComments(
+  const numberOfComments = await getCommentsNumber(
     EDBTableTitles.COMMENTS_CHANNEL,
     `${id}`
   );
-  const comments = commDbResult instanceof Error ? [] : commDbResult;
 
   return (
     <>
-      <BreadCrumbServer />
+      <BreadCrumbServer
+        breadCrumbList={[
+          BREAD_CRUMBS.CHANNELS_TV_PROGRAM,
+          `${h1Start[LANGUAGE]} "${title}"`,
+        ]}
+      />
       <article className="article">
         <Title>
           {`${h1Start[LANGUAGE]} "${title}"`}
@@ -190,20 +186,16 @@ export default async function Page({
           channelTitle={title}
         />
 
+        <GrooveLine className="py-4" />
+
+        <NoteBlock noteTitle={noteTitle[LANGUAGE]}>
+          {getResponsibilityText(title)[LANGUAGE]}
+        </NoteBlock>
+
         <BottomInfoPanel
           items={[
-            // {
-            //   name: packageTitle[LANGUAGE],
-            //   value: (
-            //     <Link
-            //       href={`/${EUrlBaseParam.PACKAGE_CHANNEL_LIST}/${catLink}`}
-            //     >
-            //       {catTitle}
-            //     </Link>
-            //   ),
-            // },
             { name: viewsTitle[LANGUAGE], value: view + 1 },
-            { name: commentsTitle[LANGUAGE], value: comments.length },
+            { name: commentsTitle[LANGUAGE], value: numberOfComments },
           ]}
         />
       </article>
@@ -220,11 +212,11 @@ export default async function Page({
       ) : null}
 
       <CommentBlock
-        numberOfComments={comments.length}
+        numberOfComments={numberOfComments}
         revalidateUrl={`/${EUrlBaseParam.CHANNELS_TV_PROGRAM}/${slug}/${url_date}`}
         dbCommentTableName={EDBTableTitles.COMMENTS_CHANNEL}
         articleId={`${id}`}
-        articleName={title}
+        articleName={`${h1Start[LANGUAGE]} "${title}"`}
       />
     </>
   );

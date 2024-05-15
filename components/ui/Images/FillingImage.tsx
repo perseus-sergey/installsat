@@ -39,6 +39,7 @@ const FillingImg = ({
         fill
         style={{
           objectFit: 'contain',
+          // maxWidth: '100%',
         }}
         placeholder={isBlur ? 'blur' : 'empty'}
         blurDataURL={blurImgPath}

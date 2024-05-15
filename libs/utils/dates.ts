@@ -1,23 +1,30 @@
 import { ELanguage } from '@/models/ui.model';
 import { DateTime } from 'luxon';
 
-export const getDate = (date: string | Date = new Date(), lang?: string) => {
+export const getValidDate = (date: string | Date) => {
   const currDate = date instanceof Date ? date : new Date(date);
-  if (currDate.toString() === 'Invalid Date') return '';
 
-  return currDate.toLocaleDateString(lang, {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  });
+  return currDate.toString() === 'Invalid Date' ? null : currDate;
+};
+
+export const getDate = (date: string | Date = new Date(), lang?: string) => {
+  const currDate = getValidDate(date);
+
+  return !currDate
+    ? ''
+    : currDate.toLocaleDateString(lang, {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+      });
 };
 
 export const getFormattedDateStr = (
   date: string | Date = new Date(),
   isYearFirst = true
 ) => {
-  const currDate = date instanceof Date ? date : new Date(date);
-  if (currDate.toString() === 'Invalid Date') return '';
+  const currDate = getValidDate(date);
+  if (!currDate) return '';
 
   const year = currDate.getFullYear();
   const month = String(currDate.getMonth() + 1).padStart(2, '0');
@@ -29,11 +36,9 @@ export const getFormattedDateStr = (
 export const getFormattedDateStrYearFirst = (
   date: string | Date = new Date()
 ) => {
-  const currDate = date instanceof Date ? date : new Date(date);
+  const currDate = getValidDate(date);
 
-  return currDate.toString() === 'Invalid Date'
-    ? ''
-    : currDate.toISOString().slice(0, 10);
+  return !currDate ? '' : currDate.toISOString().slice(0, 10);
 };
 
 export const getStartOfWeekDate = (date: Date) => {

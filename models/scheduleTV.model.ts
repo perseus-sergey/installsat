@@ -20,6 +20,22 @@ export const SCHEDULE_META = {
       [ELanguage.EN]: `program of the channel ${chanTitle} television schedule today tomorrow yesterday this next week`,
     };
   },
+  channelList: {
+    metaH1: {
+      [ELanguage.UA]: 'Програма передач телеканалів',
+      [ELanguage.EN]: 'TV schedule of channels',
+    },
+    metaDescription: {
+      [ELanguage.UA]: 'Актуальна програма передач телевізійних каналів',
+      [ELanguage.EN]: 'Actual TV channels schedule',
+    },
+    metaKeywords: {
+      [ELanguage.UA]:
+        'Програма передач телеканалів розклад телепрограма телебачення сьогодні завтра вчора на тиждень',
+      [ELanguage.EN]:
+        'The program of TV channels, the schedule, the TV program, today, tomorrow, yesterday, for a week',
+    },
+  },
   descriptionStart: {
     [ELanguage.UA]: 'Актуальна програма передач каналу',
     [ELanguage.EN]: 'Actual TV schedule of the channel',

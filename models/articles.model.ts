@@ -6,8 +6,8 @@ export const ARTICLES = {
     images: {
       h1Image: {
         path: '/Images/channelsOptimized/',
-        height: 90,
-        width: 100,
+        height: 100,
+        width: 120,
         defaultImg: {
           src: '/Images/channelsOptimized/zastavka.jpg',
           height: 100,

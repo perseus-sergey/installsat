@@ -27,8 +27,9 @@ const FillingImg = ({
       style={{
         position: 'relative',
         height: `${height}px`,
-        maxHeight: '80vh',
+        // maxHeight: '80vh',
         // width: `${width}px`,
+        minWidth: `${width}px`,
       }}
     >
       <Image

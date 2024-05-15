@@ -40,12 +40,9 @@ const WeekScheduleTabs = ({ currentDate }: { currentDate: string }) => {
   }, []);
 
   return (
-    <ul
-      style={{ listStyle: 'none' }}
-      className="flex gap-1 flex-wrap justify-center"
-    >
-      {tabs}
-    </ul>
+    <nav className="py-4">
+      <ul className="flex gap-1 flex-wrap justify-center">{tabs}</ul>
+    </nav>
   );
 };
 

@@ -35,6 +35,7 @@ export const AccordionMenuItem = ({
                 height={img.height}
                 src={img.src}
                 alt={img.alt[LANGUAGE] || ''}
+                isFillParent
               />
             )}
             {title[LANGUAGE]}

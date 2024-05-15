@@ -183,14 +183,12 @@ export default async function Page({
           />
         </Title>
 
-        <div className="article-text">
-          <WeekScheduleTabs currentDate={url_date} />
-          <SchedulePage
-            scheduleList={schedules}
-            urlDate={url_date}
-            channelTitle={title}
-          />
-        </div>
+        <WeekScheduleTabs currentDate={url_date} />
+        <SchedulePage
+          scheduleList={schedules}
+          urlDate={url_date}
+          channelTitle={title}
+        />
 
         <BottomInfoPanel
           items={[

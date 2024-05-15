@@ -54,7 +54,7 @@ const SchedulePage = ({
         );
       })}
       {availableSchedulesLength > 1 && (
-        <nav className="tab-nav flex order-[-1] mb-4">
+        <nav className="tab-nav flex order-[-1] mb-4 gap-8">
           {scheduleList.map((tbl, index) => {
             const i = index + 1;
 
@@ -75,7 +75,8 @@ const SchedulePage = ({
                     role="button"
                     aria-label={ariaLabel[LANGUAGE]}
                   >
-                    {tabCaptionStart[LANGUAGE]} {i}
+                    {tabCaptionStart[LANGUAGE]}
+                    {' .'.repeat(i)}
                   </label>
                 </Fragment>
               )

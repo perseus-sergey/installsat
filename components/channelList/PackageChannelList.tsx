@@ -36,9 +36,14 @@ const { channelLogo } = META_CHANNEL.images;
 interface IProps {
   channels: [string, (IPackageChannelListModel | IOnlineChannelListModel)[]][];
   pathToChannelDetails: EUrlBaseParam;
+  todayStr?: string;
 }
 
-const PackageChannelList = ({ channels, pathToChannelDetails }: IProps) =>
+const PackageChannelList = ({
+  channels,
+  pathToChannelDetails,
+  todayStr = '',
+}: IProps) =>
   channels.length > 0 ? (
     channels.map(([genreTitle, chanList]) => (
       <>
@@ -76,7 +81,7 @@ const PackageChannelList = ({ channels, pathToChannelDetails }: IProps) =>
           {chanList.map((channel) => (
             <li key={channel.chan_id} className={styles.listItem}>
               <Link
-                href={`/${pathToChannelDetails}/${channel.chan_cpu}`}
+                href={`/${pathToChannelDetails}/${channel.chan_cpu}${todayStr ? `/${todayStr}` : ''}`}
                 aria-label={ariaLabel[LANGUAGE]}
               >
                 <ChannelCardTooltip

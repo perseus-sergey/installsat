@@ -6,7 +6,7 @@ import { EUrlSearchParam } from '@/models/url.model';
 import { META_ALL_SAT_CHANNEL_LIST } from '@/models/channelList.model';
 import BaseButton from '../buttons/BaseButton/BaseButton';
 import { LANGUAGE } from '@/models/ui.model';
-import TooltipSimple from '../TooltipSimple/TooltipSimple';
+import TooltipSimple from '../tooltips/TooltipSimple/TooltipSimple';
 import useSearch from '@/libs/hooks/useSearch';
 import StyledInputField from '../StyledInputField/StyledInputField';
 

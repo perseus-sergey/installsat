@@ -1,7 +1,7 @@
 import DeleteCommentSubscription from '@/components/DeleteCommentSubscription/DeleteCommentSubscription';
 import { Title } from '@/components/ui/Titles/Title';
+import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
 import { decrypt } from '@/libs/utils/decrypt';
-import { getFormattedDateStr } from '@/libs/utils/utils';
 import { validSearchParam } from '@/libs/utils/validSearchParam';
 import { COMMENTS_MODEL } from '@/models/comments.model';
 import {
@@ -36,7 +36,7 @@ export const metadata: Metadata = {
     title,
     description,
     url: `${BASE_URL}/${EUrlBaseParam.DELETE_COMMENT_SUBSCRIPTION}`,
-    publishedTime: getFormattedDateStr(new Date()),
+    publishedTime: getFormattedDateStrYearFirst(),
   },
 };
 

@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import TooltipSimple from '../ui/TooltipSimple/TooltipSimple';
+import TooltipSimple from '../ui/tooltips/TooltipSimple/TooltipSimple';
 import { SubmitPendingButton } from '../ui/buttons/SubmitPendingBtn';
 import styles from './ConfirmCancelButtons.module.scss';
 

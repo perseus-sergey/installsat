@@ -38,6 +38,7 @@ body {
   color: #5a5a5a;
   background: url('/Images/black00001.gif');
   background-color: #000000;
+  overflow-x: hidden;
 }
 
 a {
@@ -71,6 +72,7 @@ a {
   display: flex;
   flex-direction: column;
   flex: 3;
+  overflow-x: hidden;
 }
 
 .article {

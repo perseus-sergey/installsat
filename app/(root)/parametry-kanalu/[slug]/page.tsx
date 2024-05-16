@@ -17,10 +17,9 @@ import {
   getDBChannel,
   getSimilarChannels,
 } from '@/controllers/channel.controller';
-import { getFormattedDateStr } from '@/libs/utils/utils';
 import { META_CHANNEL } from '@/models/channel.model';
 import { LANGUAGE, EDBTableTitles, DEFAULT_META_DATA } from '@/models/ui.model';
-import { EUrlBaseParam, EUrlSearchParam } from '@/models/url.model';
+import { EUrlBaseParam } from '@/models/url.model';
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
@@ -30,6 +29,7 @@ import GrooveLine from '@/components/ui/GrooveLine';
 import BreadCrumbServer from '@/components/BreadCrumbs/BreadCrumbsServer';
 import { CHANNEL_LIST_ANCHOR_START } from '@/models/channelList.model';
 import { BREAD_CRUMBS } from '@/models/breadCrumbs.model';
+import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
 
 const BASE_URL = process.env.BASE_URL;
 
@@ -51,7 +51,7 @@ const {
   similar: { channels: simChannelsBefore, articles: simArticlesBefore },
 } = META_CHANNEL;
 
-const currentDate = getFormattedDateStr();
+const currentDate = getFormattedDateStrYearFirst();
 
 export interface IChannelProps {
   params: { slug: string };
@@ -71,7 +71,6 @@ export const generateMetadata = async ({
     cat_parent_id,
     cat_parent_title,
     cat_title,
-    cat_id,
     sat_title,
     freq,
     polar,
@@ -88,11 +87,7 @@ export const generateMetadata = async ({
     .split('/')
     .reverse();
 
-  // if it is encrypted channel or category lybid || UA TV then canonical, else native url
-  const addCanonical =
-    canonical && (cat_id === 23 || cat_parent_id === 2 || cat_parent_id === 25)
-      ? clearedCanonical
-      : chan_slug;
+  const addCanonical = canonical ? clearedCanonical : chan_slug;
 
   return {
     title: metaTitle,
@@ -193,11 +188,11 @@ export default async function Page({ params: { slug } }: IChannelProps) {
         <div className="article-text">
           <DangerHtml text={text} />
 
-          <GrooveLine />
+          <GrooveLine className="py-4" />
 
           <TvScheduleLink
             title={`${scheduleTitle[LANGUAGE]} "${title}"`}
-            href={`/${EUrlBaseParam.CHANNELS_TV_PROGRAM}/${slug}?${EUrlSearchParam.DATE}=${currentDate}`}
+            href={`/${EUrlBaseParam.CHANNELS_TV_PROGRAM}/${slug}/${currentDate}`}
           />
 
           {tvforsite_net && (
@@ -254,7 +249,7 @@ export default async function Page({ params: { slug } }: IChannelProps) {
               <Link href={`/${EUrlBaseParam.ARTICLE}/${art.cpu}`}>
                 {art.title}
               </Link>
-              <span>{` (${getFormattedDateStr(art.date)})`}</span>
+              <span>{` (${getFormattedDateStrYearFirst(art.date)})`}</span>
             </li>
           ))}
         />

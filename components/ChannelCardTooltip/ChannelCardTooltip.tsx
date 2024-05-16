@@ -2,7 +2,7 @@ import { IImgParams } from '@/models/ui.model';
 import FillingValidImage, {
   IAlternativeImgProps,
 } from '../ui/Images/FillingValidImage';
-import Tooltip from '../ui/tooltips/Tooltip/Tooltip';
+import Tooltip from '../ui/tooltips/TooltipMoovingClient/Tooltip';
 // import styles from './ChannelCardTooltip.module.scss';
 
 interface ITooltipTextList {
@@ -43,6 +43,7 @@ const ChannelCardTooltip = ({
             image={tooltipImage}
             defaultImage={tooltipDefaultImage}
             alternativeImgString={tooltipAlternativeImgString}
+            isFillParent
           />
           <div className="py-2.5 px-5">
             <ul>
@@ -65,6 +66,7 @@ const ChannelCardTooltip = ({
         defaultImage={mainDefaultImage}
         alternativeImgString={mainAlternativeImgString}
         isChangeToGif={mainIsChangeToGif}
+        isFillParent
       />
     </Tooltip>
     {children && children}

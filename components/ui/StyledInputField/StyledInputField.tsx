@@ -1,5 +1,5 @@
 import { ChangeEvent, RefObject } from 'react';
-import TooltipSimple from '../TooltipSimple/TooltipSimple';
+import TooltipSimple from '../tooltips/TooltipSimple/TooltipSimple';
 import BaseButton from '../buttons/BaseButton/BaseButton';
 import styles from './StyledInputField.module.scss';
 

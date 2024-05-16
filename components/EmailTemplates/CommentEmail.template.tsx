@@ -1,5 +1,6 @@
+import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
 import { encrypt } from '@/libs/utils/encrypt';
-import { getFormattedDateStr, makeUrlSearchParams } from '@/libs/utils/utils';
+import { makeUrlSearchParams } from '@/libs/utils/utils';
 import { ISubscribersEmails } from '@/models/comments.model';
 import { EDBTableTitles, ELanguage } from '@/models/ui.model';
 import {
@@ -127,7 +128,7 @@ export const CommentToAdminEmail = async ({
             <ul>
               {subscribers.map(({ author, date, mail }) => (
                 <li key={mail}>
-                  {author}: {mail} ({getFormattedDateStr(date)})
+                  {author}: {mail} ({getFormattedDateStrYearFirst(date)})
                 </li>
               ))}
             </ul>

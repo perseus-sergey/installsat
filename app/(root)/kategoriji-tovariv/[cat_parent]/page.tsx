@@ -12,7 +12,7 @@ import { Title } from '@/components/ui/Titles/Title';
 import { EUrlBaseParam } from '@/models/url.model';
 import { Metadata } from 'next';
 import { DEFAULT_META_DATA } from '@/models/ui.model';
-import { getFormattedDateStr } from '@/libs/utils/utils';
+import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
 
 const BASE_URL = process.env.BASE_URL || '';
 
@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     title: 'maps',
     description: 'maps description',
     url: `${BASE_URL}/${EUrlBaseParam.DELETE_COMMENT_SUBSCRIPTION}`,
-    publishedTime: getFormattedDateStr(new Date()),
+    publishedTime: getFormattedDateStrYearFirst(),
   },
 };
 

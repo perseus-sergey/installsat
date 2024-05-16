@@ -14,6 +14,7 @@ interface IFillingImgProps {
   isBlur?: boolean;
   blurImgPath?: string;
   isChangeToGif?: boolean;
+  isFillParent?: boolean;
 }
 
 const FillingValidImage = ({
@@ -24,6 +25,7 @@ const FillingValidImage = ({
   isBlur = false,
   blurImgPath = IMG_PROPERTIES.defaultImgBlur,
   isChangeToGif = false,
+  isFillParent = false,
 }: IFillingImgProps) => {
   const validImg = imagePathValidate(
     image,
@@ -38,6 +40,7 @@ const FillingValidImage = ({
       alt={alt}
       isBlur={isBlur}
       blurImgPath={blurImgPath}
+      isFillParent={isFillParent}
     />
   ) : (
     <span style={{ fontSize: alternativeImgString.fontSize }}>{validImg}</span>

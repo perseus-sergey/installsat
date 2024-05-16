@@ -23,7 +23,11 @@ const BottomInfoPanel = ({ items }: IBottomInfoPanel) => {
             key={name}
           >
             <span className={styles.itemName}>{name}: </span>
-            <figcaption className={styles.itemValue}>{value}</figcaption>
+            <figcaption className={styles.itemValue}>
+              {typeof value === 'number'
+                ? value.toLocaleString('en-US')
+                : value}
+            </figcaption>
           </figure>
         </li>
       ))}

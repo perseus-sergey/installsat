@@ -2,7 +2,7 @@ import Link from 'next/link';
 import styles from './GoUpLink.module.scss';
 import { META_ALL_SAT_CHANNEL_LIST } from '@/models/channelList.model';
 import { LANGUAGE } from '@/models/ui.model';
-import TooltipSimple from '../TooltipSimple/TooltipSimple';
+import TooltipSimple from '../tooltips/TooltipSimple/TooltipSimple';
 
 const {
   anchors: { goUpLink },

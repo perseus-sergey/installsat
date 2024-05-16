@@ -1,0 +1,29 @@
+.tabInput,
+.tabContent {
+  display: none;
+}
+
+.tabContent {
+  max-width: 95%;
+}
+
+.tabLabel {
+  display: block;
+  padding-bottom: 0.2rem;
+  cursor: pointer;
+  font-weight: bold;
+  text-decoration: none;
+  color: #0d6efd;
+}
+
+#content-1:has(~ .tab-nav > #tab-1:checked),
+#content-2:has(~ .tab-nav > #tab-2:checked),
+#content-3:has(~ .tab-nav > #tab-3:checked) {
+  display: block;
+}
+
+.tabInput:checked + .tabLabel {
+  cursor: default;
+  color: #6f6f6f;
+  border-bottom: 3px groove #d1d1d1;
+}

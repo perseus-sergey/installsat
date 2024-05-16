@@ -16,7 +16,7 @@ $tooltipWidth: 140px;
 .tooltipText,
 .tooltipBottom {
   max-width: 250px;
-  background-color: rgb(63 89 175 / 77%);
+  background-color: rgb(63 89 175 / 90%);
   color: #ffffff;
   font-size: 1rem;
   line-height: 1.2;
@@ -26,14 +26,13 @@ $tooltipWidth: 140px;
   text-align: center;
   padding: 0.5rem;
   border-radius: 6px;
-  z-index: 5;
+  z-index: 101;
 }
 
 .tooltipBottom {
   position: fixed;
   bottom: 3%;
   right: 0;
-  z-index: 5;
   transform: translateX(-100vw);
   transition: transform 0.6s;
 }

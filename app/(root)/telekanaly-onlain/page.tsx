@@ -20,7 +20,7 @@ import { Suspense } from 'react';
 import { validSearchParam } from '@/libs/utils/validSearchParam';
 import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
 import { getCommentsNumber } from '@/controllers/comments.controller';
-import TooltipSimple from '@/components/ui/TooltipSimple/TooltipSimple';
+import TooltipSimple from '@/components/ui/tooltips/TooltipSimple/TooltipSimple';
 import Link from 'next/link';
 import GenreImage from '@/components/ui/Images/GenreImage/GenreImage';
 import OnlineChannelListAfterText from '@/components/online/OnlineChannelListAfterText/OnlineChannelListAfterText';

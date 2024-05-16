@@ -1,5 +1,5 @@
 import { MChanTheme, META_SAT_CHANNEL_LIST } from '@/models/channelList.model';
-import TooltipSimple from '../../TooltipSimple/TooltipSimple';
+import TooltipSimple from '../../tooltips/TooltipSimple/TooltipSimple';
 import FillingImg from '../FillingImage';
 import React from 'react';
 

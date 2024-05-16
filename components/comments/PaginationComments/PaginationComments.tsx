@@ -3,7 +3,7 @@
 import styles from './PaginationComments.module.scss';
 import { ARTICLES } from '@/models/articles.model';
 import { EDBTableTitles, LANGUAGE } from '@/models/ui.model';
-import TooltipSimple from '../../ui/TooltipSimple/TooltipSimple';
+import TooltipSimple from '../../ui/tooltips/TooltipSimple/TooltipSimple';
 import { useEffect, useState } from 'react';
 import BaseButton from '../../ui/buttons/BaseButton/BaseButton';
 import { getComments } from '@/controllers/comments.controller';

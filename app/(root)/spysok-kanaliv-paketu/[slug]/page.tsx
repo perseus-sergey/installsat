@@ -24,7 +24,7 @@ import { Suspense, cache } from 'react';
 import { validSearchParam } from '@/libs/utils/validSearchParam';
 import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
 import { getCommentsNumber } from '@/controllers/comments.controller';
-import TooltipSimple from '@/components/ui/TooltipSimple/TooltipSimple';
+import TooltipSimple from '@/components/ui/tooltips/TooltipSimple/TooltipSimple';
 import Link from 'next/link';
 import PackageChannelList from '@/components/channelList/PackageChannelList';
 import FillingValidImage from '@/components/ui/Images/FillingValidImage';

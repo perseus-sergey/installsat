@@ -4,7 +4,7 @@ import { EUrlSearchParam } from '@/models/url.model';
 import { ARTICLES } from '@/models/articles.model';
 import { LANGUAGE, TSearchParams } from '@/models/ui.model';
 import { makeUrlSearchParams } from '@/libs/utils/utils';
-import TooltipSimple from '../TooltipSimple/TooltipSimple';
+import TooltipSimple from '../tooltips/TooltipSimple/TooltipSimple';
 
 const {
   nextPageTitle,

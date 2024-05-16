@@ -17,7 +17,7 @@ import { EUrlBaseParam, EUrlSearchParam } from '@/models/url.model';
 import Filter from '@/components/ui/Filter/Filter';
 import { Suspense } from 'react';
 import { validSearchParam } from '@/libs/utils/validSearchParam';
-import TooltipSimple from '@/components/ui/TooltipSimple/TooltipSimple';
+import TooltipSimple from '@/components/ui/tooltips/TooltipSimple/TooltipSimple';
 import Link from 'next/link';
 import GenreImage from '@/components/ui/Images/GenreImage/GenreImage';
 import PackageChannelList from '@/components/channelList/PackageChannelList';

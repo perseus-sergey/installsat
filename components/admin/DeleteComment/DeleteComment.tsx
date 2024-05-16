@@ -1,6 +1,6 @@
 'use client';
 
-import TooltipSimple from '@/components/ui/TooltipSimple/TooltipSimple';
+import TooltipSimple from '@/components/ui/tooltips/TooltipSimple/TooltipSimple';
 import { useFormState } from 'react-dom';
 import { SubmitPendingButton } from '@/components/ui/buttons/SubmitPendingBtn';
 import { useToastMessage } from '@/libs/hooks/useToastMessage';

@@ -87,14 +87,6 @@ const Accordion = async () => {
         </AccordionMenuItem>
         <AccordionMenuItem options={PACKAGES}>
           <ul className={styles.accordionContent}>
-            {/* <li className={styles.contentItem}>
-              <Link
-                href={ADDED_ITEMS.freeChannels.link}
-                className={styles.contentItemLink}
-              >
-                {ADDED_ITEMS.freeChannels.title[LANGUAGE]}
-              </Link>
-            </li> */}
             {channelCatList.map((item) => (
               <li key={item.id} className={styles.contentItem}>
                 <Link

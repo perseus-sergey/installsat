@@ -23,6 +23,9 @@ const useSearch = (searchQueryTitle: EUrlSearchParam, debounceDelay = 300) => {
     }
     replace(`${pathname}?${params.toString()}`);
   };
+  // =================================================================
+  // revalidate path after reload page
+  // =================================================================
 
   const handleSearchDebounced = useDebouncedCallback(
     handleSearch,

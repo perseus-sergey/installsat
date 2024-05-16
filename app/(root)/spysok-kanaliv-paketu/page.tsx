@@ -1,12 +1,12 @@
 import { Title } from '@/components/ui/Titles/Title';
 import type { Metadata } from 'next';
-import { getFormattedDateStr } from '@/libs/utils/utils';
 import { EUrlBaseParam } from '@/models/url.model';
 import { LANGUAGE as L, DEFAULT_META_DATA } from '@/models/ui.model';
 import { getChannelPackages } from '@/controllers/channelList.controller';
 import PackageList from '@/components/article/ArticleList/PackageList';
 import { META_PACKAGES } from '@/models/channelList.model';
 import BreadCrumbServer from '@/components/BreadCrumbs/BreadCrumbsServer';
+import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
 
 const BASE_URL = process.env.BASE_URL;
 
@@ -21,7 +21,7 @@ export const metadata: Metadata = {
     title: metaTitle[L],
     description: metaDescription[L],
     url: `${BASE_URL}/${EUrlBaseParam.PACKAGE_CHANNEL_LIST}`,
-    publishedTime: getFormattedDateStr(),
+    publishedTime: getFormattedDateStrYearFirst(),
   },
 };
 export default async function Page() {

@@ -1,6 +1,5 @@
 import BottomInfoPanel from '@/components/BottomInfoPanel/BottomInfoPanel';
 import DangerHtml from '@/components/ui/DangerHtml/DangerHtml';
-import EmptyData from '@/components/errors/EmptyData/EmptyData';
 import FillingValidImage from '@/components/ui/Images/FillingValidImage';
 import NoteBlock from '@/components/ui/NoteBlock/NoteBlock';
 import SimilarArticles from '@/components/SimilarArticles/SimilarArticles';
@@ -15,27 +14,27 @@ import {
   getDBOnlineChannel,
   getSimilarChannels,
 } from '@/controllers/channel.controller';
-import { getFormattedDateStr } from '@/libs/utils/utils';
 import { META_CHANNEL, META_CHANNEL_ONLINE } from '@/models/channel.model';
 import {
   LANGUAGE as L,
   EDBTableTitles,
   DEFAULT_META_DATA,
 } from '@/models/ui.model';
-import { EUrlBaseParam, EUrlSearchParam } from '@/models/url.model';
+import { EUrlBaseParam } from '@/models/url.model';
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
 import { getCommentsNumber } from '@/controllers/comments.controller';
 import ChannelOnlineParams from '@/components/ChannelParams/ChannelOnlineParams';
-import OnlinePlayerTabs from '@/components/online/OnlinePlayerTabs/OnlinePlayerTabs';
+import OnlinePlayerTabs from '@/components/tabs/OnlinePlayerTabs';
 import GrooveLine from '@/components/ui/GrooveLine';
 import ScheduleShort from '@/components/Schedule/ScheduleShort';
 import { fetchUserLocation } from '@/libs/utils/getUserIP';
 import BreadCrumbServer from '@/components/BreadCrumbs/BreadCrumbsServer';
 import { BREAD_CRUMBS } from '@/models/breadCrumbs.model';
 import { cache } from 'react';
+import { getFormattedDateStr } from '@/libs/utils/dates';
 
 const BASE_URL = process.env.BASE_URL;
 
@@ -62,8 +61,7 @@ export const generateMetadata = async ({
   params: { slug },
 }: IChannelProps): Promise<Metadata> => {
   const sqlResult = await getDBOnlineChannel(slug);
-  if (sqlResult instanceof Error || !sqlResult.length)
-    return DEFAULT_META_DATA[L];
+  if (!sqlResult || !sqlResult.length) return DEFAULT_META_DATA[L];
 
   const { title: chTitle, description: descr, chan_slug } = sqlResult[0];
   const description = getDescription(chTitle, descr)[L];
@@ -86,9 +84,7 @@ export const generateMetadata = async ({
 export default async function Page({ params: { slug } }: IChannelProps) {
   const sqlResult = await getDBOnlineChannel(slug);
 
-  if (sqlResult instanceof Error)
-    return <EmptyData description={sqlResult.message} />;
-  if (!sqlResult.length) notFound();
+  if (!sqlResult || !sqlResult.length) notFound();
 
   const { id, title, logo, text, view, chan_slug } = sqlResult[0];
 
@@ -152,7 +148,7 @@ export default async function Page({ params: { slug } }: IChannelProps) {
 
           <TvScheduleLink
             title={`${scheduleTitle[L]} "${title}"`}
-            href={`/${EUrlBaseParam.CHANNELS_TV_PROGRAM}/${slug}?${EUrlSearchParam.DATE}=${getFormattedDateStr()}`}
+            href={`/${EUrlBaseParam.CHANNELS_TV_PROGRAM}/${slug}/${getFormattedDateStr()}`}
           />
 
           <ChannelOnlineParams channelDBParams={sqlResult[0]} />

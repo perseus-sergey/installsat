@@ -18,7 +18,6 @@ import {
   DEFAULT_META_DATA,
   EDBTableTitles,
 } from '@/models/ui.model';
-import { getFormattedDateStr } from '@/libs/utils/utils';
 import { EUrlBaseParam, EUrlSearchParam } from '@/models/url.model';
 import Filter from '@/components/ui/Filter/Filter';
 import { Suspense } from 'react';
@@ -30,6 +29,7 @@ import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
 import { getCommentsNumber } from '@/controllers/comments.controller';
 import BreadCrumbServer from '@/components/BreadCrumbs/BreadCrumbsServer';
 import { BREAD_CRUMBS } from '@/models/breadCrumbs.model';
+import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
 
 const BASE_URL = process.env.BASE_URL;
 
@@ -59,7 +59,7 @@ export const metadata: Metadata = {
     title: metaTitle[L],
     description: metaDescription[L],
     url: `${BASE_URL}/${EUrlBaseParam.SAT_CHANNEL_LIST}`,
-    publishedTime: getFormattedDateStr(),
+    publishedTime: getFormattedDateStrYearFirst(),
   },
 };
 interface IPageProps {

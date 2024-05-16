@@ -16,11 +16,11 @@ import FillingValidImage from '@/components/ui/Images/FillingValidImage';
 import { cache } from 'react';
 import { LANGUAGE, DEFAULT_META_DATA, EDBTableTitles } from '@/models/ui.model';
 import { EUrlBaseParam } from '@/models/url.model';
-import { getFormattedDateStr } from '@/libs/utils/utils';
 import { getCommentsNumber } from '@/controllers/comments.controller';
 import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
 import BreadCrumbServer from '@/components/BreadCrumbs/BreadCrumbsServer';
 import { BREAD_CRUMBS } from '@/models/breadCrumbs.model';
+import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
 
 const BASE_URL = process.env.BASE_URL;
 
@@ -70,7 +70,7 @@ export const generateMetadata = ({ params }: IPageParams): Metadata => {
       title: fullMetaTitle,
       description,
       url: `${BASE_URL}/${EUrlBaseParam.SAT_CHANNEL_LIST}/${slug}`,
-      publishedTime: getFormattedDateStr(),
+      publishedTime: getFormattedDateStrYearFirst(),
     },
   };
 };

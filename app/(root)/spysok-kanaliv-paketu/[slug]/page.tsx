@@ -18,14 +18,13 @@ import {
   DEFAULT_META_DATA,
   EDBTableTitles,
 } from '@/models/ui.model';
-import { getFormattedDateStr } from '@/libs/utils/utils';
 import { EUrlBaseParam, EUrlSearchParam } from '@/models/url.model';
 import Filter from '@/components/ui/Filter/Filter';
 import { Suspense, cache } from 'react';
 import { validSearchParam } from '@/libs/utils/validSearchParam';
 import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
 import { getCommentsNumber } from '@/controllers/comments.controller';
-import TooltipSimple from '@/components/ui/TooltipSimple/TooltipSimple';
+import TooltipSimple from '@/components/ui/tooltips/TooltipSimple/TooltipSimple';
 import Link from 'next/link';
 import PackageChannelList from '@/components/channelList/PackageChannelList';
 import FillingValidImage from '@/components/ui/Images/FillingValidImage';
@@ -37,6 +36,7 @@ import BreadCrumbServer, {
   IBreadCrumbLink,
 } from '@/components/BreadCrumbs/BreadCrumbsServer';
 import { BREAD_CRUMBS } from '@/models/breadCrumbs.model';
+import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
 
 const BASE_URL = process.env.BASE_URL;
 
@@ -85,7 +85,7 @@ export const generateMetadata = async ({
       title: `${cat_title}. ${metaTitle[L]}`,
       description: cat_description,
       url: `${BASE_URL}/${EUrlBaseParam.PACKAGE_CHANNEL_LIST}/${cat_slug}`,
-      publishedTime: getFormattedDateStr(),
+      publishedTime: getFormattedDateStrYearFirst(),
     },
   };
 };

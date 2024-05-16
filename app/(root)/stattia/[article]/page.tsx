@@ -4,12 +4,12 @@ import FillingValidImage from '@/components/ui/Images/FillingValidImage';
 import { ARTICLES } from '@/models/articles.model';
 import { getArticle } from '@/controllers/articles.controller';
 import DangerHtml from '@/components/ui/DangerHtml/DangerHtml';
-import { getFormattedDateStr } from '@/libs/utils/utils';
 import { EUrlBaseParam } from '@/models/url.model';
 import BottomInfoPanel from '@/components/BottomInfoPanel/BottomInfoPanel';
 import Link from 'next/link';
 import { LANGUAGE } from '@/models/ui.model';
 import { notFound } from 'next/navigation';
+import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
 
 interface IArticleParams {
   params: { article: string };
@@ -63,7 +63,7 @@ export default async function Page({ params: { article } }: IArticleParams) {
           { name: viewsTitle[LANGUAGE], value: view + 1 },
           {
             name: dateTitle[LANGUAGE],
-            value: getFormattedDateStr(date),
+            value: getFormattedDateStrYearFirst(date),
           },
         ]}
       />

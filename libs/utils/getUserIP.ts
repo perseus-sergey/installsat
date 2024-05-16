@@ -8,9 +8,15 @@ const getUserIP = () =>
 export const fetchUserLocation = cache(
   async (): Promise<IUserLocation | null> => {
     const ip = getUserIP();
-    const response = await fetch(`http://ip-api.com/json/${ip}`);
-    if (!response.ok) return null;
+    try {
+      const response = await fetch(`http://ip-api.com/json/${ip}`);
+      if (!response.ok) return null;
 
-    return response.json();
+      return response.json();
+    } catch (e) {
+      console.log('Fetching user location failed');
+
+      return null;
+    }
   }
 );

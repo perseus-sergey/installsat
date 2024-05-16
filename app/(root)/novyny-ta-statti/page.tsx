@@ -6,7 +6,6 @@ import FillingValidImage from '@/components/ui/Images/FillingValidImage';
 import ArticleList from '@/components/article/ArticleList/ArticleList';
 import Pagination from '@/components/ui/Pagination/Pagination';
 import { notFound } from 'next/navigation';
-import { getFormattedDateStr } from '@/libs/utils/utils';
 import { EUrlBaseParam, EUrlSearchParam } from '@/models/url.model';
 import {
   LANGUAGE as L,
@@ -17,17 +16,22 @@ import {
 import { imagePathValidate } from '@/libs/utils/imagePathValidate';
 import { validSearchParam } from '@/libs/utils/validSearchParam';
 import BreadCrumbServer from '@/components/BreadCrumbs/BreadCrumbsServer';
+import Filter from '@/components/ui/Filter/Filter';
+import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
 
 const BASE_URL = process.env.BASE_URL;
 
 const {
-  meta: { description, h1Start, title },
-  pagination,
-  images,
-  articlesCountCaption,
-} = ARTICLES.articleList;
+  search: { placeholder, labelTitle },
+  articleList: {
+    meta: { description, h1Start, title },
+    pagination,
+    images,
+    articlesCountCaption,
+  },
+} = ARTICLES;
 
-const currDate = getFormattedDateStr();
+const currDate = getFormattedDateStrYearFirst();
 
 const articleTitleImg = imagePathValidate(
   images.titleImg,
@@ -87,6 +91,12 @@ export default async function Page({ searchParams }: IProps) {
           />
         </Title>
 
+        <Filter
+          idName="article-search-input"
+          placeholder={placeholder[LANGUAGE]}
+          labelTitle={labelTitle[LANGUAGE]}
+          searchQueryTitle={EUrlSearchParam.ARTICLE}
+        />
         <p className="text-blue-600 font-bold text-center text-lg">{`${articlesCountCaption[LANGUAGE]}${mapsCount}`}</p>
 
         <Pagination

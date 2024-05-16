@@ -9,7 +9,7 @@ import {
 } from '@/models/breadCrumbs.model';
 import { ELanguage, LANGUAGE } from '@/models/ui.model';
 import { cutMiddleOfText } from '@/libs/utils/utils';
-import TooltipSimple from '../ui/TooltipSimple/TooltipSimple';
+import TooltipSimple from '../ui/tooltips/TooltipSimple/TooltipSimple';
 
 const { lengthThreshold, numberOfEndWords, numberOfStartWords } =
   CUT_LAST_ELEMENT;
@@ -94,7 +94,10 @@ const BreadCrumbServer = ({
                 <React.Fragment key={index}>
                   <li className={itemClassName} style={itemStyle}>
                     {typeof item !== 'string' && item.href ? (
-                      <TooltipSimple tooltipText={linkText}>
+                      <TooltipSimple
+                        tooltipText={linkText}
+                        isTooltipBottomOfPage
+                      >
                         <Link
                           href={`/${item.href}`}
                           className="hover:underline"
@@ -103,7 +106,10 @@ const BreadCrumbServer = ({
                         </Link>
                       </TooltipSimple>
                     ) : (
-                      <TooltipSimple tooltipText={linkText}>
+                      <TooltipSimple
+                        tooltipText={linkText}
+                        isTooltipBottomOfPage
+                      >
                         <div>{truncatedLinkText}</div>
                       </TooltipSimple>
                     )}

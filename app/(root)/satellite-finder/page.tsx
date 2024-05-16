@@ -7,7 +7,6 @@ import {
   updateViewCount,
 } from '@/controllers/articles.controller';
 import { getSatsForForm } from '@/controllers/satDigest.controller';
-import { getFormattedDateStr } from '@/libs/utils/utils';
 import { SAT_FINDER_META_DATA } from '@/models/satFinder.model';
 import { EDBTableTitles, LANGUAGE, DEFAULT_META_DATA } from '@/models/ui.model';
 import { EUrlBaseParam, EUrlSearchParam } from '@/models/url.model';
@@ -17,6 +16,7 @@ import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
 import BottomInfoPanel from '@/components/BottomInfoPanel/BottomInfoPanel';
 import { getCommentsNumber } from '@/controllers/comments.controller';
 import BreadCrumbServer from '@/components/BreadCrumbs/BreadCrumbsServer';
+import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
 
 const BASE_URL = process.env.BASE_URL;
 
@@ -43,7 +43,7 @@ export const metadata: Metadata = {
     title,
     description,
     url: `${BASE_URL}/${EUrlBaseParam.SAT_FINDER}`,
-    publishedTime: getFormattedDateStr(),
+    publishedTime: getFormattedDateStrYearFirst(),
   },
 };
 

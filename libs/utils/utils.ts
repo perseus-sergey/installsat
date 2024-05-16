@@ -1,13 +1,5 @@
 import { TSearchParams } from '@/models/ui.model';
 
-// export const cutText = (text: string, length: number) => {
-//   const trimmedText = text.trim();
-
-//   return trimmedText.length <= length
-//     ? trimmedText
-//     : `${text.slice(0, length).trim()} ...`;
-// };
-
 export const cutText = (text: string, cutLength: number) => {
   if (!text) return '';
 
@@ -23,6 +15,7 @@ export const cutText = (text: string, cutLength: number) => {
 
   return `${trimmedText}...`;
 };
+
 export const cutMiddleOfText = (
   text: string,
   lengthThreshold: number,
@@ -54,31 +47,6 @@ export const arrayShift = <T>(array: T[][]): T[][] => {
   const [, ...rest] = array;
 
   return rest;
-};
-
-export const getDate = (date: string | Date = new Date(), lang?: string) => {
-  const currDate = date instanceof Date ? date : new Date(date);
-  if (currDate.toString() === 'Invalid Date') return '';
-
-  return currDate.toLocaleDateString(lang, {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  });
-};
-
-export const getFormattedDateStr = (
-  date: string | Date = new Date(),
-  isYearFirst = true
-) => {
-  const currDate = date instanceof Date ? date : new Date(date);
-  if (currDate.toString() === 'Invalid Date') return '';
-
-  const year = currDate.getFullYear();
-  const month = String(currDate.getMonth() + 1).padStart(2, '0');
-  const day = String(currDate.getDate()).padStart(2, '0');
-
-  return isYearFirst ? `${year}-${month}-${day}` : `${day}-${month}-${year}`;
 };
 
 export const isUniqDeepArray = <T>(arr: T[][]): boolean =>

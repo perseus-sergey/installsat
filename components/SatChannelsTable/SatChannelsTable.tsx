@@ -11,7 +11,7 @@ import Link from 'next/link';
 import { EUrlBaseParam } from '@/models/url.model';
 import { cutText } from '@/libs/utils/utils';
 import FillingImg from '../ui/Images/FillingImage';
-import TooltipSimple from '../ui/TooltipSimple/TooltipSimple';
+import TooltipSimple from '../ui/tooltips/TooltipSimple/TooltipSimple';
 import FillingValidImage from '../ui/Images/FillingValidImage';
 import { META_CHANNEL } from '@/models/channel.model';
 import { LANGUAGE } from '@/models/ui.model';

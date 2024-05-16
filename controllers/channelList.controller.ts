@@ -180,6 +180,28 @@ export const getOnlineChannels = cache(async (searchQuery = '') => {
   return result;
 });
 
+export const getChannelsWithSchedule = async (searchQuery = '') => {
+  const searchPart = searchQuery ? `AND C.title LIKE "%${searchQuery}%"` : '';
+
+  const sql = `
+  SELECT C.id AS chan_id, C.title AS chan_title, C.cpu AS chan_cpu, C.logo AS chan_logo, C.description AS chan_description, C.view, C.tema AS genre_id,
+    L.title AS lan, T.title AS genre_title
+  FROM tbl_channals AS C
+  LEFT JOIN tbl_language AS L ON C.lang = L.id
+  LEFT JOIN
+    tbl_chan_tema AS T ON C.tema = T.id
+  WHERE C.tema != 15 AND ((C.vipiko != '' AND C.vipiko != 0) OR (C.vsetv != '' AND C.vsetv != 0))
+  ${searchPart}
+  GROUP BY C.title
+  ORDER BY C.tema, C.title
+  `;
+  const resp = await executeQuery<IOnlineChannelListModel>(sql);
+
+  return resp instanceof Error || !resp.length
+    ? null
+    : groupeChannelsBy<IOnlineChannelListModel>(resp, 'genre_title');
+};
+
 export const getT2Channels = cache(async (searchQuery = '') => {
   const searchPart = searchQuery ? `AND C.title LIKE "%${searchQuery}%"` : '';
 

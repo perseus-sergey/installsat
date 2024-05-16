@@ -3,7 +3,7 @@ import React from 'react';
 import SideBar from '@/components/SideBar/SideBar';
 import { META_TRANS_NEWS_LIST } from '@/models/satDigest.model';
 import { LANGUAGE, DEFAULT_META_DATA } from '@/models/ui.model';
-import { getFormattedDateStr } from '@/libs/utils/utils';
+import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
 
 const BASE_URL = process.env.BASE_URL;
 
@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     title: metaTitle[LANGUAGE],
     description: metaDescription[LANGUAGE],
     url: BASE_URL,
-    publishedTime: getFormattedDateStr(new Date()),
+    publishedTime: getFormattedDateStrYearFirst(),
   },
 };
 export default function RootLayout({

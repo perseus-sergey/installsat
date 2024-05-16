@@ -2,12 +2,12 @@ import { Title } from '@/components/ui/Titles/Title';
 import type { Metadata } from 'next';
 import { SAT_MAPS_MODEL } from '@/models/articles.model';
 import { getSatMapList } from '@/controllers/articles.controller';
-import { getFormattedDateStr } from '@/libs/utils/utils';
 import { EUrlBaseParam } from '@/models/url.model';
 import { LANGUAGE as L, DEFAULT_META_DATA } from '@/models/ui.model';
 import FillingImg from '@/components/ui/Images/FillingImage';
 import MapList from '@/components/article/ArticleList/MapList';
 import BreadCrumbServer from '@/components/BreadCrumbs/BreadCrumbsServer';
+import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
 
 const BASE_URL = process.env.BASE_URL;
 
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
     title: metaTitle[L],
     description: metaDescription[L],
     url: `${BASE_URL}/${EUrlBaseParam.SAT_COVERAGE_MAP}`,
-    publishedTime: getFormattedDateStr(),
+    publishedTime: getFormattedDateStrYearFirst(),
   },
 };
 export default async function Page() {

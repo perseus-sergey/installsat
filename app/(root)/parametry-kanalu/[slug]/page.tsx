@@ -71,7 +71,6 @@ export const generateMetadata = async ({
     cat_parent_id,
     cat_parent_title,
     cat_title,
-    cat_id,
     sat_title,
     freq,
     polar,
@@ -88,11 +87,7 @@ export const generateMetadata = async ({
     .split('/')
     .reverse();
 
-  // if it is encrypted channel or category lybid || UA TV then canonical, else native url
-  const addCanonical =
-    canonical && (cat_id === 23 || cat_parent_id === 2 || cat_parent_id === 25)
-      ? clearedCanonical
-      : chan_slug;
+  const addCanonical = canonical ? clearedCanonical : chan_slug;
 
   return {
     title: metaTitle,
@@ -193,7 +188,7 @@ export default async function Page({ params: { slug } }: IChannelProps) {
         <div className="article-text">
           <DangerHtml text={text} />
 
-          <GrooveLine />
+          <GrooveLine className="p-4" />
 
           <TvScheduleLink
             title={`${scheduleTitle[LANGUAGE]} "${title}"`}

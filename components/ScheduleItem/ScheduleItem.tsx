@@ -40,7 +40,6 @@ const ScheduleItem = ({ schedule, now, addHour }: IScheduleItemProps) => {
           text={schedule.title}
           wrapperTagName="span"
         />
-        {/* <span className={titleClass}>{schedule.title}</span> */}
       </div>
       {schedule.prog_desc && (
         <p className={`${titleClass} ${styles.tvProgDescription}`}>

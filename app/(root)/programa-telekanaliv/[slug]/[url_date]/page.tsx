@@ -52,17 +52,6 @@ export const generateMetadata = async ({
 
   const { title, description } = sqlResult[0];
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  // const [clearedCanonical, ..._] = canonical
-  //   .replace(/\/$/, '')
-  //   .split('/')
-  //   .reverse();
-
-  // if it is encrypted channel or category lybid || UA TV then canonical, else native url
-  // const addCanonical =
-  //   canonical && (cat_id === 23 || cat_parent_id === 2 || cat_parent_id === 25)
-  //     ? clearedCanonical
-  //     : chan_slug;
   const metaDescription = `${descriptionStart[LANGUAGE]} ${title}. ${cutText(description, 150)}`;
   const metaTitle = getTitle(title, url_date)[LANGUAGE];
 
@@ -70,9 +59,6 @@ export const generateMetadata = async ({
     title: metaTitle,
     description: metaDescription,
     keywords: getKeywords(title)[LANGUAGE],
-    // alternates: {
-    //   canonical: `${BASE_URL}/${EUrlBaseParam.CHANNEL_PARAMS}/${addCanonical}`,
-    // },
     openGraph: {
       ...DEFAULT_META_DATA.openGraph,
       title: metaTitle,

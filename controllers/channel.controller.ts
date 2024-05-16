@@ -98,8 +98,6 @@ export const getDBOnlineChannel = cache(async (slug: string) => {
   const res = await executeQuery<IOnlineChannel>(sql, [slug]);
 
   return res instanceof Error ? null : res;
-
-  // return await executeQuery<IOnlineChannel>(sql, [slug]);
 });
 
 export const getDBChannelSlugList = async () =>

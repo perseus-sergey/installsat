@@ -1,6 +1,8 @@
 $tooltipWidth: 140px;
 
 .TooltipSimple {
+  cursor: context-menu;
+
   &:hover .tooltipText {
     visibility: visible;
     opacity: 1;
@@ -13,7 +15,6 @@ $tooltipWidth: 140px;
 
 .tooltipText,
 .tooltipBottom {
-  position: absolute;
   max-width: 250px;
   background-color: rgb(63 89 175 / 77%);
   color: #ffffff;
@@ -29,6 +30,7 @@ $tooltipWidth: 140px;
 }
 
 .tooltipBottom {
+  position: fixed;
   bottom: 3%;
   right: 0;
   z-index: 5;
@@ -37,6 +39,7 @@ $tooltipWidth: 140px;
 }
 
 .tooltipText {
+  position: absolute;
   visibility: hidden;
   width: $tooltipWidth;
   background-color: #031245;

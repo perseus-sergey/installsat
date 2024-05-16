@@ -41,7 +41,6 @@ const { getKeywords, getTitle, h1Start, descriptionStart } = SCHEDULE_META;
 
 export interface IPageProps {
   params: { slug: string; url_date: string };
-  // searchParams: TSearchParams;
 }
 
 export const generateMetadata = async ({
@@ -69,57 +68,12 @@ export const generateMetadata = async ({
   };
 };
 
-// export async function generateStaticParams(): Promise<
-//   {
-//     slug: string;
-//   }[]
-// > {
-//   const channelSlugList = await getDBChannelSlugList();
-
-//   if (channelSlugList instanceof Error) return [{ slug: '' }];
-
-//   return channelSlugList.map((channel) => ({ slug: channel.cpu }));
-// }
-
-// export const dynamicParams = false;
-
-export default async function Page({
-  params: { slug, url_date },
-  // searchParams: { date },
-}: IPageProps) {
+export default async function Page({ params: { slug, url_date } }: IPageProps) {
   const sqlResult = await getDBOnlineChannel(slug);
   if (!sqlResult || !sqlResult.length || !getValidDate(url_date)) notFound();
 
-  const {
-    id,
-    title,
-    logo,
-    view,
-    vipiko,
-    vsetv,
-    // cat_title,
-    // cat_parent_title,
-    // cat_parent_id,
-    // cat_parent_cpu,
-    // cat_slug,
-  } = sqlResult[0];
+  const { id, title, logo, view, vipiko, vsetv } = sqlResult[0];
 
-  // const catLink =
-  //   cat_parent_id > 0 ? `${cat_parent_cpu}#${cat_slug}` : cat_slug;
-
-  // const catTitle =
-  //   cat_parent_id > 0 ? `${cat_parent_title} - ${cat_title}` : cat_title;
-
-  // const dbScheduleDataArr = [
-  //   {
-  //     tblName: EDBTableTitles.TV_SCHEDULE_VIPIKO,
-  //     scheduleId: vipiko,
-  //   },
-  //   {
-  //     tblName: EDBTableTitles.TV_SCHEDULE_VSE_TV,
-  //     scheduleId: vsetv,
-  //   },
-  // ];
   const dbScheduleDataArr = [
     {
       tblName: EDBTableTitles.TV_SCHEDULE_VIPIKO,

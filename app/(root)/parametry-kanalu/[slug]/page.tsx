@@ -188,7 +188,7 @@ export default async function Page({ params: { slug } }: IChannelProps) {
         <div className="article-text">
           <DangerHtml text={text} />
 
-          <GrooveLine className="p-4" />
+          <GrooveLine className="py-4" />
 
           <TvScheduleLink
             title={`${scheduleTitle[LANGUAGE]} "${title}"`}

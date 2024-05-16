@@ -17,6 +17,7 @@ const {
   PACKAGES,
   USEFUL,
   ONLINE_TV,
+  SCHEDULE,
 } = MENU_ACCORDION;
 
 const Accordion = async () => {
@@ -141,6 +142,7 @@ const Accordion = async () => {
             </li>
           ))} */}
         <AccordionMenuItem options={ONLINE_TV} />
+        <AccordionMenuItem options={SCHEDULE} />
       </ul>
       <input
         type="radio"

@@ -148,6 +148,20 @@ export const MENU_ACCORDION: { [key: string]: IAccordionItemOptions } = {
     title: { [ELanguage.UA]: 'Онлайн ТБ', [ELanguage.EN]: 'Online TV' },
     titleHref: `/${EUrlBaseParam.ONLINE_CHANNEL_LIST}`,
   },
+  SCHEDULE: {
+    name: 'SCHEDULE',
+    img: {
+      src: '/Images/accordion/calendar.png',
+      width: 32,
+      height: 32,
+      alt: {
+        [ELanguage.UA]: 'Розклад передач ТБ',
+        [ELanguage.EN]: 'TV schedule',
+      },
+    },
+    title: { [ELanguage.UA]: 'Програма ТБ', [ELanguage.EN]: 'TV schedule' },
+    titleHref: `/${EUrlBaseParam.CHANNELS_TV_PROGRAM}`,
+  },
 };
 
 export const ADDED_ITEMS = {

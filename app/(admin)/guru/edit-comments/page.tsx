@@ -17,7 +17,9 @@ const emailKey = process.env.MAIL_ENCRYPT_KEY || '';
 export interface IPageParams {
   searchParams?: TSearchParams;
 }
-
+// =================================================================
+// Breadcrumbs add page titles
+// =================================================================
 export default async function Page({ searchParams }: IPageParams) {
   if (!searchParams) return;
 
@@ -51,7 +53,7 @@ export default async function Page({ searchParams }: IPageParams) {
               <td>{comment.author}</td>
               <td>{comment.ip}</td>
               <td>{comment.text}</td>
-              <td>
+              <td className="text-center">
                 <TooltipSimple tooltipText="Edit comment">
                   <Link
                     href={`${BASE_PATH}/${EDIT_COMMENT}/${comment.id}?${makeUrlSearchParams(searchParams).toString()}`}
@@ -61,7 +63,7 @@ export default async function Page({ searchParams }: IPageParams) {
                   </Link>
                 </TooltipSimple>
               </td>
-              <td>
+              <td className="text-center">
                 <DeleteComment
                   commentID={`${comment.id}`}
                   dbTableName={commentDbTable}

@@ -74,7 +74,11 @@ const CommentForm = ({
       className={styles.CommentForm}
       action={formAction}
     >
-      <FieldError formState={formState} name={AUTHOR} />
+      <FieldError
+        formState={formState}
+        name={AUTHOR}
+        errorFieldId={`${AUTHOR}-error`}
+      />
       <input
         id={AUTHOR}
         name={AUTHOR}
@@ -84,12 +88,17 @@ const CommentForm = ({
         required
         placeholder={authorName.placeholder[LANGUAGE]}
         aria-label={authorName.ariaLabel[LANGUAGE]}
+        aria-describedby={`${AUTHOR}-error`}
       />
       <label htmlFor={AUTHOR} className={styles.required}>
         {authorName.labelText[LANGUAGE]}
       </label>
 
-      <FieldError formState={formState} name={EMAIL} />
+      <FieldError
+        formState={formState}
+        name={EMAIL}
+        errorFieldId={`${EMAIL}-error`}
+      />
       <input
         type="email"
         id={EMAIL}
@@ -99,10 +108,15 @@ const CommentForm = ({
         size={30}
         placeholder={authorEmail.placeholder}
         aria-label={authorEmail.ariaLabel[LANGUAGE]}
+        aria-describedby={`${EMAIL}-error`}
       />
       <label htmlFor={EMAIL}>{authorEmail.labelText[LANGUAGE]}</label>
 
-      <FieldError formState={formState} name={TEXT} />
+      <FieldError
+        formState={formState}
+        name={TEXT}
+        errorFieldId={`${TEXT}-error`}
+      />
       <textarea
         id={TEXT}
         name={TEXT}
@@ -112,11 +126,13 @@ const CommentForm = ({
         rows={4}
         cols={60}
         maxLength={commentText.maxSize.value}
+        aria-describedby={`${TEXT}-error`}
         required
       />
       <label htmlFor={TEXT} className={styles.required}>
         {commentText.labelText[LANGUAGE]}
       </label>
+
       <SubmitPendingButton
         ariaLabel={submit.ariaLabel[LANGUAGE]}
         innerHtml={submit.innerText[LANGUAGE]}

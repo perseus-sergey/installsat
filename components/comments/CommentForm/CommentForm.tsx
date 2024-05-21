@@ -135,10 +135,11 @@ const CommentForm = ({
 
       <SubmitPendingButton
         ariaLabel={submit.ariaLabel[LANGUAGE]}
-        innerHtml={submit.innerText[LANGUAGE]}
         pendingInnerHtml={submit.pendingInnerText[LANGUAGE]}
         className={styles.submitCommentButton}
-      />
+      >
+        {submit.innerText[LANGUAGE]}
+      </SubmitPendingButton>
       {noScriptFallback}
     </form>
   );

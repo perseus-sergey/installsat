@@ -18,6 +18,13 @@ export interface IPageParams {
   searchParams?: TSearchParams;
 }
 // =================================================================
+// add Online link to bottom of channel schedule pages
+// check useful links in channel schedule pages
+// =================================================================
+// =================================================================
+// add AUTH_SECRET to remote env
+// =================================================================
+// =================================================================
 // Breadcrumbs add page titles
 // =================================================================
 export default async function Page({ searchParams }: IPageParams) {
@@ -37,6 +44,9 @@ export default async function Page({ searchParams }: IPageParams) {
     commentDbTableEncrypted,
     emailKey
   )) as EDBTableTitles;
+
+  if (!articleId || !commentDbTable)
+    return <EmptyData description="Wrong Url Search Params!" />;
 
   const comments = await getComments(commentDbTable, articleId);
 

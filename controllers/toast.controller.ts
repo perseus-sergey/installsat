@@ -1,3 +1,4 @@
+import { AuthError } from 'next-auth';
 import { ZodError } from 'zod';
 
 export interface IFormState {
@@ -16,18 +17,27 @@ export const EMPTY_FORM_STATE: IFormState = {
   timestamp: Date.now(),
 };
 
-export const fromErrorToFormState = (error: unknown): IFormState => ({
-  status: 'ERROR' as const,
-  message:
-    error instanceof ZodError
-      ? ''
-      : error instanceof Error
-        ? error.message
-        : 'An unknown error occurred',
-  fieldErrors: error instanceof ZodError ? error.flatten().fieldErrors : {},
-  timestamp: Date.now(),
-  fieldValues: {},
-});
+export const fromErrorToFormState = (error: unknown): IFormState => {
+  let message = '';
+
+  if (error instanceof AuthError) {
+    message =
+      error.type === 'CredentialsSignin'
+        ? 'Invalid credentials.'
+        : 'Something went wrong.';
+  } else if (!(error instanceof ZodError)) {
+    message =
+      error instanceof Error ? error.message : 'An unknown error occurred';
+  }
+
+  return {
+    status: 'ERROR' as const,
+    message,
+    fieldErrors: error instanceof ZodError ? error.flatten().fieldErrors : {},
+    timestamp: Date.now(),
+    fieldValues: {},
+  };
+};
 
 export const toFormState = (
   status: IFormState['status'],

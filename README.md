@@ -36,6 +36,8 @@
   - [Examples](https://react.email/examples)
 - IP Geolocation - [JSON endpoint](https://ip-api.com/docs/api:json)
   - How to get the client Ip address in app router - [GitHub](https://github.com/vercel/next.js/discussions/55037)
+- bcrypt.js - [NPM](https://www.npmjs.com/package/bcryptjs)
+  > - ` yarn add bcryptjs @types/bcryptjs`
 
 ---
 

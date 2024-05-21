@@ -19,7 +19,10 @@ export enum EUrlBaseParam {
   PRODUCT_LIST = 'spysok-tovariv',
   PRODUCT_CATEGORIES = 'kategoriji-tovariv',
   DELETE_COMMENT_SUBSCRIPTION = 'delete-subscription',
+  SIGN_IN = 'login',
+  SIGN_UP = 'login/sign-up',
 }
+
 export enum EUrlAdminParam {
   BASE_PATH = '/guru',
   EDIT_COMMENT = 'edit-comments',

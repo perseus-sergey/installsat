@@ -2,17 +2,17 @@
 
 import { useFormStatus } from 'react-dom';
 import BaseButton from './BaseButton/BaseButton';
-import React from 'react';
+import React, { ButtonHTMLAttributes, ReactNode } from 'react';
 
-interface IProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+interface IProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   ariaLabel: string;
-  innerHtml: React.ReactNode;
-  pendingInnerHtml: React.ReactNode;
+  children: ReactNode;
+  pendingInnerHtml?: ReactNode;
 }
 
 export function SubmitPendingButton({
   ariaLabel,
-  innerHtml,
+  children,
   pendingInnerHtml,
   ...attributes
 }: IProps) {
@@ -29,7 +29,7 @@ export function SubmitPendingButton({
       ariaLabel={ariaLabel}
       {...attributes}
     >
-      {pending ? `${pendingInnerHtml}...` : innerHtml}
+      {pending && pendingInnerHtml ? `${pendingInnerHtml}...` : children}
     </BaseButton>
   );
 }

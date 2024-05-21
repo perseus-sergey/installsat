@@ -21,6 +21,8 @@ import { ELoginFormNames } from '@/models/login.model';
 import FieldError from '../comments/FieldError/FieldError';
 import { EMPTY_FORM_STATE } from '@/controllers/toast.controller';
 import { useToastMessage } from '@/libs/hooks/useToastMessage';
+import { useEffect } from 'react';
+import { redirect } from 'next/navigation';
 // import { authenticateAction } from '@/app/lib/actions';
 
 const { PASSWORD, NAME, EMAIL } = ELoginFormNames;
@@ -62,13 +64,18 @@ export default function SignUpForm({
     EMPTY_FORM_STATE
   );
 
+  useEffect(() => {
+    if (!isLoginForm && formState.status === 'SUCCESS') {
+      redirect(EUrlBaseParam.BASE_PATH);
+    }
+  }, [formState.status, isLoginForm]);
+
   const noScriptFallback = useToastMessage(formState);
 
   return (
     <form
       className="rounded-lg bg-blue-950 px-6 py-4 max-w-96 w-4/5 mx-auto my-4 shadow-md"
       id="login-form"
-      // ref={formRef}
       action={formAction}
     >
       {!isLoginForm && (
@@ -163,26 +170,16 @@ export default function SignUpForm({
         className="mt-4 w-full text-gray-50"
         ariaLabel="Submit"
       >
-        Sign Up <span className="ml-auto text-gray-300">➠</span>
+        {isLoginForm ? 'Log In' : 'Sign Up'}{' '}
+        <span className="ml-auto text-gray-300">➠</span>
       </SubmitPendingButton>
       {noScriptFallback}
-      <Link href={`/${EUrlBaseParam.SIGN_IN}`} className="text-gray-300">
-        Log In
+      <Link
+        href={`/${isLoginForm ? EUrlBaseParam.SIGN_UP : EUrlBaseParam.SIGN_IN}`}
+        className="text-gray-300"
+      >
+        {isLoginForm ? 'Registration' : 'Log In'}
       </Link>
     </form>
   );
 }
-
-// <div
-//   className="flex h-8 items-end space-x-1"
-//   aria-live="polite"
-//   aria-atomic="true"
-// >
-//   {errorMessage && (
-//     <>
-//       {/* <ExclamationCircleIcon className="h-5 w-5 text-red-500" /> */}
-//       <span className="text-red-500">!</span>
-//       <p className="text-sm text-red-500">{errorMessage}</p>
-//     </>
-//   )}
-// </div>

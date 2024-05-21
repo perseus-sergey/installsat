@@ -3,7 +3,7 @@ import { Title } from '@/components/ui/Titles/Title';
 
 export const SignUpPage = () => (
   <article className="article">
-    <Title>Create new account.</Title>
+    <Title>Create a new account.</Title>
     <SignUpForm />
   </article>
 );

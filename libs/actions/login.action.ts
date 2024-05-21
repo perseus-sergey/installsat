@@ -1,7 +1,7 @@
 'use server';
 
 import { signIn } from '@/auth';
-import { createDbUser } from '@/controllers/login.controller';
+import { createDbUser, getDbUser } from '@/controllers/login.controller';
 import {
   IFormState,
   fromErrorToFormState,
@@ -45,12 +45,25 @@ export async function authenticateAction(
       [EMAIL]: formData.get(EMAIL),
       [PASSWORD]: formData.get(PASSWORD),
     });
-    await signIn('credentials', {
-      email: validFormData[EMAIL],
-      password: validFormData[PASSWORD],
-    });
 
-    return toFormState('SUCCESS', 'Login successfully!');
+    const user = (await getDbUser(validFormData[EMAIL]))[0];
+    const isValidUser =
+      user && (await bcryptjs.compare(validFormData[PASSWORD], user.password));
+    if (isValidUser)
+      await signIn('credentials', {
+        name: user.name,
+        email: user.email,
+        role: user.role,
+      });
+
+    // await signIn('credentials', {
+    //   email: validFormData[EMAIL],
+    //   password: validFormData[PASSWORD],
+    // });
+
+    return isValidUser
+      ? toFormState('SUCCESS', 'Login successfully!')
+      : toFormState('ERROR', 'Invalid credentials');
   } catch (error) {
     if (error instanceof AuthError || error instanceof ZodError)
       return fromErrorToFormState(error);

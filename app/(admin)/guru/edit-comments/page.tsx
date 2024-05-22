@@ -17,26 +17,7 @@ const emailKey = process.env.MAIL_ENCRYPT_KEY || '';
 export interface IPageParams {
   searchParams?: TSearchParams;
 }
-// =================================================================
-// Remove /guru | /delete-subscription | /login from robots.txt
-// =================================================================
-// =================================================================
-// Add sidebar to guru:
-// - add edit duplicate CHANNEL
-// =================================================================
-// =================================================================
-// parse + cron:
-// - trans news
-// - schedule999
-// - schedule vseTv
-// =================================================================
-// =================================================================
-// Change remote .env
-// ADMIN_EMAIL
-// AUTH_SECRET
-// AUTH_GITHUB_ID
-// AUTH_GITHUB_SECRET
-// =================================================================
+
 export default async function Page({ searchParams }: IPageParams) {
   if (!searchParams) return;
 

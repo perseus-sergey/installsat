@@ -5,15 +5,18 @@ import WidgetArticleCategories from '../WidgetArticleCategories/WidgetArticleCat
 import WidgetLastNews from '../WidgetLastNews/WidgetLastNews';
 import styles from './SideBar.module.scss';
 
-const SideBar = () => (
-  <aside className="sidebar" data-testid="SideBar">
-    <ToggleSidebarLabel className={styles.ToggleSidebarLabel}>
-      {SIDE_BAR_CLOSE_BTN}
-    </ToggleSidebarLabel>
-    <WidgetLastNews />
-    <Accordion />
-    <WidgetArticleCategories />
-  </aside>
-);
+const SideBar = async () => {
+  return (
+    <aside className="sidebar" data-testid="SideBar">
+      <ToggleSidebarLabel className={styles.ToggleSidebarLabel}>
+        {SIDE_BAR_CLOSE_BTN}
+      </ToggleSidebarLabel>
+      <WidgetLastNews />
+      <Accordion />
+      <WidgetArticleCategories />
+      {/* <UserWelcome /> */}
+    </aside>
+  );
+};
 
 export default SideBar;

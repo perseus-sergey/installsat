@@ -10,6 +10,7 @@ interface IFillingImgProps extends React.ImgHTMLAttributes<HTMLImageElement> {
   isBlur?: boolean;
   blurImgPath?: string;
   isPriority?: boolean;
+  quality?: number;
 }
 
 const FillingImg = ({
@@ -17,6 +18,7 @@ const FillingImg = ({
   height,
   src,
   alt = '',
+  quality = 75,
   isFillParent = false,
   isBlur = false,
   isPriority = false,
@@ -44,6 +46,7 @@ const FillingImg = ({
         placeholder={isBlur ? 'blur' : 'empty'}
         blurDataURL={blurImgPath}
         priority={isPriority}
+        quality={quality}
       />
     </div>
   ) : (

@@ -35,7 +35,12 @@
 - [React Email - components for creating beautiful emails using React](https://react.email/)
   - [Examples](https://react.email/examples)
 - IP Geolocation - [JSON endpoint](https://ip-api.com/docs/api:json)
-  - How to get the client Ip address in app router - [GitHub](https://github.com/vercel/next.js/discussions/55037)
+  > - How to get the client Ip address in app router - [GitHub](https://github.com/vercel/next.js/discussions/55037)
+- Authentication - [Auth.js](https://authjs.dev/)
+  > - [NextJs - Learn](https://nextjs.org/learn/dashboard-app/adding-authentication)
+  > - [NextJs - Authentication](https://nextjs.org/docs/app/building-your-application/authentication)
+- bcrypt.js - [NPM](https://www.npmjs.com/package/bcryptjs)
+  > - ` yarn add bcryptjs @types/bcryptjs`
 
 ---
 

@@ -39,14 +39,14 @@ export const footerMenuList: IFooterMenu[] = [
     },
     href: `/${EUrlBaseParam.ARTICLE}/kak-sviazati-tuner-s-antennoi`,
   },
-  {
-    title: {
-      [ELanguage.UA]: 'Супутникове обладнання',
-      [ELanguage.EN]: 'Satellite equipment',
-    },
-    href: `/${EUrlBaseParam.PRODUCT_CATEGORIES}`,
-    // href: '/novosti-i-statji/satellite_equipments',
-  },
+  // {
+  //   title: {
+  //     [ELanguage.UA]: 'Супутникове обладнання',
+  //     [ELanguage.EN]: 'Satellite equipment',
+  //   },
+  //   href: `/${EUrlBaseParam.PRODUCT_CATEGORIES}`,
+  //   // href: '/novosti-i-statji/satellite_equipments',
+  // },
   {
     title: {
       [ELanguage.UA]: 'Теле-канали без щомісячної плати',

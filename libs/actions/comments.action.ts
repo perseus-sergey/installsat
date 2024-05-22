@@ -59,8 +59,8 @@ export const editCommentAction = async (
   const commentSchema = z.object({
     [COMMENT_TEXT]: z
       .string()
-      .min(2, '⛔ At least 2 characters')
-      .max(450, '⛔ 450 characters maximum'),
+      .min(2, 'At least 2 characters')
+      .max(450, '450 characters maximum'),
   });
 
   try {

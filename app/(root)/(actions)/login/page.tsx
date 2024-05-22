@@ -4,7 +4,7 @@ import { Title } from '@/components/ui/Titles/Title';
 import { EUrlBaseParam } from '@/models/url.model';
 import { redirect } from 'next/navigation';
 
-export const LoginPage = async () => {
+const LoginPage = async () => {
   if (await auth()) return redirect(EUrlBaseParam.BASE_PATH);
 
   return (

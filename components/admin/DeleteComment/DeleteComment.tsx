@@ -38,9 +38,10 @@ const DeleteComment = ({
         <SubmitPendingButton
           ariaLabel="Remove comment"
           style={{ color: 'red', minWidth: '3rem', textAlign: 'center' }}
-          innerHtml="⌫"
           pendingInnerHtml="🕓"
-        />
+        >
+          ⌫
+        </SubmitPendingButton>
       </TooltipSimple>
       {noScriptFallback}
     </form>

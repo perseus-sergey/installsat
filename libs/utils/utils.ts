@@ -28,8 +28,7 @@ export const cutMiddleOfText = (
 
   if (trimmedText.length <= lengthThreshold) return trimmedText;
 
-  trimmedText = trimmedText.replace(/[^а-яА-Яa-zA-Z]*$/, '');
-
+  trimmedText = trimmedText.replace(/[^а-яА-Яіїїєa-zA-Z]*$/, '');
   const words = trimmedText.split(/\s+/);
   const totalWords = words.length;
 

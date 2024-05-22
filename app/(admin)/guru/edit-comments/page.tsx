@@ -17,7 +17,26 @@ const emailKey = process.env.MAIL_ENCRYPT_KEY || '';
 export interface IPageParams {
   searchParams?: TSearchParams;
 }
-
+// =================================================================
+// Remove /guru | /delete-subscription | /login from robots.txt
+// =================================================================
+// =================================================================
+// Add sidebar to guru:
+// - add edit duplicate CHANNEL
+// =================================================================
+// =================================================================
+// parse + cron:
+// - trans news
+// - schedule999
+// - schedule vseTv
+// =================================================================
+// =================================================================
+// Change remote .env
+// ADMIN_EMAIL
+// AUTH_SECRET
+// AUTH_GITHUB_ID
+// AUTH_GITHUB_SECRET
+// =================================================================
 export default async function Page({ searchParams }: IPageParams) {
   if (!searchParams) return;
 
@@ -36,6 +55,9 @@ export default async function Page({ searchParams }: IPageParams) {
     emailKey
   )) as EDBTableTitles;
 
+  if (!articleId || !commentDbTable)
+    return <EmptyData description="Wrong Url Search Params!" />;
+
   const comments = await getComments(commentDbTable, articleId);
 
   if (comments instanceof Error)
@@ -51,7 +73,7 @@ export default async function Page({ searchParams }: IPageParams) {
               <td>{comment.author}</td>
               <td>{comment.ip}</td>
               <td>{comment.text}</td>
-              <td>
+              <td className="text-center">
                 <TooltipSimple tooltipText="Edit comment">
                   <Link
                     href={`${BASE_PATH}/${EDIT_COMMENT}/${comment.id}?${makeUrlSearchParams(searchParams).toString()}`}
@@ -61,7 +83,7 @@ export default async function Page({ searchParams }: IPageParams) {
                   </Link>
                 </TooltipSimple>
               </td>
-              <td>
+              <td className="text-center">
                 <DeleteComment
                   commentID={`${comment.id}`}
                   dbTableName={commentDbTable}

@@ -11,6 +11,7 @@ describe('<FieldError />', () => {
       <FieldError
         formState={EMPTY_FORM_STATE}
         name={ECommentFormNames.AUTHOR}
+        errorFieldId="error-field-id"
       />
     );
 

@@ -114,14 +114,16 @@ const FrequencySegment = ({
           {biss && <p className={styles.biss}>{biss}</p>}
         </td>
         <td className={styles.tdGenre}>
-          <TooltipSimple tooltipText={tem}>
-            <FillingImg
-              width={genreImage.width}
-              height={genreImage.height}
-              alt={`${genreImage.altPre} ${tem}`}
-              src={`${genreImage.path}${MChanTheme.get(tema)}`}
-            />
-          </TooltipSimple>
+          <div className="flex flex-col items-center">
+            <TooltipSimple tooltipText={tem}>
+              <FillingImg
+                width={genreImage.width}
+                height={genreImage.height}
+                alt={`${genreImage.altPre} ${tem}`}
+                src={`${genreImage.path}${MChanTheme.get(tema)}`}
+              />
+            </TooltipSimple>
+          </div>
         </td>
       </tr>
     )

@@ -94,24 +94,28 @@ const BreadCrumbServer = ({
                 <React.Fragment key={index}>
                   <li className={itemClassName} style={itemStyle}>
                     {typeof item !== 'string' && item.href ? (
-                      <TooltipSimple
-                        tooltipText={linkText}
-                        isTooltipBottomOfPage
-                      >
-                        <Link
-                          href={`/${item.href}`}
-                          className="hover:underline"
+                      <>
+                        <LastBreadCrumbElement
+                          tooltipText={linkText}
+                          isTooltip={
+                            linkText.length !== truncatedLinkText.length
+                          }
                         >
-                          {truncatedLinkText}
-                        </Link>
-                      </TooltipSimple>
+                          <Link
+                            href={`/${item.href}`}
+                            className="hover:underline"
+                          >
+                            {truncatedLinkText}
+                          </Link>
+                        </LastBreadCrumbElement>
+                      </>
                     ) : (
-                      <TooltipSimple
+                      <LastBreadCrumbElement
                         tooltipText={linkText}
-                        isTooltipBottomOfPage
+                        isTooltip={linkText.length !== truncatedLinkText.length}
                       >
-                        <div>{truncatedLinkText}</div>
-                      </TooltipSimple>
+                        <span>{truncatedLinkText}</span>
+                      </LastBreadCrumbElement>
                     )}
                   </li>
                 </React.Fragment>
@@ -121,6 +125,24 @@ const BreadCrumbServer = ({
         )}
       </ol>
     </nav>
+  );
+};
+
+const LastBreadCrumbElement = ({
+  children,
+  isTooltip = false,
+  tooltipText,
+}: {
+  children: ReactNode;
+  tooltipText?: string;
+  isTooltip?: boolean;
+}) => {
+  return isTooltip ? (
+    <TooltipSimple tooltipText={tooltipText} isTooltipBottomOfPage>
+      {children}
+    </TooltipSimple>
+  ) : (
+    <>{children}</>
   );
 };
 

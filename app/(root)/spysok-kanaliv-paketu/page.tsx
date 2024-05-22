@@ -29,7 +29,7 @@ export default async function Page() {
 
   return (
     <>
-      <BreadCrumbServer />
+      <BreadCrumbServer breadCrumbList={[metaH1[L]]} />
       <article className="article">
         <Title>{metaH1[L]}</Title>
 

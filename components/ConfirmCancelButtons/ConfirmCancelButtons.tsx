@@ -25,15 +25,12 @@ export const ConfirmSubmitButton = ({
     <SubmitPendingButton
       className={styles.confirmButton}
       ariaLabel={ariaLabel}
-      innerHtml={
-        <>
-          <span className={styles.checkMark}></span>
-          {title}
-        </>
-      }
       pendingInnerHtml={pendingInnerHtml}
       {...attributes}
-    />
+    >
+      <span className={styles.checkMark}></span>
+      {title}
+    </SubmitPendingButton>
   </TooltipSimple>
 );
 

@@ -48,7 +48,9 @@ export default async function Page({ params: { date } }: IPageParams) {
 
   return (
     <>
-      <BreadCrumbServer />
+      <BreadCrumbServer
+        breadCrumbList={[`${metaH1start[L]} ${formattedDate}`]}
+      />
       <article className="article">
         <TransNewsSingle
           title={`${metaH1start[L]} ${formattedDate}`}

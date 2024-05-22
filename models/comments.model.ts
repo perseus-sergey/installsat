@@ -22,15 +22,15 @@ export const COMMENTS_MODEL = {
       minSize: {
         value: 1,
         warningText: {
-          [ELanguage.UA]: '⛔ Введіть щонайменш 1 символ',
-          [ELanguage.EN]: '⛔ Enter at least 1 character',
+          [ELanguage.UA]: 'Введіть щонайменш 1 символ',
+          [ELanguage.EN]: 'Enter at least 1 character',
         },
       },
       maxSize: {
         value: 30,
         warningText: {
-          [ELanguage.UA]: '⛔ Не більше 30 символів',
-          [ELanguage.EN]: '⛔ Maximum 30 characters allowed',
+          [ELanguage.UA]: 'Не більше 30 символів',
+          [ELanguage.EN]: 'Maximum 30 characters allowed',
         },
       },
     },
@@ -50,15 +50,15 @@ export const COMMENTS_MODEL = {
       minSize: {
         value: 2,
         warningText: {
-          [ELanguage.UA]: '⛔ Введіть щонайменш 2 символи',
-          [ELanguage.EN]: '⛔ Enter at least 2 characters',
+          [ELanguage.UA]: 'Введіть щонайменш 2 символи',
+          [ELanguage.EN]: 'Enter at least 2 characters',
         },
       },
       maxSize: {
         value: 450,
         warningText: {
-          [ELanguage.UA]: '⛔ Не більше 450 символів',
-          [ELanguage.EN]: '⛔ Maximum 450 characters allowed',
+          [ELanguage.UA]: 'Не більше 450 символів',
+          [ELanguage.EN]: 'Maximum 450 characters allowed',
         },
       },
     },
@@ -73,8 +73,8 @@ export const COMMENTS_MODEL = {
         [ELanguage.EN]: 'Email address (will not be displayed)',
       },
       warningText: {
-        [ELanguage.UA]: '⛔ Не коректний формат електронної пошти!',
-        [ELanguage.EN]: '⛔ Incorrect email format!',
+        [ELanguage.UA]: 'Не коректний формат електронної пошти!',
+        [ELanguage.EN]: 'Incorrect email format!',
       },
     },
     submit: {

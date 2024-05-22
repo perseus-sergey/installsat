@@ -18,13 +18,14 @@ export interface IPageParams {
   searchParams?: TSearchParams;
 }
 // =================================================================
-// Breadcrumbs add page titles
+// Remove /guru | /delete-subscription | /login from robots.txt
 // =================================================================
 // =================================================================
-// Remove /guru from robots.txt
-// =================================================================
-// =================================================================
-// Change remote .env ADMIN_EMAIL AUTH_SECRET
+// Change remote .env
+// ADMIN_EMAIL
+// AUTH_SECRET
+// AUTH_GITHUB_ID
+// AUTH_GITHUB_SECRET
 // =================================================================
 export default async function Page({ searchParams }: IPageParams) {
   if (!searchParams) return;

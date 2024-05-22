@@ -9,7 +9,6 @@ import { EUrlAdminParam, EUrlBaseParam } from './models/url.model';
 
 //   callbacks: {
 //     authorized({ auth, request: { nextUrl } }) {
-//       console.log('🚀 ~ authorized ~ auth:', auth);
 //       const isLoggedIn = !!auth?.user;
 //       const isOnGuruRoute = nextUrl.pathname.startsWith(
 //         EUrlAdminParam.BASE_PATH
@@ -34,7 +33,6 @@ export const authConfig = {
 
   callbacks: {
     authorized({ auth, request: { nextUrl } }) {
-      console.log('🚀 ~ authorized ~ auth:', auth);
       const isLoggedIn = !!auth?.user;
       const isOnProtectedRoute = nextUrl.pathname.startsWith(
         EUrlAdminParam.BASE_PATH
@@ -42,16 +40,10 @@ export const authConfig = {
       const isOnLoginRoute = nextUrl.pathname.startsWith(loginPagePath);
 
       if (isOnProtectedRoute) {
-        console.log(
-          '🚀 ~ authorized ~ isOnProtectedRoute:',
-          isOnProtectedRoute
-        );
         return isLoggedIn ? true : false;
       } else if (isOnLoginRoute) {
-        console.log('🚀 ~ authorized ~ isOnLoginRoute:', isOnLoginRoute);
         return isLoggedIn ? false : true;
       } else if (isLoggedIn) {
-        console.log('🚀 ~ authorized ~ isLoggedIn:', isLoggedIn);
         return Response.redirect(new URL(EUrlAdminParam.BASE_PATH, nextUrl));
       }
       return true;

@@ -23,18 +23,3 @@ export const createDbUser = async (
     `INSERT INTO userlist (email,  password, name, role, registration_date) VALUES (?,?,?,?,?)`,
     [email, password, name, `${roleNumber}`, getFormattedDateStrYearFirst()]
   );
-
-// export const editCommentDB = async (
-//   dbTableName: EDBTableTitles,
-//   commentId: number,
-//   text: string
-// ) =>
-//   await executeQuery(`UPDATE ${dbTableName} SET text = ? WHERE id = ?`, [
-//     text,
-//     `${commentId}`,
-//   ]);
-
-// export const deleteComment = async (
-//   dbTableName: EDBTableTitles,
-//   commentID: string
-// ) => await executeQuery(`DELETE FROM ${dbTableName} WHERE id=?`, [commentID]);

@@ -1,7 +1,7 @@
 import SignUpForm from '@/components/SignUpForm/SignUpForm';
 import { Title } from '@/components/ui/Titles/Title';
 
-export const SignUpPage = () => (
+const SignUpPage = () => (
   <article className="article">
     <Title>Create a new account.</Title>
     <SignUpForm />

@@ -81,7 +81,7 @@ export default async function Page({ searchParams }: IPageProps) {
 
   return (
     <>
-      <BreadCrumbServer />
+      <BreadCrumbServer breadCrumbList={[metaH1[L]]} />
       <article className="article">
         <Title>
           {metaH1[L]}

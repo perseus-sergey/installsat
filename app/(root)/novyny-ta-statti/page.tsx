@@ -79,7 +79,7 @@ export default async function Page({ searchParams }: IProps) {
 
   return (
     <>
-      <BreadCrumbServer />
+      <BreadCrumbServer breadCrumbList={[`${h1Start[L]} ${currDate}`]} />
       <article className="article">
         <Title>
           {h1Start[L]} {currDate}

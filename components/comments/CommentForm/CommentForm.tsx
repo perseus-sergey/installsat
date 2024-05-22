@@ -1,7 +1,6 @@
 'use client';
 
 import styles from './CommentForm.module.scss';
-// import '../styles.css';
 import { SubmitPendingButton } from '@/components/ui/buttons/SubmitPendingBtn';
 import { formCommentAction } from '../formComment.action';
 import { useFormState } from 'react-dom';
@@ -74,64 +73,70 @@ const CommentForm = ({
       className={styles.CommentForm}
       action={formAction}
     >
-      <FieldError
-        formState={formState}
-        name={AUTHOR}
-        errorFieldId={`${AUTHOR}-error`}
-      />
-      <input
-        id={AUTHOR}
-        name={AUTHOR}
-        className={styles.inputField}
-        maxLength={authorName.maxSize.value}
-        size={20}
-        required
-        placeholder={authorName.placeholder[LANGUAGE]}
-        aria-label={authorName.ariaLabel[LANGUAGE]}
-        aria-describedby={`${AUTHOR}-error`}
-      />
-      <label htmlFor={AUTHOR} className={styles.required}>
-        {authorName.labelText[LANGUAGE]}
-      </label>
+      <div className="pb-4 pt-1 flex flex-col">
+        <label htmlFor={AUTHOR} className={styles.required}>
+          {authorName.labelText[LANGUAGE]}
+        </label>
+        <input
+          id={AUTHOR}
+          name={AUTHOR}
+          className={styles.inputField}
+          maxLength={authorName.maxSize.value}
+          size={20}
+          required
+          placeholder={authorName.placeholder[LANGUAGE]}
+          aria-label={authorName.ariaLabel[LANGUAGE]}
+          aria-describedby={`${AUTHOR}-error`}
+        />
+        <FieldError
+          formState={formState}
+          name={AUTHOR}
+          errorFieldId={`${AUTHOR}-error`}
+        />
+      </div>
 
-      <FieldError
-        formState={formState}
-        name={EMAIL}
-        errorFieldId={`${EMAIL}-error`}
-      />
-      <input
-        type="email"
-        id={EMAIL}
-        name={EMAIL}
-        maxLength={40}
-        className={styles.inputField}
-        size={30}
-        placeholder={authorEmail.placeholder}
-        aria-label={authorEmail.ariaLabel[LANGUAGE]}
-        aria-describedby={`${EMAIL}-error`}
-      />
-      <label htmlFor={EMAIL}>{authorEmail.labelText[LANGUAGE]}</label>
+      <div className="pb-4 pt-1 flex flex-col">
+        <label htmlFor={EMAIL}>{authorEmail.labelText[LANGUAGE]}</label>
+        <input
+          type="email"
+          id={EMAIL}
+          name={EMAIL}
+          maxLength={40}
+          className={styles.inputField}
+          size={30}
+          placeholder={authorEmail.placeholder}
+          aria-label={authorEmail.ariaLabel[LANGUAGE]}
+          aria-describedby={`${EMAIL}-error`}
+        />
+        <FieldError
+          formState={formState}
+          name={EMAIL}
+          errorFieldId={`${EMAIL}-error`}
+        />
+      </div>
 
-      <FieldError
-        formState={formState}
-        name={TEXT}
-        errorFieldId={`${TEXT}-error`}
-      />
-      <textarea
-        id={TEXT}
-        name={TEXT}
-        className={styles.inputField}
-        placeholder={commentText.placeholder[LANGUAGE]}
-        aria-label={commentText.ariaLabel[LANGUAGE]}
-        rows={4}
-        cols={60}
-        maxLength={commentText.maxSize.value}
-        aria-describedby={`${TEXT}-error`}
-        required
-      />
-      <label htmlFor={TEXT} className={styles.required}>
-        {commentText.labelText[LANGUAGE]}
-      </label>
+      <div className="pb-4 pt-1 flex flex-col">
+        <label htmlFor={TEXT} className={styles.required}>
+          {commentText.labelText[LANGUAGE]}
+        </label>
+        <textarea
+          id={TEXT}
+          name={TEXT}
+          className={styles.inputField}
+          placeholder={commentText.placeholder[LANGUAGE]}
+          aria-label={commentText.ariaLabel[LANGUAGE]}
+          rows={4}
+          cols={60}
+          maxLength={commentText.maxSize.value}
+          aria-describedby={`${TEXT}-error`}
+          required
+        />
+        <FieldError
+          formState={formState}
+          name={TEXT}
+          errorFieldId={`${TEXT}-error`}
+        />
+      </div>
 
       <SubmitPendingButton
         ariaLabel={submit.ariaLabel[LANGUAGE]}

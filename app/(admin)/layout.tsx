@@ -11,10 +11,9 @@ export interface IParams {
 
 export default async function layout({ children }: IParams) {
   const session = await auth();
-  console.log('🚀 ~ layout ~ session:', session);
 
   if (!session || !session.user || session.user.email !== adminEmail)
-    redirect(EUrlBaseParam.BASE_PATH);
+    return redirect(EUrlBaseParam.BASE_PATH);
 
   return <article className="article">{children}</article>;
 }

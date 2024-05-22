@@ -24,6 +24,7 @@ import WeekScheduleTabs from '@/components/tabs/WeekScheduleTabs';
 import NoteBlock from '@/components/ui/NoteBlock/NoteBlock';
 import GrooveLine from '@/components/ui/GrooveLine';
 import { BREAD_CRUMBS } from '@/models/breadCrumbs.model';
+import ChannelOnlineLink from '@/components/ui/buttons/ChannelOnlineLink/ChannelOnlineLink';
 
 const BASE_URL = process.env.BASE_URL;
 
@@ -35,6 +36,7 @@ const {
   similar: { channels: simChannelsBefore },
   noteTitle,
   getResponsibilityText,
+  getOnlineLinkText,
 } = META_CHANNEL;
 
 const { getKeywords, getTitle, h1Start, descriptionStart } = SCHEDULE_META;
@@ -72,7 +74,7 @@ export default async function Page({ params: { slug, url_date } }: IPageProps) {
   const sqlResult = await getDBOnlineChannel(slug);
   if (!sqlResult || !sqlResult.length || !getValidDate(url_date)) notFound();
 
-  const { id, title, logo, view, vipiko, vsetv } = sqlResult[0];
+  const { id, title, logo, view, vipiko, vsetv, tvforsite_net } = sqlResult[0];
 
   const dbScheduleDataArr = [
     {
@@ -125,6 +127,14 @@ export default async function Page({ params: { slug, url_date } }: IPageProps) {
           urlDate={url_date}
           channelTitle={title}
         />
+
+        {tvforsite_net && (
+          <ChannelOnlineLink
+            href={`/${EUrlBaseParam.ONLINE_CHANNEL_LIST}/${slug}`}
+          >
+            {getOnlineLinkText(title)[LANGUAGE]}
+          </ChannelOnlineLink>
+        )}
 
         <GrooveLine className="py-4" />
 

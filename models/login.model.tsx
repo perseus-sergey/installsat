@@ -1,3 +1,5 @@
+import FillingImg from '@/components/ui/Images/FillingImage';
+
 export interface IUser {
   id: string;
   name: string;
@@ -13,3 +15,14 @@ export enum ELoginFormNames {
   EMAIL = 'login-email',
   PASSWORD = 'login-password',
 }
+
+export const AUTH_PROVIDER_LOGOS: Record<string, React.ReactNode> = {
+  github: (
+    <FillingImg
+      width={16}
+      height={16}
+      src="/Images/auth/github.png"
+      isFillParent
+    />
+  ),
+};

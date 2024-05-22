@@ -53,13 +53,7 @@ export async function authenticateAction(
       await signIn('credentials', {
         name: user.name,
         email: user.email,
-        role: user.role,
       });
-
-    // await signIn('credentials', {
-    //   email: validFormData[EMAIL],
-    //   password: validFormData[PASSWORD],
-    // });
 
     return isValidUser
       ? toFormState('SUCCESS', 'Login successfully!')
@@ -104,3 +98,6 @@ export async function createUserAction(
     return fromErrorToFormState(error);
   }
 }
+
+export const restProviderLinksAction = async (providerId: string) =>
+  await signIn(providerId);

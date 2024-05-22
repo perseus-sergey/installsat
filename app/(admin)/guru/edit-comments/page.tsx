@@ -31,7 +31,7 @@ export interface IPageParams {
 // Remove /guru from robots.txt
 // =================================================================
 // =================================================================
-// Change remote .env
+// Change remote .env ADMIN_EMAIL AUTH_SECRET
 // =================================================================
 export default async function Page({ searchParams }: IPageParams) {
   if (!searchParams) return;

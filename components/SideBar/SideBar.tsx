@@ -4,6 +4,7 @@ import ToggleSidebarLabel from '../ui/ToggleSidebarLabel/ToggleSidebarLabel';
 import WidgetArticleCategories from '../WidgetArticleCategories/WidgetArticleCategories';
 import WidgetLastNews from '../WidgetLastNews/WidgetLastNews';
 import styles from './SideBar.module.scss';
+import UserWelcome from '../UserWelcome/UserWelcome';
 
 const SideBar = async () => {
   return (
@@ -14,7 +15,7 @@ const SideBar = async () => {
       <WidgetLastNews />
       <Accordion />
       <WidgetArticleCategories />
-      {/* <UserWelcome /> */}
+      <UserWelcome />
     </aside>
   );
 };

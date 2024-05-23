@@ -3,9 +3,15 @@ set -e
 
 echo "Deployment started..."
 
+# Cancel any ongoing rebase
+git rebase --abort || true
+
+# Reset any local changes
+git reset --hard
+
 # Pull the latest version of the app
 git pull origin main
-echo "New changes copied to server !"
+echo "New changes copied to server!"
 
 echo "Installing Dependencies..."
 yarn

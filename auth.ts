@@ -5,7 +5,11 @@ import { Provider } from 'next-auth/providers';
 import GitHub from 'next-auth/providers/github';
 
 const providers: Provider[] = [
-  GitHub({ checks: ['none'] }),
+  GitHub({
+    checks: ['none'],
+    clientId: process.env.AUTH_GITHUB_ID || '',
+    clientSecret: process.env.AUTH_GITHUB_SECRET || '',
+  }),
   Credentials({
     async authorize(credentials) {
       return credentials.name && typeof credentials.name === 'string'

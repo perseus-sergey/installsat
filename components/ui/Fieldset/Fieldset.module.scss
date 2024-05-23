@@ -1,5 +1,5 @@
 .fieldset {
-  border: 2px groove;
+  border: var(--groove-border);
   border-radius: 0.5rem;
 
   .legend {

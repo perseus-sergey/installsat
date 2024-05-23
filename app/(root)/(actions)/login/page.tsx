@@ -9,7 +9,7 @@ const LoginPage = async () => {
 
   return (
     <article className="article">
-      {/* Auth: {JSON.stringify(await auth())} */}
+      Auth: {JSON.stringify(await auth())}
       <Title>Please log in to continue.</Title>
       <SignUpForm isLoginForm />
     </article>

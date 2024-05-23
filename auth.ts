@@ -5,7 +5,7 @@ import { Provider } from 'next-auth/providers';
 import GitHub from 'next-auth/providers/github';
 
 const providers: Provider[] = [
-  GitHub,
+  GitHub({ checks: ['none'] }),
   Credentials({
     async authorize(credentials) {
       return credentials.name && typeof credentials.name === 'string'

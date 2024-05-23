@@ -13,7 +13,7 @@ const TooltipBigImg = ({
   hintDescription,
 }: ITooltipBigImgProps) => {
   return (
-    <div className={styles.Tooltip}>
+    <div className="m-4">
       {children}
 
       <figure className={styles.hint}>

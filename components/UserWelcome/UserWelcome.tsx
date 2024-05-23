@@ -1,7 +1,7 @@
 import { auth, signOut } from '@/auth';
 import BaseButton from '../ui/buttons/BaseButton/BaseButton';
-import Link from 'next/link';
-import { EUrlBaseParam } from '@/models/url.model';
+// import Link from 'next/link';
+// import { EUrlBaseParam } from '@/models/url.model';
 
 const UserWelcome = async () => {
   const session = await auth();
@@ -24,15 +24,16 @@ const UserWelcome = async () => {
         <span className="hidden md:block">Sign Out</span>
       </BaseButton>
     </form>
-  ) : (
-    <Link
-      href={`/${EUrlBaseParam.SIGN_IN}`}
-      className="flex items-center gap-5 self-start rounded-lg bg-blue-500 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-blue-400 md:text-base"
-    >
-      <span>⏼</span>
-      <span className="hidden md:block">Log In</span>
-    </Link>
-  );
+  ) : null;
+  // (
+  //   <Link
+  //     href={`/${EUrlBaseParam.SIGN_IN}`}
+  //     className="flex items-center gap-5 self-start rounded-lg bg-blue-500 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-blue-400 md:text-base"
+  //   >
+  //     <span>⏼</span>
+  //     <span className="hidden md:block">Log In</span>
+  //   </Link>
+  // );
 };
 
 export default UserWelcome;

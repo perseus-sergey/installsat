@@ -108,6 +108,7 @@ export default async function layout({ params: { slug } }: IArticleParams) {
             alternativeImgString={singleMap.h1Image.alternativeStr}
             alt={`${singleMap.h1Image.altStart[LANGUAGE]} ${h1Title}`}
             isBlur
+            isFillParent
           />
         </Title>
         {sqlResult.length > 0 ? (

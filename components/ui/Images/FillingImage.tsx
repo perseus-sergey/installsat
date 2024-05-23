@@ -7,6 +7,7 @@ interface IFillingImgProps extends React.ImgHTMLAttributes<HTMLImageElement> {
   src: string;
   alt?: string;
   isFillParent?: boolean;
+  isBigImage?: boolean;
   isBlur?: boolean;
   blurImgPath?: string;
   isPriority?: boolean;
@@ -20,6 +21,7 @@ const FillingImg = ({
   alt = '',
   quality = 75,
   isFillParent = false,
+  isBigImage = false,
   isBlur = false,
   isPriority = false,
   blurImgPath = IMG_PROPERTIES.defaultImgBlur,
@@ -31,7 +33,7 @@ const FillingImg = ({
         height: `${height}px`,
         // maxHeight: '80vh',
         // width: `${width}px`,
-        minWidth: `${width}px`,
+        minWidth: isBigImage ? 0 : `${width}px`,
       }}
     >
       <Image

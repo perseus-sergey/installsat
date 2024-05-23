@@ -28,7 +28,6 @@ const BeamMapList = ({ beamList }: IBeamMapListProps) => {
         </TitleH2>
         {item.beam_description && <p>{item.beam_description}</p>}
         <TooltipClient
-          className="p-4"
           hintDescription={altText}
           hintContent={
             <FillingImg
@@ -37,6 +36,7 @@ const BeamMapList = ({ beamList }: IBeamMapListProps) => {
               src={`${singleMap.bigMapParams.path}${item.map_img}`}
               alt={altText}
               isFillParent
+              isBigImage
             />
           }
         >
@@ -48,6 +48,7 @@ const BeamMapList = ({ beamList }: IBeamMapListProps) => {
             blurImgPath={IMG_PROPERTIES.defaultImgBlur}
             isBlur
             isFillParent
+            isBigImage
           />
         </TooltipClient>
       </Fragment>

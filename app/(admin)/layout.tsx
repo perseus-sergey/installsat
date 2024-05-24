@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation';
 import './styles.scss';
 import { EUrlBaseParam } from '@/models/url.model';
 import { auth } from '@/auth';
+import SideBar from '@/components/SideBar/SideBar';
 
 const adminEmail = process.env.ADMIN_EMAIL || '';
 
@@ -15,5 +16,12 @@ export default async function layout({ children }: IParams) {
   if (!session || !session.user || session.user.email !== adminEmail)
     return redirect(EUrlBaseParam.BASE_PATH);
 
-  return <article className="article">{children}</article>;
+  return (
+    <main className="main">
+      <SideBar isAdmin />
+      <section className="articleWrapper">
+        <article className="article">{children}</article>)
+      </section>
+    </main>
+  );
 }

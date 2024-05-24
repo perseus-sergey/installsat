@@ -4,6 +4,7 @@ import ToggleSidebarLabel from '../ui/ToggleSidebarLabel/ToggleSidebarLabel';
 import WidgetArticleCategories from '../WidgetArticleCategories/WidgetArticleCategories';
 import WidgetLastNews from '../WidgetLastNews/WidgetLastNews';
 import UserWelcome from '../UserWelcome/UserWelcome';
+import AccordionAdmin from '../menuAccordion/Accordion/AccordionAdmin';
 
 const SideBar = async ({ isAdmin = false }: { isAdmin?: boolean }) => {
   return (
@@ -12,7 +13,7 @@ const SideBar = async ({ isAdmin = false }: { isAdmin?: boolean }) => {
         {SIDE_BAR_CLOSE_BTN}
       </ToggleSidebarLabel>
       {!isAdmin && <WidgetLastNews />}
-      <Accordion />
+      {isAdmin ? <AccordionAdmin /> : <Accordion />}
       {!isAdmin && <WidgetArticleCategories />}
       <UserWelcome />
     </aside>

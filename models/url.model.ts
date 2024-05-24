@@ -26,6 +26,8 @@ export enum EUrlBaseParam {
 export enum EUrlAdminParam {
   BASE_PATH = '/guru',
   EDIT_COMMENT = 'edit-comments',
+  ARTICLES_EDIT = 'articles',
+  CHANNELS_EDIT = 'channels',
 }
 
 export enum EUrlSearchParam {

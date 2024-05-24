@@ -47,7 +47,7 @@ export default async function Page({ searchParams }: IPageParams) {
 
   return (
     <>
-      <Title>Edit comments for page</Title>
+      <Title>List of Channels for Edit</Title>
       <table className="base-table">
         <tbody>
           {comments.map((comment) => (
@@ -68,8 +68,8 @@ export default async function Page({ searchParams }: IPageParams) {
               <td className="text-center">
                 <DeleteItemButton
                   itemID={`${comment.id}`}
-                  dbTableName={commentDbTable}
-                  revalidateUrl={`/${EUrlAdminParam.BASE_PATH}/${EUrlAdminParam.EDIT_COMMENT}`}
+                  dbTableName={EDBTableTitles.ARTICLE}
+                  revalidateUrl={`${EUrlAdminParam.BASE_PATH}/${EUrlAdminParam.ARTICLES_EDIT}`}
                 />
               </td>
             </tr>

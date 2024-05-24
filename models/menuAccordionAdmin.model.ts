@@ -1,54 +1,63 @@
-import { ELanguage, ILang } from './ui.model';
-import { EUrlBaseParam } from './url.model';
+import { ELanguage } from './ui.model';
+import { EUrlAdminParam, EUrlBaseParam } from './url.model';
 
-export interface IAccordionItemOptions {
-  name: string;
-  img: {
-    src: string;
-    width: number;
-    height: number;
-    alt: ILang;
-  };
-  title: ILang;
-  titleHref?: string;
-  baseHrefOfList?: string;
-}
+// export interface IAccordionItemOptions {
+//   name: string;
+//   img: {
+//     src: string;
+//     width: number;
+//     height: number;
+//     alt: ILang;
+//   };
+//   title: ILang;
+//   titleHref?: string;
+//   baseHrefOfList?: string;
+// }
 
-export const MENU_ACCORDION: { [key: string]: IAccordionItemOptions } = {
-  SATELLITE_TV: {
-    name: 'SATELLITE_TV',
+// export const MENU_ACCORDION_ADMIN: { [key: string]: IAccordionItemOptions } = {
+export const MENU_ACCORDION_ADMIN = {
+  ARTICLES: {
+    name: 'ARTICLES',
     img: {
-      src: '/Images/accordion/folder_home_3055.png',
+      src: '/Images/accordion/icon_info_key.png',
       width: 32,
       height: 32,
       alt: {
-        [ELanguage.UA]: 'Супутникове телебачення InstallSat',
-        [ELanguage.EN]: 'Satellite TV Installsat',
+        [ELanguage.EN]: 'Articles',
+        [ELanguage.UA]: 'Статті',
       },
     },
     title: {
-      [ELanguage.UA]: 'Цифрове телебачення',
-      [ELanguage.EN]: 'Digital TV',
+      [ELanguage.EN]: 'Articles',
+      [ELanguage.UA]: 'Статті',
     },
-    titleHref: `/${EUrlBaseParam.ARTICLE}/sputnikovoe-televidenie`,
+    links: [
+      { title: 'Add new', href: `${EUrlAdminParam.BASE_PATH}/articles/add` },
+      { title: 'Edit', href: `${EUrlAdminParam.BASE_PATH}/articles/edit` },
+    ],
   },
-  SAT_FINDER: {
-    name: 'SAT_FINDER',
+
+  CHANNELS: {
+    name: 'CHANNELS',
     img: {
-      src: '/Images/accordion/compass.png',
-      width: 32,
+      src: '/Images/accordion/satellite32.png',
+      width: 34,
       height: 32,
       alt: {
-        [ELanguage.EN]: 'Satellite Finder',
-        [ELanguage.UA]: 'Пошук супутників',
+        [ELanguage.UA]: 'Канали на супутниках',
+        [ELanguage.EN]: 'Channels on satellites',
       },
     },
     title: {
-      [ELanguage.UA]: 'Пошук супутників',
-      [ELanguage.EN]: 'Satellite Finder',
+      [ELanguage.UA]: 'Канали',
+      [ELanguage.EN]: 'Channels',
     },
-    titleHref: `/${EUrlBaseParam.SAT_FINDER}`,
+    links: [
+      { title: 'Add new', href: `${EUrlAdminParam.BASE_PATH}/channels/add` },
+      { title: 'Edit', href: `${EUrlAdminParam.BASE_PATH}/channels/edit` },
+    ],
   },
+
   MAPS: {
     name: 'MAPS',
     img: {
@@ -83,23 +92,6 @@ export const MENU_ACCORDION: { [key: string]: IAccordionItemOptions } = {
   //   },
   //   baseHrefOfList: `/${EUrlBaseParam.INSTALLATION_OPTIONS}`,
   // },
-  SATELLITES: {
-    name: 'SATELLITES',
-    img: {
-      src: '/Images/accordion/satellite32.png',
-      width: 34,
-      height: 32,
-      alt: {
-        [ELanguage.UA]: 'Канали на супутниках',
-        [ELanguage.EN]: 'Channels on satellites',
-      },
-    },
-    title: {
-      [ELanguage.UA]: 'Канали на супутниках',
-      [ELanguage.EN]: 'Channels on satellites',
-    },
-    baseHrefOfList: `/${EUrlBaseParam.SAT_CHANNEL_LIST}`,
-  },
   PACKAGES: {
     name: 'PACKAGES',
     img: {
@@ -116,23 +108,6 @@ export const MENU_ACCORDION: { [key: string]: IAccordionItemOptions } = {
       [ELanguage.EN]: 'Channel packages',
     },
     baseHrefOfList: `/${EUrlBaseParam.PACKAGE_CHANNEL_LIST}`,
-  },
-  USEFUL: {
-    name: 'USEFUL',
-    img: {
-      src: '/Images/accordion/icon_info_key.png',
-      width: 32,
-      height: 32,
-      alt: {
-        [ELanguage.UA]: 'Корисні статті',
-        [ELanguage.EN]: 'Useful articles',
-      },
-    },
-    title: {
-      [ELanguage.UA]: 'Корисні статті',
-      [ELanguage.EN]: 'Useful articles',
-    },
-    baseHrefOfList: `/${EUrlBaseParam.ARTICLE}`,
   },
   ONLINE_TV: {
     name: 'ONLINE_TV',

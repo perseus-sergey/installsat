@@ -264,6 +264,7 @@ export interface IAllNewsModel {
   cpu: string;
   description: string;
   date: Date;
+  date_upd: Date;
   author: string;
   logo: string;
   view: number;

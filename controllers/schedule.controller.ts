@@ -45,7 +45,7 @@ export const getChanOneDaySchedule = cache(
       `
       )
       .join(' ');
-    const res = await executeMultipleQuery<IScheduleTVModel>(sql);
+    const res = await executeMultipleQuery<[IScheduleTVModel[]]>(sql);
 
     return res instanceof Error ? null : res;
   }

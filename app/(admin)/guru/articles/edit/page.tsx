@@ -72,7 +72,7 @@ export default async function Page({ searchParams }: IPageParams) {
                 <td>{getFormattedDateStrYearFirst(article.date_upd)}</td>
                 <td>
                   <Link
-                    href={`${BASE_PATH}/${ARTICLES_EDIT}/${article.id}`}
+                    href={`${BASE_PATH}/${ARTICLES_EDIT}/edit/${article.id}`}
                     className="flex items-center gap-2"
                   >
                     ✐ <span className="text-blue-800">{article.title}</span>

@@ -31,7 +31,7 @@ export const executeQuery = async <T>(
 export const executeMultipleQuery = async <T>(
   sql: string,
   values: string[] = []
-): Promise<T[][] | Error> => {
+): Promise<T | Error> => {
   try {
     const connection = await mysql.createConnection({
       ...access,
@@ -40,7 +40,7 @@ export const executeMultipleQuery = async <T>(
     const [result] = await connection.query(sql, values);
     await connection.end();
 
-    return result as T[][];
+    return result as T;
   } catch (err) {
     console.log(err);
     // throw err;

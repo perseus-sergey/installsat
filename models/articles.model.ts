@@ -328,3 +328,15 @@ export interface IArticleModel {
   cat_slug: string;
   cat_folder: string;
 }
+export interface IArticleTableModel {
+  logo: string;
+  source: string;
+  title: string;
+  cpu: string;
+  description: string;
+  text: string;
+  author: string;
+  date: string;
+  cat: number;
+  folder: string;
+}

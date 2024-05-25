@@ -1,5 +1,5 @@
-import { executeQuery } from '@/libs/db/mysqldb';
-import { IAllNewsModel } from '@/models/articles.model';
+import { executeMultipleQuery, executeQuery } from '@/libs/db/mysqldb';
+import { IAllNewsModel, IArticleTableModel } from '@/models/articles.model';
 import { EDBTableTitles } from '@/models/ui.model';
 import { cache } from 'react';
 
@@ -25,11 +25,6 @@ import { cache } from 'react';
 //   }
 // );
 
-// SELECT us.id, us.title, us.date_upd, us.source, ca.title as categ
-// 		FROM `tbl_useful` AS us
-// 		LEFT JOIN `tbl_categories` AS ca  ON `us`.cat = `ca`.id
-// 		ORDER BY `us`.`date` DESC
-
 export const getAdminChunkOfNews = cache(
   async (quantity: number, start = 0, searchQuery = '') => {
     const searchText = searchQuery ? `LIKE "%${searchQuery}%"` : '!= ""';
@@ -50,7 +45,6 @@ ORDER BY
   U.date DESC, U.id 
 LIMIT ?, ?
 `;
-    console.log('🚀 ~ sql:', sql);
     const res = await executeQuery<IAllNewsModel>(sql, [
       `${start}`,
       `${quantity}`,
@@ -114,28 +108,18 @@ export const deleteItemFromDbTable = async (
 //   return res instanceof Error ? [] : res;
 // });
 
-// export const getArticle = cache(async (slug: string) => {
-//   const sql = `
-//   SELECT
-//   U.id,
-//   U.title,
-//   U.cpu AS slug,
-//   U.date,
-//   U.description,
-//   U.text,
-//   U.author,
-//   U.cat AS cat_id,
-//   U.view,
-//   U.logo,
-//   C.title AS cat_name,
-//   C.cpu AS cat_slug,
-//   C.folder AS cat_folder
-// FROM
-//   tbl_useful U
-// LEFT JOIN
-//   tbl_categories C ON U.cat = C.id
-// WHERE U.cpu = ?
-// `;
+export const getAllDbDataById = cache(
+  async <T>(dbTableName: EDBTableTitles, id: string) => {
+    const sql = `SELECT * FROM ${dbTableName} WHERE id = ?`;
 
-//   return await executeQuery<IArticleModel>(sql, [slug]);
-// });
+    return await executeQuery<T>(sql, [`${id}`]);
+  }
+);
+
+export const getArticleAndCatDb = cache(async (articleId: string | number) => {
+  const sql = `SELECT * FROM tbl_useful WHERE id = ${articleId} LIMIT 1; SELECT title, id FROM tbl_categories`;
+
+  return executeMultipleQuery<
+    [IArticleTableModel[], { id: number; title: string }[]]
+  >(sql);
+});

@@ -32,8 +32,8 @@ export const MENU_ACCORDION_ADMIN = {
       [ELanguage.UA]: 'Статті',
     },
     links: [
-      { title: 'Add new', href: `${EUrlAdminParam.BASE_PATH}/articles/add` },
-      { title: 'Edit', href: `${EUrlAdminParam.BASE_PATH}/articles/edit` },
+      { title: 'Add new', href: `/${EUrlAdminParam.BASE_PATH}/articles/add` },
+      { title: 'Edit', href: `/${EUrlAdminParam.BASE_PATH}/articles/edit` },
     ],
   },
 
@@ -53,8 +53,8 @@ export const MENU_ACCORDION_ADMIN = {
       [ELanguage.EN]: 'Channels',
     },
     links: [
-      { title: 'Add new', href: `${EUrlAdminParam.BASE_PATH}/channels/add` },
-      { title: 'Edit', href: `${EUrlAdminParam.BASE_PATH}/channels/edit` },
+      { title: 'Add new', href: `/${EUrlAdminParam.BASE_PATH}/channels/add` },
+      { title: 'Edit', href: `/${EUrlAdminParam.BASE_PATH}/channels/edit` },
     ],
   },
 

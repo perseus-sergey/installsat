@@ -1,8 +1,21 @@
 'use client';
 
-import { IArticleTableModel } from '@/models/articles.model';
-import { useState } from 'react';
-import { Editor } from '@tinymce/tinymce-react';
+import {
+  EArticleEditFields,
+  TArticleTableModel,
+} from '@/models/articles.model';
+import { useRef, useState } from 'react';
+import { Editor as CoreEditor } from 'tinymce';
+import Link from 'next/link';
+import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
+import CopyClipboard from '@/components/CopyClipboard/CopyClipboard';
+import { SubmitPendingButton } from '@/components/ui/buttons/SubmitPendingBtn';
+import { useToastMessage } from '@/libs/hooks/useToastMessage';
+import { useFormState } from 'react-dom';
+import { EMPTY_FORM_STATE, IFormState } from '@/controllers/toast.controller';
+import { editArticleAction } from '@/libs/actions/admin.action';
+import FieldError from '@/components/comments/FieldError/FieldError';
+import TinyEditor from '@/components/TinyEditor/TinyEditor';
 
 interface Category {
   id: number;
@@ -10,139 +23,213 @@ interface Category {
 }
 
 interface IProps {
-  initialData: [IArticleTableModel[], Category[]];
+  articleId: string;
+  revalidateUrl: string;
+  initialData: [TArticleTableModel[], Category[]];
+  editorApiKey: string;
 }
 
-const FormEditArticle = ({ initialData }: IProps) => {
+const FormEditArticle = ({
+  initialData,
+  articleId,
+  revalidateUrl,
+  editorApiKey,
+}: IProps) => {
   const [initArticleData, categories] = initialData;
 
   const [formData, setFormData] = useState({
-    logo: initArticleData[0].logo || '',
-    title: initArticleData[0].title || '',
-    cpu: initArticleData[0].cpu || '',
-    description: initArticleData[0].description.replace(/"/g, '""') || '',
-    text: initArticleData[0].text || '',
-    author: initArticleData[0].author || '',
-    date: initArticleData[0].date || '',
-    cat: initArticleData[0].cat || '',
-    folder: initArticleData[0].folder || '',
+    [EArticleEditFields.logo]: initArticleData[0].logo || '',
+    [EArticleEditFields.title]: initArticleData[0].title || '',
+    [EArticleEditFields.cpu]: initArticleData[0].cpu || '',
+    [EArticleEditFields.description]:
+      initArticleData[0].description.replace(/"/g, '') || '',
+    [EArticleEditFields.author]: initArticleData[0].author || '',
+    [EArticleEditFields.date]: initArticleData[0].date || '',
+    [EArticleEditFields.cat]: initArticleData[0].cat || '',
+    [EArticleEditFields.folder]: initArticleData[0].folder || '',
+    [EArticleEditFields.text]: initArticleData[0].text || '',
   });
+
+  const editorRef = useRef<CoreEditor | null>(null);
 
   const handleChange = ({
     name,
+    id,
     value,
   }: EventTarget &
     (HTMLTextAreaElement | HTMLInputElement | HTMLSelectElement)) => {
     setFormData((prevData) => ({
       ...prevData,
       [name]: value,
+      [id]: value,
     }));
   };
 
-  return (
-    <div>
-      <input
-        name="logo"
-        type="text"
-        value={formData.logo}
-        size={40}
-        maxLength={255}
-        readOnly
-      />
+  const handleEditorChange = (content: string) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      [EArticleEditFields.text]: content,
+    }));
+  };
 
-      <h1 className="eTitle_useful">Editing Articles</h1>
+  const editArticleHandler = editArticleAction.bind(
+    null,
+    articleId,
+    formData[EArticleEditFields.text],
+    revalidateUrl
+  );
+
+  // const editArticleHandler = editArticleAction.bind(
+  //   null,
+  //   articleId,
+  //   editorRef.current ? editorRef.current.getContent() : '',
+  //   revalidateUrl
+  // );
+
+  const [formState, formAction] = useFormState(
+    editArticleHandler,
+    EMPTY_FORM_STATE
+  );
+
+  const noScriptFallback = useToastMessage(formState);
+
+  return (
+    <form action={formAction} className="flex flex-col items-start gap-6 py-4">
+      <FormTextareaItem
+        itemName={EArticleEditFields.logo}
+        labelTitle="Article Logo:"
+        value={formData.logo}
+        handleChange={handleChange}
+        formState={formState}
+      />
       <p>
-        <a
+        Source:{' '}
+        <Link
+          className="text-blue-600 text-xl"
           target="_blank"
           rel="noopener noreferrer"
-          href={initArticleData[0].source}
+          href={initArticleData[0].source || ''}
         >
-          Source
-        </a>
+          {initArticleData[0].source} 🔗
+        </Link>
       </p>
-      <p>
-        Article Title:
-        <br />
-        <textarea
-          name="title"
-          cols={40}
-          rows={2}
-          value={formData.title}
-          onChange={(e) => handleChange(e.target)}
-        ></textarea>
-      </p>
-      <p>
-        Slug (Human-readable URL)
-        <br />
-        (Enter only English characters without tags, use hyphens instead of
-        spaces, it will be the URL):
-        <br />
-        <textarea
-          name="cpu"
-          cols={40}
-          rows={2}
-          value={formData.cpu}
-          onChange={(e) => handleChange(e.target)}
-        ></textarea>
-      </p>
-      <p>
-        Short Description
-        <br />
-        (Enter text only without tags, replace double quotes with «», it will be
-        written in meta_description):
-        <br />
-        <textarea
-          name="description"
-          cols={60}
-          rows={20}
-          value={formData.description}
-          onChange={(e) => handleChange(e.target)}
-        ></textarea>
-      </p>
-
-      <Editor
-        apiKey="8htugre4jjfi2py064rvhgmyru3t2pa5xk3zuiia7arw0fqh"
-        init={{
-          plugins:
-            'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount checklist mediaembed casechange export formatpainter pageembed linkchecker a11ychecker tinymcespellchecker permanentpen powerpaste advtable advcode editimage advtemplate mentions tinycomments tableofcontents footnotes mergetags autocorrect typography inlinecss markdown',
-          toolbar:
-            'code | visualblocks | undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table mergetags | addcomment showcomments | spellcheckdialog a11ycheck typography | align lineheight | checklist numlist bullist indent outdent | emoticons charmap | removeformat',
-          tinycomments_mode: 'embedded',
-          tinycomments_author: 'Author name',
-          mergetags_list: [
-            { value: 'First.Name', title: 'First Name' },
-            { value: 'Email', title: 'Email' },
-          ],
-        }}
-        initialValue={formData.text}
+      <FormTextareaItem
+        itemName={EArticleEditFields.title}
+        labelTitle="Article Title:"
+        value={formData.title}
+        handleChange={handleChange}
+        formState={formState}
       />
-      <p>
-        Author:
-        <br />
-        <textarea
-          name="author"
-          cols={60}
-          rows={2}
-          value={formData.author}
-          onChange={(e) => handleChange(e.target)}
-        ></textarea>
-      </p>
-      <p>
-        Date:
-        <br />
-        <textarea
-          name="date"
-          cols={30}
-          rows={1}
-          value={formData.date}
-          onChange={(e) => handleChange(e.target)}
-        ></textarea>
-      </p>
-      <p>
-        Category
-        <br />
+      <FormTextareaItem
+        itemName={EArticleEditFields.cpu}
+        labelTitle="Slug:"
+        description="(Human-readable URL) (Enter only English characters without tags,
+          use hyphens instead of spaces, it will be the URL)"
+        value={formData.cpu}
+        handleChange={handleChange}
+        formState={formState}
+      />
+
+      <FormTextareaItem
+        itemName={EArticleEditFields.description}
+        labelTitle="Short Description:"
+        description="(Enter text only without tags, replace double quotes
+          with «», it will be written in meta_description)"
+        value={formData.description}
+        handleChange={handleChange}
+        formState={formState}
+      />
+      <section className="w-full inline-block">
+        <h2 className="text-center text-xl">
+          <b>Main Text</b>
+        </h2>
+        <TinyEditor
+          onEditorChange={handleEditorChange}
+          id={EArticleEditFields.text}
+          editorApiKey={editorApiKey}
+          initialValue={initArticleData[0].text}
+          editorRef={editorRef}
+        />
+        {/* <Editor
+          id={EArticleEditFields.text}
+          apiKey={editorApiKey}
+          onInit={(_evt, editor) => (editorRef.current = editor)}
+          initialValue={initArticleData[0].text}
+          init={{
+            height: 500,
+            // menubar: false,
+            plugins: [
+              'advlist',
+              'autolink',
+              'lists',
+              'link',
+              'image',
+              'charmap',
+              'codesample',
+              'emoticons',
+              'formatpainter',
+              'linkchecker',
+              'a11ychecker',
+              'preview',
+              'anchor',
+              'searchreplace',
+              'visualblocks',
+              'code',
+              'fullscreen',
+              'tinymcespellchecker',
+              'advcode',
+              'editimage',
+              'code',
+              'autocorrect',
+              ' typography',
+              ' inlinecss',
+              'markdown',
+              'insertdatetime',
+              'media',
+              'table',
+              'code',
+              'help',
+              'wordcount',
+            ],
+            toolbar:
+              'code | visualblocks | undo redo | blocks fontfamily fontsize | ' +
+              'bold italic forecolor | alignleft aligncenter ' +
+              'alignright alignjustify | bullist numlist outdent indent | ' +
+              'removeformat | help',
+            content_style:
+              'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
+          }}
+        /> */}
+        <FieldError
+          formState={formState}
+          name={EArticleEditFields.text}
+          errorFieldId={`${EArticleEditFields.text}-error`}
+          className="text-red-700"
+        />
+      </section>
+      <FormTextareaItem
+        itemName={EArticleEditFields.author}
+        labelTitle="Author:"
+        value={formData.author}
+        handleChange={handleChange}
+        formState={formState}
+      />
+      <FormTextareaItem
+        itemName={EArticleEditFields.date}
+        labelTitle="Date:"
+        value={getFormattedDateStrYearFirst(formData.date)}
+        handleChange={handleChange}
+        formState={formState}
+      />
+
+      <section className="flex flex-col items-start">
+        <label htmlFor={EArticleEditFields.cat} className="text-xl">
+          <b>Category:</b>
+        </label>
         <select
-          name="cat"
+          className="p-2"
+          name={EArticleEditFields.cat}
+          id={EArticleEditFields.cat}
           value={formData.cat}
           onChange={(e) => handleChange(e.target)}
         >
@@ -152,20 +239,94 @@ const FormEditArticle = ({ initialData }: IProps) => {
             </option>
           ))}
         </select>
-      </p>
-      <p>
-        Folder Name for Images for this Article:
-        <br />
-        <textarea
-          name="folder"
-          cols={40}
-          rows={1}
-          value={formData.folder}
-          onChange={(e) => handleChange(e.target)}
-        ></textarea>
-      </p>
-    </div>
+        <FieldError
+          formState={formState}
+          name={EArticleEditFields.cat}
+          errorFieldId={`${EArticleEditFields.cat}-error`}
+          className="text-red-700"
+        />
+      </section>
+
+      <FormTextareaItem
+        itemName={EArticleEditFields.folder}
+        labelTitle="Folder Name:"
+        description="For Images for this Article"
+        value={formData.folder}
+        handleChange={handleChange}
+        formState={formState}
+      />
+
+      <SubmitPendingButton
+        ariaLabel="Save Changes"
+        pendingInnerHtml="Saving Changes ..."
+        className="MovingButton"
+      >
+        Save Changes
+      </SubmitPendingButton>
+      {noScriptFallback}
+    </form>
   );
 };
 
+interface IFormTextareaItem {
+  itemName: EArticleEditFields;
+  labelTitle: string;
+  description?: string;
+  value: string;
+  formState: IFormState;
+  cols?: number;
+  rows?: number;
+  handleChange: (
+    e: EventTarget &
+      (HTMLTextAreaElement | HTMLInputElement | HTMLSelectElement)
+  ) => void;
+  isCopyClipboard?: boolean;
+}
+
+const FormTextareaItem = ({
+  itemName,
+  labelTitle,
+  description,
+  value,
+  formState,
+  cols,
+  rows,
+  handleChange,
+  isCopyClipboard = false,
+}: IFormTextareaItem) => (
+  <section className="flex flex-col items-start">
+    <label htmlFor={itemName} className="text-xl">
+      <b>{labelTitle}</b>
+    </label>
+    {description && <p>{description}</p>}
+    <div className="flex items-start gap-1">
+      <textarea
+        className="p-2 w-full rounded-md"
+        name={itemName}
+        id={itemName}
+        cols={cols || Math.min(value.length + 20, 80)}
+        rows={rows || Math.ceil(value.length / 40) || 1}
+        value={value}
+        onChange={(e) => handleChange(e.target)}
+      />
+      {isCopyClipboard && (
+        <CopyClipboard
+          value={value}
+          classIconWrapper="text-sky-700 hover:text-sky-500"
+        />
+      )}
+    </div>
+    <FieldError
+      formState={formState}
+      name={itemName}
+      errorFieldId={`${itemName}-error`}
+      className="text-red-700"
+    />
+  </section>
+);
+
 export default FormEditArticle;
+
+// =================================================================
+// =================================================================
+// =================================================================

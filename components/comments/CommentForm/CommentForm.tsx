@@ -141,7 +141,7 @@ const CommentForm = ({
       <SubmitPendingButton
         ariaLabel={submit.ariaLabel[LANGUAGE]}
         pendingInnerHtml={submit.pendingInnerText[LANGUAGE]}
-        className={styles.submitCommentButton}
+        className="MovingButton"
       >
         {submit.innerText[LANGUAGE]}
       </SubmitPendingButton>

@@ -69,7 +69,7 @@ export default async function Page({ searchParams }: IPageParams) {
                 <DeleteItemButton
                   itemID={`${comment.id}`}
                   dbTableName={EDBTableTitles.ARTICLE}
-                  revalidateUrl={`${EUrlAdminParam.BASE_PATH}/${EUrlAdminParam.ARTICLES_EDIT}`}
+                  revalidateUrl={`/${EUrlAdminParam.BASE_PATH}/${EUrlAdminParam.ARTICLES_EDIT}`}
                 />
               </td>
             </tr>

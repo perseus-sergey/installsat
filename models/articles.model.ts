@@ -1,5 +1,6 @@
 import { ELanguage } from './ui.model';
 import { EUrlBaseParam } from './url.model';
+import { z } from 'zod';
 
 export const ARTICLES = {
   article: {
@@ -328,15 +329,28 @@ export interface IArticleModel {
   cat_slug: string;
   cat_folder: string;
 }
-export interface IArticleTableModel {
-  logo: string;
-  source: string;
-  title: string;
-  cpu: string;
-  description: string;
-  text: string;
-  author: string;
-  date: string;
-  cat: number;
-  folder: string;
+export enum EArticleEditFields {
+  logo = 'logo',
+  source = 'source',
+  title = 'title',
+  cpu = 'cpu',
+  description = 'description',
+  text = 'text',
+  author = 'author',
+  date = 'date',
+  cat = 'cat',
+  folder = 'folder',
 }
+export const editArticleSchema = z.object({
+  [EArticleEditFields.logo]: z.string().trim().optional(),
+  [EArticleEditFields.source]: z.string().trim().optional(),
+  [EArticleEditFields.title]: z.string().min(2).trim(),
+  [EArticleEditFields.cpu]: z.string().min(2).trim(),
+  [EArticleEditFields.description]: z.string().min(2).trim(),
+  [EArticleEditFields.text]: z.string().min(2).trim(),
+  [EArticleEditFields.author]: z.string().trim().optional(),
+  [EArticleEditFields.date]: z.coerce.date(),
+  [EArticleEditFields.cat]: z.coerce.number(),
+  [EArticleEditFields.folder]: z.string().trim().optional(),
+});
+export type TArticleTableModel = z.infer<typeof editArticleSchema>;

@@ -22,6 +22,10 @@ const AccordionAdmin = async () => {
   // const usefulArticleList =
   //   usefulArticleListResp instanceof Error ? [] : usefulArticleListResp;
 
+  // =================================================================
+  // server env add: TINY_MCE_API_KEY
+  // =================================================================
+
   return (
     <nav className={styles.Accordion} data-testid="Accordion">
       <ul>

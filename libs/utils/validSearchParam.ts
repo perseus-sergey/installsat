@@ -8,5 +8,5 @@ export const validSearchParam = (
   searchParams &&
   searchParams[paramName] &&
   typeof searchParams[paramName] === 'string'
-    ? (searchParams[paramName] as string)
+    ? decodeURIComponent(searchParams[paramName] as string)
     : '';

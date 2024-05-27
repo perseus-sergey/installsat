@@ -35,7 +35,7 @@ const DeleteItemButton = ({ itemID, dbTableName, revalidateUrl }: IProps) => {
       <TooltipSimple tooltipText="Remove item">
         <SubmitPendingButton
           ariaLabel="Remove item"
-          style={{ color: 'red', minWidth: '3rem', textAlign: 'center' }}
+          className="text-red-500 hover:text-red-400 min-w-12 text-center"
           pendingInnerHtml="🕓"
         >
           ⌫

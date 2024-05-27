@@ -24,6 +24,7 @@ interface IProps extends React.HTMLAttributes<HTMLElement> {
   homeTitle?: ReactNode;
   separator?: ReactNode;
   activeLinkColor?: string;
+  hasHomeLink?: boolean;
 }
 
 const BreadCrumbServer = ({
@@ -32,6 +33,7 @@ const BreadCrumbServer = ({
   activeLinkColor,
   homeTitle,
   separator = BREAD_SEPARATOR,
+  hasHomeLink = false,
 }: IProps) => {
   return (
     <nav
@@ -42,18 +44,22 @@ const BreadCrumbServer = ({
       data-testid="BreadCrumb"
     >
       <ol className={styles.container}>
-        <li className={`${styles.item} ${styles.firstItem}`}>
-          <Link
-            href={BREAD_CRUMBS.BASE_PATH.href}
-            style={{ fontSize: FIRST_ELEMENT_SIZE }}
-            className="hover:underline"
-          >
-            {homeTitle || BREAD_CRUMBS.BASE_PATH.title[LANGUAGE]}
-          </Link>
-        </li>
+        {hasHomeLink && (
+          <li className={`${styles.item} ${styles.firstItem}`}>
+            <Link
+              href={BREAD_CRUMBS.BASE_PATH.href}
+              style={{ fontSize: FIRST_ELEMENT_SIZE }}
+              className="hover:underline"
+            >
+              {homeTitle || BREAD_CRUMBS.BASE_PATH.title[LANGUAGE]}
+            </Link>
+          </li>
+        )}
         {breadCrumbList && breadCrumbList.length > 0 && (
           <>
-            <span className={styles.separator}> {separator} </span>
+            {hasHomeLink && (
+              <span className={styles.separator}> {separator} </span>
+            )}
             {breadCrumbList.map((item, index) => {
               const isCurrentUrl = breadCrumbList.length === index + 1;
               const linkText =

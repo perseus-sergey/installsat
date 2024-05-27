@@ -1,6 +1,7 @@
 import { executeMultipleQuery, executeQuery } from '@/libs/db/mysqldb';
 import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
 import { IAllNewsModel, TArticleTableModel } from '@/models/articles.model';
+import { IEditChannelListModel } from '@/models/channelList.model';
 import { EDBTableTitles } from '@/models/ui.model';
 import { cache } from 'react';
 
@@ -79,9 +80,27 @@ export const editArticleDB = async (
     ]
   );
 
-// if (isset($title) && isset($cpu) && isset($cat1) && isset($description) && isset($text) && isset($logo) && isset($folder)){
-// 	$dateUpd = date('Y-m-d');
-//   add_to_db ("
-//   UPDATE $tbl SET title='$title',cpu='$cpu',description='$description',text='$text',cat='$cat1',author='$author',logo='$logo',folder='$folder',date='$date',date_upd='$dateUpd'
-//   WHERE id='$id'");
-// }
+export const getEditDbChannels = cache(async (searchQuery: string) => {
+  if (!searchQuery) return [];
+
+  const sql = `
+      SELECT ch.id, ch.title, ch.cpu, ch.canonical,
+      sat.title AS sat_title,
+      sat.position AS sat_position,
+      fr.freq AS frequency,
+      cat.title AS category,
+      co.title AS compr,
+      (SELECT title FROM tbl_chan_categ WHERE id = cat.parent LIMIT 1) AS cat_parent_title
+      FROM tbl_channals AS ch 
+      LEFT JOIN tbl_chan_freq 		  AS fr	 ON ch.frequency 	= fr.id 
+      LEFT JOIN tbl_chan_categ 		  AS cat ON ch.cat   		  = cat.id 
+      LEFT JOIN tbl_chan_sat 			  AS sat ON ch.sat 			  = sat.id 
+      LEFT JOIN tbl_chan_compress   AS co	 ON ch.compress 	= co.id 
+      WHERE 	ch.title LIKE "%${searchQuery}%"
+      ORDER BY ch.title, fr.freq
+    `;
+
+  const resp = await executeQuery<IEditChannelListModel>(sql, [searchQuery]);
+
+  return resp;
+});

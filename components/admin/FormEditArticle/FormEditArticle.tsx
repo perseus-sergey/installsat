@@ -79,13 +79,6 @@ const FormEditArticle = ({
     revalidateUrl
   );
 
-  // const editArticleHandler = editArticleAction.bind(
-  //   null,
-  //   articleId,
-  //   editorRef.current ? editorRef.current.getContent() : '',
-  //   revalidateUrl
-  // );
-
   const [formState, formAction] = useFormState(
     editArticleHandler,
     EMPTY_FORM_STATE
@@ -95,13 +88,6 @@ const FormEditArticle = ({
 
   return (
     <form action={formAction} className="flex flex-col items-start gap-6 py-4">
-      <FormTextareaItem
-        itemName={EArticleEditFields.logo}
-        labelTitle="Article Logo:"
-        value={formData.logo}
-        handleChange={handleChange}
-        formState={formState}
-      />
       <p>
         Source:{' '}
         <Link
@@ -247,14 +233,22 @@ const FormEditArticle = ({
         />
       </section>
 
-      <FormTextareaItem
-        itemName={EArticleEditFields.folder}
-        labelTitle="Folder Name:"
-        description="For Images for this Article"
-        value={formData.folder}
-        handleChange={handleChange}
-        formState={formState}
-      />
+      <div className="flex flex-wrap gap-4 items-center">
+        <FormTextareaItem
+          itemName={EArticleEditFields.logo}
+          labelTitle="Article Logo:"
+          value={formData.logo}
+          handleChange={handleChange}
+          formState={formState}
+        />
+        <FormTextareaItem
+          itemName={EArticleEditFields.folder}
+          labelTitle="Folder Name for this Article Images:"
+          value={formData.folder}
+          handleChange={handleChange}
+          formState={formState}
+        />
+      </div>
 
       <SubmitPendingButton
         ariaLabel="Save Changes"

@@ -1,6 +1,15 @@
 import { executeMultipleQuery, executeQuery } from '@/libs/db/mysqldb';
 import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
-import { IAllNewsModel, TArticleTableModel } from '@/models/articles.model';
+import {
+  IAllNewsModel,
+  IArticleCategory,
+  TArticleTableModel,
+} from '@/models/articles.model';
+import {
+  EChannelEditFields,
+  IChannelCategory,
+  TChannelEditModel,
+} from '@/models/channel.model';
 import { IEditChannelListModel } from '@/models/channelList.model';
 import { EDBTableTitles } from '@/models/ui.model';
 import { cache } from 'react';
@@ -52,9 +61,7 @@ export const getAdminChunkOfNews = cache(
 export const getArticleAndCatDb = cache(async (articleId: string | number) => {
   const sql = `SELECT * FROM tbl_useful WHERE id = ${articleId} LIMIT 1; SELECT title, id FROM tbl_categories`;
 
-  return executeMultipleQuery<
-    [TArticleTableModel[], { id: number; title: string }[]]
-  >(sql);
+  return executeMultipleQuery<[TArticleTableModel[], IArticleCategory[]]>(sql);
 });
 
 export const editArticleDB = async (
@@ -100,7 +107,119 @@ export const getEditDbChannels = cache(async (searchQuery: string) => {
       ORDER BY ch.title, fr.freq
     `;
 
-  const resp = await executeQuery<IEditChannelListModel>(sql, [searchQuery]);
+  const resp = await executeQuery<IEditChannelListModel>(sql);
 
   return resp;
 });
+
+export const getEditDbChannel = cache(async (id: string) => {
+  const sql = `
+      SELECT
+        CH.title, 
+        CH.cpu AS chan_slug, 
+        CH.logo, 
+        CH.description, 
+        CH.text, 
+        CH.sat AS sat_id, 
+        CH.frequency AS frequency_id, 
+        CH.beam AS beam_id, 
+        CH.cat AS cat_id, 
+        CH.tema AS genre_id, 
+        CH.compress AS compress_id, 
+        CH.lang AS lang_id, 
+        CH.encryption AS encryption_id, 
+        CH.url, 
+        CH.country_id, 
+        CH.biss, 
+        CH.ip_deny, 
+        CH.canonical, 
+        CH.no_googlads, 
+        CH.vsetv, 
+        CH.vipiko, 
+        CH.potok, 
+        CH.pars_uppod, 
+        CH.pattern, 
+        CH.other_stream, 
+        CH.mark, 
+        CH.tvforsite_net
+      FROM tbl_channals AS CH 
+      WHERE ch.id = ?
+      LIMIT 1;
+
+      SELECT title, id, parent, cpu FROM tbl_chan_categ      
+    `;
+
+  const resp = await executeMultipleQuery<
+    [TChannelEditModel[], IChannelCategory[]]
+  >(sql, [id]);
+
+  return resp;
+});
+
+export const editChannelDB = async (
+  channelID: string,
+  channelData: TChannelEditModel
+) =>
+  await executeQuery(
+    `
+    UPDATE tbl_channals SET 
+      title = ?,
+      cpu = ?,
+      description = ?,
+      text = ?,
+      cat = ?,
+      sat = ?,
+      frequency = ?,
+      beam = ?,
+      tema = ?,
+      logo = ?,
+      url = ?,
+      biss = ?,
+      ip_deny = ?,
+      no_googlads = ?,
+      country_id = ?,
+      encryption = ?,
+      canonical = ?,
+      compress = ?,
+      lang = ?,
+      tvforsite_net = ?,
+      vsetv = ?,
+      vipiko = ?,
+      potok = ?,
+      pars_uppod = ?,
+      other_stream = ?,
+      mark = ?,
+      pattern = ?
+    WHERE id = ?
+    `,
+    [
+      channelData[EChannelEditFields.title],
+      channelData[EChannelEditFields.chan_slug],
+      channelData[EChannelEditFields.description],
+      channelData[EChannelEditFields.text],
+      `${channelData[EChannelEditFields.cat_id]}`,
+      `${channelData[EChannelEditFields.sat_id]}` || '',
+      `${channelData[EChannelEditFields.frequency_id]}` || '',
+      `${channelData[EChannelEditFields.beam_id]}` || '',
+      `${channelData[EChannelEditFields.genre_id]}`,
+      `${channelData[EChannelEditFields.logo]}`,
+      `${channelData[EChannelEditFields.url]}`,
+      channelData[EChannelEditFields.biss] || '',
+      `${channelData[EChannelEditFields.ip_deny]}`,
+      `${channelData[EChannelEditFields.no_googlads]}`,
+      `${channelData[EChannelEditFields.country_id]}`,
+      `${channelData[EChannelEditFields.encryption_id]}`,
+      channelData[EChannelEditFields.canonical],
+      `${channelData[EChannelEditFields.compress_id]}`,
+      `${channelData[EChannelEditFields.lang_id]}`,
+      channelData[EChannelEditFields.tvforsite_net] || '',
+      `${channelData[EChannelEditFields.vsetv]}`,
+      `${channelData[EChannelEditFields.vipiko]}`,
+      channelData[EChannelEditFields.potok] || '',
+      channelData[EChannelEditFields.pars_uppod] || '',
+      channelData[EChannelEditFields.other_stream] || '',
+      channelData[EChannelEditFields.mark] || '',
+      channelData[EChannelEditFields.pattern] || '',
+      channelID,
+    ]
+  );

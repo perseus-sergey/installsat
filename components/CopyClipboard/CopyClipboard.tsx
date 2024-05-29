@@ -4,12 +4,11 @@ import { ClipboardIcon } from '../ui/icons-svg/ClipboardIcon';
 import { EMPTY_FORM_STATE, toFormState } from '@/controllers/toast.controller';
 import { useState } from 'react';
 
-interface IProps {
+interface IProps extends React.HTMLAttributes<HTMLElement> {
   value: string;
-  classIconWrapper?: string;
 }
 
-const CopyClipboard = ({ value, classIconWrapper = '' }: IProps) => {
+const CopyClipboard = ({ value, className, ...props }: IProps) => {
   const [copyMessage, setCopyMessage] = useState(EMPTY_FORM_STATE);
   const handleCopy = (value: string) => {
     navigator.clipboard
@@ -29,11 +28,12 @@ const CopyClipboard = ({ value, classIconWrapper = '' }: IProps) => {
   return (
     <BaseButton
       data-testid="CopyClipboard"
-      className={classIconWrapper}
+      className={className}
       ariaLabel="Click to copy"
       onClick={() => handleCopy(value)}
+      {...props}
     >
-      <ClipboardIcon />
+      <ClipboardIcon className="w-full h-full" />
     </BaseButton>
   );
 };

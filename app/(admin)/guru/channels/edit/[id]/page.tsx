@@ -1,9 +1,9 @@
 import BreadCrumbServer from '@/components/BreadCrumbs/BreadCrumbsServer';
-import FormEditArticle from '@/components/admin/FormEditArticle/FormEditArticle';
+import FormEditChannel from '@/components/admin/FormEditArticle/FormEditChannel';
 import EmptyData from '@/components/errors/EmptyData/EmptyData';
 import GrooveLine from '@/components/ui/GrooveLine';
 import { Title } from '@/components/ui/Titles/Title';
-import { getArticleAndCatDb } from '@/controllers/admin.controller';
+import { getEditDbChannel } from '@/controllers/admin.controller';
 import { EUrlAdminParam, EUrlBaseParam } from '@/models/url.model';
 import Link from 'next/link';
 import * as React from 'react';
@@ -12,11 +12,11 @@ interface IParams {
   params: { id: string };
 }
 const Page = async ({ params: { id } }: IParams) => {
-  const dbResult = await getArticleAndCatDb(id);
+  const dbResult = await getEditDbChannel(id);
   if (dbResult instanceof Error)
     return <EmptyData description={dbResult.message} />;
 
-  const productionHref = `/${EUrlBaseParam.ARTICLE}/${dbResult[0][0].cpu}`;
+  const productionHref = `/${EUrlBaseParam.CHANNEL_PARAMS}/${dbResult[0][0].chan_slug}`;
 
   const Breadcrumbs = () => (
     <BreadCrumbServer
@@ -38,15 +38,18 @@ const Page = async ({ params: { id } }: IParams) => {
     <>
       <Breadcrumbs />
       <Title className="flex flex-col">
-        Edit Article:
+        Edit Channel:
         <Link className="text-xl" target="_blank" href={productionHref}>
           {dbResult[0][0].title} 🔗
         </Link>
       </Title>
-      <FormEditArticle
+      <FormEditChannel
         initialData={dbResult}
         articleId={id}
-        revalidateUrl={`/${EUrlAdminParam.BASE_PATH}/${EUrlAdminParam.ARTICLES_EDIT}/edit/${id}`}
+        revalidateUrl={[
+          `/${EUrlAdminParam.BASE_PATH}/${EUrlAdminParam.CHANNELS_EDIT}/edit/${id}`,
+          `/${EUrlAdminParam.BASE_PATH}/${EUrlAdminParam.CHANNELS_EDIT}/edit`,
+        ]}
         editorApiKey={process.env.TINY_MCE_API_KEY || ''}
       />
       <GrooveLine />

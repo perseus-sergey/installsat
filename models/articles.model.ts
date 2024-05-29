@@ -329,6 +329,7 @@ export interface IArticleModel {
   cat_slug: string;
   cat_folder: string;
 }
+
 export enum EArticleEditFields {
   logo = 'logo',
   source = 'source',
@@ -354,3 +355,8 @@ export const editArticleSchema = z.object({
   [EArticleEditFields.folder]: z.string().trim().optional(),
 });
 export type TArticleTableModel = z.infer<typeof editArticleSchema>;
+
+export interface IArticleCategory {
+  id: number;
+  title: string;
+}

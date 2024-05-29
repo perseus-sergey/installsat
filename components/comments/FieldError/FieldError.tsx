@@ -1,11 +1,16 @@
 import { IFormState } from '@/controllers/toast.controller';
 import { EArticleEditFields } from '@/models/articles.model';
+import { EChannelEditFields } from '@/models/channel.model';
 import { ECommentFormNames } from '@/models/comments.model';
 import { ELoginFormNames } from '@/models/login.model';
 
 interface IFieldErrorProps extends React.HTMLAttributes<HTMLElement> {
   formState: IFormState;
-  name: ECommentFormNames | ELoginFormNames | EArticleEditFields;
+  name:
+    | ECommentFormNames
+    | ELoginFormNames
+    | EArticleEditFields
+    | EChannelEditFields;
   errorFieldId: string;
 }
 

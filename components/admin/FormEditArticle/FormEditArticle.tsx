@@ -2,30 +2,26 @@
 
 import {
   EArticleEditFields,
+  IArticleCategory,
   TArticleTableModel,
 } from '@/models/articles.model';
 import { useRef, useState } from 'react';
 import { Editor as CoreEditor } from 'tinymce';
 import Link from 'next/link';
 import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
-import CopyClipboard from '@/components/CopyClipboard/CopyClipboard';
 import { SubmitPendingButton } from '@/components/ui/buttons/SubmitPendingBtn';
 import { useToastMessage } from '@/libs/hooks/useToastMessage';
 import { useFormState } from 'react-dom';
-import { EMPTY_FORM_STATE, IFormState } from '@/controllers/toast.controller';
+import { EMPTY_FORM_STATE } from '@/controllers/toast.controller';
 import { editArticleAction } from '@/libs/actions/admin.action';
 import FieldError from '@/components/comments/FieldError/FieldError';
 import TinyEditor from '@/components/TinyEditor/TinyEditor';
-
-interface Category {
-  id: number;
-  title: string;
-}
+import FormTextareaItem from './FormTextareaItem';
 
 interface IProps {
   articleId: string;
   revalidateUrl: string;
-  initialData: [TArticleTableModel[], Category[]];
+  initialData: [TArticleTableModel[], IArticleCategory[]];
   editorApiKey: string;
 }
 
@@ -105,6 +101,7 @@ const FormEditArticle = ({
         value={formData.title}
         handleChange={handleChange}
         formState={formState}
+        required
       />
       <FormTextareaItem
         itemName={EArticleEditFields.cpu}
@@ -114,6 +111,7 @@ const FormEditArticle = ({
         value={formData.cpu}
         handleChange={handleChange}
         formState={formState}
+        required
       />
 
       <FormTextareaItem
@@ -124,6 +122,7 @@ const FormEditArticle = ({
         value={formData.description}
         handleChange={handleChange}
         formState={formState}
+        required
       />
       <section className="w-full inline-block">
         <h2 className="text-center text-xl">
@@ -136,56 +135,6 @@ const FormEditArticle = ({
           initialValue={initArticleData[0].text}
           editorRef={editorRef}
         />
-        {/* <Editor
-          id={EArticleEditFields.text}
-          apiKey={editorApiKey}
-          onInit={(_evt, editor) => (editorRef.current = editor)}
-          initialValue={initArticleData[0].text}
-          init={{
-            height: 500,
-            // menubar: false,
-            plugins: [
-              'advlist',
-              'autolink',
-              'lists',
-              'link',
-              'image',
-              'charmap',
-              'codesample',
-              'emoticons',
-              'formatpainter',
-              'linkchecker',
-              'a11ychecker',
-              'preview',
-              'anchor',
-              'searchreplace',
-              'visualblocks',
-              'code',
-              'fullscreen',
-              'tinymcespellchecker',
-              'advcode',
-              'editimage',
-              'code',
-              'autocorrect',
-              ' typography',
-              ' inlinecss',
-              'markdown',
-              'insertdatetime',
-              'media',
-              'table',
-              'code',
-              'help',
-              'wordcount',
-            ],
-            toolbar:
-              'code | visualblocks | undo redo | blocks fontfamily fontsize | ' +
-              'bold italic forecolor | alignleft aligncenter ' +
-              'alignright alignjustify | bullist numlist outdent indent | ' +
-              'removeformat | help',
-            content_style:
-              'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
-          }}
-        /> */}
         <FieldError
           formState={formState}
           name={EArticleEditFields.text}
@@ -206,6 +155,7 @@ const FormEditArticle = ({
         value={getFormattedDateStrYearFirst(formData.date)}
         handleChange={handleChange}
         formState={formState}
+        required
       />
 
       <section className="flex flex-col items-start">
@@ -262,65 +212,4 @@ const FormEditArticle = ({
   );
 };
 
-interface IFormTextareaItem {
-  itemName: EArticleEditFields;
-  labelTitle: string;
-  description?: string;
-  value: string;
-  formState: IFormState;
-  cols?: number;
-  rows?: number;
-  handleChange: (
-    e: EventTarget &
-      (HTMLTextAreaElement | HTMLInputElement | HTMLSelectElement)
-  ) => void;
-  isCopyClipboard?: boolean;
-}
-
-const FormTextareaItem = ({
-  itemName,
-  labelTitle,
-  description,
-  value,
-  formState,
-  cols,
-  rows,
-  handleChange,
-  isCopyClipboard = false,
-}: IFormTextareaItem) => (
-  <section className="flex flex-col items-start">
-    <label htmlFor={itemName} className="text-xl">
-      <b>{labelTitle}</b>
-    </label>
-    {description && <p>{description}</p>}
-    <div className="flex items-start gap-1">
-      <textarea
-        className="p-2 w-full rounded-md"
-        name={itemName}
-        id={itemName}
-        cols={cols || Math.min(value.length + 20, 80)}
-        rows={rows || Math.ceil(value.length / 40) || 1}
-        value={value}
-        onChange={(e) => handleChange(e.target)}
-      />
-      {isCopyClipboard && (
-        <CopyClipboard
-          value={value}
-          classIconWrapper="text-sky-700 hover:text-sky-500"
-        />
-      )}
-    </div>
-    <FieldError
-      formState={formState}
-      name={itemName}
-      errorFieldId={`${itemName}-error`}
-      className="text-red-700"
-    />
-  </section>
-);
-
 export default FormEditArticle;
-
-// =================================================================
-// =================================================================
-// =================================================================

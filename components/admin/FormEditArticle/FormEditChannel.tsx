@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { Editor as CoreEditor } from 'tinymce';
 import { SubmitPendingButton } from '@/components/ui/buttons/SubmitPendingBtn';
 import { useToastMessage } from '@/libs/hooks/useToastMessage';
@@ -17,6 +17,7 @@ import {
 } from '@/models/channel.model';
 import { EUrlBaseParam } from '@/models/url.model';
 import CopyClipboard from '@/components/CopyClipboard/CopyClipboard';
+import DependentSelects from '@/components/DependentSelects/DependentSelects';
 
 const {
   title,
@@ -63,8 +64,8 @@ const FormEditChannel = ({
 }: IProps) => {
   const [initArticleData, categories] = initialData;
 
-  const [formData, setFormData] = useState({
-    [logo]: initArticleData[0].logo,
+  const [formData, setFormData] = useState<Record<string, string | number>>({
+    [logo]: initArticleData[0].logo || '',
     [title]: initArticleData[0].title,
     [chan_slug]: initArticleData[0].chan_slug,
     [description]: initArticleData[0].description.replace(/"/g, ''),
@@ -76,30 +77,7 @@ const FormEditChannel = ({
     [canonical]: initArticleData[0].canonical,
   });
 
-  const [filteredCats, setFilteredCats] = useState<IChannelCategory[]>([]);
   const [catFinal, setCatFinal] = useState(initArticleData[0].cat_id);
-  const [isFirstRender, setIsFirstRender] = useState(true);
-
-  useEffect(() => {
-    setCatFinal(formData[cat_id]);
-  }, [formData[cat_id]]);
-
-  useEffect(() => {
-    const filteredCats = categories.filter(
-      (cat) => cat.parent === +formData.catParentId
-    );
-    setFilteredCats(filteredCats);
-
-    if (isFirstRender) {
-      setIsFirstRender(false);
-
-      return;
-    }
-
-    setCatFinal(
-      filteredCats.length ? filteredCats[0].id : formData.catParentId
-    );
-  }, [formData.catParentId]);
 
   const editorRef = useRef<CoreEditor | null>(null);
 
@@ -126,8 +104,11 @@ const FormEditChannel = ({
   const editArticleHandler = editChannelAction.bind(
     null,
     articleId,
-    formData[text],
-    filteredCats.length && catFinal === formData.catParentId ? -1 : catFinal,
+    formData[text] as string,
+    categories.filter((cat) => cat.parent === +formData.catParentId).length &&
+      catFinal === formData.catParentId
+      ? -1
+      : catFinal,
     revalidateUrl
   );
 
@@ -143,7 +124,7 @@ const FormEditChannel = ({
       <FormTextareaItem
         itemName={title}
         labelTitle="Channel name:"
-        value={formData.title}
+        value={formData[title] as string}
         handleChange={handleChange}
         formState={formState}
         required
@@ -153,7 +134,7 @@ const FormEditChannel = ({
         labelTitle="Slug:"
         description="(Human-readable URL) (Enter only English characters without tags,
           use «-» instead of spaces, it will be the URL)"
-        value={formData.chan_slug}
+        value={formData[chan_slug] as string}
         handleChange={handleChange}
         formState={formState}
         isCopyClipboard
@@ -182,7 +163,7 @@ const FormEditChannel = ({
             />
           </>
         }
-        value={formData.canonical}
+        value={formData[canonical] as string}
         handleChange={handleChange}
         formState={formState}
         isCopyClipboard
@@ -194,7 +175,7 @@ const FormEditChannel = ({
         labelTitle="Short Description:"
         description="(Enter text only without tags, replace double quotes
           with «», it will be written in meta_description)"
-        value={formData.description}
+        value={formData[description] as string}
         handleChange={handleChange}
         formState={formState}
         isCopyClipboard
@@ -219,20 +200,43 @@ const FormEditChannel = ({
         />
       </section>
 
-      {/* ================================================================ */}
+      <DependentSelects
+        selectId={cat_id}
+        parentValueTitle="catParentId"
+        labelTitle={<b>Category:</b>}
+        categories={categories}
+        formData={formData}
+        setFormData={setFormData}
+        formState={formState}
+        finalValue={catFinal}
+        setFinalValue={setCatFinal}
+      />
 
+      <DependentSelects
+        selectId={cat_id}
+        parentValueTitle="catParentId"
+        labelTitle={<b>Category:</b>}
+        categories={categories}
+        formData={formData}
+        setFormData={setFormData}
+        formState={formState}
+        finalValue={catFinal}
+        setFinalValue={setCatFinal}
+      />
+      {/* ================================================================ */}
+      {/* 
       <section className="flex flex-col items-start">
         <label htmlFor={cat_id} className="text-xl">
           <b>Category:</b>
         </label>
         <div className="flex gap-4">
-          <p>catParentId: {formData.catParentId}</p>
-          {formData.catParentId > 0 && (
+          <p>catParentId: {formData[catParentId]}</p>
+          {formData[catParentId] > 0 && (
             <select
               className="p-2"
               name={'catParentId'}
               id={'catParentId'}
-              value={formData.catParentId}
+              value={formData[catParentId]}
               onChange={(e) => handleChange(e.target)}
             >
               {categories
@@ -269,7 +273,7 @@ const FormEditChannel = ({
           errorFieldId={`${cat_id}-error`}
           className="text-red-700"
         />
-      </section>
+      </section> */}
 
       {/* ================================================================ */}
 
@@ -277,7 +281,7 @@ const FormEditChannel = ({
         <FormTextareaItem
           itemName={logo}
           labelTitle="Article Logo:"
-          value={formData.logo || ''}
+          value={formData[logo] as string}
           handleChange={handleChange}
           formState={formState}
           required

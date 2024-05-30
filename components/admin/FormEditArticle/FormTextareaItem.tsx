@@ -60,7 +60,6 @@ const FormTextareaItem = ({
     <FieldError
       formState={formState}
       name={itemName}
-      errorFieldId={`${itemName}-error`}
       className="text-red-700"
     />
   </section>

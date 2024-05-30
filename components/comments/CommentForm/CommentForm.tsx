@@ -88,11 +88,7 @@ const CommentForm = ({
           aria-label={authorName.ariaLabel[LANGUAGE]}
           aria-describedby={`${AUTHOR}-error`}
         />
-        <FieldError
-          formState={formState}
-          name={AUTHOR}
-          errorFieldId={`${AUTHOR}-error`}
-        />
+        <FieldError formState={formState} name={AUTHOR} />
       </div>
 
       <div className="pb-4 pt-1 flex flex-col">
@@ -108,11 +104,7 @@ const CommentForm = ({
           aria-label={authorEmail.ariaLabel[LANGUAGE]}
           aria-describedby={`${EMAIL}-error`}
         />
-        <FieldError
-          formState={formState}
-          name={EMAIL}
-          errorFieldId={`${EMAIL}-error`}
-        />
+        <FieldError formState={formState} name={EMAIL} />
       </div>
 
       <div className="pb-4 pt-1 flex flex-col">
@@ -131,11 +123,7 @@ const CommentForm = ({
           aria-describedby={`${TEXT}-error`}
           required
         />
-        <FieldError
-          formState={formState}
-          name={TEXT}
-          errorFieldId={`${TEXT}-error`}
-        />
+        <FieldError formState={formState} name={TEXT} />
       </div>
 
       <SubmitPendingButton

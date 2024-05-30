@@ -16,7 +16,7 @@ const Page = async ({ params: { id } }: IParams) => {
   if (dbResult instanceof Error)
     return <EmptyData description={dbResult.message} />;
 
-  const productionHref = `/${EUrlBaseParam.CHANNEL_PARAMS}/${dbResult[0][0].chan_slug}`;
+  const productionHref = `/${EUrlBaseParam.CHANNEL_PARAMS}/${dbResult[1][0].chan_slug}`;
 
   const Breadcrumbs = () => (
     <BreadCrumbServer
@@ -27,7 +27,7 @@ const Page = async ({ params: { id } }: IParams) => {
           href: `${EUrlAdminParam.BASE_PATH}/${EUrlAdminParam.CHANNELS_EDIT}/edit`,
         },
         {
-          title: dbResult[0][0].title,
+          title: dbResult[1][0].title,
           href: productionHref,
         },
       ]}
@@ -40,12 +40,12 @@ const Page = async ({ params: { id } }: IParams) => {
       <Title className="flex flex-col">
         Edit Channel:
         <Link className="text-xl" target="_blank" href={productionHref}>
-          {dbResult[0][0].title} 🔗
+          {dbResult[1][0].title} 🔗
         </Link>
       </Title>
       <FormEditChannel
         initialData={dbResult}
-        articleId={id}
+        channelId={id}
         revalidateUrl={[
           `/${EUrlAdminParam.BASE_PATH}/${EUrlAdminParam.CHANNELS_EDIT}/edit/${id}`,
           `/${EUrlAdminParam.BASE_PATH}/${EUrlAdminParam.CHANNELS_EDIT}/edit`,

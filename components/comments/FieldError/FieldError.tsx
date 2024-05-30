@@ -11,13 +11,13 @@ interface IFieldErrorProps extends React.HTMLAttributes<HTMLElement> {
     | ELoginFormNames
     | EArticleEditFields
     | EChannelEditFields;
-  errorFieldId: string;
+  errorFieldId?: string;
 }
 
 const FieldError = ({
   formState,
   name,
-  errorFieldId,
+  errorFieldId = `${name}-error`,
   className,
 }: IFieldErrorProps) => {
   return (

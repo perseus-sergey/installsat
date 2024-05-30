@@ -1,3 +1,4 @@
+import { IInputData } from '@/components/admin/FormEditArticle/FormEditChannel';
 import { executeMultipleQuery, executeQuery } from '@/libs/db/mysqldb';
 import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
 import {
@@ -5,11 +6,7 @@ import {
   IArticleCategory,
   TArticleTableModel,
 } from '@/models/articles.model';
-import {
-  EChannelEditFields,
-  IChannelCategory,
-  TChannelEditModel,
-} from '@/models/channel.model';
+import { EChannelEditFields, TChannelEditModel } from '@/models/channel.model';
 import { IEditChannelListModel } from '@/models/channelList.model';
 import { EDBTableTitles } from '@/models/ui.model';
 import { cache } from 'react';
@@ -112,8 +109,63 @@ export const getEditDbChannels = cache(async (searchQuery: string) => {
   return resp;
 });
 
-export const getEditDbChannel = cache(async (id: string) => {
-  const sql = `
+export const getDbRelativeChannelCats = cache(
+  async (parentId: string | number) => {
+    const resp = await executeQuery<IInputData>(
+      `SELECT title, id FROM tbl_chan_categ WHERE parent = ?`,
+      [`${parentId}`]
+    );
+
+    return resp instanceof Error ? [] : resp;
+  }
+);
+// =================================================================
+// change tbl_chan_sat
+// =================================================================
+export const getDbRelativeFrequencies = cache(
+  async (satId: string | number) => {
+    const resp = await executeQuery<{
+      freq: number;
+      sat: number;
+      beam: number;
+      id: number;
+      cpu: string;
+    }>(
+      `
+    SELECT 
+      F.freq, 
+      F.id,
+      F.sat,
+      F.beam,
+      B.cpu
+    FROM 
+      tbl_chan_freq AS F 
+    LEFT JOIN 
+      tbl_chan_beam AS B ON F.beam = B.id
+    WHERE 
+      F.sat = ?
+    ORDER BY 
+      F.beam, F.freq;
+        `,
+      [`${satId}`]
+    );
+
+    if (resp instanceof Error) return [];
+
+    return resp.map((f) => ({
+      title: `${f.freq} => ${f.cpu}`,
+      id: `${f.sat}|${f.beam}|${f.id}`,
+    }));
+  }
+);
+
+export const getEditDbChannel = cache(
+  async (
+    id: string
+  ): Promise<Error | [IInputData[], TChannelEditModel[], IInputData[]]> => {
+    const sql = `
+      SELECT title, id, position FROM tbl_chan_sat WHERE id != 1 AND fill = 1 ORDER BY grade;
+
       SELECT
         CH.title, 
         CH.cpu AS chan_slug, 
@@ -141,20 +193,31 @@ export const getEditDbChannel = cache(async (id: string) => {
         CH.pattern, 
         CH.other_stream, 
         CH.mark, 
-        CH.tvforsite_net
-      FROM tbl_channals AS CH 
+        CH.tvforsite_net,
+        CAT.parent AS parent_cat_id
+      FROM tbl_channals AS CH
+      LEFT JOIN tbl_chan_categ AS CAT ON CH.cat = CAT.id
       WHERE ch.id = ?
       LIMIT 1;
 
-      SELECT title, id, parent, cpu FROM tbl_chan_categ      
+      SELECT title, id FROM tbl_chan_categ WHERE parent = 0;
     `;
 
-  const resp = await executeMultipleQuery<
-    [TChannelEditModel[], IChannelCategory[]]
-  >(sql, [id]);
+    const resp = await executeMultipleQuery<
+      [(IInputData & { position: string })[], TChannelEditModel[], IInputData[]]
+    >(sql, [id]);
 
-  return resp;
-});
+    if (resp instanceof Error) return resp;
+
+    const frequencies = resp[0].map((f) => ({
+      title: `${f.position} - ${f.title}`,
+      id: f.id,
+    }));
+    const [, ...rest] = resp;
+
+    return [frequencies, ...rest];
+  }
+);
 
 export const editChannelDB = async (
   channelID: string,

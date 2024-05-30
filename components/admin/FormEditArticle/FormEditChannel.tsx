@@ -6,18 +6,23 @@ import { SubmitPendingButton } from '@/components/ui/buttons/SubmitPendingBtn';
 import { useToastMessage } from '@/libs/hooks/useToastMessage';
 import { useFormState } from 'react-dom';
 import { EMPTY_FORM_STATE } from '@/controllers/toast.controller';
-import { editChannelAction } from '@/libs/actions/admin.action';
+import {
+  editChannelAction,
+  getRelativeCatsAction,
+  getRelativeFrequenciesAction,
+} from '@/libs/actions/admin.action';
 import FieldError from '@/components/comments/FieldError/FieldError';
 import TinyEditor from '@/components/TinyEditor/TinyEditor';
 import FormTextareaItem from './FormTextareaItem';
-import {
-  EChannelEditFields,
-  IChannelCategory,
-  TChannelEditModel,
-} from '@/models/channel.model';
+import { EChannelEditFields, TChannelEditModel } from '@/models/channel.model';
 import { EUrlBaseParam } from '@/models/url.model';
 import CopyClipboard from '@/components/CopyClipboard/CopyClipboard';
 import DependentSelects from '@/components/DependentSelects/DependentSelects';
+
+export interface IInputData {
+  id: string;
+  title: string;
+}
 
 const {
   title,
@@ -27,9 +32,10 @@ const {
   cat_id,
   text,
   canonical,
-  // sat_id,
-  // frequency_id,
-  // beam_id,
+  parent_cat_id,
+  sat_id,
+  frequency_id,
+  beam_id,
   // genre_id,
   // lang_id,
   // compress_id,
@@ -50,34 +56,41 @@ const {
 } = EChannelEditFields;
 
 interface IProps {
-  articleId: string;
+  channelId: string;
   revalidateUrl: string[];
-  initialData: [TChannelEditModel[], IChannelCategory[]];
+  initialData: [IInputData[], TChannelEditModel[], IInputData[]];
   editorApiKey: string;
 }
 
 const FormEditChannel = ({
   initialData,
-  articleId,
+  channelId,
   revalidateUrl,
   editorApiKey,
 }: IProps) => {
-  const [initArticleData, categories] = initialData;
+  const [satellites, initArticleData, parentCategories] = initialData;
 
-  const [formData, setFormData] = useState<Record<string, string | number>>({
-    [logo]: initArticleData[0].logo || '',
-    [title]: initArticleData[0].title,
-    [chan_slug]: initArticleData[0].chan_slug,
-    [description]: initArticleData[0].description.replace(/"/g, ''),
-    [cat_id]: initArticleData[0].cat_id,
-    catParentId:
-      categories.find((cat) => cat.id === initArticleData[0].cat_id)?.parent ||
-      initArticleData[0].cat_id,
-    [text]: initArticleData[0].text,
-    [canonical]: initArticleData[0].canonical,
-  });
+  const [formData, setFormData] = useState<
+    Record<EChannelEditFields, string | number>
+  >({
+    logo: initArticleData[0].logo || '',
+    title: initArticleData[0].title,
+    chan_slug: initArticleData[0].chan_slug,
+    description: initArticleData[0].description.replace(/"/g, ''),
+    text: initArticleData[0].text,
+    canonical: initArticleData[0].canonical,
+    cat_id: `${initArticleData[0].cat_id}`,
+    sat_id: initArticleData[0].sat_id,
+    frequency_id: `${initArticleData[0].sat_id}|${initArticleData[0].beam_id}|${initArticleData[0].frequency_id}`,
+    parent_cat_id:
+      initArticleData[0].parent_cat_id || initArticleData[0].cat_id,
+  } as Record<EChannelEditFields, string | number>);
 
-  const [catFinal, setCatFinal] = useState(initArticleData[0].cat_id);
+  const [catFinal, setCatFinal] = useState(`${initArticleData[0].cat_id}`);
+
+  const [frequencyFinal, setFrequencyFinal] = useState(
+    `${initArticleData[0].sat_id}|${initArticleData[0].beam_id}|${initArticleData[0].frequency_id}`
+  );
 
   const editorRef = useRef<CoreEditor | null>(null);
 
@@ -93,7 +106,9 @@ const FormEditChannel = ({
       [id]: value,
     }));
   };
-
+  // =================================================================
+  // remove handleEditorChange
+  // =================================================================
   const handleEditorChange = (content: string) => {
     setFormData((prevData) => ({
       ...prevData,
@@ -101,14 +116,18 @@ const FormEditChannel = ({
     }));
   };
 
+  const getDependantCatList = async (parentId: string | number) =>
+    await getRelativeCatsAction(parentId);
+
+  const getDependantFreqList = async (satId: string | number) =>
+    await getRelativeFrequenciesAction(satId);
+
   const editArticleHandler = editChannelAction.bind(
     null,
-    articleId,
+    channelId,
     formData[text] as string,
-    categories.filter((cat) => cat.parent === +formData.catParentId).length &&
-      catFinal === formData.catParentId
-      ? -1
-      : catFinal,
+    catFinal,
+    formData[frequency_id] as string,
     revalidateUrl
   );
 
@@ -195,86 +214,45 @@ const FormEditChannel = ({
         <FieldError
           formState={formState}
           name={text}
-          errorFieldId={`${text}-error`}
           className="text-red-700"
         />
       </section>
 
       <DependentSelects
         selectId={cat_id}
-        parentValueTitle="catParentId"
+        parentValueTitle={parent_cat_id}
         labelTitle={<b>Category:</b>}
-        categories={categories}
         formData={formData}
-        setFormData={setFormData}
         formState={formState}
         finalValue={catFinal}
         setFinalValue={setCatFinal}
+        parentList={parentCategories}
+        getDependantList={getDependantCatList}
+        handleChange={handleChange}
       />
 
       <DependentSelects
-        selectId={cat_id}
-        parentValueTitle="catParentId"
-        labelTitle={<b>Category:</b>}
-        categories={categories}
+        selectId={frequency_id}
+        parentValueTitle={sat_id}
+        labelTitle={<b>Satellite, Beam, Frequency:</b>}
         formData={formData}
-        setFormData={setFormData}
         formState={formState}
-        finalValue={catFinal}
-        setFinalValue={setCatFinal}
+        finalValue={frequencyFinal}
+        setFinalValue={setFrequencyFinal}
+        parentList={satellites}
+        getDependantList={getDependantFreqList}
+        handleChange={handleChange}
       />
-      {/* ================================================================ */}
-      {/* 
-      <section className="flex flex-col items-start">
-        <label htmlFor={cat_id} className="text-xl">
-          <b>Category:</b>
-        </label>
-        <div className="flex gap-4">
-          <p>catParentId: {formData[catParentId]}</p>
-          {formData[catParentId] > 0 && (
-            <select
-              className="p-2"
-              name={'catParentId'}
-              id={'catParentId'}
-              value={formData[catParentId]}
-              onChange={(e) => handleChange(e.target)}
-            >
-              {categories
-                .filter((cat) => cat.parent === 0)
-                .map((category) => (
-                  <option key={category.id} value={category.id}>
-                    {category.title} {category.id}
-                  </option>
-                ))}
-            </select>
-          )}
-
-          <p>catFinal: {catFinal}</p>
-          {filteredCats && filteredCats.length > 0 && (
-            <select
-              className="p-2"
-              name={cat_id}
-              id={cat_id}
-              value={catFinal}
-              onChange={(e) => handleChange(e.target)}
-            >
-              <option value={0}></option>
-              {filteredCats.map((category) => (
-                <option key={category.id} value={category.id}>
-                  {category.title} {category.id}
-                </option>
-              ))}
-            </select>
-          )}
-        </div>
-        <FieldError
-          formState={formState}
-          name={cat_id}
-          errorFieldId={`${cat_id}-error`}
-          className="text-red-700"
-        />
-      </section> */}
-
+      <FieldError
+        formState={formState}
+        name={sat_id}
+        className="text-red-700"
+      />
+      <FieldError
+        formState={formState}
+        name={beam_id}
+        className="text-red-700"
+      />
       {/* ================================================================ */}
 
       <div className="flex flex-wrap gap-4 items-center">

@@ -138,7 +138,6 @@ const FormEditArticle = ({
         <FieldError
           formState={formState}
           name={EArticleEditFields.text}
-          errorFieldId={`${EArticleEditFields.text}-error`}
           className="text-red-700"
         />
       </section>
@@ -178,7 +177,6 @@ const FormEditArticle = ({
         <FieldError
           formState={formState}
           name={EArticleEditFields.cat}
-          errorFieldId={`${EArticleEditFields.cat}-error`}
           className="text-red-700"
         />
       </section>

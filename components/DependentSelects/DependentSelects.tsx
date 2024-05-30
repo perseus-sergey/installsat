@@ -1,82 +1,74 @@
 import { ReactNode, useEffect, useState } from 'react';
 import FieldError from '@/components/comments/FieldError/FieldError';
-import { IChannelCategory } from '@/models/channel.model';
 import { EChannelEditFields } from '@/models/channel.model';
 import { IFormState } from '@/controllers/toast.controller';
-
-const { cat_id } = EChannelEditFields;
+import { IInputData } from '../admin/FormEditArticle/FormEditChannel';
 
 interface IProps {
   selectId: EChannelEditFields;
   labelTitle: ReactNode;
-  parentValueTitle: string;
-  categories: IChannelCategory[];
-  formData: Record<string, string | number>;
-  setFormData: React.Dispatch<
-    React.SetStateAction<Record<string, string | number>>
-  >;
+  parentValueTitle: EChannelEditFields;
+  formData: Record<EChannelEditFields, string | number>;
+  handleChange: (
+    e: EventTarget &
+      (HTMLTextAreaElement | HTMLInputElement | HTMLSelectElement)
+  ) => void;
   formState: IFormState;
-  finalValue: number;
-  setFinalValue: React.Dispatch<React.SetStateAction<number>>;
+  finalValue: string;
+  setFinalValue: React.Dispatch<React.SetStateAction<string>>;
+  parentList: IInputData[];
+  getDependantList: (parentId: number | string) => Promise<IInputData[]>;
 }
 
 const DependentSelects = ({
   selectId,
   labelTitle,
   parentValueTitle,
-  categories,
   formData,
-  setFormData,
+  handleChange,
   formState,
   finalValue,
   setFinalValue,
+  parentList,
+  getDependantList,
 }: IProps) => {
-  const [filteredList, setFilteredList] = useState<IChannelCategory[]>([]);
+  const [filteredList, setFilteredList] = useState<IInputData[]>([]);
   const [isFirstRender, setIsFirstRender] = useState(true);
 
   useEffect(() => {
-    setFinalValue(formData[cat_id] as number);
-  }, [formData[cat_id]]);
+    setFinalValue(`${formData[selectId]}`);
+  }, [formData[selectId]]);
 
   useEffect(() => {
-    const filteredList = categories.filter(
-      (cat) => cat.parent === +formData[parentValueTitle]
-    );
-    setFilteredList(filteredList);
+    const fetchFilteredList = async () => {
+      const filteredList = await getDependantList(formData[parentValueTitle]);
+      setFilteredList(filteredList);
 
-    if (isFirstRender) {
-      setIsFirstRender(false);
+      if (isFirstRender) {
+        setIsFirstRender(false);
 
-      return;
-    }
+        return;
+      }
 
-    setFinalValue(
-      filteredList.length
-        ? filteredList[0].id
-        : (formData[parentValueTitle] as number)
-    );
+      setFinalValue(
+        filteredList.length
+          ? filteredList[0].id
+          : `${formData[parentValueTitle]}`
+      );
+    };
+
+    fetchFilteredList();
   }, [formData[parentValueTitle]]);
-
-  const handleChange = ({
-    name,
-    id,
-    value,
-  }: EventTarget &
-    (HTMLTextAreaElement | HTMLInputElement | HTMLSelectElement)) => {
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-      [id]: value,
-    }));
-  };
 
   return (
     <section className="flex flex-col items-start">
-      <label htmlFor={cat_id} className="text-xl">
+      <label htmlFor={selectId} className="text-xl">
         {labelTitle}
       </label>
       <div className="flex gap-4">
-        {/* <p>{parentValueTitle}: {formData[parentValueTitle]}</p> */}
+        {/* <p>
+          {parentValueTitle}: {formData[parentValueTitle]}
+        </p> */}
         {(formData[parentValueTitle] as number) > 0 && (
           <select
             className="p-2"
@@ -85,13 +77,11 @@ const DependentSelects = ({
             value={formData[parentValueTitle] as number}
             onChange={(e) => handleChange(e.target)}
           >
-            {categories
-              .filter((cat) => cat.parent === 0)
-              .map((category) => (
-                <option key={category.id} value={category.id}>
-                  {category.title} {category.id}
-                </option>
-              ))}
+            {parentList.map((item) => (
+              <option key={item.id} value={item.id}>
+                {item.title}
+              </option>
+            ))}
           </select>
         )}
 
@@ -104,10 +94,10 @@ const DependentSelects = ({
             value={finalValue}
             onChange={(e) => handleChange(e.target)}
           >
-            <option value={0}></option>
-            {filteredList.map((category) => (
-              <option key={category.id} value={category.id}>
-                {category.title} {category.id}
+            {/* <option value={0}></option> */}
+            {filteredList.map((item) => (
+              <option key={item.id} value={item.id}>
+                {item.title} * {item.id}
               </option>
             ))}
           </select>
@@ -116,7 +106,6 @@ const DependentSelects = ({
       <FieldError
         formState={formState}
         name={selectId}
-        errorFieldId={`${selectId}-error`}
         className="text-red-700"
       />
     </section>

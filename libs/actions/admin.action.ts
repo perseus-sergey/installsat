@@ -4,6 +4,8 @@ import {
   deleteItemFromDbTable,
   editArticleDB,
   editChannelDB,
+  getDbRelativeChannelCats,
+  getDbRelativeFrequencies,
 } from '@/controllers/admin.controller';
 import {
   IFormState,
@@ -30,6 +32,12 @@ import { revalidatePath } from 'next/cache';
 
 //   return toFormState('SUCCESS', 'Article deleted successfully');
 // };
+
+export const getRelativeCatsAction = async (parentID: string | number) =>
+  await getDbRelativeChannelCats(parentID);
+
+export const getRelativeFrequenciesAction = async (satId: string | number) =>
+  await getDbRelativeFrequencies(satId);
 
 export const deleteItemAction = async (
   itemID: string,
@@ -83,7 +91,8 @@ export const editArticleAction = async (
 export const editChannelAction = async (
   channelID: string,
   channelText: string,
-  catId: number,
+  catId: string,
+  satBeamFreq: string,
   revalidateUrl: string[],
   _formState: IFormState,
   formData: FormData
@@ -118,6 +127,8 @@ export const editChannelAction = async (
     other_stream,
     mark,
   } = EChannelEditFields;
+  const [sat, beam, frequency] = satBeamFreq.split('|');
+  console.log('🚀 ~ satBeamFreq:', satBeamFreq);
 
   try {
     const validFormData = editChannelSchema.parse({
@@ -128,9 +139,9 @@ export const editChannelAction = async (
       [description]: formData.get(description),
       [cat_id]: catId,
       [canonical]: formData.get(canonical),
-      [sat_id]: formData.get(sat_id),
-      [frequency_id]: formData.get(frequency_id),
-      [beam_id]: formData.get(beam_id),
+      [sat_id]: +sat,
+      [frequency_id]: +frequency,
+      [beam_id]: +beam,
       [genre_id]: formData.get(genre_id),
       [lang_id]: formData.get(lang_id),
       [compress_id]: formData.get(compress_id),
@@ -152,6 +163,7 @@ export const editChannelAction = async (
     const res = editChannelDB(channelID, validFormData);
     if (res instanceof Error) throw new Error(res.message);
   } catch (error) {
+    // console.log('🚀 ~ error:', error);
     return fromErrorToFormState(error);
   }
 

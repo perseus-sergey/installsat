@@ -138,6 +138,7 @@ export enum EChannelEditFields {
   description = 'description',
   text = 'text',
   cat_id = 'cat_id',
+  parent_cat_id = 'parent_cat_id',
   canonical = 'canonical',
   sat_id = 'sat_id',
   frequency_id = 'frequency_id',
@@ -180,9 +181,16 @@ export const editChannelSchema = z.object({
   [EChannelEditFields.country_id]: z.coerce.number(),
   [EChannelEditFields.no_googlads]: z.coerce.number(),
 
-  [EChannelEditFields.sat_id]: z.coerce.number().optional(),
-  [EChannelEditFields.frequency_id]: z.coerce.number().optional(),
-  [EChannelEditFields.beam_id]: z.coerce.number().optional(),
+  [EChannelEditFields.parent_cat_id]: z.coerce.number().optional(),
+  [EChannelEditFields.sat_id]: z.coerce
+    .number({ message: 'Satellite should be number!' })
+    .optional(),
+  [EChannelEditFields.frequency_id]: z.coerce
+    .number({ message: 'Frequency should be number!' })
+    .optional(),
+  [EChannelEditFields.beam_id]: z.coerce
+    .number({ message: 'Beam should be number!' })
+    .optional(),
   [EChannelEditFields.ip_deny]: z.coerce.number().optional(),
   [EChannelEditFields.encryption_id]: z.coerce.number().optional(),
   [EChannelEditFields.vsetv]: z.coerce.number().optional(),

@@ -28,19 +28,21 @@
 - [Jest](https://jestjs.io/uk/)
 - [Flaticon](https://www.flaticon.com/)
 - [Nodemailer](https://nodemailer.com/usage/)
-  - [Send email using Nodemailer](https://react.email/docs/integrations/nodemailer)
-  - [YouTube](https://www.youtube.com/watch?v=81lt0qcXtHE&ab_channel=SakuraDev) - How to Send Emails In Next.JS 14 With Dynamic Templates
-  - [GitHub: nextjs14-send-emails-with-dynamic-templates](https://github.com/vahid-nejad/nextjs14-send-emails-with-dynamic-templates/blob/main/src/lib/mail.ts)
-  - [Email contact form using NextJS (App router)](https://medium.com/@abilsavio/email-contact-form-using-nextjs-app-router-60c29fe70644)
+  > - [Send email using Nodemailer](https://react.email/docs/integrations/nodemailer)
+  > - [YouTube](https://www.youtube.com/watch?v=81lt0qcXtHE&ab_channel=SakuraDev) - How to Send Emails In Next.JS 14 With Dynamic Templates
+  > - [GitHub: nextjs14-send-emails-with-dynamic-templates](https://github.com/vahid-nejad/nextjs14-send-emails-with-dynamic-templates/blob/main/src/lib/mail.ts)
+  > - [Email contact form using NextJS (App router)](https://medium.com/@abilsavio/email-contact-form-using-nextjs-app-router-60c29fe70644)
 - [React Email - components for creating beautiful emails using React](https://react.email/)
-  - [Examples](https://react.email/examples)
+  > - [Examples](https://react.email/examples)
 - IP Geolocation - [JSON endpoint](https://ip-api.com/docs/api:json)
   > - How to get the client Ip address in app router - [GitHub](https://github.com/vercel/next.js/discussions/55037)
 - Authentication - [Auth.js](https://authjs.dev/)
   > - [NextJs - Learn](https://nextjs.org/learn/dashboard-app/adding-authentication)
   > - [NextJs - Authentication](https://nextjs.org/docs/app/building-your-application/authentication)
 - bcrypt.js - [NPM](https://www.npmjs.com/package/bcryptjs)
-  > - ` yarn add bcryptjs @types/bcryptjs`
+  > - yarn add bcryptjs @types/bcryptjs
+- WYSIWYG editor - [TinyMCE](https://www.npmjs.com/package/bcryptjs)
+  > - [For React](https://www.tiny.cloud/my-account/integrate/#react)
 
 ---
 

@@ -3,8 +3,10 @@ set -e
 
 echo "Deployment started..."
 
-# Cancel any ongoing rebase
-git rebase --abort || true
+# Check if a rebase is in progress and abort if so
+if git rebase --show-current-patch > /dev/null 2>&1; then
+  git rebase --abort
+fi
 
 # Reset any local changes
 git reset --hard

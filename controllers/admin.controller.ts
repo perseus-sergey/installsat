@@ -206,7 +206,7 @@ export const getEditDbChannel = async (
         CAT.parent AS parent_cat_id
       FROM tbl_channals AS CH
       LEFT JOIN tbl_chan_categ AS CAT ON CH.cat = CAT.id
-      WHERE ch.id = ?
+      WHERE CH.id = ?
       LIMIT 1;
 
       SELECT title, id FROM tbl_chan_categ WHERE parent = 0;

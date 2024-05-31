@@ -3,16 +3,13 @@ set -e
 
 echo "Deployment started..."
 
-# Cancel any ongoing rebase
-if git rebase --show-current-patch > /dev/null 2>&1; then
-  git rebase --abort
-fi
-
 # Reset any local changes
 git reset --hard
 
-# Pull the latest version of the app without rebase
+# Fetch the latest changes from the remote repository
 git fetch origin
+
+# Forcefully update the local branch to match the remote branch
 git reset --hard origin/main
 echo "New changes copied to server!"
 

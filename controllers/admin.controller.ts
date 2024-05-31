@@ -119,9 +119,6 @@ export const getDbRelativeChannelCats = cache(
     return resp instanceof Error ? [] : resp;
   }
 );
-// =================================================================
-// change tbl_chan_sat
-// =================================================================
 export const getDbRelativeFrequencies = cache(
   async (satId: string | number) => {
     const resp = await executeQuery<{

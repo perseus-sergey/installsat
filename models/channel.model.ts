@@ -161,7 +161,6 @@ export enum EChannelEditFields {
   other_stream = 'other_stream',
   mark = 'mark',
 }
-//   if (isset($title) && isset($cpu) && isset($description) && isset($cat1) && isset($sat) && isset($tema) && isset($compress) && isset($lang)){
 
 const zodEmptyOr2 = z
   .string()

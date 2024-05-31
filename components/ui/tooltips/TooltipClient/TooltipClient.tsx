@@ -3,6 +3,19 @@
 import { ReactNode, Suspense, useEffect, useState } from 'react';
 import styles from './TooltipClient.module.scss';
 import BaseButton from '../../buttons/BaseButton/BaseButton';
+import { ELanguage, LANGUAGE } from '@/models/ui.model';
+
+const CAPTIONS = {
+  ariaLabelSmall: {
+    [ELanguage.UA]: 'Натисніть щоб відкрити',
+    [ELanguage.EN]: 'Click to open',
+  },
+  ariaLabelBig: {
+    [ELanguage.UA]: 'Натисніть щоб сховати',
+    [ELanguage.EN]: 'Click to hide',
+  },
+  closeButtonMark: '✕',
+};
 
 interface ITooltipClientProps extends React.HTMLAttributes<HTMLElement> {
   children: ReactNode;
@@ -43,7 +56,7 @@ const TooltipClient = ({
     <>
       <Suspense>
         <BaseButton
-          ariaLabel="Натисніть щоб відкрити"
+          ariaLabel={CAPTIONS.ariaLabelSmall[LANGUAGE]}
           onClick={showPopUp}
           className={className}
           {...attributes}
@@ -54,7 +67,10 @@ const TooltipClient = ({
 
       {isPopUp && (
         <Suspense>
-          <BaseButton ariaLabel="Натисніть щоб сховати" onClick={removePopUp}>
+          <BaseButton
+            ariaLabel={CAPTIONS.ariaLabelBig[LANGUAGE]}
+            onClick={removePopUp}
+          >
             <figure
               className={`${styles.hint}${!isStyleDisabled ? ` ${styles.showHint}` : ''}`}
             >
@@ -62,7 +78,9 @@ const TooltipClient = ({
               <figcaption className="p-2 flex justify-between gap-8 items-center">
                 {hintDescription}
                 <span className={styles.crossMarkWrapper}>
-                  <span className={styles.crossMark}>✕</span>
+                  <span className={styles.crossMark}>
+                    {CAPTIONS.closeButtonMark}
+                  </span>
                 </span>
               </figcaption>
             </figure>

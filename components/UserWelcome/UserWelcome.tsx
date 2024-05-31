@@ -18,9 +18,9 @@ const UserWelcome = async () => {
       <BaseButton
         type="submit"
         ariaLabel="Sign Out"
-        className="flex h-[48px] grow items-center justify-center gap-2 rounded-md bg-gray-50 p-3 text-sm font-medium hover:bg-sky-100 hover:text-blue-600 md:flex-none md:justify-start md:p-2 md:px-3"
+        className="flex grow items-center justify-center gap-2 rounded-md bg-gray-50 px-4 py-1 text-sm font-medium hover:bg-sky-100 hover:text-blue-600"
       >
-        <span>⏻</span>
+        <span className="text-2xl">⏻</span>
         <span className="hidden md:block">Sign Out</span>
       </BaseButton>
     </form>

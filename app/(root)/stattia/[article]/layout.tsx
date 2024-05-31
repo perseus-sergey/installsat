@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import React from 'react';
-import { EUrlBaseParam } from '@/models/url.model';
+import { EUrlAdminParam, EUrlBaseParam } from '@/models/url.model';
 import {
   LANGUAGE,
   EDBTableTitles,
@@ -21,6 +21,7 @@ import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
 import BreadCrumbServer from '@/components/BreadCrumbs/BreadCrumbsServer';
 import { BREAD_CRUMBS } from '@/models/breadCrumbs.model';
 import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
+import EditLinkButton from '@/components/admin/EditLinkButton/EditLinkButton';
 
 interface IArticleParams {
   children: React.ReactNode;
@@ -78,6 +79,9 @@ export default async function layout({
 
   return (
     <>
+      <EditLinkButton
+        href={`/${EUrlAdminParam.BASE_PATH}/${EUrlAdminParam.ARTICLES_EDIT}/edit/${id}`}
+      />
       <BreadCrumbServer
         breadCrumbList={[
           BREAD_CRUMBS.NEWS_AND_ARTICLES,

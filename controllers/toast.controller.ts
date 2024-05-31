@@ -25,10 +25,11 @@ export const fromErrorToFormState = (error: unknown): IFormState => {
       error.type === 'CredentialsSignin'
         ? 'Invalid credentials.'
         : 'Something went wrong.';
-  } else if (!(error instanceof ZodError)) {
+  } else if (error instanceof ZodError)
+    message = 'Complete all the fields correctly.';
+  else
     message =
       error instanceof Error ? error.message : 'An unknown error occurred';
-  }
 
   return {
     status: 'ERROR' as const,

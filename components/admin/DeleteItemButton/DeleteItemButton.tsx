@@ -8,36 +8,34 @@ import { EMPTY_FORM_STATE } from '@/controllers/toast.controller';
 import { deleteCommentAction } from '@/libs/actions/comments.action';
 import { EDBTableTitles } from '@/models/ui.model';
 
-interface IDeleteCommentProps {
-  commentID: string;
+interface IProps {
+  itemID: string;
   dbTableName: EDBTableTitles;
   revalidateUrl: string;
 }
-
-const DeleteComment = ({
-  commentID,
-  dbTableName,
-  revalidateUrl,
-}: IDeleteCommentProps) => {
-  const deleteCommentHandler = deleteCommentAction.bind(
+// =================================================================
+// Remove deletecomment component
+// =================================================================
+const DeleteItemButton = ({ itemID, dbTableName, revalidateUrl }: IProps) => {
+  const deleteItemHandler = deleteCommentAction.bind(
     null,
-    commentID,
+    itemID,
     dbTableName,
     revalidateUrl
   );
 
   const [formState, formAction] = useFormState(
-    deleteCommentHandler,
+    deleteItemHandler,
     EMPTY_FORM_STATE
   );
   const noScriptFallback = useToastMessage(formState);
 
   return (
-    <form action={formAction} id={commentID}>
-      <TooltipSimple tooltipText="Remove comment">
+    <form action={formAction} id={itemID}>
+      <TooltipSimple tooltipText="Remove item">
         <SubmitPendingButton
-          ariaLabel="Remove comment"
-          style={{ color: 'red', minWidth: '3rem', textAlign: 'center' }}
+          ariaLabel="Remove item"
+          className="text-red-500 hover:text-red-400 min-w-12 text-center"
           pendingInnerHtml="🕓"
         >
           ⌫
@@ -48,4 +46,4 @@ const DeleteComment = ({
   );
 };
 
-export default DeleteComment;
+export default DeleteItemButton;

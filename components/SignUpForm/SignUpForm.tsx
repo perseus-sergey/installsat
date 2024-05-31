@@ -18,6 +18,8 @@ import { redirect } from 'next/navigation';
 import { providerMap } from '@/auth';
 import { SatelliteBroadcastIcon } from '../ui/icons-svg/SatelliteBroadcastIcon';
 
+const BASE_URL = process.env.BASE_URL || '';
+
 const { PASSWORD, NAME, EMAIL } = ELoginFormNames;
 
 export default function SignUpForm({
@@ -66,11 +68,7 @@ export default function SignUpForm({
                 🏷
               </span>
             </div>
-            <FieldError
-              formState={formState}
-              name={NAME}
-              errorFieldId={`${NAME}-error`}
-            />
+            <FieldError formState={formState} name={NAME} />
           </>
         )}
 
@@ -96,11 +94,7 @@ export default function SignUpForm({
             @
           </span>
         </div>
-        <FieldError
-          formState={formState}
-          name={EMAIL}
-          errorFieldId={`${EMAIL}-error`}
-        />
+        <FieldError formState={formState} name={EMAIL} />
 
         <label
           className="mb-3 mt-5 block text-xs font-medium text-gray-50"
@@ -125,11 +119,7 @@ export default function SignUpForm({
             🔑
           </span>
         </div>
-        <FieldError
-          formState={formState}
-          name={PASSWORD}
-          errorFieldId={`${PASSWORD}-error`}
-        />
+        <FieldError formState={formState} name={PASSWORD} />
         <SubmitPendingButton
           className="mt-4 w-full text-gray-50"
           ariaLabel="Submit"
@@ -152,7 +142,9 @@ export default function SignUpForm({
               <SubmitPendingButton
                 className="flex items-center gap-2 text-gray-50"
                 ariaLabel={`Sign in with ${provider.name}`}
-                onClick={async () => restProviderLinksAction(provider.id)}
+                onClick={async () =>
+                  restProviderLinksAction(provider.id, BASE_URL)
+                }
                 key={provider.id}
               >
                 {AUTH_PROVIDER_LOGOS[provider.id]}

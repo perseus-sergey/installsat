@@ -35,7 +35,8 @@ export const authConfig = {
     authorized({ auth, request: { nextUrl } }) {
       const isLoggedIn = !!auth?.user;
       const isOnProtectedRoute = nextUrl.pathname.startsWith(
-        EUrlAdminParam.BASE_PATH
+        EUrlAdminParam.BASE_PATH,
+        1
       );
       const isOnLoginRoute = nextUrl.pathname.startsWith(loginPagePath);
 

@@ -3,7 +3,6 @@ import { TitleH2 } from '../ui/Titles/TitleH2';
 import { IMG_PROPERTIES, LANGUAGE } from '@/models/ui.model';
 import FillingImg from '../ui/Images/FillingImage';
 import React, { Fragment } from 'react';
-// import TooltipBigImg from '../ui/tooltips/TooltipBigImg/TooltipBigImg';
 import TooltipClient from '../ui/tooltips/TooltipClient/TooltipClient';
 
 const {

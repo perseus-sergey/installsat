@@ -1,4 +1,4 @@
-import DeleteComment from '@/components/admin/DeleteComment/DeleteComment';
+import DeleteItemButton from '@/components/admin/DeleteItemButton/DeleteItemButton';
 import EmptyData from '@/components/errors/EmptyData/EmptyData';
 import { Title } from '@/components/ui/Titles/Title';
 import TooltipSimple from '@/components/ui/tooltips/TooltipSimple/TooltipSimple';
@@ -19,7 +19,8 @@ export interface IPageParams {
 }
 
 export default async function Page({ searchParams }: IPageParams) {
-  if (!searchParams) return;
+  if (!searchParams)
+    return <EmptyData description="Wrong Url Search Params!" />;
 
   const articleIdEncrypted = validSearchParam(
     EUrlSearchParam.COMMENT_DEL_ARTICLE_ID,
@@ -65,8 +66,8 @@ export default async function Page({ searchParams }: IPageParams) {
                 </TooltipSimple>
               </td>
               <td className="text-center">
-                <DeleteComment
-                  commentID={`${comment.id}`}
+                <DeleteItemButton
+                  itemID={`${comment.id}`}
                   dbTableName={commentDbTable}
                   revalidateUrl={`/${EUrlAdminParam.BASE_PATH}/${EUrlAdminParam.EDIT_COMMENT}`}
                 />

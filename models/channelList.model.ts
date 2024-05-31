@@ -383,8 +383,23 @@ export interface ISatChannelListModel {
   tem: string;
   compr: string;
   lan: string;
+  canonical: string;
+  cat_parent_title: string;
+  category: number;
 }
 
+export interface IEditChannelListModel {
+  id: number;
+  title: string;
+  cpu: string;
+  sat_title: string;
+  sat_position: string;
+  frequency: number;
+  compr: string;
+  canonical: string;
+  cat_parent_title: string;
+  category: number;
+}
 export interface IChannelListModel {
   chan_id: number;
   chan_title: string;

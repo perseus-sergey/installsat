@@ -18,7 +18,7 @@ interface IPaginationProps {
   page: number;
   offsetNumber: number;
   totalPages: number;
-  searchParams: TSearchParams;
+  searchParams?: TSearchParams;
 }
 
 const getPageNumbers = (
@@ -43,6 +43,8 @@ const Pagination = ({
   totalPages,
   searchParams,
 }: IPaginationProps) => {
+  if (!searchParams) return null;
+
   const urlSearchParams = makeUrlSearchParams(searchParams);
 
   const setUrlPage = (value: string | number): string => {

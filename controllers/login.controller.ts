@@ -1,5 +1,6 @@
 'use server';
 
+import { auth } from '@/auth';
 import { executeQuery } from '@/libs/db/mysqldb';
 import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
 import { IUser } from '@/models/login.model';
@@ -23,3 +24,16 @@ export const createDbUser = async (
     `INSERT INTO userlist (email,  password, name, role, registration_date) VALUES (?,?,?,?,?)`,
     [email, password, name, `${roleNumber}`, getFormattedDateStrYearFirst()]
   );
+
+export const isAdminAuth = cache(async () => {
+  const session = await auth();
+  const adminEmail = process.env.ADMIN_EMAIL;
+
+  return session &&
+    session.user &&
+    session.user.email &&
+    adminEmail &&
+    session.user.email === adminEmail
+    ? true
+    : false;
+});

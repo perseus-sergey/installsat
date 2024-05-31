@@ -19,7 +19,7 @@ import {
 } from '@/controllers/channel.controller';
 import { META_CHANNEL } from '@/models/channel.model';
 import { LANGUAGE, EDBTableTitles, DEFAULT_META_DATA } from '@/models/ui.model';
-import { EUrlBaseParam } from '@/models/url.model';
+import { EUrlAdminParam, EUrlBaseParam } from '@/models/url.model';
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
@@ -30,6 +30,7 @@ import BreadCrumbServer from '@/components/BreadCrumbs/BreadCrumbsServer';
 import { CHANNEL_LIST_ANCHOR_START } from '@/models/channelList.model';
 import { BREAD_CRUMBS } from '@/models/breadCrumbs.model';
 import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
+import EditLinkButton from '@/components/admin/EditLinkButton/EditLinkButton';
 
 const BASE_URL = process.env.BASE_URL;
 
@@ -156,6 +157,9 @@ export default async function Page({ params: { slug } }: IChannelProps) {
 
   return (
     <>
+      <EditLinkButton
+        href={`/${EUrlAdminParam.BASE_PATH}/${EUrlAdminParam.CHANNELS_EDIT}/edit/${id}`}
+      />
       <BreadCrumbServer
         breadCrumbList={[
           BREAD_CRUMBS.PACKAGE_CHANNEL_LIST,

@@ -1,5 +1,6 @@
 import { cutText } from '@/libs/utils/utils';
 import { ELanguage } from './ui.model';
+import { z } from 'zod';
 
 export interface IChannel {
   id: number;
@@ -42,6 +43,176 @@ export interface IOnlineChannel extends IChannel {
   genre_id: number;
   country: string;
 }
+
+export interface IChannelCategory {
+  id: number;
+  title: string;
+  parent: number;
+  cpu: string;
+}
+
+// $beam = explode("|", $beam)[0];
+//   if (isset($title) && isset($cpu) && isset($description) && isset($cat1) && isset($sat) && isset($tema) && isset($compress) && isset($lang)){
+// 	if ($chb_old_new == 1)
+// 		$cat_fill="";
+// 	elseif ($chb_old_new == 0)
+// 		$cat_fill=",cat='$cat2'";
+// 	if ($chb_sat == 1){
+// 		$sat_fill=""; $freq_fill="";$beam_fill="";
+// 	}
+// 	elseif ($chb_sat == 0){
+// 		$sat_fill=",sat='$sat'"; $freq_fill=",frequency='$frequency'"; $beam_fill=",beam='$beam'";
+// 	}
+// 	add_to_db ("
+// 	UPDATE $tbl SET title='$title',cpu='$cpu',description='$description',text='$text',
+// 	tema='$tema',compress='$compress',lang='$lang',logo='$logo',url='$url',biss='$biss',country_id='$country_id',ip_deny='$ip_deny',
+// 	no_googlads='$noGoogAds',
+// 	encryption='$encryption',canonical='$canonical',programma='$programma',telegid_id='$telegid_id',vsetv='$vsetv',vipiko='$vipiko',potok='$potok',pars_uppod='$pars_uppod',pattern='$pattern',
+// 	tvforsite_net='$tvforsite_net',simpletv='$simpletv',tvforsite_ru='$tvforsite_ru',other_stream='$other_stream',
+// 	mark='$mark',aspect='$aspect'
+// 	$cat_fill$sat_fill$freq_fill$beam_fill
+// 	WHERE id='$id'");
+
+// 	$updateText = "";
+// 	  if ($chb_logo) {
+// 		  $updateText .= " `logo`='$logo'";
+// 	  }
+// 	  if ($chb_title) {
+// 		  $updateText .= ", `title`='$title'";
+// 	  }
+// 	  if ($chb_canonical) {
+// 		  $updateText .= ", `canonical`='$canonical'";
+// 	  }
+// 	  if ($chb_description) {
+// 		  $updateText .= ", `description`='$description'";
+// 	  }
+// 	  if ($chb_text) {
+// 		  $updateText .= ", `text`='$text'";
+// 	  }
+// 	  if ($chb_tema) {
+// 		  $updateText .= ", `tema`='$tema'";
+// 	  }
+// 	  if ($chb_lang) {
+// 		  $updateText .= ", `lang`='$lang'";
+// 	  }
+// 	  if ($chb_url) {
+// 		  $updateText .= ", `url`='$url'";
+// 	  }
+// 	  if ($chb_tvforsite_net) {
+// 		  $updateText .= ", `tvforsite_net`='$tvforsite_net'";
+// 	  }
+// 	  if ($chb_mark) {
+// 		  $updateText .= ", `mark`='$mark'";
+// 	  }
+// 	  $updateText = trim($updateText, " ,");
+
+// 	  if ($updateText != "") {
+// 		$canon = ($chb_canonical) ? $chb_canonical : $canonical;
+// 		echo $ask = "
+// 		UPDATE $tbl SET $updateText
+// 		WHERE `canonical` = '$canon'
+// 		";
+// 		add_to_db ($ask);
+// 	  }
+
+// 	  $updateText = "";
+// 	  if ($chb_vsetv) {
+// 		  $updateText .= ", `vsetv`='$vsetv'";
+// 	  }
+// 	  if ($chb_vipiko) {
+// 		  $updateText .= ", `vipiko`='$vipiko'";
+// 	  }
+// 	  $updateText = trim($updateText, " ,");
+// 	  if ($updateText != "") {
+// 		echo $ask = "
+// 		UPDATE $tbl SET $updateText
+// 		WHERE `title` = '$title'
+// 		";
+// 		add_to_db ($ask);
+// 	  }
+
+export enum EChannelEditFields {
+  title = 'title',
+  logo = 'logo',
+  chan_slug = 'chan_slug',
+  description = 'description',
+  text = 'text',
+  cat_id = 'cat_id',
+  parent_cat_id = 'parent_cat_id',
+  canonical = 'canonical',
+  sat_id = 'sat_id',
+  frequency_id = 'frequency_id',
+  beam_id = 'beam_id',
+  genre_id = 'genre_id',
+  lang_id = 'lang_id',
+  compress_id = 'compress_id',
+  country_id = 'country_id',
+  url = 'url',
+  biss = 'biss',
+  ip_deny = 'ip_deny',
+  no_googlads = 'no_googlads',
+  encryption_id = 'encryption_id',
+  vsetv = 'vsetv',
+  vipiko = 'vipiko',
+  potok = 'potok',
+  pars_uppod = 'pars_uppod',
+  pattern = 'pattern',
+  tvforsite_net = 'tvforsite_net',
+  other_stream = 'other_stream',
+  mark = 'mark',
+}
+
+const zodEmptyOr2 = z
+  .string()
+  .transform((val) => val.trim())
+  .refine((val) => val === '' || val.length >= 2, {
+    message: 'Must be EMPTY || 2+ characters',
+  });
+
+export const editChannelSchema = z.object({
+  [EChannelEditFields.title]: z.string().min(2).trim(),
+  [EChannelEditFields.chan_slug]: z.string().min(2).trim(),
+  [EChannelEditFields.description]: z.string().min(2).trim(),
+  [EChannelEditFields.text]: z.string().min(2).trim(),
+
+  //   [EChannelEditFields.cat_id]: z.number().min(1).minValue(1),
+  [EChannelEditFields.cat_id]: z.coerce
+    .number()
+    .min(1, 'Choose relative category'),
+
+  [EChannelEditFields.canonical]: z.string().min(2).trim(),
+  [EChannelEditFields.genre_id]: z.coerce.number(),
+  [EChannelEditFields.lang_id]: z.coerce.number(),
+  [EChannelEditFields.compress_id]: z.coerce.number(),
+  [EChannelEditFields.country_id]: z.coerce.number(),
+  [EChannelEditFields.no_googlads]: z.coerce.number(),
+
+  [EChannelEditFields.parent_cat_id]: z.coerce.number().optional(),
+  [EChannelEditFields.sat_id]: z.coerce
+    .number({ message: 'Satellite should be number!' })
+    .optional(),
+  [EChannelEditFields.frequency_id]: z.coerce
+    .number({ message: 'Frequency should be number!' })
+    .optional(),
+  [EChannelEditFields.beam_id]: z.coerce
+    .number({ message: 'Beam should be number!' })
+    .optional(),
+  [EChannelEditFields.ip_deny]: z.coerce.number().optional(),
+  [EChannelEditFields.encryption_id]: z.coerce.number().optional(),
+  [EChannelEditFields.vsetv]: z.coerce.number().optional(),
+  [EChannelEditFields.vipiko]: z.coerce.number().optional(),
+
+  [EChannelEditFields.logo]: z.string().trim().optional(),
+  [EChannelEditFields.url]: z.string().trim().optional(),
+  [EChannelEditFields.biss]: z.string().trim().optional(),
+  [EChannelEditFields.potok]: zodEmptyOr2,
+  [EChannelEditFields.pars_uppod]: zodEmptyOr2,
+  [EChannelEditFields.pattern]: zodEmptyOr2,
+  [EChannelEditFields.tvforsite_net]: zodEmptyOr2,
+  [EChannelEditFields.other_stream]: zodEmptyOr2,
+  [EChannelEditFields.mark]: z.string().trim().optional(),
+});
+export type TChannelEditModel = z.infer<typeof editChannelSchema>;
 
 export interface ISimilarChannel {
   id: number;

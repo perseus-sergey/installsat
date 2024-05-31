@@ -8,7 +8,7 @@ import { EChannelEditFields } from '@/models/channel.model';
 
 interface IFormTextareaItem {
   itemName: EArticleEditFields | EChannelEditFields;
-  labelTitle: string;
+  labelTitle: React.ReactNode;
   description?: React.ReactNode;
   value: string;
   formState: IFormState;
@@ -41,7 +41,7 @@ const FormTextareaItem = ({
     {description && <p>{description}</p>}
     <div className="flex items-start gap-1">
       <textarea
-        className="p-2 w-full rounded-md"
+        className="px-2 py-1 w-full rounded-md"
         name={itemName}
         id={itemName}
         cols={cols || Math.min(value.length + 20, 80)}

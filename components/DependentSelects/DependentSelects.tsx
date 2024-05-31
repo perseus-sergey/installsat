@@ -1,12 +1,13 @@
-import { ReactNode, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import FieldError from '@/components/comments/FieldError/FieldError';
 import { EChannelEditFields } from '@/models/channel.model';
 import { IFormState } from '@/controllers/toast.controller';
 import { IInputData } from '../admin/FormEditArticle/FormEditChannel';
+import Fieldset from '../ui/Fieldset/Fieldset';
 
 interface IProps {
   selectId: EChannelEditFields;
-  labelTitle: ReactNode;
+  labelTitle: string;
   parentValueTitle: EChannelEditFields;
   formData: Record<EChannelEditFields, string | number>;
   handleChange: (
@@ -61,17 +62,14 @@ const DependentSelects = ({
   }, [formData[parentValueTitle]]);
 
   return (
-    <section className="flex flex-col items-start">
-      <label htmlFor={selectId} className="text-xl">
-        {labelTitle}
-      </label>
-      <div className="flex gap-4">
+    <Fieldset legendText={labelTitle} className="flex flex-col items-start p-4">
+      <div className="flex flex-wrap gap-4">
         {/* <p>
           {parentValueTitle}: {formData[parentValueTitle]}
         </p> */}
         {(formData[parentValueTitle] as number) > 0 && (
           <select
-            className="p-2"
+            className="px-2 py-1"
             name={parentValueTitle}
             id={parentValueTitle}
             value={formData[parentValueTitle] as number}
@@ -85,10 +83,10 @@ const DependentSelects = ({
           </select>
         )}
 
-        <p>finalValue: {finalValue}</p>
+        {/* <p>finalValue: {finalValue}</p> */}
         {filteredList && filteredList.length > 0 && (
           <select
-            className="p-2"
+            className="px-2 py-1"
             name={selectId}
             id={selectId}
             value={finalValue}
@@ -97,7 +95,8 @@ const DependentSelects = ({
             {/* <option value={0}></option> */}
             {filteredList.map((item) => (
               <option key={item.id} value={item.id}>
-                {item.title} * {item.id}
+                {item.title}
+                {/* {item.title} * {item.id} */}
               </option>
             ))}
           </select>
@@ -108,7 +107,7 @@ const DependentSelects = ({
         name={selectId}
         className="text-red-700"
       />
-    </section>
+    </Fieldset>
   );
 };
 

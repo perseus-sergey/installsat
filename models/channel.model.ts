@@ -163,6 +163,13 @@ export enum EChannelEditFields {
 }
 //   if (isset($title) && isset($cpu) && isset($description) && isset($cat1) && isset($sat) && isset($tema) && isset($compress) && isset($lang)){
 
+const zodEmptyOr2 = z
+  .string()
+  .transform((val) => val.trim())
+  .refine((val) => val === '' || val.length >= 2, {
+    message: 'Must be EMPTY || 2+ characters',
+  });
+
 export const editChannelSchema = z.object({
   [EChannelEditFields.title]: z.string().min(2).trim(),
   [EChannelEditFields.chan_slug]: z.string().min(2).trim(),
@@ -199,11 +206,11 @@ export const editChannelSchema = z.object({
   [EChannelEditFields.logo]: z.string().trim().optional(),
   [EChannelEditFields.url]: z.string().trim().optional(),
   [EChannelEditFields.biss]: z.string().trim().optional(),
-  [EChannelEditFields.potok]: z.string().min(2).trim().optional(),
-  [EChannelEditFields.pars_uppod]: z.string().min(2).trim().optional(),
-  [EChannelEditFields.pattern]: z.string().min(2).trim().optional(),
-  [EChannelEditFields.tvforsite_net]: z.string().min(2).trim().optional(),
-  [EChannelEditFields.other_stream]: z.string().min(2).trim().optional(),
+  [EChannelEditFields.potok]: zodEmptyOr2,
+  [EChannelEditFields.pars_uppod]: zodEmptyOr2,
+  [EChannelEditFields.pattern]: zodEmptyOr2,
+  [EChannelEditFields.tvforsite_net]: zodEmptyOr2,
+  [EChannelEditFields.other_stream]: zodEmptyOr2,
   [EChannelEditFields.mark]: z.string().trim().optional(),
 });
 export type TChannelEditModel = z.infer<typeof editChannelSchema>;

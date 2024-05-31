@@ -159,11 +159,23 @@ export const getDbRelativeFrequencies = cache(
   }
 );
 
-export const getEditDbChannel = cache(
-  async (
-    id: string
-  ): Promise<Error | [IInputData[], TChannelEditModel[], IInputData[]]> => {
-    const sql = `
+export const getEditDbChannel = async (
+  id: string
+): Promise<
+  | Error
+  | [
+      IInputData[],
+      TChannelEditModel[],
+      IInputData[],
+      IInputData[],
+      IInputData[],
+      IInputData[],
+      IInputData[],
+      IInputData[],
+      IInputData[],
+    ]
+> => {
+  const sql = `
       SELECT title, id, position FROM tbl_chan_sat WHERE id != 1 AND fill = 1 ORDER BY grade;
 
       SELECT
@@ -201,23 +213,44 @@ export const getEditDbChannel = cache(
       LIMIT 1;
 
       SELECT title, id FROM tbl_chan_categ WHERE parent = 0;
+
+      SELECT title, id FROM tbl_chan_compress;
+
+      SELECT title, id FROM tbl_chan_encryption;
+
+      SELECT title, id FROM tbl_chan_tema;
+
+      SELECT title, id FROM tbl_language;
+
+      SELECT title, vipiko_id AS id FROM vipiko_chan ORDER BY title ASC;
+
+      SELECT title, id FROM tbl_country;
     `;
 
-    const resp = await executeMultipleQuery<
-      [(IInputData & { position: string })[], TChannelEditModel[], IInputData[]]
-    >(sql, [id]);
+  const resp = await executeMultipleQuery<
+    [
+      (IInputData & { position: string })[],
+      TChannelEditModel[],
+      IInputData[],
+      IInputData[],
+      IInputData[],
+      IInputData[],
+      IInputData[],
+      IInputData[],
+      IInputData[],
+    ]
+  >(sql, [id]);
 
-    if (resp instanceof Error) return resp;
+  if (resp instanceof Error) return resp;
 
-    const frequencies = resp[0].map((f) => ({
-      title: `${f.position} - ${f.title}`,
-      id: f.id,
-    }));
-    const [, ...rest] = resp;
+  const frequencies = resp[0].map((f) => ({
+    title: `${f.position} - ${f.title}`,
+    id: f.id,
+  }));
+  const [, ...rest] = resp;
 
-    return [frequencies, ...rest];
-  }
-);
+  return [frequencies, ...rest];
+};
 
 export const editChannelDB = async (
   channelID: string,

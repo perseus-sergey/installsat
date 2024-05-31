@@ -10,7 +10,8 @@ interface IFieldErrorProps extends React.HTMLAttributes<HTMLElement> {
     | ECommentFormNames
     | ELoginFormNames
     | EArticleEditFields
-    | EChannelEditFields;
+    | EChannelEditFields
+    | string;
   errorFieldId?: string;
 }
 
@@ -20,7 +21,7 @@ const FieldError = ({
   errorFieldId = `${name}-error`,
   className,
 }: IFieldErrorProps) => {
-  return (
+  return formState.fieldErrors[name] ? (
     <div
       data-testid="FieldError"
       role="status"
@@ -45,7 +46,7 @@ const FieldError = ({
         </ul>
       )}
     </div>
-  );
+  ) : null;
 };
 
 export default FieldError;

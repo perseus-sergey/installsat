@@ -128,7 +128,7 @@ export const editChannelAction = async (
     mark,
   } = EChannelEditFields;
   const [sat, beam, frequency] = satBeamFreq.split('|');
-  console.log('🚀 ~ satBeamFreq:', satBeamFreq);
+  // console.log('🚀 ~ formData:', formData);
 
   try {
     const validFormData = editChannelSchema.parse({

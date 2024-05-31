@@ -3,7 +3,7 @@ set -e
 
 echo "Deployment started..."
 
-# Check if a rebase is in progress and abort if so
+# Cancel any ongoing rebase
 if git rebase --show-current-patch > /dev/null 2>&1; then
   git rebase --abort
 fi
@@ -11,12 +11,13 @@ fi
 # Reset any local changes
 git reset --hard
 
-# Pull the latest version of the app
-git pull origin main
+# Pull the latest version of the app without rebase
+git fetch origin
+git reset --hard origin/main
 echo "New changes copied to server!"
 
 echo "Installing Dependencies..."
-yarn
+yarn install
 
 echo "Creating Production Build..."
 yarn build

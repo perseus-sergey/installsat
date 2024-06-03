@@ -43,6 +43,15 @@
   > - yarn add bcryptjs @types/bcryptjs
 - WYSIWYG editor - [TinyMCE](https://www.npmjs.com/package/bcryptjs)
   > - [For React](https://www.tiny.cloud/my-account/integrate/#react)
+- Web Scrapping - [Puppeteer](https://pptr.dev/)
+  > - [Error [ERR_REQUIRE_ESM]: require() of ES Module, node_modules\wrap-ansi\index.js not supported](https://stackoverflow.com/a/77810578/22835451)
+- Web Scrapping - [cheerio](https://cheerio.js.org/)
+  ```sh
+  yarn add cheerio
+  ```
+  ```sh
+  yarn add @types/cheerio --dev
+  ```
 
 ---
 

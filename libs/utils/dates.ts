@@ -121,3 +121,6 @@ export const getDayOfMonthStr = (dateStr: string, lang: ELanguage) => {
 
   return result;
 };
+
+export const getFormattedDate = (date: Date, format: string): string =>
+  DateTime.fromJSDate(date).toFormat(format);

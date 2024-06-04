@@ -99,3 +99,9 @@ export interface IVseTvParsModel {
   title: string;
   cpu: string;
 }
+export interface IVseTvErrorChannel extends IVseTvParsModel {
+  channelEditUrl: string;
+  sourceChannelUrl: string;
+  parseUrl: string;
+  error: string;
+}

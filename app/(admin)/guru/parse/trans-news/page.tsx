@@ -33,6 +33,7 @@ interface IShowsData {
 const BASE_URL = process.env.BASE_URL;
 const { TV_SCHEDULE_VSE_TV } = EDBTableTitles;
 const BATCH_SIZE = 500;
+// const PARSE_URL = 'https://www.flysat.com/en/news';
 const trapChannel: IVseTvParsModel = {
   vsetv: '346',
   title: 'trapChannel',

@@ -59,7 +59,7 @@ export const getDBVseTvChannels = async (IDs?: string[]) => {
   const channels = IDs && IDs.length ? `AND vsetv IN (${IDs.join(',')})` : '';
 
   const sql = `
-  SELECT id, vsetv, title, cpu
+  SELECT MAX(id) AS id, vsetv, MAX(title) AS title, MAX(cpu) AS cpu
   FROM tbl_channals
   WHERE vsetv IS NOT NULL
   AND vsetv != 0 
@@ -78,9 +78,9 @@ export const insertDBVseTvChannels = async (values: string[]) => {
   const insertedStr = values.join(',');
 
   const sql = `
-  INSERT INTO ${TV_SCHEDULE_VSE_TV} 
-  (start,end,chan_id,title) 
-  VALUES 
+  INSERT INTO ${TV_SCHEDULE_VSE_TV}
+  (start,end,chan_id,title)
+  VALUES
   ${insertedStr}
 `;
   const res = await executeQuery(sql);
@@ -122,8 +122,8 @@ export const getDbIdAmount = async (
   const res = await executeQuery<IDbIdAmountModel>(
     `SELECT COUNT( id ) AS count FROM ${tblName}`
   );
-  if (res instanceof Error)
-    throw new Error(`Error of count id in DB table${tblName}: ${res.message}`);
 
-  return res;
+  return res instanceof Error
+    ? `Error of count id in DB table${tblName}: ${res.message}`
+    : res;
 };

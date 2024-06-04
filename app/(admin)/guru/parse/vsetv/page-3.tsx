@@ -1,27 +1,33 @@
 import { Title } from '@/components/ui/Titles/Title';
+import puppeteer, { Browser } from 'puppeteer';
 import * as cheerio from 'cheerio';
-import { getFormattedDate } from '@/libs/utils/dates';
+import {
+  getFormattedDate,
+  getFormattedDateStrYearFirst,
+} from '@/libs/utils/dates';
 import { DateTime } from 'luxon';
 import {
   deleteDBVseTvChannel,
   getDBVseTvChannels,
   getDbIdAmount,
+  insertDBVseTvChannels,
   truncateDBVseTv,
 } from '@/controllers/schedule.controller';
 import { EDBTableTitles, TSearchParams } from '@/models/ui.model';
 import { validSearchParamArray } from '@/libs/utils/validSearchParam';
-import { EUrlAdminParam, EUrlSearchParam } from '@/models/url.model';
+import {
+  EUrlAdminParam,
+  EUrlBaseParam,
+  EUrlSearchParam,
+} from '@/models/url.model';
 import { IVseTvErrorChannel, IVseTvParsModel } from '@/models/scheduleTV.model';
 import { cache } from 'react';
 import Link from 'next/link';
 import { createURLWithParams } from '@/libs/utils/utils';
-import axios from 'axios';
-import iconv from 'iconv-lite';
 import { IDbIdAmountModel } from '@/models/admin.model';
 import { sendMail } from '@/libs/mail/sendMail';
 import { renderAsync } from '@react-email/render';
 import { ParseVseTvEmailTemplate } from '@/components/EmailTemplates/parseVseTv.template';
-import { pool } from '@/libs/db/mysqldb';
 
 interface IShowsData {
   startTime: string;
@@ -31,8 +37,6 @@ interface IShowsData {
 }
 
 const BASE_URL = process.env.BASE_URL;
-const { TV_SCHEDULE_VSE_TV } = EDBTableTitles;
-const BATCH_SIZE = 500;
 const trapChannel: IVseTvParsModel = {
   vsetv: '346',
   title: 'trapChannel',
@@ -107,7 +111,13 @@ const getFullDate = (
   if (isNaN(minute) || minute < 0 || minute >= 60)
     return `Bad minute: ${minute} from ${timeStr}`;
 
-  const dateTime = DateTime.fromObject({ year, month, day, hour, minute });
+  const dateTime = DateTime.fromObject({
+    year,
+    month,
+    day,
+    hour,
+    minute,
+  });
 
   return dateTime.isValid
     ? dateTime.toJSDate()
@@ -115,7 +125,7 @@ const getFullDate = (
 }; // Output: Date object representing '2024-07-14 07:25:00'
 
 const parseChannelPage = async (
-  // browser: Browser,
+  browser: Browser,
   channel: IVseTvParsModel,
   zero?: string,
   five?: string
@@ -124,15 +134,23 @@ const parseChannelPage = async (
     throw new Error(
       `Error parsing channel «${channel.title}»(${channel.vsetv} - Traps are not defined: zero = «${zero}»; five = «${five}»`
     );
-  const res = await axios.get(getParseURL(channel.vsetv), {
-    responseType: 'arraybuffer',
-  });
+  const url = getParseURL(channel.vsetv);
+  const page = await browser.newPage();
+  await page.goto(url, { waitUntil: 'networkidle2' });
 
-  const decodedData = iconv.decode(Buffer.from(res.data), 'windows-1251');
+  const html = await page.content();
+  // const res = await axios.get(getParseURL(channel.vsetv), {
+  //   responseType: 'arraybuffer',
+  // });
 
-  const replacedHtml = decodedData
+  // const decodedData = iconv.decode(Buffer.from(res.data), 'windows-1251');
+
+  const replacedHtml = html
     .replace(new RegExp(`<img src="/pic/${five || ''}\\.gif">`, 'g'), '5')
     .replace(new RegExp(`<img src="/pic/${zero || ''}\\.gif">`, 'g'), '0');
+  // const replacedHtml = decodedData
+  //   .replace(new RegExp(`<img src="/pic/${five || ''}\\.gif">`, 'g'), '5')
+  //   .replace(new RegExp(`<img src="/pic/${zero || ''}\\.gif">`, 'g'), '0');
 
   return cheerio.load(replacedHtml);
 };
@@ -210,32 +228,6 @@ const extractParsedData = ($: cheerio.CheerioAPI, channel: IVseTvParsModel) => {
   return errors.length > 0 ? errors.join(', ') : parsedData;
 };
 
-const insertDataInBatches = async (data: string[]) => {
-  if (!data || data.length === 0) return ['Error: Received empty data'];
-
-  let message: string[] = [];
-
-  for (let i = 0; i < data.length; i += BATCH_SIZE) {
-    const batch = data.slice(i, i + BATCH_SIZE);
-    const insertedStr = batch.join(',');
-    const sql = `
-      INSERT INTO ${TV_SCHEDULE_VSE_TV} (start, end, chan_id, title) 
-      VALUES ${insertedStr}
-    `;
-
-    try {
-      await pool.query(sql);
-      // message.push(`Inserted batch, BATCH_SIZE = ${BATCH_SIZE}`);
-    } catch (error) {
-      message.push(
-        `Error inserting batch: ${error instanceof Error ? error.message : 'Unknown error'}`
-      );
-    }
-  }
-
-  return message;
-};
-
 export default async function Page({
   searchParams,
 }: {
@@ -248,10 +240,12 @@ export default async function Page({
 
   let dbInsertedStrings: string[] = [];
   const errorChannels: IVseTvErrorChannel[] = [];
-  const errorMessages: string[] = [];
+  let browser;
+  let errorMessage = '';
   let resDbTableLength: IDbIdAmountModel[] | string = '';
 
   try {
+    browser = await puppeteer.launch({ headless: true });
     const channels = await getDBVseTvChannels(searchQueryArray);
 
     if (!searchQueryArray || searchQueryArray.length === 0)
@@ -259,52 +253,51 @@ export default async function Page({
 
     for (const channel of channels) {
       try {
-        const { zero, five } = catchTraps(await parseChannelPage(trapChannel));
-        const $ = await parseChannelPage(channel, zero, five);
+        // const { zero, five } = catchTraps(await parseChannelPage(trapChannel));
+        const { zero, five } = catchTraps(
+          await parseChannelPage(browser, trapChannel)
+        );
+        const $ = await parseChannelPage(browser, channel, zero, five);
+        // const $ = await parseChannelPage(channel, zero, five);
         const channelParsedData = extractParsedData($, channel);
         if (typeof channelParsedData === 'string') {
           errorChannels.push({
             ...channel,
             error: channelParsedData,
-            channelEditUrl: `${BASE_URL}/${EUrlAdminParam.BASE_PATH}/${EUrlAdminParam.CHANNELS_EDIT}/edit/${channel.id}`,
-            sourceChannelUrl: getParseURL(channel.vsetv),
-            parseUrl: createURLWithParams(
+            channelEditUrl: `${BASE_URL}/${EUrlBaseParam.CHANNELS_TV_PROGRAM}/${channel.cpu}/${getFormattedDateStrYearFirst()}`,
+            sourceChannelUrl: createURLWithParams(
               `${BASE_URL}/${EUrlAdminParam.BASE_PATH}/${EUrlAdminParam.PARSE}/${EUrlAdminParam.PARSE_SCHEDULE_VSETV}`,
               { [EUrlSearchParam.CHANNEL]: channel.vsetv }
             ),
+            parseUrl: getParseURL(channel.vsetv),
           });
           continue;
         }
 
-        dbInsertedStrings = [
-          ...dbInsertedStrings,
-          ...channelParsedData.map(
-            (chan) =>
-              `('${chan.startTime}', '${chan.endTime}', ${chan.channelVseTvId}, '${chan.title.replace(/'/g, "''")}')`
-          ),
-        ];
+        dbInsertedStrings = channelParsedData.map(
+          (chan) =>
+            `('${chan.startTime}', '${chan.endTime}', ${chan.channelVseTvId}, '${chan.title.replace(/'/g, "''")}')`
+        );
 
         if (searchQueryArray && searchQueryArray.length > 0)
           await deleteDBVseTvChannel(`${channel.vsetv}`, channel.title);
+
+        insertDBVseTvChannels(dbInsertedStrings);
       } catch (err) {
-        errorMessages.push(
-          `Error processing channel «${channel.title}»(${channel.vsetv}): ${err instanceof Error ? err.message : 'Unknown error occurred'}`
-        );
+        errorMessage = `Error processing channel «${channel.title}»(${channel.vsetv}): ${err instanceof Error ? err.message : 'Unknown error occurred'}`;
       }
     }
 
-    const insertMessages = await insertDataInBatches(dbInsertedStrings);
-    errorMessages.push(...insertMessages);
-
     resDbTableLength = await getDbIdAmount();
   } catch (error) {
-    errorMessages.push(
+    errorMessage =
       error instanceof Error
         ? `Error during parsing: ${error.message}`
-        : 'Unknown error occurred'
-    );
+        : 'Unknown error occurred';
   }
-
+  // finally {
+  // if (browser) await browser.close();
+  // }
   await sendMail({
     subject: `Parse schedule VseTv`,
     body: await renderAsync(
@@ -315,7 +308,7 @@ export default async function Page({
             ? 'Not Defined'
             : resDbTableLength[0].count.toLocaleString('en-US')
         }
-        errorMessages={errorMessages}
+        errorMessages={[errorMessage]}
         errorChannels={errorChannels}
         allFailedChannelsUrl={createURLWithParams(
           `${BASE_URL}/${EUrlAdminParam.BASE_PATH}/${EUrlAdminParam.PARSE}/${EUrlAdminParam.PARSE_SCHEDULE_VSETV}`,
@@ -332,29 +325,21 @@ export default async function Page({
         <p>{resDbTableLength}</p>
       ) : (
         <p>
-          The number of records in the database table {TV_SCHEDULE_VSE_TV}:{' '}
+          The number of records in the database table{' '}
+          {EDBTableTitles.TV_SCHEDULE_VSE_TV}:{' '}
           {resDbTableLength[0].count.toLocaleString('en-US')}
         </p>
       )}
-      {errorMessages.length > 0 && (
-        <>
-          <h2 className="font-bold text-blue-700 text-xl">Messages:</h2>
-          <ul>
-            {errorMessages.map((message, i) => (
-              <li key={i}>{message}</li>
-            ))}
-          </ul>
-        </>
-      )}
+      {errorMessage && <p>{errorMessage}</p>}
       {errorChannels.length > 0 && (
         <ul>
           {errorChannels.map((channel) => (
             <li key={channel.id}>
               <span>
                 <Link
-                  href={`${BASE_URL}/${EUrlAdminParam.BASE_PATH}${EUrlAdminParam.CHANNELS_EDIT}/edit/${channel.id}`}
+                  href={`${BASE_URL}/${EUrlBaseParam.CHANNELS_TV_PROGRAM}/${channel.cpu}/${getFormattedDateStrYearFirst()}`}
                 >
-                  Edit «{channel.title}»
+                  «{channel.title}»
                 </Link>{' '}
                 <Link href={getParseURL(channel.vsetv)}>VseTv</Link>{' '}
                 <Link

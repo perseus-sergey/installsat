@@ -48,3 +48,30 @@ export const executeMultipleQuery = async <T>(
     return err as Error;
   }
 };
+
+export const pool = mysql.createPool({
+  ...access,
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0,
+  multipleStatements: true,
+});
+
+// export const queryPool = async <T>(sql: string): Promise<T | Error> => {
+//   try {
+//     const pool = mysql.createPool({
+//       ...access,
+//       waitForConnections: true,
+//       connectionLimit: 10,
+//       queueLimit: 0,
+//       multipleStatements: true,
+//     });
+//     const [result] = await pool.query(sql);
+
+//     return result as T;
+//   } catch (err) {
+//     console.log(err);
+
+//     return err as Error;
+//   }
+// };

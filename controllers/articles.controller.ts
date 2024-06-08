@@ -7,6 +7,7 @@ import {
   ISimilarArticleModel,
   ISingleCatArticlesModel,
 } from '@/models/articles.model';
+import { decode } from 'html-entities';
 import { cache } from 'react';
 
 export const WRONG_CAT_IDS = '(2,0,11,12,13)';
@@ -72,7 +73,9 @@ LIMIT ?, ?
     `${quantity}`,
   ]);
 
-  return res instanceof Error ? [] : res;
+  return res instanceof Error
+    ? []
+    : res.map((r) => ({ ...r, title: decode(r.title) }));
 };
 
 export const getSatMapList = cache(async () => {
@@ -107,7 +110,14 @@ export const getSatMapList = cache(async () => {
 `;
   const res = await executeQuery<IAllMapsModel>(sql);
 
-  return res instanceof Error ? [] : res;
+  return res instanceof Error
+    ? []
+    : res.map((r) => ({
+        ...r,
+        title: decode(r.title),
+        description: decode(r.description),
+        position: decode(r.position),
+      }));
 });
 
 export const getSatMap = cache(async (slug: string) => {
@@ -121,11 +131,20 @@ export const getSatMap = cache(async (slug: string) => {
 `;
   const res = await executeQuery<IMapModel>(sql, [slug]);
 
-  return res instanceof Error ? [] : res;
+  return res instanceof Error
+    ? []
+    : res.map((r) => ({
+        ...r,
+        sat_title: decode(r.sat_title),
+        position: decode(r.position),
+        beam_title: decode(r.beam_title),
+        beam_description: decode(r.beam_description),
+      }));
 });
 
-export const getArticle = cache(async (slug: string) => {
-  const sql = `
+export const getArticle = cache(
+  async (slug: string): Promise<IArticleModel | null> => {
+    const sql = `
   SELECT
   U.id,
   U.title,
@@ -145,10 +164,19 @@ FROM
 LEFT JOIN
   tbl_categories C ON U.cat = C.id
 WHERE U.cpu = ?
+LIMIT 1
 `;
+    const res = await executeQuery<IArticleModel>(sql, [slug]);
 
-  return await executeQuery<IArticleModel>(sql, [slug]);
-});
+    return res instanceof Error || res.length === 0
+      ? null
+      : {
+          ...res[0],
+          title: decode(res[0].title),
+          description: decode(res[0].description),
+        };
+  }
+);
 
 export const getSatFinderArticle = async () => {
   const sql = `SELECT id, title, cpu, description, text, view, logo FROM tbl_useful WHERE cpu = ?`;
@@ -171,7 +199,14 @@ export const getSimilarArticles = async (logo: string, id = -1) => {
     LIMIT 7
 `;
 
-  return await executeQuery<ISimilarArticleModel>(sql, [logo]);
+  const res = await executeQuery<ISimilarArticleModel>(sql, [logo]);
+
+  return res instanceof Error
+    ? []
+    : res.map((r) => ({
+        ...r,
+        title: decode(r.title),
+      }));
 };
 
 export const getArticleSlugList = cache(async () => {

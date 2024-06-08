@@ -35,10 +35,9 @@ export const generateMetadata = async ({
 }: IArticleParams): Promise<Metadata> => {
   const sqlResult = await getArticle(article);
 
-  if (sqlResult instanceof Error || !sqlResult.length)
-    return DEFAULT_META_DATA[LANGUAGE];
+  if (!sqlResult) return DEFAULT_META_DATA[LANGUAGE];
 
-  const { title, description, date, slug } = sqlResult[0];
+  const { title, description, date, slug } = sqlResult;
 
   return {
     title,
@@ -62,13 +61,11 @@ export default async function layout({
 
   if (sqlResult instanceof Error)
     return <EmptyData description={sqlResult.message} />;
-  if (!sqlResult.length) notFound();
+  if (!sqlResult) notFound();
 
-  const { id, logo, view, title, slug, cat_slug, cat_name } = sqlResult[0];
+  const { id, logo, view, title, slug, cat_slug, cat_name } = sqlResult;
 
   const similarArticles = await getSimilarArticles(logo, id);
-  if (similarArticles instanceof Error)
-    return <EmptyData description={similarArticles.message} />;
 
   const numberOfComments = await getCommentsNumber(
     EDBTableTitles.COMMENTS_ARTICLE,

@@ -33,7 +33,7 @@ export default async function Page() {
       <article className="article">
         <Title>{metaH1[L]}</Title>
 
-        <PackageList packageList={packages instanceof Error ? [] : packages} />
+        <PackageList packageList={packages} />
       </article>
     </>
   );

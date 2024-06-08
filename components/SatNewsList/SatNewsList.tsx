@@ -10,7 +10,7 @@ import {
 import EmptyData from '../errors/EmptyData/EmptyData';
 import FillingValidImage from '../ui/Images/FillingValidImage';
 import { LANGUAGE, TSearchParams } from '@/models/ui.model';
-import { getDate } from '@/libs/utils/dates';
+import { getDateInISO } from '@/libs/utils/dates';
 
 interface ISatNewsListProps {
   searchParams: TSearchParams;
@@ -19,7 +19,10 @@ interface ISatNewsListProps {
 const SatNewsList = async ({
   searchParams: { sat, interval },
 }: ISatNewsListProps) => {
-  const newsIntervalResult = await getSatDigestNews(sat, Number(interval));
+  const newsIntervalResult = await getSatDigestNews({
+    satellites: sat,
+    timeInterval: Number(interval),
+  });
 
   if (newsIntervalResult instanceof Error)
     return <EmptyData description={newsIntervalResult.message} />;
@@ -49,7 +52,7 @@ const SatNewsList = async ({
         {[...news[1]].map((satNews) => (
           <>
             <h3 className={styles.groupSubTitle} key={satNews[0]}>
-              {`${getDate(satNews[0])} ....`}
+              {`${getDateInISO(satNews[0])} ....`}
             </h3>
             <div className={styles.newsList}>
               <DangerHtml text={getDailyNews(satNews[1])} wrapperTagName="ul" />

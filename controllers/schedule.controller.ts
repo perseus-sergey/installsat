@@ -1,7 +1,11 @@
 import { executeMultipleQuery, executeQuery } from '@/libs/db/mysqldb';
-import { IScheduleTVModel } from '@/models/scheduleTV.model';
+import { IDbIdAmountModel } from '@/models/admin.model';
+import { IScheduleTVModel, IVseTvParsModel } from '@/models/scheduleTV.model';
 import { EDBTableTitles } from '@/models/ui.model';
+import { decode } from 'html-entities';
 import { cache } from 'react';
+
+const { TV_SCHEDULE_VSE_TV } = EDBTableTitles;
 
 export const getDBChannelScheduleShort = cache(
   async (
@@ -9,7 +13,7 @@ export const getDBChannelScheduleShort = cache(
     chanelId: number,
     hourInterval: number,
     rowsLimit: number
-  ) => {
+  ): Promise<IScheduleTVModel[] | Error> => {
     const sql = `
     SELECT *
     FROM ${dbTableName}
@@ -19,11 +23,19 @@ export const getDBChannelScheduleShort = cache(
     LIMIT ?
 `;
 
-    return await executeQuery<IScheduleTVModel>(sql, [
+    const res = await executeQuery<IScheduleTVModel>(sql, [
       `${chanelId}`,
       `${hourInterval}`,
       `${rowsLimit}`,
     ]);
+
+    return res instanceof Error
+      ? res
+      : res.map((r) => ({
+          ...r,
+          title: decode(r.title),
+          prog_desc: decode(r.prog_desc),
+        }));
   }
 );
 
@@ -31,7 +43,7 @@ export const getChanOneDaySchedule = cache(
   async (
     scheduleTables: { tblName: EDBTableTitles; scheduleId: number }[],
     dateStr: string
-  ) => {
+  ): Promise<IScheduleTVModel[][] | null> => {
     const sql = scheduleTables
       .map(
         ({ tblName, scheduleId }) =>
@@ -47,6 +59,88 @@ export const getChanOneDaySchedule = cache(
       .join(' ');
     const res = await executeMultipleQuery<[IScheduleTVModel[]]>(sql);
 
-    return res instanceof Error ? null : res;
+    return res instanceof Error
+      ? null
+      : res.map((scged) =>
+          scged.map((r) => ({
+            ...r,
+            title: decode(r.title),
+            prog_desc: decode(r.prog_desc),
+          }))
+        );
   }
 );
+
+export const getDBVseTvChannels = async (IDs?: string[]) => {
+  //AND `vsetv` IN (176,328,30,772)
+  const channels = IDs && IDs.length ? `AND vsetv IN (${IDs.join(',')})` : '';
+
+  const sql = `
+  SELECT MAX(id) AS id, vsetv, MAX(title) AS title, MAX(cpu) AS cpu
+  FROM tbl_channals
+  WHERE vsetv IS NOT NULL
+  AND vsetv != 0 
+  ${channels}
+  GROUP BY vsetv
+`;
+  const res = await executeQuery<IVseTvParsModel>(sql);
+
+  if (res instanceof Error)
+    throw new Error(`Error of get channel IDs from DB: ${res.message}`);
+
+  return res;
+};
+
+export const insertDBVseTvChannels = async (values: string[]) => {
+  const insertedStr = values.join(',');
+
+  const sql = `
+  INSERT INTO ${TV_SCHEDULE_VSE_TV}
+  (start,end,chan_id,title)
+  VALUES
+  ${insertedStr}
+`;
+  const res = await executeQuery(sql);
+  if (res instanceof Error)
+    throw new Error(`Error of insert channel schedule to DB: ${res.message}`);
+
+  return res;
+};
+
+export const truncateDBVseTv = async () => {
+  const res = await executeQuery(`TRUNCATE TABLE ${TV_SCHEDULE_VSE_TV}`);
+  if (res instanceof Error)
+    throw new Error(
+      `Error of truncate table ${TV_SCHEDULE_VSE_TV} in DB: ${res.message}`
+    );
+
+  return res;
+};
+
+export const deleteDBVseTvChannel = async (
+  channelID: string,
+  channelTitle: string
+) => {
+  const res = await executeQuery(
+    `DELETE FROM ${TV_SCHEDULE_VSE_TV} WHERE chan_id = ?`,
+    [channelID]
+  );
+  if (res instanceof Error)
+    throw new Error(
+      `Error of delete schedule for channel ${channelTitle}(${channelID}) from DB: ${res.message}`
+    );
+
+  return res;
+};
+
+export const getDbIdAmount = async (
+  tblName: EDBTableTitles = TV_SCHEDULE_VSE_TV
+) => {
+  const res = await executeQuery<IDbIdAmountModel>(
+    `SELECT COUNT( id ) AS count FROM ${tblName}`
+  );
+
+  return res instanceof Error
+    ? `Error of count id in DB table${tblName}: ${res.message}`
+    : res;
+};

@@ -1,7 +1,7 @@
 import BreadCrumbServer from '@/components/BreadCrumbs/BreadCrumbsServer';
 import TransNewsSingle from '@/components/TransNewsSingle/TransNewsSingle';
 import { getTransNewsForSingleDay } from '@/controllers/satDigest.controller';
-import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
+import { getDateInISO, getFormattedDateStrYearFirst } from '@/libs/utils/dates';
 import { META_TRANS_NEWS_SINGLE } from '@/models/satDigest.model';
 import { LANGUAGE as L, DEFAULT_META_DATA } from '@/models/ui.model';
 import { EUrlBaseParam } from '@/models/url.model';
@@ -42,7 +42,7 @@ export const generateMetadata = async ({ params: { date } }: IPageParams) => {
 export default async function Page({ params: { date } }: IPageParams) {
   const newsArray = await getTransNewsForSingleDay(date);
 
-  const formattedDate = getCurrDateCached(date);
+  const formattedDate = getDateInISO(date);
 
   if (!formattedDate) notFound();
 

@@ -126,9 +126,7 @@ export default async function Page({ params }: IPageParams) {
         </StartArticleSection>
         <SatChannelsTable
           isSingleSat
-          satChannels={getGroupedChannelsAllSat([
-            satChannels instanceof Error ? [] : satChannels,
-          ])}
+          satChannels={getGroupedChannelsAllSat([satChannels])}
         />
       </article>
 

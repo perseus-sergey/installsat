@@ -28,6 +28,9 @@ export enum EUrlAdminParam {
   EDIT_COMMENT = 'edit-comments',
   ARTICLES_EDIT = 'articles',
   CHANNELS_EDIT = 'channels',
+  PARSE = 'parse',
+  PARSE_SCHEDULE_VSETV = 'vsetv',
+  PARSE_SAT_DIGEST = 'trans-news',
 }
 
 export enum EUrlSearchParam {

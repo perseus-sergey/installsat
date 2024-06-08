@@ -33,7 +33,7 @@ const BreadCrumbServer = ({
   activeLinkColor,
   homeTitle,
   separator = BREAD_SEPARATOR,
-  hasHomeLink = false,
+  hasHomeLink = true,
 }: IProps) => {
   return (
     <nav

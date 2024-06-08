@@ -23,5 +23,6 @@ jobs:
           port: ${{ secrets.PORT }}
           key: ${{ secrets.SSHKEY }}
           # Виконати команду 'chmod' для надання дозволів на виконання
-          pre_commands: chmod +x ./.scripts/deploy.sh
+          pre_commands: |
+            chmod +x ~/installsat/.scripts/deploy.sh
           script: 'cd ~/installsat && ./.scripts/deploy.sh'

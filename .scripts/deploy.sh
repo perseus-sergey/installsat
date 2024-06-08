@@ -20,7 +20,7 @@ git reset --hard origin/main
 echo "New changes copied to server!"
 
 echo "Installing Dependencies..."
-yarn install --frozen-lockfile
+yarn install --immutable
 
 echo "Creating Production Build..."
 yarn build

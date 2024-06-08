@@ -3,12 +3,6 @@ set -e
 
 echo "Deployment started..."
 
-# Перевірка файлів та прав доступу
-ls -l ./.scripts/deploy.sh
-
-# Надання дозволів на виконання
-chmod +x ./.scripts/deploy.sh
-
 # Reset any local changes
 git reset --hard
 

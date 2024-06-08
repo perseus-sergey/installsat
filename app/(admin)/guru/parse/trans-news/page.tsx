@@ -133,7 +133,7 @@ const extractParsedData = ($: cheerio.CheerioAPI, updateAmount: number) => {
   const firstThreeBaslikElements = baslikElements.slice(0, updateAmount);
 
   firstThreeBaslikElements.each((_i, el) => {
-    const dateText = $(el).text(); // Отримуємо текст з елемента <p class="baslik">
+    const dateText = $(el).text(); // Отримуємо текст з елемента <p class="baslik">>
     const [date, updateText] = dateText.split('/'); // Розділяємо текст на дату і номер оновлення
     const dt = DateTime.fromFormat(date, 'dd.MM.yyyy', { zone: 'utc' });
     if (!dt.isValid) {

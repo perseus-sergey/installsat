@@ -229,7 +229,7 @@ const insertDataInBatches = async (data: string[]) => {
 
     try {
       await pool.query(sql);
-      // message.push(`Inserted batch, BATCH_SIZE = ${BATCH_SIZE}`);;
+      // message.push(`Inserted batch, BATCH_SIZE = ${BATCH_SIZE}`);
     } catch (error) {
       message.push(
         `Error inserting batch: ${error instanceof Error ? error.message : 'Unknown error'}`

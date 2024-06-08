@@ -8,13 +8,15 @@ import { EUrlAdminParam, EUrlSearchParam } from '@/models/url.model';
 import { IDbIdAmountModel } from '@/models/admin.model';
 import { sendMail } from '@/libs/mail/sendMail';
 import { renderAsync } from '@react-email/render';
-import { getDBSatID } from '@/controllers/parseTransNews.controller';
-import { access } from '@/libs/db/mysqldb';
+import {
+  deleteDBOldTransNews,
+  getDBSatID,
+  insertDBTransNews,
+} from '@/controllers/parseTransNews.controller';
 import { getDbIdAmount } from '@/controllers/schedule.controller';
 import { ParseTransNews } from '@/components/EmailTemplates/parseTransNews.template';
-import mysql from 'mysql2/promise';
 
-interface ITblDigestParse {
+export interface ITblDigestParse {
   date: string;
   update: number | null;
   channel_title: string;
@@ -30,7 +32,7 @@ interface ITblDigestParse {
 const BASE_URL = process.env.BASE_URL;
 const SHOW_ONLY = false;
 const PARSE_URL = 'https://www.flysat.com/en/news';
-const PARSED_UPDATES = 10;
+const PARSED_UPDATES = 4;
 
 const parseChannelPage = async (browser: Browser, url: string) => {
   const page = await browser.newPage();
@@ -133,7 +135,6 @@ const extractParsedData = ($: cheerio.CheerioAPI, updateAmount: number) => {
   firstThreeBaslikElements.each((_i, el) => {
     const dateText = $(el).text(); // Отримуємо текст з елемента <p class="baslik">
     const [date, updateText] = dateText.split('/'); // Розділяємо текст на дату і номер оновлення
-    // const dt = DateTime.fromFormat(date, 'dd.MM.yyyy');
     const dt = DateTime.fromFormat(date, 'dd.MM.yyyy', { zone: 'utc' });
     if (!dt.isValid) {
       extractErrors.push(`Error extracting DATE from: «${dateText}»`);
@@ -222,10 +223,8 @@ const addSatId = async (parsedData: ITblDigestParse[]) => {
 
   for (const item of parsedData) {
     const satResult = await getDBSatID(item.sat_name);
-    if (typeof satResult === 'string' || !satResult.length) {
-      addSatIdErrors.push(
-        `Error extracting SATELLITE ID from DB. Can't find satellite name «${item.sat_name}». DB response: ${satResult}`
-      );
+    if (typeof satResult === 'string') {
+      addSatIdErrors.push(satResult);
       dataWithSatId.push({
         ...item,
         sat: '0',
@@ -233,7 +232,7 @@ const addSatId = async (parsedData: ITblDigestParse[]) => {
     } else {
       dataWithSatId.push({
         ...item,
-        sat: satResult[0].id,
+        sat: satResult.id,
       });
     }
   }
@@ -241,87 +240,12 @@ const addSatId = async (parsedData: ITblDigestParse[]) => {
   return { dataWithSatId, addSatIdErrors };
 };
 
-const insertDataToDB = async (data: ITblDigestParse[]) => {
-  const uniqueDateUpdatePairs = [
-    ...new Set(data.map((item) => `('${item.date}', ${item.update})`)),
-  ];
-
-  const deleteQuery = `
-    DELETE FROM ${EDBTableTitles.TRANS_NEWS}
-    WHERE (\`date\`, \`update\`) IN (${uniqueDateUpdatePairs.join(', ')});
-  `;
-
-  // const delRes = SHOW_ONLY ? '' : await executeQuery(deleteQuery);
-  // if (delRes instanceof Error) {
-  //   throw new Error(`Can't DELETE OLD DATA from the database: ${delRes}`);
-  // }
-
-  //================================================================
-  const connection = await mysql.createConnection(access);
-  try {
-    !SHOW_ONLY && (await connection.query(deleteQuery));
-
-    const values = data.map((item) => [
-      connection.escape(item.date),
-      connection.escape(item.update),
-      connection.escape(item.channel_title),
-      connection.escape(item.action),
-      connection.escape(item.text),
-      connection.escape(item.sat),
-      connection.escape(item.sat_name),
-      connection.escape(item.sat_position),
-      connection.escape(item.frequency_text),
-      connection.escape(item.country),
-    ]);
-
-    const insertQuery = `
-      INSERT INTO ${EDBTableTitles.TRANS_NEWS} 
-      (\`date\`, \`update\`, \`channel_title\`, \`action\`, \`text\`, \`sat\`, \`sat_name\`, \`sat_position\`, \`frequency_text\`, \`country\`)
-      VALUES ${values.map((valueSet) => `(${valueSet.join(', ')})`).join(', ')};
-    `;
-
-    !SHOW_ONLY && (await connection.query(insertQuery));
-  } catch (error) {
-    throw new Error(
-      `ERROR: DB DELETE || INSERT: ${
-        error instanceof Error ? error.message : 'Unknown error occurred'
-      }`
-    );
-  } finally {
-    connection.end();
-  }
-  //================================================================
-
-  // const values = data.map((item) => [
-  //   item.date,
-  //   `${item.update}` || '',
-  //   item.channel_title,
-  //   item.action,
-  //   item.text,
-  //   item.sat,
-  //   item.sat_name,
-  //   item.sat_position,
-  //   item.frequency_text,
-  // ]);
-
-  // const insertQuery = `
-  //   INSERT INTO ${EDBTableTitles.TRANS_NEWS}
-  //   (\`date\`, \`update\`, \`channel_title\`, \`action\`, \`text\`, \`sat\`, \`sat_name\`, \`sat_position\`, \`frequency_text\`)
-  //   VALUES ?
-  // `;
-
-  // const insertRes = SHOW_ONLY ? '' : await executeQuery(insertQuery, [values]);
-  // if (insertRes instanceof Error) {
-  //   throw new Error(`Can't INSERT NEW DATA to the database: ${insertRes}`);
-  // }
-};
-
 const sendReportMail = async (
   errorMessages: string[],
   tblItemLength: string
 ) => {
   await sendMail({
-    subject: `Parse schedule VseTv`,
+    subject: `Parse transponder news`,
     body: await renderAsync(
       <ParseTransNews
         pathToMainParsePage={`${BASE_URL}/${EUrlAdminParam.BASE_PATH}/${EUrlAdminParam.PARSE}`}
@@ -359,7 +283,16 @@ export default async function Page({
     finalData = dataWithSatIdRes.dataWithSatId;
     errorMessages.push(...dataWithSatIdRes.addSatIdErrors);
 
-    await insertDataToDB(finalData);
+    // await insertDataToDB(finalData);
+    if (!SHOW_ONLY) {
+      const deleteRes = await deleteDBOldTransNews(finalData);
+      errorMessages.push(deleteRes);
+    }
+
+    if (!SHOW_ONLY) {
+      const insertRes = await insertDBTransNews(finalData);
+      errorMessages.push(insertRes);
+    }
 
     resDbTableLength = await getDbIdAmount(EDBTableTitles.TRANS_NEWS);
   } catch (error) {
@@ -372,12 +305,13 @@ export default async function Page({
     if (browser) await browser.close();
   }
 
-  await sendReportMail(
-    errorMessages,
-    typeof resDbTableLength === 'string'
-      ? 'Not Defined'
-      : resDbTableLength[0].count.toLocaleString('en-US')
-  );
+  if (!SHOW_ONLY)
+    await sendReportMail(
+      errorMessages,
+      typeof resDbTableLength === 'string'
+        ? 'Not Defined'
+        : resDbTableLength[0].count.toLocaleString('en-US')
+    );
 
   return (
     <>

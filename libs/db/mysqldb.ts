@@ -1,4 +1,4 @@
-import mysql, { ConnectionOptions } from 'mysql2/promise';
+import mysql, { ConnectionOptions, ResultSetHeader } from 'mysql2/promise';
 
 // const port = process.env.DB_PORT ? +process.env.DB_PORT : 0;
 
@@ -54,24 +54,20 @@ export const pool = mysql.createPool({
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0,
-  multipleStatements: true,
+  // multipleStatements: true,
 });
 
-// export const queryPool = async <T>(sql: string): Promise<T | Error> => {
-//   try {
-//     const pool = mysql.createPool({
-//       ...access,
-//       waitForConnections: true,
-//       connectionLimit: 10,
-//       queueLimit: 0,
-//       multipleStatements: true,
-//     });
-//     const [result] = await pool.query(sql);
+export const executePoolQuery = async <T>(
+  sql: string,
+  values: string[] = []
+): Promise<T[] | Error | ResultSetHeader> => {
+  try {
+    const [rows] = await pool.execute(sql, values);
 
-//     return result as T;
-//   } catch (err) {
-//     console.log(err);
+    return rows as T[] | ResultSetHeader;
+  } catch (err) {
+    console.log(err);
 
-//     return err as Error;
-//   }
-// };
+    return err as Error;
+  }
+};

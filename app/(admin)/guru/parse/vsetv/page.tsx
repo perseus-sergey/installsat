@@ -9,7 +9,10 @@ import {
   truncateDBVseTv,
 } from '@/controllers/schedule.controller';
 import { EDBTableTitles, TSearchParams } from '@/models/ui.model';
-import { validSearchParamArray } from '@/libs/utils/validSearchParam';
+import {
+  validSearchParam,
+  validSearchParamArray,
+} from '@/libs/utils/validSearchParam';
 import { EUrlAdminParam, EUrlSearchParam } from '@/models/url.model';
 import { IVseTvErrorChannel, IVseTvParsModel } from '@/models/scheduleTV.model';
 import { cache } from 'react';
@@ -33,7 +36,7 @@ interface IShowsData {
 const BASE_URL = process.env.BASE_URL;
 const { TV_SCHEDULE_VSE_TV } = EDBTableTitles;
 const BATCH_SIZE = 500;
-const trapChannel: IVseTvParsModel = {
+const TRAP_CHANNEL: IVseTvParsModel = {
   vsetv: '346',
   title: 'trapChannel',
   id: '',
@@ -115,12 +118,12 @@ const getFullDate = (
 }; // Output: Date object representing '2024-07-14 07:25:00'
 
 const parseChannelPage = async (
-  // browser: Browser,
   channel: IVseTvParsModel,
+  trapChannelId: string,
   zero?: string,
   five?: string
 ) => {
-  if ((!zero || !five) && `${channel.vsetv}` !== `${trapChannel.vsetv}`)
+  if ((!zero || !five || zero === five) && `${channel.vsetv}` !== trapChannelId)
     throw new Error(
       `Error parsing channel «${channel.title}»(${channel.vsetv} - Traps are not defined: zero = «${zero}»; five = «${five}»`
     );
@@ -247,12 +250,28 @@ export default async function Page({
     searchParams
   );
 
+  const trapsChannelId = validSearchParam(
+    EUrlSearchParam.COMMENT_ID,
+    searchParams
+  );
+
   let dbInsertedStrings: string[] = [];
   const errorChannels: IVseTvErrorChannel[] = [];
   const errorMessages: string[] = [];
   let resDbTableLength: IDbIdAmountModel[] | string = '';
+  const trapChannel: IVseTvParsModel = trapsChannelId
+    ? { ...TRAP_CHANNEL, vsetv: trapsChannelId }
+    : TRAP_CHANNEL;
 
   try {
+    const { zero, five } = catchTraps(
+      await parseChannelPage(trapChannel, trapChannel.vsetv)
+    );
+    if (!zero || !five || zero === five)
+      throw new Error(
+        `Traps are not defined: zero = «${zero}»; five = «${five}»`
+      );
+
     const channels = await getDBVseTvChannels(searchQueryArray);
 
     if (!searchQueryArray || searchQueryArray.length === 0)
@@ -260,8 +279,12 @@ export default async function Page({
 
     for (const channel of channels) {
       try {
-        const { zero, five } = catchTraps(await parseChannelPage(trapChannel));
-        const $ = await parseChannelPage(channel, zero, five);
+        const $ = await parseChannelPage(
+          channel,
+          trapChannel.vsetv,
+          zero,
+          five
+        );
         const channelParsedData = extractParsedData($, channel);
         if (typeof channelParsedData === 'string') {
           errorChannels.push({
@@ -285,7 +308,11 @@ export default async function Page({
           ),
         ];
 
-        if (searchQueryArray && searchQueryArray.length > 0)
+        if (
+          searchQueryArray &&
+          searchQueryArray.length > 0 &&
+          dbInsertedStrings.length > 0
+        )
           await deleteDBVseTvChannel(`${channel.vsetv}`, channel.title);
       } catch (err) {
         errorMessages.push(

@@ -2,6 +2,7 @@ import { executeMultipleQuery, executeQuery } from '@/libs/db/mysqldb';
 import { IDbIdAmountModel } from '@/models/admin.model';
 import { IScheduleTVModel, IVseTvParsModel } from '@/models/scheduleTV.model';
 import { EDBTableTitles } from '@/models/ui.model';
+import { decode } from 'html-entities';
 import { cache } from 'react';
 
 const { TV_SCHEDULE_VSE_TV } = EDBTableTitles;
@@ -12,7 +13,7 @@ export const getDBChannelScheduleShort = cache(
     chanelId: number,
     hourInterval: number,
     rowsLimit: number
-  ) => {
+  ): Promise<IScheduleTVModel[] | Error> => {
     const sql = `
     SELECT *
     FROM ${dbTableName}
@@ -22,11 +23,19 @@ export const getDBChannelScheduleShort = cache(
     LIMIT ?
 `;
 
-    return await executeQuery<IScheduleTVModel>(sql, [
+    const res = await executeQuery<IScheduleTVModel>(sql, [
       `${chanelId}`,
       `${hourInterval}`,
       `${rowsLimit}`,
     ]);
+
+    return res instanceof Error
+      ? res
+      : res.map((r) => ({
+          ...r,
+          title: decode(r.title),
+          prog_desc: decode(r.prog_desc),
+        }));
   }
 );
 
@@ -34,7 +43,7 @@ export const getChanOneDaySchedule = cache(
   async (
     scheduleTables: { tblName: EDBTableTitles; scheduleId: number }[],
     dateStr: string
-  ) => {
+  ): Promise<IScheduleTVModel[][] | null> => {
     const sql = scheduleTables
       .map(
         ({ tblName, scheduleId }) =>
@@ -50,7 +59,15 @@ export const getChanOneDaySchedule = cache(
       .join(' ');
     const res = await executeMultipleQuery<[IScheduleTVModel[]]>(sql);
 
-    return res instanceof Error ? null : res;
+    return res instanceof Error
+      ? null
+      : res.map((scged) =>
+          scged.map((r) => ({
+            ...r,
+            title: decode(r.title),
+            prog_desc: decode(r.prog_desc),
+          }))
+        );
   }
 );
 

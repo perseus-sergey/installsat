@@ -11,6 +11,7 @@ import {
   TSatDigest,
 } from '@/models/satDigest.model';
 import { LANGUAGE } from '@/models/ui.model';
+import { decode } from 'html-entities';
 
 export const getSatDigestNews = async ({
   satellites = undefined,
@@ -81,7 +82,7 @@ export const getGroupedSatelliteOptions = (
   const mapToOption = (sats: TSatModel[]): ISatelliteOption[] =>
     sats.map((sat) => ({
       value: sat.grade,
-      label: `${sat.position} ..... ${sat.title}`,
+      label: decode(`${sat.position} ..... ${sat.title}`),
     }));
 
   const options: IGroupedSatelliteOption[] = [
@@ -119,7 +120,7 @@ export const getSatsForForm = async (isDefaultValue = true) => {
   const satResult = await executeQuery<TSatModel>(`
   SELECT title, id, position, grade
   FROM tbl_chan_sat
-  WHERE title!=''
+  WHERE title != ''
   ORDER BY grade
 `);
 

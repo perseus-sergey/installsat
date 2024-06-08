@@ -14,7 +14,7 @@
     "test:watch": "jest --watchAll"
   },
   "dependencies": {
-    "@babel/parser": "7.24.4",
+    "@babel/parser": "^7.24.7",
     "@react-email/components": "0.0.17",
     "@react-email/render": "^0.0.12",
     "@tinymce/tinymce-react": "^5.0.1",

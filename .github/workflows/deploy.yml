@@ -19,4 +19,4 @@ jobs:
           port: ${{ secrets.PORT }}
           key: ${{ secrets.SSHKEY }}
           pre_commands: chmod +x ./.scripts/deploy.sh
-          script: 'cd ~/installsat && yarn --immutable && ./.scripts/deploy.sh'
+          script: 'cd ~/installsat && yarn --immutable --immutable-cache && ./.scripts/deploy.sh'

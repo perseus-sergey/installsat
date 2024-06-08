@@ -1,15 +1,11 @@
 name: Deploy
 
-# Trigger the workflow on push and
-# pull request events on the main branch
 on:
   push:
     branches: ['main']
   pull_request:
     branches: ['main']
 
-# Authenticate to the server via SSH
-# and run our deployment script
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -22,6 +18,5 @@ jobs:
           username: ${{ secrets.USERNAME }}
           port: ${{ secrets.PORT }}
           key: ${{ secrets.SSHKEY }}
-          # Виконати команду 'chmod' для надання дозволів на виконання
           pre_commands: chmod +x ./.scripts/deploy.sh
-          script: 'cd ~/installsat && ./.scripts/deploy.sh'
+          script: 'cd ~/installsat && yarn --immutable --immutable-cache && ./.scripts/deploy.sh'

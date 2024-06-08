@@ -17,6 +17,7 @@ import FillingValidImage from '../ui/Images/FillingValidImage';
 import GenreImage from '../ui/Images/GenreImage/GenreImage';
 import EmptyData from '../errors/EmptyData/EmptyData';
 import { EUrlBaseParam } from '@/models/url.model';
+import { decode } from 'html-entities';
 
 const {
   name: tName,
@@ -78,45 +79,49 @@ const PackageChannelList = ({
           </p>
         )}
         <ul className={styles.channelList}>
-          {chanList.map((channel) => (
-            <li key={channel.chan_id} className={styles.listItem}>
-              <Link
-                href={`/${pathToChannelDetails}/${channel.chan_cpu}${todayStr ? `/${todayStr}` : ''}`}
-                aria-label={ariaLabel[LANGUAGE]}
-              >
-                <ChannelCardTooltip
-                  mainImage={{
-                    ...channelLogo.big,
-                    src: `${channelLogo.big.path}${channel.chan_logo}`,
-                  }}
-                  mainDefaultImage={channelLogo.big.defaultImage}
-                  mainAlternativeImgString={channelLogo.big.alternativeImgStr}
-                  tooltipTextList={[
-                    {
-                      title: tName[LANGUAGE],
-                      description: channel.chan_title,
-                    },
-                    'view' in channel
-                      ? {
-                          title: tViews[LANGUAGE],
-                          description: channel.view.toLocaleString('en-US'),
-                        }
-                      : { title: '', description: '' },
-                    {
-                      title: tLanguage[LANGUAGE],
-                      description: channel.lan,
-                    },
-                    {
-                      title: tDescription[LANGUAGE],
-                      description: cutText(channel.chan_description, 150),
-                    },
-                  ]}
+          {chanList.map((channel) => {
+            const chanTitle = decode(channel.chan_title);
+
+            return (
+              <li key={channel.chan_id} className={styles.listItem}>
+                <Link
+                  href={`/${pathToChannelDetails}/${channel.chan_cpu}${todayStr ? `/${todayStr}` : ''}`}
+                  aria-label={ariaLabel[LANGUAGE]}
                 >
-                  <span className="text-center">{channel.chan_title}</span>
-                </ChannelCardTooltip>
-              </Link>
-            </li>
-          ))}
+                  <ChannelCardTooltip
+                    mainImage={{
+                      ...channelLogo.big,
+                      src: `${channelLogo.big.path}${channel.chan_logo}`,
+                    }}
+                    mainDefaultImage={channelLogo.big.defaultImage}
+                    mainAlternativeImgString={channelLogo.big.alternativeImgStr}
+                    tooltipTextList={[
+                      {
+                        title: tName[LANGUAGE],
+                        description: chanTitle,
+                      },
+                      'view' in channel
+                        ? {
+                            title: tViews[LANGUAGE],
+                            description: channel.view.toLocaleString('en-US'),
+                          }
+                        : { title: '', description: '' },
+                      {
+                        title: tLanguage[LANGUAGE],
+                        description: channel.lan,
+                      },
+                      {
+                        title: tDescription[LANGUAGE],
+                        description: cutText(channel.chan_description, 150),
+                      },
+                    ]}
+                  >
+                    <span className="text-center">{chanTitle}</span>
+                  </ChannelCardTooltip>
+                </Link>
+              </li>
+            );
+          })}
           {'genre_h1' in chanList[0] && chanList[0].genre_h1 && (
             <p className="thhead_small">{chanList[0].genre_h1}</p>
           )}

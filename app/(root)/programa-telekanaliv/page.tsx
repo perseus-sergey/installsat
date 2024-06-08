@@ -69,8 +69,7 @@ export default async function Page({ searchParams }: IPageProps) {
     searchParams
   );
 
-  const onlineChannels =
-    (await getChannelsWithSchedule(searchQueryChannel)) || [];
+  const onlineChannels = await getChannelsWithSchedule(searchQueryChannel);
 
   return (
     <>

@@ -83,9 +83,7 @@ export default async function Page({ searchParams }: IPageProps) {
   const satListResults = await getChannelSatList();
   const satList = satListResults instanceof Error ? [] : satListResults;
 
-  const groupedChannelsAllSat = getGroupedChannelsAllSat([
-    satChannels instanceof Error ? [] : satChannels,
-  ]);
+  const groupedChannelsAllSat = getGroupedChannelsAllSat([satChannels]);
 
   const satLinks = satList.map((sat) => ({
     title: `${sat.title} - ${sat.position}`,

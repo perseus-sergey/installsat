@@ -2,7 +2,7 @@ import mysql, { ConnectionOptions } from 'mysql2/promise';
 
 // const port = process.env.DB_PORT ? +process.env.DB_PORT : 0;
 
-const access: ConnectionOptions = {
+export const access: ConnectionOptions = {
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
   database: process.env.DB_NAME,

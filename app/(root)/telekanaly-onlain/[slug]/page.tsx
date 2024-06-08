@@ -61,9 +61,9 @@ export const generateMetadata = async ({
   params: { slug },
 }: IChannelProps): Promise<Metadata> => {
   const sqlResult = await getDBOnlineChannel(slug);
-  if (!sqlResult || !sqlResult.length) return DEFAULT_META_DATA[L];
+  if (!sqlResult) return DEFAULT_META_DATA[L];
 
-  const { title: chTitle, description: descr, chan_slug } = sqlResult[0];
+  const { title: chTitle, description: descr, chan_slug } = sqlResult;
   const description = getDescription(chTitle, descr)[L];
   const title = getTitle(chTitle)[L];
 
@@ -84,17 +84,15 @@ export const generateMetadata = async ({
 export default async function Page({ params: { slug } }: IChannelProps) {
   const sqlResult = await getDBOnlineChannel(slug);
 
-  if (!sqlResult || !sqlResult.length) notFound();
+  if (!sqlResult) notFound();
 
-  const { id, title, logo, text, view, chan_slug } = sqlResult[0];
+  const { id, title, logo, text, view, chan_slug } = sqlResult;
 
   const similarChannelsResult = await getSimilarChannels(logo);
   const similarChannels =
     similarChannelsResult instanceof Error ? [] : similarChannelsResult;
 
-  const similarArticlesResult = await getSimilarArticles(logo);
-  const similarArticles =
-    similarArticlesResult instanceof Error ? [] : similarArticlesResult;
+  const similarArticles = await getSimilarArticles(logo);
 
   const numberOfComments = await getCommentsNumber(
     EDBTableTitles.COMMENTS_CHANNEL,
@@ -133,13 +131,13 @@ export default async function Page({ params: { slug } }: IChannelProps) {
           />
         </Title>
         <OnlinePlayerTabs
-          channelData={sqlResult[0]}
+          channelData={sqlResult}
           userCountryCode={userCountryCode}
         />
 
         <GrooveLine />
 
-        <ScheduleShort channelData={sqlResult[0]} />
+        <ScheduleShort channelData={sqlResult} />
 
         <div className="article-text">
           <DangerHtml text={text} />
@@ -151,7 +149,7 @@ export default async function Page({ params: { slug } }: IChannelProps) {
             href={`/${EUrlBaseParam.CHANNELS_TV_PROGRAM}/${slug}/${getFormattedDateStr()}`}
           />
 
-          <ChannelOnlineParams channelDBParams={sqlResult[0]} />
+          <ChannelOnlineParams channelDBParams={sqlResult} />
 
           <NoteBlock noteTitle={noteTitle[L]}>
             {getResponsibilityText(title)[L]}

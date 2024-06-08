@@ -7,6 +7,7 @@ import { getDailyNews } from '@/controllers/satDigest.controller';
 import FillingValidImage from '../ui/Images/FillingValidImage';
 import { LANGUAGE, ERRORS } from '@/models/ui.model';
 import EmptyPage from '../errors/EmptyPage/EmptyPage';
+import { decode } from 'html-entities';
 
 interface ITransNewsSingleProps {
   newsArray: [string, TSatDigest[]][] | null;
@@ -33,7 +34,7 @@ const TransNewsSingle = ({ newsArray, title }: ITransNewsSingleProps) => (
                   alternativeImgString={satLogo.alternativeStr}
                   alt={`${satLogo.alt[LANGUAGE]}${satNews[0]}`}
                 />
-                {satNews[0]}
+                {decode(satNews[0])}
               </h2>
               <div className={satNewsStyles.newsList}>
                 <DangerHtmlUl

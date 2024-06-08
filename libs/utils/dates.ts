@@ -1,6 +1,14 @@
 import { ELanguage } from '@/models/ui.model';
 import { DateTime } from 'luxon';
 
+export const getUserTimeZone = () =>
+  Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+export const getDateInISO = (dateStr: string) =>
+  DateTime.fromISO(dateStr, {
+    zone: getUserTimeZone(),
+  }).toISODate();
+
 export const getValidDate = (date: string | Date) => {
   const currDate = date instanceof Date ? date : new Date(date);
 
@@ -120,7 +128,7 @@ export const getDayOfMonthStr = (dateStr: string, lang: ELanguage) => {
     : `${months[monthIndex]} ${day}`;
 
   return result;
-};
+}; // 29 липня
 
 export const getFormattedDate = (date: Date, format: string): string =>
   DateTime.fromJSDate(date).toFormat(format);

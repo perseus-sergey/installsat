@@ -141,19 +141,19 @@ const extractParsedData = ($: cheerio.CheerioAPI, channel: IVseTvParsModel) => {
   const parsedData: IShowsData[] = [];
   const chWeekdayTitle = $('td.weekdaytitle').first();
   if (!chWeekdayTitle)
-    return `Error of parsing weekday title for channel «${channel.title}»(${channel.vsetv})`;
+    return `Error of parsing WEEKDAY TITLE from «${$(chWeekdayTitle).html()}» for channel «${channel.title}»(${channel.vsetv})`;
 
   const words = chWeekdayTitle.text().trim().split(' ');
   const parsedMonth = words[words.length - 1];
   const parsedDay = words[words.length - 2];
   const monthNumber = month.indexOf(parsedMonth);
   if (monthNumber < 0)
-    return `Error extracting and matching month number from chWeekdayTitle: «${chWeekdayTitle}»`;
+    return `Error extracting and matching month number from chWeekdayTitle: «${$(chWeekdayTitle).html()}»`;
 
   const chTimes = $('.time');
   const chProgTitles = $('.prname2');
   if (!chTimes.length || !chProgTitles.length)
-    return `Error of parsing channel times or program titles for channel`;
+    return `Error of parsing channel TIMES or PROGRAM TITLES for channel «${channel.title}»(${channel.vsetv})`;
 
   let currentTitle: string | undefined = undefined;
   let previousDate: Date | null = null;
@@ -211,7 +211,8 @@ const extractParsedData = ($: cheerio.CheerioAPI, channel: IVseTvParsModel) => {
 };
 
 const insertDataInBatches = async (data: string[]) => {
-  if (!data || data.length === 0) return ['Error: Received empty data'];
+  if (!data || data.length === 0)
+    return ['Error: Received empty data for batch insert'];
 
   let message: string[] = [];
 

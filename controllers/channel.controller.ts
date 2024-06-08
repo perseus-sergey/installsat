@@ -4,6 +4,7 @@ import {
   IOnlineChannel,
   ISimilarChannel,
 } from '@/models/channel.model';
+import { decode } from 'html-entities';
 import { cache } from 'react';
 
 export const getDBChannel = cache(async (slug: string) => {
@@ -59,12 +60,21 @@ WHERE
   CH.cpu = ?
 LIMIT 1
 `;
+  const res = await executeQuery<IChannel>(sql, [slug]);
+  if (res instanceof Error) return null;
+  if (!res.length) return null;
 
-  return await executeQuery<IChannel>(sql, [slug]);
+  return {
+    ...res[0],
+    title: decode(res[0].title),
+    description: decode(res[0].description),
+    sat_title: decode(res[0].sat_title),
+  };
 });
 
-export const getDBOnlineChannel = cache(async (slug: string) => {
-  const sql = `
+export const getDBOnlineChannel = cache(
+  async (slug: string): Promise<IOnlineChannel | null> => {
+    const sql = `
   SELECT 
     C.id, 
     C.title, 
@@ -95,10 +105,18 @@ export const getDBOnlineChannel = cache(async (slug: string) => {
   WHERE C.cpu =  ?
   LIMIT 1
 `;
-  const res = await executeQuery<IOnlineChannel>(sql, [slug]);
+    const res = await executeQuery<IOnlineChannel>(sql, [slug]);
 
-  return res instanceof Error ? null : res;
-});
+    return res instanceof Error || !res.length
+      ? null
+      : {
+          ...res[0],
+          title: decode(res[0].title),
+          description: decode(res[0].description),
+          other_stream: decode(res[0].other_stream),
+        };
+  }
+);
 
 export const getDBChannelSlugList = async () =>
   await executeQuery<{ cpu: string }>(`SELECT cpu FROM tbl_channals`);

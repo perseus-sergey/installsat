@@ -44,7 +44,7 @@ export default async function Page({
     <>
       <Title>Edit comment</Title>
       <EditComment
-        text={comment[0].text}
+        text={comment}
         commentID={id}
         dbTableName={commentDbTable}
         revalidateUrl={`/${BASE_PATH}/${EDIT_COMMENT}?${searchParamsUrl.toString()}`}

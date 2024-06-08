@@ -90,3 +90,16 @@ export const makeUrlSearchParams = (
 
   return params;
 };
+
+export const createURLWithParams = (
+  baseURL: string,
+  searchParams?: TSearchParams
+): string => {
+  if (!searchParams) return baseURL;
+
+  const url = new URL(baseURL);
+  const params = makeUrlSearchParams(searchParams);
+  url.search = params.toString();
+
+  return url.toString();
+};

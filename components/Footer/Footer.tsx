@@ -6,6 +6,7 @@ import {
 import styles from './Footer.module.scss';
 import Link from 'next/link';
 import { LANGUAGE } from '@/models/ui.model';
+import { Fragment } from 'react';
 
 const Footer = () => (
   <footer className={styles.footer}>
@@ -17,16 +18,16 @@ const Footer = () => (
       <ul className={styles.menuList}>
         {footerMenuList.map((item, i) => {
           return (
-            <>
+            <Fragment key={i}>
               {i ? (
                 <span className={styles.separator}>{MENU_SEPARATOR}</span>
               ) : null}
-              <li key={i}>
+              <li>
                 <Link href={item.href} className={styles.navLink}>
                   {item.title[LANGUAGE]}
                 </Link>
               </li>
-            </>
+            </Fragment>
           );
         })}
       </ul>

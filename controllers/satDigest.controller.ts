@@ -11,11 +11,15 @@ import {
   TSatDigest,
 } from '@/models/satDigest.model';
 import { LANGUAGE } from '@/models/ui.model';
+import { decode } from 'html-entities';
 
-export const getSatDigestNews = async (
-  satellites?: string | string[] | undefined,
-  timeInterval = 0
-) => {
+export const getSatDigestNews = async ({
+  satellites = undefined,
+  timeInterval = 0,
+}: {
+  satellites?: string | string[] | undefined;
+  timeInterval?: number;
+}): Promise<Error | TSatDigest[]> => {
   let orderBy = 'ORDER BY d.date DESC, satGrade, satTitle';
   let tblName = 'tbl_digest';
   let where = `WHERE date >= CURDATE() - INTERVAL ${LAST_NEWS_INTERVAL} DAY`;
@@ -39,7 +43,7 @@ export const getSatDigestNews = async (
   }
 
   const sql = `
-    SELECT d.id, d.date, d.text,
+    SELECT d.id, d.date, d.text, d.sat_name, d.sat_position,
     sat.parent AS satParent,
     sat.title AS satTitle,
     sat.logo AS satLogo,
@@ -51,8 +55,20 @@ export const getSatDigestNews = async (
     ${inSatList}
     ${orderBy}
   `;
+  const res = await executeQuery<TSatDigest>(sql);
 
-  return await executeQuery<TSatDigest>(sql, []);
+  return res instanceof Error
+    ? res
+    : res.map((r) => ({
+        ...r,
+        date: (r.date as Date).toLocaleDateString('en-CA', {
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+        }),
+        satTitle: r.satTitle || r.sat_name || 'Unknown Satellite',
+        satPosition: r.satPosition || r.sat_position || '',
+      }));
 };
 
 export const getGroupedSatelliteOptions = (
@@ -66,7 +82,7 @@ export const getGroupedSatelliteOptions = (
   const mapToOption = (sats: TSatModel[]): ISatelliteOption[] =>
     sats.map((sat) => ({
       value: sat.grade,
-      label: `${sat.position} ..... ${sat.title}`,
+      label: decode(`${sat.position} ..... ${sat.title}`),
     }));
 
   const options: IGroupedSatelliteOption[] = [
@@ -100,12 +116,11 @@ export const splitSatellitesByDirection = (satellites: TSatModel[]) =>
     [[], []]
   );
 
-//TODO: check the same function
 export const getSatsForForm = async (isDefaultValue = true) => {
   const satResult = await executeQuery<TSatModel>(`
   SELECT title, id, position, grade
   FROM tbl_chan_sat
-  WHERE title!=''
+  WHERE title != ''
   ORDER BY grade
 `);
 
@@ -125,6 +140,8 @@ export const getTransNewsForSingleDay = async (
     d.date, 
     d.text, 
     d.id,
+    d.sat_name, 
+    d.sat_position,
     sat.parent AS satPar,
     sat.title AS satTitle,
     sat.logo AS satLogo,
@@ -135,15 +152,20 @@ export const getTransNewsForSingleDay = async (
 	WHERE date = ?
 	ORDER BY satGrade, satTitle
 `;
-  const newsResult = await executeQuery<TSatDigest>(sql, [date]);
+  const newsResult = await executeQuery<TSatDigest>(sql, [
+    new Date(date).toLocaleDateString('en-CA'),
+  ]);
 
   if (newsResult instanceof Error) return null;
 
   return Array.from(
-    newsResult.reduce((acc, currObj) => {
-      const satTitle = `${currObj.satTitle} ${currObj.satPosition}`;
+    newsResult.reduce((acc, item) => {
+      const satName = item.satTitle || item.sat_name || 'Unknown Satellite';
+      const position = item.sat_position || item.sat_position || '';
+      const satTitle = `${satName} ${position}`;
+
       const mapCurrSat = acc.get(satTitle) || [];
-      acc.set(satTitle, [...mapCurrSat, currObj]);
+      acc.set(satTitle, [...mapCurrSat, item]);
 
       return acc;
     }, new Map())
@@ -153,13 +175,13 @@ export const getTransNewsForSingleDay = async (
 export const setGroupedNewsByDateMap = async (): Promise<
   TGroupedNews | Error
 > => {
-  const newsResult = await getSatDigestNews();
+  const newsResult = await getSatDigestNews({});
 
   if (newsResult instanceof Error) return newsResult;
 
   return Array.from(
     newsResult.reduce((acc, currObj) => {
-      const strCurrDate = `${currObj.date}`;
+      const strCurrDate = currObj.date;
       const mapCurrDate = acc.get(strCurrDate) || new Map();
       const newsArrForCurrSat = mapCurrDate.get(currObj.satTitle) || [];
       mapCurrDate.set(currObj.satTitle, [...newsArrForCurrSat, currObj]);

@@ -5,20 +5,35 @@ import {
   IPackageChannelListModel,
   ISatChannelListModel,
 } from '@/models/channelList.model';
+import { decode } from 'html-entities';
 import { cache } from 'react';
 
 const groupeChannelsBy = <T>(
   channelList: T[],
   groupChanBy: keyof T,
+  decodeFields?: (keyof T)[],
   sortChanBy?: keyof T
-) => {
+): [string, T[]][] => {
   const groupedData = channelList.reduce(
     (acc, channel) => {
       const groupedField = channel[groupChanBy] as unknown as string;
       if (!acc[groupedField]) {
         acc[groupedField] = [];
       }
-      acc[groupedField].push(channel);
+
+      const decodedChannel = { ...channel };
+
+      if (decodeFields) {
+        decodeFields.forEach((field) => {
+          if (typeof channel[field] === 'string') {
+            (decodedChannel[field] as unknown as string) = decode(
+              channel[field] as string
+            );
+          }
+        });
+      }
+
+      acc[groupedField].push(decodedChannel);
 
       return acc;
     },
@@ -38,7 +53,7 @@ const groupeChannelsBy = <T>(
           }
         })
       : channels,
-  ]) as [keyof T, T[]][];
+  ]) as [string, T[]][];
 
   return result;
 };
@@ -50,7 +65,7 @@ export const getSatChannels = cache(
     satellites?: string | string[] | undefined,
     isMPG4 = false,
     isT2MI = false
-  ) => {
+  ): Promise<ISatChannelListModel[]> => {
     let inSatList = '';
     const searchPart = searchQuery
       ? `AND 	ch.title LIKE "%${searchQuery}%"`
@@ -100,11 +115,20 @@ export const getSatChannels = cache(
 
     const resp = await executeQuery<ISatChannelListModel>(sql, [channelId]);
 
-    return resp;
+    return resp instanceof Error || resp.length === 0
+      ? []
+      : resp.map((r) => ({
+          ...r,
+          sat_title: decode(r.sat_title),
+          title: decode(r.title),
+          description: decode(r.description),
+        }));
   }
 );
 
-export const getChannelPackages = async () => {
+export const getChannelPackages = async (): Promise<
+  IChannelPackagesModel[]
+> => {
   const sql = `
   SELECT 
     C.id, 
@@ -123,7 +147,15 @@ export const getChannelPackages = async () => {
       C.title
   `;
 
-  return await executeQuery<IChannelPackagesModel>(sql);
+  const resp = await executeQuery<IChannelPackagesModel>(sql);
+
+  return resp instanceof Error || resp.length === 0
+    ? []
+    : resp.map((r) => ({
+        ...r,
+        title: decode(r.title),
+        description: decode(r.description),
+      }));
 };
 
 export const getOnlineChannels = cache(async (searchQuery = '') => {
@@ -145,15 +177,22 @@ export const getOnlineChannels = cache(async (searchQuery = '') => {
 
   const resp = await executeQuery<IOnlineChannelListModel>(sql);
 
-  if (resp instanceof Error || !resp.length) return null;
+  if (resp instanceof Error || !resp.length) return [];
 
   const groupedData = resp.reduce(
     (acc, channel) => {
-      const { chan_title, genre_title, potok, tvforsite_net } = channel;
+      const decodedChannel = {
+        ...channel,
+        chan_title: decode(channel.chan_title),
+        chan_description: decode(channel.chan_description),
+      };
+
+      const { chan_title, genre_title, potok, tvforsite_net } = decodedChannel;
       if (!acc[genre_title]) {
         acc[genre_title] = [];
       }
-      const shouldAdd = !acc[genre_title].some(
+
+      const existingChannel = acc[genre_title].find(
         (otherChannel) =>
           otherChannel.chan_title === chan_title ||
           (otherChannel.compress === 5 &&
@@ -163,8 +202,8 @@ export const getOnlineChannels = cache(async (searchQuery = '') => {
             otherChannel.tvforsite_net === tvforsite_net)
       );
 
-      if (shouldAdd) {
-        acc[genre_title].push(channel);
+      if (!existingChannel) {
+        acc[genre_title].push(decodedChannel);
       }
 
       return acc;
@@ -184,22 +223,40 @@ export const getChannelsWithSchedule = async (searchQuery = '') => {
   const searchPart = searchQuery ? `AND C.title LIKE "%${searchQuery}%"` : '';
 
   const sql = `
-  SELECT C.id AS chan_id, C.title AS chan_title, C.cpu AS chan_cpu, C.logo AS chan_logo, C.description AS chan_description, C.view, C.tema AS genre_id,
-    L.title AS lan, T.title AS genre_title
-  FROM tbl_channals AS C
-  LEFT JOIN tbl_language AS L ON C.lang = L.id
-  LEFT JOIN
-    tbl_chan_tema AS T ON C.tema = T.id
-  WHERE C.tema != 15 AND ((C.vipiko != '' AND C.vipiko != 0) OR (C.vsetv != '' AND C.vsetv != 0))
-  ${searchPart}
-  GROUP BY C.title
-  ORDER BY C.tema, C.title
+  SELECT 
+      MAX(C.id) AS chan_id,
+      C.title AS chan_title,
+      MAX(C.cpu) AS chan_cpu,
+      MAX(C.logo) AS chan_logo,
+      MAX(C.description) AS chan_description,
+      MAX(C.view) AS view,
+      C.tema AS genre_id,
+      MAX(L.title) AS lan,
+      MAX(T.title) AS genre_title
+  FROM 
+      tbl_channals AS C
+  LEFT JOIN 
+      tbl_language AS L ON C.lang = L.id
+  LEFT JOIN 
+      tbl_chan_tema AS T ON C.tema = T.id
+  WHERE 
+      C.tema != 15 
+      AND ((C.vipiko != '' AND C.vipiko != 0) OR (C.vsetv != '' AND C.vsetv != 0))
+      ${searchPart}
+  GROUP BY 
+      C.title, C.tema
+  ORDER BY 
+      C.tema, 
+      C.title;
   `;
   const resp = await executeQuery<IOnlineChannelListModel>(sql);
 
   return resp instanceof Error || !resp.length
-    ? null
-    : groupeChannelsBy<IOnlineChannelListModel>(resp, 'genre_title');
+    ? []
+    : groupeChannelsBy<IOnlineChannelListModel>(resp, 'genre_title', [
+        'chan_title',
+        'chan_description',
+      ]);
 };
 
 export const getT2Channels = cache(async (searchQuery = '') => {
@@ -224,7 +281,10 @@ export const getT2Channels = cache(async (searchQuery = '') => {
 
   return resp instanceof Error || !resp.length
     ? null
-    : groupeChannelsBy<IPackageChannelListModel>(resp, 'genre_title');
+    : groupeChannelsBy<IPackageChannelListModel>(resp, 'genre_title', [
+        'chan_title',
+        'chan_description',
+      ]);
 });
 
 export const getPackageChannels = cache(
@@ -275,7 +335,12 @@ export const getPackageChannels = cache(
 
     return resp instanceof Error || !resp.length
       ? null
-      : groupeChannelsBy<IPackageChannelListModel>(resp, 'genre_title');
+      : groupeChannelsBy<IPackageChannelListModel>(
+          resp,
+          'genre_title',
+          ['chan_title', 'chan_description'],
+          'chan_title'
+        );
   }
 );
 

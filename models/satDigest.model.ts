@@ -129,22 +129,21 @@ export const META_TRANS_NEWS_SINGLE = {
   },
 };
 
-export const rawSatDigest = {
-  id: -1,
-  date: new Date('1970-01-01'),
-  update: -1,
-  text: '',
-  sat: -1,
-  sat_name: '',
-  country: '',
-  satParent: '',
-  satTitle: '',
-  satLogo: '',
-  satGrade: '',
-  satPosition: '',
-};
-
-export type TSatDigest = typeof rawSatDigest;
+export interface TSatDigest {
+  id: number;
+  date: Date | string;
+  update: number;
+  text: string;
+  sat: number;
+  sat_name: string;
+  country: string;
+  satParent: string;
+  satTitle: string;
+  satLogo: string;
+  satGrade: string;
+  satPosition: string;
+  sat_position: string;
+}
 
 export interface IStateOption {
   readonly value: number;

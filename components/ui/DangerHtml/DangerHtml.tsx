@@ -1,5 +1,3 @@
-import React from 'react';
-
 interface IDangerHtmlProps {
   text: string;
   className?: string;

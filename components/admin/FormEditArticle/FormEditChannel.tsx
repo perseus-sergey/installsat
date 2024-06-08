@@ -388,7 +388,7 @@ const FormEditChannel = ({
                 className="text-blue-600 underline"
                 href="http://www.vsetv.com/"
                 target="_blank"
-                rel="noopener noreferrer"
+                rel="noopener noreferrer nofollow"
               >
                 vsetv.com
               </Link>

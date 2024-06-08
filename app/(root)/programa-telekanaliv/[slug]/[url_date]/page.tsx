@@ -25,6 +25,7 @@ import NoteBlock from '@/components/ui/NoteBlock/NoteBlock';
 import GrooveLine from '@/components/ui/GrooveLine';
 import { BREAD_CRUMBS } from '@/models/breadCrumbs.model';
 import ChannelOnlineLink from '@/components/ui/buttons/ChannelOnlineLink/ChannelOnlineLink';
+import { decode } from 'html-entities';
 
 const BASE_URL = process.env.BASE_URL;
 
@@ -49,9 +50,9 @@ export const generateMetadata = async ({
   params: { slug, url_date },
 }: IPageProps): Promise<Metadata> => {
   const sqlResult = await getDBOnlineChannel(slug);
-  if (!sqlResult || !sqlResult.length) return DEFAULT_META_DATA[LANGUAGE];
+  if (!sqlResult) return DEFAULT_META_DATA[LANGUAGE];
 
-  const { title, description } = sqlResult[0];
+  const { title, description } = sqlResult;
 
   const metaDescription = `${descriptionStart[LANGUAGE]} ${title}. ${cutText(description, 150)}`;
   const metaTitle = getTitle(title, url_date)[LANGUAGE];
@@ -72,9 +73,18 @@ export const generateMetadata = async ({
 
 export default async function Page({ params: { slug, url_date } }: IPageProps) {
   const sqlResult = await getDBOnlineChannel(slug);
-  if (!sqlResult || !sqlResult.length || !getValidDate(url_date)) notFound();
+  if (!sqlResult || !getValidDate(url_date)) notFound();
 
-  const { id, title, logo, view, vipiko, vsetv, tvforsite_net } = sqlResult[0];
+  const {
+    id,
+    title: chanTitle,
+    logo,
+    view,
+    vipiko,
+    vsetv,
+    tvforsite_net,
+  } = sqlResult;
+  const title = decode(chanTitle);
 
   const dbScheduleDataArr = [
     {

@@ -72,7 +72,7 @@ export default async function Page({ searchParams }: IPageProps) {
     searchParams
   );
 
-  const onlineChannels = (await getOnlineChannels(searchQueryChannel)) || [];
+  const onlineChannels = await getOnlineChannels(searchQueryChannel);
 
   const numberOfComments = await getCommentsNumber(
     EDBTableTitles.COMMENTS_GENRE,

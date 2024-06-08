@@ -2,7 +2,6 @@ import BottomInfoPanel from '@/components/BottomInfoPanel/BottomInfoPanel';
 import ChannelOnlineLink from '@/components/ui/buttons/ChannelOnlineLink/ChannelOnlineLink';
 import ChannelParams from '@/components/ChannelParams/ChannelParams';
 import DangerHtml from '@/components/ui/DangerHtml/DangerHtml';
-import EmptyData from '@/components/errors/EmptyData/EmptyData';
 import FillingValidImage from '@/components/ui/Images/FillingValidImage';
 import NoteBlock from '@/components/ui/NoteBlock/NoteBlock';
 import SimilarArticles from '@/components/SimilarArticles/SimilarArticles';
@@ -22,7 +21,6 @@ import { LANGUAGE, EDBTableTitles, DEFAULT_META_DATA } from '@/models/ui.model';
 import { EUrlAdminParam, EUrlBaseParam } from '@/models/url.model';
 import { Metadata } from 'next';
 import Link from 'next/link';
-import { notFound } from 'next/navigation';
 import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
 import { getCommentsNumber } from '@/controllers/comments.controller';
 import GrooveLine from '@/components/ui/GrooveLine';
@@ -31,6 +29,7 @@ import { CHANNEL_LIST_ANCHOR_START } from '@/models/channelList.model';
 import { BREAD_CRUMBS } from '@/models/breadCrumbs.model';
 import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
 import EditLinkButton from '@/components/admin/EditLinkButton/EditLinkButton';
+import { notFound } from 'next/navigation';
 
 const BASE_URL = process.env.BASE_URL;
 
@@ -62,8 +61,7 @@ export const generateMetadata = async ({
   params: { slug },
 }: IChannelProps): Promise<Metadata> => {
   const sqlResult = await getDBChannel(slug);
-  if (sqlResult instanceof Error || !sqlResult.length)
-    return DEFAULT_META_DATA[LANGUAGE];
+  if (!sqlResult) return DEFAULT_META_DATA[LANGUAGE];
 
   const {
     title,
@@ -76,7 +74,7 @@ export const generateMetadata = async ({
     freq,
     polar,
     canonical,
-  } = sqlResult[0];
+  } = sqlResult;
   const metaTitle =
     cat_parent_id > 0
       ? `${titleBefore[LANGUAGE]} ${title} | ${cat_parent_title} | ${cat_title}`
@@ -110,9 +108,7 @@ export const generateMetadata = async ({
 export default async function Page({ params: { slug } }: IChannelProps) {
   const sqlResult = await getDBChannel(slug);
 
-  if (sqlResult instanceof Error)
-    return <EmptyData description={sqlResult.message} />;
-  if (!sqlResult.length) notFound();
+  if (!sqlResult) notFound();
 
   const {
     id,
@@ -130,7 +126,7 @@ export default async function Page({ params: { slug } }: IChannelProps) {
     sat_slug,
     sat_title,
     tvforsite_net,
-  } = sqlResult[0];
+  } = sqlResult;
 
   const catLink =
     cat_parent_id > 0
@@ -144,9 +140,7 @@ export default async function Page({ params: { slug } }: IChannelProps) {
   const similarChannels =
     similarChannelsResult instanceof Error ? [] : similarChannelsResult;
 
-  const similarArticlesResult = await getSimilarArticles(logo);
-  const similarArticles =
-    similarArticlesResult instanceof Error ? [] : similarArticlesResult;
+  const similarArticles = await getSimilarArticles(logo);
 
   const numberOfComments = await getCommentsNumber(
     EDBTableTitles.COMMENTS_CHANNEL,
@@ -198,7 +192,9 @@ export default async function Page({ params: { slug } }: IChannelProps) {
             title={`${scheduleTitle[LANGUAGE]} "${title}"`}
             href={`/${EUrlBaseParam.CHANNELS_TV_PROGRAM}/${slug}/${currentDate}`}
           />
-
+          {/* ----------------------------------------------------------------
+check online href
+          ---------------------------------------------------------------- */}
           {tvforsite_net && (
             <ChannelOnlineLink
               href={`/${EUrlBaseParam.ONLINE_CHANNEL_LIST}/${slug}`}
@@ -206,7 +202,7 @@ export default async function Page({ params: { slug } }: IChannelProps) {
               {getOnlineLinkText(title)[LANGUAGE]}
             </ChannelOnlineLink>
           )}
-          <ChannelParams channelDBParams={sqlResult[0]} />
+          <ChannelParams channelDBParams={sqlResult} />
 
           <NoteBlock noteTitle={noteTitle[LANGUAGE]}>
             {getResponsibilityText(title)[LANGUAGE]}

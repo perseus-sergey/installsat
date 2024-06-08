@@ -45,7 +45,10 @@ export const getCommentFromDB = async (
   SELECT text FROM ${tblName} WHERE id = ?
 `;
 
-  return await executeQuery<{ text: string }>(sql, [commentId]);
+  const res = await executeQuery<{ text: string }>(sql, [commentId]);
+
+  return res instanceof Error ? res : res[0].text;
+  // return res instanceof Error ? res : decode(res[0].text);
 };
 
 export const insertComment = async (

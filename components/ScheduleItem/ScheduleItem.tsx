@@ -3,6 +3,7 @@ import styles from './ScheduleItem.module.scss';
 import { IScheduleTVModel, SCHEDULE_META } from '@/models/scheduleTV.model';
 import { cutText } from '@/libs/utils/utils';
 import DangerHtml from '../ui/DangerHtml/DangerHtml';
+import { decode } from 'html-entities';
 
 const { descriptionMaxLength } = SCHEDULE_META.scheduleShort;
 
@@ -43,7 +44,7 @@ const ScheduleItem = ({ schedule, now, addHour }: IScheduleItemProps) => {
       </div>
       {schedule.prog_desc && (
         <p className={`${titleClass} ${styles.tvProgDescription}`}>
-          {cutText(schedule.prog_desc, descriptionMaxLength)}
+          {cutText(decode(schedule.prog_desc), descriptionMaxLength)}
         </p>
       )}
     </>

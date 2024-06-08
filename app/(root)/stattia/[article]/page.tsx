@@ -28,9 +28,9 @@ export default async function Page({ params: { article } }: IArticleParams) {
 
   if (sqlResult instanceof Error)
     return <EmptyData description={sqlResult.message} />;
-  if (!sqlResult.length) notFound();
+  if (!sqlResult) notFound();
 
-  const { title, logo, text, cat_slug, cat_name, date, view } = sqlResult[0];
+  const { title, logo, text, cat_slug, cat_name, date, view } = sqlResult;
 
   return (
     <>

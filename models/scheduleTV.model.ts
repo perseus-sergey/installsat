@@ -83,6 +83,7 @@ export const SCHEDULE_META = {
     },
   },
 };
+
 export interface IScheduleTVModel {
   id: string;
   start: Date;
@@ -90,4 +91,17 @@ export interface IScheduleTVModel {
   chan_id: string;
   title: string;
   prog_desc?: string;
+}
+
+export interface IVseTvParsModel {
+  id: string;
+  vsetv: string;
+  title: string;
+  cpu: string;
+}
+export interface IVseTvErrorChannel extends IVseTvParsModel {
+  channelEditUrl: string;
+  sourceChannelUrl: string;
+  parseUrl: string;
+  error: string;
 }

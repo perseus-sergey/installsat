@@ -54,6 +54,7 @@
   ```sh
   yarn add @types/cheerio --dev
   ```
+- HTML entities library - [html-entities](https://www.npmjs.com/package/html-entities)
 
 ---
 

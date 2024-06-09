@@ -1,0 +1,12 @@
+name: Scheduled Task
+
+on:
+  schedule:
+    - cron: '30 5 * * 1' # кожного понеділка о 5:30 ранку
+
+jobs:
+  run-script:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Call Parse Script
+        run: curl -X GET https://mysite.tv/parse

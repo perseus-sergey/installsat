@@ -27,13 +27,20 @@ export const createDbUser = async (
 
 export const isAdminAuth = cache(async () => {
   const session = await auth();
-  const adminEmail = process.env.ADMIN_EMAIL;
+  // const adminEmail = process.env.ADMIN_EMAIL;
 
-  return session &&
-    session.user &&
-    session.user.email &&
-    adminEmail &&
-    session.user.email === adminEmail
-    ? true
-    : false;
+  return session && session.user && session.user.email ? true : false;
 });
+
+// export const isAdminAuth = cache(async () => {
+//   const session = await auth();
+//   const adminEmail = process.env.ADMIN_EMAIL;
+
+//   return session &&
+//     session.user &&
+//     session.user.email &&
+//     adminEmail &&
+//     session.user.email === adminEmail
+//     ? true
+//     : false;
+// });

@@ -15,7 +15,11 @@ jobs:
       - name: Get CSRF Token
         id: get-csrf
         run: |
-          csrf_token=$(curl -c cookies.txt -s https://installsat.fun/login | grep -oP '(?<=name="csrf-token" content=")[^"]+')
+          # Зробимо запит до сторінки і виведемо її частину для перевірки
+          page_content=$(curl -c cookies.txt -s https://installsat.fun/login)
+          echo "$page_content" | head -n 50  # Виведемо перші 50 рядків сторінки
+          # Спробуємо витягти CSRF токен
+          csrf_token=$(echo "$page_content" | grep -oP '(?<=name="csrf-token" content=")[^"]+')
           echo "CSRF Token: $csrf_token"
           echo "::set-output name=csrf_token::$csrf_token"
 

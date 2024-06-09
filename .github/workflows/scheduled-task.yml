@@ -9,5 +9,15 @@ jobs:
   run-script:
     runs-on: ubuntu-latest
     steps:
+      - name: Authenticate and Get Token
+        id: auth
+        run: |
+          response=$(curl -X POST https://installsat.fun/login -H "Content-Type: application/json" -d '{"login-email": "${{ secrets.LOGIN_EMAIL }}", "login-password": "${{ secrets.LOGIN_PASSWORD }}"}')
+          token=$(echo $response | jq -r '.token')
+          echo "::set-output name=token::$token"
+
       - name: Call Parse Script
-        run: curl -X GET https://installsat.fun/guru/parse/trans-news
+        run: |
+          curl -H "Authorization: Bearer ${{ steps.auth.outputs.token }}" -X GET https://installsat.fun/guru/parse/trans-news
+        env:
+          TOKEN: ${{ steps.auth.outputs.token }}

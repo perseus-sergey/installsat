@@ -18,6 +18,15 @@
     "es6": true
   },
 
+  "overrides": [
+    {
+      "files": ["*.mjs"],
+      "parserOptions": {
+        "project": "./tsconfig.mjs.json"
+      }
+    }
+  ],
+
   "settings": {
     "react": {
       "version": "detect"

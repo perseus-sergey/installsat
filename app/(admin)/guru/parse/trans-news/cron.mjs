@@ -7,14 +7,12 @@ import { DateTime } from 'luxon';
 import { EDBTableTitles } from '@/models/ui.model';
 import { EUrlAdminParam } from '@/models/url.model';
 import { sendMail } from '@/libs/mail/sendMail';
-import { renderAsync } from '@react-email/render';
 import {
   deleteDBOldTransNews,
   getDBSatID,
   insertDBTransNews,
 } from '@/controllers/parseTransNews.controller';
 import { getDbIdAmount } from '@/controllers/schedule.controller';
-import { ParseTransNews } from '@/components/EmailTemplates/parseTransNews.template';
 
 const BASE_URL = process.env.BASE_URL;
 const PARSE_URL = 'https://www.flysat.com/en/news';
@@ -223,15 +221,31 @@ const addSatId = async (parsedData) => {
 };
 
 const sendReportMail = async (errorMessages, tblItemLength) => {
+  const messages = errorMessages.length
+    ? `<p style="color: blue; font-size: 20px; padding: 10px 0">Messages:</p><ul style="padding-bottom: 10px">${errorMessages.map((msg) => `<li>${msg}</li>`)}</ul>`
+    : '';
+
   await sendMail({
     subject: `Parse transponder news`,
-    body: await renderAsync(
-      <ParseTransNews
-        pathToMainParsePage={`${BASE_URL}/${EUrlAdminParam.BASE_PATH}/${EUrlAdminParam.PARSE}`}
-        dbTableLength={tblItemLength}
-        errorMessages={errorMessages}
-      />
-    ),
+    body: `
+    <html>
+      <head>
+        <title>Parse Trans News</title>
+      </head>
+      <body>
+        <table width="100%" cellspacing="0" cellpadding="0" border="0">
+          <tr>
+            <td align="center">
+              The number of records in the database table:
+              <span style="color: green;"> ${tblItemLength}</span>
+                ${messages}
+              <a style="color: blue; font-size: 20px; padding: 10px 0" target="_blank" href="${BASE_URL}/${EUrlAdminParam.BASE_PATH}/${EUrlAdminParam.PARSE}" >Parse Transponder news again</a>
+            </td>
+          </tr>
+        </table>
+      </body>
+    </html>
+    `,
   });
 };
 

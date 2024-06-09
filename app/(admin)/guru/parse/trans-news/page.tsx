@@ -269,7 +269,9 @@ export default async function Page({
   let finalData: ITblDigestParse[] = [];
 
   try {
-    browser = await puppeteer.launch({ headless: true });
+    browser = await puppeteer.launch({
+      args: ['--no-sandbox', '--disable-setuid-sandbox'],
+    });
 
     const html = await parseChannelPage(browser, PARSE_URL);
     const $ = cheerio.load(html);

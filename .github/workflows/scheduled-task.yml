@@ -15,9 +15,10 @@ jobs:
       - name: Authenticate and Get Token
         id: auth
         run: |
-          response=$(curl -X POST https://installsat.fun/api/auth/callback/credentials \
+          response=$(curl -X POST  https://installsat.fun/api/auth/callback/credentials \
             -H "Content-Type: application/json" \
-            -d "{\"login-email\": \"${{ secrets.LOGIN_EMAIL }}\", \"login-password\": \"${{ secrets.LOGIN_PASSWORD }}\"}")
+            -d "{\"login-email\": \"${{ secrets.LOGIN_EMAIL }}\", \"login-password\": \"${{ secrets.LOGIN_PASSWORD }}\"}" \
+            -v) # додаємо -v для детального виводу
           echo "Server Response: $response"
           token=$(echo $response | jq -r '.token')
           if [[ "$token" == "null" ]]; then

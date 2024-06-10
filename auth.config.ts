@@ -45,7 +45,8 @@ export const authConfig = {
       } else if (isOnLoginRoute) {
         return isLoggedIn ? false : true;
       } else if (isLoggedIn) {
-        return Response.redirect(new URL(EUrlAdminParam.BASE_PATH, nextUrl));
+        return Response.redirect('/');
+        // return Response.redirect(new URL(EUrlAdminParam.BASE_PATH, nextUrl));
       }
       return true;
     },

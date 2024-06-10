@@ -1,26 +1,51 @@
-import puppeteer from 'puppeteer';
+// import { Title } from '@/components/ui/Titles/Title';
+import puppeteer, { Browser } from 'puppeteer';
 import * as cheerio from 'cheerio';
 import { DateTime } from 'luxon';
-import { sendMail } from '../libs/mail/sendMail.ts';
+import { EDBTableTitles, TSearchParams } from '@/models/ui.model';
+import { validSearchParam } from '@/libs/utils/validSearchParam';
+import { EUrlAdminParam, EUrlSearchParam } from '@/models/url.model';
+import { IDbIdAmountModel } from '@/models/admin.model';
+import { sendMail } from '@/libs/mail/sendMail';
+import { renderAsync } from '@react-email/render';
 import {
   deleteDBOldTransNews,
   getDBSatID,
   insertDBTransNews,
-} from '../controllers/parseTransNews.controller.ts';
-import { getDbIdAmount } from '../controllers/schedule.controller.ts';
+} from '@/controllers/parseTransNews.controller';
+import { getDbIdAmount } from '@/controllers/schedule.controller';
+import { ParseTransNews } from '@/components/EmailTemplates/parseTransNews.template';
+
+export interface ITblDigestParse {
+  date: string;
+  update: number | null;
+  channel_title: string;
+  action: string;
+  text: string;
+  sat: string;
+  sat_name: string;
+  sat_position: string;
+  frequency_text: string;
+  country: string;
+}
 
 const BASE_URL = process.env.BASE_URL;
+const SHOW_ONLY = false;
 const PARSE_URL = 'https://www.flysat.com/en/news';
 const PARSED_UPDATES = 4;
 
-const parseChannelPage = async (browser, url) => {
+const parseChannelPage = async (browser: Browser, url: string) => {
   const page = await browser.newPage();
   await page.goto(url, { waitUntil: 'domcontentloaded' });
 
   return await page.content();
 };
 
-const actionTextHandler = (text, chanTitle, frequency) => {
+const actionTextHandler = (
+  text: string,
+  chanTitle: string,
+  frequency: string
+) => {
   const channelTitle = chanTitle.replace('/package/ui', 'Пакет');
 
   const replacements = [
@@ -100,9 +125,9 @@ const actionTextHandler = (text, chanTitle, frequency) => {
   return `<li><p><span class='grey_text'>${channelTitle}</span> ${changed} ${frequency}`;
 };
 
-const extractParsedData = ($, updateAmount) => {
-  const parsedData = [];
-  const extractErrors = [];
+const extractParsedData = ($: cheerio.CheerioAPI, updateAmount: number) => {
+  const parsedData: ITblDigestParse[] = [];
+  const extractErrors: string[] = [];
 
   const baslikElements = $('p.baslik');
   const firstThreeBaslikElements = baslikElements.slice(0, updateAmount);
@@ -192,9 +217,9 @@ const extractParsedData = ($, updateAmount) => {
   return { parsedData, extractErrors };
 };
 
-const addSatId = async (parsedData) => {
-  const addSatIdErrors = [];
-  const dataWithSatId = [];
+const addSatId = async (parsedData: ITblDigestParse[]) => {
+  const addSatIdErrors: string[] = [];
+  const dataWithSatId: ITblDigestParse[] = [];
 
   for (const item of parsedData) {
     const satResult = await getDBSatID(item.sat_name);
@@ -215,60 +240,63 @@ const addSatId = async (parsedData) => {
   return { dataWithSatId, addSatIdErrors };
 };
 
-const sendReportMail = async (errorMessages, tblItemLength) => {
-  const messages = errorMessages.length
-    ? `<p style="color: blue; font-size: 20px; padding: 10px 0">Messages:</p><ul style="padding-bottom: 10px">${errorMessages.map((msg) => `<li>${msg}</li>`)}</ul>`
-    : '';
-
+const sendReportMail = async (
+  errorMessages: string[],
+  tblItemLength: string
+) => {
   await sendMail({
     subject: `Parse transponder news`,
-    body: `
-    <html>
-      <head>
-        <title>Parse Trans News</title>
-      </head>
-      <body>
-        <table width="100%" cellspacing="0" cellpadding="0" border="0">
-          <tr>
-            <td align="center">
-              The number of records in the database table:
-              <span style="color: green;"> ${tblItemLength}</span>
-                ${messages}
-              <a style="color: blue; font-size: 20px; padding: 10px 0" target="_blank" href="${BASE_URL}/guru/parse" >Parse Transponder news again</a>
-            </td>
-          </tr>
-        </table>
-      </body>
-    </html>
-    `,
+    body: await renderAsync(
+      <ParseTransNews
+        pathToMainParsePage={`${BASE_URL}/${EUrlAdminParam.BASE_PATH}/${EUrlAdminParam.PARSE}`}
+        dbTableLength={tblItemLength}
+        errorMessages={errorMessages}
+      />
+    ),
   });
 };
 
-export default async function Page() {
+export default async function Page({
+  searchParams,
+}: {
+  searchParams?: TSearchParams;
+}) {
+  const searchQuery = validSearchParam(EUrlSearchParam.INTERVAL, searchParams);
+
   let browser;
-  const errorMessages = [];
-  let resDbTableLength = '';
-  let finalData = [];
+  const errorMessages: string[] = [];
+  let resDbTableLength: IDbIdAmountModel[] | string = '';
+  let finalData: ITblDigestParse[] = [];
 
   try {
-    browser = await puppeteer.launch({ headless: true });
+    browser = await puppeteer.launch({
+      args: ['--no-sandbox', '--disable-setuid-sandbox'],
+    });
 
     const html = await parseChannelPage(browser, PARSE_URL);
     const $ = cheerio.load(html);
 
-    const { parsedData, extractErrors } = extractParsedData($, PARSED_UPDATES);
+    const { parsedData, extractErrors } = extractParsedData(
+      $,
+      parseInt(searchQuery, 10) || PARSED_UPDATES
+    );
     errorMessages.push(...extractErrors);
     const dataWithSatIdRes = await addSatId(parsedData);
     finalData = dataWithSatIdRes.dataWithSatId;
     errorMessages.push(...dataWithSatIdRes.addSatIdErrors);
 
-    const deleteRes = await deleteDBOldTransNews(finalData);
-    errorMessages.push(deleteRes);
+    // await insertDataToDB(finalData);
+    if (!SHOW_ONLY) {
+      const deleteRes = await deleteDBOldTransNews(finalData);
+      errorMessages.push(deleteRes);
+    }
 
-    const insertRes = await insertDBTransNews(finalData);
-    errorMessages.push(insertRes);
+    if (!SHOW_ONLY) {
+      const insertRes = await insertDBTransNews(finalData);
+      errorMessages.push(insertRes);
+    }
 
-    resDbTableLength = await getDbIdAmount('tbl_digest');
+    resDbTableLength = await getDbIdAmount(EDBTableTitles.TRANS_NEWS);
   } catch (error) {
     errorMessages.push(
       error instanceof Error
@@ -279,10 +307,11 @@ export default async function Page() {
     if (browser) await browser.close();
   }
 
-  await sendReportMail(
-    errorMessages,
-    typeof resDbTableLength === 'string'
-      ? 'Not Defined'
-      : resDbTableLength[0].count.toLocaleString('en-US')
-  );
+  if (!SHOW_ONLY)
+    await sendReportMail(
+      errorMessages,
+      typeof resDbTableLength === 'string'
+        ? 'Not Defined'
+        : resDbTableLength[0].count.toLocaleString('en-US')
+    );
 }

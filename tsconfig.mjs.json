@@ -3,5 +3,5 @@
     "module": "ESNext",
     "target": "ESNext"
   },
-  "include": ["app/(admin)/guru/parse/**/*.mjs"]
+  "include": ["**/*.mjs"]
 }

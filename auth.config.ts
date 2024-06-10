@@ -50,5 +50,10 @@ export const authConfig = {
       }
       return true;
     },
+    async redirect({ url, baseUrl }) {
+      console.log(`🚀 ~ Redirect URL: ${url}, Base URL: ${baseUrl}`);
+
+      return baseUrl;
+    },
   },
 } satisfies NextAuthConfig;

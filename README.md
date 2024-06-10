@@ -44,6 +44,7 @@
 - WYSIWYG editor - [TinyMCE](https://www.npmjs.com/package/bcryptjs)
   > - [For React](https://www.tiny.cloud/my-account/integrate/#react)
 - Web Scrapping - [Puppeteer](https://pptr.dev/)
+  > - [Troubleshooting](https://pptr.dev/troubleshooting)
   > - [Error [ERR_REQUIRE_ESM]: require() of ES Module, node_modules\wrap-ansi\index.js not supported](https://stackoverflow.com/a/77810578/22835451)
 - Pure JS character encoding conversion - [iconv-lite](https://www.npmjs.com/package/iconv-lite)
   > - [Error [ERR_REQUIRE_ESM]: require() of ES Module, node_modules\wrap-ansi\index.js not supported](https://stackoverflow.com/a/77810578/22835451)

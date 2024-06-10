@@ -50,9 +50,7 @@ export const authConfig = {
       }
       return true;
     },
-    async redirect({ url, baseUrl }) {
-      console.log(`🚀 ~ Redirect URL: ${url}, Base URL: ${baseUrl}`);
-
+    async redirect({ baseUrl }) {
       return baseUrl;
     },
   },

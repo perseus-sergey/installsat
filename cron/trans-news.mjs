@@ -4,13 +4,13 @@
 import puppeteer from 'puppeteer';
 import * as cheerio from 'cheerio';
 import { DateTime } from 'luxon';
-import { sendMail } from '../libs/mail/sendMail.ts';
+import { sendMail } from '@/libs/mail/sendMail.ts';
 import {
   deleteDBOldTransNews,
   getDBSatID,
   insertDBTransNews,
-} from '../controllers/parseTransNews.controller.ts';
-import { getDbIdAmount } from '../controllers/schedule.controller.ts';
+} from '@/controllers/parseTransNews.controller';
+import { getDbIdAmount } from '@/controllers/schedule.controller';
 
 const BASE_URL = process.env.BASE_URL;
 const PARSE_URL = 'https://www.flysat.com/en/news';

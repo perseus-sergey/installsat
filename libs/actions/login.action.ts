@@ -102,7 +102,10 @@ export async function createUserAction(
 // =================================================================
 // Check callback in production
 // =================================================================
-export const restProviderLinksAction = async (
-  providerId: string,
-  callbackUrl: string
-) => await signIn(providerId, { redirectTo: callbackUrl });
+// export const restProviderLinksAction = async (
+//   providerId: string,
+//   callbackUrl: string
+// ) => await signIn(providerId, { redirectTo: callbackUrl });
+
+export const restProviderLinksAction = async (providerId: string) =>
+  await signIn(providerId);

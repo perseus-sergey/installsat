@@ -4,7 +4,7 @@
 import puppeteer from 'puppeteer';
 import * as cheerio from 'cheerio';
 import { DateTime } from 'luxon';
-import { sendMail } from '../../../../../libs/mail/sendMail';
+import { sendMail } from '../../../../../libs/mail/sendMail.ts';
 import {
   deleteDBOldTransNews,
   getDBSatID,

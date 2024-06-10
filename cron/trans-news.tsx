@@ -15,6 +15,7 @@ import {
 } from '@/controllers/parseTransNews.controller';
 import { getDbIdAmount } from '@/controllers/schedule.controller';
 import { ParseTransNews } from '@/components/EmailTemplates/parseTransNews.template';
+import { Title } from '@/components/ui/Titles/Title';
 
 export interface ITblDigestParse {
   date: string;
@@ -314,4 +315,23 @@ export default async function Page({
         ? 'Not Defined'
         : resDbTableLength[0].count.toLocaleString('en-US')
     );
+
+  return (
+    <>
+      <Title>Parse FlySat</Title>
+      {errorMessages.length > 0 && (
+        <>
+          <h2 className="font-bold text-blue-700 text-xl">Messages:</h2>
+          <ul>
+            {errorMessages.map((message, i) => (
+              <li key={i}>{message}</li>
+            ))}
+          </ul>
+        </>
+      )}
+      <pre>{JSON.stringify(finalData, null, 2)}</pre>
+    </>
+  );
+
+  // return null;
 }

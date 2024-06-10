@@ -4,18 +4,15 @@ import * as cheerio from 'cheerio';
 import { DateTime } from 'luxon';
 import { EDBTableTitles, TSearchParams } from '@/models/ui.model';
 import { validSearchParam } from '@/libs/utils/validSearchParam';
-import { EUrlAdminParam, EUrlSearchParam } from '@/models/url.model';
+import { EUrlSearchParam } from '@/models/url.model';
 import { IDbIdAmountModel } from '@/models/admin.model';
 import { sendMail } from '@/libs/mail/sendMail';
-import { renderAsync } from '@react-email/render';
 import {
   deleteDBOldTransNews,
   getDBSatID,
   insertDBTransNews,
 } from '@/controllers/parseTransNews.controller';
 import { getDbIdAmount } from '@/controllers/schedule.controller';
-import { ParseTransNews } from '@/components/EmailTemplates/parseTransNews.template';
-import { Title } from '@/components/ui/Titles/Title';
 
 export interface ITblDigestParse {
   date: string;
@@ -245,15 +242,31 @@ const sendReportMail = async (
   errorMessages: string[],
   tblItemLength: string
 ) => {
+  const messages = errorMessages.length
+    ? `<p style="color: blue; font-size: 20px; padding: 10px 0">Messages:</p><ul style="padding-bottom: 10px">${errorMessages.map((msg) => `<li>${msg}</li>`)}</ul>`
+    : '';
+
   await sendMail({
     subject: `Parse transponder news`,
-    body: await renderAsync(
-      <ParseTransNews
-        pathToMainParsePage={`${BASE_URL}/${EUrlAdminParam.BASE_PATH}/${EUrlAdminParam.PARSE}`}
-        dbTableLength={tblItemLength}
-        errorMessages={errorMessages}
-      />
-    ),
+    body: `
+    <html>
+      <head>
+        <title>Parse Trans News</title>
+      </head>
+      <body>
+        <table width="100%" cellspacing="0" cellpadding="0" border="0">
+          <tr>
+            <td align="center">
+              The number of records in the database table:
+              <span style="color: green;"> ${tblItemLength}</span>
+                ${messages}
+              <a style="color: blue; font-size: 20px; padding: 10px 0" target="_blank" href="${BASE_URL}/guru/parse" >Parse Transponder news again</a>
+            </td>
+          </tr>
+        </table>
+      </body>
+    </html>
+    `,
   });
 };
 
@@ -316,22 +329,22 @@ export default async function Page({
         : resDbTableLength[0].count.toLocaleString('en-US')
     );
 
-  return (
-    <>
-      <Title>Parse FlySat</Title>
-      {errorMessages.length > 0 && (
-        <>
-          <h2 className="font-bold text-blue-700 text-xl">Messages:</h2>
-          <ul>
-            {errorMessages.map((message, i) => (
-              <li key={i}>{message}</li>
-            ))}
-          </ul>
-        </>
-      )}
-      <pre>{JSON.stringify(finalData, null, 2)}</pre>
-    </>
-  );
+  // return (
+  //   <>
+  //     <Title>Parse FlySat</Title>
+  //     {errorMessages.length > 0 && (
+  //       <>
+  //         <h2 className="font-bold text-blue-700 text-xl">Messages:</h2>
+  //         <ul>
+  //           {errorMessages.map((message, i) => (
+  //             <li key={i}>{message}</li>
+  //           ))}
+  //         </ul>
+  //       </>
+  //     )}
+  //     <pre>{JSON.stringify(finalData, null, 2)}</pre>
+  //   </>
+  // );
 
-  // return null;
+  return null;
 }

@@ -4,9 +4,7 @@
 import puppeteer from 'puppeteer';
 import * as cheerio from 'cheerio';
 import { DateTime } from 'luxon';
-import { EDBTableTitles } from '@/models/ui.model';
-import { EUrlAdminParam } from '@/models/url.model';
-import { sendMail } from '@/libs/mail/sendMail';
+import { sendMail } from '../../../../../libs/mail/sendMail';
 import {
   deleteDBOldTransNews,
   getDBSatID,
@@ -239,7 +237,7 @@ const sendReportMail = async (errorMessages, tblItemLength) => {
               The number of records in the database table:
               <span style="color: green;"> ${tblItemLength}</span>
                 ${messages}
-              <a style="color: blue; font-size: 20px; padding: 10px 0" target="_blank" href="${BASE_URL}/${EUrlAdminParam.BASE_PATH}/${EUrlAdminParam.PARSE}" >Parse Transponder news again</a>
+              <a style="color: blue; font-size: 20px; padding: 10px 0" target="_blank" href="${BASE_URL}/guru/parse" >Parse Transponder news again</a>
             </td>
           </tr>
         </table>
@@ -273,7 +271,7 @@ export default async function Page() {
     const insertRes = await insertDBTransNews(finalData);
     errorMessages.push(insertRes);
 
-    resDbTableLength = await getDbIdAmount(EDBTableTitles.TRANS_NEWS);
+    resDbTableLength = await getDbIdAmount('tbl_digest');
   } catch (error) {
     errorMessages.push(
       error instanceof Error

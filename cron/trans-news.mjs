@@ -7,7 +7,7 @@ import {
   getDBSatID,
   insertDBTransNews,
 } from '../controllers/parseTransNews.controller.ts';
-import { getDbIdAmount } from '@/controllers/schedule.controller.ts';
+import { getDbIdAmount } from '../controllers/schedule.controller.ts';
 
 const BASE_URL = process.env.BASE_URL;
 const PARSE_URL = 'https://www.flysat.com/en/news';

@@ -29,7 +29,7 @@ export const isAdminAuth = cache(async () => {
   const session = await auth();
   // const adminEmail = process.env.ADMIN_EMAIL;
 
-  return session && session.user && session.user.email ? true : false;
+  return session ? true : false;
 });
 
 // export const isAdminAuth = cache(async () => {

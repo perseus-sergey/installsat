@@ -12,9 +12,23 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Authenticate and get session token
+        id: authenticate
+        run: |
+          response=$(curl -s -X POST "https://installsat.fun/api/auth/callback/credentials" \
+            -H "Content-Type: application/x-www-form-urlencoded" \
+            -d "username=${{ secrets.LOGIN_EMAIL }}&password=${{ secrets.LOGIN_PASSWORD }}")
+          echo "Authentication response: $response"
+          session_token=$(echo $response | jq -r '.sessionToken') # Replace with correct path to session token
+          if [[ -z "$session_token" || "$session_token" == "null" ]]; then
+            echo "Failed to authenticate."
+            exit 1
+          fi
+          echo "::set-output name=session_token::$session_token"
+
       - name: Call Parse Script
         run: |
-          session_token="${{ secrets.OAUTH_TOKEN }}"
+          session_token="${{ steps.authenticate.outputs.session_token }}"
           echo "Using session token: $session_token"
           response=$(curl -H "Cookie: authjs.session-token=$session_token" -X GET https://installsat.fun/guru/parse/trans-news)
           echo "Server Response: $response"

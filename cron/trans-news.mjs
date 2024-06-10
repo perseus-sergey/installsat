@@ -1,6 +1,3 @@
-/** @jsxRuntime classic */
-/** @jsx jsx */
-
 import puppeteer from 'puppeteer';
 import * as cheerio from 'cheerio';
 import { DateTime } from 'luxon';
@@ -9,8 +6,8 @@ import {
   deleteDBOldTransNews,
   getDBSatID,
   insertDBTransNews,
-} from '@/controllers/parseTransNews.controller';
-import { getDbIdAmount } from '@/controllers/schedule.controller';
+} from '@/controllers/parseTransNews.controller.ts';
+import { getDbIdAmount } from '@/controllers/schedule.controller.ts';
 
 const BASE_URL = process.env.BASE_URL;
 const PARSE_URL = 'https://www.flysat.com/en/news';

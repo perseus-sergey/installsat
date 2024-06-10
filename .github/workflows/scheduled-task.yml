@@ -16,7 +16,7 @@ jobs:
         run: |
           session_token="${{ secrets.OAUTH_TOKEN }}"
           echo "Using session token: $session_token"
-          response=$(curl -H "Authorization: Bearer $session_token" -X GET https://installsat.fun/guru/parse/trans-news)
+          response=$(curl -H "Cookie: authjs.session-token=$session_token" -X GET https://installsat.fun/guru/parse/trans-news)
           echo "Server Response: $response"
           if [[ "$response" == *"login?callbackUrl"* ]]; then
             echo "Authentication failed. Redirected to login page."

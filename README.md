@@ -47,7 +47,6 @@
   > - [Troubleshooting](https://pptr.dev/troubleshooting)
   > - [Error [ERR_REQUIRE_ESM]: require() of ES Module, node_modules\wrap-ansi\index.js not supported](https://stackoverflow.com/a/77810578/22835451)
 - Pure JS character encoding conversion - [iconv-lite](https://www.npmjs.com/package/iconv-lite)
-  > - [Error [ERR_REQUIRE_ESM]: require() of ES Module, node_modules\wrap-ansi\index.js not supported](https://stackoverflow.com/a/77810578/22835451)
 - Web Scrapping - [cheerio](https://cheerio.js.org/)
   ```sh
   yarn add cheerio
@@ -55,7 +54,8 @@
   ```sh
   yarn add @types/cheerio --dev
   ```
-- HTML entities library - [html-entities](https://www.npmjs.com/package/html-entities)
+- [html-entities](https://www.npmjs.com/package/html-entities) - HTML entities library
+- [dotenv](https://www.npmjs.com/package/dotenv) - Loads from a .env file into process.env
 
 ---
 

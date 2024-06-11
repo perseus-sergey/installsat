@@ -26,7 +26,7 @@ const actionTextHandler = (text, chanTitle, frequency) => {
   const replacements = [
     { regex: /package/iu, replacement: 'Пакет' },
     {
-      regex: /FTA(?: *w*){0,2}/,
+      regex: /FTA(?: *\w*){0,2}/,
       replacement: "<span class='free_chan'>транслюється відкрито</span>",
     },
     {
@@ -34,48 +34,48 @@ const actionTextHandler = (text, chanTitle, frequency) => {
       replacement: "<span class='add_chan'>нова SR(символьна швидкість)</span>",
     },
     {
-      regex: /(?:\bw*\bs)*encrypted(?:\bw*\bs)*/iu,
+      regex: /(?:\b\w*\b\s)*encrypted(?:\b\w*\b\s)*/iu,
       replacement: "<span class='left_chan'>закодовано на </span>",
     },
     {
-      regex: /^ *(stw+ed agw+n(?: *on)*) *$/iu,
+      regex: /^ *(st\w+ed ag\w+n(?: *on)*) *$/iu,
       replacement: "<span class='add_chan'>відновив мовлення</span>",
     },
     {
-      regex: /^ *(in the paw+ge agw*n(?: *on)*) *$/iu,
+      regex: /^ *(in the pa\w+ge ag\w*n(?: *on)*) *$/iu,
       replacement: "<span class='add_chan'>Знову в пакеті</span>",
     },
     {
-      regex: /^ *(stw+ed tew+ng(?: *on)*) *$/iu,
+      regex: /^ *(st\w+ed te\w+ng(?: *on)*) *$/iu,
       replacement: "<span class='add_chan'>розпочав тестове мовлення</span>",
     },
     {
-      regex: /^ *(stw+ed rw+r pw+m(?: *on)*) *$/iu,
+      regex: /^ *(st\w+ed r\w+r p\w+m(?: *on)*) *$/iu,
       replacement: "<span class='add_chan'>розпочав регулярне мовлення</span>",
     },
     {
-      regex: /^ *(stw+ed pw+m(?: *on)*) *$/iu,
+      regex: /^ *(st\w+ed p\w+m(?: *on)*) *$/iu,
       replacement: "<span class='add_chan'>розпочав транслювати</span>",
     },
     {
-      regex: /^ *(stw+ed(?: *on)*) *$/iu,
+      regex: /^ *(st\w+ed(?: *on)*) *$/iu,
       replacement: "<span class='add_chan'>розпочав мовлення</span>",
     },
     {
-      regex: /bw+[kc] (?:on)* *w* *new/iu,
+      regex: /b\w+[kc] (?:on)* *\w* *new/iu,
       replacement:
         "<span class='add_chan'>повернувся з новими параметрами</span>",
     },
     {
-      regex: /aw+r a* *brw*k/iu,
+      regex: /a\w+r a* *br\w*k/iu,
       replacement: "<span class='add_chan'>після зникнення</span>",
     },
     {
-      regex: /^(agw*n)* *(on *(?:agw*n)*)/i,
+      regex: /^(ag\w*n)* *(on *(?:ag\w*n)*)/i,
       replacement: "<span class='add_chan'>з'явився на супутнику</span> ",
     },
     {
-      regex: /^(agw*n)* *(left *(?:agw*n)*)/i,
+      regex: /^(ag\w*n)* *(left *(?:ag\w*n)*)/i,
       replacement: "<span class='left_chan'>припинив трансляції</span> на ",
     },
     { regex: / package /i, replacement: ' пакет ' },

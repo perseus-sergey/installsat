@@ -36,7 +36,6 @@ export const insertDBTransNews = async (data) => {
       (\`date\`, \`update\`, \`channel_title\`, \`action\`, \`text\`, \`sat\`, \`sat_name\`, \`sat_position\`, \`frequency_text\`, \`country\`)
       VALUES ${values.map((valueSet) => `(${valueSet.join(', ')})`).join(', ')};
     `;
-  console.log('🚀 ~ insertDBTransNews ~ sql:', sql);
   const res = await executePoolQuery(sql);
 
   if (res instanceof Error) throw new Error(`DB INSERT data: ${res.message}`);

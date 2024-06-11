@@ -1,4 +1,5 @@
 import mysql from 'mysql2/promise';
+import '../../dotenv-config.mjs';
 
 // const port = process.env.DB_PORT ? +process.env.DB_PORT : 0;
 

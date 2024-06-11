@@ -1,9 +1,7 @@
 import { executePoolQuery, pool } from './mysqldb.mjs';
-import React from 'react';
+import memoize from 'lodash.memoize';
 
-const { cache } = React;
-
-export const getDBSatID = cache(async (satName) => {
+export const getDBSatID = memoize(async (satName) => {
   const sql = `
     SELECT id
     FROM tbl_chan_sat

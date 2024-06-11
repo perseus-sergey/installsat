@@ -7,7 +7,7 @@ import {
   getDBSatID,
   insertDBTransNews,
   getDbIdAmount,
-} from './libs/parseTransNews.controller.js';
+} from './libs/parseTransNews.controller.mjs';
 
 const BASE_URL = process.env.BASE_URL;
 const PARSE_URL = 'https://www.flysat.com/en/news';

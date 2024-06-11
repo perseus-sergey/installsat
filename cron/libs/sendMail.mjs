@@ -1,4 +1,7 @@
 import nodemailer from 'nodemailer';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const MAIN_EMAIL = process.env.MAIN_EMAIL;
 export async function sendMail({ to, subject, body }) {

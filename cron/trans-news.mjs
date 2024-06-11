@@ -251,7 +251,9 @@ const R_U_N = async () => {
   let finalData = [];
 
   try {
-    browser = await puppeteer.launch({ headless: true });
+    const browser = await puppeteer.launch({
+      args: ['--no-sandbox', '--disable-setuid-sandbox'],
+    });
 
     const html = await parseChannelPage(browser, PARSE_URL);
     const $ = cheerio.load(html);

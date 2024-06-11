@@ -1,11 +1,10 @@
-import { executePoolQuery, pool } from '@/libs/db/mysqldb';
-import { EDBTableTitles } from '@/models/ui.model';
+import { executePoolQuery, pool } from './mysqldb.mjs';
 import { cache } from 'react';
 
 export const getDBSatID = cache(async (satName) => {
   const sql = `
     SELECT id
-    FROM ${EDBTableTitles.CHANNEL_SAT}
+    FROM tbl_chan_sat
     WHERE description = ?
     LIMIT 1
   `;
@@ -33,7 +32,7 @@ export const insertDBTransNews = async (data) => {
   ]);
 
   const sql = `
-      INSERT INTO ${EDBTableTitles.TRANS_NEWS} 
+      INSERT INTO tbl_digest 
       (\`date\`, \`update\`, \`channel_title\`, \`action\`, \`text\`, \`sat\`, \`sat_name\`, \`sat_position\`, \`frequency_text\`, \`country\`)
       VALUES ${values.map((valueSet) => `(${valueSet.join(', ')})`).join(', ')};
     `;
@@ -54,7 +53,7 @@ export const deleteDBOldTransNews = async (data) => {
   ];
 
   const sql = `
-    DELETE FROM ${EDBTableTitles.TRANS_NEWS}
+    DELETE FROM tbl_digest
     WHERE (\`date\`, \`update\`) IN (${uniqueDateUpdatePairs.join(', ')});
   `;
   const res = await executePoolQuery(sql);

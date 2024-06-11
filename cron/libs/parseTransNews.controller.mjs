@@ -1,4 +1,5 @@
 import { executePoolQuery, pool } from './mysqldb.mjs';
+import React from 'react';
 
 const { cache } = React;
 

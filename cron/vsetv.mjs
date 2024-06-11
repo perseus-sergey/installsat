@@ -1,55 +1,32 @@
-// import { Title } from '@/components/ui/Titles/Title';
-import puppeteer, { Browser } from 'puppeteer';
+import puppeteer from 'puppeteer';
 import * as cheerio from 'cheerio';
 import { DateTime } from 'luxon';
-import { EDBTableTitles, TSearchParams } from '@/models/ui.model';
-import { validSearchParam } from '@/libs/utils/validSearchParam';
-import { EUrlSearchParam } from '@/models/url.model';
-import { IDbIdAmountModel } from '@/models/admin.model';
-import { sendMail } from '@/libs/mail/sendMail';
+import { sendMail } from './libs/sendMail.mjs';
 import {
   deleteDBOldTransNews,
   getDBSatID,
   insertDBTransNews,
-} from '@/controllers/parseTransNews.controller';
-import { getDbIdAmount } from '@/controllers/schedule.controller';
-
-export interface ITblDigestParse {
-  date: string;
-  update: number | null;
-  channel_title: string;
-  action: string;
-  text: string;
-  sat: string;
-  sat_name: string;
-  sat_position: string;
-  frequency_text: string;
-  country: string;
-}
+  getDbIdAmount,
+} from './libs/parseTransNews.controller.mjs';
 
 const BASE_URL = process.env.BASE_URL;
-const SHOW_ONLY = false;
 const PARSE_URL = 'https://www.flysat.com/en/news';
 const PARSED_UPDATES = 4;
 
-const parseChannelPage = async (browser: Browser, url: string) => {
+const parseChannelPage = async (browser, url) => {
   const page = await browser.newPage();
   await page.goto(url, { waitUntil: 'domcontentloaded' });
 
   return await page.content();
 };
 
-const actionTextHandler = (
-  text: string,
-  chanTitle: string,
-  frequency: string
-) => {
+const actionTextHandler = (text, chanTitle, frequency) => {
   const channelTitle = chanTitle.replace('/package/ui', 'Пакет');
 
   const replacements = [
     { regex: /package/iu, replacement: 'Пакет' },
     {
-      regex: /FTA(?: *w*){0,2}/,
+      regex: /FTA(?: *\w*){0,2}/,
       replacement: "<span class='free_chan'>транслюється відкрито</span>",
     },
     {
@@ -57,48 +34,48 @@ const actionTextHandler = (
       replacement: "<span class='add_chan'>нова SR(символьна швидкість)</span>",
     },
     {
-      regex: /(?:\bw*\bs)*encrypted(?:\bw*\bs)*/iu,
+      regex: /(?:\b\w*\b\s)*encrypted(?:\b\w*\b\s)*/iu,
       replacement: "<span class='left_chan'>закодовано на </span>",
     },
     {
-      regex: /^ *(stw+ed agw+n(?: *on)*) *$/iu,
+      regex: /^ *(st\w+ed ag\w+n(?: *on)*) *$/iu,
       replacement: "<span class='add_chan'>відновив мовлення</span>",
     },
     {
-      regex: /^ *(in the paw+ge agw*n(?: *on)*) *$/iu,
+      regex: /^ *(in the pa\w+ge ag\w*n(?: *on)*) *$/iu,
       replacement: "<span class='add_chan'>Знову в пакеті</span>",
     },
     {
-      regex: /^ *(stw+ed tew+ng(?: *on)*) *$/iu,
+      regex: /^ *(st\w+ed te\w+ng(?: *on)*) *$/iu,
       replacement: "<span class='add_chan'>розпочав тестове мовлення</span>",
     },
     {
-      regex: /^ *(stw+ed rw+r pw+m(?: *on)*) *$/iu,
+      regex: /^ *(st\w+ed r\w+r p\w+m(?: *on)*) *$/iu,
       replacement: "<span class='add_chan'>розпочав регулярне мовлення</span>",
     },
     {
-      regex: /^ *(stw+ed pw+m(?: *on)*) *$/iu,
+      regex: /^ *(st\w+ed p\w+m(?: *on)*) *$/iu,
       replacement: "<span class='add_chan'>розпочав транслювати</span>",
     },
     {
-      regex: /^ *(stw+ed(?: *on)*) *$/iu,
+      regex: /^ *(st\w+ed(?: *on)*) *$/iu,
       replacement: "<span class='add_chan'>розпочав мовлення</span>",
     },
     {
-      regex: /bw+[kc] (?:on)* *w* *new/iu,
+      regex: /b\w+[kc] (?:on)* *\w* *new/iu,
       replacement:
         "<span class='add_chan'>повернувся з новими параметрами</span>",
     },
     {
-      regex: /aw+r a* *brw*k/iu,
+      regex: /a\w+r a* *br\w*k/iu,
       replacement: "<span class='add_chan'>після зникнення</span>",
     },
     {
-      regex: /^(agw*n)* *(on *(?:agw*n)*)/i,
+      regex: /^(ag\w*n)* *(on *(?:ag\w*n)*)/i,
       replacement: "<span class='add_chan'>з'явився на супутнику</span> ",
     },
     {
-      regex: /^(agw*n)* *(left *(?:agw*n)*)/i,
+      regex: /^(ag\w*n)* *(left *(?:ag\w*n)*)/i,
       replacement: "<span class='left_chan'>припинив трансляції</span> на ",
     },
     { regex: / package /i, replacement: ' пакет ' },
@@ -123,9 +100,9 @@ const actionTextHandler = (
   return `<li><p><span class='grey_text'>${channelTitle}</span> ${changed} ${frequency}`;
 };
 
-const extractParsedData = ($: cheerio.CheerioAPI, updateAmount: number) => {
-  const parsedData: ITblDigestParse[] = [];
-  const extractErrors: string[] = [];
+const extractParsedData = ($, updateAmount) => {
+  const parsedData = [];
+  const extractErrors = [];
 
   const baslikElements = $('p.baslik');
   const firstThreeBaslikElements = baslikElements.slice(0, updateAmount);
@@ -215,9 +192,9 @@ const extractParsedData = ($: cheerio.CheerioAPI, updateAmount: number) => {
   return { parsedData, extractErrors };
 };
 
-const addSatId = async (parsedData: ITblDigestParse[]) => {
-  const addSatIdErrors: string[] = [];
-  const dataWithSatId: ITblDigestParse[] = [];
+const addSatId = async (parsedData) => {
+  const addSatIdErrors = [];
+  const dataWithSatId = [];
 
   for (const item of parsedData) {
     const satResult = await getDBSatID(item.sat_name);
@@ -238,10 +215,7 @@ const addSatId = async (parsedData: ITblDigestParse[]) => {
   return { dataWithSatId, addSatIdErrors };
 };
 
-const sendReportMail = async (
-  errorMessages: string[],
-  tblItemLength: string
-) => {
+const sendReportMail = async (errorMessages, tblItemLength) => {
   const messages = errorMessages.length
     ? `<p style="color: blue; font-size: 20px; padding: 10px 0">Messages:</p><ul style="padding-bottom: 10px">${errorMessages.map((msg) => `<li>${msg}</li>`)}</ul>`
     : '';
@@ -270,47 +244,33 @@ const sendReportMail = async (
   });
 };
 
-export default async function Page({
-  searchParams,
-}: {
-  searchParams?: TSearchParams;
-}) {
-  const searchQuery = validSearchParam(EUrlSearchParam.INTERVAL, searchParams);
-
+const R_U_N = async () => {
   let browser;
-  const errorMessages: string[] = [];
-  let resDbTableLength: IDbIdAmountModel[] | string = '';
-  let finalData: ITblDigestParse[] = [];
+  const errorMessages = [];
+  let resDbTableLength = '';
+  let finalData = [];
 
   try {
-    browser = await puppeteer.launch({
+    const browser = await puppeteer.launch({
       args: ['--no-sandbox', '--disable-setuid-sandbox'],
     });
 
     const html = await parseChannelPage(browser, PARSE_URL);
     const $ = cheerio.load(html);
 
-    const { parsedData, extractErrors } = extractParsedData(
-      $,
-      parseInt(searchQuery, 10) || PARSED_UPDATES
-    );
+    const { parsedData, extractErrors } = extractParsedData($, PARSED_UPDATES);
     errorMessages.push(...extractErrors);
     const dataWithSatIdRes = await addSatId(parsedData);
     finalData = dataWithSatIdRes.dataWithSatId;
     errorMessages.push(...dataWithSatIdRes.addSatIdErrors);
 
-    // await insertDataToDB(finalData);
-    if (!SHOW_ONLY) {
-      const deleteRes = await deleteDBOldTransNews(finalData);
-      errorMessages.push(deleteRes);
-    }
+    const deleteRes = await deleteDBOldTransNews(finalData);
+    errorMessages.push(deleteRes);
 
-    if (!SHOW_ONLY) {
-      const insertRes = await insertDBTransNews(finalData);
-      errorMessages.push(insertRes);
-    }
+    const insertRes = await insertDBTransNews(finalData);
+    errorMessages.push(insertRes);
 
-    resDbTableLength = await getDbIdAmount(EDBTableTitles.TRANS_NEWS);
+    resDbTableLength = await getDbIdAmount('tbl_digest');
   } catch (error) {
     errorMessages.push(
       error instanceof Error
@@ -321,30 +281,12 @@ export default async function Page({
     if (browser) await browser.close();
   }
 
-  if (!SHOW_ONLY)
-    await sendReportMail(
-      errorMessages,
-      typeof resDbTableLength === 'string'
-        ? 'Not Defined'
-        : resDbTableLength[0].count.toLocaleString('en-US')
-    );
+  await sendReportMail(
+    errorMessages,
+    typeof resDbTableLength === 'string'
+      ? 'Not Defined'
+      : resDbTableLength[0].count.toLocaleString('en-US')
+  );
+};
 
-  // return (
-  //   <>
-  //     <Title>Parse FlySat</Title>
-  //     {errorMessages.length > 0 && (
-  //       <>
-  //         <h2 className="font-bold text-blue-700 text-xl">Messages:</h2>
-  //         <ul>
-  //           {errorMessages.map((message, i) => (
-  //             <li key={i}>{message}</li>
-  //           ))}
-  //         </ul>
-  //       </>
-  //     )}
-  //     <pre>{JSON.stringify(finalData, null, 2)}</pre>
-  //   </>
-  // );
-
-  return null;
-}
+R_U_N();

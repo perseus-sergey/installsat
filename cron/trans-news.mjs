@@ -244,7 +244,7 @@ const sendReportMail = async (errorMessages, tblItemLength) => {
   });
 };
 
-export default async function Page() {
+const R_U_N = async () => {
   let browser;
   const errorMessages = [];
   let resDbTableLength = '';
@@ -285,4 +285,6 @@ export default async function Page() {
       ? 'Not Defined'
       : resDbTableLength[0].count.toLocaleString('en-US')
   );
-}
+};
+
+R_U_N();

@@ -3,6 +3,7 @@ import nodemailer from 'nodemailer';
 const MAIN_EMAIL = process.env.MAIN_EMAIL;
 export async function sendMail({ to, subject, body }) {
   const MAIL_SMTP = process.env.MAIL_SMTP;
+  console.log('🚀 ~ sendMail ~ MAIL_SMTP:', MAIL_SMTP);
   const MAIL_SMTP_PASS = process.env.MAIL_SMTP_PASS;
 
   const transport = nodemailer.createTransport({

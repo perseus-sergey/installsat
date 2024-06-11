@@ -1,5 +1,6 @@
 import { executePoolQuery, pool } from './mysqldb.mjs';
-import { cache } from 'react';
+
+const { cache } = React;
 
 export const getDBSatID = cache(async (satName) => {
   const sql = `

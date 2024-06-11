@@ -52,7 +52,6 @@ export const pool = mysql.createPool({
 });
 
 export const executePoolQuery = async (sql, values = []) => {
-  console.log('🚀 ~ access:', access);
   try {
     const [rows] = await pool.execute(sql, values);
 

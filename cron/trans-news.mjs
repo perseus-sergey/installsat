@@ -229,9 +229,16 @@ const sendReportMail = async (errorMessages, tblItemLength) => {
     </p>
       ${messages}
     <hr />
-    <a style="color: blue; font-size: 20px; padding: 10px 0" target="_blank" href="${BASE_URL}/guru/parse" >
-    Parse Transponder news again
-    </a>
+    <p>
+      <a style="color: blue; font-size: 20px; padding: 10px 0" target="_blank" href="${BASE_URL}/guru/parse" >
+      Parse Transponder news again
+      </a>
+    </p>
+    <p>
+      <a style="color: #267f00; font-size: 20px; padding: 10px 0" target="_blank" href="${PARSE_URL}" >
+      Source page
+      </a>
+    </p>
     `,
   });
 };

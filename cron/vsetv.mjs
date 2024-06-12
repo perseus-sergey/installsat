@@ -1,7 +1,6 @@
 import * as cheerio from 'cheerio';
 import { DateTime } from 'luxon';
 import {
-  deleteDBVseTvChannel,
   getDBVseTvChannels,
   truncateDBVseTv,
 } from './libs/parseVseTv.controller.mjs';
@@ -246,24 +245,14 @@ const sendReportMail = async ({
   });
 };
 
-export default async function R_U_N() {
-  const searchQueryArray = validSearchParamArray(
-    EUrlSearchParam.CHANNEL,
-    searchParams
-  );
-
-  const trapsChannelId = validSearchParam(
-    EUrlSearchParam.COMMENT_ID,
-    searchParams
-  );
-
+const R_U_N = async () => {
   let dbInsertedStrings = [];
   const errorChannels = [];
   const errorMessages = [];
   let resDbTableLength = '';
-  const trapChannel = trapsChannelId
-    ? { ...TRAP_CHANNEL, vsetv: trapsChannelId }
-    : TRAP_CHANNEL;
+  const trapChannel = TRAP_CHANNEL;
+
+  console.log('🚀 ~ R_U_N ~ start:', trapChannel);
 
   try {
     const { zero, five } = catchTraps(
@@ -274,7 +263,7 @@ export default async function R_U_N() {
         `Traps are not defined: zero = «${zero}»; five = «${five}»`
       );
 
-    const channels = await getDBVseTvChannels(searchQueryArray);
+    const channels = await getDBVseTvChannels();
 
     await truncateDBVseTv();
 
@@ -308,13 +297,6 @@ export default async function R_U_N() {
               `('${pool.escape(chan.startTime)}', '${pool.escape(chan.endTime)}', ${pool.escape(chan.channelVseTvId)}, '${pool.escape(chan.title.replace(/'/g, "''"))}')`
           ),
         ];
-
-        if (
-          searchQueryArray &&
-          searchQueryArray.length > 0 &&
-          dbInsertedStrings.length > 0
-        )
-          await deleteDBVseTvChannel(`${channel.vsetv}`, channel.title);
       } catch (err) {
         errorMessages.push(
           `Error processing channel «${channel.title}»(${channel.vsetv}): ${err instanceof Error ? err.message : 'Unknown error occurred'}`
@@ -344,6 +326,6 @@ export default async function R_U_N() {
   });
 
   console.log('🚀 ~ R_U_N ~ errorMessages:', errorMessages);
-}
+};
 
 R_U_N();

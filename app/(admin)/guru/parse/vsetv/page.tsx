@@ -304,7 +304,7 @@ export default async function Page({
           ...dbInsertedStrings,
           ...channelParsedData.map(
             (chan) =>
-              `('${chan.startTime}', '${chan.endTime}', ${chan.channelVseTvId}, '${chan.title.replace(/'/g, "''")}')`
+              `('${pool.escape(chan.startTime)}', '${pool.escape(chan.endTime)}', ${pool.escape(chan.channelVseTvId)}, '${pool.escape(chan.title.replace(/'/g, "''"))}')`
           ),
         ];
 

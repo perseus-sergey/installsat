@@ -218,7 +218,7 @@ const sendReportMail = async ({
     ? `<p style="color: blue; font-size: 20px; padding: 10px 0">Messages:</p><ul style="padding-bottom: 10px">${errorMessages.map((msg) => `<li>${msg}</li>`)}</ul>`
     : '';
   const wrongChannels = errorChannels.length
-    ? `<p style="color: red; font-size: 20px; padding: 10px 0">Channels with errors:</p><ul style="padding-bottom: 10px">${errorChannels.map((ch) => `<li><a href=${ch.channelEditUrl}>Edit «${ch.title}»</a> | <a style="color: darkgray" href=${ch.sourceChannelUrl}>SOURCE</a> | <a style="color: darkgreen" href=${ch.parseUrl}>Parse Again</a></li>`)}<span style="color: gray"> (${ch.error})</span></ul>`
+    ? `<p style="color: red; font-size: 20px; padding: 10px 0">Channels with errors:</p><ul style="padding-bottom: 10px">${errorChannels.map((ch) => `<li><a href=${ch.channelEditUrl}>Edit «${ch.title}»</a> | <a style="color: darkgray" href=${ch.sourceChannelUrl}>SOURCE</a> | <a style="color: darkgreen" href=${ch.parseUrl}>Parse Again</a><span style="color: gray"> (${ch.error})</span></li>`)}</ul>`
     : '';
 
   const allFailedChannelsUrl = createURLWithParams(
@@ -251,8 +251,6 @@ const R_U_N = async () => {
   const errorMessages = [];
   let resDbTableLength = '';
   const trapChannel = TRAP_CHANNEL;
-
-  console.log('🚀 ~ R_U_N ~ start:', trapChannel);
 
   try {
     const { zero, five } = catchTraps(
@@ -294,7 +292,7 @@ const R_U_N = async () => {
           ...dbInsertedStrings,
           ...channelParsedData.map(
             (chan) =>
-              `('${pool.escape(chan.startTime)}', '${pool.escape(chan.endTime)}', ${pool.escape(chan.channelVseTvId)}, '${pool.escape(chan.title.replace(/'/g, "''"))}')`
+              `(${pool.escape(chan.startTime)}, ${pool.escape(chan.endTime)}, ${pool.escape(chan.channelVseTvId)}, ${pool.escape(chan.title.replace(/'/g, "''"))})`
           ),
         ];
       } catch (err) {

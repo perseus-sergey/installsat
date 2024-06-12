@@ -230,17 +230,23 @@ const sendReportMail = async ({
     title: 'Parse VseTv Schedule Report',
     subject: `Parse VseTv Schedule`,
     body: `
-    The number of records in the database table:
-    <span style="color: green;"> ${tblItemLength}</span>
+    <p style="font-size: 20px;">The number of records in the database table:
+      <span style="color: green;"> ${tblItemLength}</span>
+    </p>
       ${messages}
       <hr />
       ${wrongChannels}
-      <a style="color: blue; font-size: 20px; padding: 10px 0" target="_blank" href="${allFailedChannelsUrl}" >
-      Parse all failed channels
-    </a>
-      <a style="color: #267f00; font-size: 20px; padding: 10px 0" target="_blank" href="${BASE_URL}/guru/parse" >
-      Parse all channels again
-    </a>
+      <hr />
+      <p>
+        <a style="color: blue; font-size: 20px; padding: 10px 0" target="_blank" href="${allFailedChannelsUrl}" >
+        Parse all failed channels
+        </a>
+      </p>
+      <p>
+        <a style="color: #267f00; font-size: 20px; padding: 10px 0" target="_blank" href="${BASE_URL}/guru/parse" >
+        Parse all channels again
+        </a>
+      </p>
     `,
   });
 };

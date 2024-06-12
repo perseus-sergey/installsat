@@ -1,21 +1,31 @@
-import { ELanguage } from './ui.model';
+import { ELanguage, ILang } from './ui.model';
 import { EUrlAdminParam } from './url.model';
 
-// export interface IAccordionItemOptions {
-//   name: string;
-//   img: {
-//     src: string;
-//     width: number;
-//     height: number;
-//     alt: ILang;
-//   };
-//   title: ILang;
-//   titleHref?: string;
-//   baseHrefOfList?: string;
-// }
+interface ILink {
+  title: string;
+  href: string;
+}
 
-// export const MENU_ACCORDION_ADMIN: { [key: string]: IAccordionItemOptions } = {
-export const MENU_ACCORDION_ADMIN = {
+interface IImage {
+  src: string;
+  width: number;
+  height: number;
+  alt: ILang;
+}
+
+interface IMenuType {
+  name: string;
+  titleHref?: string;
+  img: IImage;
+  title: ILang;
+  links?: ILink[];
+}
+
+interface IMenuAccordionAdmin {
+  [key: string]: IMenuType;
+}
+
+export const MENU_ACCORDION_ADMIN: IMenuAccordionAdmin = {
   ARTICLES: {
     name: 'ARTICLES',
     img: {
@@ -32,8 +42,14 @@ export const MENU_ACCORDION_ADMIN = {
       [ELanguage.UA]: 'Статті',
     },
     links: [
-      { title: 'Add new', href: `/${EUrlAdminParam.BASE_PATH}/articles/add` },
-      { title: 'Edit', href: `/${EUrlAdminParam.BASE_PATH}/articles/edit` },
+      {
+        title: 'Add new',
+        href: `/${EUrlAdminParam.BASE_PATH}/${EUrlAdminParam.ARTICLES_EDIT}/add`,
+      },
+      {
+        title: 'Edit',
+        href: `/${EUrlAdminParam.BASE_PATH}/${EUrlAdminParam.ARTICLES_EDIT}/edit`,
+      },
     ],
   },
 
@@ -53,9 +69,33 @@ export const MENU_ACCORDION_ADMIN = {
       [ELanguage.EN]: 'Channels',
     },
     links: [
-      { title: 'Add new', href: `/${EUrlAdminParam.BASE_PATH}/channels/add` },
-      { title: 'Edit', href: `/${EUrlAdminParam.BASE_PATH}/channels/edit` },
+      {
+        title: 'Add new',
+        href: `/${EUrlAdminParam.BASE_PATH}/${EUrlAdminParam.CHANNELS_EDIT}/add`,
+      },
+      {
+        title: 'Edit',
+        href: `/${EUrlAdminParam.BASE_PATH}/${EUrlAdminParam.CHANNELS_EDIT}/edit`,
+      },
     ],
+  },
+
+  PARSING: {
+    name: 'PARSING',
+    img: {
+      src: '/Images/accordion/html.png',
+      width: 32,
+      height: 32,
+      alt: {
+        [ELanguage.UA]: 'Парсинг',
+        [ELanguage.EN]: 'Parsing',
+      },
+    },
+    title: {
+      [ELanguage.UA]: 'Парсинг',
+      [ELanguage.EN]: 'Parsing',
+    },
+    titleHref: `/${EUrlAdminParam.BASE_PATH}/${EUrlAdminParam.PARSE}`,
   },
 
   // MAPS: {
@@ -147,4 +187,3 @@ export const MENU_ACCORDION_ADMIN = {
 //     },
 //     link: `/${EUrlBaseParam.SAT_CHANNEL_LIST}`,
 //   },
-// };

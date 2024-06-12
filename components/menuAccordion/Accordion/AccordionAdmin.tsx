@@ -3,8 +3,6 @@ import Link from 'next/link';
 import { AccordionMenuItem } from '../AccordionMenuItem/AccordionMenuItem';
 import { MENU_ACCORDION_ADMIN } from '@/models/menuAccordionAdmin.model';
 
-const { ARTICLES, CHANNELS } = MENU_ACCORDION_ADMIN;
-
 const AccordionAdmin = async () => {
   // const channelCatListResp = await getChannelCatList();
   // const channelSatListResp = await getChannelSatList();
@@ -29,19 +27,23 @@ const AccordionAdmin = async () => {
   return (
     <nav className={styles.Accordion} data-testid="Accordion">
       <ul>
-        {[ARTICLES, CHANNELS].map((menuType, index) => (
-          <AccordionMenuItem options={menuType} key={index}>
-            <ul className={styles.accordionContent}>
-              {menuType.links.map((item) => (
-                <li key={item.title} className={styles.contentItem}>
-                  <Link href={item.href} className={styles.contentItemLink}>
-                    {item.title}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </AccordionMenuItem>
-        ))}
+        {Object.values(MENU_ACCORDION_ADMIN).map((menuType, index) => {
+          return menuType.links ? (
+            <AccordionMenuItem options={menuType} key={index}>
+              <ul className={styles.accordionContent}>
+                {menuType.links.map((item) => (
+                  <li key={item.title} className={styles.contentItem}>
+                    <Link href={item.href} className={styles.contentItemLink}>
+                      {item.title}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </AccordionMenuItem>
+          ) : (
+            <AccordionMenuItem options={menuType} />
+          );
+        })}
         {/* <AccordionMenuItem options={SATELLITE_TV} />
         <AccordionMenuItem options={SAT_FINDER} /> */}
         {/* <AccordionMenuItem options={INSTALLATIONS}>

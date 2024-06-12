@@ -221,25 +221,15 @@ const sendReportMail = async (errorMessages, tblItemLength) => {
     : '';
 
   await sendMail({
+    title: 'Parse Trans News',
     subject: `Parse transponder news`,
     body: `
-    <html>
-      <head>
-        <title>Parse Trans News</title>
-      </head>
-      <body>
-        <table width="100%" cellspacing="0" cellpadding="0" border="0">
-          <tr>
-            <td align="center">
-              The number of records in the database table:
-              <span style="color: green;"> ${tblItemLength}</span>
-                ${messages}
-              <a style="color: blue; font-size: 20px; padding: 10px 0" target="_blank" href="${BASE_URL}/guru/parse" >Parse Transponder news again</a>
-            </td>
-          </tr>
-        </table>
-      </body>
-    </html>
+    The number of records in the database table:
+    <span style="color: green;"> ${tblItemLength}</span>
+      ${messages}
+    <a style="color: blue; font-size: 20px; padding: 10px 0" target="_blank" href="${BASE_URL}/guru/parse" >
+    Parse Transponder news again
+    </a>
     `,
   });
 };

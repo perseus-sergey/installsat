@@ -63,7 +63,7 @@ export const deleteDBOldTransNews = async (data) => {
   return `DB SUCCESS! deleted rows: ${res.affectedRows}`;
 };
 
-export const getDbIdAmount = async (tblName = TV_SCHEDULE_VSE_TV) => {
+export const getDbIdAmount = async (tblName) => {
   const res = await executePoolQuery(
     `SELECT COUNT( id ) AS count FROM ${tblName}`
   );

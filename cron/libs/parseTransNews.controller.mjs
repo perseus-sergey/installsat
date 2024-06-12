@@ -38,7 +38,11 @@ export const insertDBTransNews = async (data) => {
     `;
   const res = await executePoolQuery(sql);
 
-  if (res instanceof Error) throw new Error(`DB INSERT data: ${res.message}`);
+  if (res instanceof Error) {
+    console.log('🚀 ~ insertDBTransNews ~ sql:', sql);
+
+    throw new Error(`DB INSERT data: ${res.message}`);
+  }
 
   return `DB SUCCESS! inserted rows: ${res.affectedRows}`;
 };

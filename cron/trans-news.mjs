@@ -224,9 +224,11 @@ const sendReportMail = async (errorMessages, tblItemLength) => {
     title: 'Parse Trans News',
     subject: `Parse transponder news`,
     body: `
-    The number of records in the database table:
-    <span style="color: green;"> ${tblItemLength}</span>
+    <p style="font-size: 20px;">The number of records in the database table:
+      <span style="color: green;"> ${tblItemLength}</span>
+    </p>
       ${messages}
+    <hr />
     <a style="color: blue; font-size: 20px; padding: 10px 0" target="_blank" href="${BASE_URL}/guru/parse" >
     Parse Transponder news again
     </a>

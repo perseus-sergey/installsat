@@ -96,7 +96,7 @@ const getFullDate = (year, month, dayStr, timeStr) => {
   return dateTime.isValid
     ? dateTime.toJSDate()
     : `Wrong dateTime ${dateTime.toJSDate()}`;
-}; // Output: Date object representing '2024-07-14 07:25:00'
+}; // Output: Date object representing '2024-07-14 07:25:00';
 
 const parseChannelPage = async (
   channel,

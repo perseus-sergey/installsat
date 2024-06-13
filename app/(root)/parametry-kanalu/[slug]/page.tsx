@@ -192,9 +192,7 @@ export default async function Page({ params: { slug } }: IChannelProps) {
             title={`${scheduleTitle[LANGUAGE]} "${title}"`}
             href={`/${EUrlBaseParam.CHANNELS_TV_PROGRAM}/${slug}/${currentDate}`}
           />
-          {/* ----------------------------------------------------------------
-check online href
-          ---------------------------------------------------------------- */}
+
           {tvforsite_net && (
             <ChannelOnlineLink
               href={`/${EUrlBaseParam.ONLINE_CHANNEL_LIST}/${slug}`}

@@ -152,12 +152,12 @@ export const getSimilarChannels = async (logo: string) => {
   AND
     CA.parent NOT IN (2, 25)
   OR 
-    C.logo = "1plus1.jpg" 
+    C.logo = ? 
   AND 
     C.compress = 5
   ORDER BY 
     C.cat DESC, S.grade
   `;
 
-  return await executeQuery<ISimilarChannel>(sql, [logo]);
+  return await executeQuery<ISimilarChannel>(sql, [logo, logo]);
 };

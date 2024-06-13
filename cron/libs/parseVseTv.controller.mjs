@@ -34,7 +34,7 @@ export const insertDBVseTvChannels = async (values) => {
 
   return res instanceof Error
     ? `Error of insert channel schedule to DB: ${res.message}`
-    : '';
+    : null;
   // return res instanceof Error
   //   ? `Error of insert channel schedule to DB: ${res.message}`
   //   : `DB SUCCESS! Inserted rows: ${res.affectedRows}`;

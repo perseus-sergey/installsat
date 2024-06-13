@@ -309,7 +309,7 @@ const R_U_N = async () => {
     }
 
     const insertMessages = await insertDataInBatches(dbInsertedStrings);
-    errorMessages.push(...insertMessages);
+    insertMessages && errorMessages.push(...insertMessages);
 
     resDbTableLength = await getDbIdAmount(TV_SCHEDULE_VSE_TV);
   } catch (error) {
@@ -328,8 +328,6 @@ const R_U_N = async () => {
         ? 'Not Defined'
         : resDbTableLength[0].count.toLocaleString('en-US'),
   });
-
-  console.log('🚀 ~ R_U_N ~ errorMessages:', errorMessages);
 };
 
 R_U_N();

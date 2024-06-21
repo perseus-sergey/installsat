@@ -134,7 +134,7 @@ const extractParsedData = ($, updateAmount) => {
             return;
           }
 
-          // Збираємо частоту між дужками, або використовуємо текст після назви каналу.
+          // Збираємо частоту між дужками, або використовуємо текст після назви каналу
           let frequency_text = '';
           const textAfterChanTitle = $(updateEl).text().split(channel_title)[1];
           const frequencyMatch = textAfterChanTitle.match(/\(([^)]+)\)/);

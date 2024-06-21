@@ -22,11 +22,7 @@ export const metadata: Metadata = {
     publishedTime: getFormattedDateStrYearFirst(),
   },
 };
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <main className="main">
       <SideBar />

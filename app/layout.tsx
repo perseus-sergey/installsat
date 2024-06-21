@@ -2,6 +2,7 @@ import '../globals.scss';
 import Footer from '@/components/Footer/Footer';
 import Header from '@/components/Header/Header';
 import ToastProvider from '@/libs/ToastProvider/ToastProvider';
+import { GoogleAnalytics } from '@next/third-parties/google';
 
 export default function RootLayout({
   children,
@@ -16,6 +17,7 @@ export default function RootLayout({
         <ToastProvider>{children}</ToastProvider>
         <Footer />
       </body>
+      <GoogleAnalytics gaId="G-XYZ" />
     </html>
   );
 }

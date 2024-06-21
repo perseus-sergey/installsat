@@ -203,7 +203,7 @@ const insertDataInBatches = async (data) => {
   for (let i = 0; i < data.length; i += BATCH_SIZE) {
     const batch = data.slice(i, i + BATCH_SIZE);
     const resMessage = await insertDBVseTvChannels(batch);
-    message.push(resMessage);
+    if (resMessage) message.push(resMessage);
   }
 
   return message;

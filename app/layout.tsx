@@ -17,7 +17,7 @@ export default function RootLayout({
         <ToastProvider>{children}</ToastProvider>
         <Footer />
       </body>
-      <GoogleAnalytics gaId="G-XYZ" />
+      <GoogleAnalytics gaId="G-60MX085VHN" />
     </html>
   );
 }

@@ -54,6 +54,8 @@ const getCurrentSatParams = cache((satCpu: string) => {
     : { title: '', id: '-1', satPosition: -1, logo: '', slug: '' };
 });
 
+export const dynamic = 'force-dynamic';
+
 export const generateMetadata = ({ params }: IPageParams): Metadata => {
   const { title, satPosition, slug } = getCurrentSatParams(params.sat);
 

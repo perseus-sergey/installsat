@@ -47,6 +47,8 @@ const {
   },
 } = META_ALL_SAT_CHANNEL_LIST;
 
+export const dynamic = 'force-dynamic';
+
 export const metadata: Metadata = {
   title: metaH1[L],
   description: metaDescription[L],

@@ -13,6 +13,8 @@ interface IProps {
   searchParams: TSearchParams;
 }
 
+export const dynamic = 'force-dynamic';
+
 export default function Page({ searchParams }: IProps) {
   const searchInterval = searchParams[EUrlSearchParam.INTERVAL];
   const intervalDays =

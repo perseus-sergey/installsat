@@ -50,6 +50,8 @@ const {
   CHANNEL_LIST_DB_ID,
 } = META_ALL_SAT_CHANNEL_LIST;
 
+export const dynamic = 'force-dynamic';
+
 export const metadata: Metadata = {
   title: metaTitle[L],
   description: metaDescription[L],

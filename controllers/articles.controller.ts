@@ -1,4 +1,4 @@
-import { executeQuery } from '@/libs/db/mysqldb';
+import { poolExecute } from '@/libs/db/mysqldb';
 import {
   IAllMapsModel,
   IAllNewsModel,
@@ -15,7 +15,7 @@ export const WRONG_CAT_IDS = '(2,0,11,12,13)';
 export const getArticleCatList = cache(async () => {
   const sql = `SELECT id, title, cpu, description, text FROM tbl_categories WHERE id NOT IN ${WRONG_CAT_IDS}`;
 
-  return await executeQuery<ISingleCatArticlesModel>(sql);
+  return await poolExecute<ISingleCatArticlesModel[]>(sql);
 });
 
 export const getCurrentCatParams = cache(
@@ -68,7 +68,7 @@ ORDER BY
   U.date DESC, U.id 
 LIMIT ?, ?
 `;
-  const res = await executeQuery<IAllNewsModel>(sql, [
+  const res = await poolExecute<IAllNewsModel[]>(sql, [
     `${start}`,
     `${quantity}`,
   ]);
@@ -108,7 +108,7 @@ export const getSatMapList = cache(async () => {
       WHERE id = s.id
   );
 `;
-  const res = await executeQuery<IAllMapsModel>(sql);
+  const res = await poolExecute<IAllMapsModel[]>(sql);
 
   return res instanceof Error
     ? []
@@ -129,7 +129,7 @@ export const getSatMap = cache(async (slug: string) => {
   WHERE s.cpu = ?
   AND b.map_img != ''
 `;
-  const res = await executeQuery<IMapModel>(sql, [slug]);
+  const res = await poolExecute<IMapModel[]>(sql, [slug]);
 
   return res instanceof Error
     ? []
@@ -166,7 +166,7 @@ LEFT JOIN
 WHERE U.cpu = ?
 LIMIT 1
 `;
-    const res = await executeQuery<IArticleModel>(sql, [slug]);
+    const res = await poolExecute<IArticleModel[]>(sql, [slug]);
 
     return res instanceof Error || res.length === 0
       ? null
@@ -181,7 +181,7 @@ LIMIT 1
 export const getSatFinderArticle = async () => {
   const sql = `SELECT id, title, cpu, description, text, view, logo FROM tbl_useful WHERE cpu = ?`;
 
-  return await executeQuery<IArticleModel>(sql, [
+  return await poolExecute<IArticleModel[]>(sql, [
     'napravlenie-antenny-po-karte',
   ]);
 };
@@ -199,7 +199,7 @@ export const getSimilarArticles = async (logo: string, id = -1) => {
     LIMIT 7
 `;
 
-  const res = await executeQuery<ISimilarArticleModel>(sql, [logo]);
+  const res = await poolExecute<ISimilarArticleModel[]>(sql, [logo]);
 
   return res instanceof Error
     ? []
@@ -209,18 +209,18 @@ export const getSimilarArticles = async (logo: string, id = -1) => {
       }));
 };
 
-export const getArticleSlugList = cache(async () => {
-  const sql = `SELECT cpu FROM tbl_useful`;
+// export const getArticleSlugList = cache(async () => {
+//   const sql = `SELECT cpu FROM tbl_useful`;
 
-  return await executeQuery<{ cpu: string }>(sql);
-});
+//   return await poolExecute<{ cpu: string }>(sql);
+// });
 
 export const updateViewCount = async (
   dbTableTitle: string,
   articleId: string,
   oldViewNumber: number
 ) =>
-  await executeQuery(`UPDATE ${dbTableTitle} SET view = ? WHERE id = ?`, [
+  await poolExecute(`UPDATE ${dbTableTitle} SET view = ? WHERE id = ?`, [
     `${oldViewNumber + 1}`,
     articleId,
   ]);

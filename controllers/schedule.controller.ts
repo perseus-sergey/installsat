@@ -1,4 +1,4 @@
-import { executeMultipleQuery, executeQuery } from '@/libs/db/mysqldb';
+import { executeMultipleQuery, poolExecute } from '@/libs/db/mysqldb';
 import { IDbIdAmountModel } from '@/models/admin.model';
 import { IScheduleTVModel, IVseTvParsModel } from '@/models/scheduleTV.model';
 import { EDBTableTitles } from '@/models/ui.model';
@@ -23,7 +23,7 @@ export const getDBChannelScheduleShort = cache(
     LIMIT ?
 `;
 
-    const res = await executeQuery<IScheduleTVModel>(sql, [
+    const res = await poolExecute<IScheduleTVModel[]>(sql, [
       `${chanelId}`,
       `${hourInterval}`,
       `${rowsLimit}`,
@@ -83,7 +83,7 @@ export const getDBVseTvChannels = async (IDs?: string[]) => {
   ${channels}
   GROUP BY vsetv
 `;
-  const res = await executeQuery<IVseTvParsModel>(sql);
+  const res = await poolExecute<IVseTvParsModel[]>(sql);
 
   if (res instanceof Error)
     throw new Error(`Error of get channel IDs from DB: ${res.message}`);
@@ -91,24 +91,24 @@ export const getDBVseTvChannels = async (IDs?: string[]) => {
   return res;
 };
 
-export const insertDBVseTvChannels = async (values: string[]) => {
-  const insertedStr = values.join(',');
+// export const insertDBVseTvChannels = async (values: string[]) => {
+//   const insertedStr = values.join(',');
 
-  const sql = `
-  INSERT INTO ${TV_SCHEDULE_VSE_TV}
-  (start,end,chan_id,title)
-  VALUES
-  ${insertedStr}
-`;
-  const res = await executeQuery(sql);
-  if (res instanceof Error)
-    throw new Error(`Error of insert channel schedule to DB: ${res.message}`);
+//   const sql = `
+//   INSERT INTO ${TV_SCHEDULE_VSE_TV}
+//   (start,end,chan_id,title)
+//   VALUES
+//   ${insertedStr}
+// `;
+//   const res = await poolExecute(sql);
+//   if (res instanceof Error)
+//     throw new Error(`Error inserting channel schedule to DB: ${res.message}`);
 
-  return res;
-};
+//   return res;
+// };
 
 export const truncateDBVseTv = async () => {
-  const res = await executeQuery(`TRUNCATE TABLE ${TV_SCHEDULE_VSE_TV}`);
+  const res = await poolExecute(`TRUNCATE TABLE ${TV_SCHEDULE_VSE_TV}`);
   if (res instanceof Error)
     throw new Error(
       `Error of truncate table ${TV_SCHEDULE_VSE_TV} in DB: ${res.message}`
@@ -121,7 +121,7 @@ export const deleteDBVseTvChannel = async (
   channelID: string,
   channelTitle: string
 ) => {
-  const res = await executeQuery(
+  const res = await poolExecute(
     `DELETE FROM ${TV_SCHEDULE_VSE_TV} WHERE chan_id = ?`,
     [channelID]
   );
@@ -136,7 +136,7 @@ export const deleteDBVseTvChannel = async (
 export const getDbIdAmount = async (
   tblName: EDBTableTitles = TV_SCHEDULE_VSE_TV
 ) => {
-  const res = await executeQuery<IDbIdAmountModel>(
+  const res = await poolExecute<IDbIdAmountModel[]>(
     `SELECT COUNT( id ) AS count FROM ${tblName}`
   );
 

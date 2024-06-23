@@ -1,5 +1,5 @@
 import { TGroupedNews } from '@/components/SatNews/SatNews';
-import { executeQuery } from '@/libs/db/mysqldb';
+import { poolExecute } from '@/libs/db/mysqldb';
 import {
   IGroupedSatelliteOption,
   ISatelliteOption,
@@ -55,7 +55,7 @@ export const getSatDigestNews = async ({
     ${inSatList}
     ${orderBy}
   `;
-  const res = await executeQuery<TSatDigest>(sql);
+  const res = await poolExecute<TSatDigest[]>(sql);
 
   return res instanceof Error
     ? res
@@ -117,7 +117,7 @@ export const splitSatellitesByDirection = (satellites: TSatModel[]) =>
   );
 
 export const getSatsForForm = async (isDefaultValue = true) => {
-  const satResult = await executeQuery<TSatModel>(`
+  const satResult = await poolExecute<TSatModel[]>(`
   SELECT title, id, position, grade
   FROM tbl_chan_sat
   WHERE title != ''
@@ -152,7 +152,7 @@ export const getTransNewsForSingleDay = async (
 	WHERE date = ?
 	ORDER BY satGrade, satTitle
 `;
-  const newsResult = await executeQuery<TSatDigest>(sql, [
+  const newsResult = await poolExecute<TSatDigest[]>(sql, [
     new Date(date).toLocaleDateString('en-CA'),
   ]);
 

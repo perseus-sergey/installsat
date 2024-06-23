@@ -4,6 +4,7 @@ import {
   deleteComment,
   deleteSubscriptionEmail,
   editCommentDB,
+  insertComment,
 } from '@/controllers/comments.controller';
 import {
   IFormState,
@@ -11,10 +12,78 @@ import {
   toFormState,
 } from '@/controllers/toast.controller';
 import { EEditCommentFieldNames } from '@/models/admin.model';
-import { EDBTableTitles } from '@/models/ui.model';
+import { COMMENTS_MODEL, ECommentFormNames } from '@/models/comments.model';
+import { EDBTableTitles, LANGUAGE } from '@/models/ui.model';
 import { revalidatePath } from 'next/cache';
-import { redirect } from 'next/navigation';
 import { z } from 'zod';
+
+const { authorName, authorEmail, commentText } = COMMENTS_MODEL.commentForm;
+
+const emptyFieldValues = {
+  authorName: '',
+  commentText: '',
+  authorEmail: '',
+};
+
+const { AUTHOR, EMAIL, TEXT } = ECommentFormNames;
+
+const commentSchema = z.object({
+  [AUTHOR]: z
+    .string()
+    .min(authorName.minSize.value, authorName.minSize.warningText[LANGUAGE])
+    .max(authorName.maxSize.value, authorName.maxSize.warningText[LANGUAGE]),
+  [EMAIL]: z.union([
+    z.literal(''),
+    z.string().email(authorEmail.warningText[LANGUAGE]),
+  ]),
+  [TEXT]: z
+    .string()
+    .min(commentText.minSize.value, commentText.minSize.warningText[LANGUAGE])
+    .max(commentText.maxSize.value, commentText.maxSize.warningText[LANGUAGE]),
+});
+
+export const addCommentAction = async (
+  articleId: string,
+  userIp: string,
+  userCountryCode: string,
+  revalidateUrl: string,
+  dbTableName: EDBTableTitles,
+  _formState: IFormState,
+  formData: FormData
+) => {
+  let fieldValues = emptyFieldValues;
+  let res = 0;
+
+  try {
+    const validFormData = commentSchema.parse({
+      [AUTHOR]: formData.get(AUTHOR),
+      [EMAIL]: formData.get(EMAIL),
+      [TEXT]: formData.get(TEXT),
+    });
+
+    res = await insertComment(
+      dbTableName,
+      articleId,
+      validFormData[AUTHOR],
+      validFormData[EMAIL],
+      validFormData[TEXT],
+      userIp,
+      userCountryCode
+    );
+
+    fieldValues = {
+      authorName: validFormData[AUTHOR],
+      commentText: validFormData[TEXT],
+      authorEmail: validFormData[EMAIL],
+    };
+  } catch (error) {
+    return fromErrorToFormState(error);
+  }
+
+  revalidatePath(revalidateUrl);
+
+  return toFormState('SUCCESS', `${res} comment added`, fieldValues);
+};
 
 export const deleteCommentAction = async (
   commentID: string,
@@ -27,6 +96,10 @@ export const deleteCommentAction = async (
     return fromErrorToFormState(delCommentResult.message);
 
   revalidatePath(revalidateUrl);
+
+  // if SUCCESS, the component is removed.
+  // Since the toast is displayed at the level of this component, it will be deleted along with the component
+  // and we will not be able to see this tost
 
   return toFormState('SUCCESS', 'Comment deleted successfully');
 };
@@ -68,11 +141,17 @@ export const editCommentAction = async (
       [COMMENT_TEXT]: formData.get(COMMENT_TEXT),
     });
 
-    editCommentDB(dbTableName, commentID, validFormData[COMMENT_TEXT]);
+    const res = await editCommentDB(
+      dbTableName,
+      commentID,
+      validFormData[COMMENT_TEXT]
+    );
+
+    revalidatePath(revalidateUrl);
+    // redirect(revalidateUrl);
+
+    return toFormState('SUCCESS', `${res} comment changed`);
   } catch (error) {
     return fromErrorToFormState(error);
   }
-
-  revalidatePath(revalidateUrl);
-  redirect(revalidateUrl);
 };

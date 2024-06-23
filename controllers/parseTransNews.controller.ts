@@ -1,5 +1,5 @@
 import { ITblDigestParse } from '@/app/(admin)/guru/parse/trans-news/page';
-import { executePoolQuery, pool } from '@/libs/db/mysqldb';
+import { poolExecute, pool } from '@/libs/db/mysqldb';
 import { EDBTableTitles } from '@/models/ui.model';
 import { ResultSetHeader } from 'mysql2';
 import { cache } from 'react';
@@ -11,9 +11,7 @@ export const getDBSatID = cache(async (satName: string) => {
     WHERE description = ?
     LIMIT 1
   `;
-  const res = (await executePoolQuery<{ id: string }>(sql, [satName])) as
-    | Error
-    | { id: string }[];
+  const res = await poolExecute<{ id: string }[]>(sql, [satName]);
 
   if (res instanceof Error) return `DB Error: ${res.message}`;
   if (res.length === 0)
@@ -41,7 +39,7 @@ export const insertDBTransNews = async (data: ITblDigestParse[]) => {
       (\`date\`, \`update\`, \`channel_title\`, \`action\`, \`text\`, \`sat\`, \`sat_name\`, \`sat_position\`, \`frequency_text\`, \`country\`)
       VALUES ${values.map((valueSet) => `(${valueSet.join(', ')})`).join(', ')};
     `;
-  const res = (await executePoolQuery(sql)) as Error | ResultSetHeader;
+  const res = await poolExecute<ResultSetHeader>(sql);
 
   if (res instanceof Error) throw new Error(`DB INSERT data: ${res.message}`);
 
@@ -61,7 +59,7 @@ export const deleteDBOldTransNews = async (data: ITblDigestParse[]) => {
     DELETE FROM ${EDBTableTitles.TRANS_NEWS}
     WHERE (\`date\`, \`update\`) IN (${uniqueDateUpdatePairs.join(', ')});
   `;
-  const res = (await executePoolQuery(sql)) as Error | ResultSetHeader;
+  const res = await poolExecute<ResultSetHeader>(sql);
 
   if (res instanceof Error) throw new Error(`DB DELETE data: ${res.message}`);
 

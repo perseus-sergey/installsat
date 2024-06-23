@@ -38,7 +38,10 @@ const parseChannelPage = async (browser: Browser, url: string) => {
   const page = await browser.newPage();
   await page.goto(url, { waitUntil: 'domcontentloaded' });
 
-  return await page.content();
+  const content = await page.content();
+  await page.close();
+
+  return content;
 };
 
 const actionTextHandler = (

@@ -58,7 +58,7 @@ export default async function Page({ searchParams }: IPageParams) {
               <td className="text-center">
                 <TooltipSimple tooltipText="Edit comment">
                   <Link
-                    href={`${BASE_PATH}/${EDIT_COMMENT}/${comment.id}?${makeUrlSearchParams(searchParams).toString()}`}
+                    href={`/${BASE_PATH}/${EDIT_COMMENT}/${comment.id}?${makeUrlSearchParams(searchParams).toString()}`}
                     style={{ fontSize: '1.5rem', color: 'green' }}
                   >
                     ✐
@@ -69,7 +69,7 @@ export default async function Page({ searchParams }: IPageParams) {
                 <DeleteItemButton
                   itemID={`${comment.id}`}
                   dbTableName={commentDbTable}
-                  revalidateUrl={`/${EUrlAdminParam.BASE_PATH}/${EUrlAdminParam.EDIT_COMMENT}`}
+                  revalidateUrl={`/${BASE_PATH}/${EDIT_COMMENT}`}
                 />
               </td>
             </tr>

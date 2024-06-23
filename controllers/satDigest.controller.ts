@@ -12,6 +12,7 @@ import {
 } from '@/models/satDigest.model';
 import { LANGUAGE } from '@/models/ui.model';
 import { decode } from 'html-entities';
+import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
 
 export const getSatDigestNews = async ({
   satellites = undefined,
@@ -61,11 +62,7 @@ export const getSatDigestNews = async ({
     ? res
     : res.map((r) => ({
         ...r,
-        date: (r.date as Date).toLocaleDateString('en-CA', {
-          year: 'numeric',
-          month: '2-digit',
-          day: '2-digit',
-        }),
+        date: getFormattedDateStrYearFirst(r.date),
         satTitle: r.satTitle || r.sat_name || 'Unknown Satellite',
         satPosition: r.satPosition || r.sat_position || '',
       }));

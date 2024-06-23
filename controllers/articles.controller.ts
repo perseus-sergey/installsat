@@ -15,7 +15,9 @@ export const WRONG_CAT_IDS = '(2,0,11,12,13)';
 export const getArticleCatList = cache(async () => {
   const sql = `SELECT id, title, cpu, description, text FROM tbl_categories WHERE id NOT IN ${WRONG_CAT_IDS}`;
 
-  return await poolExecute<ISingleCatArticlesModel[]>(sql);
+  const res = await poolExecute<ISingleCatArticlesModel[]>(sql);
+
+  return res instanceof Error ? [] : res;
 });
 
 export const getCurrentCatParams = cache(

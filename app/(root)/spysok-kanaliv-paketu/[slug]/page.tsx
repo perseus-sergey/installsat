@@ -66,6 +66,8 @@ interface IPageProps {
   searchParams?: TSearchParams;
 }
 
+export const dynamic = 'force-dynamic';
+
 export const generateMetadata = async ({
   params: { slug },
 }: IPageProps): Promise<Metadata> => {

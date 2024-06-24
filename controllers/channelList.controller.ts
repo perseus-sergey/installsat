@@ -1,4 +1,4 @@
-import { executeQuery } from '@/libs/db/mysqldb';
+import { poolExecute } from '@/libs/db/mysqldb';
 import {
   IChannelPackagesModel,
   IOnlineChannelListModel,
@@ -113,7 +113,7 @@ export const getSatChannels = cache(
   ORDER BY fr.freq, be.polar, ch.title
   `;
 
-    const resp = await executeQuery<ISatChannelListModel>(sql, [channelId]);
+    const resp = await poolExecute<ISatChannelListModel[]>(sql, [channelId]);
 
     return resp instanceof Error || resp.length === 0
       ? []
@@ -147,7 +147,7 @@ export const getChannelPackages = async (): Promise<
       C.title
   `;
 
-  const resp = await executeQuery<IChannelPackagesModel>(sql);
+  const resp = await poolExecute<IChannelPackagesModel[]>(sql);
 
   return resp instanceof Error || resp.length === 0
     ? []
@@ -175,7 +175,7 @@ export const getOnlineChannels = cache(async (searchQuery = '') => {
     ORDER BY C.tema, C.tvforsite_net DESC
   `;
 
-  const resp = await executeQuery<IOnlineChannelListModel>(sql);
+  const resp = await poolExecute<IOnlineChannelListModel[]>(sql);
 
   if (resp instanceof Error || !resp.length) return [];
 
@@ -249,7 +249,7 @@ export const getChannelsWithSchedule = async (searchQuery = '') => {
       C.tema, 
       C.title;
   `;
-  const resp = await executeQuery<IOnlineChannelListModel>(sql);
+  const resp = await poolExecute<IOnlineChannelListModel[]>(sql);
 
   return resp instanceof Error || !resp.length
     ? []
@@ -275,9 +275,10 @@ export const getT2Channels = cache(async (searchQuery = '') => {
     ORDER BY C.tema, C.title
   `;
 
-  const resp = await executeQuery<
-    IOnlineChannelListModel & IPackageChannelListModel
-  >(sql);
+  const resp =
+    await poolExecute<(IOnlineChannelListModel & IPackageChannelListModel)[]>(
+      sql
+    );
 
   return resp instanceof Error || !resp.length
     ? null
@@ -329,7 +330,7 @@ export const getPackageChannels = cache(
     subcat.location, C.tema
   `;
 
-    const resp = await executeQuery<IPackageChannelListModel>(sql, [
+    const resp = await poolExecute<IPackageChannelListModel[]>(sql, [
       packageSlug,
     ]);
 

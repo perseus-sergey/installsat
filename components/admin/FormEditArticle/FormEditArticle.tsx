@@ -40,7 +40,8 @@ const FormEditArticle = ({
     [EArticleEditFields.description]:
       initArticleData[0].description.replace(/"/g, '') || '',
     [EArticleEditFields.author]: initArticleData[0].author || '',
-    [EArticleEditFields.date]: initArticleData[0].date || '',
+    [EArticleEditFields.date]:
+      getFormattedDateStrYearFirst(initArticleData[0].date) || '',
     [EArticleEditFields.cat]: initArticleData[0].cat || '',
     [EArticleEditFields.folder]: initArticleData[0].folder || '',
     [EArticleEditFields.text]: initArticleData[0].text || '',
@@ -151,7 +152,8 @@ const FormEditArticle = ({
       <FormTextareaItem
         itemName={EArticleEditFields.date}
         labelTitle="Date:"
-        value={getFormattedDateStrYearFirst(formData.date)}
+        value={formData.date}
+        // value={getFormattedDateStrYearFirst(formData.date)}
         handleChange={handleChange}
         formState={formState}
         required

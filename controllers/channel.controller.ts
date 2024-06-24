@@ -1,4 +1,4 @@
-import { executeQuery } from '@/libs/db/mysqldb';
+import { poolExecute } from '@/libs/db/mysqldb';
 import {
   IChannel,
   IOnlineChannel,
@@ -60,7 +60,7 @@ WHERE
   CH.cpu = ?
 LIMIT 1
 `;
-  const res = await executeQuery<IChannel>(sql, [slug]);
+  const res = await poolExecute<IChannel[]>(sql, [slug]);
   if (res instanceof Error) return null;
   if (!res.length) return null;
 
@@ -105,7 +105,7 @@ export const getDBOnlineChannel = cache(
   WHERE C.cpu =  ?
   LIMIT 1
 `;
-    const res = await executeQuery<IOnlineChannel>(sql, [slug]);
+    const res = await poolExecute<IOnlineChannel[]>(sql, [slug]);
 
     return res instanceof Error || !res.length
       ? null
@@ -118,8 +118,8 @@ export const getDBOnlineChannel = cache(
   }
 );
 
-export const getDBChannelSlugList = async () =>
-  await executeQuery<{ cpu: string }>(`SELECT cpu FROM tbl_channals`);
+// export const getDBChannelSlugList = async () =>
+//   await poolExecute<{ cpu: string }[]>(`SELECT cpu FROM tbl_channals`);
 
 export const getSimilarChannels = async (logo: string) => {
   const sql = `
@@ -159,5 +159,5 @@ export const getSimilarChannels = async (logo: string) => {
     C.cat DESC, S.grade
   `;
 
-  return await executeQuery<ISimilarChannel>(sql, [logo, logo]);
+  return await poolExecute<ISimilarChannel[]>(sql, [logo, logo]);
 };

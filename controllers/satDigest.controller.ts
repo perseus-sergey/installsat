@@ -1,5 +1,5 @@
 import { TGroupedNews } from '@/components/SatNews/SatNews';
-import { executeQuery } from '@/libs/db/mysqldb';
+import { poolExecute } from '@/libs/db/mysqldb';
 import {
   IGroupedSatelliteOption,
   ISatelliteOption,
@@ -12,6 +12,7 @@ import {
 } from '@/models/satDigest.model';
 import { LANGUAGE } from '@/models/ui.model';
 import { decode } from 'html-entities';
+import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
 
 export const getSatDigestNews = async ({
   satellites = undefined,
@@ -55,17 +56,13 @@ export const getSatDigestNews = async ({
     ${inSatList}
     ${orderBy}
   `;
-  const res = await executeQuery<TSatDigest>(sql);
+  const res = await poolExecute<TSatDigest[]>(sql);
 
   return res instanceof Error
     ? res
     : res.map((r) => ({
         ...r,
-        date: (r.date as Date).toLocaleDateString('en-CA', {
-          year: 'numeric',
-          month: '2-digit',
-          day: '2-digit',
-        }),
+        date: getFormattedDateStrYearFirst(r.date),
         satTitle: r.satTitle || r.sat_name || 'Unknown Satellite',
         satPosition: r.satPosition || r.sat_position || '',
       }));
@@ -117,7 +114,7 @@ export const splitSatellitesByDirection = (satellites: TSatModel[]) =>
   );
 
 export const getSatsForForm = async (isDefaultValue = true) => {
-  const satResult = await executeQuery<TSatModel>(`
+  const satResult = await poolExecute<TSatModel[]>(`
   SELECT title, id, position, grade
   FROM tbl_chan_sat
   WHERE title != ''
@@ -152,7 +149,7 @@ export const getTransNewsForSingleDay = async (
 	WHERE date = ?
 	ORDER BY satGrade, satTitle
 `;
-  const newsResult = await executeQuery<TSatDigest>(sql, [
+  const newsResult = await poolExecute<TSatDigest[]>(sql, [
     new Date(date).toLocaleDateString('en-CA'),
   ]);
 

@@ -1,18 +1,16 @@
 import { poolExecute } from '@/libs/db/mysqldb';
 import { TChannelCatsModel } from '@/models/tblChannelCateg.model';
-import { TInstallationsModel } from '@/models/tblInstallations.model';
 import { TSatModel } from '@/models/tblSat.model';
 import { NUMBER_OF_LAST_NEWS_WIDGET } from '@/models/widget.model';
 import { cache } from 'react';
-import { WRONG_CAT_IDS } from './articles.controller';
-import { IAllNewsModel } from '@/models/articles.model';
+import { WRONG_CAT_IDS, satMapListSql } from './articles.controller';
+import { IAllMapsModel, IAllNewsModel } from '@/models/articles.model';
 
-export const getInstallationsList = cache(
-  async () =>
-    await poolExecute<TInstallationsModel[]>(`
-  SELECT title, cpu, id FROM tbl_installations WHERE id NOT IN (8,9)
-  `)
-);
+export const getSatMapList = async () => {
+  const res = await poolExecute<IAllMapsModel[]>(satMapListSql);
+
+  return res instanceof Error ? [] : res;
+};
 
 export const getChannelCatList = cache(
   async () =>

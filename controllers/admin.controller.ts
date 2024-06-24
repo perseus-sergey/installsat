@@ -1,5 +1,5 @@
 import { IInputData } from '@/components/admin/FormEditArticle/FormEditChannel';
-import { executeMultipleQuery, executeQuery } from '@/libs/db/mysqldb';
+import { poolExecute, poolQuery } from '@/libs/db/mysqldb';
 import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
 import {
   IAllNewsModel,
@@ -9,6 +9,7 @@ import {
 import { EChannelEditFields, TChannelEditModel } from '@/models/channel.model';
 import { IEditChannelListModel } from '@/models/channelList.model';
 import { EDBTableTitles } from '@/models/ui.model';
+import { ResultSetHeader } from 'mysql2';
 import { cache } from 'react';
 
 // export const WRONG_CAT_IDS = '(2,0,11,12,13)';
@@ -16,15 +17,15 @@ import { cache } from 'react';
 export const deleteItemFromDbTable = async (
   dbTableName: EDBTableTitles,
   id: string
-) => await executeQuery(`DELETE FROM ${dbTableName} WHERE id=?`, [id]);
+) => await poolExecute(`DELETE FROM ${dbTableName} WHERE id=?`, [id]);
 
-export const getAllDbDataById = cache(
-  async <T>(dbTableName: EDBTableTitles, id: string) => {
-    const sql = `SELECT * FROM ${dbTableName} WHERE id = ?`;
+// export const getAllDbDataById = cache(
+//   async <T>(dbTableName: EDBTableTitles, id: string) => {
+//     const sql = `SELECT * FROM ${dbTableName} WHERE id = ?`;
 
-    return await executeQuery<T>(sql, [`${id}`]);
-  }
-);
+//     return await poolExecute<T>(sql, [`${id}`]);
+//   }
+// );
 
 export const getAdminChunkOfNews = cache(
   async (quantity: number, start = 0, searchQuery = '') => {
@@ -46,7 +47,7 @@ export const getAdminChunkOfNews = cache(
       U.date DESC, U.id 
     LIMIT ?, ?
     `;
-    const res = await executeQuery<IAllNewsModel>(sql, [
+    const res = await poolExecute<IAllNewsModel[]>(sql, [
       `${start}`,
       `${quantity}`,
     ]);
@@ -58,14 +59,14 @@ export const getAdminChunkOfNews = cache(
 export const getArticleAndCatDb = cache(async (articleId: string | number) => {
   const sql = `SELECT * FROM tbl_useful WHERE id = ${articleId} LIMIT 1; SELECT title, id FROM tbl_categories`;
 
-  return executeMultipleQuery<[TArticleTableModel[], IArticleCategory[]]>(sql);
+  return poolQuery<[TArticleTableModel[], IArticleCategory[]]>(sql);
 });
 
 export const editArticleDB = async (
   articleID: string,
   articleData: TArticleTableModel
 ) =>
-  await executeQuery(
+  await poolExecute<ResultSetHeader>(
     `
     UPDATE tbl_useful SET title = ?, cpu = ?, description = ?, text = ?, cat = ?, author = ?, logo = ?, folder = ?, date = ?, date_upd = ?
     WHERE id = ?`,
@@ -104,14 +105,14 @@ export const getEditDbChannels = cache(async (searchQuery: string) => {
       ORDER BY ch.title, fr.freq
     `;
 
-  const resp = await executeQuery<IEditChannelListModel>(sql);
+  const resp = await poolExecute<IEditChannelListModel[]>(sql);
 
   return resp;
 });
 
 export const getDbRelativeChannelCats = cache(
   async (parentId: string | number) => {
-    const resp = await executeQuery<IInputData>(
+    const resp = await poolExecute<IInputData[]>(
       `SELECT title, id FROM tbl_chan_categ WHERE parent = ?`,
       [`${parentId}`]
     );
@@ -121,13 +122,15 @@ export const getDbRelativeChannelCats = cache(
 );
 export const getDbRelativeFrequencies = cache(
   async (satId: string | number) => {
-    const resp = await executeQuery<{
-      freq: number;
-      sat: number;
-      beam: number;
-      id: number;
-      cpu: string;
-    }>(
+    const resp = await poolExecute<
+      {
+        freq: number;
+        sat: number;
+        beam: number;
+        id: number;
+        cpu: string;
+      }[]
+    >(
       `
     SELECT 
       F.freq, 
@@ -224,7 +227,7 @@ export const getEditDbChannel = async (
       SELECT title, id FROM tbl_country;
     `;
 
-  const resp = await executeMultipleQuery<
+  const resp = await poolQuery<
     [
       (IInputData & { position: string })[],
       TChannelEditModel[],
@@ -253,7 +256,7 @@ export const editChannelDB = async (
   channelID: string,
   channelData: TChannelEditModel
 ) =>
-  await executeQuery(
+  await poolExecute<ResultSetHeader>(
     `
     UPDATE tbl_channals SET 
       title = ?,

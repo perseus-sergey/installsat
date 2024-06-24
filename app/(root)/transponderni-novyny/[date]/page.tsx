@@ -19,6 +19,8 @@ interface IPageParams {
   params: { date: string };
 }
 
+export const dynamic = 'force-dynamic';
+
 export const generateMetadata = async ({ params: { date } }: IPageParams) => {
   const formattedDate = getCurrDateCached(date);
   const title = `${metaTitleStart[L]} ${formattedDate}`;

@@ -46,6 +46,8 @@ export interface IPageProps {
   params: { slug: string; url_date: string };
 }
 
+export const dynamic = 'force-dynamic';
+
 export const generateMetadata = async ({
   params: { slug, url_date },
 }: IPageProps): Promise<Metadata> => {

@@ -68,7 +68,7 @@ const EditComment = ({
 
         <CancelLinkButton
           ariaLabel="Don't save changes"
-          title="Cancel"
+          title="Back"
           href={revalidateUrl}
         />
       </div>

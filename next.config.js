@@ -33,9 +33,14 @@ const nextConfig = {
       },
       {
         source: '/novosti-i-statji/satellite_equipments',
-        destination: '/kategoriji-tovariv',
+        destination: '/',
         permanent: true,
       },
+      // {
+      //   source: '/novosti-i-statji/satellite_equipments',
+      //   destination: '/kategoriji-tovariv',
+      //   permanent: true,
+      // },
       {
         source: '/novosti-i-statji/karty-pokrytija-telesputnikov',
         destination: '/karty-pokryttia-suputnykiv',
@@ -148,17 +153,27 @@ const nextConfig = {
       },
       {
         source: '/kategorija-tovara/:cat_parent',
-        destination: '/kategoriji-tovariv/:cat_parent',
+        destination: '/',
         permanent: true,
       },
+      // {
+      //   source: '/kategorija-tovara/:cat_parent',
+      //   destination: '/kategoriji-tovariv/:cat_parent',
+      //   permanent: true,
+      // },
       {
         source: '/spisok-tovarov/:cat*',
-        destination: '/kategoriji-tovariv',
+        destination: '/',
         permanent: true,
       },
+      // {
+      //   source: '/spisok-tovarov/:cat*',
+      //   destination: '/kategoriji-tovariv',
+      //   permanent: true,
+      // },
       {
         source: '/tovar/:cat*',
-        destination: '/kategoriji-tovariv',
+        destination: '/',
         permanent: true,
       },
     ];
@@ -167,16 +182,3 @@ const nextConfig = {
 
 module.exports = nextConfig;
 // module.exports = withNextVideo(nextConfig);
-
-// RewriteRule 	^price/([-a-zA-Z0-9_]+)/$ 									product_price.php?cat=$1 			[QSA,L]
-// RewriteRule 	^nashi-kontakty/?$ 											contacts.php 						[QSA,L]
-// RewriteRule 	^chat/?$ 											chat/chat.php 						[QSA,L]
-
-//   SAT_COVERAGE_MAP = 'mapa-pokryttia-suputnyka',
-//   NEWS_AND_ARTICLES = 'novyny-ta-statti',
-//   CHANNEL_PARAMS = 'parametry-kanalu',
-//   ONLINE_CHANNEL_LIST = 'telekanaly-onlain',
-//   PRODUCT = 'tovar',
-//   PRODUCT_LIST = 'spysok-tovariv',
-//   PRODUCT_CATEGORIES = 'kategoriji-tovariv',
-// }

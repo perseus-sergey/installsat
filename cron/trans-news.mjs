@@ -8,8 +8,11 @@ import {
   insertDBTransNews,
   getDbIdAmount,
 } from './libs/parseTransNews.controller.mjs';
+import { execSync } from 'child_process';
 
 const BASE_URL = process.env.BASE_URL;
+const isProductionMode = process.env.PRODUCTION_MODE === 'true';
+
 const PARSE_URL = 'https://www.flysat.com/en/news';
 const PARSED_UPDATES = 4;
 
@@ -17,7 +20,10 @@ const parseChannelPage = async (browser, url) => {
   const page = await browser.newPage();
   await page.goto(url, { waitUntil: 'domcontentloaded' });
 
-  return await page.content();
+  const content = await page.content();
+  await page.close();
+
+  return content;
 };
 
 const actionTextHandler = (text, chanTitle, frequency) => {
@@ -243,6 +249,14 @@ const sendReportMail = async (errorMessages, tblItemLength) => {
   });
 };
 
+const killChromeProcesses = () => {
+  try {
+    execSync('pkill -f chrome');
+  } catch (error) {
+    console.error('Error killing chrome processes:', error);
+  }
+};
+
 const R_U_N = async () => {
   let browser;
   const errorMessages = [];
@@ -277,7 +291,19 @@ const R_U_N = async () => {
         : 'Unknown error occurred'
     );
   } finally {
-    if (browser) await browser.close();
+    if (browser) {
+      try {
+        await browser.close();
+      } catch (closeError) {
+        errorMessages.push(
+          closeError instanceof Error
+            ? `ERROR closing browser: ${closeError.message}`
+            : 'Error closing browser'
+        );
+      }
+    }
+    // Закрити всі запущені процеси Chrome після завершення роботи функції
+    isProductionMode && killChromeProcesses();
   }
 
   await sendReportMail(

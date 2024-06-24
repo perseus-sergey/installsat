@@ -15,6 +15,7 @@ import {
 } from '@/controllers/parseTransNews.controller';
 import { getDbIdAmount } from '@/controllers/schedule.controller';
 import { ParseTransNews } from '@/components/EmailTemplates/parseTransNews.template';
+import { execSync } from 'child_process';
 
 export interface ITblDigestParse {
   date: string;
@@ -30,6 +31,8 @@ export interface ITblDigestParse {
 }
 
 const BASE_URL = process.env.BASE_URL;
+const isProductionMode = process.env.PRODUCTION_MODE === 'true';
+
 const SHOW_ONLY = false;
 const PARSE_URL = 'https://www.flysat.com/en/news';
 const PARSED_UPDATES = 4;
@@ -38,7 +41,10 @@ const parseChannelPage = async (browser: Browser, url: string) => {
   const page = await browser.newPage();
   await page.goto(url, { waitUntil: 'domcontentloaded' });
 
-  return await page.content();
+  const content = await page.content();
+  await page.close();
+
+  return content;
 };
 
 const actionTextHandler = (
@@ -256,6 +262,14 @@ const sendReportMail = async (
   });
 };
 
+const killChromeProcesses = () => {
+  try {
+    execSync('pkill -f chrome');
+  } catch (error) {
+    console.error('Error killing chrome processes:', error);
+  }
+};
+
 export default async function Page({
   searchParams,
 }: {
@@ -304,7 +318,19 @@ export default async function Page({
         : 'Unknown error occurred'
     );
   } finally {
-    if (browser) await browser.close();
+    if (browser) {
+      try {
+        await browser.close();
+      } catch (closeError) {
+        errorMessages.push(
+          closeError instanceof Error
+            ? `ERROR closing browser: ${closeError.message}`
+            : 'Error closing browser'
+        );
+      }
+    }
+    // Закрити всі запущені процеси Chrome після завершення роботи функції
+    isProductionMode && killChromeProcesses();
   }
 
   if (!SHOW_ONLY)

@@ -1,5 +1,4 @@
 import styles from './WidgetArticleCategories.module.scss';
-import EmptyData from '../errors/EmptyData/EmptyData';
 import Link from 'next/link';
 import { WIDGET_ARTICLE_CATEGORY } from '@/models/widget.model';
 import { LANGUAGE } from '@/models/ui.model';
@@ -7,9 +6,8 @@ import { getArticleCatList } from '@/controllers/articles.controller';
 
 const WidgetArticleCategories = async () => {
   const articleCatWidgetList = await getArticleCatList();
-  if (articleCatWidgetList instanceof Error) return <EmptyData />;
 
-  return (
+  return articleCatWidgetList.length > 0 ? (
     <ul className="sidebar-widget" data-testid="WidgetArticleCategories">
       <li className={styles.listItem}>
         <Link className={styles.itemLink} href={WIDGET_ARTICLE_CATEGORY.href}>
@@ -28,6 +26,6 @@ const WidgetArticleCategories = async () => {
         </li>
       ))}
     </ul>
-  );
+  ) : null;
 };
 export default WidgetArticleCategories;

@@ -2,7 +2,6 @@
 
 import styles from './CommentForm.module.scss';
 import { SubmitPendingButton } from '@/components/ui/buttons/SubmitPendingBtn';
-import { formCommentAction } from '../formComment.action';
 import { useFormState } from 'react-dom';
 import { COMMENTS_MODEL, ECommentFormNames } from '@/models/comments.model';
 import FieldError from '../FieldError/FieldError';
@@ -12,6 +11,7 @@ import { EDBTableTitles, LANGUAGE } from '@/models/ui.model';
 import { useFormCommentSendEmail } from '@/libs/hooks/useFormCommentSendEmail';
 import { EMPTY_FORM_STATE } from '@/controllers/toast.controller';
 import { IUserLocation } from '@/models/userLocation.model';
+import { addCommentAction } from '@/libs/actions/comments.action';
 
 const { AUTHOR, EMAIL, TEXT } = ECommentFormNames;
 const { authorEmail, authorName, commentText, submit } =
@@ -36,7 +36,7 @@ const CommentForm = ({
   baseUrl,
   emailKey,
 }: ICommentProps) => {
-  const sendCommentHandler = formCommentAction.bind(
+  const sendCommentHandler = addCommentAction.bind(
     null,
     articleId,
     userLocation && userLocation.status === 'success' ? userLocation.query : '',

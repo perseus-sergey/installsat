@@ -1,9 +1,10 @@
 'use server';
 
-import { executeQuery } from '@/libs/db/mysqldb';
+import { poolExecute } from '@/libs/db/mysqldb';
 import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
 import { ICommentsModel, ISubscribersEmails } from '@/models/comments.model';
 import { EDBTableTitles } from '@/models/ui.model';
+import { ResultSetHeader } from 'mysql2';
 import { cache } from 'react';
 
 export const getComments = cache(
@@ -12,7 +13,7 @@ export const getComments = cache(
   SELECT * FROM ${tblName} WHERE post = ? ORDER BY id DESC LIMIT ?, ?
 `;
 
-    return await executeQuery<ICommentsModel>(sql, [
+    return await poolExecute<ICommentsModel[]>(sql, [
       postId,
       `${start}`,
       `${perPage}`,
@@ -26,7 +27,7 @@ export const getCommentsNumber = cache(
     SELECT COUNT(id) AS total_count FROM ${tblName} WHERE post = ?
 `;
 
-    const respCommentsNumber = await executeQuery<{ total_count: number }>(
+    const respCommentsNumber = await poolExecute<{ total_count: number }[]>(
       sql,
       [postId]
     );
@@ -45,7 +46,7 @@ export const getCommentFromDB = async (
   SELECT text FROM ${tblName} WHERE id = ?
 `;
 
-  const res = await executeQuery<{ text: string }>(sql, [commentId]);
+  const res = await poolExecute<{ text: string }[]>(sql, [commentId]);
 
   return res instanceof Error ? res : res[0].text;
   // return res instanceof Error ? res : decode(res[0].text);
@@ -59,8 +60,8 @@ export const insertComment = async (
   text: string,
   ip = '',
   country = ''
-) =>
-  await executeQuery(
+) => {
+  const res = await poolExecute<ResultSetHeader>(
     `INSERT INTO ${dbTableName} (post,author,mail,text,date,ip,country) VALUES (?,?,?,?,?,?,?)`,
     [
       articleId,
@@ -73,22 +74,32 @@ export const insertComment = async (
     ]
   );
 
+  if (res instanceof Error) throw new Error(`DB ERROR: ${res.message}`);
+
+  return res.affectedRows;
+};
+
 export const editCommentDB = async (
   dbTableName: EDBTableTitles,
   commentId: number,
   text: string
-) =>
-  await executeQuery(`UPDATE ${dbTableName} SET text = ? WHERE id = ?`, [
-    text,
-    `${commentId}`,
-  ]);
+) => {
+  const res = await poolExecute<ResultSetHeader>(
+    `UPDATE ${dbTableName} SET text = ? WHERE id = ?`,
+    [text, `${commentId}`]
+  );
+
+  if (res instanceof Error) throw new Error(`DB ERROR: ${res.message}`);
+
+  return res.affectedRows;
+};
 
 export const deleteSubscriptionEmail = async (
   dbTableName: EDBTableTitles,
   articleId: string,
   email: string
 ) =>
-  await executeQuery(
+  await poolExecute(
     `UPDATE ${dbTableName} SET mail='' WHERE post=? AND mail=?`,
     [articleId, email]
   );
@@ -96,13 +107,13 @@ export const deleteSubscriptionEmail = async (
 export const deleteComment = async (
   dbTableName: EDBTableTitles,
   commentID: string
-) => await executeQuery(`DELETE FROM ${dbTableName} WHERE id=?`, [commentID]);
+) => await poolExecute(`DELETE FROM ${dbTableName} WHERE id=?`, [commentID]);
 
 export const getArticleSubscribers = async (
   dbTableName: EDBTableTitles,
   articleId: string
 ) =>
-  await executeQuery<ISubscribersEmails>(
+  await poolExecute<ISubscribersEmails[]>(
     `
     SELECT mail, MAX(author) AS author, MAX(ip) AS ip, MAX(date) AS date
     FROM ${dbTableName}

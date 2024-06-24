@@ -13,9 +13,7 @@ interface IProps {
   dbTableName: EDBTableTitles;
   revalidateUrl: string;
 }
-// =================================================================
-// Remove deletecomment component
-// =================================================================
+
 const DeleteItemButton = ({ itemID, dbTableName, revalidateUrl }: IProps) => {
   const deleteItemHandler = deleteCommentAction.bind(
     null,

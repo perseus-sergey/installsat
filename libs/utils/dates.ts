@@ -41,12 +41,26 @@ export const getFormattedDateStr = (
   return isYearFirst ? `${year}-${month}-${day}` : `${day}-${month}-${year}`;
 };
 
+// export const getFormattedDateStrYearFirst = (
+//   date: string | Date = new Date()
+// ) => {
+//   const currDate = getValidDate(date);
+
+//   return !currDate ? '' : currDate.toISOString().slice(0, 10);
+// };
+
 export const getFormattedDateStrYearFirst = (
   date: string | Date = new Date()
 ) => {
-  const currDate = getValidDate(date);
+  const validDate = getValidDate(date);
 
-  return !currDate ? '' : currDate.toISOString().slice(0, 10);
+  return !validDate
+    ? ''
+    : validDate.toLocaleDateString('en-CA', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+      });
 };
 
 export const getStartOfWeekDate = (date: Date) => {

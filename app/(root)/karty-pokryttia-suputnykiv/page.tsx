@@ -11,6 +11,8 @@ import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
 
 const BASE_URL = process.env.BASE_URL;
 
+export const dynamic = 'force-dynamic';
+
 const {
   metaAllMaps: { metaDescription, metaKeywords, metaTitle },
   images: { allMaps: allMapsImg },

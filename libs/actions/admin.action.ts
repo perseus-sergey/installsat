@@ -15,6 +15,7 @@ import {
 import { EArticleEditFields, editArticleSchema } from '@/models/articles.model';
 import { EChannelEditFields, editChannelSchema } from '@/models/channel.model';
 import { EDBTableTitles } from '@/models/ui.model';
+import { ResultSetHeader } from 'mysql2';
 import { revalidatePath } from 'next/cache';
 // import { redirect } from 'next/navigation';
 // import { z } from 'zod';
@@ -64,6 +65,8 @@ export const editArticleAction = async (
   const { logo, title, cpu, description, author, date, cat, folder } =
     EArticleEditFields;
 
+  let res: Error | ResultSetHeader | string = '';
+
   try {
     const validFormData = editArticleSchema.parse({
       logo: formData.get(logo),
@@ -76,7 +79,7 @@ export const editArticleAction = async (
       cat: formData.get(cat),
       folder: formData.get(folder),
     });
-    const res = editArticleDB(articleID, validFormData);
+    res = await editArticleDB(articleID, validFormData);
     if (res instanceof Error) throw new Error(res.message);
   } catch (error) {
     return fromErrorToFormState(error);
@@ -84,7 +87,10 @@ export const editArticleAction = async (
 
   revalidatePath(revalidateUrl);
 
-  return toFormState('SUCCESS', 'Article updated successfully');
+  return toFormState(
+    'SUCCESS',
+    `Article updated successfully. Affected Rows: ${res.affectedRows}`
+  );
   // redirect(revalidateUrl);
 };
 
@@ -129,6 +135,7 @@ export const editChannelAction = async (
   } = EChannelEditFields;
   const [sat, beam, frequency] = satBeamFreq.split('|');
   // console.log('🚀 ~ formData:', formData);
+  let res: Error | ResultSetHeader | string = '0';
 
   try {
     const validFormData = editChannelSchema.parse({
@@ -160,7 +167,7 @@ export const editChannelAction = async (
       [other_stream]: formData.get(other_stream),
       [mark]: formData.get(mark),
     });
-    const res = editChannelDB(channelID, validFormData);
+    res = await editChannelDB(channelID, validFormData);
     if (res instanceof Error) throw new Error(res.message);
   } catch (error) {
     // console.log('🚀 ~ error:', error);
@@ -170,94 +177,8 @@ export const editChannelAction = async (
   revalidateUrl.forEach((url) => revalidatePath(url));
   // redirect(revalidateUrl);
 
-  return toFormState('SUCCESS', 'Channel updated successfully');
+  return toFormState(
+    'SUCCESS',
+    `Channel updated successfully. Affected rows: ${res.affectedRows}`
+  );
 };
-
-// export const editCommentAction = async (
-//   itemID: number,
-//   dbTableName: EDBTableTitles,
-//   revalidateUrl: string,
-//   _formState: IFormState,
-//   formData: FormData
-// ) => {
-//   const { COMMENT_TEXT } = EEditCommentFieldNames;
-
-//   const commentSchema = z.object({
-//     [COMMENT_TEXT]: z
-//       .string()
-//       .min(2, 'At least 2 characters')
-//       .max(450, '450 characters maximum'),
-//   });
-
-//   try {
-//     const validFormData = commentSchema.parse({
-//       [COMMENT_TEXT]: formData.get(COMMENT_TEXT),
-//     });
-
-//     editCommentDB(dbTableName, itemID, validFormData[COMMENT_TEXT]);
-//   } catch (error) {
-//     return fromErrorToFormState(error);
-//   }
-
-//   revalidatePath(revalidateUrl);
-//   redirect(revalidateUrl);
-// };
-
-// const { AUTHOR, EMAIL, TEXT } = ECommentFormNames;
-
-// const commentSchema = z.object({
-//   [AUTHOR]: z
-//     .string()
-//     .min(authorName.minSize.value, authorName.minSize.warningText[LANGUAGE])
-//     .max(authorName.maxSize.value, authorName.maxSize.warningText[LANGUAGE]),
-//   [EMAIL]: z.union([
-//     z.literal(''),
-//     z.string().email(authorEmail.warningText[LANGUAGE]),
-//   ]),
-//   [TEXT]: z
-//     .string()
-//     .min(commentText.minSize.value, commentText.minSize.warningText[LANGUAGE])
-//     .max(commentText.maxSize.value, commentText.maxSize.warningText[LANGUAGE]),
-// });
-
-// export const formCommentAction = async (
-//   articleId: string,
-//   userIp: string,
-//   userCountryCode: string,
-//   revalidateUrl: string,
-//   dbTableName: EDBTableTitles,
-//   _formState: IFormState,
-//   formData: FormData
-// ) => {
-//   let fieldValues = emptyFieldValues;
-
-//   try {
-//     const validFormData = commentSchema.parse({
-//       [AUTHOR]: formData.get(AUTHOR),
-//       [EMAIL]: formData.get(EMAIL),
-//       [TEXT]: formData.get(TEXT),
-//     });
-
-//     insertComment(
-//       dbTableName,
-//       articleId,
-//       validFormData[AUTHOR],
-//       validFormData[EMAIL],
-//       validFormData[TEXT],
-//       userIp,
-//       userCountryCode
-//     );
-
-//     fieldValues = {
-//       authorName: validFormData[AUTHOR],
-//       commentText: validFormData[TEXT],
-//       authorEmail: validFormData[EMAIL],
-//     };
-//   } catch (error) {
-//     return fromErrorToFormState(error);
-//   }
-
-//   revalidatePath(revalidateUrl);
-
-//   return toFormState('SUCCESS', 'Comment created', fieldValues);
-// };

@@ -1,5 +1,6 @@
 export enum EUrlBaseParam {
   BASE_PATH = '/',
+  LANG = 'lang',
   TRANSPONDER_NEWS = 'transponderni-novyny',
   // SAT_NEWS = 'suputnykovi-novyny',
   PACKAGE_CHANNEL_LIST = 'spysok-kanaliv-paketu',

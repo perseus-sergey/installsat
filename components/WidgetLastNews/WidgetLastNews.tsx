@@ -3,9 +3,9 @@ import styles from './WidgetLastNews.module.scss';
 import { getLastNewsWidgetList } from '@/controllers/sidebar.controller';
 import EmptyData from '../errors/EmptyData/EmptyData';
 import { WIDGET_LAST_NEWS } from '@/models/widget.model';
-import { LANGUAGE } from '@/models/ui.model';
+import { ELanguage, LANGUAGE } from '@/models/ui.model';
 
-const WidgetLastNews = async () => {
+const WidgetLastNews = async ({ lang }: { lang: ELanguage }) => {
   const lastNewsWidgetList = await getLastNewsWidgetList();
   if (lastNewsWidgetList instanceof Error) return <EmptyData />;
 
@@ -19,7 +19,9 @@ const WidgetLastNews = async () => {
       <ul className={styles.listBody}>
         {lastNewsWidgetList.map((item) => (
           <li key={item.id} className={styles.listItem}>
-            <Link href={`${WIDGET_LAST_NEWS.baseHrefOfList}/${item.cpu}/`}>
+            <Link
+              href={`/${lang}/${WIDGET_LAST_NEWS.baseHrefOfList}/${item.cpu}/`}
+            >
               {item.title} ...
             </Link>
           </li>

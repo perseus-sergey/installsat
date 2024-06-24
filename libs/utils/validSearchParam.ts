@@ -1,4 +1,4 @@
-import { TSearchParams } from '@/models/ui.model';
+import { ELanguage, TSearchParams } from '@/models/ui.model';
 import { EUrlSearchParam } from '@/models/url.model';
 
 export const validSearchParam = (
@@ -10,6 +10,15 @@ export const validSearchParam = (
   typeof searchParams[paramName] === 'string'
     ? decodeURIComponent(searchParams[paramName] as string)
     : '';
+
+export const isValidLanguage = (lang: string): boolean =>
+  Object.values(ELanguage).includes(lang as ELanguage);
+
+export const getELangKey = (lang: string): ELanguage => {
+  const isValid = isValidLanguage(lang);
+
+  return isValid ? (lang as ELanguage) : ELanguage.UA;
+};
 
 export const validSearchParamArray = (
   paramName: EUrlSearchParam,

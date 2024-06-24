@@ -1,5 +1,7 @@
 'use client';
 
+import Footer from '@/components/Footer/Footer';
+import Header from '@/components/Header/Header';
 import ErrorPage from '@/components/errors/ErrorPage/ErrorPage';
 
 export default ({
@@ -8,4 +10,15 @@ export default ({
 }: {
   error: Error & { digest?: string };
   reset: () => void;
-}) => <ErrorPage error={error} resetFn={reset} />;
+}) => (
+  <html lang="en">
+    <body suppressHydrationWarning={true}>
+      <input type="checkbox" id="toggle-sidebar" hidden />
+      <Header />
+      <main className="article">
+        <ErrorPage error={error} resetFn={reset} />
+      </main>
+      <Footer />
+    </body>
+  </html>
+);

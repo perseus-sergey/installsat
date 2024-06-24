@@ -3,6 +3,11 @@ import { MetadataRoute } from 'next';
 export default function sitemap(): MetadataRoute.Sitemap {
   const BASE = process.env.BASE_URL || '';
 
+  // return products.map((product) => ({
+  //   url: `${BASE_URL}/product/${id}`,
+  //   lastModified: product.date,
+  // }))
+
   return [
     {
       url: BASE,

@@ -80,8 +80,7 @@ LIMIT ?, ?
     : res.map((r) => ({ ...r, title: decode(r.title) }));
 };
 
-export const getSatMapList = cache(async () => {
-  const sql = `
+export const satMapListSql = `
   SELECT 
       MAX(b.id) AS beam_id,
       s.id,
@@ -110,7 +109,9 @@ export const getSatMapList = cache(async () => {
       WHERE id = s.id
   );
 `;
-  const res = await poolExecute<IAllMapsModel[]>(sql);
+
+export const getSatMapList = cache(async () => {
+  const res = await poolExecute<IAllMapsModel[]>(satMapListSql);
 
   return res instanceof Error
     ? []

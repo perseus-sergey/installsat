@@ -18,7 +18,7 @@ import {
   META_TRANS_NEWS_LIST,
   digestIntervals,
 } from '@/models/satDigest.model';
-import { LANGUAGE } from '@/models/ui.model';
+import { DEFAULT_LANG } from '@/models/ui.model';
 
 const { satSelect, timeIntervalSelect } = META_TRANS_NEWS_LIST.select;
 
@@ -35,7 +35,7 @@ export const ControlComponentSat = (
   props: ControlProps<ISatelliteOption, true>
 ) => (
   <div className={`${styles.selectHeader} ${styles.satSelectHeader}`}>
-    <p>{satSelect.title[LANGUAGE]}</p>
+    <p>{satSelect.title[DEFAULT_LANG]}</p>
     <components.Control {...props} />
   </div>
 );
@@ -44,7 +44,7 @@ const ControlComponentInterval = (
   props: ControlProps<ISatelliteOption, false>
 ) => (
   <div className={`${styles.selectHeader} ${styles.satSelectHeader}`}>
-    <p>{timeIntervalSelect.title[LANGUAGE]}</p>
+    <p>{timeIntervalSelect.title[DEFAULT_LANG]}</p>
     <components.Control {...props} />
   </div>
 );

@@ -6,6 +6,7 @@ import {
   deleteDBVseTvChannel,
   getDBVseTvChannels,
   getDbIdAmount,
+  insertDBVseTvChannels,
   truncateDBVseTv,
 } from '@/controllers/schedule.controller';
 import { EDBTableTitles, TSearchParams } from '@/models/ui.model';
@@ -24,7 +25,7 @@ import { IDbIdAmountModel } from '@/models/admin.model';
 import { sendMail } from '@/libs/mail/sendMail';
 import { renderAsync } from '@react-email/render';
 import { ParseVseTvEmailTemplate } from '@/components/EmailTemplates/parseVseTv.template';
-import { pool } from '@/libs/db/mysqldb';
+import { getPool } from '@/libs/db/mysqldb';
 
 interface IShowsData {
   startTime: string;
@@ -33,6 +34,7 @@ interface IShowsData {
   channelVseTvId: string;
 }
 
+const pool = getPool();
 const BASE_URL = process.env.BASE_URL;
 const { TV_SCHEDULE_VSE_TV } = EDBTableTitles;
 const BATCH_SIZE = 500;
@@ -221,19 +223,23 @@ const insertDataInBatches = async (data: string[]) => {
 
   for (let i = 0; i < data.length; i += BATCH_SIZE) {
     const batch = data.slice(i, i + BATCH_SIZE);
-    const insertedStr = batch.join(',');
-    const sql = `
-      INSERT INTO ${TV_SCHEDULE_VSE_TV} (start, end, chan_id, title) 
-      VALUES ${insertedStr}
-    `;
+    // const insertedStr = batch.join(',');
+    // const sql = `
+    //   INSERT INTO ${TV_SCHEDULE_VSE_TV} (start, end, chan_id, title)
+    //   VALUES ${insertedStr}
+    // `;
 
     try {
-      await pool.query(sql);
+      // await pool.query(sql);
+      await insertDBVseTvChannels(batch);
       // message.push(`Inserted batch, BATCH_SIZE = ${BATCH_SIZE}`);
-    } catch (error) {
+    } catch (err) {
       message.push(
-        `Error inserting batch: ${error instanceof Error ? error.message : 'Unknown error'}`
+        `Error inserting batch: ${err instanceof Error ? err.message : 'Unknown error'}`
       );
+      // message.push(
+      //   `Error inserting batch: ${error instanceof Error ? error.message : 'Unknown error'}`
+      // );
     }
   }
 

@@ -9,7 +9,7 @@ import type { Metadata } from 'next';
 import FillingImg from '@/components/ui/Images/FillingImage';
 import Fieldset from '@/components/ui/Fieldset/Fieldset';
 import {
-  LANGUAGE as L,
+  DEFAULT_LANG as L,
   TSearchParams,
   DEFAULT_META_DATA,
   EDBTableTitles,

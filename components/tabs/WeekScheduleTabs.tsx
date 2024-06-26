@@ -5,7 +5,7 @@ import {
 import styles from './OnlinePlayerTabs.module.scss';
 import { createArray } from '@/libs/utils/utils';
 import { SCHEDULE_META } from '@/models/scheduleTV.model';
-import { LANGUAGE } from '@/models/ui.model';
+import { DEFAULT_LANG } from '@/models/ui.model';
 import Link from 'next/link';
 
 const { tabsTitles } = SCHEDULE_META.tabsWeek;
@@ -26,11 +26,11 @@ const WeekScheduleTabs = ({ currentDate }: { currentDate: string }) => {
             href={dateString}
             className={`${styles.tabButton}${dateString === now ? ` ${styles.currentTab}` : ''}`}
           >
-            {tabsTitles[LANGUAGE][i]}, {date.getDate()}
+            {tabsTitles[DEFAULT_LANG][i]}, {date.getDate()}
           </Link>
         ) : (
           <span className={styles.currentDayTab}>
-            {tabsTitles[LANGUAGE][i]}, {date.getDate()}
+            {tabsTitles[DEFAULT_LANG][i]}, {date.getDate()}
           </span>
         )}
       </li>

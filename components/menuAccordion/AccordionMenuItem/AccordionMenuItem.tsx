@@ -1,4 +1,4 @@
-import { LANGUAGE } from '@/models/ui.model';
+import { ELanguage } from '@/models/ui.model';
 import styles from '../Accordion/Accordion.module.scss';
 
 import { ReactNode } from 'react';
@@ -8,12 +8,14 @@ import FillingImg from '../../ui/Images/FillingImage';
 
 interface IAccordionMenuItem {
   options: IAccordionItemOptions;
+  lang: ELanguage;
   children?: ReactNode;
 }
 
 export const AccordionMenuItem = ({
   options: { name, title, img, titleHref },
   children,
+  lang,
 }: IAccordionMenuItem) =>
   children ? (
     <>
@@ -34,11 +36,11 @@ export const AccordionMenuItem = ({
                 width={img.width}
                 height={img.height}
                 src={img.src}
-                alt={img.alt[LANGUAGE] || ''}
+                alt={img.alt[lang] || ''}
                 isFillParent
               />
             )}
-            {title[LANGUAGE]}
+            {title[lang]}
           </div>
         </label>
         <label
@@ -56,10 +58,10 @@ export const AccordionMenuItem = ({
             width={img.width}
             height={img.height}
             src={img.src}
-            alt={img.alt[LANGUAGE] || ''}
+            alt={img.alt[lang] || ''}
           />
         )}
-        {title[LANGUAGE]}
+        {title[lang]}
       </Link>
     </li>
   );

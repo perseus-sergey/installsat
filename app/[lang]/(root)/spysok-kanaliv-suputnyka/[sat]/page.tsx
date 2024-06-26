@@ -14,7 +14,11 @@ import StartArticleSection from '@/components/article/StartArticleSection/StartA
 import SatChannelsTable from '@/components/SatChannelsTable/SatChannelsTable';
 import FillingValidImage from '@/components/ui/Images/FillingValidImage';
 import { cache } from 'react';
-import { LANGUAGE, DEFAULT_META_DATA, EDBTableTitles } from '@/models/ui.model';
+import {
+  DEFAULT_LANG,
+  DEFAULT_META_DATA,
+  EDBTableTitles,
+} from '@/models/ui.model';
 import { EUrlBaseParam } from '@/models/url.model';
 import { getCommentsNumber } from '@/controllers/comments.controller';
 import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
@@ -60,8 +64,8 @@ export const generateMetadata = ({ params }: IPageParams): Metadata => {
   const { title, satPosition, slug } = getCurrentSatParams(params.sat);
 
   const satTitle = `${title} - ${satPosition}`;
-  const fullMetaTitle = `${metaTitle[LANGUAGE]} ${satTitle}`;
-  const description = `${metaDescription[LANGUAGE]} ${satTitle}`;
+  const fullMetaTitle = `${metaTitle[DEFAULT_LANG]} ${satTitle}`;
+  const description = `${metaDescription[DEFAULT_LANG]} ${satTitle}`;
 
   return {
     title: fullMetaTitle,
@@ -111,7 +115,7 @@ export default async function Page({ params }: IPageParams) {
       />
       <article className="article">
         <Title>
-          {getH1(`${title} - ${satPosition}`)[LANGUAGE]}
+          {getH1(`${title} - ${satPosition}`)[DEFAULT_LANG]}
           <FillingValidImage
             image={{
               ...h1SatImage,
@@ -119,12 +123,12 @@ export default async function Page({ params }: IPageParams) {
             }}
             defaultImage={h1SatImage.defaultImage}
             alternativeImgString={h1SatImage.alternativeString}
-            alt={`${h1SatImage.alt[LANGUAGE]} ${title}`}
+            alt={`${h1SatImage.alt[DEFAULT_LANG]} ${title}`}
             isBlur
           />
         </Title>
         <StartArticleSection>
-          <DangerHtmlUl wrapperTagName="p" text={START_CONTENT[LANGUAGE]} />
+          <DangerHtmlUl wrapperTagName="p" text={START_CONTENT[DEFAULT_LANG]} />
         </StartArticleSection>
         <SatChannelsTable
           isSingleSat
@@ -137,7 +141,7 @@ export default async function Page({ params }: IPageParams) {
         revalidateUrl={`/${EUrlBaseParam.SAT_CHANNEL_LIST}/${slug}`}
         dbCommentTableName={EDBTableTitles.COMMENTS_SATELLITE}
         articleId={id}
-        articleName={`${metaTitle[LANGUAGE]} ${title} - ${satPosition}`}
+        articleName={`${metaTitle[DEFAULT_LANG]} ${title} - ${satPosition}`}
       />
     </>
   );

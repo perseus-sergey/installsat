@@ -1,6 +1,6 @@
 import styles from './CommentBlock.module.scss';
 import CommentForm from '../CommentForm/CommentForm';
-import { EDBTableTitles, ELanguage, LANGUAGE } from '@/models/ui.model';
+import { EDBTableTitles, ELanguage, DEFAULT_LANG } from '@/models/ui.model';
 import { COMMENTS_MODEL } from '@/models/comments.model';
 import { EUrlSearchParam } from '@/models/url.model';
 import { fetchUserLocation } from '@/libs/utils/getUserIP';
@@ -31,7 +31,7 @@ const CommentBlock = async ({
   return (
     <section className={styles.CommentBlock} id={EUrlSearchParam.COMMENT_ID}>
       <h2 className={styles.commentBlockTitle}>
-        {commentForm.title[LANGUAGE]}
+        {commentForm.title[DEFAULT_LANG]}
       </h2>
       <CommentForm
         revalidateUrl={revalidateUrl}
@@ -43,7 +43,7 @@ const CommentBlock = async ({
         emailKey={process.env.MAIL_ENCRYPT_KEY || ''}
       />
       <div className={styles.bansBlock}>
-        <BansBlock lang={LANGUAGE} />
+        <BansBlock lang={DEFAULT_LANG} />
       </div>
       <PaginationComments
         numberOfComments={numberOfComments}

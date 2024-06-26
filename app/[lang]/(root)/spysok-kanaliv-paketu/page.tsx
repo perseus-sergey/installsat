@@ -1,7 +1,7 @@
 import { Title } from '@/components/ui/Titles/Title';
 import type { Metadata } from 'next';
 import { EUrlBaseParam } from '@/models/url.model';
-import { LANGUAGE as L, DEFAULT_META_DATA } from '@/models/ui.model';
+import { DEFAULT_LANG as L, DEFAULT_META_DATA } from '@/models/ui.model';
 import { getChannelPackages } from '@/controllers/channelList.controller';
 import PackageList from '@/components/article/ArticleList/PackageList';
 import { META_PACKAGES } from '@/models/channelList.model';

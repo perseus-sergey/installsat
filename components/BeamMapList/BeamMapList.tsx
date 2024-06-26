@@ -1,6 +1,6 @@
 import { IMapModel, SAT_MAPS_MODEL } from '@/models/articles.model';
 import { TitleH2 } from '../ui/Titles/TitleH2';
-import { IMG_PROPERTIES, LANGUAGE } from '@/models/ui.model';
+import { IMG_PROPERTIES, DEFAULT_LANG } from '@/models/ui.model';
 import FillingImg from '../ui/Images/FillingImage';
 import React, { Fragment } from 'react';
 import TooltipClient from '../ui/tooltips/TooltipClient/TooltipClient';
@@ -17,13 +17,13 @@ interface IBeamMapListProps {
 const BeamMapList = ({ beamList }: IBeamMapListProps) => {
   return beamList.map((item) => {
     const altText = singleMap.mapParams.getAlt(item.sat_title, item.beam_title)[
-      LANGUAGE
+      DEFAULT_LANG
     ];
 
     return (
       <Fragment key={item.beam_slug}>
         <TitleH2>
-          {h2Start[LANGUAGE]} «{item.beam_title}»
+          {h2Start[DEFAULT_LANG]} «{item.beam_title}»
         </TitleH2>
         {item.beam_description && <p>{item.beam_description}</p>}
         <TooltipClient

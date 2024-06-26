@@ -12,8 +12,8 @@ import {
 import type { Metadata } from 'next';
 import Fieldset from '@/components/ui/Fieldset/Fieldset';
 import {
-  LANGUAGE as L,
-  LANGUAGE,
+  DEFAULT_LANG as L,
+  DEFAULT_LANG,
   TSearchParams,
   DEFAULT_META_DATA,
   EDBTableTitles,
@@ -74,7 +74,7 @@ export const generateMetadata = async ({
   const res =
     slug === T2_SLUG ? await getT2Channels() : await getPackageChannels(slug);
 
-  if (!res || !res.length) return DEFAULT_META_DATA[LANGUAGE];
+  if (!res || !res.length) return DEFAULT_META_DATA[DEFAULT_LANG];
 
   const { cat_title, cat_description, cat_slug } = res[0][1][0];
 
@@ -218,7 +218,7 @@ export default async function Page({
 
       {similarLinks.length ? (
         <SimilarArticles
-          similarTitle={similarLinksTitle[LANGUAGE]}
+          similarTitle={similarLinksTitle[DEFAULT_LANG]}
           similarArticlesMapped={similarLinks.map((link) => (
             <li key={link.cpu}>
               <Link href={`/${EUrlBaseParam.PACKAGE_CHANNEL_LIST}/${link.cpu}`}>

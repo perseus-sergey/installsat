@@ -17,7 +17,11 @@ import {
   getSimilarChannels,
 } from '@/controllers/channel.controller';
 import { META_CHANNEL } from '@/models/channel.model';
-import { LANGUAGE, EDBTableTitles, DEFAULT_META_DATA } from '@/models/ui.model';
+import {
+  DEFAULT_LANG,
+  EDBTableTitles,
+  DEFAULT_META_DATA,
+} from '@/models/ui.model';
 import { EUrlAdminParam, EUrlBaseParam } from '@/models/url.model';
 import { Metadata } from 'next';
 import Link from 'next/link';
@@ -61,7 +65,7 @@ export const generateMetadata = async ({
   params: { slug },
 }: IChannelProps): Promise<Metadata> => {
   const sqlResult = await getDBChannel(slug);
-  if (!sqlResult) return DEFAULT_META_DATA[LANGUAGE];
+  if (!sqlResult) return DEFAULT_META_DATA[DEFAULT_LANG];
 
   const {
     title,
@@ -77,8 +81,8 @@ export const generateMetadata = async ({
   } = sqlResult;
   const metaTitle =
     cat_parent_id > 0
-      ? `${titleBefore[LANGUAGE]} ${title} | ${cat_parent_title} | ${cat_title}`
-      : `${titleBefore[LANGUAGE]} ${title} | ${sat_title} ${freq} ${polar} | ${cat_title}`;
+      ? `${titleBefore[DEFAULT_LANG]} ${title} | ${cat_parent_title} | ${cat_title}`
+      : `${titleBefore[DEFAULT_LANG]} ${title} | ${sat_title} ${freq} ${polar} | ${cat_title}`;
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [clearedCanonical, ..._] = canonical
@@ -91,7 +95,7 @@ export const generateMetadata = async ({
   return {
     title: metaTitle,
     description: description || title,
-    keywords: keywordsBefore[LANGUAGE] + description,
+    keywords: keywordsBefore[DEFAULT_LANG] + description,
     alternates: {
       canonical: `${BASE_URL}/${EUrlBaseParam.CHANNEL_PARAMS}/${addCanonical}`,
     },
@@ -165,12 +169,12 @@ export default async function Page({ params: { slug } }: IChannelProps) {
             href: `${EUrlBaseParam.SAT_CHANNEL_LIST}/${sat_slug}`,
             title: sat_title,
           },
-          `${titleBefore[LANGUAGE]} "${title}"`,
+          `${titleBefore[DEFAULT_LANG]} "${title}"`,
         ]}
       />
       <article className="article">
         <Title>
-          {`${titleBefore[LANGUAGE]} "${title}"`}
+          {`${titleBefore[DEFAULT_LANG]} "${title}"`}
           <FillingValidImage
             image={{
               ...bigLogo,
@@ -178,7 +182,7 @@ export default async function Page({ params: { slug } }: IChannelProps) {
             }}
             defaultImage={bigLogo.defaultImage}
             alternativeImgString={bigLogo.alternativeImgStr}
-            alt={`${bigLogo.alt[LANGUAGE]} "${title}"`}
+            alt={`${bigLogo.alt[DEFAULT_LANG]} "${title}"`}
             isBlur
           />
         </Title>
@@ -189,7 +193,7 @@ export default async function Page({ params: { slug } }: IChannelProps) {
           <GrooveLine className="py-4" />
 
           <TvScheduleLink
-            title={`${scheduleTitle[LANGUAGE]} "${title}"`}
+            title={`${scheduleTitle[DEFAULT_LANG]} "${title}"`}
             href={`/${EUrlBaseParam.CHANNELS_TV_PROGRAM}/${slug}/${currentDate}`}
           />
 
@@ -197,20 +201,20 @@ export default async function Page({ params: { slug } }: IChannelProps) {
             <ChannelOnlineLink
               href={`/${EUrlBaseParam.ONLINE_CHANNEL_LIST}/${slug}`}
             >
-              {getOnlineLinkText(title)[LANGUAGE]}
+              {getOnlineLinkText(title)[DEFAULT_LANG]}
             </ChannelOnlineLink>
           )}
           <ChannelParams channelDBParams={sqlResult} />
 
-          <NoteBlock noteTitle={noteTitle[LANGUAGE]}>
-            {getResponsibilityText(title)[LANGUAGE]}
+          <NoteBlock noteTitle={noteTitle[DEFAULT_LANG]}>
+            {getResponsibilityText(title)[DEFAULT_LANG]}
           </NoteBlock>
         </div>
 
         <BottomInfoPanel
           items={[
             {
-              name: packageTitle[LANGUAGE],
+              name: packageTitle[DEFAULT_LANG],
               value: (
                 <Link
                   href={`/${EUrlBaseParam.PACKAGE_CHANNEL_LIST}/${catLink}`}
@@ -220,17 +224,17 @@ export default async function Page({ params: { slug } }: IChannelProps) {
               ),
             },
             {
-              name: viewsTitle[LANGUAGE],
+              name: viewsTitle[DEFAULT_LANG],
               value: (view + 1).toLocaleString('en-US'),
             },
-            { name: commentsTitle[LANGUAGE], value: numberOfComments },
+            { name: commentsTitle[DEFAULT_LANG], value: numberOfComments },
           ]}
         />
       </article>
 
       {similarChannels.length ? (
         <SimilarArticles
-          similarTitle={`${simChannelsBefore.title[LANGUAGE]} "${title}"`}
+          similarTitle={`${simChannelsBefore.title[DEFAULT_LANG]} "${title}"`}
           similarArticlesMapped={similarChannels.map((chan) => (
             <li key={chan.cpu}>
               <SimilarChannel channelTitle={title} chanParams={chan} />
@@ -241,7 +245,7 @@ export default async function Page({ params: { slug } }: IChannelProps) {
 
       {similarArticles.length ? (
         <SimilarArticles
-          similarTitle={simArticlesBefore.title[LANGUAGE]}
+          similarTitle={simArticlesBefore.title[DEFAULT_LANG]}
           similarArticlesMapped={similarArticles.map((art) => (
             <li key={art.cpu}>
               <Link href={`/${EUrlBaseParam.ARTICLE}/${art.cpu}`}>

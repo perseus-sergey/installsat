@@ -8,7 +8,11 @@ import {
 } from '@/controllers/articles.controller';
 import { getSatsForForm } from '@/controllers/satDigest.controller';
 import { SAT_FINDER_META_DATA } from '@/models/satFinder.model';
-import { EDBTableTitles, LANGUAGE, DEFAULT_META_DATA } from '@/models/ui.model';
+import {
+  EDBTableTitles,
+  DEFAULT_LANG,
+  DEFAULT_META_DATA,
+} from '@/models/ui.model';
 import { EUrlBaseParam, EUrlSearchParam } from '@/models/url.model';
 import { Metadata } from 'next';
 import { Suspense } from 'react';
@@ -37,7 +41,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL || ''),
   title,
   description,
-  keywords: keywords[LANGUAGE],
+  keywords: keywords[DEFAULT_LANG],
   openGraph: {
     ...DEFAULT_META_DATA.openGraph,
     title,
@@ -66,7 +70,7 @@ export default async function Page() {
           <FillingValidImage
             image={h1Image}
             alternativeImgString={h1Image.alternativeStr}
-            alt={h1Image.alt[LANGUAGE]}
+            alt={h1Image.alt[DEFAULT_LANG]}
           />
         </Title>
 

@@ -7,7 +7,7 @@ import styles from './ArticleList.module.scss';
 import ArticleCard from '../ArticleCard/ArticleCard';
 import FillingImg from '../../ui/Images/FillingImage';
 import FillingValidImage from '../../ui/Images/FillingValidImage';
-import { LANGUAGE } from '@/models/ui.model';
+import { DEFAULT_LANG } from '@/models/ui.model';
 import { EUrlBaseParam } from '@/models/url.model';
 import EmptyData from '@/components/errors/EmptyData/EmptyData';
 
@@ -50,17 +50,17 @@ const MapList = ({ articleList }: IArticleListProps) =>
                   }}
                   defaultImage={singleMap.h1Image.defaultImg}
                   alternativeImgString={singleMap.h1Image.alternativeStr}
-                  alt={`${singleMap.h1Image.altStart[LANGUAGE]} ${metaTitle[LANGUAGE]} ${title}`}
+                  alt={`${singleMap.h1Image.altStart[DEFAULT_LANG]} ${metaTitle[DEFAULT_LANG]} ${title}`}
                   isBlur
                 />
               }
               articleDescription={
-                <p>{makePostDescription(description)[LANGUAGE]}</p>
+                <p>{makePostDescription(description)[DEFAULT_LANG]}</p>
               }
               href={`/${EUrlBaseParam.SAT_COVERAGE_MAP}/${cpu}`}
               infoPanelItems={[
-                { name: viewsTitle[LANGUAGE], value: view },
-                { name: commentsTitle[LANGUAGE], value: comment_count },
+                { name: viewsTitle[DEFAULT_LANG], value: view },
+                { name: commentsTitle[DEFAULT_LANG], value: comment_count },
               ]}
             />
           </li>

@@ -3,7 +3,7 @@
 import { ReactNode, Suspense, useEffect, useState } from 'react';
 import styles from './TooltipClient.module.scss';
 import BaseButton from '../../buttons/BaseButton/BaseButton';
-import { ELanguage, LANGUAGE } from '@/models/ui.model';
+import { ELanguage, DEFAULT_LANG } from '@/models/ui.model';
 
 const CAPTIONS = {
   ariaLabelSmall: {
@@ -56,7 +56,7 @@ const TooltipClient = ({
     <>
       <Suspense>
         <BaseButton
-          ariaLabel={CAPTIONS.ariaLabelSmall[LANGUAGE]}
+          ariaLabel={CAPTIONS.ariaLabelSmall[DEFAULT_LANG]}
           onClick={showPopUp}
           className={className}
           {...attributes}
@@ -68,7 +68,7 @@ const TooltipClient = ({
       {isPopUp && (
         <Suspense>
           <BaseButton
-            ariaLabel={CAPTIONS.ariaLabelBig[LANGUAGE]}
+            ariaLabel={CAPTIONS.ariaLabelBig[DEFAULT_LANG]}
             onClick={removePopUp}
           >
             <figure

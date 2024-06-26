@@ -2,7 +2,7 @@ import Link from 'next/link';
 import styles from './Pagination.module.scss';
 import { EUrlSearchParam } from '@/models/url.model';
 import { ARTICLES } from '@/models/articles.model';
-import { LANGUAGE, TSearchParams } from '@/models/ui.model';
+import { DEFAULT_LANG, TSearchParams } from '@/models/ui.model';
 import { makeUrlSearchParams } from '@/libs/utils/utils';
 import TooltipSimple from '../tooltips/TooltipSimple/TooltipSimple';
 
@@ -63,12 +63,12 @@ const Pagination = ({
             isDisabled={page === 1}
             controls={[
               {
-                ariaLabel: linkTitle.firstPage[LANGUAGE],
+                ariaLabel: linkTitle.firstPage[DEFAULT_LANG],
                 href: setUrlPage('1'),
                 innerText: firstPageTitle,
               },
               {
-                ariaLabel: linkTitle.previousPage[LANGUAGE],
+                ariaLabel: linkTitle.previousPage[DEFAULT_LANG],
                 href: setUrlPage(`${page - 1 || 1}`),
                 innerText: previousPageTitle,
               },
@@ -78,7 +78,7 @@ const Pagination = ({
           {pageNumbers.map((pageNumber, index) => (
             <ControlButton
               key={index}
-              ariaLabel={`${linkTitle.pageStartStr[LANGUAGE]}${pageNumber}`}
+              ariaLabel={`${linkTitle.pageStartStr[DEFAULT_LANG]}${pageNumber}`}
               href={setUrlPage(pageNumber)}
               innerText={pageNumber}
               className={
@@ -91,12 +91,12 @@ const Pagination = ({
             isDisabled={page === totalPages}
             controls={[
               {
-                ariaLabel: linkTitle.nextPage[LANGUAGE],
+                ariaLabel: linkTitle.nextPage[DEFAULT_LANG],
                 href: setUrlPage(`${page + 1}`),
                 innerText: nextPageTitle,
               },
               {
-                ariaLabel: linkTitle.lastPage[LANGUAGE],
+                ariaLabel: linkTitle.lastPage[DEFAULT_LANG],
                 href: setUrlPage(`${totalPages}`),
                 innerText: lastPageTitle,
               },

@@ -4,7 +4,7 @@ import { Title } from '@/components/ui/Titles/Title';
 import { getEditDbChannels } from '@/controllers/admin.controller';
 import { validSearchParam } from '@/libs/utils/validSearchParam';
 import { ARTICLES } from '@/models/articles.model';
-import { LANGUAGE, TSearchParams } from '@/models/ui.model';
+import { DEFAULT_LANG, TSearchParams } from '@/models/ui.model';
 import { EUrlAdminParam, EUrlSearchParam } from '@/models/url.model';
 import Link from 'next/link';
 
@@ -28,8 +28,8 @@ export default async function Page({
       <Title>Channel list for Edit</Title>
       <Filter
         idName="channel-search-input"
-        placeholder={placeholder[LANGUAGE]}
-        labelTitle={labelTitle[LANGUAGE]}
+        placeholder={placeholder[DEFAULT_LANG]}
+        labelTitle={labelTitle[DEFAULT_LANG]}
         searchQueryTitle={EUrlSearchParam.ARTICLE}
       />
 

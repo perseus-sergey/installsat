@@ -2,10 +2,16 @@ import '../globals.scss';
 import Footer from '@/components/Footer/Footer';
 import Header from '@/components/Header/Header';
 import ToastProvider from '@/libs/ToastProvider/ToastProvider';
-import { isValidLanguage } from '@/libs/utils/validSearchParam';
+import { getELangKey } from '@/libs/utils/validSearchParam';
+import { DEFAULT_LANG, ELanguage } from '@/models/ui.model';
 import { EUrlBaseParam } from '@/models/url.model';
 import { GoogleAnalytics } from '@next/third-parties/google';
-import { notFound } from 'next/navigation';
+
+export async function generateStaticParams() {
+  return Object.values(ELanguage).map((l) => ({ [EUrlBaseParam.LANG]: l }));
+}
+
+export const dynamicParams = false;
 
 export default function RootLayout({
   children,
@@ -14,15 +20,15 @@ export default function RootLayout({
   children: React.ReactNode;
   params: { [key in EUrlBaseParam]: string };
 }) {
-  if (!isValidLanguage(params[EUrlBaseParam.LANG])) notFound();
+  const lang = getELangKey(params[EUrlBaseParam.LANG]);
 
   return (
-    <html lang={params[EUrlBaseParam.LANG]}>
+    <html lang={lang || DEFAULT_LANG}>
       <body suppressHydrationWarning={true}>
         <input type="checkbox" id="toggle-sidebar" hidden />
-        <Header />
+        <Header lang={lang} />
         <ToastProvider>{children}</ToastProvider>
-        <Footer />
+        <Footer lang={lang} />
       </body>
       <GoogleAnalytics gaId="G-60MX085VHN" />
     </html>

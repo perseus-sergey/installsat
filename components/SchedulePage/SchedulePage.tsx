@@ -3,7 +3,7 @@ import ScheduleItem from '../ScheduleItem/ScheduleItem';
 import './SchedulePage.scss';
 import { DateTime } from 'luxon';
 import { Fragment } from 'react';
-import { LANGUAGE } from '@/models/ui.model';
+import { DEFAULT_LANG } from '@/models/ui.model';
 import EmptyData from '../errors/EmptyData/EmptyData';
 import { TitleH2 } from '../ui/Titles/TitleH2';
 import { getDayOfMonthStr } from '@/libs/utils/dates';
@@ -26,14 +26,14 @@ const SchedulePage = ({
   channelTitle,
 }: ISchedulePageProps) => {
   const now = DateTime.local();
-  const dayStr = getDayOfMonthStr(urlDate, LANGUAGE);
+  const dayStr = getDayOfMonthStr(urlDate, DEFAULT_LANG);
   const availableSchedulesLength = !scheduleList
     ? 0
     : scheduleList?.filter((scheduleList) => scheduleList.length).length;
 
   return scheduleList && availableSchedulesLength > 0 ? (
     <div className={'flex flex-wrap flex-col items-center'}>
-      <TitleH2>{h2TitleForDate(channelTitle, dayStr)[LANGUAGE]}</TitleH2>
+      <TitleH2>{h2TitleForDate(channelTitle, dayStr)[DEFAULT_LANG]}</TitleH2>
 
       {scheduleList.map((tbl, index) => {
         const i = index + 1;
@@ -73,9 +73,9 @@ const SchedulePage = ({
                     htmlFor={`tab-${i}`}
                     className="tabLabel"
                     role="button"
-                    aria-label={ariaLabel[LANGUAGE]}
+                    aria-label={ariaLabel[DEFAULT_LANG]}
                   >
-                    {tabCaptionStart[LANGUAGE]}
+                    {tabCaptionStart[DEFAULT_LANG]}
                     {' .'.repeat(i)}
                   </label>
                 </Fragment>
@@ -87,7 +87,9 @@ const SchedulePage = ({
     </div>
   ) : (
     <EmptyData
-      description={scheduleNotAvailableForDate(channelTitle, dayStr)[LANGUAGE]}
+      description={
+        scheduleNotAvailableForDate(channelTitle, dayStr)[DEFAULT_LANG]
+      }
     />
   );
 };

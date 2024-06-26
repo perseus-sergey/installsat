@@ -7,7 +7,7 @@ import DangerHtml from '@/components/ui/DangerHtml/DangerHtml';
 import { EUrlBaseParam } from '@/models/url.model';
 import BottomInfoPanel from '@/components/BottomInfoPanel/BottomInfoPanel';
 import Link from 'next/link';
-import { LANGUAGE } from '@/models/ui.model';
+import { DEFAULT_LANG } from '@/models/ui.model';
 import { notFound } from 'next/navigation';
 import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
 
@@ -43,7 +43,7 @@ export default async function Page({ params: { article } }: IArticleParams) {
           }}
           defaultImage={h1Image.defaultImg}
           alternativeImgString={h1Image.alternativeStr}
-          alt={`${h1Image.altStart[LANGUAGE]} ${title}`}
+          alt={`${h1Image.altStart[DEFAULT_LANG]} ${title}`}
           isBlur
         />
       </Title>
@@ -53,16 +53,16 @@ export default async function Page({ params: { article } }: IArticleParams) {
       <BottomInfoPanel
         items={[
           {
-            name: themeTitle[LANGUAGE],
+            name: themeTitle[DEFAULT_LANG],
             value: (
               <Link href={`/${EUrlBaseParam.NEWS_AND_ARTICLES}/${cat_slug}`}>
                 {cat_name}
               </Link>
             ),
           },
-          { name: viewsTitle[LANGUAGE], value: view + 1 },
+          { name: viewsTitle[DEFAULT_LANG], value: view + 1 },
           {
-            name: dateTitle[LANGUAGE],
+            name: dateTitle[DEFAULT_LANG],
             value: getFormattedDateStrYearFirst(date),
           },
         ]}

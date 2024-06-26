@@ -57,7 +57,6 @@ export const footerMenuList: IFooterMenu[] = [
   {
     title: { [ELanguage.UA]: 'ТБ Онлайн', [ELanguage.EN]: 'Online TV' },
     href: `/${EUrlBaseParam.ONLINE_CHANNEL_LIST}`,
-    // href: `/spisok-online-kanalov/vse-tv`,
   },
   {
     title: { [ELanguage.UA]: 'Biss Ключі', [ELanguage.EN]: 'Biss Keys' },

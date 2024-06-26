@@ -2,7 +2,7 @@
 
 import styles from './PaginationComments.module.scss';
 import { ARTICLES } from '@/models/articles.model';
-import { EDBTableTitles, LANGUAGE } from '@/models/ui.model';
+import { EDBTableTitles, DEFAULT_LANG } from '@/models/ui.model';
 import TooltipSimple from '../../ui/tooltips/TooltipSimple/TooltipSimple';
 import { useEffect, useState } from 'react';
 import BaseButton from '../../ui/buttons/BaseButton/BaseButton';
@@ -97,9 +97,9 @@ const PaginationComments = ({
         <h3 className={styles.commentsTitle}>
           <FillingImg
             {...commentList.image}
-            alt={commentList.image.alt[LANGUAGE]}
+            alt={commentList.image.alt[DEFAULT_LANG]}
           />
-          {commentList.title[LANGUAGE]} ({numberOfComments})
+          {commentList.title[DEFAULT_LANG]} ({numberOfComments})
         </h3>
         <ul className={styles.CommentList}>
           {comments.map((comment) => {
@@ -126,12 +126,12 @@ const PaginationComments = ({
                 isDisabled={pageNumber === 1}
                 controls={[
                   {
-                    ariaLabel: linkTitle.firstPage[LANGUAGE],
+                    ariaLabel: linkTitle.firstPage[DEFAULT_LANG],
                     onClick: () => setPageNumber(1),
                     innerText: firstPageTitle,
                   },
                   {
-                    ariaLabel: linkTitle.previousPage[LANGUAGE],
+                    ariaLabel: linkTitle.previousPage[DEFAULT_LANG],
                     onClick: () => setPageNumber((page) => page - 1 || 1),
                     innerText: previousPageTitle,
                   },
@@ -141,7 +141,7 @@ const PaginationComments = ({
               {numbersOfPages.map((numb) => (
                 <ControlButton
                   key={numb}
-                  ariaLabel={`${linkTitle.pageStartStr[LANGUAGE]}${numb}`}
+                  ariaLabel={`${linkTitle.pageStartStr[DEFAULT_LANG]}${numb}`}
                   onClick={() => setPageNumber(numb)}
                   innerText={numb}
                   className={
@@ -156,12 +156,12 @@ const PaginationComments = ({
                 isDisabled={pageNumber === totalPages}
                 controls={[
                   {
-                    ariaLabel: linkTitle.nextPage[LANGUAGE],
+                    ariaLabel: linkTitle.nextPage[DEFAULT_LANG],
                     onClick: () => setPageNumber((page) => page + 1),
                     innerText: nextPageTitle,
                   },
                   {
-                    ariaLabel: linkTitle.lastPage[LANGUAGE],
+                    ariaLabel: linkTitle.lastPage[DEFAULT_LANG],
                     onClick: () => setPageNumber(totalPages),
                     innerText: lastPageTitle,
                   },

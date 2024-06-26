@@ -9,7 +9,7 @@ import type { Metadata } from 'next';
 import FillingImg from '@/components/ui/Images/FillingImage';
 import Fieldset from '@/components/ui/Fieldset/Fieldset';
 import {
-  LANGUAGE as L,
+  DEFAULT_LANG as L,
   TSearchParams,
   DEFAULT_META_DATA,
 } from '@/models/ui.model';
@@ -27,8 +27,6 @@ import { SCHEDULE_META } from '@/models/scheduleTV.model';
 import { BREAD_CRUMBS } from '@/models/breadCrumbs.model';
 
 const BASE_URL = process.env.BASE_URL;
-
-const todayStr = getFormattedDateStrYearFirst();
 
 const { metaDescription, metaH1, metaKeywords } = SCHEDULE_META.channelList;
 
@@ -49,18 +47,23 @@ const {
 
 export const dynamic = 'force-dynamic';
 
-export const metadata: Metadata = {
-  title: metaH1[L],
-  description: metaDescription[L],
-  keywords: metaKeywords[L],
-  openGraph: {
-    ...DEFAULT_META_DATA.openGraph,
+export async function generateMetadata(): Promise<Metadata> {
+  const todayStr = getFormattedDateStrYearFirst();
+
+  return {
     title: metaH1[L],
     description: metaDescription[L],
-    url: `${BASE_URL}/${EUrlBaseParam.CHANNELS_TV_PROGRAM}`,
-    publishedTime: todayStr,
-  },
-};
+    keywords: metaKeywords[L],
+    openGraph: {
+      ...DEFAULT_META_DATA.openGraph,
+      title: metaH1[L],
+      description: metaDescription[L],
+      url: `${BASE_URL}/${EUrlBaseParam.CHANNELS_TV_PROGRAM}`,
+      publishedTime: todayStr,
+    },
+  };
+}
+
 interface IPageProps {
   searchParams?: TSearchParams;
 }
@@ -72,6 +75,7 @@ export default async function Page({ searchParams }: IPageProps) {
   );
 
   const onlineChannels = await getChannelsWithSchedule(searchQueryChannel);
+  const todayStr = getFormattedDateStrYearFirst();
 
   return (
     <>

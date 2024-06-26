@@ -4,7 +4,7 @@ import ArticleCard from '../ArticleCard/ArticleCard';
 import FillingImg from '../../ui/Images/FillingImage';
 import FillingValidImage from '../../ui/Images/FillingValidImage';
 import Link from 'next/link';
-import { LANGUAGE, IImgParams } from '@/models/ui.model';
+import { DEFAULT_LANG, IImgParams } from '@/models/ui.model';
 import { EUrlBaseParam } from '@/models/url.model';
 import { cutText } from '@/libs/utils/utils';
 import DangerHtml from '../../ui/DangerHtml/DangerHtml';
@@ -61,7 +61,7 @@ const ArticleList = ({ articleList, articleTitleImg }: IArticleListProps) =>
                   }}
                   defaultImage={h1Image.defaultImg}
                   alternativeImgString={h1Image.alternativeStr}
-                  alt={`${h1Image.altStart[LANGUAGE]} ${title}`}
+                  alt={`${h1Image.altStart[DEFAULT_LANG]} ${title}`}
                   isBlur
                   isFillParent
                 />
@@ -75,7 +75,7 @@ const ArticleList = ({ articleList, articleTitleImg }: IArticleListProps) =>
               href={`${ARTICLES.articleList.links.articleLink.path}${cpu}`}
               infoPanelItems={[
                 {
-                  name: themeTitle[LANGUAGE],
+                  name: themeTitle[DEFAULT_LANG],
                   value: (
                     <Link
                       href={`/${EUrlBaseParam.NEWS_AND_ARTICLES}/${category_cpu}`}
@@ -84,12 +84,12 @@ const ArticleList = ({ articleList, articleTitleImg }: IArticleListProps) =>
                     </Link>
                   ),
                 },
-                { name: viewsTitle[LANGUAGE], value: view },
+                { name: viewsTitle[DEFAULT_LANG], value: view },
                 {
-                  name: dateTitle[LANGUAGE],
+                  name: dateTitle[DEFAULT_LANG],
                   value: getFormattedDateStrYearFirst(date),
                 },
-                { name: commentsTitle[LANGUAGE], value: comment_count },
+                { name: commentsTitle[DEFAULT_LANG], value: comment_count },
               ]}
             />
           </li>

@@ -8,8 +8,8 @@ import Pagination from '@/components/ui/Pagination/Pagination';
 import { notFound } from 'next/navigation';
 import { EUrlBaseParam, EUrlSearchParam } from '@/models/url.model';
 import {
-  LANGUAGE as L,
-  LANGUAGE,
+  DEFAULT_LANG as L,
+  DEFAULT_LANG,
   TSearchParams,
   DEFAULT_META_DATA,
 } from '@/models/ui.model';
@@ -93,11 +93,11 @@ export default async function Page({ searchParams }: IProps) {
 
         <Filter
           idName="article-search-input"
-          placeholder={placeholder[LANGUAGE]}
-          labelTitle={labelTitle[LANGUAGE]}
+          placeholder={placeholder[DEFAULT_LANG]}
+          labelTitle={labelTitle[DEFAULT_LANG]}
           searchQueryTitle={EUrlSearchParam.ARTICLE}
         />
-        <p className="text-blue-600 font-bold text-center text-lg">{`${articlesCountCaption[LANGUAGE]}${mapsCount}`}</p>
+        <p className="text-blue-600 font-bold text-center text-lg">{`${articlesCountCaption[DEFAULT_LANG]}${mapsCount}`}</p>
 
         <Pagination
           page={pageNumber || 1}

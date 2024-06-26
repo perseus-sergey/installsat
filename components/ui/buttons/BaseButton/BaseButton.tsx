@@ -7,7 +7,6 @@ export default ({ ariaLabel, children, className, ...attributes }: IProps) => (
   <button
     aria-label={ariaLabel}
     className={className}
-    data-testid="TextButton"
     type="button"
     role="button"
     {...attributes}

@@ -14,7 +14,7 @@ import FillingImg from '../ui/Images/FillingImage';
 import TooltipSimple from '../ui/tooltips/TooltipSimple/TooltipSimple';
 import FillingValidImage from '../ui/Images/FillingValidImage';
 import { META_CHANNEL } from '@/models/channel.model';
-import { LANGUAGE } from '@/models/ui.model';
+import { DEFAULT_LANG } from '@/models/ui.model';
 import ChannelCardTooltip from '../ChannelCardTooltip/ChannelCardTooltip';
 import GoUpLink from '../ui/GoUpLink/GoUpLink';
 import { TitleH2List } from '../ui/Titles/TitleH2List';
@@ -85,23 +85,23 @@ const FrequencySegment = ({
             }
             tooltipTextList={[
               {
-                title: CHANNEL_TOOLTIP_TITLES.name[LANGUAGE],
+                title: CHANNEL_TOOLTIP_TITLES.name[DEFAULT_LANG],
                 description: title,
               },
               {
-                title: CHANNEL_TOOLTIP_TITLES.genre[LANGUAGE],
+                title: CHANNEL_TOOLTIP_TITLES.genre[DEFAULT_LANG],
                 description: tem,
               },
               {
-                title: CHANNEL_TOOLTIP_TITLES.language[LANGUAGE],
+                title: CHANNEL_TOOLTIP_TITLES.language[DEFAULT_LANG],
                 description: lan,
               },
               {
-                title: CHANNEL_TOOLTIP_TITLES.description[LANGUAGE],
+                title: CHANNEL_TOOLTIP_TITLES.description[DEFAULT_LANG],
                 description: cutText(description, 100),
               },
               {
-                title: CHANNEL_TOOLTIP_TITLES.compression[LANGUAGE],
+                title: CHANNEL_TOOLTIP_TITLES.compression[DEFAULT_LANG],
                 description: compr,
               },
             ]}
@@ -141,7 +141,9 @@ const SatChannelsTable = ({
             <TitleH2List id={sat[0][0].sat_slug}>
               <GoUpLink />
 
-              <TooltipSimple tooltipText={satTitleLink.tooltipTitle[LANGUAGE]}>
+              <TooltipSimple
+                tooltipText={satTitleLink.tooltipTitle[DEFAULT_LANG]}
+              >
                 <Link
                   className={styles.satTitleLink}
                   href={`${satTitleLink.linkUrl}/${sat[0][0].sat_slug}`}
@@ -149,7 +151,9 @@ const SatChannelsTable = ({
                   {`${sat[0][0].sat_title} - ${sat[0][0].sat_position}`}
                 </Link>
               </TooltipSimple>
-              <TooltipSimple tooltipText={satTitleLink.tooltipTitle[LANGUAGE]}>
+              <TooltipSimple
+                tooltipText={satTitleLink.tooltipTitle[DEFAULT_LANG]}
+              >
                 <Link
                   className={styles.satTitleLink}
                   href={`${satTitleLink.linkUrl}/${sat[0][0].sat_slug}`}
@@ -161,7 +165,7 @@ const SatChannelsTable = ({
                     }}
                     defaultImage={h1SatImage.defaultImage}
                     alternativeImgString={h1SatImage.alternativeString}
-                    alt={`${h1SatImage.alt[LANGUAGE]} ${sat[0][0].sat_title}`}
+                    alt={`${h1SatImage.alt[DEFAULT_LANG]} ${sat[0][0].sat_title}`}
                     isBlur
                   />
                 </Link>

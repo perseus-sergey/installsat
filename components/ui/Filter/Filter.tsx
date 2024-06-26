@@ -5,7 +5,7 @@ import styles from './Filter.module.scss';
 import { EUrlSearchParam } from '@/models/url.model';
 import { META_ALL_SAT_CHANNEL_LIST } from '@/models/channelList.model';
 import BaseButton from '../buttons/BaseButton/BaseButton';
-import { LANGUAGE } from '@/models/ui.model';
+import { DEFAULT_LANG } from '@/models/ui.model';
 import TooltipSimple from '../tooltips/TooltipSimple/TooltipSimple';
 import useSearch from '@/libs/hooks/useSearch';
 import StyledInputField from '../StyledInputField/StyledInputField';
@@ -51,7 +51,7 @@ export default function Filter({
         placeholder={placeholder}
         hiddenLabelTitle={labelTitle}
         searchIconStr={searchIconStr}
-        cancelBtnAriaLabel={cancelBtnAriaLabel[LANGUAGE]}
+        cancelBtnAriaLabel={cancelBtnAriaLabel[DEFAULT_LANG]}
       />
       {resetButton && (
         <TooltipSimple tooltipText={resetButton.ariaLabel}>

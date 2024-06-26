@@ -91,21 +91,20 @@ export const getDBVseTvChannels = async (IDs?: string[]) => {
   return res;
 };
 
-// export const insertDBVseTvChannels = async (values: string[]) => {
-//   const insertedStr = values.join(',');
+export const insertDBVseTvChannels = async (values: string[]) => {
+  const insertedStr = values.join(',');
 
-//   const sql = `
-//   INSERT INTO ${TV_SCHEDULE_VSE_TV}
-//   (start,end,chan_id,title)
-//   VALUES
-//   ${insertedStr}
-// `;
-//   const res = await poolExecute(sql);
-//   if (res instanceof Error)
-//     throw new Error(`Error inserting channel schedule to DB: ${res.message}`);
+  const sql = `
+  INSERT INTO ${TV_SCHEDULE_VSE_TV}
+  (start,end,chan_id,title)
+  VALUES
+  ${insertedStr}
+`;
+  const res = await poolExecute(sql);
+  if (res instanceof Error) throw new Error(res.message);
 
-//   return res;
-// };
+  return res;
+};
 
 export const truncateDBVseTv = async () => {
   const res = await poolExecute(`TRUNCATE TABLE ${TV_SCHEDULE_VSE_TV}`);

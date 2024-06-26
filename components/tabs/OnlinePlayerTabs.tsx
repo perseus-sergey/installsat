@@ -9,7 +9,7 @@ import {
   IOnlineChannel,
   META_CHANNEL_ONLINE,
 } from '../../models/channel.model';
-import { LANGUAGE } from '@/models/ui.model';
+import { DEFAULT_LANG } from '@/models/ui.model';
 
 const {
   tabs: {
@@ -61,11 +61,11 @@ const OnlinePlayerTabs = ({
                       stream && (
                         <li key={i}>
                           <BaseButton
-                            ariaLabel={getAriaLabel(i + 1)[LANGUAGE]}
+                            ariaLabel={getAriaLabel(i + 1)[DEFAULT_LANG]}
                             className={`${styles.tabButton}${playerN === i ? ` ${styles.currentTab}` : ''}`}
                             onClick={() => setPlayerN(i)}
                           >
-                            {getTitle(i + 1)[LANGUAGE]}
+                            {getTitle(i + 1)[DEFAULT_LANG]}
                           </BaseButton>
                         </li>
                       )

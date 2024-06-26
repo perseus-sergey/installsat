@@ -1,17 +1,18 @@
 import Footer from '@/components/Footer/Footer';
 import Header from '@/components/Header/Header';
 import NotFoundPage from '@/components/errors/NotFoundPage/NotFoundPage';
+import { ELanguage } from '@/models/ui.model';
 
 export default function NotFound() {
   return (
-    <html lang="en">
+    <html lang={ELanguage.EN}>
       <body suppressHydrationWarning={true}>
         <input type="checkbox" id="toggle-sidebar" hidden />
-        <Header />
+        <Header lang={ELanguage.EN} />
         <main className="article">
           <NotFoundPage />
         </main>
-        <Footer />
+        <Footer lang={ELanguage.EN} />
       </body>
     </html>
   );

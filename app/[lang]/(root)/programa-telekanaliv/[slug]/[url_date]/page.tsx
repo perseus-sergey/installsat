@@ -10,7 +10,11 @@ import {
 import { getCommentsNumber } from '@/controllers/comments.controller';
 import { cutText } from '@/libs/utils/utils';
 import { META_CHANNEL } from '@/models/channel.model';
-import { LANGUAGE, EDBTableTitles, DEFAULT_META_DATA } from '@/models/ui.model';
+import {
+  DEFAULT_LANG,
+  EDBTableTitles,
+  DEFAULT_META_DATA,
+} from '@/models/ui.model';
 import { EUrlBaseParam } from '@/models/url.model';
 import { Metadata } from 'next';
 import BreadCrumbServer from '@/components/BreadCrumbs/BreadCrumbsServer';
@@ -52,17 +56,17 @@ export const generateMetadata = async ({
   params: { slug, url_date },
 }: IPageProps): Promise<Metadata> => {
   const sqlResult = await getDBOnlineChannel(slug);
-  if (!sqlResult) return DEFAULT_META_DATA[LANGUAGE];
+  if (!sqlResult) return DEFAULT_META_DATA[DEFAULT_LANG];
 
   const { title, description } = sqlResult;
 
-  const metaDescription = `${descriptionStart[LANGUAGE]} ${title}. ${cutText(description, 150)}`;
-  const metaTitle = getTitle(title, url_date)[LANGUAGE];
+  const metaDescription = `${descriptionStart[DEFAULT_LANG]} ${title}. ${cutText(description, 150)}`;
+  const metaTitle = getTitle(title, url_date)[DEFAULT_LANG];
 
   return {
     title: metaTitle,
     description: metaDescription,
-    keywords: getKeywords(title)[LANGUAGE],
+    keywords: getKeywords(title)[DEFAULT_LANG],
     openGraph: {
       ...DEFAULT_META_DATA.openGraph,
       title: metaTitle,
@@ -115,12 +119,12 @@ export default async function Page({ params: { slug, url_date } }: IPageProps) {
       <BreadCrumbServer
         breadCrumbList={[
           BREAD_CRUMBS.CHANNELS_TV_PROGRAM,
-          `${h1Start[LANGUAGE]} "${title}"`,
+          `${h1Start[DEFAULT_LANG]} "${title}"`,
         ]}
       />
       <article className="article">
         <Title>
-          {`${h1Start[LANGUAGE]} "${title}"`}
+          {`${h1Start[DEFAULT_LANG]} "${title}"`}
           <FillingValidImage
             image={{
               ...bigLogo,
@@ -128,7 +132,7 @@ export default async function Page({ params: { slug, url_date } }: IPageProps) {
             }}
             defaultImage={bigLogo.defaultImage}
             alternativeImgString={bigLogo.alternativeImgStr}
-            alt={`${bigLogo.alt[LANGUAGE]} "${title}"`}
+            alt={`${bigLogo.alt[DEFAULT_LANG]} "${title}"`}
             isBlur
           />
         </Title>
@@ -144,27 +148,27 @@ export default async function Page({ params: { slug, url_date } }: IPageProps) {
           <ChannelOnlineLink
             href={`/${EUrlBaseParam.ONLINE_CHANNEL_LIST}/${slug}`}
           >
-            {getOnlineLinkText(title)[LANGUAGE]}
+            {getOnlineLinkText(title)[DEFAULT_LANG]}
           </ChannelOnlineLink>
         )}
 
         <GrooveLine className="py-4" />
 
-        <NoteBlock noteTitle={noteTitle[LANGUAGE]}>
-          {getResponsibilityText(title)[LANGUAGE]}
+        <NoteBlock noteTitle={noteTitle[DEFAULT_LANG]}>
+          {getResponsibilityText(title)[DEFAULT_LANG]}
         </NoteBlock>
 
         <BottomInfoPanel
           items={[
-            { name: viewsTitle[LANGUAGE], value: view + 1 },
-            { name: commentsTitle[LANGUAGE], value: numberOfComments },
+            { name: viewsTitle[DEFAULT_LANG], value: view + 1 },
+            { name: commentsTitle[DEFAULT_LANG], value: numberOfComments },
           ]}
         />
       </article>
 
       {similarChannels.length ? (
         <SimilarArticles
-          similarTitle={`${simChannelsBefore.title[LANGUAGE]}"${title}"`}
+          similarTitle={`${simChannelsBefore.title[DEFAULT_LANG]}"${title}"`}
           similarArticlesMapped={similarChannels.map((chan) => (
             <li key={chan.cpu}>
               <SimilarChannel channelTitle={title} chanParams={chan} />
@@ -178,7 +182,7 @@ export default async function Page({ params: { slug, url_date } }: IPageProps) {
         revalidateUrl={`/${EUrlBaseParam.CHANNELS_TV_PROGRAM}/${slug}/${url_date}`}
         dbCommentTableName={EDBTableTitles.COMMENTS_CHANNEL}
         articleId={`${id}`}
-        articleName={`${h1Start[LANGUAGE]} "${title}"`}
+        articleName={`${h1Start[DEFAULT_LANG]} "${title}"`}
       />
     </>
   );

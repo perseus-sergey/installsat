@@ -10,7 +10,7 @@ import { TitleH2List } from '../ui/Titles/TitleH2List';
 import GoUpLink from '../ui/GoUpLink/GoUpLink';
 import { META_CHANNEL } from '@/models/channel.model';
 import ChannelCardTooltip from '../ChannelCardTooltip/ChannelCardTooltip';
-import { LANGUAGE } from '@/models/ui.model';
+import { DEFAULT_LANG } from '@/models/ui.model';
 import Link from 'next/link';
 import { cutText } from '@/libs/utils/utils';
 import FillingValidImage from '../ui/Images/FillingValidImage';
@@ -62,7 +62,7 @@ const PackageChannelList = ({
                 height: subCatImage.height,
                 src: `${subCatImage.path}${chanList[0].genre_logo}`,
               }}
-              alt={`${subCatImage.altPre[LANGUAGE]} ${genreTitle}`}
+              alt={`${subCatImage.altPre[DEFAULT_LANG]} ${genreTitle}`}
               alternativeImgString={subCatImage.alternativeImgStr}
             />
           ) : (
@@ -75,7 +75,7 @@ const PackageChannelList = ({
         </TitleH2List>
         {'price' in chanList[0] && chanList[0].price && (
           <p className="thhead_small">
-            {getPriceString(chanList[0].price)[LANGUAGE]}
+            {getPriceString(chanList[0].price)[DEFAULT_LANG]}
           </p>
         )}
         <ul className={styles.channelList}>
@@ -86,7 +86,7 @@ const PackageChannelList = ({
               <li key={channel.chan_id} className={styles.listItem}>
                 <Link
                   href={`/${pathToChannelDetails}/${channel.chan_cpu}${todayStr ? `/${todayStr}` : ''}`}
-                  aria-label={ariaLabel[LANGUAGE]}
+                  aria-label={ariaLabel[DEFAULT_LANG]}
                 >
                   <ChannelCardTooltip
                     mainImage={{
@@ -97,21 +97,21 @@ const PackageChannelList = ({
                     mainAlternativeImgString={channelLogo.big.alternativeImgStr}
                     tooltipTextList={[
                       {
-                        title: tName[LANGUAGE],
+                        title: tName[DEFAULT_LANG],
                         description: chanTitle,
                       },
                       'view' in channel
                         ? {
-                            title: tViews[LANGUAGE],
+                            title: tViews[DEFAULT_LANG],
                             description: channel.view.toLocaleString('en-US'),
                           }
                         : { title: '', description: '' },
                       {
-                        title: tLanguage[LANGUAGE],
+                        title: tLanguage[DEFAULT_LANG],
                         description: channel.lan,
                       },
                       {
-                        title: tDescription[LANGUAGE],
+                        title: tDescription[DEFAULT_LANG],
                         description: cutText(channel.chan_description, 150),
                       },
                     ]}

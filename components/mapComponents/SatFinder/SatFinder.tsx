@@ -27,7 +27,7 @@ import { Loader } from '../../ui/loaders/Loader';
 import GoogleMap from '../GoogleMap/GoogleMap';
 import { makeSelectedOptions } from '@/controllers/satFinder.controller';
 import StyledInputField from '../../ui/StyledInputField/StyledInputField';
-import { LANGUAGE } from '@/models/ui.model';
+import { DEFAULT_LANG } from '@/models/ui.model';
 import BaseButton from '../../ui/buttons/BaseButton/BaseButton';
 
 interface ISatFinderProps {
@@ -163,7 +163,7 @@ const SatFinder = ({
   return (
     <>
       <Fieldset
-        legendText={fieldsetTitle[LANGUAGE]}
+        legendText={fieldsetTitle[DEFAULT_LANG]}
         className={styles.fieldset}
       >
         <form
@@ -178,20 +178,20 @@ const SatFinder = ({
               idName="addressInput"
               value={addressInputValue}
               handleOnChange={setAddressInputValue}
-              placeholder={inputField.placeholder[LANGUAGE]}
-              hiddenLabelTitle={inputField.labelName[LANGUAGE]}
-              cancelBtnAriaLabel={inputField.cancelBtnAriaLabel[LANGUAGE]}
+              placeholder={inputField.placeholder[DEFAULT_LANG]}
+              hiddenLabelTitle={inputField.labelName[DEFAULT_LANG]}
+              cancelBtnAriaLabel={inputField.cancelBtnAriaLabel[DEFAULT_LANG]}
               searchIconStr={inputField.searchIconStr}
               cancelClick={() => setAddressInputValue('')}
               widthPx={280}
             />
             <BaseButton
               className={styles.submitButton}
-              ariaLabel={submitButton.ariaLabel[LANGUAGE]}
+              ariaLabel={submitButton.ariaLabel[DEFAULT_LANG]}
               type="submit"
               id="submitBtn"
             >
-              {submitButton.title[LANGUAGE]}
+              {submitButton.title[DEFAULT_LANG]}
             </BaseButton>
           </div>
         </form>

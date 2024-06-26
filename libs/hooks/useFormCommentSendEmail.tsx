@@ -5,7 +5,7 @@ import {
   CommentToAdminEmail,
   CommentToUserEmail,
 } from '@/components/EmailTemplates/CommentEmail.template';
-import { EDBTableTitles, LANGUAGE } from '@/models/ui.model';
+import { EDBTableTitles, DEFAULT_LANG } from '@/models/ui.model';
 import { getArticleSubscribers } from '@/controllers/comments.controller';
 import { IFormState } from '@/controllers/toast.controller';
 import { COMMENTS_MODEL } from '@/models/comments.model';
@@ -68,7 +68,7 @@ export const useFormCommentSendEmail = (
         const body = await renderAsync(<CommentToUserEmail {...attributes} />);
         await sendMail({
           to: mail,
-          subject: `${COMMENTS_MODEL.email.subjectPreTitle[LANGUAGE]} ${articleName}`,
+          subject: `${COMMENTS_MODEL.email.subjectPreTitle[DEFAULT_LANG]} ${articleName}`,
           body,
         });
       });

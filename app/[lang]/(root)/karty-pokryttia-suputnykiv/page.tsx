@@ -3,7 +3,7 @@ import type { Metadata } from 'next';
 import { SAT_MAPS_MODEL } from '@/models/articles.model';
 import { getSatMapList } from '@/controllers/articles.controller';
 import { EUrlBaseParam } from '@/models/url.model';
-import { LANGUAGE as L, DEFAULT_META_DATA } from '@/models/ui.model';
+import { DEFAULT_LANG as L, DEFAULT_META_DATA } from '@/models/ui.model';
 import FillingImg from '@/components/ui/Images/FillingImage';
 import MapList from '@/components/article/ArticleList/MapList';
 import BreadCrumbServer from '@/components/BreadCrumbs/BreadCrumbsServer';

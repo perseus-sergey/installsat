@@ -1,7 +1,11 @@
 import type { Metadata } from 'next';
 import React from 'react';
 import { EUrlBaseParam } from '@/models/url.model';
-import { LANGUAGE, EDBTableTitles, DEFAULT_META_DATA } from '@/models/ui.model';
+import {
+  DEFAULT_LANG,
+  EDBTableTitles,
+  DEFAULT_META_DATA,
+} from '@/models/ui.model';
 import {
   getSatMap,
   getSatMapList,
@@ -40,19 +44,19 @@ export const generateMetadata = async ({
 }: IArticleParams): Promise<Metadata> => {
   const sqlResult = await getSatMap(slug);
 
-  if (!sqlResult.length) return DEFAULT_META_DATA[LANGUAGE];
+  if (!sqlResult.length) return DEFAULT_META_DATA[DEFAULT_LANG];
 
   const { sat_title, position, beam_description } = sqlResult[0];
 
-  const description = `${getDescription(`${sat_title} ${position}`)[LANGUAGE]}. ${beam_description}`;
+  const description = `${getDescription(`${sat_title} ${position}`)[DEFAULT_LANG]}. ${beam_description}`;
 
   return {
-    title: `${metaTitle[LANGUAGE]} ${sat_title} ${position}`,
+    title: `${metaTitle[DEFAULT_LANG]} ${sat_title} ${position}`,
     description,
-    keywords: metaKeywords[LANGUAGE],
+    keywords: metaKeywords[DEFAULT_LANG],
     openGraph: {
       ...DEFAULT_META_DATA.openGraph,
-      title: `${metaTitle[LANGUAGE]} ${sat_title} ${position}`,
+      title: `${metaTitle[DEFAULT_LANG]} ${sat_title} ${position}`,
       description,
       url: `${BASE_URL}/${EUrlBaseParam.SAT_COVERAGE_MAP}/${slug}`,
       publishedTime: getFormattedDateStrYearFirst(),
@@ -84,7 +88,7 @@ export default async function layout({ params: { slug } }: IArticleParams) {
     `${sat_id}`
   );
 
-  const h1Title = getH1(`${sat_title}, ${position}`)[LANGUAGE];
+  const h1Title = getH1(`${sat_title}, ${position}`)[DEFAULT_LANG];
 
   updateViewCount(EDBTableTitles.CHANNEL_SAT, `${sat_id}`, view);
 
@@ -93,7 +97,7 @@ export default async function layout({ params: { slug } }: IArticleParams) {
       <BreadCrumbServer
         breadCrumbList={[
           BREAD_CRUMBS.SAT_COVERAGE_MAP,
-          `${metaTitle[LANGUAGE]} ${sat_title} ${position}`,
+          `${metaTitle[DEFAULT_LANG]} ${sat_title} ${position}`,
         ]}
       />
       <article className="article">
@@ -106,7 +110,7 @@ export default async function layout({ params: { slug } }: IArticleParams) {
             }}
             defaultImage={singleMap.h1Image.defaultImg}
             alternativeImgString={singleMap.h1Image.alternativeStr}
-            alt={`${singleMap.h1Image.altStart[LANGUAGE]} ${h1Title}`}
+            alt={`${singleMap.h1Image.altStart[DEFAULT_LANG]} ${h1Title}`}
             isBlur
             isFillParent
           />
@@ -118,18 +122,18 @@ export default async function layout({ params: { slug } }: IArticleParams) {
         )}
         <BottomInfoPanel
           items={[
-            { name: viewsTitle[LANGUAGE], value: view + 1 },
-            { name: commentsTitle[LANGUAGE], value: numberOfComments },
+            { name: viewsTitle[DEFAULT_LANG], value: view + 1 },
+            { name: commentsTitle[DEFAULT_LANG], value: numberOfComments },
           ]}
         />
       </article>
 
       <SimilarArticles
-        similarTitle={similarTitle[LANGUAGE]}
+        similarTitle={similarTitle[DEFAULT_LANG]}
         similarArticlesMapped={[
           <li key={0}>
             <Link href={`/${EUrlBaseParam.SAT_CHANNEL_LIST}/${slug}`}>
-              {similarStart[LANGUAGE]} {sat_title} {position}
+              {similarStart[DEFAULT_LANG]} {sat_title} {position}
             </Link>
           </li>,
         ]}
@@ -140,7 +144,7 @@ export default async function layout({ params: { slug } }: IArticleParams) {
         revalidateUrl={`/${EUrlBaseParam.SAT_COVERAGE_MAP}/${slug}`}
         dbCommentTableName={EDBTableTitles.COMMENTS_MAPS}
         articleId={`${sat_id}`}
-        articleName={`${metaTitle[LANGUAGE]} ${sat_title} ${position}`}
+        articleName={`${metaTitle[DEFAULT_LANG]} ${sat_title} ${position}`}
       />
     </>
   );

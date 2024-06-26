@@ -7,7 +7,7 @@ import { COMMENTS_MODEL, ECommentFormNames } from '@/models/comments.model';
 import FieldError from '../FieldError/FieldError';
 import { useToastMessage } from '@/libs/hooks/useToastMessage';
 import { useFormReset } from '@/libs/hooks/useFormReset';
-import { EDBTableTitles, LANGUAGE } from '@/models/ui.model';
+import { EDBTableTitles, DEFAULT_LANG } from '@/models/ui.model';
 import { useFormCommentSendEmail } from '@/libs/hooks/useFormCommentSendEmail';
 import { EMPTY_FORM_STATE } from '@/controllers/toast.controller';
 import { IUserLocation } from '@/models/userLocation.model';
@@ -75,7 +75,7 @@ const CommentForm = ({
     >
       <div className="pb-4 pt-1 flex flex-col">
         <label htmlFor={AUTHOR} className={styles.required}>
-          {authorName.labelText[LANGUAGE]}
+          {authorName.labelText[DEFAULT_LANG]}
         </label>
         <input
           id={AUTHOR}
@@ -84,15 +84,15 @@ const CommentForm = ({
           maxLength={authorName.maxSize.value}
           size={20}
           required
-          placeholder={authorName.placeholder[LANGUAGE]}
-          aria-label={authorName.ariaLabel[LANGUAGE]}
+          placeholder={authorName.placeholder[DEFAULT_LANG]}
+          aria-label={authorName.ariaLabel[DEFAULT_LANG]}
           aria-describedby={`${AUTHOR}-error`}
         />
         <FieldError formState={formState} name={AUTHOR} />
       </div>
 
       <div className="pb-4 pt-1 flex flex-col">
-        <label htmlFor={EMAIL}>{authorEmail.labelText[LANGUAGE]}</label>
+        <label htmlFor={EMAIL}>{authorEmail.labelText[DEFAULT_LANG]}</label>
         <input
           type="email"
           id={EMAIL}
@@ -101,7 +101,7 @@ const CommentForm = ({
           className={styles.inputField}
           size={30}
           placeholder={authorEmail.placeholder}
-          aria-label={authorEmail.ariaLabel[LANGUAGE]}
+          aria-label={authorEmail.ariaLabel[DEFAULT_LANG]}
           aria-describedby={`${EMAIL}-error`}
         />
         <FieldError formState={formState} name={EMAIL} />
@@ -109,14 +109,14 @@ const CommentForm = ({
 
       <div className="pb-4 pt-1 flex flex-col">
         <label htmlFor={TEXT} className={styles.required}>
-          {commentText.labelText[LANGUAGE]}
+          {commentText.labelText[DEFAULT_LANG]}
         </label>
         <textarea
           id={TEXT}
           name={TEXT}
           className={styles.inputField}
-          placeholder={commentText.placeholder[LANGUAGE]}
-          aria-label={commentText.ariaLabel[LANGUAGE]}
+          placeholder={commentText.placeholder[DEFAULT_LANG]}
+          aria-label={commentText.ariaLabel[DEFAULT_LANG]}
           rows={4}
           cols={60}
           maxLength={commentText.maxSize.value}
@@ -127,11 +127,11 @@ const CommentForm = ({
       </div>
 
       <SubmitPendingButton
-        ariaLabel={submit.ariaLabel[LANGUAGE]}
-        pendingInnerHtml={submit.pendingInnerText[LANGUAGE]}
+        ariaLabel={submit.ariaLabel[DEFAULT_LANG]}
+        pendingInnerHtml={submit.pendingInnerText[DEFAULT_LANG]}
         className="MovingButton"
       >
-        {submit.innerText[LANGUAGE]}
+        {submit.innerText[DEFAULT_LANG]}
       </SubmitPendingButton>
       {noScriptFallback}
     </form>

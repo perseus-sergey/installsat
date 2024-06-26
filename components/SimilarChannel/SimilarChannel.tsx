@@ -1,7 +1,7 @@
 import { ISimilarChannel, META_CHANNEL } from '@/models/channel.model';
 import Link from 'next/link';
 import { EUrlBaseParam } from '@/models/url.model';
-import { LANGUAGE } from '@/models/ui.model';
+import { DEFAULT_LANG } from '@/models/ui.model';
 
 interface ISimilarChannelProps {
   chanParams: ISimilarChannel;
@@ -40,7 +40,7 @@ const SimilarChannel = ({
     return (
       <>
         <Link href={`/${EUrlBaseParam.ONLINE_CHANNEL_LIST}/${cpu}`}>
-          {getOnlineChannelTitle(channelTitle)[LANGUAGE]}
+          {getOnlineChannelTitle(channelTitle)[DEFAULT_LANG]}
         </Link>
       </>
     );
@@ -49,16 +49,16 @@ const SimilarChannel = ({
     return (
       <>
         <Link href={`/${EUrlBaseParam.SAT_CHANNEL_LIST}/${sat_cpu}`}>
-          {getSatChannelTitle(sat_title, sat_position)[LANGUAGE]}
+          {getSatChannelTitle(sat_title, sat_position)[DEFAULT_LANG]}
         </Link>{' '}
-        {getFrequencyTitle(freq)[LANGUAGE]}
+        {getFrequencyTitle(freq)[DEFAULT_LANG]}
       </>
     );
 
   if (cat_title)
     return (
       <>
-        {packageTitle[LANGUAGE]}{' '}
+        {packageTitle[DEFAULT_LANG]}{' '}
         <Link href={`/${EUrlBaseParam.PACKAGE_CHANNEL_LIST}/${catLink}`}>
           {parentCatTitle}
           {cat_title}

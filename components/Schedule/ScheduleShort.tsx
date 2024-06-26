@@ -1,4 +1,4 @@
-import { EDBTableTitles, LANGUAGE } from '@/models/ui.model';
+import { EDBTableTitles, DEFAULT_LANG } from '@/models/ui.model';
 import { DateTime } from 'luxon';
 import { getDBChannelScheduleShort } from '@/controllers/schedule.controller';
 import { IOnlineChannel } from '@/models/channel.model';
@@ -67,7 +67,7 @@ const ScheduleShort = async ({
     <div>
       <>
         <TitleH2>
-          {h2Start[LANGUAGE]} ✧{title}✧
+          {h2Start[DEFAULT_LANG]} ✧{title}✧
         </TitleH2>
         <div
           style={{

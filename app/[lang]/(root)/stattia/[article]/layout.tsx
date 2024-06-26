@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import React from 'react';
 import { EUrlAdminParam, EUrlBaseParam } from '@/models/url.model';
 import {
-  LANGUAGE,
+  DEFAULT_LANG,
   EDBTableTitles,
   SIMILAR_ARTICLES,
   DEFAULT_META_DATA,
@@ -35,7 +35,7 @@ export const generateMetadata = async ({
 }: IArticleParams): Promise<Metadata> => {
   const sqlResult = await getArticle(article);
 
-  if (!sqlResult) return DEFAULT_META_DATA[LANGUAGE];
+  if (!sqlResult) return DEFAULT_META_DATA[DEFAULT_LANG];
 
   const { title, description, date, slug } = sqlResult;
 
@@ -93,7 +93,7 @@ export default async function layout({
 
       {similarArticles.length ? (
         <SimilarArticles
-          similarTitle={SIMILAR_ARTICLES.title[LANGUAGE]}
+          similarTitle={SIMILAR_ARTICLES.title[DEFAULT_LANG]}
           similarArticlesMapped={similarArticles.map((art) => (
             <li key={art.cpu}>
               <Link href={`/${EUrlBaseParam.ARTICLE}/${art.cpu}`}>

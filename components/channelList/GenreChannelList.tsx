@@ -6,7 +6,7 @@ import {
 } from '@/models/channelList.model';
 import styles from './channelList.module.scss';
 import ChannelCardTooltip from '../ChannelCardTooltip/ChannelCardTooltip';
-import { LANGUAGE } from '@/models/ui.model';
+import { DEFAULT_LANG } from '@/models/ui.model';
 import { cutText } from '@/libs/utils/utils';
 import { META_CHANNEL } from '@/models/channel.model';
 import { TitleH2List } from '../ui/Titles/TitleH2List';
@@ -61,7 +61,7 @@ const GenreChannelList = ({ channels }: IProps) =>
             <li key={chan_id} className={styles.listItem}>
               <Link
                 href={`${path}/${chan_cpu}`}
-                aria-label={ariaLabel[LANGUAGE]}
+                aria-label={ariaLabel[DEFAULT_LANG]}
               >
                 <ChannelCardTooltip
                   mainImage={{
@@ -72,21 +72,21 @@ const GenreChannelList = ({ channels }: IProps) =>
                   mainAlternativeImgString={channelLogo.big.alternativeImgStr}
                   tooltipTextList={[
                     {
-                      title: tName[LANGUAGE],
+                      title: tName[DEFAULT_LANG],
                       description: chan_title,
                     },
                     {
-                      title: tLanguage[LANGUAGE],
+                      title: tLanguage[DEFAULT_LANG],
                       description: lan,
                     },
                     view
                       ? {
-                          title: tViews[LANGUAGE],
+                          title: tViews[DEFAULT_LANG],
                           description: view.toLocaleString('en-US'),
                         }
                       : { title: '', description: '' },
                     {
-                      title: tDescription[LANGUAGE],
+                      title: tDescription[DEFAULT_LANG],
                       description: cutText(chan_description, 100),
                     },
                   ]}

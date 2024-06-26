@@ -3,7 +3,7 @@ import TransNewsSingle from '@/components/TransNewsSingle/TransNewsSingle';
 import { getTransNewsForSingleDay } from '@/controllers/satDigest.controller';
 import { getDateInISO, getFormattedDateStrYearFirst } from '@/libs/utils/dates';
 import { META_TRANS_NEWS_SINGLE } from '@/models/satDigest.model';
-import { LANGUAGE as L, DEFAULT_META_DATA } from '@/models/ui.model';
+import { DEFAULT_LANG as L, DEFAULT_META_DATA } from '@/models/ui.model';
 import { EUrlBaseParam } from '@/models/url.model';
 import { notFound } from 'next/navigation';
 import { cache } from 'react';

@@ -1,7 +1,7 @@
 import { ARTICLES } from '@/models/articles.model';
 import ArticleCard from '../ArticleCard/ArticleCard';
 import FillingValidImage from '../../ui/Images/FillingValidImage';
-import { LANGUAGE } from '@/models/ui.model';
+import { DEFAULT_LANG } from '@/models/ui.model';
 import { EUrlBaseParam } from '@/models/url.model';
 import { cutText } from '@/libs/utils/utils';
 import DangerHtml from '../../ui/DangerHtml/DangerHtml';
@@ -38,7 +38,7 @@ const PackageList = ({ packageList }: IProps) =>
                     }}
                     defaultImage={packageImage.defaultImg}
                     alternativeImgString={packageImage.alternativeStr}
-                    alt={`${packageImage.altPre[LANGUAGE]} ${title}`}
+                    alt={`${packageImage.altPre[DEFAULT_LANG]} ${title}`}
                     isBlur
                   />
                 }
@@ -50,8 +50,8 @@ const PackageList = ({ packageList }: IProps) =>
                 }
                 href={`/${EUrlBaseParam.PACKAGE_CHANNEL_LIST}/${cpu}`}
                 infoPanelItems={[
-                  { name: viewsTitle[LANGUAGE], value: view },
-                  { name: commentsTitle[LANGUAGE], value: comment_count },
+                  { name: viewsTitle[DEFAULT_LANG], value: view },
+                  { name: commentsTitle[DEFAULT_LANG], value: comment_count },
                 ]}
               />
             </li>

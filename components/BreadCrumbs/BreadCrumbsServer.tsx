@@ -7,7 +7,7 @@ import {
   CUT_LAST_ELEMENT,
   FIRST_ELEMENT_SIZE,
 } from '@/models/breadCrumbs.model';
-import { ELanguage, LANGUAGE } from '@/models/ui.model';
+import { ELanguage, DEFAULT_LANG } from '@/models/ui.model';
 import { cutMiddleOfText } from '@/libs/utils/utils';
 import TooltipSimple from '../ui/tooltips/TooltipSimple/TooltipSimple';
 
@@ -51,7 +51,7 @@ const BreadCrumbServer = ({
               style={{ fontSize: FIRST_ELEMENT_SIZE }}
               className="hover:underline"
             >
-              {homeTitle || BREAD_CRUMBS.BASE_PATH.title[LANGUAGE]}
+              {homeTitle || BREAD_CRUMBS.BASE_PATH.title[DEFAULT_LANG]}
             </Link>
           </li>
         )}
@@ -67,7 +67,7 @@ const BreadCrumbServer = ({
                   ? item
                   : typeof item.title === 'string'
                     ? item.title
-                    : item.title[LANGUAGE];
+                    : item.title[DEFAULT_LANG];
               const itemStyle =
                 isCurrentUrl && activeLinkColor
                   ? { color: activeLinkColor }

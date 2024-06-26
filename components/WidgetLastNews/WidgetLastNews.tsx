@@ -3,7 +3,7 @@ import styles from './WidgetLastNews.module.scss';
 import { getLastNewsWidgetList } from '@/controllers/sidebar.controller';
 import EmptyData from '../errors/EmptyData/EmptyData';
 import { WIDGET_LAST_NEWS } from '@/models/widget.model';
-import { ELanguage, LANGUAGE } from '@/models/ui.model';
+import { ELanguage } from '@/models/ui.model';
 
 const WidgetLastNews = async ({ lang }: { lang: ELanguage }) => {
   const lastNewsWidgetList = await getLastNewsWidgetList();
@@ -12,8 +12,11 @@ const WidgetLastNews = async ({ lang }: { lang: ELanguage }) => {
   return (
     <div className="sidebar-widget" data-testid="WidgetLastNews">
       <h3 className={styles.title}>
-        <Link href={WIDGET_LAST_NEWS.href} className={styles.titleLink}>
-          {WIDGET_LAST_NEWS.title[LANGUAGE]}
+        <Link
+          href={`/${lang}/${WIDGET_LAST_NEWS.href}`}
+          className={styles.titleLink}
+        >
+          {WIDGET_LAST_NEWS.title[lang]}
         </Link>
       </h3>
       <ul className={styles.listBody}>

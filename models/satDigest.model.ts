@@ -1,5 +1,5 @@
 import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
-import { ELanguage, LANGUAGE } from './ui.model';
+import { ELanguage, DEFAULT_LANG } from './ui.model';
 
 // =================================================================
 // Need to change to 30
@@ -29,8 +29,8 @@ export const META_TRANS_NEWS_LIST = {
     }
 
     return {
-      [ELanguage.UA]: `Транспондерні новини популярних супутників ${addStr[LANGUAGE]}`,
-      [ELanguage.EN]: `Transponder news of popular satellites ${addStr[LANGUAGE]}`,
+      [ELanguage.UA]: `Транспондерні новини популярних супутників ${addStr[DEFAULT_LANG]}`,
+      [ELanguage.EN]: `Transponder news of popular satellites ${addStr[DEFAULT_LANG]}`,
     };
   },
   metaTitle: {

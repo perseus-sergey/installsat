@@ -3,6 +3,7 @@
 import Footer from '@/components/Footer/Footer';
 import Header from '@/components/Header/Header';
 import ErrorPage from '@/components/errors/ErrorPage/ErrorPage';
+import { ELanguage } from '@/models/ui.model';
 
 export default ({
   error,
@@ -14,11 +15,11 @@ export default ({
   <html lang="en">
     <body suppressHydrationWarning={true}>
       <input type="checkbox" id="toggle-sidebar" hidden />
-      <Header />
+      <Header lang={ELanguage.EN} />
       <main className="article">
         <ErrorPage error={error} resetFn={reset} />
       </main>
-      <Footer />
+      <Footer lang={ELanguage.EN} />
     </body>
   </html>
 );

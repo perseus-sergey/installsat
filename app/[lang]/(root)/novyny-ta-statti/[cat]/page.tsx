@@ -11,7 +11,11 @@ import TextUnderH1 from '@/components/TextUnderH1/TextUnderH1';
 import ArticleList from '@/components/article/ArticleList/ArticleList';
 import { notFound } from 'next/navigation';
 import Pagination from '@/components/ui/Pagination/Pagination';
-import { LANGUAGE, TSearchParams, DEFAULT_META_DATA } from '@/models/ui.model';
+import {
+  DEFAULT_LANG,
+  TSearchParams,
+  DEFAULT_META_DATA,
+} from '@/models/ui.model';
 import { EUrlBaseParam, EUrlSearchParam } from '@/models/url.model';
 import { imagePathValidate } from '@/libs/utils/imagePathValidate';
 import { validSearchParam } from '@/libs/utils/validSearchParam';
@@ -109,21 +113,21 @@ export default async function Page({
           <FillingValidImage
             image={images.h1Image}
             alternativeImgString={images.h1Image.alternativeStr}
-            alt={images.h1Image.alt[LANGUAGE]}
+            alt={images.h1Image.alt[DEFAULT_LANG]}
             isBlur
           />
         </Title>
 
         <Filter
           idName="article-search-input"
-          placeholder={placeholder[LANGUAGE]}
-          labelTitle={labelTitle[LANGUAGE]}
+          placeholder={placeholder[DEFAULT_LANG]}
+          labelTitle={labelTitle[DEFAULT_LANG]}
           searchQueryTitle={EUrlSearchParam.ARTICLE}
         />
 
         <TextUnderH1>{text}</TextUnderH1>
 
-        <p className="text-blue-600 font-bold text-center text-lg">{`${articlesCountCaption[LANGUAGE]}${mapsCount}`}</p>
+        <p className="text-blue-600 font-bold text-center text-lg">{`${articlesCountCaption[DEFAULT_LANG]}${mapsCount}`}</p>
 
         <Pagination
           page={pageNumber || 1}

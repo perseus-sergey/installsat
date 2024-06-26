@@ -16,7 +16,7 @@ import {
 } from '@/controllers/channel.controller';
 import { META_CHANNEL, META_CHANNEL_ONLINE } from '@/models/channel.model';
 import {
-  LANGUAGE as L,
+  DEFAULT_LANG as L,
   EDBTableTitles,
   DEFAULT_META_DATA,
 } from '@/models/ui.model';

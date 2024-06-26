@@ -19,8 +19,8 @@ const SideBar = async ({
         {SIDE_BAR_CLOSE_BTN}
       </ToggleSidebarLabel>
       {!isAdmin && <WidgetLastNews lang={lang} />}
-      {isAdmin ? <AccordionAdmin /> : <Accordion />}
-      {!isAdmin && <WidgetArticleCategories />}
+      {isAdmin ? <AccordionAdmin /> : <Accordion lang={lang} />}
+      {!isAdmin && <WidgetArticleCategories lang={lang} />}
       <UserWelcome />
     </aside>
   );

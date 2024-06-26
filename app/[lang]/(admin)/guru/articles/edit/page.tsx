@@ -7,7 +7,7 @@ import { getAdminChunkOfNews } from '@/controllers/admin.controller';
 import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
 import { validSearchParam } from '@/libs/utils/validSearchParam';
 import { ARTICLES } from '@/models/articles.model';
-import { EDBTableTitles, LANGUAGE, TSearchParams } from '@/models/ui.model';
+import { EDBTableTitles, DEFAULT_LANG, TSearchParams } from '@/models/ui.model';
 import { EUrlAdminParam, EUrlSearchParam } from '@/models/url.model';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
@@ -51,11 +51,11 @@ export default async function Page({ searchParams }: IPageParams) {
       <Title>List of Articles for Edit</Title>
       <Filter
         idName="article-search-input"
-        placeholder={placeholder[LANGUAGE]}
-        labelTitle={labelTitle[LANGUAGE]}
+        placeholder={placeholder[DEFAULT_LANG]}
+        labelTitle={labelTitle[DEFAULT_LANG]}
         searchQueryTitle={EUrlSearchParam.ARTICLE}
       />
-      <p className="text-blue-600 font-bold text-center text-lg">{`${articlesCountCaption[LANGUAGE]}${articlesCount}`}</p>
+      <p className="text-blue-600 font-bold text-center text-lg">{`${articlesCountCaption[DEFAULT_LANG]}${articlesCount}`}</p>
       <Pagination
         page={pageNumber || 1}
         offsetNumber={PAGINATION.offsetNumber}

@@ -7,7 +7,7 @@ import { COMMENTS_MODEL } from '@/models/comments.model';
 import {
   DEFAULT_META_DATA,
   EDBTableTitles,
-  LANGUAGE,
+  DEFAULT_LANG,
   TSearchParams,
 } from '@/models/ui.model';
 import { EUrlBaseParam, EUrlSearchParam } from '@/models/url.model';
@@ -61,7 +61,7 @@ export default async function Page({ searchParams }: IPageParams) {
   return (
     <>
       <Title style={{ flexDirection: 'column' }}>
-        {h1[LANGUAGE]}
+        {h1[DEFAULT_LANG]}
         <br />
         <span style={{ color: '#d30084', fontSize: '0.7em' }}>{mail}</span>
       </Title>

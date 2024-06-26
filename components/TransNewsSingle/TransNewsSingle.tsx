@@ -5,7 +5,7 @@ import DangerHtmlUl from '../ui/DangerHtml/DangerHtml';
 import { META_TRANS_NEWS_LIST, TSatDigest } from '@/models/satDigest.model';
 import { getDailyNews } from '@/controllers/satDigest.controller';
 import FillingValidImage from '../ui/Images/FillingValidImage';
-import { LANGUAGE, ERRORS } from '@/models/ui.model';
+import { DEFAULT_LANG, ERRORS } from '@/models/ui.model';
 import EmptyPage from '../errors/EmptyPage/EmptyPage';
 import { decode } from 'html-entities';
 
@@ -32,7 +32,7 @@ const TransNewsSingle = ({ newsArray, title }: ITransNewsSingleProps) => (
                   }}
                   defaultImage={satLogo.defaultImg}
                   alternativeImgString={satLogo.alternativeStr}
-                  alt={`${satLogo.alt[LANGUAGE]}${satNews[0]}`}
+                  alt={`${satLogo.alt[DEFAULT_LANG]}${satNews[0]}`}
                 />
                 {decode(satNews[0])}
               </h2>
@@ -47,7 +47,7 @@ const TransNewsSingle = ({ newsArray, title }: ITransNewsSingleProps) => (
         })}
       </div>
     ) : (
-      <EmptyPage title={ERRORS.EMPTY_DATE_NEWS_PAGE.title[LANGUAGE]} />
+      <EmptyPage title={ERRORS.EMPTY_DATE_NEWS_PAGE.title[DEFAULT_LANG]} />
     )}
   </>
 );

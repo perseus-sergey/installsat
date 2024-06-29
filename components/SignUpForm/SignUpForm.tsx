@@ -52,7 +52,7 @@ export default function SignUpForm({
             </label>
             <div className="relative">
               <input
-                className="peer block w-full rounded-md border border-gray-200 py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500"
+                className="block w-full rounded-md border border-gray-200 py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500"
                 id={NAME}
                 name={NAME}
                 placeholder="Enter your Name"
@@ -78,7 +78,7 @@ export default function SignUpForm({
         </label>
         <div className="relative">
           <input
-            className="peer block w-full rounded-md border border-gray-200 py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500"
+            className="block w-full rounded-md border border-gray-200 py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500"
             id={EMAIL}
             type="email"
             name={EMAIL}
@@ -102,7 +102,7 @@ export default function SignUpForm({
         </label>
         <div className="relative">
           <input
-            className="peer block w-full rounded-md border border-gray-200 py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500"
+            className="block w-full rounded-md border border-gray-200 py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500"
             id={PASSWORD}
             type="password"
             name={PASSWORD}

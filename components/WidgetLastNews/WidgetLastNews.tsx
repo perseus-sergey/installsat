@@ -1,13 +1,12 @@
 import Link from 'next/link';
 import styles from './WidgetLastNews.module.scss';
 import { getLastNewsWidgetList } from '@/controllers/sidebar.controller';
-import EmptyData from '../errors/EmptyData/EmptyData';
 import { WIDGET_LAST_NEWS } from '@/models/widget.model';
 import { ELanguage } from '@/models/ui.model';
 
 const WidgetLastNews = async ({ lang }: { lang: ELanguage }) => {
   const lastNewsWidgetList = await getLastNewsWidgetList();
-  if (lastNewsWidgetList instanceof Error) return <EmptyData />;
+  if (lastNewsWidgetList instanceof Error) return null;
 
   return (
     <div className="sidebar-widget" data-testid="WidgetLastNews">

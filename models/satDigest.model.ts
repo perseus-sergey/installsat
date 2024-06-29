@@ -1,10 +1,7 @@
 import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
 import { ELanguage, DEFAULT_LANG } from './ui.model';
 
-// =================================================================
-// Need to change to 30
-// =================================================================
-export const LAST_NEWS_INTERVAL = 90;
+export const LAST_NEWS_INTERVAL = 30;
 
 export const META_TRANS_NEWS_LIST = {
   getH1(interval: number) {
@@ -150,7 +147,7 @@ export interface IStateOption {
   readonly label: string;
 }
 
-export const digestIntervals: readonly IStateOption[] = [
+export const digestIntervalOptions: readonly IStateOption[] = [
   { value: 7, label: 'Останні 7 днів' },
   { value: 30, label: 'Останні 30 днів' },
   { value: 90, label: 'Останні 90 днів' },

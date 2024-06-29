@@ -29,7 +29,7 @@ export default function Filter({
   resetButton,
 }: IFilterProps) {
   const pathname = usePathname();
-  const { replace } = useRouter();
+  const { replace, refresh } = useRouter();
 
   const { searchValue, inputRef, handleSearchDebounced, cancelClickHandler } =
     useSearch(searchQueryTitle, 700);
@@ -38,6 +38,7 @@ export default function Filter({
     if (inputRef.current) inputRef.current.value = '';
     // setSearchValue('');
     replace(pathname);
+    refresh();
   };
 
   return (

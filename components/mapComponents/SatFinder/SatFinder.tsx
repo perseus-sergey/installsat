@@ -16,11 +16,11 @@ import {
 } from '@/models/tblSat.model';
 import Fieldset from '../../ui/Fieldset/Fieldset';
 import {
-  ControlComponentSat,
   Group,
   ESelectType,
   MySelect,
   formatGroupSatLabel,
+  createControlComponentSat,
 } from '../../ui/ReactSelect/ReactSelect';
 import { MultiValue, components } from 'react-select';
 import { Loader } from '../../ui/loaders/Loader';
@@ -205,7 +205,7 @@ const SatFinder = ({
             options={groupedSats}
             components={{
               Group,
-              Control: ControlComponentSat,
+              Control: createControlComponentSat(DEFAULT_LANG),
               Input: (props) => (
                 <components.Input
                   {...props}

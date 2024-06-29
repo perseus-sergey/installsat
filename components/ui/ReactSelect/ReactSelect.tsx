@@ -56,26 +56,6 @@ export const Group = (
   </div>
 );
 
-export const ReactSelect = <
-  Option,
-  IsMulti extends boolean = false,
-  Group extends GroupBase<Option> = GroupBase<Option>,
->({
-  selectName,
-  ...rest
-}: Props<Option, IsMulti, Group> & IReactSelectProps) => {
-  return (
-    <Select
-      className={styles.ReactSelect}
-      instanceId={`inst-${selectName}`}
-      id={selectName}
-      name={selectName}
-      data-testid="ReactSelect"
-      {...rest}
-    />
-  );
-};
-
 export const MySelect = <
   Option,
   IsMulti extends boolean = false,
@@ -95,55 +75,9 @@ export const MySelect = <
   );
 };
 
-// export const ReactSelectInterval = ({
-//   defValue,
-//   ...rest
-// }: {
-//   defValue: ISatelliteOption;
-// }) => (
-//   <ReactSelect
-//     selectName={ESelectType.SELECT_TIME_INTERVAL}
-//     defaultValue={defValue}
-//     // defaultValue={digestIntervalOptions[1]}
-//     options={digestIntervalOptions}
-//     components={{
-//       Control: ControlComponentInterval,
-//       Input: (props) => (
-//         <components.Input {...props} aria-activedescendant={undefined} />
-//       ),
-//     }}
-//     {...rest}
-//   />
-// );
-
 export const formatGroupSatLabel = (group: IGroupedSatelliteOption) => (
   <div className={styles.groupHeading}>
     <span>{group.label}</span>
     <span className={styles.groupBadgeStyles}>{group.options.length}</span>
   </div>
 );
-
-// interface IReactSelectSat {
-//   groupedSats: readonly IGroupedSatelliteOption[];
-//   defValue?: ISatelliteOption;
-//   closeMenuOnSelect?: boolean;
-// }
-
-// export const ReactSelectSat = ({ groupedSats, defValue }: IReactSelectSat) => (
-//   <ReactSelect
-//     selectName={ESelectType.SELECT_SATS}
-//     isMulti
-//     closeMenuOnSelect={false}
-//     defaultValue={defValue}
-//     // defaultValue={groupedSats[0].options[0]}
-//     options={groupedSats}
-//     components={{
-//       Group,
-//       Control: ControlComponentSat,
-//       Input: (props) => (
-//         <components.Input {...props} aria-activedescendant={undefined} />
-//       ),
-//     }}
-//     formatGroupLabel={formatGroupSatLabel}
-//   />
-// );

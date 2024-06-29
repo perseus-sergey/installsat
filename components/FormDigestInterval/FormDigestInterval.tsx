@@ -115,10 +115,6 @@ const FormDigestInterval = ({
       <div className="flex flex-col justify-center items-center gap-2 pb-4">
         <div className="flex flex-wrap justify-center items-center gap-x-8 gap-y-4 p-2 text-gray-400">
           {groupedSats.length > 0 ? (
-            // <ReactSelectSat
-            //   defValue={groupedSats[0].options[0]}
-            //   groupedSats={groupedSats}
-            // />
             <MySelect
               selectName={ESelectType.SELECT_SATS}
               isMulti

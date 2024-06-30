@@ -56,7 +56,7 @@ export const getPool = (): mysql.Pool => {
     pool = mysql.createPool({
       ...access,
       waitForConnections: true,
-      connectionLimit: 100,
+      connectionLimit: 150,
       queueLimit: 0,
       multipleStatements: true,
     });

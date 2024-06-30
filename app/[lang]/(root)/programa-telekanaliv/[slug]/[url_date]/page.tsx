@@ -11,11 +11,12 @@ import { getCommentsNumber } from '@/controllers/comments.controller';
 import { cutText } from '@/libs/utils/utils';
 import { META_CHANNEL } from '@/models/channel.model';
 import {
-  DEFAULT_LANG,
   EDBTableTitles,
   DEFAULT_META_DATA,
+  ELanguage,
+  DEFAULT_LANG,
 } from '@/models/ui.model';
-import { EUrlBaseParam } from '@/models/url.model';
+import { EUrlBaseParam, MAIN_URL } from '@/models/url.model';
 import { Metadata } from 'next';
 import BreadCrumbServer from '@/components/BreadCrumbs/BreadCrumbsServer';
 import { SCHEDULE_META } from '@/models/scheduleTV.model';
@@ -23,15 +24,16 @@ import { getChanOneDaySchedule } from '@/controllers/schedule.controller';
 import { notFound } from 'next/navigation';
 import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
 import SchedulePage from '@/components/SchedulePage/SchedulePage';
-import { getFormattedDateStr, getValidDate } from '@/libs/utils/dates';
+import { getFormattedDateStrYearFirst, getValidDate } from '@/libs/utils/dates';
 import WeekScheduleTabs from '@/components/tabs/WeekScheduleTabs';
 import NoteBlock from '@/components/ui/NoteBlock/NoteBlock';
 import GrooveLine from '@/components/ui/GrooveLine';
 import { BREAD_CRUMBS } from '@/models/breadCrumbs.model';
 import ChannelOnlineLink from '@/components/ui/buttons/ChannelOnlineLink/ChannelOnlineLink';
 import { decode } from 'html-entities';
+import { getELangKey } from '@/libs/utils/validSearchParam';
 
-const BASE_URL = process.env.BASE_URL;
+const BASE_URL = process.env.BASE_URL || MAIN_URL;
 
 const {
   images: {
@@ -47,37 +49,55 @@ const {
 const { getKeywords, getTitle, h1Start, descriptionStart } = SCHEDULE_META;
 
 export interface IPageProps {
-  params: { slug: string; url_date: string };
+  params: { [key in EUrlBaseParam]: string };
 }
 
 export const dynamic = 'force-dynamic';
 
 export const generateMetadata = async ({
-  params: { slug, url_date },
+  params,
 }: IPageProps): Promise<Metadata> => {
+  const slug = params[EUrlBaseParam.SLUG];
+  const url_date = params[EUrlBaseParam.URL_DATE];
+  const lang = getELangKey(params[EUrlBaseParam.LANG]);
+
   const sqlResult = await getDBOnlineChannel(slug);
-  if (!sqlResult) return DEFAULT_META_DATA[DEFAULT_LANG];
+  if (!sqlResult) return DEFAULT_META_DATA[lang];
 
   const { title, description } = sqlResult;
 
-  const metaDescription = `${descriptionStart[DEFAULT_LANG]} ${title}. ${cutText(description, 150)}`;
-  const metaTitle = getTitle(title, url_date)[DEFAULT_LANG];
+  const metaDescription = `${descriptionStart[lang]} ${title}. ${cutText(description, 150)}`;
+  const metaTitle = getTitle(title, url_date)[lang];
+
+  const slugPath = `${EUrlBaseParam.CHANNELS_TV_PROGRAM}/${slug}/${url_date}`;
 
   return {
+    metadataBase: new URL(BASE_URL),
     title: metaTitle,
     description: metaDescription,
-    keywords: getKeywords(title)[DEFAULT_LANG],
+    keywords: getKeywords(title)[lang],
     openGraph: {
       ...DEFAULT_META_DATA.openGraph,
       title: metaTitle,
       description: metaDescription,
-      url: `${BASE_URL}/${EUrlBaseParam.CHANNELS_TV_PROGRAM}/${slug}/${url_date}`,
-      publishedTime: getFormattedDateStr(),
+      url: `/${lang}/${slugPath}`,
+      publishedTime: getFormattedDateStrYearFirst(),
+    },
+    alternates: {
+      canonical: `/${DEFAULT_LANG}/${slugPath}`,
+      languages: {
+        en: `/${ELanguage.EN}/${slugPath}`,
+        uk: `/${ELanguage.UA}/${slugPath}`,
+      },
     },
   };
 };
 
-export default async function Page({ params: { slug, url_date } }: IPageProps) {
+export default async function Page({ params }: IPageProps) {
+  const slug = params[EUrlBaseParam.SLUG];
+  const url_date = params[EUrlBaseParam.URL_DATE];
+  const lang = getELangKey(params[EUrlBaseParam.LANG]);
+
   const sqlResult = await getDBOnlineChannel(slug);
   if (!sqlResult || !getValidDate(url_date)) notFound();
 
@@ -117,14 +137,15 @@ export default async function Page({ params: { slug, url_date } }: IPageProps) {
   return (
     <>
       <BreadCrumbServer
+        lang={lang}
         breadCrumbList={[
           BREAD_CRUMBS.CHANNELS_TV_PROGRAM,
-          `${h1Start[DEFAULT_LANG]} "${title}"`,
+          `${h1Start[lang]} "${title}"`,
         ]}
       />
       <article className="article">
         <Title>
-          {`${h1Start[DEFAULT_LANG]} "${title}"`}
+          {`${h1Start[lang]} "${title}"`}
           <FillingValidImage
             image={{
               ...bigLogo,
@@ -132,13 +153,14 @@ export default async function Page({ params: { slug, url_date } }: IPageProps) {
             }}
             defaultImage={bigLogo.defaultImage}
             alternativeImgString={bigLogo.alternativeImgStr}
-            alt={`${bigLogo.alt[DEFAULT_LANG]} "${title}"`}
+            alt={`${bigLogo.alt[lang]} "${title}"`}
             isBlur
           />
         </Title>
 
-        <WeekScheduleTabs currentDate={url_date} />
+        <WeekScheduleTabs currentDate={url_date} lang={lang} />
         <SchedulePage
+          lang={lang}
           scheduleList={schedules}
           urlDate={url_date}
           channelTitle={title}
@@ -146,43 +168,49 @@ export default async function Page({ params: { slug, url_date } }: IPageProps) {
 
         {tvforsite_net && (
           <ChannelOnlineLink
-            href={`/${EUrlBaseParam.ONLINE_CHANNEL_LIST}/${slug}`}
+            lang={lang}
+            href={`/${lang}/${EUrlBaseParam.ONLINE_CHANNEL_LIST}/${slug}`}
           >
-            {getOnlineLinkText(title)[DEFAULT_LANG]}
+            {getOnlineLinkText(title)[lang]}
           </ChannelOnlineLink>
         )}
 
         <GrooveLine className="py-4" />
 
-        <NoteBlock noteTitle={noteTitle[DEFAULT_LANG]}>
-          {getResponsibilityText(title)[DEFAULT_LANG]}
+        <NoteBlock noteTitle={noteTitle[lang]}>
+          {getResponsibilityText(title)[lang]}
         </NoteBlock>
 
         <BottomInfoPanel
           items={[
-            { name: viewsTitle[DEFAULT_LANG], value: view + 1 },
-            { name: commentsTitle[DEFAULT_LANG], value: numberOfComments },
+            { name: viewsTitle[lang], value: view + 1 },
+            { name: commentsTitle[lang], value: numberOfComments },
           ]}
         />
       </article>
 
       {similarChannels.length ? (
         <SimilarArticles
-          similarTitle={`${simChannelsBefore.title[DEFAULT_LANG]}"${title}"`}
+          similarTitle={`${simChannelsBefore.title[lang]}"${title}"`}
           similarArticlesMapped={similarChannels.map((chan) => (
             <li key={chan.cpu}>
-              <SimilarChannel channelTitle={title} chanParams={chan} />
+              <SimilarChannel
+                channelTitle={title}
+                chanParams={chan}
+                lang={lang}
+              />
             </li>
           ))}
         />
       ) : null}
 
       <CommentBlock
+        lang={lang}
         numberOfComments={numberOfComments}
-        revalidateUrl={`/${EUrlBaseParam.CHANNELS_TV_PROGRAM}/${slug}/${url_date}`}
+        revalidateUrl={`/${lang}/${EUrlBaseParam.CHANNELS_TV_PROGRAM}/${slug}/${url_date}`}
         dbCommentTableName={EDBTableTitles.COMMENTS_CHANNEL}
         articleId={`${id}`}
-        articleName={`${h1Start[DEFAULT_LANG]} "${title}"`}
+        articleName={`${h1Start[lang]} "${title}"`}
       />
     </>
   );

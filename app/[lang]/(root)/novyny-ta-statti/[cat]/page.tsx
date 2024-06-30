@@ -15,16 +15,17 @@ import {
   DEFAULT_LANG,
   TSearchParams,
   DEFAULT_META_DATA,
+  ELanguage,
 } from '@/models/ui.model';
-import { EUrlBaseParam, EUrlSearchParam } from '@/models/url.model';
+import { EUrlBaseParam, EUrlSearchParam, MAIN_URL } from '@/models/url.model';
 import { imagePathValidate } from '@/libs/utils/imagePathValidate';
-import { validSearchParam } from '@/libs/utils/validSearchParam';
+import { getELangKey, validSearchParam } from '@/libs/utils/validSearchParam';
 import BreadCrumbServer from '@/components/BreadCrumbs/BreadCrumbsServer';
 import { BREAD_CRUMBS } from '@/models/breadCrumbs.model';
 import Filter from '@/components/ui/Filter/Filter';
 import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
 
-const BASE_URL = process.env.BASE_URL;
+const BASE_URL = process.env.BASE_URL || MAIN_URL;
 
 const {
   articleList: { pagination, images, articlesCountCaption },
@@ -39,16 +40,22 @@ const articleTitleImg = imagePathValidate(
 export const dynamic = 'force-dynamic';
 
 export interface IPageParams {
-  params: { cat: string };
+  params: { [key in EUrlBaseParam]: string };
   searchParams: TSearchParams;
 }
 
 export const generateMetadata = async ({
-  params: { cat },
+  params,
 }: IPageParams): Promise<Metadata> => {
+  const cat = params[EUrlBaseParam.CATEGORY];
+  const lang = getELangKey(params[EUrlBaseParam.LANG]);
+
   const { title, description, cpu } = await getCurrentCatParams(cat);
 
+  const slugPath = `${EUrlBaseParam.NEWS_AND_ARTICLES}/${cpu}`;
+
   return {
+    metadataBase: new URL(BASE_URL),
     title,
     description,
     keywords: description,
@@ -56,29 +63,37 @@ export const generateMetadata = async ({
       ...DEFAULT_META_DATA.openGraph,
       title,
       description,
-      url: `${BASE_URL}/${EUrlBaseParam.NEWS_AND_ARTICLES}/${cpu}`,
+      url: `/${lang}/${slugPath}`,
       publishedTime: getFormattedDateStrYearFirst(),
+    },
+    alternates: {
+      canonical: `/${DEFAULT_LANG}/${slugPath}`,
+      languages: {
+        en: `/${ELanguage.EN}/${slugPath}`,
+        uk: `/${ELanguage.UA}/${slugPath}`,
+      },
     },
   };
 };
 
 export async function generateStaticParams(): Promise<
   {
-    cat: string;
+    [EUrlBaseParam.CATEGORY]: string;
   }[]
 > {
   const allCatResponse = await getArticleCatList();
-  if (allCatResponse instanceof Error) return [{ cat: '' }];
+  if (allCatResponse instanceof Error)
+    return [{ [EUrlBaseParam.CATEGORY]: '' }];
 
-  return allCatResponse.map((cat) => ({ cat: cat.cpu }));
+  return allCatResponse.map((cat) => ({ [EUrlBaseParam.CATEGORY]: cat.cpu }));
 }
 
 export const dynamicParams = false;
 
-export default async function Page({
-  params: { cat },
-  searchParams,
-}: IPageParams) {
+export default async function Page({ params, searchParams }: IPageParams) {
+  const cat = params[EUrlBaseParam.CATEGORY];
+  const lang = getELangKey(params[EUrlBaseParam.LANG]);
+
   const { id, description, text } = await getCurrentCatParams(cat);
 
   const { perPage } = pagination;
@@ -105,6 +120,7 @@ export default async function Page({
     <>
       <BreadCrumbServer
         breadCrumbList={[BREAD_CRUMBS.NEWS_AND_ARTICLES, description]}
+        lang={lang}
       />
       <article className="article">
         <Title>
@@ -113,30 +129,36 @@ export default async function Page({
           <FillingValidImage
             image={images.h1Image}
             alternativeImgString={images.h1Image.alternativeStr}
-            alt={images.h1Image.alt[DEFAULT_LANG]}
+            alt={images.h1Image.alt[lang]}
             isBlur
           />
         </Title>
 
         <Filter
+          lang={lang}
           idName="article-search-input"
-          placeholder={placeholder[DEFAULT_LANG]}
-          labelTitle={labelTitle[DEFAULT_LANG]}
+          placeholder={placeholder[lang]}
+          labelTitle={labelTitle[lang]}
           searchQueryTitle={EUrlSearchParam.ARTICLE}
         />
 
         <TextUnderH1>{text}</TextUnderH1>
 
-        <p className="text-blue-600 font-bold text-center text-lg">{`${articlesCountCaption[DEFAULT_LANG]}${mapsCount}`}</p>
+        <p className="text-blue-600 font-bold text-center text-lg">{`${articlesCountCaption[lang]}${mapsCount}`}</p>
 
         <Pagination
+          lang={lang}
           page={pageNumber || 1}
           offsetNumber={pagination.offsetNumber}
           totalPages={totalPages}
           searchParams={searchParams}
         />
 
-        <ArticleList articleList={allNews} articleTitleImg={articleTitleImg} />
+        <ArticleList
+          lang={lang}
+          articleList={allNews}
+          articleTitleImg={articleTitleImg}
+        />
       </article>
     </>
   );

@@ -5,16 +5,17 @@ import DangerHtmlUl from '../ui/DangerHtml/DangerHtml';
 import { META_TRANS_NEWS_LIST, TSatDigest } from '@/models/satDigest.model';
 import { getDailyNews } from '@/controllers/satDigest.controller';
 import FillingValidImage from '../ui/Images/FillingValidImage';
-import { DEFAULT_LANG, ERRORS } from '@/models/ui.model';
+import { ELanguage, ERRORS } from '@/models/ui.model';
 import EmptyPage from '../errors/EmptyPage/EmptyPage';
 import { decode } from 'html-entities';
 
 interface ITransNewsSingleProps {
   newsArray: [string, TSatDigest[]][] | null;
   title: string;
+  lang: ELanguage;
 }
 
-const TransNewsSingle = ({ newsArray, title }: ITransNewsSingleProps) => (
+const TransNewsSingle = ({ newsArray, title, lang }: ITransNewsSingleProps) => (
   <>
     <Title>{title}</Title>
     {newsArray && newsArray.length > 0 ? (
@@ -32,7 +33,7 @@ const TransNewsSingle = ({ newsArray, title }: ITransNewsSingleProps) => (
                   }}
                   defaultImage={satLogo.defaultImg}
                   alternativeImgString={satLogo.alternativeStr}
-                  alt={`${satLogo.alt[DEFAULT_LANG]}${satNews[0]}`}
+                  alt={`${satLogo.alt[lang]}${satNews[0]}`}
                 />
                 {decode(satNews[0])}
               </h2>
@@ -47,7 +48,7 @@ const TransNewsSingle = ({ newsArray, title }: ITransNewsSingleProps) => (
         })}
       </div>
     ) : (
-      <EmptyPage title={ERRORS.EMPTY_DATE_NEWS_PAGE.title[DEFAULT_LANG]} />
+      <EmptyPage title={ERRORS.EMPTY_DATE_NEWS_PAGE.title[lang]} />
     )}
   </>
 );

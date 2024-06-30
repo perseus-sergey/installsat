@@ -4,6 +4,12 @@ export const MAIN_URL = 'http://localhost:3000';
 export enum EUrlBaseParam {
   BASE_PATH = '/',
   LANG = 'lang',
+  DATE = 'date',
+  URL_DATE = 'url_date',
+  SLUG = 'slug',
+  SATELLITE = 'sat',
+  ARTICLE_PARAM = 'article',
+  CATEGORY = 'cat',
   TRANSPONDER_NEWS = 'transponderni-novyny',
   // SAT_NEWS = 'suputnykovi-novyny',
   PACKAGE_CHANNEL_LIST = 'spysok-kanaliv-paketu',
@@ -28,6 +34,7 @@ export enum EUrlBaseParam {
 }
 
 export enum EUrlAdminParam {
+  ID = 'id',
   BASE_PATH = 'guru',
   EDIT_COMMENT = 'edit-comments',
   ARTICLES_EDIT = 'articles',

@@ -57,7 +57,7 @@ $labelHeight: 54px;
 }
 
 .accordionRadio:checked + .accordionItem .accordionLabel ~ .accordionContent {
-  max-height: 500px;
+  max-height: 700px;
 }
 
 .accordionRadio:checked + .accordionItem .accordionLabel.arrow::after {

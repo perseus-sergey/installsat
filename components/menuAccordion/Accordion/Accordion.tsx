@@ -50,7 +50,7 @@ const Accordion = async ({ lang }: { lang: ELanguage }) => {
             {installationsList.map((item) => (
               <li key={item.id} className={styles.contentItem}>
                 <Link
-                  href={`${INSTALLATIONS.baseHrefOfList}/${item.cpu}/`}
+                  href={`/${lang}${INSTALLATIONS.baseHrefOfList}/${item.cpu}/`}
                   className={styles.contentItemLink}
                 >
                   {item.title}
@@ -64,7 +64,7 @@ const Accordion = async ({ lang }: { lang: ELanguage }) => {
             {channelSatList.map((item) => (
               <li key={item.id} className={styles.contentItem}>
                 <Link
-                  href={`${SATELLITES.baseHrefOfList}/${item.cpu}/`}
+                  href={`/${lang}${SATELLITES.baseHrefOfList}/${item.cpu}/`}
                   className={styles.contentItemLink}
                 >
                   {item.title} {item.position}
@@ -78,7 +78,7 @@ const Accordion = async ({ lang }: { lang: ELanguage }) => {
             {maps.map((item) => (
               <li key={item.beam_id} className={styles.contentItem}>
                 <Link
-                  href={`${MAPS.baseHrefOfList}/${item.cpu}`}
+                  href={`/${lang}${MAPS.baseHrefOfList}/${item.cpu}`}
                   className={styles.contentItemLink}
                 >
                   {item.title} {item.position}
@@ -92,7 +92,7 @@ const Accordion = async ({ lang }: { lang: ELanguage }) => {
             {channelCatList.map((item) => (
               <li key={item.id} className={styles.contentItem}>
                 <Link
-                  href={`${PACKAGES.baseHrefOfList}/${item.cpu}/`}
+                  href={`/${lang}${PACKAGES.baseHrefOfList}/${item.cpu}/`}
                   className={styles.contentItemLink}
                 >
                   {item.title}
@@ -106,7 +106,7 @@ const Accordion = async ({ lang }: { lang: ELanguage }) => {
             {usefulArticleList.map((item) => (
               <li key={item.id} className={styles.contentItem}>
                 <Link
-                  href={`${USEFUL.baseHrefOfList}/${item.cpu}/`}
+                  href={`/${lang}${USEFUL.baseHrefOfList}/${item.cpu}/`}
                   className={styles.contentItemLink}
                 >
                   {item.title}
@@ -128,7 +128,7 @@ const Accordion = async ({ lang }: { lang: ELanguage }) => {
               <ul>
                 {menu_arrcat.map((item) => (
                   <li key={item.id} className={styles.contentItem}>
-                    <Link href={`/kategorija-tovara/${item.cpu}/`} className={styles.contentItemLink}>
+                    <Link href={`/${lang}/kategorija-tovara/${item.cpu}/`} className={styles.contentItemLink}>
                       <Image
                         height="16"
                         width="16"

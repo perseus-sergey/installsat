@@ -6,20 +6,20 @@ import FillingValidImage from '@/components/ui/Images/FillingValidImage';
 import ArticleList from '@/components/article/ArticleList/ArticleList';
 import Pagination from '@/components/ui/Pagination/Pagination';
 import { notFound } from 'next/navigation';
-import { EUrlBaseParam, EUrlSearchParam } from '@/models/url.model';
+import { EUrlBaseParam, EUrlSearchParam, MAIN_URL } from '@/models/url.model';
 import {
-  DEFAULT_LANG as L,
   DEFAULT_LANG,
   TSearchParams,
   DEFAULT_META_DATA,
+  ELanguage,
 } from '@/models/ui.model';
 import { imagePathValidate } from '@/libs/utils/imagePathValidate';
-import { validSearchParam } from '@/libs/utils/validSearchParam';
+import { getELangKey, validSearchParam } from '@/libs/utils/validSearchParam';
 import BreadCrumbServer from '@/components/BreadCrumbs/BreadCrumbsServer';
 import Filter from '@/components/ui/Filter/Filter';
 import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
 
-const BASE_URL = process.env.BASE_URL;
+const BASE_URL = process.env.BASE_URL || MAIN_URL;
 
 const {
   search: { placeholder, labelTitle },
@@ -31,8 +31,6 @@ const {
   },
 } = ARTICLES;
 
-const currDate = getFormattedDateStrYearFirst();
-
 const articleTitleImg = imagePathValidate(
   images.titleImg,
   images.titleImg.alternativeStr.title
@@ -41,22 +39,36 @@ const articleTitleImg = imagePathValidate(
 export const dynamic = 'force-dynamic';
 
 interface IProps {
+  params: { [key in EUrlBaseParam]: string };
   searchParams: TSearchParams;
 }
 
-export const metadata: Metadata = {
-  title: title[L],
-  description: description[L],
-  keywords: description[L],
-  openGraph: {
-    ...DEFAULT_META_DATA.openGraph,
-    title: title[L],
-    description: description[L],
-    url: `${BASE_URL}/${EUrlBaseParam.NEWS_AND_ARTICLES}`,
-    publishedTime: currDate,
-  },
+export const generateMetadata = ({ params }: IProps): Metadata => {
+  const lang = getELangKey(params[EUrlBaseParam.LANG]);
+
+  return {
+    metadataBase: new URL(BASE_URL),
+    title: title[lang],
+    description: description[lang],
+    keywords: description[lang],
+    openGraph: {
+      ...DEFAULT_META_DATA.openGraph,
+      title: title[lang],
+      description: description[lang],
+      url: `/${lang}/${EUrlBaseParam.NEWS_AND_ARTICLES}`,
+      publishedTime: getFormattedDateStrYearFirst(),
+    },
+    alternates: {
+      canonical: `/${DEFAULT_LANG}/${EUrlBaseParam.NEWS_AND_ARTICLES}`,
+      languages: {
+        en: `/${ELanguage.EN}/${EUrlBaseParam.NEWS_AND_ARTICLES}`,
+        uk: `/${ELanguage.UA}/${EUrlBaseParam.NEWS_AND_ARTICLES}`,
+      },
+    },
+  };
 };
-export default async function Page({ searchParams }: IProps) {
+export default async function Page({ searchParams, params }: IProps) {
+  const lang = getELangKey(params[EUrlBaseParam.LANG]);
   const { perPage } = pagination;
 
   const page = validSearchParam(EUrlSearchParam.PAGE, searchParams) || '1';
@@ -77,36 +89,47 @@ export default async function Page({ searchParams }: IProps) {
 
   const totalPages = Math.ceil(mapsCount / perPage);
 
+  const currDate = getFormattedDateStrYearFirst();
+
   return (
     <>
-      <BreadCrumbServer breadCrumbList={[`${h1Start[L]} ${currDate}`]} />
+      <BreadCrumbServer
+        breadCrumbList={[`${h1Start[lang]} ${currDate}`]}
+        lang={lang}
+      />
       <article className="article">
         <Title>
-          {h1Start[L]} {currDate}
+          {h1Start[lang]} {currDate}
           <FillingValidImage
             image={images.h1Image}
             alternativeImgString={images.h1Image.alternativeStr}
-            alt={images.h1Image.alt[L]}
+            alt={images.h1Image.alt[lang]}
             isBlur
           />
         </Title>
 
         <Filter
+          lang={lang}
           idName="article-search-input"
-          placeholder={placeholder[DEFAULT_LANG]}
-          labelTitle={labelTitle[DEFAULT_LANG]}
+          placeholder={placeholder[lang]}
+          labelTitle={labelTitle[lang]}
           searchQueryTitle={EUrlSearchParam.ARTICLE}
         />
-        <p className="text-blue-600 font-bold text-center text-lg">{`${articlesCountCaption[DEFAULT_LANG]}${mapsCount}`}</p>
+        <p className="text-blue-600 font-bold text-center text-lg">{`${articlesCountCaption[lang]}${mapsCount}`}</p>
 
         <Pagination
+          lang={lang}
           page={pageNumber || 1}
           offsetNumber={pagination.offsetNumber}
           totalPages={totalPages}
           searchParams={searchParams}
         />
 
-        <ArticleList articleList={allNews} articleTitleImg={articleTitleImg} />
+        <ArticleList
+          articleList={allNews}
+          articleTitleImg={articleTitleImg}
+          lang={lang}
+        />
       </article>
     </>
   );

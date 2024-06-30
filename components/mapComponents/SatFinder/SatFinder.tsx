@@ -27,7 +27,7 @@ import { Loader } from '../../ui/loaders/Loader';
 import GoogleMap from '../GoogleMap/GoogleMap';
 import { makeSelectedOptions } from '@/controllers/satFinder.controller';
 import StyledInputField from '../../ui/StyledInputField/StyledInputField';
-import { DEFAULT_LANG } from '@/models/ui.model';
+import { ELanguage } from '@/models/ui.model';
 import BaseButton from '../../ui/buttons/BaseButton/BaseButton';
 
 interface ISatFinderProps {
@@ -35,6 +35,7 @@ interface ISatFinderProps {
   mapId: string;
   searchQueryName: EUrlSearchParam;
   groupedSats: IGroupedSatelliteOption[];
+  lang: ELanguage;
 }
 
 const {
@@ -47,6 +48,7 @@ const SatFinder = ({
   mapId,
   searchQueryName,
   groupedSats,
+  lang,
 }: ISatFinderProps) => {
   const searchParams = useSearchParams();
   const pathname = usePathname();
@@ -162,36 +164,32 @@ const SatFinder = ({
 
   return (
     <>
-      <Fieldset
-        legendText={fieldsetTitle[DEFAULT_LANG]}
-        className={styles.fieldset}
-      >
+      <Fieldset legendText={fieldsetTitle[lang]} className="p-4 my-4 mx-auto">
         <form
           action={formAction}
           name="formDigestInterval"
           id="formDigestInterval"
-          className={styles.FormDigestInterval}
           data-testid="SatFinder"
         >
-          <div className={styles.addressWrapper}>
+          <div className="flex flex-wrap items-center gap-4 pb-4 justify-center sm:justify-normal">
             <StyledInputField
               idName="addressInput"
               value={addressInputValue}
               handleOnChange={setAddressInputValue}
-              placeholder={inputField.placeholder[DEFAULT_LANG]}
-              hiddenLabelTitle={inputField.labelName[DEFAULT_LANG]}
-              cancelBtnAriaLabel={inputField.cancelBtnAriaLabel[DEFAULT_LANG]}
+              placeholder={inputField.placeholder[lang]}
+              hiddenLabelTitle={inputField.labelName[lang]}
+              cancelBtnAriaLabel={inputField.cancelBtnAriaLabel[lang]}
               searchIconStr={inputField.searchIconStr}
               cancelClick={() => setAddressInputValue('')}
               widthPx={280}
             />
             <BaseButton
               className={styles.submitButton}
-              ariaLabel={submitButton.ariaLabel[DEFAULT_LANG]}
+              ariaLabel={submitButton.ariaLabel[lang]}
               type="submit"
               id="submitBtn"
             >
-              {submitButton.title[DEFAULT_LANG]}
+              {submitButton.title[lang]}
             </BaseButton>
           </div>
         </form>
@@ -205,7 +203,7 @@ const SatFinder = ({
             options={groupedSats}
             components={{
               Group,
-              Control: createControlComponentSat(DEFAULT_LANG),
+              Control: createControlComponentSat(lang),
               Input: (props) => (
                 <components.Input
                   {...props}
@@ -222,6 +220,7 @@ const SatFinder = ({
         )}
       </Fieldset>
       <GoogleMap
+        lang={lang}
         apiKey={apiKey}
         mapId={mapId}
         markerPosition={markerPosition}

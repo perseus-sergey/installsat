@@ -21,8 +21,9 @@ import {
   DEFAULT_LANG,
   EDBTableTitles,
   DEFAULT_META_DATA,
+  ELanguage,
 } from '@/models/ui.model';
-import { EUrlAdminParam, EUrlBaseParam } from '@/models/url.model';
+import { EUrlAdminParam, EUrlBaseParam, MAIN_URL } from '@/models/url.model';
 import { Metadata } from 'next';
 import Link from 'next/link';
 import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
@@ -34,8 +35,9 @@ import { BREAD_CRUMBS } from '@/models/breadCrumbs.model';
 import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
 import EditLinkButton from '@/components/admin/EditLinkButton/EditLinkButton';
 import { notFound } from 'next/navigation';
+import { getELangKey } from '@/libs/utils/validSearchParam';
 
-const BASE_URL = process.env.BASE_URL;
+const BASE_URL = process.env.BASE_URL || MAIN_URL;
 
 const {
   images: {
@@ -55,17 +57,18 @@ const {
   similar: { channels: simChannelsBefore, articles: simArticlesBefore },
 } = META_CHANNEL;
 
-const currentDate = getFormattedDateStrYearFirst();
-
 export interface IChannelProps {
-  params: { slug: string };
+  params: { [key in EUrlBaseParam]: string };
 }
 
 export const generateMetadata = async ({
-  params: { slug },
+  params,
 }: IChannelProps): Promise<Metadata> => {
+  const slug = params[EUrlBaseParam.SLUG];
+  const lang = getELangKey(params[EUrlBaseParam.LANG]);
+
   const sqlResult = await getDBChannel(slug);
-  if (!sqlResult) return DEFAULT_META_DATA[DEFAULT_LANG];
+  if (!sqlResult) return DEFAULT_META_DATA[lang];
 
   const {
     title,
@@ -79,10 +82,11 @@ export const generateMetadata = async ({
     polar,
     canonical,
   } = sqlResult;
+
   const metaTitle =
     cat_parent_id > 0
-      ? `${titleBefore[DEFAULT_LANG]} ${title} | ${cat_parent_title} | ${cat_title}`
-      : `${titleBefore[DEFAULT_LANG]} ${title} | ${sat_title} ${freq} ${polar} | ${cat_title}`;
+      ? `${titleBefore[lang]} ${title} | ${cat_parent_title} | ${cat_title}`
+      : `${titleBefore[lang]} ${title} | ${sat_title} ${freq} ${polar} | ${cat_title}`;
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [clearedCanonical, ..._] = canonical
@@ -93,23 +97,31 @@ export const generateMetadata = async ({
   const addCanonical = canonical ? clearedCanonical : chan_slug;
 
   return {
+    metadataBase: new URL(BASE_URL),
     title: metaTitle,
-    description: description || title,
-    keywords: keywordsBefore[DEFAULT_LANG] + description,
+    description: description || metaTitle,
+    keywords: keywordsBefore[lang] + description,
     alternates: {
-      canonical: `${BASE_URL}/${EUrlBaseParam.CHANNEL_PARAMS}/${addCanonical}`,
+      canonical: `/${DEFAULT_LANG}/${EUrlBaseParam.CHANNEL_PARAMS}/${addCanonical}`,
+      languages: {
+        en: `/${ELanguage.EN}/${EUrlBaseParam.CHANNEL_PARAMS}/${chan_slug}`,
+        uk: `/${ELanguage.UA}/${EUrlBaseParam.CHANNEL_PARAMS}/${chan_slug}`,
+      },
     },
     openGraph: {
       ...DEFAULT_META_DATA.openGraph,
       title: metaTitle,
-      description: description || title,
-      url: `${BASE_URL}/${EUrlBaseParam.CHANNEL_PARAMS}/${chan_slug}`,
-      publishedTime: currentDate,
+      description: description || metaTitle,
+      url: `/${lang}/${EUrlBaseParam.CHANNEL_PARAMS}/${chan_slug}`,
+      publishedTime: getFormattedDateStrYearFirst(),
     },
   };
 };
 
-export default async function Page({ params: { slug } }: IChannelProps) {
+export default async function Page({ params }: IChannelProps) {
+  const slug = params[EUrlBaseParam.SLUG];
+  const lang = getELangKey(params[EUrlBaseParam.LANG]);
+
   const sqlResult = await getDBChannel(slug);
 
   if (!sqlResult) notFound();
@@ -151,14 +163,17 @@ export default async function Page({ params: { slug } }: IChannelProps) {
     `${id}`
   );
 
+  const currentDate = getFormattedDateStrYearFirst();
+
   updateViewCount(EDBTableTitles.CHANNELS, `${id}`, view);
 
   return (
     <>
       <EditLinkButton
-        href={`/${EUrlAdminParam.BASE_PATH}/${EUrlAdminParam.CHANNELS_EDIT}/edit/${id}`}
+        href={`/${lang}/${EUrlAdminParam.BASE_PATH}/${EUrlAdminParam.CHANNELS_EDIT}/edit/${id}`}
       />
       <BreadCrumbServer
+        lang={lang}
         breadCrumbList={[
           BREAD_CRUMBS.PACKAGE_CHANNEL_LIST,
           {
@@ -169,12 +184,12 @@ export default async function Page({ params: { slug } }: IChannelProps) {
             href: `${EUrlBaseParam.SAT_CHANNEL_LIST}/${sat_slug}`,
             title: sat_title,
           },
-          `${titleBefore[DEFAULT_LANG]} "${title}"`,
+          `${titleBefore[lang]} "${title}"`,
         ]}
       />
       <article className="article">
         <Title>
-          {`${titleBefore[DEFAULT_LANG]} "${title}"`}
+          {`${titleBefore[lang]} "${title}"`}
           <FillingValidImage
             image={{
               ...bigLogo,
@@ -182,7 +197,7 @@ export default async function Page({ params: { slug } }: IChannelProps) {
             }}
             defaultImage={bigLogo.defaultImage}
             alternativeImgString={bigLogo.alternativeImgStr}
-            alt={`${bigLogo.alt[DEFAULT_LANG]} "${title}"`}
+            alt={`${bigLogo.alt[lang]} "${title}"`}
             isBlur
           />
         </Title>
@@ -193,51 +208,56 @@ export default async function Page({ params: { slug } }: IChannelProps) {
           <GrooveLine className="py-4" />
 
           <TvScheduleLink
-            title={`${scheduleTitle[DEFAULT_LANG]} "${title}"`}
-            href={`/${EUrlBaseParam.CHANNELS_TV_PROGRAM}/${slug}/${currentDate}`}
+            title={`${scheduleTitle[lang]} "${title}"`}
+            href={`/${lang}/${EUrlBaseParam.CHANNELS_TV_PROGRAM}/${slug}/${currentDate}`}
           />
 
           {tvforsite_net && (
             <ChannelOnlineLink
-              href={`/${EUrlBaseParam.ONLINE_CHANNEL_LIST}/${slug}`}
+              lang={lang}
+              href={`/${lang}/${EUrlBaseParam.ONLINE_CHANNEL_LIST}/${slug}`}
             >
-              {getOnlineLinkText(title)[DEFAULT_LANG]}
+              {getOnlineLinkText(title)[lang]}
             </ChannelOnlineLink>
           )}
-          <ChannelParams channelDBParams={sqlResult} />
+          <ChannelParams channelDBParams={sqlResult} lang={lang} />
 
-          <NoteBlock noteTitle={noteTitle[DEFAULT_LANG]}>
-            {getResponsibilityText(title)[DEFAULT_LANG]}
+          <NoteBlock noteTitle={noteTitle[lang]}>
+            {getResponsibilityText(title)[lang]}
           </NoteBlock>
         </div>
 
         <BottomInfoPanel
           items={[
             {
-              name: packageTitle[DEFAULT_LANG],
+              name: packageTitle[lang],
               value: (
                 <Link
-                  href={`/${EUrlBaseParam.PACKAGE_CHANNEL_LIST}/${catLink}`}
+                  href={`/${lang}/${EUrlBaseParam.PACKAGE_CHANNEL_LIST}/${catLink}`}
                 >
                   {catTitle}
                 </Link>
               ),
             },
             {
-              name: viewsTitle[DEFAULT_LANG],
+              name: viewsTitle[lang],
               value: (view + 1).toLocaleString('en-US'),
             },
-            { name: commentsTitle[DEFAULT_LANG], value: numberOfComments },
+            { name: commentsTitle[lang], value: numberOfComments },
           ]}
         />
       </article>
 
       {similarChannels.length ? (
         <SimilarArticles
-          similarTitle={`${simChannelsBefore.title[DEFAULT_LANG]} "${title}"`}
+          similarTitle={`${simChannelsBefore.title[lang]} "${title}"`}
           similarArticlesMapped={similarChannels.map((chan) => (
             <li key={chan.cpu}>
-              <SimilarChannel channelTitle={title} chanParams={chan} />
+              <SimilarChannel
+                lang={lang}
+                channelTitle={title}
+                chanParams={chan}
+              />
             </li>
           ))}
         />
@@ -245,10 +265,10 @@ export default async function Page({ params: { slug } }: IChannelProps) {
 
       {similarArticles.length ? (
         <SimilarArticles
-          similarTitle={simArticlesBefore.title[DEFAULT_LANG]}
+          similarTitle={simArticlesBefore.title[lang]}
           similarArticlesMapped={similarArticles.map((art) => (
             <li key={art.cpu}>
-              <Link href={`/${EUrlBaseParam.ARTICLE}/${art.cpu}`}>
+              <Link href={`/${lang}/${EUrlBaseParam.ARTICLE}/${art.cpu}`}>
                 {art.title}
               </Link>
               <span>{` (${getFormattedDateStrYearFirst(art.date)})`}</span>
@@ -258,8 +278,9 @@ export default async function Page({ params: { slug } }: IChannelProps) {
       ) : null}
 
       <CommentBlock
+        lang={lang}
         numberOfComments={numberOfComments}
-        revalidateUrl={`/${EUrlBaseParam.CHANNEL_PARAMS}/${chan_slug}`}
+        revalidateUrl={`/${lang}/${EUrlBaseParam.CHANNEL_PARAMS}/${chan_slug}`}
         dbCommentTableName={EDBTableTitles.COMMENTS_CHANNEL}
         articleId={`${id}`}
         articleName={title}

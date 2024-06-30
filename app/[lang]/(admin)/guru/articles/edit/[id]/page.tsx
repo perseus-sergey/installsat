@@ -4,27 +4,33 @@ import EmptyData from '@/components/errors/EmptyData/EmptyData';
 import GrooveLine from '@/components/ui/GrooveLine';
 import { Title } from '@/components/ui/Titles/Title';
 import { getArticleAndCatDb } from '@/controllers/admin.controller';
+import { getELangKey } from '@/libs/utils/validSearchParam';
 import { EUrlAdminParam, EUrlBaseParam } from '@/models/url.model';
 import Link from 'next/link';
 import * as React from 'react';
 
 interface IParams {
-  params: { id: string };
+  params: { [key in EUrlAdminParam | EUrlBaseParam]: string };
 }
-const Page = async ({ params: { id } }: IParams) => {
+
+const Page = async ({ params }: IParams) => {
+  const id = params[EUrlAdminParam.ID];
+  const lang = getELangKey(params[EUrlBaseParam.LANG]);
+
   const dbResult = await getArticleAndCatDb(id);
   if (dbResult instanceof Error)
     return <EmptyData description={dbResult.message} />;
 
-  const articleHref = `/${EUrlBaseParam.ARTICLE}/${dbResult[0][0].cpu}`;
+  const articleHref = `/${lang}/${EUrlBaseParam.ARTICLE}/${dbResult[0][0].cpu}`;
 
   const Breadcrumbs = () => (
     <BreadCrumbServer
+      lang={lang}
       hasHomeLink={false}
       breadCrumbList={[
         {
           title: 'Article list',
-          href: `${EUrlAdminParam.BASE_PATH}/${EUrlAdminParam.ARTICLES_EDIT}/edit`,
+          href: `/${lang}/${EUrlAdminParam.BASE_PATH}/${EUrlAdminParam.ARTICLES_EDIT}/edit`,
         },
         {
           title: dbResult[0][0].title,
@@ -46,7 +52,7 @@ const Page = async ({ params: { id } }: IParams) => {
       <FormEditArticle
         initialData={dbResult}
         articleId={id}
-        revalidateUrl={`/${EUrlAdminParam.BASE_PATH}/${EUrlAdminParam.ARTICLES_EDIT}/edit/${id}`}
+        revalidateUrl={`/${lang}/${EUrlAdminParam.BASE_PATH}/${EUrlAdminParam.ARTICLES_EDIT}/edit/${id}`}
         editorApiKey={process.env.TINY_MCE_API_KEY || ''}
       />
       <GrooveLine />

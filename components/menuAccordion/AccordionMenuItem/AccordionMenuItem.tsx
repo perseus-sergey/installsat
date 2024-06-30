@@ -52,7 +52,10 @@ export const AccordionMenuItem = ({
     </>
   ) : (
     <li className={styles.accordionItem}>
-      <Link className={styles.titleWrapper} href={titleHref || '#'}>
+      <Link
+        className={styles.titleWrapper}
+        href={`/${lang}${titleHref}` || '#'}
+      >
         {img.src && (
           <FillingImg
             width={img.width}

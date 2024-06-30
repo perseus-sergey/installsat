@@ -27,7 +27,7 @@ import { makeSelectedOptions } from '@/controllers/satFinder.controller';
 import TooltipSimple from '../ui/tooltips/TooltipSimple/TooltipSimple';
 import BaseButton from '../ui/buttons/BaseButton/BaseButton';
 
-const { fieldsetTitle } = META_TRANS_NEWS_LIST;
+const { fieldsetTitle, resetButton } = META_TRANS_NEWS_LIST;
 interface IFormDigestIntervalProps {
   groupedSats: IGroupedSatelliteOption[];
   lang: ELanguage;
@@ -48,16 +48,6 @@ const FormDigestInterval = ({
   const [satGradeList, setSatGradeList] = useState(
     searchParams.getAll(EUrlSearchParam.SAT)
   );
-
-  // const createQueryString = useCallback(
-  //   (name: string, value: string) => {
-  //     const params = new URLSearchParams(searchParams.toString())
-  //     params.set(name, value)
-
-  //     return params.toString()
-  //   },
-  //   [searchParams]
-  // )
 
   useEffect(() => {
     const satUrlParams = searchParams.getAll(EUrlSearchParam.SAT);
@@ -163,14 +153,14 @@ const FormDigestInterval = ({
             </h2>
           )}
         </div>
-        <TooltipSimple tooltipText={'Reset all filters'}>
+        <TooltipSimple tooltipText={resetButton.ariaLabel[lang]}>
           <BaseButton
             className="w-fit bg-sky-700 text-gray-100 px-4 py-2 rounded-md hover:bg-sky-600"
-            ariaLabel={'Reset all filters'}
+            ariaLabel={resetButton.ariaLabel[lang]}
             onClick={resetAll}
           >
-            <span className="text-lg text-white">⏻</span>
-            {' Reset filters'}
+            <span className="text-lg text-white">⏻ </span>
+            {resetButton.title[lang]}
           </BaseButton>
         </TooltipSimple>
       </div>

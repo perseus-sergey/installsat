@@ -9,14 +9,15 @@ import type { Metadata } from 'next';
 import FillingImg from '@/components/ui/Images/FillingImage';
 import Fieldset from '@/components/ui/Fieldset/Fieldset';
 import {
-  DEFAULT_LANG as L,
   TSearchParams,
   DEFAULT_META_DATA,
+  DEFAULT_LANG,
+  ELanguage,
 } from '@/models/ui.model';
-import { EUrlBaseParam, EUrlSearchParam } from '@/models/url.model';
+import { EUrlBaseParam, EUrlSearchParam, MAIN_URL } from '@/models/url.model';
 import Filter from '@/components/ui/Filter/Filter';
 import { Suspense } from 'react';
-import { validSearchParam } from '@/libs/utils/validSearchParam';
+import { getELangKey, validSearchParam } from '@/libs/utils/validSearchParam';
 import TooltipSimple from '@/components/ui/tooltips/TooltipSimple/TooltipSimple';
 import Link from 'next/link';
 import GenreImage from '@/components/ui/Images/GenreImage/GenreImage';
@@ -26,7 +27,7 @@ import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
 import { SCHEDULE_META } from '@/models/scheduleTV.model';
 import { BREAD_CRUMBS } from '@/models/breadCrumbs.model';
 
-const BASE_URL = process.env.BASE_URL;
+const BASE_URL = process.env.BASE_URL || MAIN_URL;
 
 const { metaDescription, metaH1, metaKeywords } = SCHEDULE_META.channelList;
 
@@ -45,30 +46,45 @@ const {
   },
 } = META_ALL_SAT_CHANNEL_LIST;
 
-export const dynamic = 'force-dynamic';
-
-export async function generateMetadata(): Promise<Metadata> {
-  const todayStr = getFormattedDateStrYearFirst();
-
-  return {
-    title: metaH1[L],
-    description: metaDescription[L],
-    keywords: metaKeywords[L],
-    openGraph: {
-      ...DEFAULT_META_DATA.openGraph,
-      title: metaH1[L],
-      description: metaDescription[L],
-      url: `${BASE_URL}/${EUrlBaseParam.CHANNELS_TV_PROGRAM}`,
-      publishedTime: todayStr,
-    },
-  };
-}
+const { CHANNELS_TV_PROGRAM } = EUrlBaseParam;
 
 interface IPageProps {
+  params: { [key in EUrlBaseParam]: string };
   searchParams?: TSearchParams;
 }
 
-export default async function Page({ searchParams }: IPageProps) {
+export const dynamic = 'force-dynamic';
+
+export const generateMetadata = async ({
+  params,
+}: IPageProps): Promise<Metadata> => {
+  const lang = getELangKey(params[EUrlBaseParam.LANG]);
+
+  return {
+    metadataBase: new URL(BASE_URL),
+    title: metaH1[lang],
+    description: metaDescription[lang],
+    keywords: metaKeywords[lang],
+    openGraph: {
+      ...DEFAULT_META_DATA.openGraph,
+      title: metaH1[lang],
+      description: metaDescription[lang],
+      url: `/${lang}/${CHANNELS_TV_PROGRAM}`,
+      publishedTime: getFormattedDateStrYearFirst(),
+    },
+    alternates: {
+      canonical: `/${DEFAULT_LANG}/${CHANNELS_TV_PROGRAM}`,
+      languages: {
+        en: `/${ELanguage.EN}/${CHANNELS_TV_PROGRAM}`,
+        uk: `/${ELanguage.UA}/${CHANNELS_TV_PROGRAM}`,
+      },
+    },
+  };
+};
+
+export default async function Page({ searchParams, params }: IPageProps) {
+  const lang = getELangKey(params[EUrlBaseParam.LANG]);
+
   const searchQueryChannel = validSearchParam(
     EUrlSearchParam.CHANNEL,
     searchParams
@@ -80,30 +96,34 @@ export default async function Page({ searchParams }: IPageProps) {
   return (
     <>
       <BreadCrumbServer
-        breadCrumbList={[BREAD_CRUMBS.ONLINE_CHANNEL_LIST, metaH1[L]]}
+        lang={lang}
+        breadCrumbList={[BREAD_CRUMBS.ONLINE_CHANNEL_LIST, metaH1[lang]]}
       />
       <article className="article">
         <Title>
-          {metaH1[L]}
-          {getH1After(searchQueryChannel)[L]}
-          <FillingImg {...h1Image} alt={h1Image.alt[L]} />
+          {metaH1[lang]}
+          {getH1After(searchQueryChannel)[lang]}
+          <FillingImg {...h1Image} alt={h1Image.alt[lang]} />
         </Title>
 
-        <Fieldset legendText={legendText[L]}>
+        <Fieldset legendText={legendText[lang]}>
           <nav className="p-2 md:p-4">
             <ul>
               {onlineChannels.map(([genreTitle, chanList]) => (
                 <li key={genreTitle} className="flex items-center gap-4">
                   <GenreImage
+                    lang={lang}
                     tooltipText={genreTitle}
                     genreMapPosition={chanList[0].genre_id}
                   />
-                  <TooltipSimple tooltipText={`${ariaLabel[L]} ${genreTitle}`}>
+                  <TooltipSimple
+                    tooltipText={`${ariaLabel[lang]} ${genreTitle}`}
+                  >
                     <Link
                       title={genreTitle}
                       href={`#${CHANNEL_LIST_ANCHOR_START}${chanList[0].genre_id}`}
                       className="text-indigo-800 text-lg hover:text-red-500"
-                      aria-label={`${ariaLabel[L]} ${genreTitle}`}
+                      aria-label={`${ariaLabel[lang]} ${genreTitle}`}
                     >
                       {genreTitle}
                     </Link>
@@ -112,9 +132,10 @@ export default async function Page({ searchParams }: IPageProps) {
               ))}
             </ul>
             <Filter
+              lang={lang}
               idName="channel-search-input"
-              placeholder={placeholder[L]}
-              labelTitle={labelTitle[L]}
+              placeholder={placeholder[lang]}
+              labelTitle={labelTitle[lang]}
               searchQueryTitle={EUrlSearchParam.CHANNEL}
             />
           </nav>
@@ -122,7 +143,8 @@ export default async function Page({ searchParams }: IPageProps) {
 
         <Suspense key={searchQueryChannel}>
           <PackageChannelList
-            pathToChannelDetails={EUrlBaseParam.CHANNELS_TV_PROGRAM}
+            lang={lang}
+            pathToChannelDetails={CHANNELS_TV_PROGRAM}
             channels={onlineChannels}
             todayStr={todayStr}
           />

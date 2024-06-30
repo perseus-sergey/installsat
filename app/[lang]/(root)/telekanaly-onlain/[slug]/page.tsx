@@ -16,11 +16,12 @@ import {
 } from '@/controllers/channel.controller';
 import { META_CHANNEL, META_CHANNEL_ONLINE } from '@/models/channel.model';
 import {
-  DEFAULT_LANG as L,
   EDBTableTitles,
   DEFAULT_META_DATA,
+  DEFAULT_LANG,
+  ELanguage,
 } from '@/models/ui.model';
-import { EUrlBaseParam } from '@/models/url.model';
+import { EUrlBaseParam, MAIN_URL } from '@/models/url.model';
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
@@ -34,9 +35,15 @@ import { fetchUserLocation } from '@/libs/utils/getUserIP';
 import BreadCrumbServer from '@/components/BreadCrumbs/BreadCrumbsServer';
 import { BREAD_CRUMBS } from '@/models/breadCrumbs.model';
 import { cache } from 'react';
-import { getFormattedDateStr } from '@/libs/utils/dates';
+import {
+  getFormattedDateStr,
+  getFormattedDateStrYearFirst,
+} from '@/libs/utils/dates';
+import { getELangKey } from '@/libs/utils/validSearchParam';
 
-const BASE_URL = process.env.BASE_URL;
+const BASE_URL = process.env.BASE_URL || MAIN_URL;
+const { LANG, SLUG, CHANNELS_TV_PROGRAM, ONLINE_CHANNEL_LIST, ARTICLE } =
+  EUrlBaseParam;
 
 const {
   images: {
@@ -54,34 +61,52 @@ const { getDescription, getH1, getKeywords, getTitle } = META_CHANNEL_ONLINE;
 const getH1Cached = cache(getH1);
 
 export interface IChannelProps {
-  params: { slug: string };
+  params: { [key in EUrlBaseParam]: string };
 }
 
 export const generateMetadata = async ({
-  params: { slug },
+  params,
 }: IChannelProps): Promise<Metadata> => {
+  const slug = params[SLUG];
+  const lang = getELangKey(params[LANG]);
+
   const sqlResult = await getDBOnlineChannel(slug);
-  if (!sqlResult) return DEFAULT_META_DATA[L];
+  if (!sqlResult) return DEFAULT_META_DATA[lang];
 
   const { title: chTitle, description: descr, chan_slug } = sqlResult;
-  const description = getDescription(chTitle, descr)[L];
-  const title = getTitle(chTitle)[L];
+  const description = getDescription(chTitle, descr)[lang];
+  const title = getTitle(chTitle)[lang];
+
+  const slugPath = `${ONLINE_CHANNEL_LIST}/${chan_slug}`;
 
   return {
+    metadataBase: new URL(BASE_URL),
     title,
     description,
-    keywords: getKeywords(title)[L],
+    keywords: getKeywords(title)[lang],
     openGraph: {
       ...DEFAULT_META_DATA.openGraph,
       title,
       description,
-      url: `${BASE_URL}/${EUrlBaseParam.ONLINE_CHANNEL_LIST}/${chan_slug}`,
-      publishedTime: getFormattedDateStr(),
+      url: `/${lang}/${slugPath}`,
+      publishedTime: getFormattedDateStrYearFirst(),
+    },
+    alternates: {
+      canonical: `/${DEFAULT_LANG}/${slugPath}`,
+      languages: {
+        en: `/${ELanguage.EN}/${slugPath}`,
+        uk: `/${ELanguage.UA}/${slugPath}`,
+      },
     },
   };
 };
 
-export default async function Page({ params: { slug } }: IChannelProps) {
+export default async function Page({ params }: IChannelProps) {
+  const slug = params[SLUG];
+  if (!slug) notFound();
+
+  const lang = getELangKey(params[LANG]);
+
   const sqlResult = await getDBOnlineChannel(slug);
 
   if (!sqlResult) notFound();
@@ -111,14 +136,15 @@ export default async function Page({ params: { slug } }: IChannelProps) {
   return (
     <>
       <BreadCrumbServer
+        lang={lang}
         breadCrumbList={[
           BREAD_CRUMBS.ONLINE_CHANNEL_LIST,
-          getH1Cached(title)[L],
+          getH1Cached(title)[lang],
         ]}
       />
       <article className="article">
         <Title>
-          {getH1Cached(title)[L]}
+          {getH1Cached(title)[lang]}
           <FillingValidImage
             image={{
               ...bigLogo,
@@ -126,18 +152,19 @@ export default async function Page({ params: { slug } }: IChannelProps) {
             }}
             defaultImage={bigLogo.defaultImage}
             alternativeImgString={bigLogo.alternativeImgStr}
-            alt={`${bigLogo.alt[L]} "${title}"`}
+            alt={`${bigLogo.alt[lang]} "${title}"`}
             isBlur
           />
         </Title>
         <OnlinePlayerTabs
+          lang={lang}
           channelData={sqlResult}
           userCountryCode={userCountryCode}
         />
 
         <GrooveLine />
 
-        <ScheduleShort channelData={sqlResult} />
+        <ScheduleShort lang={lang} channelData={sqlResult} />
 
         <div className="article-text">
           <DangerHtml text={text} />
@@ -145,34 +172,38 @@ export default async function Page({ params: { slug } }: IChannelProps) {
           <GrooveLine />
 
           <TvScheduleLink
-            title={`${scheduleTitle[L]} "${title}"`}
-            href={`/${EUrlBaseParam.CHANNELS_TV_PROGRAM}/${slug}/${getFormattedDateStr()}`}
+            title={`${scheduleTitle[lang]} "${title}"`}
+            href={`/${lang}/${CHANNELS_TV_PROGRAM}/${slug}/${getFormattedDateStrYearFirst()}`}
           />
 
-          <ChannelOnlineParams channelDBParams={sqlResult} />
+          <ChannelOnlineParams lang={lang} channelDBParams={sqlResult} />
 
-          <NoteBlock noteTitle={noteTitle[L]}>
-            {getResponsibilityText(title)[L]}
+          <NoteBlock noteTitle={noteTitle[lang]}>
+            {getResponsibilityText(title)[lang]}
           </NoteBlock>
         </div>
 
         <BottomInfoPanel
           items={[
             {
-              name: viewsTitle[L],
-              value: (view + 1).toLocaleString('en-US'),
+              name: viewsTitle[lang],
+              value: view + 1,
             },
-            { name: commentsTitle[L], value: numberOfComments },
+            { name: commentsTitle[lang], value: numberOfComments },
           ]}
         />
       </article>
 
       {similarChannels.length ? (
         <SimilarArticles
-          similarTitle={`${simChannelsBefore.title[L]} "${title}"`}
+          similarTitle={`${simChannelsBefore.title[lang]} "${title}"`}
           similarArticlesMapped={similarChannels.map((chan) => (
             <li key={chan.cpu}>
-              <SimilarChannel channelTitle={title} chanParams={chan} />
+              <SimilarChannel
+                lang={lang}
+                channelTitle={title}
+                chanParams={chan}
+              />
             </li>
           ))}
         />
@@ -180,12 +211,10 @@ export default async function Page({ params: { slug } }: IChannelProps) {
 
       {similarArticles.length ? (
         <SimilarArticles
-          similarTitle={simArticlesBefore.title[L]}
+          similarTitle={simArticlesBefore.title[lang]}
           similarArticlesMapped={similarArticles.map((art) => (
             <li key={art.cpu}>
-              <Link href={`/${EUrlBaseParam.ARTICLE}/${art.cpu}`}>
-                {art.title}
-              </Link>
+              <Link href={`/${lang}/${ARTICLE}/${art.cpu}`}>{art.title}</Link>
               <span>{` (${getFormattedDateStr(art.date)})`}</span>
             </li>
           ))}
@@ -193,8 +222,9 @@ export default async function Page({ params: { slug } }: IChannelProps) {
       ) : null}
 
       <CommentBlock
+        lang={lang}
         numberOfComments={numberOfComments}
-        revalidateUrl={`/${EUrlBaseParam.CHANNEL_PARAMS}/${chan_slug}`}
+        revalidateUrl={`/${lang}/${ONLINE_CHANNEL_LIST}/${chan_slug}`}
         dbCommentTableName={EDBTableTitles.COMMENTS_CHANNEL}
         articleId={`${id}`}
         articleName={title}

@@ -3,6 +3,7 @@ import '@testing-library/jest-dom/extend-expect';
 import TransNewsSingle from './TransNewsSingle';
 import test, { describe } from 'node:test';
 import { getTransNewsForSingleDay } from '@/controllers/satDigest.controller';
+import { ELanguage } from '@/models/ui.model';
 
 describe('<TransNewsSingle />', async () => {
   const newsDate = '2024-02-02';
@@ -12,7 +13,11 @@ describe('<TransNewsSingle />', async () => {
 
   test('it should mount', () => {
     render(
-      <TransNewsSingle newsArray={newsArray} title="TransNewsSingle Test" />
+      <TransNewsSingle
+        lang={ELanguage.EN}
+        newsArray={newsArray}
+        title="TransNewsSingle Test"
+      />
     );
 
     const transNewsSingle = screen.getByTestId('TransNewsSingle');

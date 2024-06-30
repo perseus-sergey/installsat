@@ -4,22 +4,29 @@ import EmptyData from '@/components/errors/EmptyData/EmptyData';
 import GrooveLine from '@/components/ui/GrooveLine';
 import { Title } from '@/components/ui/Titles/Title';
 import { getEditDbChannel } from '@/controllers/admin.controller';
+import { getELangKey } from '@/libs/utils/validSearchParam';
 import { EUrlAdminParam, EUrlBaseParam } from '@/models/url.model';
 import Link from 'next/link';
 import * as React from 'react';
 
 interface IParams {
-  params: { id: string };
+  params: { [key in EUrlAdminParam | EUrlBaseParam]: string };
 }
-const Page = async ({ params: { id } }: IParams) => {
+
+const Page = async ({ params }: IParams) => {
+  console.log('🚀 ~ Page ~ params:', params);
+  const id = params[EUrlAdminParam.ID];
+  const lang = getELangKey(params[EUrlBaseParam.LANG]);
+
   const dbResult = await getEditDbChannel(id);
   if (dbResult instanceof Error)
     return <EmptyData description={dbResult.message} />;
 
-  const productionHref = `/${EUrlBaseParam.CHANNEL_PARAMS}/${dbResult[1][0].chan_slug}`;
+  const productionHref = `/${lang}/${EUrlBaseParam.CHANNEL_PARAMS}/${dbResult[1][0].chan_slug}`;
 
   const Breadcrumbs = () => (
     <BreadCrumbServer
+      lang={lang}
       hasHomeLink={false}
       breadCrumbList={[
         {
@@ -47,8 +54,8 @@ const Page = async ({ params: { id } }: IParams) => {
         initialData={dbResult}
         channelId={id}
         revalidateUrl={[
-          `/${EUrlAdminParam.BASE_PATH}/${EUrlAdminParam.CHANNELS_EDIT}/edit/${id}`,
-          `/${EUrlAdminParam.BASE_PATH}/${EUrlAdminParam.CHANNELS_EDIT}/edit`,
+          `/${lang}/${EUrlAdminParam.BASE_PATH}/${EUrlAdminParam.CHANNELS_EDIT}/edit/${id}`,
+          `/${lang}/${EUrlAdminParam.BASE_PATH}/${EUrlAdminParam.CHANNELS_EDIT}/edit`,
         ]}
         editorApiKey={process.env.TINY_MCE_API_KEY || ''}
       />

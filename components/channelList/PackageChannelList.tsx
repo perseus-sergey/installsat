@@ -10,7 +10,7 @@ import { TitleH2List } from '../ui/Titles/TitleH2List';
 import GoUpLink from '../ui/GoUpLink/GoUpLink';
 import { META_CHANNEL } from '@/models/channel.model';
 import ChannelCardTooltip from '../ChannelCardTooltip/ChannelCardTooltip';
-import { DEFAULT_LANG } from '@/models/ui.model';
+import { ELanguage } from '@/models/ui.model';
 import Link from 'next/link';
 import { cutText } from '@/libs/utils/utils';
 import FillingValidImage from '../ui/Images/FillingValidImage';
@@ -37,12 +37,14 @@ const { channelLogo } = META_CHANNEL.images;
 interface IProps {
   channels: [string, (IPackageChannelListModel | IOnlineChannelListModel)[]][];
   pathToChannelDetails: EUrlBaseParam;
+  lang: ELanguage;
   todayStr?: string;
 }
 
 const PackageChannelList = ({
   channels,
   pathToChannelDetails,
+  lang,
   todayStr = '',
 }: IProps) =>
   channels.length > 0 ? (
@@ -53,7 +55,7 @@ const PackageChannelList = ({
           id={`${CHANNEL_LIST_ANCHOR_START}${chanList[0].genre_id}`}
           className="flex-col md:flex-row"
         >
-          <GoUpLink />
+          <GoUpLink lang={lang} />
           {genreTitle}
           {'genre_logo' in chanList[0] ? (
             <FillingValidImage
@@ -62,11 +64,12 @@ const PackageChannelList = ({
                 height: subCatImage.height,
                 src: `${subCatImage.path}${chanList[0].genre_logo}`,
               }}
-              alt={`${subCatImage.altPre[DEFAULT_LANG]} ${genreTitle}`}
+              alt={`${subCatImage.altPre[lang]} ${genreTitle}`}
               alternativeImgString={subCatImage.alternativeImgStr}
             />
           ) : (
             <GenreImage
+              lang={lang}
               tooltipText={genreTitle}
               genreMapPosition={chanList[0].genre_id}
               className={styles.genreImage}
@@ -75,7 +78,7 @@ const PackageChannelList = ({
         </TitleH2List>
         {'price' in chanList[0] && chanList[0].price && (
           <p className="thhead_small">
-            {getPriceString(chanList[0].price)[DEFAULT_LANG]}
+            {getPriceString(chanList[0].price)[lang]}
           </p>
         )}
         <ul className={styles.channelList}>
@@ -85,8 +88,8 @@ const PackageChannelList = ({
             return (
               <li key={channel.chan_id} className={styles.listItem}>
                 <Link
-                  href={`/${pathToChannelDetails}/${channel.chan_cpu}${todayStr ? `/${todayStr}` : ''}`}
-                  aria-label={ariaLabel[DEFAULT_LANG]}
+                  href={`/${lang}/${pathToChannelDetails}/${channel.chan_cpu}${todayStr ? `/${todayStr}` : ''}`}
+                  aria-label={ariaLabel[lang]}
                 >
                   <ChannelCardTooltip
                     mainImage={{
@@ -97,21 +100,21 @@ const PackageChannelList = ({
                     mainAlternativeImgString={channelLogo.big.alternativeImgStr}
                     tooltipTextList={[
                       {
-                        title: tName[DEFAULT_LANG],
+                        title: tName[lang],
                         description: chanTitle,
                       },
                       'view' in channel
                         ? {
-                            title: tViews[DEFAULT_LANG],
+                            title: tViews[lang],
                             description: channel.view.toLocaleString('en-US'),
                           }
                         : { title: '', description: '' },
                       {
-                        title: tLanguage[DEFAULT_LANG],
+                        title: tLanguage[lang],
                         description: channel.lan,
                       },
                       {
-                        title: tDescription[DEFAULT_LANG],
+                        title: tDescription[lang],
                         description: cutText(channel.chan_description, 150),
                       },
                     ]}

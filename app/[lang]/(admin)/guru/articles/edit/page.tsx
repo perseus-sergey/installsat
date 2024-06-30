@@ -5,10 +5,14 @@ import Pagination from '@/components/ui/Pagination/Pagination';
 import { Title } from '@/components/ui/Titles/Title';
 import { getAdminChunkOfNews } from '@/controllers/admin.controller';
 import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
-import { validSearchParam } from '@/libs/utils/validSearchParam';
+import { getELangKey, validSearchParam } from '@/libs/utils/validSearchParam';
 import { ARTICLES } from '@/models/articles.model';
 import { EDBTableTitles, DEFAULT_LANG, TSearchParams } from '@/models/ui.model';
-import { EUrlAdminParam, EUrlSearchParam } from '@/models/url.model';
+import {
+  EUrlAdminParam,
+  EUrlBaseParam,
+  EUrlSearchParam,
+} from '@/models/url.model';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
@@ -25,10 +29,12 @@ const PAGINATION = {
 };
 
 export interface IPageParams {
+  params: { [key in EUrlAdminParam | EUrlBaseParam]: string };
   searchParams?: TSearchParams;
 }
 
-export default async function Page({ searchParams }: IPageParams) {
+export default async function Page({ searchParams, params }: IPageParams) {
+  const lang = getELangKey(params[EUrlBaseParam.LANG]);
   const page = validSearchParam(EUrlSearchParam.PAGE, searchParams) || '1';
 
   const searchQuery = validSearchParam(EUrlSearchParam.ARTICLE, searchParams);
@@ -50,6 +56,7 @@ export default async function Page({ searchParams }: IPageParams) {
     <>
       <Title>List of Articles for Edit</Title>
       <Filter
+        lang={lang}
         idName="article-search-input"
         placeholder={placeholder[DEFAULT_LANG]}
         labelTitle={labelTitle[DEFAULT_LANG]}
@@ -57,6 +64,7 @@ export default async function Page({ searchParams }: IPageParams) {
       />
       <p className="text-blue-600 font-bold text-center text-lg">{`${articlesCountCaption[DEFAULT_LANG]}${articlesCount}`}</p>
       <Pagination
+        lang={lang}
         page={pageNumber || 1}
         offsetNumber={PAGINATION.offsetNumber}
         totalPages={totalPages}
@@ -72,7 +80,7 @@ export default async function Page({ searchParams }: IPageParams) {
                 <td>{getFormattedDateStrYearFirst(article.date_upd)}</td>
                 <td>
                   <Link
-                    href={`/${BASE_PATH}/${ARTICLES_EDIT}/edit/${article.id}`}
+                    href={`/${lang}/${BASE_PATH}/${ARTICLES_EDIT}/edit/${article.id}`}
                     className="flex items-center gap-2"
                   >
                     ✐ <span className="text-blue-800">{article.title}</span>
@@ -83,7 +91,7 @@ export default async function Page({ searchParams }: IPageParams) {
                     <DeleteItemButton
                       itemID={`${article.id}`}
                       dbTableName={EDBTableTitles.ARTICLE}
-                      revalidateUrl={`/${EUrlAdminParam.BASE_PATH}/${EUrlAdminParam.ARTICLES_EDIT}`}
+                      revalidateUrl={`/${lang}/${EUrlAdminParam.BASE_PATH}/${EUrlAdminParam.ARTICLES_EDIT}`}
                     />
                   )}
                 </td>

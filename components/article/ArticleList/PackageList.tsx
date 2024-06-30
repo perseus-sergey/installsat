@@ -1,7 +1,6 @@
 import { ARTICLES } from '@/models/articles.model';
 import ArticleCard from '../ArticleCard/ArticleCard';
 import FillingValidImage from '../../ui/Images/FillingValidImage';
-import { DEFAULT_LANG } from '@/models/ui.model';
 import { EUrlBaseParam } from '@/models/url.model';
 import { cutText } from '@/libs/utils/utils';
 import DangerHtml from '../../ui/DangerHtml/DangerHtml';
@@ -10,6 +9,7 @@ import {
   META_PACKAGES,
 } from '@/models/channelList.model';
 import EmptyData from '@/components/errors/EmptyData/EmptyData';
+import { ELanguage } from '@/models/ui.model';
 
 const { packageImage } = META_PACKAGES;
 
@@ -17,9 +17,10 @@ const { views: viewsTitle, comments: commentsTitle } = ARTICLES.infoPanelTitles;
 
 interface IProps {
   packageList: IChannelPackagesModel[];
+  lang: ELanguage;
 }
 
-const PackageList = ({ packageList }: IProps) =>
+const PackageList = ({ packageList, lang }: IProps) =>
   packageList.length > 0 ? (
     <>
       <ul>
@@ -38,7 +39,7 @@ const PackageList = ({ packageList }: IProps) =>
                     }}
                     defaultImage={packageImage.defaultImg}
                     alternativeImgString={packageImage.alternativeStr}
-                    alt={`${packageImage.altPre[DEFAULT_LANG]} ${title}`}
+                    alt={`${packageImage.altPre[lang]} ${title}`}
                     isBlur
                   />
                 }
@@ -48,10 +49,10 @@ const PackageList = ({ packageList }: IProps) =>
                     wrapperTagName="span"
                   />
                 }
-                href={`/${EUrlBaseParam.PACKAGE_CHANNEL_LIST}/${cpu}`}
+                href={`/${lang}/${EUrlBaseParam.PACKAGE_CHANNEL_LIST}/${cpu}`}
                 infoPanelItems={[
-                  { name: viewsTitle[DEFAULT_LANG], value: view },
-                  { name: commentsTitle[DEFAULT_LANG], value: comment_count },
+                  { name: viewsTitle[lang], value: view },
+                  { name: commentsTitle[lang], value: comment_count },
                 ]}
               />
             </li>

@@ -78,14 +78,14 @@ export const META_TRANS_NEWS_LIST = {
       },
     },
   },
-  submitButton: {
+  resetButton: {
     title: {
-      [ELanguage.UA]: 'Підтвердити',
-      [ELanguage.EN]: 'Confirm',
+      [ELanguage.EN]: 'Reset filters',
+      [ELanguage.UA]: 'Скинути фільтри',
     },
     ariaLabel: {
-      [ELanguage.UA]: 'Підтвердити зміни',
-      [ELanguage.EN]: 'Confirm changes',
+      [ELanguage.EN]: 'Reset all filters',
+      [ELanguage.UA]: 'Скинути всі фільтри',
     },
   },
   images: {

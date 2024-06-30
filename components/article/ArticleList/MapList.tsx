@@ -7,7 +7,7 @@ import styles from './ArticleList.module.scss';
 import ArticleCard from '../ArticleCard/ArticleCard';
 import FillingImg from '../../ui/Images/FillingImage';
 import FillingValidImage from '../../ui/Images/FillingValidImage';
-import { DEFAULT_LANG } from '@/models/ui.model';
+import { ELanguage } from '@/models/ui.model';
 import { EUrlBaseParam } from '@/models/url.model';
 import EmptyData from '@/components/errors/EmptyData/EmptyData';
 
@@ -21,8 +21,9 @@ const { views: viewsTitle, comments: commentsTitle } = ARTICLES.infoPanelTitles;
 
 interface IArticleListProps {
   articleList: IAllMapsModel[];
+  lang: ELanguage;
 }
-const MapList = ({ articleList }: IArticleListProps) =>
+const MapList = ({ articleList, lang }: IArticleListProps) =>
   articleList.length > 0 ? (
     <ul className={styles.ArticleList} data-testid="ArticleList">
       {articleList.map(
@@ -50,17 +51,17 @@ const MapList = ({ articleList }: IArticleListProps) =>
                   }}
                   defaultImage={singleMap.h1Image.defaultImg}
                   alternativeImgString={singleMap.h1Image.alternativeStr}
-                  alt={`${singleMap.h1Image.altStart[DEFAULT_LANG]} ${metaTitle[DEFAULT_LANG]} ${title}`}
+                  alt={`${singleMap.h1Image.altStart[lang]} ${metaTitle[lang]} ${title}`}
                   isBlur
                 />
               }
               articleDescription={
-                <p>{makePostDescription(description)[DEFAULT_LANG]}</p>
+                <p>{makePostDescription(description)[lang]}</p>
               }
               href={`/${EUrlBaseParam.SAT_COVERAGE_MAP}/${cpu}`}
               infoPanelItems={[
-                { name: viewsTitle[DEFAULT_LANG], value: view },
-                { name: commentsTitle[DEFAULT_LANG], value: comment_count },
+                { name: viewsTitle[lang], value: view },
+                { name: commentsTitle[lang], value: comment_count },
               ]}
             />
           </li>

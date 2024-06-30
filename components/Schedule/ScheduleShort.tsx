@@ -1,4 +1,4 @@
-import { EDBTableTitles, DEFAULT_LANG } from '@/models/ui.model';
+import { EDBTableTitles, ELanguage } from '@/models/ui.model';
 import { DateTime } from 'luxon';
 import { getDBChannelScheduleShort } from '@/controllers/schedule.controller';
 import { IOnlineChannel } from '@/models/channel.model';
@@ -17,10 +17,12 @@ const {
 
 interface IScheduleShortProps {
   channelData: IOnlineChannel;
+  lang: ELanguage;
 }
 
 const ScheduleShort = async ({
   channelData: { vsetv, vipiko, telegid_id, genre_id, title },
+  lang,
 }: IScheduleShortProps) => {
   const now = DateTime.local();
   let addHour = 0;
@@ -67,7 +69,7 @@ const ScheduleShort = async ({
     <div>
       <>
         <TitleH2>
-          {h2Start[DEFAULT_LANG]} ✧{title}✧
+          {h2Start[lang]} ✧{title}✧
         </TitleH2>
         <div
           style={{

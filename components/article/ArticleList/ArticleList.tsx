@@ -4,7 +4,7 @@ import ArticleCard from '../ArticleCard/ArticleCard';
 import FillingImg from '../../ui/Images/FillingImage';
 import FillingValidImage from '../../ui/Images/FillingValidImage';
 import Link from 'next/link';
-import { DEFAULT_LANG, IImgParams } from '@/models/ui.model';
+import { ELanguage, IImgParams } from '@/models/ui.model';
 import { EUrlBaseParam } from '@/models/url.model';
 import { cutText } from '@/libs/utils/utils';
 import DangerHtml from '../../ui/DangerHtml/DangerHtml';
@@ -21,11 +21,16 @@ const {
 } = ARTICLES.infoPanelTitles;
 
 interface IArticleListProps {
+  lang: ELanguage;
   articleList: IAllNewsModel[];
   articleTitleImg: string | IImgParams;
 }
 
-const ArticleList = ({ articleList, articleTitleImg }: IArticleListProps) =>
+const ArticleList = ({
+  articleList,
+  articleTitleImg,
+  lang,
+}: IArticleListProps) =>
   articleList.length > 0 ? (
     <ul className={styles.ArticleList} data-testid="ArticleList">
       {articleList.map(
@@ -61,7 +66,7 @@ const ArticleList = ({ articleList, articleTitleImg }: IArticleListProps) =>
                   }}
                   defaultImage={h1Image.defaultImg}
                   alternativeImgString={h1Image.alternativeStr}
-                  alt={`${h1Image.altStart[DEFAULT_LANG]} ${title}`}
+                  alt={`${h1Image.altStart[lang]} ${title}`}
                   isBlur
                   isFillParent
                 />
@@ -72,24 +77,24 @@ const ArticleList = ({ articleList, articleTitleImg }: IArticleListProps) =>
                   wrapperTagName="span"
                 />
               }
-              href={`${ARTICLES.articleList.links.articleLink.path}${cpu}`}
+              href={`/${lang}/${EUrlBaseParam.ARTICLE}/${cpu}`}
               infoPanelItems={[
                 {
-                  name: themeTitle[DEFAULT_LANG],
+                  name: themeTitle[lang],
                   value: (
                     <Link
-                      href={`/${EUrlBaseParam.NEWS_AND_ARTICLES}/${category_cpu}`}
+                      href={`/${lang}/${EUrlBaseParam.NEWS_AND_ARTICLES}/${category_cpu}`}
                     >
                       {category_title}
                     </Link>
                   ),
                 },
-                { name: viewsTitle[DEFAULT_LANG], value: view },
+                { name: viewsTitle[lang], value: view },
                 {
-                  name: dateTitle[DEFAULT_LANG],
+                  name: dateTitle[lang],
                   value: getFormattedDateStrYearFirst(date),
                 },
-                { name: commentsTitle[DEFAULT_LANG], value: comment_count },
+                { name: commentsTitle[lang], value: comment_count },
               ]}
             />
           </li>

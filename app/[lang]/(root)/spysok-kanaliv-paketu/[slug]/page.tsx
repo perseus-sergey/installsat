@@ -12,16 +12,16 @@ import {
 import type { Metadata } from 'next';
 import Fieldset from '@/components/ui/Fieldset/Fieldset';
 import {
-  DEFAULT_LANG as L,
   DEFAULT_LANG,
   TSearchParams,
   DEFAULT_META_DATA,
   EDBTableTitles,
+  ELanguage,
 } from '@/models/ui.model';
-import { EUrlBaseParam, EUrlSearchParam } from '@/models/url.model';
+import { EUrlBaseParam, EUrlSearchParam, MAIN_URL } from '@/models/url.model';
 import Filter from '@/components/ui/Filter/Filter';
 import { Suspense, cache } from 'react';
-import { validSearchParam } from '@/libs/utils/validSearchParam';
+import { getELangKey, validSearchParam } from '@/libs/utils/validSearchParam';
 import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
 import { getCommentsNumber } from '@/controllers/comments.controller';
 import TooltipSimple from '@/components/ui/tooltips/TooltipSimple/TooltipSimple';
@@ -38,7 +38,7 @@ import BreadCrumbServer, {
 import { BREAD_CRUMBS } from '@/models/breadCrumbs.model';
 import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
 
-const BASE_URL = process.env.BASE_URL;
+const BASE_URL = process.env.BASE_URL || MAIN_URL;
 
 const {
   getH1,
@@ -53,6 +53,8 @@ const {
   similarLinks: { title: similarLinksTitle, beforeLinkText },
 } = META_PACKAGE_CHANNEL_LIST;
 
+const { SLUG, LANG, PACKAGE_CHANNEL_LIST, CHANNEL_PARAMS } = EUrlBaseParam;
+
 const {
   filtering: {
     filterByChannelName: { placeholder, labelTitle },
@@ -62,54 +64,67 @@ const {
 const getH1Cached = cache(getH1);
 
 interface IPageProps {
-  params: { slug: string };
+  params: { [key in EUrlBaseParam]: string };
   searchParams?: TSearchParams;
 }
 
 export const dynamic = 'force-dynamic';
 
 export const generateMetadata = async ({
-  params: { slug },
+  params,
 }: IPageProps): Promise<Metadata> => {
+  const slug = params[SLUG];
+  const lang = getELangKey(params[LANG]);
+
   const res =
     slug === T2_SLUG ? await getT2Channels() : await getPackageChannels(slug);
 
-  if (!res || !res.length) return DEFAULT_META_DATA[DEFAULT_LANG];
+  if (!res || !res.length) return DEFAULT_META_DATA[lang];
 
   const { cat_title, cat_description, cat_slug } = res[0][1][0];
 
+  const slugPath = `${PACKAGE_CHANNEL_LIST}/${cat_slug}`;
+
   return {
-    title: `${cat_title}. ${metaTitle[L]}`,
+    metadataBase: new URL(BASE_URL),
+    title: `${cat_title}. ${metaTitle[lang]}`,
     description: cat_description,
-    keywords: `${cat_title} ${metaKeywords[L]}`,
+    keywords: `${cat_title} ${metaKeywords[lang]}`,
     openGraph: {
       ...DEFAULT_META_DATA.openGraph,
-      title: `${cat_title}. ${metaTitle[L]}`,
+      title: `${cat_title}. ${metaTitle[lang]}`,
       description: cat_description,
-      url: `${BASE_URL}/${EUrlBaseParam.PACKAGE_CHANNEL_LIST}/${cat_slug}`,
+      url: `/${lang}/${slugPath}`,
       publishedTime: getFormattedDateStrYearFirst(),
+    },
+    alternates: {
+      canonical: `/${DEFAULT_LANG}/${slugPath}`,
+      languages: {
+        en: `/${ELanguage.EN}/${slugPath}`,
+        uk: `/${ELanguage.UA}/${slugPath}`,
+      },
     },
   };
 };
 
 export async function generateStaticParams(): Promise<
   {
-    slug: string;
+    [SLUG]: string;
   }[]
 > {
   const allCatResponse = await getChannelCatList();
 
-  if (allCatResponse instanceof Error) return [{ slug: '' }];
+  if (allCatResponse instanceof Error) return [{ [SLUG]: '' }];
 
-  return allCatResponse.map((cat) => ({ slug: cat.cpu }));
+  return allCatResponse.map((cat) => ({ [SLUG]: cat.cpu }));
 }
 
 export const dynamicParams = false;
 
-export default async function Page({
-  params: { slug },
-  searchParams,
-}: IPageProps) {
+export default async function Page({ params, searchParams }: IPageProps) {
+  const slug = params[SLUG];
+  const lang = getELangKey(params[LANG]);
+
   const searchQueryChannel = validSearchParam(
     EUrlSearchParam.CHANNEL,
     searchParams
@@ -145,17 +160,22 @@ export default async function Page({
   ];
   channels &&
     breadCrumbList.push(
-      getH1Cached(channels[0][1][0].cat_title, searchQueryChannel)[L]
+      getH1Cached(channels[0][1][0].cat_title, searchQueryChannel)[lang]
     );
 
   return (
     <>
-      <BreadCrumbServer breadCrumbList={breadCrumbList} />
+      <BreadCrumbServer breadCrumbList={breadCrumbList} lang={lang} />
+
       <article className="article">
         {channels ? (
           <>
             <Title>
-              {getH1Cached(channels[0][1][0].cat_title, searchQueryChannel)[L]}
+              {
+                getH1Cached(channels[0][1][0].cat_title, searchQueryChannel)[
+                  lang
+                ]
+              }
               <FillingValidImage
                 image={{
                   width: h1Image.width,
@@ -164,30 +184,31 @@ export default async function Page({
                 }}
                 defaultImage={h1Image.defaultImage}
                 alternativeImgString={h1Image.alternativeImgStr}
-                alt={h1Image.alt[L]}
+                alt={h1Image.alt[lang]}
                 isBlur
               />
             </Title>
 
-            <Fieldset legendText={legendText[L]}>
+            <Fieldset legendText={legendText[lang]}>
               <nav className="p-2 md:p-4">
                 <ul>
                   {channels.map(([subCatTitle, chanList]) => (
                     <li key={subCatTitle} className="flex items-center gap-4">
                       {slug === 't2-efir' && (
                         <GenreImage
+                          lang={lang}
                           tooltipText={subCatTitle}
                           genreMapPosition={chanList[0].genre_id}
                         />
                       )}
                       <TooltipSimple
-                        tooltipText={`${ariaLabel[L]} ${subCatTitle}`}
+                        tooltipText={`${ariaLabel[lang]} ${subCatTitle}`}
                       >
                         <Link
                           title={subCatTitle}
                           href={`#${CHANNEL_LIST_ANCHOR_START}${chanList[0].genre_id}`}
                           className="text-indigo-800 text-lg hover:text-red-500"
-                          aria-label={`${ariaLabel[L]} ${subCatTitle}`}
+                          aria-label={`${ariaLabel[lang]} ${subCatTitle}`}
                         >
                           {subCatTitle}
                         </Link>
@@ -196,9 +217,10 @@ export default async function Page({
                   ))}
                 </ul>
                 <Filter
+                  lang={lang}
                   idName="channel-search-input"
-                  placeholder={placeholder[L]}
-                  labelTitle={labelTitle[L]}
+                  placeholder={placeholder[lang]}
+                  labelTitle={labelTitle[lang]}
                   searchQueryTitle={EUrlSearchParam.CHANNEL}
                 />
               </nav>
@@ -206,8 +228,9 @@ export default async function Page({
 
             <Suspense key={searchQueryChannel}>
               <PackageChannelList
+                lang={lang}
                 channels={channels}
-                pathToChannelDetails={EUrlBaseParam.CHANNEL_PARAMS}
+                pathToChannelDetails={CHANNEL_PARAMS}
               />
             </Suspense>
           </>
@@ -218,11 +241,11 @@ export default async function Page({
 
       {similarLinks.length ? (
         <SimilarArticles
-          similarTitle={similarLinksTitle[DEFAULT_LANG]}
+          similarTitle={similarLinksTitle[lang]}
           similarArticlesMapped={similarLinks.map((link) => (
             <li key={link.cpu}>
-              <Link href={`/${EUrlBaseParam.PACKAGE_CHANNEL_LIST}/${link.cpu}`}>
-                {beforeLinkText[L]} {link.title}
+              <Link href={`/${lang}/${PACKAGE_CHANNEL_LIST}/${link.cpu}`}>
+                {beforeLinkText[lang]} {link.title}
               </Link>
             </li>
           ))}
@@ -231,11 +254,12 @@ export default async function Page({
 
       {channels ? (
         <CommentBlock
+          lang={lang}
           numberOfComments={numberOfComments}
-          revalidateUrl={`/${EUrlBaseParam.PACKAGE_CHANNEL_LIST}/${channels[0][1][0].cat_slug}`}
+          revalidateUrl={`/${lang}/${PACKAGE_CHANNEL_LIST}/${channels[0][1][0].cat_slug}`}
           dbCommentTableName={EDBTableTitles.COMMENTS_PACKAGES}
           articleId={`${channels[0][1][0].cat_id}`}
-          articleName={`${channels[0][1][0].cat_title}. ${metaTitle[L]}`}
+          articleName={`${channels[0][1][0].cat_title}. ${metaTitle[lang]}`}
         />
       ) : (
         <EmptyData />

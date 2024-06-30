@@ -1,5 +1,4 @@
 import { ELanguage } from './ui.model';
-import { EUrlBaseParam } from './url.model';
 import { z } from 'zod';
 
 export const ARTICLES = {
@@ -67,11 +66,6 @@ export const ARTICLES = {
         alternativeStr: { title: '🌎', fontSize: '2rem' },
       },
     },
-    links: {
-      articleLink: {
-        path: `/${EUrlBaseParam.ARTICLE}/`,
-      },
-    },
     pagination: {
       perPage: 20,
       offsetNumber: 3,
@@ -124,11 +118,6 @@ export const ARTICLES = {
         height: 32,
         width: 32,
         alternativeStr: { title: '🌎', fontSize: '2rem' },
-      },
-    },
-    links: {
-      articleLink: {
-        path: `/${EUrlBaseParam.ARTICLE}/`,
       },
     },
   },

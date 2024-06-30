@@ -2,19 +2,18 @@ import DeleteCommentSubscription from '@/components/DeleteCommentSubscription/De
 import { Title } from '@/components/ui/Titles/Title';
 import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
 import { decrypt } from '@/libs/utils/decrypt';
-import { validSearchParam } from '@/libs/utils/validSearchParam';
+import { getELangKey, validSearchParam } from '@/libs/utils/validSearchParam';
 import { COMMENTS_MODEL } from '@/models/comments.model';
 import {
   DEFAULT_META_DATA,
   EDBTableTitles,
-  DEFAULT_LANG,
   TSearchParams,
 } from '@/models/ui.model';
-import { EUrlBaseParam, EUrlSearchParam } from '@/models/url.model';
+import { EUrlBaseParam, EUrlSearchParam, MAIN_URL } from '@/models/url.model';
 import { Metadata } from 'next';
 
 const emailKey = process.env.MAIL_ENCRYPT_KEY || '';
-const BASE_URL = process.env.BASE_URL || '';
+const BASE_URL = process.env.BASE_URL || MAIN_URL;
 
 const {
   deleteSubscriptionPage: {
@@ -23,24 +22,31 @@ const {
   },
 } = COMMENTS_MODEL;
 export interface IPageParams {
+  params: { [key in EUrlBaseParam]: string };
   searchParams?: TSearchParams;
 }
 
-export const metadata: Metadata = {
-  metadataBase: new URL(BASE_URL),
-  title,
-  description,
-  keywords,
-  openGraph: {
-    ...DEFAULT_META_DATA.openGraph,
+export const generateMetadata = ({ params }: IPageParams): Metadata => {
+  const lang = getELangKey(params[EUrlBaseParam.LANG]);
+
+  return {
+    metadataBase: new URL(BASE_URL),
     title,
     description,
-    url: `${BASE_URL}/${EUrlBaseParam.DELETE_COMMENT_SUBSCRIPTION}`,
-    publishedTime: getFormattedDateStrYearFirst(),
-  },
+    keywords,
+    openGraph: {
+      ...DEFAULT_META_DATA.openGraph,
+      title,
+      description,
+      url: `/${lang}/${EUrlBaseParam.DELETE_COMMENT_SUBSCRIPTION}`,
+      publishedTime: getFormattedDateStrYearFirst(),
+    },
+  };
 };
 
-export default async function Page({ searchParams }: IPageParams) {
+export default async function Page({ searchParams, params }: IPageParams) {
+  const lang = getELangKey(params[EUrlBaseParam.LANG]);
+
   const articleIdEncrypted = validSearchParam(
     EUrlSearchParam.COMMENT_DEL_ARTICLE_ID,
     searchParams
@@ -61,7 +67,7 @@ export default async function Page({ searchParams }: IPageParams) {
   return (
     <>
       <Title style={{ flexDirection: 'column' }}>
-        {h1[DEFAULT_LANG]}
+        {h1[lang]}
         <br />
         <span style={{ color: '#d30084', fontSize: '0.7em' }}>{mail}</span>
       </Title>

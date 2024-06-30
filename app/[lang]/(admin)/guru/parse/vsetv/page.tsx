@@ -11,10 +11,15 @@ import {
 } from '@/controllers/schedule.controller';
 import { EDBTableTitles, TSearchParams } from '@/models/ui.model';
 import {
+  getELangKey,
   validSearchParam,
   validSearchParamArray,
 } from '@/libs/utils/validSearchParam';
-import { EUrlAdminParam, EUrlSearchParam } from '@/models/url.model';
+import {
+  EUrlAdminParam,
+  EUrlBaseParam,
+  EUrlSearchParam,
+} from '@/models/url.model';
 import { IVseTvErrorChannel, IVseTvParsModel } from '@/models/scheduleTV.model';
 import { cache } from 'react';
 import Link from 'next/link';
@@ -44,6 +49,7 @@ const TRAP_CHANNEL: IVseTvParsModel = {
   id: '',
   cpu: '',
 };
+
 const DATE_FORMAT_FOR_DB = 'yyyy-MM-dd HH:mm:ss';
 const currentYear = new Date().getFullYear();
 
@@ -248,13 +254,18 @@ const insertDataInBatches = async (data: string[]) => {
 
 export default async function Page({
   searchParams,
+  params,
 }: {
+  params: { [key in EUrlAdminParam | EUrlBaseParam]: string };
   searchParams?: TSearchParams;
 }) {
+  const lang = getELangKey(params[EUrlBaseParam.LANG]);
   const searchQueryArray = validSearchParamArray(
     EUrlSearchParam.CHANNEL,
     searchParams
   );
+
+  const BASE_GURU_PATH = `${BASE_URL}/${lang}/${EUrlAdminParam.BASE_PATH}`;
 
   const trapsChannelId = validSearchParam(
     EUrlSearchParam.COMMENT_ID,
@@ -296,10 +307,10 @@ export default async function Page({
           errorChannels.push({
             ...channel,
             error: channelParsedData,
-            channelEditUrl: `${BASE_URL}/${EUrlAdminParam.BASE_PATH}/${EUrlAdminParam.CHANNELS_EDIT}/edit/${channel.id}`,
+            channelEditUrl: `${BASE_GURU_PATH}/${EUrlAdminParam.CHANNELS_EDIT}/edit/${channel.id}`,
             sourceChannelUrl: getParseURL(channel.vsetv),
             parseUrl: createURLWithParams(
-              `${BASE_URL}/${EUrlAdminParam.BASE_PATH}/${EUrlAdminParam.PARSE}/${EUrlAdminParam.PARSE_SCHEDULE_VSETV}`,
+              `${BASE_GURU_PATH}/${EUrlAdminParam.PARSE}/${EUrlAdminParam.PARSE_SCHEDULE_VSETV}`,
               { [EUrlSearchParam.CHANNEL]: channel.vsetv }
             ),
           });
@@ -343,7 +354,7 @@ export default async function Page({
     subject: `Parse schedule VseTv`,
     body: await renderAsync(
       <ParseVseTvEmailTemplate
-        pathToMainParsePage={`${BASE_URL}/${EUrlAdminParam.BASE_PATH}/${EUrlAdminParam.PARSE}`}
+        pathToMainParsePage={`${BASE_GURU_PATH}/${EUrlAdminParam.PARSE}`}
         dbTableLength={
           typeof resDbTableLength === 'string'
             ? 'Not Defined'
@@ -352,7 +363,7 @@ export default async function Page({
         errorMessages={errorMessages}
         errorChannels={errorChannels}
         allFailedChannelsUrl={createURLWithParams(
-          `${BASE_URL}/${EUrlAdminParam.BASE_PATH}/${EUrlAdminParam.PARSE}/${EUrlAdminParam.PARSE_SCHEDULE_VSETV}`,
+          `${BASE_GURU_PATH}/${EUrlAdminParam.PARSE}/${EUrlAdminParam.PARSE_SCHEDULE_VSETV}`,
           { [EUrlSearchParam.CHANNEL]: errorChannels.map((chan) => chan.vsetv) }
         )}
       />
@@ -386,14 +397,14 @@ export default async function Page({
             <li key={channel.id}>
               <span>
                 <Link
-                  href={`${BASE_URL}/${EUrlAdminParam.BASE_PATH}${EUrlAdminParam.CHANNELS_EDIT}/edit/${channel.id}`}
+                  href={`${BASE_GURU_PATH}${EUrlAdminParam.CHANNELS_EDIT}/edit/${channel.id}`}
                 >
                   Edit «{channel.title}»
                 </Link>{' '}
                 <Link href={getParseURL(channel.vsetv)}>VseTv</Link>{' '}
                 <Link
                   href={createURLWithParams(
-                    `${BASE_URL}/${EUrlAdminParam.BASE_PATH}/${EUrlAdminParam.PARSE}/${EUrlAdminParam.PARSE_SCHEDULE_VSETV}`,
+                    `${BASE_GURU_PATH}/${EUrlAdminParam.PARSE}/${EUrlAdminParam.PARSE_SCHEDULE_VSETV}`,
                     { [EUrlSearchParam.CHANNEL]: channel.vsetv }
                   )}
                 >

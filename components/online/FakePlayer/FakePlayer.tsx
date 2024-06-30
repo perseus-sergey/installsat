@@ -3,7 +3,7 @@
 import { META_CHANNEL_ONLINE } from '@/models/channel.model';
 import BaseButton from '../../ui/buttons/BaseButton/BaseButton';
 import styles from './FakePlayer.module.scss';
-import { DEFAULT_LANG } from '@/models/ui.model';
+import { ELanguage } from '@/models/ui.model';
 
 const {
   button: { ariaLabel, titleStart: btnTitleStart },
@@ -14,9 +14,10 @@ const {
 interface IFakePlayerProps {
   chanTitle: string;
   url: string;
+  lang: ELanguage;
 }
 
-const FakePlayer = ({ url, chanTitle }: IFakePlayerProps) => {
+const FakePlayer = ({ url, chanTitle, lang }: IFakePlayerProps) => {
   const openNewWindow = () => {
     const windowFeatures = openNewWindowFeatures;
     window.open(url, windowFeatures);
@@ -25,16 +26,16 @@ const FakePlayer = ({ url, chanTitle }: IFakePlayerProps) => {
   return url ? (
     <nav className={styles.FakePlayer} data-testid="FakePlayer">
       <BaseButton
-        ariaLabel={ariaLabel[DEFAULT_LANG]}
+        ariaLabel={ariaLabel[lang]}
         onClick={openNewWindow}
         className={styles.goButton}
       >
-        {btnTitleStart[DEFAULT_LANG]} «{chanTitle}»
+        {btnTitleStart[lang]} «{chanTitle}»
       </BaseButton>
     </nav>
   ) : (
     <strong className="text-red-700 text-center p-4">
-      {getCopyrightText(chanTitle)[DEFAULT_LANG]}
+      {getCopyrightText(chanTitle)[lang]}
     </strong>
   );
 };

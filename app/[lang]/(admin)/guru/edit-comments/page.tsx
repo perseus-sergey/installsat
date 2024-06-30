@@ -5,9 +5,13 @@ import TooltipSimple from '@/components/ui/tooltips/TooltipSimple/TooltipSimple'
 import { getComments } from '@/controllers/comments.controller';
 import { decrypt } from '@/libs/utils/decrypt';
 import { makeUrlSearchParams } from '@/libs/utils/utils';
-import { validSearchParam } from '@/libs/utils/validSearchParam';
+import { getELangKey, validSearchParam } from '@/libs/utils/validSearchParam';
 import { EDBTableTitles, TSearchParams } from '@/models/ui.model';
-import { EUrlAdminParam, EUrlSearchParam } from '@/models/url.model';
+import {
+  EUrlAdminParam,
+  EUrlBaseParam,
+  EUrlSearchParam,
+} from '@/models/url.model';
 import Link from 'next/link';
 
 const { BASE_PATH, EDIT_COMMENT } = EUrlAdminParam;
@@ -15,10 +19,12 @@ const { BASE_PATH, EDIT_COMMENT } = EUrlAdminParam;
 const emailKey = process.env.MAIL_ENCRYPT_KEY || '';
 
 export interface IPageParams {
+  params: { [key in EUrlAdminParam | EUrlBaseParam]: string };
   searchParams?: TSearchParams;
 }
 
-export default async function Page({ searchParams }: IPageParams) {
+export default async function Page({ searchParams, params }: IPageParams) {
+  const lang = getELangKey(params[EUrlBaseParam.LANG]);
   if (!searchParams)
     return <EmptyData description="Wrong Url Search Params!" />;
 
@@ -58,7 +64,7 @@ export default async function Page({ searchParams }: IPageParams) {
               <td className="text-center">
                 <TooltipSimple tooltipText="Edit comment">
                   <Link
-                    href={`/${BASE_PATH}/${EDIT_COMMENT}/${comment.id}?${makeUrlSearchParams(searchParams).toString()}`}
+                    href={`/${lang}/${BASE_PATH}/${EDIT_COMMENT}/${comment.id}?${makeUrlSearchParams(searchParams).toString()}`}
                     style={{ fontSize: '1.5rem', color: 'green' }}
                   >
                     ✐
@@ -69,7 +75,7 @@ export default async function Page({ searchParams }: IPageParams) {
                 <DeleteItemButton
                   itemID={`${comment.id}`}
                   dbTableName={commentDbTable}
-                  revalidateUrl={`/${BASE_PATH}/${EDIT_COMMENT}`}
+                  revalidateUrl={`/${lang}/${BASE_PATH}/${EDIT_COMMENT}`}
                 />
               </td>
             </tr>

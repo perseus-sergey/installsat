@@ -1,9 +1,20 @@
 import ClientInputWithSubmit from '@/components/ClientInputWithSubmit/ClientInputWithSubmit';
 import { Title } from '@/components/ui/Titles/Title';
-import { EUrlAdminParam, EUrlSearchParam } from '@/models/url.model';
+import { getELangKey } from '@/libs/utils/validSearchParam';
+import {
+  EUrlAdminParam,
+  EUrlBaseParam,
+  EUrlSearchParam,
+} from '@/models/url.model';
 import Link from 'next/link';
 
-export default async function Page() {
+interface IParams {
+  params: { [key in EUrlAdminParam | EUrlBaseParam]: string };
+}
+
+export default async function Page({ params }: IParams) {
+  const lang = getELangKey(params[EUrlBaseParam.LANG]);
+
   return (
     <>
       <Title>Parse Page</Title>
@@ -12,7 +23,7 @@ export default async function Page() {
         buttonTitle="Schedule VseTv"
         inputDefaultValue={346}
         inputType="number"
-        inputBaseHref={`${EUrlAdminParam.PARSE}/${EUrlAdminParam.PARSE_SCHEDULE_VSETV}`}
+        inputBaseHref={`/${lang}/${EUrlAdminParam.PARSE}/${EUrlAdminParam.PARSE_SCHEDULE_VSETV}`}
         searchParamName={EUrlSearchParam.COMMENT_ID}
         fieldSetTitle="Schedule VseTv"
         labelHtml={
@@ -34,7 +45,7 @@ export default async function Page() {
         buttonTitle="Transponder News"
         inputDefaultValue={4}
         inputType="number"
-        inputBaseHref={`${EUrlAdminParam.PARSE}/${EUrlAdminParam.PARSE_SAT_DIGEST}`}
+        inputBaseHref={`/${lang}/${EUrlAdminParam.PARSE}/${EUrlAdminParam.PARSE_SAT_DIGEST}`}
         searchParamName={EUrlSearchParam.INTERVAL}
         fieldSetTitle="Transponder News"
         labelHtml={

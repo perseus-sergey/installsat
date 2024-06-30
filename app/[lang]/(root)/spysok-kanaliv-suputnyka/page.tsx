@@ -13,25 +13,26 @@ import SatChannelsTable from '@/components/SatChannelsTable/SatChannelsTable';
 import FillingImg from '@/components/ui/Images/FillingImage';
 import Fieldset from '@/components/ui/Fieldset/Fieldset';
 import {
-  DEFAULT_LANG as L,
   TSearchParams,
   DEFAULT_META_DATA,
   EDBTableTitles,
+  DEFAULT_LANG,
+  ELanguage,
 } from '@/models/ui.model';
-import { EUrlBaseParam, EUrlSearchParam } from '@/models/url.model';
+import { EUrlBaseParam, EUrlSearchParam, MAIN_URL } from '@/models/url.model';
 import Filter from '@/components/ui/Filter/Filter';
 import { Suspense } from 'react';
 import AnchorListItemWithCheckbox from '@/components/AnchorListItem/AnchorListItemWithCheckbox';
 import { getChannelSatList } from '@/controllers/sidebar.controller';
 import ChannelFormatSliders from '@/components/ui/ChannelFormatSliders/ChannelFormatSliders';
-import { validSearchParam } from '@/libs/utils/validSearchParam';
+import { getELangKey, validSearchParam } from '@/libs/utils/validSearchParam';
 import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
 import { getCommentsNumber } from '@/controllers/comments.controller';
 import BreadCrumbServer from '@/components/BreadCrumbs/BreadCrumbsServer';
 import { BREAD_CRUMBS } from '@/models/breadCrumbs.model';
 import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
 
-const BASE_URL = process.env.BASE_URL;
+const BASE_URL = process.env.BASE_URL || MAIN_URL;
 
 const {
   metaH1,
@@ -52,23 +53,40 @@ const {
 
 export const dynamic = 'force-dynamic';
 
-export const metadata: Metadata = {
-  title: metaTitle[L],
-  description: metaDescription[L],
-  keywords: metaKeywords[L],
-  openGraph: {
-    ...DEFAULT_META_DATA.openGraph,
-    title: metaTitle[L],
-    description: metaDescription[L],
-    url: `${BASE_URL}/${EUrlBaseParam.SAT_CHANNEL_LIST}`,
-    publishedTime: getFormattedDateStrYearFirst(),
-  },
-};
 interface IPageProps {
+  params: { [key in EUrlBaseParam]: string };
   searchParams?: TSearchParams;
 }
 
-export default async function Page({ searchParams }: IPageProps) {
+export const generateMetadata = async ({
+  params,
+}: IPageProps): Promise<Metadata> => {
+  const lang = getELangKey(params[EUrlBaseParam.LANG]);
+
+  return {
+    metadataBase: new URL(BASE_URL),
+    title: metaTitle[lang],
+    description: metaDescription[lang],
+    keywords: metaKeywords[lang],
+    openGraph: {
+      ...DEFAULT_META_DATA.openGraph,
+      title: metaTitle[lang],
+      description: metaDescription[lang],
+      url: `/${lang}/${EUrlBaseParam.SAT_CHANNEL_LIST}`,
+      publishedTime: getFormattedDateStrYearFirst(),
+    },
+    alternates: {
+      canonical: `/${DEFAULT_LANG}/${EUrlBaseParam.SAT_CHANNEL_LIST}`,
+      languages: {
+        en: `/${ELanguage.EN}/${EUrlBaseParam.SAT_CHANNEL_LIST}`,
+        uk: `/${ELanguage.UA}/${EUrlBaseParam.SAT_CHANNEL_LIST}`,
+      },
+    },
+  };
+};
+
+export default async function Page({ searchParams, params }: IPageProps) {
+  const lang = getELangKey(params[EUrlBaseParam.LANG]);
   const searchQueryChannel = validSearchParam(
     EUrlSearchParam.CHANNEL,
     searchParams
@@ -100,19 +118,20 @@ export default async function Page({ searchParams }: IPageProps) {
   return (
     <>
       <BreadCrumbServer
-        breadCrumbList={[BREAD_CRUMBS.PACKAGE_CHANNEL_LIST, metaH1[L]]}
+        lang={lang}
+        breadCrumbList={[BREAD_CRUMBS.PACKAGE_CHANNEL_LIST, metaH1[lang]]}
       />
       <article className="article">
         <Title>
-          {metaH1[L]}
+          {metaH1[lang]}
           <FillingImg
             src={h1ImageParams.path}
-            alt={h1ImageParams.alt[L]}
+            alt={h1ImageParams.alt[lang]}
             width={h1ImageParams.width}
             height={h1ImageParams.height}
           />
         </Title>
-        <Fieldset legendText={anchors.legendTitle[L]}>
+        <Fieldset legendText={anchors.legendTitle[lang]}>
           <nav>
             <ul>
               {satLinks.map((satLink) => (
@@ -121,13 +140,13 @@ export default async function Page({ searchParams }: IPageProps) {
                     linkParams={{
                       title: satLink.title,
                       href: `#${satLink.slug}`,
-                      'aria-label': satAnchor.tooltip[L],
+                      'aria-label': satAnchor.tooltip[lang],
                     }}
                     inputAttributes={{
                       value: satLink.slug,
                       id: `chb-${satLink.slug}`,
                       name: satLink.slug,
-                      'aria-label': satCheckBox.tooltip[L],
+                      'aria-label': satCheckBox.tooltip[lang],
                     }}
                     searchQueryName={EUrlSearchParam.SAT}
                   />
@@ -140,31 +159,33 @@ export default async function Page({ searchParams }: IPageProps) {
               ))}
             </ul>
             <Filter
+              lang={lang}
               idName="channel-search-input"
-              placeholder={placeholder[L]}
-              labelTitle={labelTitle[L]}
+              placeholder={placeholder[lang]}
+              labelTitle={labelTitle[lang]}
               searchQueryTitle={EUrlSearchParam.CHANNEL}
               resetButton={{
-                ariaLabel: resetAllFiltersButton.ariaLabel[L],
+                ariaLabel: resetAllFiltersButton.ariaLabel[lang],
                 content: resetAllFiltersButton.imgStr,
               }}
             />
           </nav>
         </Fieldset>
         <StartArticleSection>
-          <p>{START_CONTENT[L]}</p>
+          <p>{START_CONTENT[lang]}</p>
         </StartArticleSection>
         <Suspense key={searchQueryChannel}>
-          <SatChannelsTable satChannels={groupedChannelsAllSat} />
+          <SatChannelsTable lang={lang} satChannels={groupedChannelsAllSat} />
         </Suspense>
       </article>
 
       <CommentBlock
+        lang={lang}
         numberOfComments={numberOfComments}
-        revalidateUrl={`/${EUrlBaseParam.SAT_CHANNEL_LIST}`}
+        revalidateUrl={`/${lang}/${EUrlBaseParam.SAT_CHANNEL_LIST}`}
         dbCommentTableName={EDBTableTitles.COMMENTS_PACKAGES}
         articleId={CHANNEL_LIST_DB_ID}
-        articleName={metaTitle[L]}
+        articleName={metaTitle[lang]}
       />
     </>
   );

@@ -9,15 +9,16 @@ import type { Metadata } from 'next';
 import FillingImg from '@/components/ui/Images/FillingImage';
 import Fieldset from '@/components/ui/Fieldset/Fieldset';
 import {
-  DEFAULT_LANG as L,
   TSearchParams,
   DEFAULT_META_DATA,
   EDBTableTitles,
+  DEFAULT_LANG,
+  ELanguage,
 } from '@/models/ui.model';
-import { EUrlBaseParam, EUrlSearchParam } from '@/models/url.model';
+import { EUrlBaseParam, EUrlSearchParam, MAIN_URL } from '@/models/url.model';
 import Filter from '@/components/ui/Filter/Filter';
 import { Suspense } from 'react';
-import { validSearchParam } from '@/libs/utils/validSearchParam';
+import { getELangKey, validSearchParam } from '@/libs/utils/validSearchParam';
 import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
 import { getCommentsNumber } from '@/controllers/comments.controller';
 import TooltipSimple from '@/components/ui/tooltips/TooltipSimple/TooltipSimple';
@@ -28,7 +29,13 @@ import PackageChannelList from '@/components/channelList/PackageChannelList';
 import BreadCrumbServer from '@/components/BreadCrumbs/BreadCrumbsServer';
 import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
 
-const BASE_URL = process.env.BASE_URL;
+interface IPageProps {
+  params: { [key in EUrlBaseParam]: string };
+  searchParams?: TSearchParams;
+}
+
+const BASE_URL = process.env.BASE_URL || MAIN_URL;
+const { LANG, ONLINE_CHANNEL_LIST } = EUrlBaseParam;
 
 const {
   metaDescription,
@@ -52,23 +59,34 @@ const {
 
 export const dynamic = 'force-dynamic';
 
-export const metadata: Metadata = {
-  title: metaTitle[L],
-  description: metaDescription[L],
-  keywords: metaKeywords[L],
-  openGraph: {
-    ...DEFAULT_META_DATA.openGraph,
-    title: metaTitle[L],
-    description: metaDescription[L],
-    url: `${BASE_URL}/${EUrlBaseParam.ONLINE_CHANNEL_LIST}`,
-    publishedTime: getFormattedDateStrYearFirst(),
-  },
-};
-interface IPageProps {
-  searchParams?: TSearchParams;
-}
+export const generateMetadata = ({ params }: IPageProps): Metadata => {
+  const lang = getELangKey(params[LANG]);
 
-export default async function Page({ searchParams }: IPageProps) {
+  return {
+    metadataBase: new URL(BASE_URL),
+    title: metaTitle[lang],
+    description: metaDescription[lang],
+    keywords: metaKeywords[lang],
+    openGraph: {
+      ...DEFAULT_META_DATA.openGraph,
+      title: metaTitle[lang],
+      description: metaDescription[lang],
+      url: `/${lang}/${ONLINE_CHANNEL_LIST}`,
+      publishedTime: getFormattedDateStrYearFirst(),
+    },
+    alternates: {
+      canonical: `/${DEFAULT_LANG}/${ONLINE_CHANNEL_LIST}`,
+      languages: {
+        en: `/${ELanguage.EN}/${ONLINE_CHANNEL_LIST}`,
+        uk: `/${ELanguage.UA}/${ONLINE_CHANNEL_LIST}`,
+      },
+    },
+  };
+};
+
+export default async function Page({ params, searchParams }: IPageProps) {
+  const lang = getELangKey(params[LANG]);
+
   const searchQueryChannel = validSearchParam(
     EUrlSearchParam.CHANNEL,
     searchParams
@@ -83,29 +101,32 @@ export default async function Page({ searchParams }: IPageProps) {
 
   return (
     <>
-      <BreadCrumbServer breadCrumbList={[metaH1[L]]} />
+      <BreadCrumbServer breadCrumbList={[metaH1[lang]]} lang={lang} />
       <article className="article">
         <Title>
-          {metaH1[L]}
-          {getH1After(searchQueryChannel)[L]}
-          <FillingImg {...h1Image} alt={h1Image.alt[L]} />
+          {metaH1[lang]}
+          {getH1After(searchQueryChannel)[lang]}
+          <FillingImg {...h1Image} alt={h1Image.alt[lang]} />
         </Title>
 
-        <Fieldset legendText={legendText[L]}>
+        <Fieldset legendText={legendText[lang]}>
           <nav className="p-2 md:p-4">
             <ul>
               {onlineChannels.map(([genreTitle, chanList]) => (
                 <li key={genreTitle} className="flex items-center gap-4">
                   <GenreImage
+                    lang={lang}
                     tooltipText={genreTitle}
                     genreMapPosition={chanList[0].genre_id}
                   />
-                  <TooltipSimple tooltipText={`${ariaLabel[L]} ${genreTitle}`}>
+                  <TooltipSimple
+                    tooltipText={`${ariaLabel[lang]} ${genreTitle}`}
+                  >
                     <Link
                       title={genreTitle}
                       href={`#${CHANNEL_LIST_ANCHOR_START}${chanList[0].genre_id}`}
                       className="text-indigo-800 text-lg hover:text-red-500"
-                      aria-label={`${ariaLabel[L]} ${genreTitle}`}
+                      aria-label={`${ariaLabel[lang]} ${genreTitle}`}
                     >
                       {genreTitle}
                     </Link>
@@ -114,9 +135,10 @@ export default async function Page({ searchParams }: IPageProps) {
               ))}
             </ul>
             <Filter
+              lang={lang}
               idName="channel-search-input"
-              placeholder={placeholder[L]}
-              labelTitle={labelTitle[L]}
+              placeholder={placeholder[lang]}
+              labelTitle={labelTitle[lang]}
               searchQueryTitle={EUrlSearchParam.CHANNEL}
             />
           </nav>
@@ -124,20 +146,22 @@ export default async function Page({ searchParams }: IPageProps) {
 
         <Suspense key={searchQueryChannel}>
           <PackageChannelList
-            pathToChannelDetails={EUrlBaseParam.ONLINE_CHANNEL_LIST}
+            lang={lang}
+            pathToChannelDetails={ONLINE_CHANNEL_LIST}
             channels={onlineChannels}
           />
         </Suspense>
 
-        <OnlineChannelListAfterText lang={L} />
+        <OnlineChannelListAfterText lang={lang} />
       </article>
 
       <CommentBlock
+        lang={lang}
         numberOfComments={numberOfComments}
-        revalidateUrl={`/${EUrlBaseParam.ONLINE_CHANNEL_LIST}`}
+        revalidateUrl={`/${lang}/${ONLINE_CHANNEL_LIST}`}
         dbCommentTableName={EDBTableTitles.COMMENTS_GENRE}
         articleId={ONLINE_CHANNEL_LIST_DB_ID}
-        articleName={metaTitle[L]}
+        articleName={metaTitle[lang]}
       />
     </>
   );

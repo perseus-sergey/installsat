@@ -104,7 +104,7 @@ const nextConfig = {
         permanent: true,
       },
       {
-        source: '/spysok-kanaliv-paketu/bez-abonplati',
+        source: '/:p?/spysok-kanaliv-paketu/bez-abonplati',
         destination: `${BASE}/spysok-kanaliv-suputnyka`,
         permanent: true,
       },

@@ -83,17 +83,32 @@ export const poolExecute = async <T>(
 // export const pool = mysql.createPool({
 //   ...access,
 //   waitForConnections: true,
-//   connectionLimit: 10,
+//   connectionLimit: 100,
 //   queueLimit: 0,
 //   multipleStatements: true,
 // });
 
 // export const poolExecute = async <T>(
 //   sql: string,
-//   values: string[] = []
+//   values: (string | number | boolean)[] = []
 // ): Promise<T | Error> => {
 //   try {
 //     const [rows] = await pool.execute(sql, values);
+
+//     return rows as T;
+//   } catch (err) {
+//     console.log(err);
+
+//     return err as Error;
+//   }
+// };
+
+// export const poolQuery = async <T>(
+//   sql: string,
+//   values: (string | number | boolean)[] = []
+// ): Promise<T | Error> => {
+//   try {
+//     const [rows] = await pool.query(sql, values);
 
 //     return rows as T;
 //   } catch (err) {

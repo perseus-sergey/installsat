@@ -14,7 +14,6 @@ interface IParams {
 }
 
 const Page = async ({ params }: IParams) => {
-  console.log('🚀 ~ Page ~ params:', params);
   const id = params[EUrlAdminParam.ID];
   const lang = getELangKey(params[EUrlBaseParam.LANG]);
 

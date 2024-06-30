@@ -21,7 +21,6 @@ export const getSatDigestNews = async ({
   satellites?: string | string[] | undefined;
   timeInterval?: number;
 }): Promise<Error | TSatDigest[]> => {
-  console.log('🚀 ~ satellites:', satellites);
   let orderBy = 'ORDER BY d.date DESC, satGrade, satTitle';
   let tblName = 'tbl_digest';
   let where = `WHERE date >= CURDATE() - INTERVAL ${LAST_NEWS_INTERVAL} DAY`;

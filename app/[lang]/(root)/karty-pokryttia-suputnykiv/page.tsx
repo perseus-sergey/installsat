@@ -20,7 +20,6 @@ const {
 } = SAT_MAPS_MODEL;
 
 interface IProps {
-  children?: React.ReactNode;
   params: { [key in EUrlBaseParam]: string };
 }
 

@@ -5,8 +5,7 @@ import styles from './DeleteCommentSubscription.module.scss';
 import { useToastMessage } from '@/libs/hooks/useToastMessage';
 import { EMPTY_FORM_STATE } from '@/controllers/toast.controller';
 import { delSubscriptionAction } from '@/libs/actions/comments.action';
-import { EDBTableTitles, DEFAULT_LANG } from '@/models/ui.model';
-import { EUrlBaseParam } from '@/models/url.model';
+import { EDBTableTitles, ELanguage } from '@/models/ui.model';
 import { COMMENTS_MODEL } from '@/models/comments.model';
 import {
   CancelLinkButton,
@@ -22,6 +21,7 @@ interface IDeleteCommentSubscriptionProps {
   articleId: string;
   commentDbTable: EDBTableTitles;
   mail: string;
+  lang: ELanguage;
 }
 
 const DeleteCommentSubscription = ({
@@ -29,6 +29,7 @@ const DeleteCommentSubscription = ({
   articleId,
   commentDbTable,
   mail,
+  lang,
 }: IDeleteCommentSubscriptionProps) => {
   const deleteSubscriptionHandler = delSubscriptionAction.bind(
     null,
@@ -48,27 +49,27 @@ const DeleteCommentSubscription = ({
     <>
       {formState.status === 'SUCCESS' ? (
         <p className={styles.responseBlock}>
-          {answerText[DEFAULT_LANG]}
+          {answerText[lang]}
           <br />
           <em className={styles.articleName}>✧{articleTitle}✧</em>
         </p>
       ) : (
         <form id="remove-subscription-form" action={formAction}>
           <p className={styles.responseBlock}>
-            {askText[DEFAULT_LANG]}
+            {askText[lang]}
             <br />
             <em className={styles.articleName}>✧{articleTitle}✧</em>?
           </p>
           <div className={styles.buttonsWrapper}>
             <ConfirmSubmitButton
-              ariaLabel={confirmButton.ariaLabel[DEFAULT_LANG]}
-              pendingInnerHtml={confirmButton.pendingText[DEFAULT_LANG]}
-              title={confirmButton.title[DEFAULT_LANG]}
+              ariaLabel={confirmButton.ariaLabel[lang]}
+              pendingInnerHtml={confirmButton.pendingText[lang]}
+              title={confirmButton.title[lang]}
             />
             <CancelLinkButton
-              ariaLabel={cancelButton.ariaLabel[DEFAULT_LANG]}
-              href={EUrlBaseParam.BASE_PATH}
-              title={cancelButton.title[DEFAULT_LANG]}
+              ariaLabel={cancelButton.ariaLabel[lang]}
+              href={`/${lang}`}
+              title={cancelButton.title[lang]}
             />
           </div>
           {noScriptFallback}

@@ -2,7 +2,7 @@ import styles from './CommentBlock.module.scss';
 import CommentForm from '../CommentForm/CommentForm';
 import { EDBTableTitles, ELanguage } from '@/models/ui.model';
 import { COMMENTS_MODEL } from '@/models/comments.model';
-import { EUrlSearchParam } from '@/models/url.model';
+import { EUrlSearchParam, MAIN_URL } from '@/models/url.model';
 import { fetchUserLocation } from '@/libs/utils/getUserIP';
 import PaginationComments from '@/components/comments/PaginationComments/PaginationComments';
 
@@ -40,7 +40,7 @@ const CommentBlock = async ({
         articleId={articleId}
         articleName={articleName}
         userLocation={userLocation}
-        baseUrl={process.env.BASE_URL || ''}
+        baseUrl={process.env.BASE_URL || MAIN_URL}
         emailKey={process.env.MAIL_ENCRYPT_KEY || ''}
       />
       <div className={styles.bansBlock}>

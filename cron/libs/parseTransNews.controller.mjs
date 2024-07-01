@@ -1,4 +1,4 @@
-import { executePoolQuery, pool } from './mysqldb.mjs';
+import { executePoolQuery, getPool } from './mysqldb.mjs';
 import memoize from 'lodash.memoize';
 
 export const getDBSatID = memoize(async (satName) => {
@@ -18,6 +18,8 @@ export const getDBSatID = memoize(async (satName) => {
 });
 
 export const insertDBTransNews = async (data) => {
+  const pool = getPool();
+
   const values = data.map((item) => [
     pool.escape(item.date),
     pool.escape(item.update),
@@ -44,6 +46,8 @@ export const insertDBTransNews = async (data) => {
 };
 
 export const deleteDBOldTransNews = async (data) => {
+  const pool = getPool();
+
   const uniqueDateUpdatePairs = [
     ...new Set(
       data.map(

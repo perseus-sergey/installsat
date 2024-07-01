@@ -1,12 +1,12 @@
 import { ELanguage } from '@/models/ui.model';
-import { EUrlAdminParam, EUrlBaseParam } from '@/models/url.model';
+import { EUrlAdminParam, EUrlBaseParam, MAIN_URL } from '@/models/url.model';
 import { MetadataRoute } from 'next';
 
 const { BASE_PATH: ADMIN_BASE } = EUrlAdminParam;
 const { SIGN_IN, DELETE_COMMENT_SUBSCRIPTION } = EUrlBaseParam;
 
 export default function robots(): MetadataRoute.Robots {
-  const BASE_URL = process.env.BASE_URL;
+  const BASE_URL = process.env.BASE_URL || MAIN_URL;
 
   return {
     rules: {

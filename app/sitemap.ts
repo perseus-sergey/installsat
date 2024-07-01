@@ -1,37 +1,36 @@
 import { getSatMapList } from '@/controllers/siteMap.controller';
 import { ELanguage } from '@/models/ui.model';
-import { EUrlBaseParam } from '@/models/url.model';
+import { EUrlBaseParam, MAIN_URL } from '@/models/url.model';
 import { MetadataRoute } from 'next';
 
+const BASE = process.env.BASE_URL || MAIN_URL;
+const { UA, EN } = ELanguage;
+const { SAT_COVERAGE_MAP } = EUrlBaseParam;
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const BASE = process.env.BASE_URL || '';
-  const { UA, EN } = ELanguage;
-
   const satMapList = await getSatMapList();
-
-  const satMaps = satMapList.map((m) => ({
-    url: `${BASE}/${UA}/${EUrlBaseParam.SAT_COVERAGE_MAP}/${m.cpu}`,
-    lastModified: new Date(),
-    alternates: {
-      languages: {
-        en: `${BASE}/${EN}/${EUrlBaseParam.SAT_COVERAGE_MAP}/${m.cpu}`,
-        uk: `${BASE}/${UA}/${EUrlBaseParam.SAT_COVERAGE_MAP}/${m.cpu}`,
-      },
-    },
-  }));
 
   return [
     {
-      url: `${BASE}/${UA}/${EUrlBaseParam.SAT_COVERAGE_MAP}`,
+      url: `${BASE}/${UA}/${SAT_COVERAGE_MAP}`,
       lastModified: new Date(),
       alternates: {
         languages: {
-          en: `${BASE}/${EN}/${EUrlBaseParam.SAT_COVERAGE_MAP}`,
-          uk: `${BASE}/${UA}/${EUrlBaseParam.SAT_COVERAGE_MAP}`,
+          en: `${BASE}/${EN}/${SAT_COVERAGE_MAP}`,
+          uk: `${BASE}/${UA}/${SAT_COVERAGE_MAP}`,
         },
       },
     },
-    ...satMaps,
+    ...satMapList.map((m) => ({
+      url: `${BASE}/${UA}/${SAT_COVERAGE_MAP}/${m.cpu}`,
+      lastModified: new Date(),
+      alternates: {
+        languages: {
+          en: `${BASE}/${EN}/${SAT_COVERAGE_MAP}/${m.cpu}`,
+          uk: `${BASE}/${UA}/${SAT_COVERAGE_MAP}/${m.cpu}`,
+        },
+      },
+    })),
   ];
   // return products.map((product) => ({
   //   url: `${BASE_URL}/product/${id}`,

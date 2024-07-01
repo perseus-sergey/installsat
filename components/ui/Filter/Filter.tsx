@@ -5,15 +5,16 @@ import styles from './Filter.module.scss';
 import { EUrlSearchParam } from '@/models/url.model';
 import { META_ALL_SAT_CHANNEL_LIST } from '@/models/channelList.model';
 import BaseButton from '../buttons/BaseButton/BaseButton';
-import { LANGUAGE } from '@/models/ui.model';
 import TooltipSimple from '../tooltips/TooltipSimple/TooltipSimple';
 import useSearch from '@/libs/hooks/useSearch';
 import StyledInputField from '../StyledInputField/StyledInputField';
+import { ELanguage } from '@/models/ui.model';
 
 const { cancelBtnAriaLabel, searchIconStr } =
   META_ALL_SAT_CHANNEL_LIST.filtering.filterByChannelName;
 
 interface IFilterProps {
+  lang: ELanguage;
   idName: string;
   placeholder: string;
   labelTitle: string;
@@ -22,6 +23,7 @@ interface IFilterProps {
 }
 
 export default function Filter({
+  lang,
   idName,
   placeholder,
   labelTitle,
@@ -29,7 +31,7 @@ export default function Filter({
   resetButton,
 }: IFilterProps) {
   const pathname = usePathname();
-  const { replace } = useRouter();
+  const { replace, refresh } = useRouter();
 
   const { searchValue, inputRef, handleSearchDebounced, cancelClickHandler } =
     useSearch(searchQueryTitle, 700);
@@ -38,6 +40,7 @@ export default function Filter({
     if (inputRef.current) inputRef.current.value = '';
     // setSearchValue('');
     replace(pathname);
+    refresh();
   };
 
   return (
@@ -51,7 +54,7 @@ export default function Filter({
         placeholder={placeholder}
         hiddenLabelTitle={labelTitle}
         searchIconStr={searchIconStr}
-        cancelBtnAriaLabel={cancelBtnAriaLabel[LANGUAGE]}
+        cancelBtnAriaLabel={cancelBtnAriaLabel[lang]}
       />
       {resetButton && (
         <TooltipSimple tooltipText={resetButton.ariaLabel}>

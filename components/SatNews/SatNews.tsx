@@ -1,19 +1,20 @@
 import { TSatDigest } from '@/models/satDigest.model';
 import SatNewsList from '../SatNewsList/SatNewsList';
 import DateNewsList from '../DateNewsList/DateNewsList';
-import { TSearchParams } from '@/models/ui.model';
+import { ELanguage, TSearchParams } from '@/models/ui.model';
 
 export type TGroupedNews = [string, Map<string, TSatDigest[]>][];
 
 interface ISatNewsProps {
   searchParams: TSearchParams;
+  lang: ELanguage;
 }
 
-const SatNews = ({ searchParams }: ISatNewsProps) =>
+const SatNews = ({ searchParams, lang }: ISatNewsProps) =>
   searchParams && Object.keys(searchParams).length ? (
-    <SatNewsList searchParams={searchParams} />
+    <SatNewsList searchParams={searchParams} lang={lang} />
   ) : (
-    <DateNewsList />
+    <DateNewsList lang={lang} />
   );
 
 export default SatNews;

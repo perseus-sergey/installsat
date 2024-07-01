@@ -6,7 +6,7 @@ import { useDebouncedCallback } from 'use-debounce';
 const useSearch = (searchQueryTitle: EUrlSearchParam, debounceDelay = 300) => {
   const searchParams = useSearchParams();
   const pathname = usePathname();
-  const { replace } = useRouter();
+  const { replace, refresh } = useRouter();
   const [searchValue] = useState(
     searchParams.get(searchQueryTitle)?.toString()
   );
@@ -18,14 +18,13 @@ const useSearch = (searchQueryTitle: EUrlSearchParam, debounceDelay = 300) => {
 
     if (term) {
       params.set(searchQueryTitle, term);
+      replace(`${pathname}?${params.toString()}`);
     } else {
       params.delete(searchQueryTitle);
+      replace(`${pathname}?${params.toString()}`);
+      refresh();
     }
-    replace(`${pathname}?${params.toString()}`);
   };
-  // =================================================================
-  // revalidate path after reload page
-  // =================================================================
 
   const handleSearchDebounced = useDebouncedCallback(
     handleSearch,

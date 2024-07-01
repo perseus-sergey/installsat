@@ -129,7 +129,7 @@ export const getSimilarChannels = async (logo: string) => {
     C.cpu,
     C.cat       AS cat_id,
     CA.title    AS cat_title,
-    CA.cpu      AS cat_cpu,
+    CA.cpu      AS cat_slug,
     CA.parent   AS cat_parent_id,
     S.title     AS sat_title,
     S.cpu       AS sat_cpu,

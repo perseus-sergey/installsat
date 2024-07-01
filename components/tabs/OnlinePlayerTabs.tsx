@@ -9,7 +9,7 @@ import {
   IOnlineChannel,
   META_CHANNEL_ONLINE,
 } from '../../models/channel.model';
-import { LANGUAGE } from '@/models/ui.model';
+import { ELanguage } from '@/models/ui.model';
 
 const {
   tabs: {
@@ -21,11 +21,13 @@ const {
 interface IOnlinePlayerTabsProps {
   channelData: IOnlineChannel;
   userCountryCode: string;
+  lang: ELanguage;
 }
 
 const OnlinePlayerTabs = ({
   channelData: { potok, tvforsite_net, country, url, title },
   userCountryCode,
+  lang,
 }: IOnlinePlayerTabsProps) => {
   const [playerN, setPlayerN] = useState(0);
 
@@ -36,7 +38,7 @@ const OnlinePlayerTabs = ({
     },
     {
       stream: tvforsite_net,
-      player: ONLINE_PLAYERS.TV_FOR_SITE_NET(tvforsite_net, title),
+      player: ONLINE_PLAYERS.TV_FOR_SITE_NET(tvforsite_net, title, lang),
     },
     // {
     //   stream: other_stream,
@@ -61,11 +63,11 @@ const OnlinePlayerTabs = ({
                       stream && (
                         <li key={i}>
                           <BaseButton
-                            ariaLabel={getAriaLabel(i + 1)[LANGUAGE]}
+                            ariaLabel={getAriaLabel(i + 1)[lang]}
                             className={`${styles.tabButton}${playerN === i ? ` ${styles.currentTab}` : ''}`}
                             onClick={() => setPlayerN(i)}
                           >
-                            {getTitle(i + 1)[LANGUAGE]}
+                            {getTitle(i + 1)[lang]}
                           </BaseButton>
                         </li>
                       )
@@ -81,10 +83,10 @@ const OnlinePlayerTabs = ({
             )}
           </>
         ) : (
-          <FakePlayer chanTitle={title} url={url} />
+          <FakePlayer lang={lang} chanTitle={title} url={url} />
         )
       ) : (
-        <FakePlayer chanTitle={title} url={url} />
+        <FakePlayer lang={lang} chanTitle={title} url={url} />
       )}
     </div>
   );
@@ -110,8 +112,10 @@ const ONLINE_PLAYERS = {
       <Video src={stream} />
     );
   },
-  TV_FOR_SITE_NET(stream: string, chanTitle: string) {
-    return !stream ? null : <FakePlayer chanTitle={chanTitle} url={stream} />;
+  TV_FOR_SITE_NET(stream: string, chanTitle: string, lang: ELanguage) {
+    return !stream ? null : (
+      <FakePlayer lang={lang} chanTitle={chanTitle} url={stream} />
+    );
   },
   // OTHER_STREAM(stream: string) {
   //   return !stream ? null : <DangerHtml text={stream} />;

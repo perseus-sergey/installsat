@@ -10,7 +10,7 @@ import {
   META_TRANS_NEWS_LIST,
   TSatDigest,
 } from '@/models/satDigest.model';
-import { LANGUAGE } from '@/models/ui.model';
+import { DEFAULT_LANG } from '@/models/ui.model';
 import { decode } from 'html-entities';
 import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
 
@@ -72,7 +72,7 @@ export const getGroupedSatelliteOptions = (
   [eastSats, westSats]: TSatModel[][],
   isDefaultValue = true
 ): IGroupedSatelliteOption[] => {
-  const language = LANGUAGE;
+  const language = DEFAULT_LANG;
   const { westDirectionLabel, eastDirectionLabel, defaultLabel } =
     META_TRANS_NEWS_LIST.select.satSelect;
 

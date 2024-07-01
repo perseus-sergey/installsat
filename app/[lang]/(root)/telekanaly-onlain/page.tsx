@@ -1,0 +1,170 @@
+import { Title } from '@/components/ui/Titles/Title';
+import { getOnlineChannels } from '@/controllers/channelList.controller';
+import {
+  CHANNEL_LIST_ANCHOR_START,
+  META_ALL_SAT_CHANNEL_LIST,
+  META_ONLINE_CHANNEL_LIST,
+} from '@/models/channelList.model';
+import type { Metadata } from 'next';
+import FillingImg from '@/components/ui/Images/FillingImage';
+import Fieldset from '@/components/ui/Fieldset/Fieldset';
+import {
+  TSearchParams,
+  DEFAULT_META_DATA,
+  EDBTableTitles,
+  DEFAULT_LANG,
+  ELanguage,
+} from '@/models/ui.model';
+import { EUrlBaseParam, EUrlSearchParam, MAIN_URL } from '@/models/url.model';
+import Filter from '@/components/ui/Filter/Filter';
+import { Suspense } from 'react';
+import { getELangKey, validSearchParam } from '@/libs/utils/validSearchParam';
+import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
+import { getCommentsNumber } from '@/controllers/comments.controller';
+import TooltipSimple from '@/components/ui/tooltips/TooltipSimple/TooltipSimple';
+import Link from 'next/link';
+import GenreImage from '@/components/ui/Images/GenreImage/GenreImage';
+import OnlineChannelListAfterText from '@/components/online/OnlineChannelListAfterText/OnlineChannelListAfterText';
+import PackageChannelList from '@/components/channelList/PackageChannelList';
+import BreadCrumbServer from '@/components/BreadCrumbs/BreadCrumbsServer';
+import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
+
+interface IPageProps {
+  params: { [key in EUrlBaseParam]: string };
+  searchParams?: TSearchParams;
+}
+
+const BASE_URL = process.env.BASE_URL || MAIN_URL;
+const { LANG, ONLINE_CHANNEL_LIST } = EUrlBaseParam;
+
+const {
+  metaDescription,
+  metaH1,
+  getH1After,
+  metaKeywords,
+  metaTitle,
+  images: { h1Image },
+  ONLINE_CHANNEL_LIST_DB_ID,
+  fieldsetFilters: {
+    legendText,
+    anchorLink: { ariaLabel },
+  },
+} = META_ONLINE_CHANNEL_LIST;
+
+const {
+  filtering: {
+    filterByChannelName: { placeholder, labelTitle },
+  },
+} = META_ALL_SAT_CHANNEL_LIST;
+
+export const dynamic = 'force-dynamic';
+
+export const generateMetadata = ({ params }: IPageProps): Metadata => {
+  const lang = getELangKey(params[LANG]);
+
+  return {
+    metadataBase: new URL(BASE_URL),
+    title: metaTitle[lang],
+    description: metaDescription[lang],
+    keywords: metaKeywords[lang],
+    openGraph: {
+      ...DEFAULT_META_DATA.openGraph,
+      title: metaTitle[lang],
+      description: metaDescription[lang],
+      url: `/${lang}/${ONLINE_CHANNEL_LIST}`,
+      publishedTime: getFormattedDateStrYearFirst(),
+    },
+    alternates: {
+      canonical: `/${DEFAULT_LANG}/${ONLINE_CHANNEL_LIST}`,
+      languages: {
+        en: `/${ELanguage.EN}/${ONLINE_CHANNEL_LIST}`,
+        uk: `/${ELanguage.UA}/${ONLINE_CHANNEL_LIST}`,
+      },
+    },
+  };
+};
+
+export default async function Page({ params, searchParams }: IPageProps) {
+  const lang = getELangKey(params[LANG]);
+
+  const searchQueryChannel = validSearchParam(
+    EUrlSearchParam.CHANNEL,
+    searchParams
+  );
+
+  const onlineChannels = await getOnlineChannels(searchQueryChannel);
+
+  const numberOfComments = await getCommentsNumber(
+    EDBTableTitles.COMMENTS_GENRE,
+    ONLINE_CHANNEL_LIST_DB_ID
+  );
+
+  return (
+    <>
+      <BreadCrumbServer breadCrumbList={[metaH1[lang]]} lang={lang} />
+      <article className="article">
+        <Title>
+          {metaH1[lang]}
+          {getH1After(searchQueryChannel)[lang]}
+          <FillingImg {...h1Image} alt={h1Image.alt[lang]} />
+        </Title>
+
+        <Fieldset legendText={legendText[lang]}>
+          <nav className="p-2 md:p-4">
+            <ul>
+              {onlineChannels.map(([genreTitle, chanList]) => (
+                <li key={genreTitle} className="flex items-center gap-4">
+                  <GenreImage
+                    lang={lang}
+                    tooltipText={genreTitle}
+                    genreMapPosition={chanList[0].genre_id}
+                  />
+                  <TooltipSimple
+                    tooltipText={`${ariaLabel[lang]} ${genreTitle}`}
+                  >
+                    <Link
+                      title={genreTitle}
+                      href={`#${CHANNEL_LIST_ANCHOR_START}${chanList[0].genre_id}`}
+                      className="text-indigo-800 text-lg hover:text-red-500"
+                      aria-label={`${ariaLabel[lang]} ${genreTitle}`}
+                    >
+                      {genreTitle}
+                    </Link>
+                  </TooltipSimple>
+                </li>
+              ))}
+            </ul>
+            <Suspense>
+              <Filter
+                lang={lang}
+                idName="channel-search-input"
+                placeholder={placeholder[lang]}
+                labelTitle={labelTitle[lang]}
+                searchQueryTitle={EUrlSearchParam.CHANNEL}
+              />
+            </Suspense>
+          </nav>
+        </Fieldset>
+
+        <Suspense key={searchQueryChannel}>
+          <PackageChannelList
+            lang={lang}
+            pathToChannelDetails={ONLINE_CHANNEL_LIST}
+            channels={onlineChannels}
+          />
+        </Suspense>
+
+        <OnlineChannelListAfterText lang={lang} />
+      </article>
+
+      <CommentBlock
+        lang={lang}
+        numberOfComments={numberOfComments}
+        revalidateUrl={`/${lang}/${ONLINE_CHANNEL_LIST}`}
+        dbCommentTableName={EDBTableTitles.COMMENTS_GENRE}
+        articleId={ONLINE_CHANNEL_LIST_DB_ID}
+        articleName={metaTitle[lang]}
+      />
+    </>
+  );
+}

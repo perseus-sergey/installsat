@@ -7,7 +7,7 @@ import {
   CUT_LAST_ELEMENT,
   FIRST_ELEMENT_SIZE,
 } from '@/models/breadCrumbs.model';
-import { ELanguage, LANGUAGE } from '@/models/ui.model';
+import { ELanguage } from '@/models/ui.model';
 import { cutMiddleOfText } from '@/libs/utils/utils';
 import TooltipSimple from '../ui/tooltips/TooltipSimple/TooltipSimple';
 
@@ -20,6 +20,7 @@ export interface IBreadCrumbLink {
 }
 
 interface IProps extends React.HTMLAttributes<HTMLElement> {
+  lang: ELanguage;
   breadCrumbList?: (IBreadCrumbLink | string)[];
   homeTitle?: ReactNode;
   separator?: ReactNode;
@@ -28,6 +29,7 @@ interface IProps extends React.HTMLAttributes<HTMLElement> {
 }
 
 const BreadCrumbServer = ({
+  lang,
   breadCrumbList,
   className,
   activeLinkColor,
@@ -47,11 +49,11 @@ const BreadCrumbServer = ({
         {hasHomeLink && (
           <li className={`${styles.item} ${styles.firstItem}`}>
             <Link
-              href={BREAD_CRUMBS.BASE_PATH.href}
+              href={`/${lang}${BREAD_CRUMBS.BASE_PATH.href}`}
               style={{ fontSize: FIRST_ELEMENT_SIZE }}
               className="hover:underline"
             >
-              {homeTitle || BREAD_CRUMBS.BASE_PATH.title[LANGUAGE]}
+              {homeTitle || BREAD_CRUMBS.BASE_PATH.title[lang]}
             </Link>
           </li>
         )}
@@ -67,7 +69,7 @@ const BreadCrumbServer = ({
                   ? item
                   : typeof item.title === 'string'
                     ? item.title
-                    : item.title[LANGUAGE];
+                    : item.title[lang];
               const itemStyle =
                 isCurrentUrl && activeLinkColor
                   ? { color: activeLinkColor }
@@ -87,7 +89,10 @@ const BreadCrumbServer = ({
                 <React.Fragment key={index}>
                   <li className={itemClassName} style={itemStyle}>
                     {typeof item !== 'string' && item.href ? (
-                      <Link href={`/${item.href}`} className="hover:underline">
+                      <Link
+                        href={`/${lang}/${item.href}`}
+                        className="hover:underline"
+                      >
                         {linkText}
                       </Link>
                     ) : (
@@ -108,7 +113,7 @@ const BreadCrumbServer = ({
                           }
                         >
                           <Link
-                            href={`/${item.href}`}
+                            href={`/${lang}/${item.href}`}
                             className="hover:underline"
                           >
                             {truncatedLinkText}

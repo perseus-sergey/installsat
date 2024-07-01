@@ -220,7 +220,7 @@ export interface ISimilarChannel {
   cpu: string;
   cat_id: number;
   cat_title: string;
-  cat_cpu: string;
+  cat_slug: string;
   cat_parent_id: number;
   sat_title: string;
   sat_cpu: string;
@@ -419,7 +419,7 @@ export const META_CHANNEL_ONLINE = {
   getH1(channelTitle: string) {
     return {
       [ELanguage.UA]: `Канал «${channelTitle}» онлайн`,
-      [ELanguage.EN]: `${channelTitle} channel online`,
+      [ELanguage.EN]: `«${channelTitle}» channel online`,
     };
   },
   getDescription(channelTitle: string, description: string) {

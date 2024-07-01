@@ -13,7 +13,7 @@ import {
 } from '@/controllers/toast.controller';
 import { EEditCommentFieldNames } from '@/models/admin.model';
 import { COMMENTS_MODEL, ECommentFormNames } from '@/models/comments.model';
-import { EDBTableTitles, LANGUAGE } from '@/models/ui.model';
+import { EDBTableTitles, DEFAULT_LANG } from '@/models/ui.model';
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
 
@@ -30,16 +30,25 @@ const { AUTHOR, EMAIL, TEXT } = ECommentFormNames;
 const commentSchema = z.object({
   [AUTHOR]: z
     .string()
-    .min(authorName.minSize.value, authorName.minSize.warningText[LANGUAGE])
-    .max(authorName.maxSize.value, authorName.maxSize.warningText[LANGUAGE]),
+    .min(authorName.minSize.value, authorName.minSize.warningText[DEFAULT_LANG])
+    .max(
+      authorName.maxSize.value,
+      authorName.maxSize.warningText[DEFAULT_LANG]
+    ),
   [EMAIL]: z.union([
     z.literal(''),
-    z.string().email(authorEmail.warningText[LANGUAGE]),
+    z.string().email(authorEmail.warningText[DEFAULT_LANG]),
   ]),
   [TEXT]: z
     .string()
-    .min(commentText.minSize.value, commentText.minSize.warningText[LANGUAGE])
-    .max(commentText.maxSize.value, commentText.maxSize.warningText[LANGUAGE]),
+    .min(
+      commentText.minSize.value,
+      commentText.minSize.warningText[DEFAULT_LANG]
+    )
+    .max(
+      commentText.maxSize.value,
+      commentText.maxSize.warningText[DEFAULT_LANG]
+    ),
 });
 
 export const addCommentAction = async (

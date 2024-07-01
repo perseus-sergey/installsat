@@ -14,11 +14,11 @@ import FillingImg from '../ui/Images/FillingImage';
 import TooltipSimple from '../ui/tooltips/TooltipSimple/TooltipSimple';
 import FillingValidImage from '../ui/Images/FillingValidImage';
 import { META_CHANNEL } from '@/models/channel.model';
-import { LANGUAGE } from '@/models/ui.model';
 import ChannelCardTooltip from '../ChannelCardTooltip/ChannelCardTooltip';
 import GoUpLink from '../ui/GoUpLink/GoUpLink';
 import { TitleH2List } from '../ui/Titles/TitleH2List';
 import EmptyData from '../errors/EmptyData/EmptyData';
+import { ELanguage } from '@/models/ui.model';
 
 const {
   links: { satTitleLink },
@@ -29,14 +29,17 @@ const {
 } = META_SAT_CHANNEL_LIST;
 
 interface ISatChannelsTableProps {
+  lang: ELanguage;
   satChannels: ISatChannelListModel[][][];
   isSingleSat?: boolean;
 }
 
 const FrequencySegment = ({
   frequencyChannels,
+  lang,
 }: {
   frequencyChannels: ISatChannelListModel[];
+  lang: ELanguage;
 }) =>
   frequencyChannels.map(
     ({ logo, compr, title, tem, lan, description, cpu, biss, tema }, idx) => (
@@ -85,30 +88,33 @@ const FrequencySegment = ({
             }
             tooltipTextList={[
               {
-                title: CHANNEL_TOOLTIP_TITLES.name[LANGUAGE],
+                title: CHANNEL_TOOLTIP_TITLES.name[lang],
                 description: title,
               },
               {
-                title: CHANNEL_TOOLTIP_TITLES.genre[LANGUAGE],
+                title: CHANNEL_TOOLTIP_TITLES.genre[lang],
                 description: tem,
               },
               {
-                title: CHANNEL_TOOLTIP_TITLES.language[LANGUAGE],
+                title: CHANNEL_TOOLTIP_TITLES.language[lang],
                 description: lan,
               },
               {
-                title: CHANNEL_TOOLTIP_TITLES.description[LANGUAGE],
+                title: CHANNEL_TOOLTIP_TITLES.description[lang],
                 description: cutText(description, 100),
               },
               {
-                title: CHANNEL_TOOLTIP_TITLES.compression[LANGUAGE],
+                title: CHANNEL_TOOLTIP_TITLES.compression[lang],
                 description: compr,
               },
             ]}
           />
         </td>
         <td className={styles.tdTitle}>
-          <Link id={cpu} href={`/${EUrlBaseParam.CHANNEL_PARAMS}/${cpu}`}>
+          <Link
+            id={cpu}
+            href={`/${lang}/${EUrlBaseParam.CHANNEL_PARAMS}/${cpu}`}
+          >
             {title}
           </Link>
           {biss && <p className={styles.biss}>{biss}</p>}
@@ -131,6 +137,7 @@ const FrequencySegment = ({
 
 const SatChannelsTable = ({
   satChannels,
+  lang,
   isSingleSat = false,
 }: ISatChannelsTableProps) =>
   satChannels.length > 0 && satChannels[0].length > 0 ? (
@@ -139,20 +146,20 @@ const SatChannelsTable = ({
         <>
           {!isSingleSat && (
             <TitleH2List id={sat[0][0].sat_slug}>
-              <GoUpLink />
+              <GoUpLink lang={lang} />
 
-              <TooltipSimple tooltipText={satTitleLink.tooltipTitle[LANGUAGE]}>
+              <TooltipSimple tooltipText={satTitleLink.tooltipTitle[lang]}>
                 <Link
                   className={styles.satTitleLink}
-                  href={`${satTitleLink.linkUrl}/${sat[0][0].sat_slug}`}
+                  href={`/${lang}${satTitleLink.linkUrl}/${sat[0][0].sat_slug}`}
                 >
                   {`${sat[0][0].sat_title} - ${sat[0][0].sat_position}`}
                 </Link>
               </TooltipSimple>
-              <TooltipSimple tooltipText={satTitleLink.tooltipTitle[LANGUAGE]}>
+              <TooltipSimple tooltipText={satTitleLink.tooltipTitle[lang]}>
                 <Link
                   className={styles.satTitleLink}
-                  href={`${satTitleLink.linkUrl}/${sat[0][0].sat_slug}`}
+                  href={`/${lang}${satTitleLink.linkUrl}/${sat[0][0].sat_slug}`}
                 >
                   <FillingValidImage
                     image={{
@@ -161,7 +168,7 @@ const SatChannelsTable = ({
                     }}
                     defaultImage={h1SatImage.defaultImage}
                     alternativeImgString={h1SatImage.alternativeString}
-                    alt={`${h1SatImage.alt[LANGUAGE]} ${sat[0][0].sat_title}`}
+                    alt={`${h1SatImage.alt[lang]} ${sat[0][0].sat_title}`}
                     isBlur
                   />
                 </Link>
@@ -174,7 +181,11 @@ const SatChannelsTable = ({
           >
             <tbody>
               {sat.map((freqChannels, idx) => (
-                <FrequencySegment key={idx} frequencyChannels={freqChannels} />
+                <FrequencySegment
+                  key={idx}
+                  frequencyChannels={freqChannels}
+                  lang={lang}
+                />
               ))}
             </tbody>
           </table>

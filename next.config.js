@@ -2,178 +2,185 @@
 // const { withNextVideo } = require('next-video/process');
 // import { withNextVideo } from 'next-video/process';
 
+const BASE = '/ua';
+
 // module.exports = withNextVideo(nextConfig);
 const nextConfig = {
   async redirects() {
     return [
       {
-        source: '/transponderni-novyny',
-        destination: '/',
+        source: '/',
+        destination: BASE,
+        permanent: true,
+      },
+      {
+        source: '/:p/transponderni-novyny',
+        destination: BASE,
         permanent: true,
       },
       {
         source: '/sputnikovye-novosti',
-        destination: '/',
+        destination: BASE,
         permanent: true,
       },
       {
-        source: '/parametry-kanalu',
-        destination: '/spysok-kanaliv-suputnyka',
+        source: '/:p?/parametry-kanalu',
+        destination: `${BASE}/spysok-kanaliv-suputnyka`,
         permanent: true,
       },
       {
         source: '/sputnikovye-novosti/:date',
-        destination: '/transponderni-novyny/:date',
+        destination: `${BASE}/transponderni-novyny/:date`,
         permanent: true,
       },
       {
         source: '/novosti-i-statji/transpondernye-novosti',
-        destination: '/',
+        destination: BASE,
         permanent: true,
       },
       {
         source: '/novosti-i-statji/satellite_equipments',
-        destination: '/',
+        destination: BASE,
         permanent: true,
       },
       // {
       //   source: '/novosti-i-statji/satellite_equipments',
-      //   destination: '/kategoriji-tovariv',
+      //   destination: `${BASE}/kategoriji-tovariv`,
       //   permanent: true,
       // },
       {
         source: '/novosti-i-statji/karty-pokrytija-telesputnikov',
-        destination: '/karty-pokryttia-suputnykiv',
+        destination: `${BASE}/karty-pokryttia-suputnykiv`,
         permanent: true,
       },
       {
         source: '/novosti-i-statji/installations',
-        destination: '/spysok-kanaliv-paketu',
+        destination: `${BASE}/spysok-kanaliv-paketu`,
         permanent: true,
       },
       {
         source: '/statja/napravlenie-antenny-po-karte',
-        destination: '/satellite-finder',
+        destination: `${BASE}/satellite-finder`,
         permanent: true,
       },
       {
         source: '/stattia/napravlenie-antenny-po-karte',
-        destination: '/satellite-finder',
+        destination: `${BASE}/satellite-finder`,
         permanent: true,
       },
       {
         source: '/novosti-i-statji/channel_list',
-        destination: '/spysok-kanaliv-paketu',
+        destination: `${BASE}/spysok-kanaliv-paketu`,
         permanent: true,
       },
       {
-        source: '/stattia',
-        destination: '/novyny-ta-statti',
+        source: '/:p?/stattia',
+        destination: `${BASE}/novyny-ta-statti`,
         permanent: true,
       },
       {
         source: '/novosti-i-statji/lastnews/:page',
-        destination: '/novyny-ta-statti?page=:page',
+        destination: `${BASE}/novyny-ta-statti?page=:page`,
         permanent: true,
       },
       {
         source: '/novosti-i-statji/:slug/:page',
-        destination: '/novyny-ta-statti/:slug?page=:page',
+        destination: `${BASE}/novyny-ta-statti/:slug?page=:page`,
         permanent: true,
       },
       {
         source: '/novosti-i-statji/:slug',
-        destination: '/novyny-ta-statti/:slug',
+        destination: `${BASE}/novyny-ta-statti/:slug`,
         permanent: true,
       },
       {
         source: '/statja/:slug',
-        destination: '/stattia/:slug',
+        destination: `${BASE}/stattia/:slug`,
         permanent: true,
       },
       {
         source: '/spisok-kanalov-paketa/bez-abonplati',
-        destination: '/spysok-kanaliv-suputnyka',
+        destination: `${BASE}/spysok-kanaliv-suputnyka`,
         permanent: true,
       },
       {
-        source: '/spysok-kanaliv-paketu/bez-abonplati',
-        destination: '/spysok-kanaliv-suputnyka',
+        source: '/:p?/spysok-kanaliv-paketu/bez-abonplati',
+        destination: `${BASE}/spysok-kanaliv-suputnyka`,
         permanent: true,
       },
       {
         source: '/spisok-kanalov-paketa/bez-abonplati/light',
-        destination: '/spysok-kanaliv-suputnyka',
+        destination: `${BASE}/spysok-kanaliv-suputnyka`,
         permanent: true,
       },
       {
         source: '/spisok-kanalov-sputnika/:slug',
-        destination: '/spysok-kanaliv-suputnyka/:slug',
+        destination: `${BASE}/spysok-kanaliv-suputnyka/:slug`,
         permanent: true,
       },
       {
         source: '/spisok-kanalov-paketa/:package',
-        destination: '/spysok-kanaliv-paketu/:package',
+        destination: `${BASE}/spysok-kanaliv-paketu/:package`,
         permanent: true,
       },
       {
         source: '/varianty-ustanovki-anten/:slug',
-        destination: '/spysok-kanaliv-paketu',
+        destination: `${BASE}/spysok-kanaliv-paketu`,
         permanent: true,
       },
       {
         source: '/tv-programma/vse-kanaly',
-        destination: '/programa-telekanaliv',
+        destination: `${BASE}/programa-telekanaliv`,
         permanent: true,
       },
       {
         source: '/programma-kanala/:slug/:date',
-        destination: '/programa-telekanaliv/:slug?date=:date',
+        destination: `${BASE}/programa-telekanaliv/:slug?date=:date`,
         permanent: true,
       },
       {
         source: '/spisok-online-kanalov/vse-tv',
-        destination: '/telekanaly-onlain',
+        destination: `${BASE}/telekanaly-onlain`,
         permanent: true,
       },
       {
         source: '/parametri-kanala/:slug',
-        destination: '/parametry-kanalu/:slug',
+        destination: `${BASE}/parametry-kanalu/:slug`,
         permanent: true,
       },
       {
         source: '/karta-pokrytija-sputnika/:slug',
-        destination: '/karty-pokryttia-suputnykiv/:slug',
+        destination: `${BASE}/karty-pokryttia-suputnykiv/:slug`,
         permanent: true,
       },
       {
         source: '/tv-online/:slug',
-        destination: '/telekanaly-onlain/:slug',
+        destination: `${BASE}/telekanaly-onlain/:slug`,
         permanent: true,
       },
       {
         source: '/kategorija-tovara/:cat_parent',
-        destination: '/',
+        destination: BASE,
         permanent: true,
       },
       // {
       //   source: '/kategorija-tovara/:cat_parent',
-      //   destination: '/kategoriji-tovariv/:cat_parent',
+      //   destination: `${BASE}/kategoriji-tovariv/:cat_parent`,
       //   permanent: true,
       // },
       {
         source: '/spisok-tovarov/:cat*',
-        destination: '/',
+        destination: BASE,
         permanent: true,
       },
       // {
       //   source: '/spisok-tovarov/:cat*',
-      //   destination: '/kategoriji-tovariv',
+      //   destination: `${BASE}/kategoriji-tovariv`,
       //   permanent: true,
       // },
       {
         source: '/tovar/:cat*',
-        destination: '/',
+        destination: BASE,
         permanent: true,
       },
     ];

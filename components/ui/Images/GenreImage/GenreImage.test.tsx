@@ -2,10 +2,17 @@ import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import GenreImage from './GenreImage';
 import test, { describe } from 'node:test';
+import { ELanguage } from '@/models/ui.model';
 
 describe('<GenreImage />', () => {
   test('it should mount', () => {
-    render(<GenreImage genreMapPosition={1} tooltipText="tooltipText" />);
+    render(
+      <GenreImage
+        lang={ELanguage.EN}
+        genreMapPosition={1}
+        tooltipText="tooltipText"
+      />
+    );
 
     const genreImage = screen.getByTestId('GenreImage');
 

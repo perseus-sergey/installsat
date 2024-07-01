@@ -1,8 +1,10 @@
-import { ITblDigestParse } from '@/app/(admin)/guru/parse/trans-news/page';
-import { poolExecute, pool } from '@/libs/db/mysqldb';
+import { ITblDigestParse } from '@/app/[lang]/(admin)/guru/parse/trans-news/page';
+import { poolExecute, getPool } from '@/libs/db/mysqldb';
 import { EDBTableTitles } from '@/models/ui.model';
 import { ResultSetHeader } from 'mysql2';
 import { cache } from 'react';
+
+const pool = getPool();
 
 export const getDBSatID = cache(async (satName: string) => {
   const sql = `

@@ -1,7 +1,8 @@
+import { ELanguage } from '@/models/ui.model';
 import { EUrlAdminParam, EUrlBaseParam } from '@/models/url.model';
 import { MetadataRoute } from 'next';
 
-const { BASE_PATH } = EUrlAdminParam;
+const { BASE_PATH: ADMIN_BASE } = EUrlAdminParam;
 const { SIGN_IN, DELETE_COMMENT_SUBSCRIPTION } = EUrlBaseParam;
 
 export default function robots(): MetadataRoute.Robots {
@@ -12,10 +13,12 @@ export default function robots(): MetadataRoute.Robots {
       userAgent: '*',
       allow: '/',
       disallow: [
-        `/${BASE_PATH}/`,
+        ...Object.values(ELanguage).map((lang) => `/${lang}/${ADMIN_BASE}/`),
+        ...Object.values(ELanguage).map((lang) => `/${lang}/${SIGN_IN}/`),
+        ...Object.values(ELanguage).map(
+          (lang) => `/${lang}/${DELETE_COMMENT_SUBSCRIPTION}/`
+        ),
         `/api/auth/`,
-        `/${SIGN_IN}/`,
-        `/${DELETE_COMMENT_SUBSCRIPTION}/`,
       ],
     },
     sitemap: `${BASE_URL}/sitemap.xml`,

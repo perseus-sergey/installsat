@@ -3,7 +3,7 @@
 import { ReactNode, Suspense, useEffect, useState } from 'react';
 import styles from './TooltipClient.module.scss';
 import BaseButton from '../../buttons/BaseButton/BaseButton';
-import { ELanguage, LANGUAGE } from '@/models/ui.model';
+import { ELanguage } from '@/models/ui.model';
 
 const CAPTIONS = {
   ariaLabelSmall: {
@@ -21,10 +21,12 @@ interface ITooltipClientProps extends React.HTMLAttributes<HTMLElement> {
   children: ReactNode;
   hintContent: ReactNode;
   hintDescription: string;
+  lang: ELanguage;
 }
 
 const TooltipClient = ({
   children,
+  lang,
   hintContent,
   hintDescription,
   className,
@@ -56,7 +58,7 @@ const TooltipClient = ({
     <>
       <Suspense>
         <BaseButton
-          ariaLabel={CAPTIONS.ariaLabelSmall[LANGUAGE]}
+          ariaLabel={CAPTIONS.ariaLabelSmall[lang]}
           onClick={showPopUp}
           className={className}
           {...attributes}
@@ -68,7 +70,7 @@ const TooltipClient = ({
       {isPopUp && (
         <Suspense>
           <BaseButton
-            ariaLabel={CAPTIONS.ariaLabelBig[LANGUAGE]}
+            ariaLabel={CAPTIONS.ariaLabelBig[lang]}
             onClick={removePopUp}
           >
             <figure

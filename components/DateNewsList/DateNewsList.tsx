@@ -9,11 +9,11 @@ import {
 import EmptyData from '../errors/EmptyData/EmptyData';
 import { EUrlBaseParam } from '@/models/url.model';
 import { META_TRANS_NEWS_SINGLE } from '@/models/satDigest.model';
-import { LANGUAGE } from '@/models/ui.model';
+import { ELanguage } from '@/models/ui.model';
 import { getDateInISO } from '@/libs/utils/dates';
 import { decode } from 'html-entities';
 
-const DateNewsList = async () => {
+const DateNewsList = async ({ lang }: { lang: ELanguage }) => {
   const newsArray = await setGroupedNewsByDateMap();
 
   if (newsArray instanceof Error)
@@ -25,8 +25,10 @@ const DateNewsList = async () => {
     return (
       <div className={styles.newsBlock} key={news[0]}>
         <h2 className={`${styles.groupTitle} ${styles.alignCenter}`}>
-          <Link href={`/${EUrlBaseParam.TRANSPONDER_NEWS}/${dateInISO}`}>
-            {META_TRANS_NEWS_SINGLE.metaH1start[LANGUAGE]}
+          <Link
+            href={`/${lang}/${EUrlBaseParam.TRANSPONDER_NEWS}/${dateInISO}`}
+          >
+            {META_TRANS_NEWS_SINGLE.metaH1start[lang]}
             <span className={styles.groupTitleDate}> {dateInISO}</span>
           </Link>
         </h2>

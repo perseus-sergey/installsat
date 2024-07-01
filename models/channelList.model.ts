@@ -128,7 +128,7 @@ export const META_PACKAGE_CHANNEL_LIST = {
   getH1(packageName: string, searchQuery: string) {
     return {
       [ELanguage.UA]: `Список каналів телебачення «${packageName}»${searchQuery && ` назва яких містить «${searchQuery}»`}`,
-      [ELanguage.EN]: `List of channels «${searchQuery}» TV${searchQuery && ` the name of which contains «${searchQuery}»`}`,
+      [ELanguage.EN]: `List of channels «${packageName}» TV${searchQuery && ` the name of which contains «${searchQuery}»`}`,
     };
   },
   metaTitle: {
@@ -270,7 +270,7 @@ export const META_ALL_SAT_CHANNEL_LIST = {
     goUpLink: {
       title: {
         [ELanguage.UA]: 'На початок',
-        [ELanguage.EN]: 'Go to top',
+        [ELanguage.EN]: 'Go Up',
       },
       img: '⇧',
     },
@@ -418,6 +418,7 @@ export interface IOnlineChannelListModel extends IChannelListModel {
   encryption: string;
   compr: string;
   tvforsite_net: string;
+  cat_slug: string;
 }
 export interface IPackageChannelListModel extends IChannelListModel {
   cat_id: number;

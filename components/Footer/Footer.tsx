@@ -5,13 +5,13 @@ import {
 } from '@/models/footer.model';
 import styles from './Footer.module.scss';
 import Link from 'next/link';
-import { LANGUAGE } from '@/models/ui.model';
+import { ELanguage, DEFAULT_LANG } from '@/models/ui.model';
 import { Fragment } from 'react';
 
-const Footer = () => (
+const Footer = ({ lang = DEFAULT_LANG }: { lang: ELanguage }) => (
   <footer className={styles.footer}>
     <section className={styles.Copyright}>
-      {COPYRIGHT_SECTION.title[LANGUAGE]}
+      {COPYRIGHT_SECTION.title[lang]}
     </section>
 
     <nav className={styles.footerMenu}>
@@ -23,8 +23,8 @@ const Footer = () => (
                 <span className={styles.separator}>{MENU_SEPARATOR}</span>
               ) : null}
               <li>
-                <Link href={item.href} className={styles.navLink}>
-                  {item.title[LANGUAGE]}
+                <Link href={`/${lang}/${item.href}`} className={styles.navLink}>
+                  {item.title[lang]}
                 </Link>
               </li>
             </Fragment>

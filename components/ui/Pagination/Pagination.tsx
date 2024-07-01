@@ -2,7 +2,7 @@ import Link from 'next/link';
 import styles from './Pagination.module.scss';
 import { EUrlSearchParam } from '@/models/url.model';
 import { ARTICLES } from '@/models/articles.model';
-import { LANGUAGE, TSearchParams } from '@/models/ui.model';
+import { ELanguage, TSearchParams } from '@/models/ui.model';
 import { makeUrlSearchParams } from '@/libs/utils/utils';
 import TooltipSimple from '../tooltips/TooltipSimple/TooltipSimple';
 
@@ -19,6 +19,7 @@ interface IPaginationProps {
   offsetNumber: number;
   totalPages: number;
   searchParams?: TSearchParams;
+  lang: ELanguage;
 }
 
 const getPageNumbers = (
@@ -42,6 +43,7 @@ const Pagination = ({
   offsetNumber,
   totalPages,
   searchParams,
+  lang,
 }: IPaginationProps) => {
   if (!searchParams) return null;
 
@@ -63,12 +65,12 @@ const Pagination = ({
             isDisabled={page === 1}
             controls={[
               {
-                ariaLabel: linkTitle.firstPage[LANGUAGE],
+                ariaLabel: linkTitle.firstPage[lang],
                 href: setUrlPage('1'),
                 innerText: firstPageTitle,
               },
               {
-                ariaLabel: linkTitle.previousPage[LANGUAGE],
+                ariaLabel: linkTitle.previousPage[lang],
                 href: setUrlPage(`${page - 1 || 1}`),
                 innerText: previousPageTitle,
               },
@@ -78,7 +80,7 @@ const Pagination = ({
           {pageNumbers.map((pageNumber, index) => (
             <ControlButton
               key={index}
-              ariaLabel={`${linkTitle.pageStartStr[LANGUAGE]}${pageNumber}`}
+              ariaLabel={`${linkTitle.pageStartStr[lang]}${pageNumber}`}
               href={setUrlPage(pageNumber)}
               innerText={pageNumber}
               className={
@@ -91,12 +93,12 @@ const Pagination = ({
             isDisabled={page === totalPages}
             controls={[
               {
-                ariaLabel: linkTitle.nextPage[LANGUAGE],
+                ariaLabel: linkTitle.nextPage[lang],
                 href: setUrlPage(`${page + 1}`),
                 innerText: nextPageTitle,
               },
               {
-                ariaLabel: linkTitle.lastPage[LANGUAGE],
+                ariaLabel: linkTitle.lastPage[lang],
                 href: setUrlPage(`${totalPages}`),
                 innerText: lastPageTitle,
               },

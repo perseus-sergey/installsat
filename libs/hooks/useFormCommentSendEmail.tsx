@@ -5,7 +5,7 @@ import {
   CommentToAdminEmail,
   CommentToUserEmail,
 } from '@/components/EmailTemplates/CommentEmail.template';
-import { EDBTableTitles, LANGUAGE } from '@/models/ui.model';
+import { EDBTableTitles, ELanguage } from '@/models/ui.model';
 import { getArticleSubscribers } from '@/controllers/comments.controller';
 import { IFormState } from '@/controllers/toast.controller';
 import { COMMENTS_MODEL } from '@/models/comments.model';
@@ -19,7 +19,8 @@ export const useFormCommentSendEmail = (
   articleId: string,
   userLocation: IUserLocation | null,
   baseUrl: string,
-  emailKey: string
+  emailKey: string,
+  lang: ELanguage
 ) => {
   const prevTimestamp = useRef(formState.timestamp);
   const { authorName, authorEmail, commentText } = formState.fieldValues;
@@ -47,6 +48,7 @@ export const useFormCommentSendEmail = (
         userLocation,
         baseUrl,
         emailKey,
+        lang,
       };
       await sendMail({
         subject: `New comment for page: ${articleName}`,
@@ -64,11 +66,12 @@ export const useFormCommentSendEmail = (
           tblCommentName,
           baseUrl,
           emailKey,
+          lang,
         };
         const body = await renderAsync(<CommentToUserEmail {...attributes} />);
         await sendMail({
           to: mail,
-          subject: `${COMMENTS_MODEL.email.subjectPreTitle[LANGUAGE]} ${articleName}`,
+          subject: `${COMMENTS_MODEL.email.subjectPreTitle[lang]} ${articleName}`,
           body,
         });
       });

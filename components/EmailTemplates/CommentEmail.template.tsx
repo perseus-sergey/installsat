@@ -44,7 +44,7 @@ interface IEmailTemplateProps {
   tblCommentName: EDBTableTitles;
   subscribers?: ISubscribersEmails[];
   userLocation?: IUserLocation | null;
-  lang?: ELanguage;
+  lang: ELanguage;
 }
 
 export const CommentToAdminEmail = async ({
@@ -160,7 +160,7 @@ export const CommentToUserEmail = async ({
   tblCommentName,
   baseUrl,
   emailKey,
-  lang = ELanguage.UA,
+  lang,
 }: IEmailTemplateProps) => {
   const styledArticleName = `✧${articleName}✧`;
   const previewText =

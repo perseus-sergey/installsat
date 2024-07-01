@@ -11,12 +11,13 @@ import {
 import { Polyline } from '@/components/mapComponents/Polyline';
 import FillingImg from '../../ui/Images/FillingImage';
 import { SAT_FINDER_META_DATA } from '@/models/satFinder.model';
-import { LANGUAGE } from '@/models/ui.model';
 import { MultiValue } from 'react-select';
 import { ISatelliteOption } from '@/models/tblSat.model';
 import { Dispatch, SetStateAction } from 'react';
+import { ELanguage } from '@/models/ui.model';
 
 interface IGoogleMapProps {
+  lang: ELanguage;
   apiKey: string;
   mapId: string;
   markerPosition: google.maps.LatLngLiteral;
@@ -36,6 +37,7 @@ const {
 } = SAT_FINDER_META_DATA.googleMap;
 
 const GoogleMap = ({
+  lang,
   apiKey,
   mapId,
   markerPosition,
@@ -80,7 +82,7 @@ const GoogleMap = ({
           position={markerPosition}
           onCloseClick={() => setIsMapInfoWindowOpened(false)}
         >
-          <FillingImg {...markerImage} alt={markerImage.alt[LANGUAGE]} />
+          <FillingImg {...markerImage} alt={markerImage.alt[lang]} />
           {selectedOptions && selectedOptions.length ? (
             <ul>
               {selectedOptions.map(({ label }) => (

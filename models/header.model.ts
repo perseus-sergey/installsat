@@ -1,11 +1,9 @@
 import { ELanguage } from './ui.model';
-import { EUrlBaseParam } from './url.model';
 
 export const TOGGLE_SIDEBAR_BUTTON_TITLE = '☰';
 
 export const LOGO = {
   link: {
-    href: EUrlBaseParam.BASE_PATH,
     title: {
       [ELanguage.EN]: 'To Home Page',
       [ELanguage.UA]: 'На головну сторінку',

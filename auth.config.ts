@@ -1,34 +1,37 @@
 import type { NextAuthConfig } from 'next-auth';
 import { EUrlAdminParam, EUrlBaseParam } from './models/url.model';
-
-const loginPagePath = `/${EUrlBaseParam.SIGN_IN}`;
+import { ELanguage } from './models/ui.model';
 
 export const authConfig = {
   pages: {
-    signIn: loginPagePath,
+    signIn: `/${ELanguage.EN}/${EUrlBaseParam.SIGN_IN}`,
   },
   providers: [],
 
   callbacks: {
     authorized({ auth, request: { nextUrl } }) {
       const isLoggedIn = !!auth?.user;
-      const isOnProtectedRoute = nextUrl.pathname.startsWith(
-        EUrlAdminParam.BASE_PATH,
-        1
+      const isOnProtectedRoute = new RegExp(
+        `/${EUrlAdminParam.BASE_PATH}(/|$)`
+      ).test(nextUrl.pathname);
+      const isOnLoginRoute = new RegExp(`/${EUrlBaseParam.SIGN_IN}(/|$)`).test(
+        nextUrl.pathname
       );
-      const isOnLoginRoute = nextUrl.pathname.startsWith(loginPagePath);
 
       if (isOnProtectedRoute) {
         return isLoggedIn ? true : false;
       } else if (isOnLoginRoute) {
         return isLoggedIn ? false : true;
       } else if (isLoggedIn) {
-        return Response.redirect(new URL(EUrlAdminParam.BASE_PATH, nextUrl));
+        // console.log('🚀 ~ authorized ~ isLoggedIn:', isLoggedIn);
+        // return Response.redirect(
+        //   new URL(`${ELanguage.EN}/${EUrlAdminParam.BASE_PATH}`, nextUrl)
+        // );
       }
       return true;
     },
-    async redirect({ baseUrl }) {
-      return baseUrl;
-    },
+    // async redirect({ baseUrl }) {
+    //   return baseUrl;
+    // },
   },
 } satisfies NextAuthConfig;

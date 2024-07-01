@@ -2,7 +2,7 @@
 
 import styles from './PaginationComments.module.scss';
 import { ARTICLES } from '@/models/articles.model';
-import { EDBTableTitles, LANGUAGE } from '@/models/ui.model';
+import { EDBTableTitles, ELanguage } from '@/models/ui.model';
 import TooltipSimple from '../../ui/tooltips/TooltipSimple/TooltipSimple';
 import { useEffect, useState } from 'react';
 import BaseButton from '../../ui/buttons/BaseButton/BaseButton';
@@ -27,6 +27,7 @@ interface IPaginationProps {
   commentsPerPage: number;
   commentsDBTblName: EDBTableTitles;
   articleId: string;
+  lang: ELanguage;
 }
 
 const getPageNumbers = (
@@ -51,6 +52,7 @@ const PaginationComments = ({
   commentsDBTblName,
   articleId,
   numberOfComments,
+  lang,
 }: IPaginationProps) => {
   const [comments, setComments] = useState<ICommentsModel[]>();
   const [pageNumber, setPageNumber] = useState(1);
@@ -97,9 +99,9 @@ const PaginationComments = ({
         <h3 className={styles.commentsTitle}>
           <FillingImg
             {...commentList.image}
-            alt={commentList.image.alt[LANGUAGE]}
+            alt={commentList.image.alt[lang]}
           />
-          {commentList.title[LANGUAGE]} ({numberOfComments})
+          {commentList.title[lang]} ({numberOfComments})
         </h3>
         <ul className={styles.CommentList}>
           {comments.map((comment) => {
@@ -126,12 +128,12 @@ const PaginationComments = ({
                 isDisabled={pageNumber === 1}
                 controls={[
                   {
-                    ariaLabel: linkTitle.firstPage[LANGUAGE],
+                    ariaLabel: linkTitle.firstPage[lang],
                     onClick: () => setPageNumber(1),
                     innerText: firstPageTitle,
                   },
                   {
-                    ariaLabel: linkTitle.previousPage[LANGUAGE],
+                    ariaLabel: linkTitle.previousPage[lang],
                     onClick: () => setPageNumber((page) => page - 1 || 1),
                     innerText: previousPageTitle,
                   },
@@ -141,7 +143,7 @@ const PaginationComments = ({
               {numbersOfPages.map((numb) => (
                 <ControlButton
                   key={numb}
-                  ariaLabel={`${linkTitle.pageStartStr[LANGUAGE]}${numb}`}
+                  ariaLabel={`${linkTitle.pageStartStr[lang]}${numb}`}
                   onClick={() => setPageNumber(numb)}
                   innerText={numb}
                   className={
@@ -156,12 +158,12 @@ const PaginationComments = ({
                 isDisabled={pageNumber === totalPages}
                 controls={[
                   {
-                    ariaLabel: linkTitle.nextPage[LANGUAGE],
+                    ariaLabel: linkTitle.nextPage[lang],
                     onClick: () => setPageNumber((page) => page + 1),
                     innerText: nextPageTitle,
                   },
                   {
-                    ariaLabel: linkTitle.lastPage[LANGUAGE],
+                    ariaLabel: linkTitle.lastPage[lang],
                     onClick: () => setPageNumber(totalPages),
                     innerText: lastPageTitle,
                   },

@@ -1,5 +1,5 @@
 import { getTodayYesterdayStr } from '@/libs/utils/dates';
-import { ELanguage, LANGUAGE } from './ui.model';
+import { ELanguage, DEFAULT_LANG } from './ui.model';
 
 export const SCHEDULE_META = {
   h1Start: {
@@ -10,8 +10,8 @@ export const SCHEDULE_META = {
     const todayYesterday = getTodayYesterdayStr(dateStr) || '';
 
     return {
-      [ELanguage.UA]: `Програма передач каналу «${chanTitle}» на ${todayYesterday && todayYesterday[LANGUAGE]} ${dateStr}`,
-      [ELanguage.EN]: `TV schedule of the channel «${chanTitle}» on ${todayYesterday && todayYesterday[LANGUAGE]} ${dateStr}`,
+      [ELanguage.UA]: `Програма передач каналу «${chanTitle}» на ${todayYesterday && todayYesterday[DEFAULT_LANG]} ${dateStr}`,
+      [ELanguage.EN]: `TV schedule of the channel «${chanTitle}» on ${todayYesterday && todayYesterday[DEFAULT_LANG]} ${dateStr}`,
     };
   },
   getKeywords(chanTitle: string) {

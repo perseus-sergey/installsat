@@ -1,4 +1,3 @@
-import React from 'react';
 import styles from './SatNewsList.module.scss';
 import DangerHtml from '../ui/DangerHtml/DangerHtml';
 import { META_TRANS_NEWS_LIST } from '@/models/satDigest.model';
@@ -9,18 +8,28 @@ import {
 } from '@/controllers/satDigest.controller';
 import EmptyData from '../errors/EmptyData/EmptyData';
 import FillingValidImage from '../ui/Images/FillingValidImage';
-import { LANGUAGE, TSearchParams } from '@/models/ui.model';
+import { ELanguage, TSearchParams } from '@/models/ui.model';
 import { getDateInISO } from '@/libs/utils/dates';
+import {
+  validSearchParam,
+  validSearchParamArray,
+} from '@/libs/utils/validSearchParam';
+import { EUrlSearchParam } from '@/models/url.model';
 
 interface ISatNewsListProps {
   searchParams: TSearchParams;
+  lang: ELanguage;
 }
 
 const SatNewsList = async ({
-  searchParams: { sat, interval },
+  searchParams,
+  // searchParams: { sat, interval },
+  lang,
 }: ISatNewsListProps) => {
+  const sats = validSearchParamArray(EUrlSearchParam.SAT, searchParams);
+  const interval = validSearchParam(EUrlSearchParam.INTERVAL, searchParams);
   const newsIntervalResult = await getSatDigestNews({
-    satellites: sat,
+    satellites: sats,
     timeInterval: Number(interval),
   });
 
@@ -42,10 +51,10 @@ const SatNewsList = async ({
             }}
             defaultImage={satLogo.defaultImg}
             alternativeImgString={satLogo.alternativeStr}
-            alt={`${satLogo.alt[LANGUAGE]}${news[0]}`}
+            alt={`${satLogo.alt[lang]}${news[0]}`}
           />
           <div>
-            {META_TRANS_NEWS_LIST.h2start[LANGUAGE]}
+            {META_TRANS_NEWS_LIST.h2start[lang]}
             <span className={styles.groupTitleDate}>{news[0]}</span>
           </div>
         </h2>

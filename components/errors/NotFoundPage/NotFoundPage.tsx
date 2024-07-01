@@ -1,8 +1,7 @@
 import styles from './NotFoundPage.module.scss';
 import Link from 'next/link';
 import { Title } from '../../ui/Titles/Title';
-import { EUrlBaseParam } from '@/models/url.model';
-import { LANGUAGE, ERRORS } from '@/models/ui.model';
+import { DEFAULT_LANG, ERRORS } from '@/models/ui.model';
 import FillingImg from '@/components/ui/Images/FillingImage';
 
 const { width, height, src } = ERRORS.EMPTY_DATE_NEWS_PAGE.img;
@@ -10,7 +9,7 @@ const { width, height, src } = ERRORS.EMPTY_DATE_NEWS_PAGE.img;
 const NotFoundPage = () => (
   <div className={styles.NotFoundPage} data-testid="NotFoundPage">
     <Title className="text-center text-shadow-lg">
-      {ERRORS.NOT_FOUND_TITLE[LANGUAGE]}
+      {ERRORS.NOT_FOUND_TITLE[DEFAULT_LANG]}
     </Title>
     <FillingImg
       src={src}
@@ -20,9 +19,9 @@ const NotFoundPage = () => (
       isPriority
     />
     <p className="text-center font-bold text-xl">
-      {ERRORS.NOT_FOUND_DESCRIPTION[LANGUAGE]}
+      {ERRORS.NOT_FOUND_DESCRIPTION[DEFAULT_LANG]}
     </p>
-    <Link href={EUrlBaseParam.BASE_PATH} className={styles.linkWrapper}>
+    <Link href={`/${DEFAULT_LANG}`} className={styles.linkWrapper}>
       <FillingImg
         src="/Images/InstallsatOrig_400.png"
         alt="Installsat TV Logo"
@@ -32,7 +31,7 @@ const NotFoundPage = () => (
         isFillParent
       />
       <p className="text-blue-900 hover:text-red-500">
-        {ERRORS.NOT_FOUND_ACTION[LANGUAGE]}
+        {ERRORS.NOT_FOUND_ACTION[DEFAULT_LANG]}
       </p>
     </Link>
   </div>

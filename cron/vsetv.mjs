@@ -21,6 +21,8 @@ import {
 import '../dotenv-config.mjs';
 
 const BASE_URL = process.env.BASE_URL;
+const BASE_GURU_PATH = `${BASE_URL}/en/${EUrlAdminParam.BASE_PATH}`;
+
 const { TV_SCHEDULE_VSE_TV } = EDBTableTitles;
 const BATCH_SIZE = 500;
 const TRAP_CHANNEL = {
@@ -222,7 +224,7 @@ const sendReportMail = async ({
     : '';
 
   const allFailedChannelsUrl = createURLWithParams(
-    `${BASE_URL}/${EUrlAdminParam.BASE_PATH}/${EUrlAdminParam.PARSE}/${EUrlAdminParam.PARSE_SCHEDULE_VSETV}`,
+    `${BASE_GURU_PATH}/${EUrlAdminParam.PARSE}/${EUrlAdminParam.PARSE_SCHEDULE_VSETV}`,
     { [EUrlSearchParam.CHANNEL]: errorChannels.map((chan) => chan.vsetv) }
   );
 
@@ -284,10 +286,10 @@ const R_U_N = async () => {
           errorChannels.push({
             ...channel,
             error: channelParsedData,
-            channelEditUrl: `${BASE_URL}/${EUrlAdminParam.BASE_PATH}/${EUrlAdminParam.CHANNELS_EDIT}/edit/${channel.id}`,
+            channelEditUrl: `${BASE_GURU_PATH}/${EUrlAdminParam.CHANNELS_EDIT}/edit/${channel.id}`,
             sourceChannelUrl: getParseURL(channel.vsetv),
             parseUrl: createURLWithParams(
-              `${BASE_URL}/${EUrlAdminParam.BASE_PATH}/${EUrlAdminParam.PARSE}/${EUrlAdminParam.PARSE_SCHEDULE_VSETV}`,
+              `${BASE_GURU_PATH}/${EUrlAdminParam.PARSE}/${EUrlAdminParam.PARSE_SCHEDULE_VSETV}`,
               { [EUrlSearchParam.CHANNEL]: channel.vsetv }
             ),
           });

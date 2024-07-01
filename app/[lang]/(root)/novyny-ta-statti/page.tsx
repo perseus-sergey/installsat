@@ -18,6 +18,7 @@ import { getELangKey, validSearchParam } from '@/libs/utils/validSearchParam';
 import BreadCrumbServer from '@/components/BreadCrumbs/BreadCrumbsServer';
 import Filter from '@/components/ui/Filter/Filter';
 import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
+import { Suspense } from 'react';
 
 const BASE_URL = process.env.BASE_URL || MAIN_URL;
 
@@ -108,13 +109,15 @@ export default async function Page({ searchParams, params }: IProps) {
           />
         </Title>
 
-        <Filter
-          lang={lang}
-          idName="article-search-input"
-          placeholder={placeholder[lang]}
-          labelTitle={labelTitle[lang]}
-          searchQueryTitle={EUrlSearchParam.ARTICLE}
-        />
+        <Suspense>
+          <Filter
+            lang={lang}
+            idName="article-search-input"
+            placeholder={placeholder[lang]}
+            labelTitle={labelTitle[lang]}
+            searchQueryTitle={EUrlSearchParam.ARTICLE}
+          />
+        </Suspense>
         <p className="text-blue-600 font-bold text-center text-lg">{`${articlesCountCaption[lang]}${mapsCount}`}</p>
 
         <Pagination

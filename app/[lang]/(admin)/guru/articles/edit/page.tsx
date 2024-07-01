@@ -15,6 +15,7 @@ import {
 } from '@/models/url.model';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import { Suspense } from 'react';
 
 const { BASE_PATH, ARTICLES_EDIT } = EUrlAdminParam;
 
@@ -55,13 +56,15 @@ export default async function Page({ searchParams, params }: IPageParams) {
   return (
     <>
       <Title>List of Articles for Edit</Title>
-      <Filter
-        lang={lang}
-        idName="article-search-input"
-        placeholder={placeholder[DEFAULT_LANG]}
-        labelTitle={labelTitle[DEFAULT_LANG]}
-        searchQueryTitle={EUrlSearchParam.ARTICLE}
-      />
+      <Suspense>
+        <Filter
+          lang={lang}
+          idName="article-search-input"
+          placeholder={placeholder[DEFAULT_LANG]}
+          labelTitle={labelTitle[DEFAULT_LANG]}
+          searchQueryTitle={EUrlSearchParam.ARTICLE}
+        />
+      </Suspense>
       <p className="text-blue-600 font-bold text-center text-lg">{`${articlesCountCaption[DEFAULT_LANG]}${articlesCount}`}</p>
       <Pagination
         lang={lang}

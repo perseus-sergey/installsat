@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import Link from 'next/link';
 import ToggleSidebarLabel from '../ui/ToggleSidebarLabel/ToggleSidebarLabel';
 import { LOGO, TOGGLE_SIDEBAR_BUTTON_TITLE } from '@/models/header.model';
@@ -21,7 +21,9 @@ const Header = ({ lang = DEFAULT_LANG }: { lang: ELanguage }) => (
         <FillingImg {...siteLogo} alt={siteLogo.alt[lang]} isPriority />
       </Link>
     </nav>
-    <LangSwitchButton />
+    <Suspense>
+      <LangSwitchButton />
+    </Suspense>
   </header>
 );
 

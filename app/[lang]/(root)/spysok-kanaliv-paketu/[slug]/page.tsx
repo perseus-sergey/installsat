@@ -216,13 +216,15 @@ export default async function Page({ params, searchParams }: IPageProps) {
                     </li>
                   ))}
                 </ul>
-                <Filter
-                  lang={lang}
-                  idName="channel-search-input"
-                  placeholder={placeholder[lang]}
-                  labelTitle={labelTitle[lang]}
-                  searchQueryTitle={EUrlSearchParam.CHANNEL}
-                />
+                <Suspense>
+                  <Filter
+                    lang={lang}
+                    idName="channel-search-input"
+                    placeholder={placeholder[lang]}
+                    labelTitle={labelTitle[lang]}
+                    searchQueryTitle={EUrlSearchParam.CHANNEL}
+                  />
+                </Suspense>
               </nav>
             </Fieldset>
 

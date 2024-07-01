@@ -131,46 +131,50 @@ export default async function Page({ searchParams, params }: IPageProps) {
             height={h1ImageParams.height}
           />
         </Title>
-        <Fieldset legendText={anchors.legendTitle[lang]}>
-          <nav>
-            <ul>
-              {satLinks.map((satLink) => (
-                <li key={satLink.slug}>
-                  <AnchorListItemWithCheckbox
-                    linkParams={{
-                      title: satLink.title,
-                      href: `#${satLink.slug}`,
-                      'aria-label': satAnchor.tooltip[lang],
-                    }}
-                    inputAttributes={{
-                      value: satLink.slug,
-                      id: `chb-${satLink.slug}`,
-                      name: satLink.slug,
-                      'aria-label': satCheckBox.tooltip[lang],
-                    }}
-                    searchQueryName={EUrlSearchParam.SAT}
-                  />
-                </li>
-              ))}
-              {formats.map((format) => (
-                <li key={format.searchQueryName}>
-                  <ChannelFormatSliders {...format} />
-                </li>
-              ))}
-            </ul>
-            <Filter
-              lang={lang}
-              idName="channel-search-input"
-              placeholder={placeholder[lang]}
-              labelTitle={labelTitle[lang]}
-              searchQueryTitle={EUrlSearchParam.CHANNEL}
-              resetButton={{
-                ariaLabel: resetAllFiltersButton.ariaLabel[lang],
-                content: resetAllFiltersButton.imgStr,
-              }}
-            />
-          </nav>
-        </Fieldset>
+        <Suspense>
+          <Fieldset legendText={anchors.legendTitle[lang]}>
+            <nav>
+              <ul>
+                {satLinks.map((satLink) => (
+                  <li key={satLink.slug}>
+                    <AnchorListItemWithCheckbox
+                      linkParams={{
+                        title: satLink.title,
+                        href: `#${satLink.slug}`,
+                        'aria-label': satAnchor.tooltip[lang],
+                      }}
+                      inputAttributes={{
+                        value: satLink.slug,
+                        id: `chb-${satLink.slug}`,
+                        name: satLink.slug,
+                        'aria-label': satCheckBox.tooltip[lang],
+                      }}
+                      searchQueryName={EUrlSearchParam.SAT}
+                    />
+                  </li>
+                ))}
+                {formats.map((format) => (
+                  <li key={format.searchQueryName}>
+                    <ChannelFormatSliders {...format} />
+                  </li>
+                ))}
+              </ul>
+              <Suspense>
+                <Filter
+                  lang={lang}
+                  idName="channel-search-input"
+                  placeholder={placeholder[lang]}
+                  labelTitle={labelTitle[lang]}
+                  searchQueryTitle={EUrlSearchParam.CHANNEL}
+                  resetButton={{
+                    ariaLabel: resetAllFiltersButton.ariaLabel[lang],
+                    content: resetAllFiltersButton.imgStr,
+                  }}
+                />
+              </Suspense>
+            </nav>
+          </Fieldset>
+        </Suspense>
         <StartArticleSection>
           <p>{START_CONTENT[lang]}</p>
         </StartArticleSection>

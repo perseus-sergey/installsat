@@ -11,6 +11,7 @@ import {
   EUrlSearchParam,
 } from '@/models/url.model';
 import Link from 'next/link';
+import { Suspense } from 'react';
 
 const { BASE_PATH, CHANNELS_EDIT } = EUrlAdminParam;
 
@@ -33,13 +34,15 @@ export default async function Page({
   return (
     <>
       <Title>Channel list for Edit</Title>
-      <Filter
-        lang={lang}
-        idName="channel-search-input"
-        placeholder={placeholder[lang]}
-        labelTitle={labelTitle[lang]}
-        searchQueryTitle={EUrlSearchParam.ARTICLE}
-      />
+      <Suspense>
+        <Filter
+          lang={lang}
+          idName="channel-search-input"
+          placeholder={placeholder[lang]}
+          labelTitle={labelTitle[lang]}
+          searchQueryTitle={EUrlSearchParam.ARTICLE}
+        />
+      </Suspense>
 
       {dbResult.length ? (
         <table className="base-table">

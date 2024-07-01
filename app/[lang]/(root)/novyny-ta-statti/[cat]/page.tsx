@@ -24,6 +24,7 @@ import BreadCrumbServer from '@/components/BreadCrumbs/BreadCrumbsServer';
 import { BREAD_CRUMBS } from '@/models/breadCrumbs.model';
 import Filter from '@/components/ui/Filter/Filter';
 import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
+import { Suspense } from 'react';
 
 const BASE_URL = process.env.BASE_URL || MAIN_URL;
 
@@ -134,13 +135,15 @@ export default async function Page({ params, searchParams }: IPageParams) {
           />
         </Title>
 
-        <Filter
-          lang={lang}
-          idName="article-search-input"
-          placeholder={placeholder[lang]}
-          labelTitle={labelTitle[lang]}
-          searchQueryTitle={EUrlSearchParam.ARTICLE}
-        />
+        <Suspense>
+          <Filter
+            lang={lang}
+            idName="article-search-input"
+            placeholder={placeholder[lang]}
+            labelTitle={labelTitle[lang]}
+            searchQueryTitle={EUrlSearchParam.ARTICLE}
+          />
+        </Suspense>
 
         <TextUnderH1>{text}</TextUnderH1>
 

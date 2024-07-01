@@ -49,7 +49,7 @@ export const executeMultipleQuery = async <T>(
   }
 };
 
-let pool: mysql.Pool;
+export let pool: mysql.Pool;
 
 export const getPool = (): mysql.Pool => {
   if (!pool) {
@@ -69,14 +69,19 @@ export const poolExecute = async <T>(
   sql: string,
   values: (string | number | boolean)[] = []
 ): Promise<T | Error> => {
+  const pool = getPool();
+  const connection = await pool.getConnection();
+
   try {
-    const [rows] = await getPool().execute(sql, values);
+    const [rows] = await connection.execute(sql, values);
 
     return rows as T;
   } catch (err) {
     console.error('MySQL query error:', err);
 
     return err as Error;
+  } finally {
+    connection.release();
   }
 };
 
@@ -122,14 +127,19 @@ export const poolQuery = async <T>(
   sql: string,
   values: (string | number | boolean)[] = []
 ): Promise<T | Error> => {
+  const pool = getPool();
+  const connection = await pool.getConnection();
+
   try {
-    const [rows] = await getPool().query(sql, values);
+    const [rows] = await connection.query(sql, values);
 
     return rows as T;
   } catch (err) {
-    console.log(err);
+    console.error('MySQL query error:', err);
 
     return err as Error;
+  } finally {
+    connection.release();
   }
 };
 

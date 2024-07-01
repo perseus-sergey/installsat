@@ -208,6 +208,7 @@ export default async function Page({ params }: IChannelProps) {
           <GrooveLine className="py-4" />
 
           <TvScheduleLink
+            lang={lang}
             title={`${scheduleTitle[lang]} "${title}"`}
             href={`/${lang}/${EUrlBaseParam.CHANNELS_TV_PROGRAM}/${slug}/${currentDate}`}
           />

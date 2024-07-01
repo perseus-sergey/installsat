@@ -61,7 +61,7 @@ const PackageList = ({ packageList, lang }: IProps) =>
       </ul>
     </>
   ) : (
-    <EmptyData />
+    <EmptyData lang={lang} />
   );
 
 export default PackageList;

@@ -41,7 +41,7 @@ export default async function Page({ searchParams, params }: IPageParams) {
   const comment = await getCommentFromDB(commentDbTable, id);
 
   if (comment instanceof Error)
-    return <EmptyData description={comment.message} />;
+    return <EmptyData lang={lang} description={comment.message} />;
 
   return (
     <>

@@ -21,7 +21,7 @@ export const dynamic = 'force-dynamic';
 export default async function Page({ searchParams, params }: IProps) {
   const lang = getELangKey(params[EUrlBaseParam.LANG]);
 
-  const groupedSats = await getSatsForForm();
+  const groupedSats = await getSatsForForm(true, lang);
 
   const searchInterval = searchParams[EUrlSearchParam.INTERVAL];
   const intervalDays =

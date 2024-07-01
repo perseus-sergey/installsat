@@ -137,7 +137,7 @@ export default async function layout({ params }: IArticleParams) {
         {sqlResult.length > 0 ? (
           <BeamMapList lang={lang} beamList={sqlResult} />
         ) : (
-          <EmptyData />
+          <EmptyData lang={lang} />
         )}
         <BottomInfoPanel
           items={[

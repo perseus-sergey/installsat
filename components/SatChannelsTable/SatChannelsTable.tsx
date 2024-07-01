@@ -193,7 +193,7 @@ const SatChannelsTable = ({
       ))}
     </>
   ) : (
-    <EmptyData />
+    <EmptyData lang={lang} />
   );
 
 export default SatChannelsTable;

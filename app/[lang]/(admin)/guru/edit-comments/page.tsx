@@ -26,7 +26,7 @@ export interface IPageParams {
 export default async function Page({ searchParams, params }: IPageParams) {
   const lang = getELangKey(params[EUrlBaseParam.LANG]);
   if (!searchParams)
-    return <EmptyData description="Wrong Url Search Params!" />;
+    return <EmptyData lang={lang} description="Wrong Url Search Params!" />;
 
   const articleIdEncrypted = validSearchParam(
     EUrlSearchParam.COMMENT_DEL_ARTICLE_ID,
@@ -44,12 +44,12 @@ export default async function Page({ searchParams, params }: IPageParams) {
   )) as EDBTableTitles;
 
   if (!articleId || !commentDbTable)
-    return <EmptyData description="Wrong Url Search Params!" />;
+    return <EmptyData lang={lang} description="Wrong Url Search Params!" />;
 
   const comments = await getComments(commentDbTable, articleId);
 
   if (comments instanceof Error)
-    return <EmptyData description={comments.message} />;
+    return <EmptyData lang={lang} description={comments.message} />;
 
   return (
     <>

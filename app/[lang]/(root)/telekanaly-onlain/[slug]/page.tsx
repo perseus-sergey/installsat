@@ -172,6 +172,7 @@ export default async function Page({ params }: IChannelProps) {
           <GrooveLine />
 
           <TvScheduleLink
+            lang={lang}
             title={`${scheduleTitle[lang]} "${title}"`}
             href={`/${lang}/${CHANNELS_TV_PROGRAM}/${slug}/${getFormattedDateStrYearFirst()}`}
           />

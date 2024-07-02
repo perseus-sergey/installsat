@@ -19,7 +19,7 @@ const Page = async ({ params }: IParams) => {
 
   const dbResult = await getArticleAndCatDb(id);
   if (dbResult instanceof Error)
-    return <EmptyData description={dbResult.message} />;
+    return <EmptyData lang={lang} description={dbResult.message} />;
 
   const articleHref = `/${lang}/${EUrlBaseParam.ARTICLE}/${dbResult[0][0].cpu}`;
 

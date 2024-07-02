@@ -10,7 +10,7 @@ import {
   META_TRANS_NEWS_LIST,
   TSatDigest,
 } from '@/models/satDigest.model';
-import { DEFAULT_LANG } from '@/models/ui.model';
+import { ELanguage } from '@/models/ui.model';
 import { decode } from 'html-entities';
 import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
 
@@ -68,11 +68,11 @@ export const getSatDigestNews = async ({
       }));
 };
 
-export const getGroupedSatelliteOptions = (
+const getGroupedSatelliteOptions = (
   [eastSats, westSats]: TSatModel[][],
-  isDefaultValue = true
+  isDefaultValue = true,
+  lang: ELanguage
 ): IGroupedSatelliteOption[] => {
-  const language = DEFAULT_LANG;
   const { westDirectionLabel, eastDirectionLabel, defaultLabel } =
     META_TRANS_NEWS_LIST.select.satSelect;
 
@@ -84,19 +84,19 @@ export const getGroupedSatelliteOptions = (
 
   const options: IGroupedSatelliteOption[] = [
     {
-      label: westDirectionLabel[language],
+      label: westDirectionLabel[lang],
       options: mapToOption(westSats),
     },
     {
-      label: eastDirectionLabel[language],
+      label: eastDirectionLabel[lang],
       options: mapToOption(eastSats),
     },
   ];
 
   if (isDefaultValue) {
     options.unshift({
-      label: defaultLabel[language],
-      options: [{ value: '', label: defaultLabel[language] }],
+      label: defaultLabel[lang],
+      options: [{ value: '', label: defaultLabel[lang] }],
     });
   }
 
@@ -113,7 +113,10 @@ export const splitSatellitesByDirection = (satellites: TSatModel[]) =>
     [[], []]
   );
 
-export const getSatsForForm = async (isDefaultValue = true) => {
+export const getSatsForForm = async (
+  isDefaultValue = true,
+  lang: ELanguage
+) => {
   const satResult = await poolExecute<TSatModel[]>(`
   SELECT title, id, position, grade
   FROM tbl_chan_sat
@@ -125,7 +128,8 @@ export const getSatsForForm = async (isDefaultValue = true) => {
     ? satResult
     : getGroupedSatelliteOptions(
         splitSatellitesByDirection(satResult),
-        isDefaultValue
+        isDefaultValue,
+        lang
       );
 };
 

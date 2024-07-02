@@ -89,6 +89,7 @@ const SchedulePage = ({
     </div>
   ) : (
     <EmptyData
+      lang={lang}
       description={scheduleNotAvailableForDate(channelTitle, dayStr)[lang]}
     />
   );

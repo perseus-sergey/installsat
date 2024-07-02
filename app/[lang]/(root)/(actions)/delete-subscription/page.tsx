@@ -65,13 +65,14 @@ export default async function Page({ searchParams, params }: IPageParams) {
   );
 
   return (
-    <>
+    <article className="article">
       <Title style={{ flexDirection: 'column' }}>
         {h1[lang]}
         <br />
         <span style={{ color: '#d30084', fontSize: '0.7em' }}>{mail}</span>
       </Title>
       <DeleteCommentSubscription
+        lang={lang}
         articleTitle={articleTitle}
         articleId={await decrypt(articleIdEncrypted, emailKey)}
         commentDbTable={
@@ -79,6 +80,6 @@ export default async function Page({ searchParams, params }: IPageParams) {
         }
         mail={mail}
       />
-    </>
+    </article>
   );
 }

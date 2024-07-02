@@ -7,6 +7,7 @@ import { DEFAULT_LANG, ELanguage } from '@/models/ui.model';
 import { EUrlBaseParam } from '@/models/url.model';
 import { GoogleAnalytics } from '@next/third-parties/google';
 
+const gaId = process.env.GA_ID || '';
 export async function generateStaticParams() {
   return Object.values(ELanguage).map((l) => ({ [EUrlBaseParam.LANG]: l }));
 }
@@ -30,7 +31,7 @@ export default function RootLayout({
         <ToastProvider>{children}</ToastProvider>
         <Footer lang={lang} />
       </body>
-      <GoogleAnalytics gaId="G-60MX085VHN" />
+      <GoogleAnalytics gaId={gaId} />
     </html>
   );
 }

@@ -88,7 +88,7 @@ export default async function Page({ params }: IArticleParams) {
   const sqlResult = await getArticle(article);
 
   if (sqlResult instanceof Error)
-    return <EmptyData description={sqlResult.message} />;
+    return <EmptyData lang={lang} description={sqlResult.message} />;
   if (!sqlResult) notFound();
 
   const { id, text, date, logo, view, title, slug, cat_slug, cat_name } =

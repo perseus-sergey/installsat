@@ -49,7 +49,7 @@ export const executeMultipleQuery = async <T>(
   }
 };
 
-export let pool: mysql.Pool;
+let pool: mysql.Pool;
 
 export const getPool = (): mysql.Pool => {
   if (!pool) {

@@ -76,7 +76,7 @@ export const generateMetadata = ({ params }: IPageProps): Metadata => {
 export default async function Page({ params }: IPageProps) {
   const lang = getELangKey(params[EUrlBaseParam.LANG]);
 
-  const groupedSats = await getSatsForForm(false);
+  const groupedSats = await getSatsForForm(false, lang);
 
   const numberOfComments = await getCommentsNumber(
     EDBTableTitles.COMMENTS_ARTICLE,

@@ -69,7 +69,7 @@ const MapList = ({ articleList, lang }: IArticleListProps) =>
       )}
     </ul>
   ) : (
-    <EmptyData />
+    <EmptyData lang={lang} />
   );
 
 export default MapList;

@@ -19,7 +19,7 @@ const Page = async ({ params }: IParams) => {
 
   const dbResult = await getEditDbChannel(id);
   if (dbResult instanceof Error)
-    return <EmptyData description={dbResult.message} />;
+    return <EmptyData lang={lang} description={dbResult.message} />;
 
   const productionHref = `/${lang}/${EUrlBaseParam.CHANNEL_PARAMS}/${dbResult[1][0].chan_slug}`;
 

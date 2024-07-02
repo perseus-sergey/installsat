@@ -17,7 +17,7 @@ const DateNewsList = async ({ lang }: { lang: ELanguage }) => {
   const newsArray = await setGroupedNewsByDateMap();
 
   if (newsArray instanceof Error)
-    return <EmptyData description={newsArray.message} />;
+    return <EmptyData lang={lang} description={newsArray.message} />;
 
   return newsArray.map((news) => {
     const dateInISO = getDateInISO(news[0]);

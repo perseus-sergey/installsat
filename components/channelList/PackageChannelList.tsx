@@ -132,7 +132,7 @@ const PackageChannelList = ({
       </>
     ))
   ) : (
-    <EmptyData />
+    <EmptyData lang={lang} />
   );
 
 export default PackageChannelList;

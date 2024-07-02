@@ -102,7 +102,7 @@ const ArticleList = ({
       )}
     </ul>
   ) : (
-    <EmptyData />
+    <EmptyData lang={lang} />
   );
 
 export default ArticleList;

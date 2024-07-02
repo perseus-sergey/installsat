@@ -64,7 +64,7 @@ export const CommentToAdminEmail = async ({
     [COMMENT_DEL_ARTICLE_ID]: await encrypt(articleId, emailKey),
     [COMMENT_DEL_DB_TABLE]: await encrypt(tblCommentName || '', emailKey),
   });
-  const commentEditUrl = `${baseUrl}/${EUrlAdminParam.BASE_PATH}/${EUrlAdminParam.EDIT_COMMENT}?${commentSearchParams}`;
+  const commentEditUrl = `${baseUrl}/${ELanguage.EN}/${EUrlAdminParam.BASE_PATH}/${EUrlAdminParam.EDIT_COMMENT}?${commentSearchParams}`;
 
   return (
     <Html>
@@ -173,7 +173,7 @@ export const CommentToUserEmail = async ({
     [COMMENT_DEL_ARTICLE_NAME]: articleName,
     [COMMENT_DEL_DB_TABLE]: await encrypt(tblCommentName || '', emailKey),
   });
-  const removeSubscriptionUrl = `${baseUrl}/${EUrlBaseParam.DELETE_COMMENT_SUBSCRIPTION}?${delCommentSearchParams}`;
+  const removeSubscriptionUrl = `${baseUrl}/${lang}/${EUrlBaseParam.DELETE_COMMENT_SUBSCRIPTION}?${delCommentSearchParams}`;
 
   return (
     <Html lang={lang === ELanguage.UA ? 'uk' : 'en'}>
@@ -186,7 +186,7 @@ export const CommentToUserEmail = async ({
         <Container style={container}>
           <Section style={{ textAlign: 'right' }}>
             <Link
-              href={`${baseUrl}`}
+              href={`${baseUrl}/${lang}`}
               target="_blank"
               style={{ display: 'inline-block' }}
             >
@@ -268,7 +268,7 @@ export const CommentToUserEmail = async ({
                 {lang === ELanguage.UA
                   ? 'Адміністрація сайту'
                   : 'Site administration'}{' '}
-                <Link href={baseUrl} target="_blank">
+                <Link href={`${baseUrl}/${lang}`} target="_blank">
                   <span style={coloredText}>Installsat.TV</span>
                 </Link>
               </Text>

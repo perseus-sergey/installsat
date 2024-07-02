@@ -29,7 +29,7 @@ export default async function Page({
 
   const dbResult = searchQuery ? await getEditDbChannels(searchQuery) : [];
   if (dbResult instanceof Error)
-    return <EmptyData description={dbResult.message} />;
+    return <EmptyData lang={lang} description={dbResult.message} />;
 
   return (
     <>
@@ -73,7 +73,7 @@ export default async function Page({
           </tbody>
         </table>
       ) : (
-        <EmptyData />
+        <EmptyData lang={lang} />
       )}
     </>
   );

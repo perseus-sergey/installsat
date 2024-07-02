@@ -40,6 +40,7 @@ const CommentForm = ({
 }: ICommentProps) => {
   const sendCommentHandler = addCommentAction.bind(
     null,
+    lang,
     articleId,
     userLocation && userLocation.status === 'success' ? userLocation.query : '',
     userLocation && userLocation.status === 'success'

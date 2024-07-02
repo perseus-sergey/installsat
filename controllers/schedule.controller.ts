@@ -1,4 +1,4 @@
-import { executeMultipleQuery, poolExecute } from '@/libs/db/mysqldb';
+import { poolExecute, poolQuery } from '@/libs/db/mysqldb';
 import { IDbIdAmountModel } from '@/models/admin.model';
 import { IScheduleTVModel, IVseTvParsModel } from '@/models/scheduleTV.model';
 import { EDBTableTitles } from '@/models/ui.model';
@@ -57,7 +57,7 @@ export const getChanOneDaySchedule = cache(
       `
       )
       .join(' ');
-    const res = await executeMultipleQuery<[IScheduleTVModel[]]>(sql);
+    const res = await poolQuery<[IScheduleTVModel[]]>(sql);
 
     return res instanceof Error
       ? null

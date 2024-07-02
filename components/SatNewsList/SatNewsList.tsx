@@ -21,11 +21,7 @@ interface ISatNewsListProps {
   lang: ELanguage;
 }
 
-const SatNewsList = async ({
-  searchParams,
-  // searchParams: { sat, interval },
-  lang,
-}: ISatNewsListProps) => {
+const SatNewsList = async ({ searchParams, lang }: ISatNewsListProps) => {
   const sats = validSearchParamArray(EUrlSearchParam.SAT, searchParams);
   const interval = validSearchParam(EUrlSearchParam.INTERVAL, searchParams);
   const newsIntervalResult = await getSatDigestNews({
@@ -34,7 +30,7 @@ const SatNewsList = async ({
   });
 
   if (newsIntervalResult instanceof Error)
-    return <EmptyData description={newsIntervalResult.message} />;
+    return <EmptyData lang={lang} description={newsIntervalResult.message} />;
 
   const newsArray = setGroupedNewsBySatMap(newsIntervalResult);
 

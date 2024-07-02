@@ -44,22 +44,35 @@ export const executeMultipleQuery = async (sql, values = []) => {
   }
 };
 
-export const pool = mysql.createPool({
-  ...access,
-  waitForConnections: true,
-  connectionLimit: 10,
-  queueLimit: 0,
-  // multipleStatements: true,
-});
+let pool;
+
+export const getPool = () => {
+  if (!pool) {
+    pool = mysql.createPool({
+      ...access,
+      waitForConnections: true,
+      connectionLimit: 20,
+      queueLimit: 0,
+      multipleStatements: true,
+    });
+  }
+
+  return pool;
+};
 
 export const executePoolQuery = async (sql, values = []) => {
+  const pool = getPool();
+  const connection = await pool.getConnection();
+
   try {
-    const [rows] = await pool.execute(sql, values);
+    const [rows] = await connection.execute(sql, values);
 
     return rows;
   } catch (err) {
     console.log(err);
 
     return err;
+  } finally {
+    connection.release();
   }
 };

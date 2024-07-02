@@ -1,13 +1,14 @@
 // import styles from './EmptyData.module.scss';
 
 import FillingValidImage from '@/components/ui/Images/FillingValidImage';
-import { DEFAULT_LANG, ERRORS } from '@/models/ui.model';
+import { ELanguage, ERRORS } from '@/models/ui.model';
 
 interface IEmptyDataProps {
+  lang: ELanguage;
   description?: string;
 }
 
-const EmptyData = ({ description }: IEmptyDataProps) => (
+const EmptyData = ({ description, lang }: IEmptyDataProps) => (
   <h3
     className="p-5 font-bold text-purple-600 flex flex-col items-center gap-12"
     data-testid="EmptyData"
@@ -17,8 +18,8 @@ const EmptyData = ({ description }: IEmptyDataProps) => (
       alternativeImgString={ERRORS.EMPTY_DATE_NEWS_PAGE.img.alternativeImgStr}
       alt="Empty Data Image"
     />
-    {/* {ERRORS.ERROR_EMPTY_DATA[DEFAULT_LANG]} */}
-    {description || ERRORS.ERROR_EMPTY_DATA[DEFAULT_LANG]}
+    {/* {ERRORS.ERROR_EMPTY_DATA[lang]} */}
+    {description || ERRORS.ERROR_EMPTY_DATA[lang]}
     {/* {description && !IS_PRODUCTION ? <span>: {description}</span> : null} */}
   </h3>
 );

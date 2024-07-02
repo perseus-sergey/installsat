@@ -13,7 +13,7 @@ import {
 } from '@/controllers/toast.controller';
 import { EEditCommentFieldNames } from '@/models/admin.model';
 import { COMMENTS_MODEL, ECommentFormNames } from '@/models/comments.model';
-import { EDBTableTitles, DEFAULT_LANG } from '@/models/ui.model';
+import { EDBTableTitles, ELanguage } from '@/models/ui.model';
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
 
@@ -27,31 +27,24 @@ const emptyFieldValues = {
 
 const { AUTHOR, EMAIL, TEXT } = ECommentFormNames;
 
-const commentSchema = z.object({
-  [AUTHOR]: z
-    .string()
-    .min(authorName.minSize.value, authorName.minSize.warningText[DEFAULT_LANG])
-    .max(
-      authorName.maxSize.value,
-      authorName.maxSize.warningText[DEFAULT_LANG]
-    ),
-  [EMAIL]: z.union([
-    z.literal(''),
-    z.string().email(authorEmail.warningText[DEFAULT_LANG]),
-  ]),
-  [TEXT]: z
-    .string()
-    .min(
-      commentText.minSize.value,
-      commentText.minSize.warningText[DEFAULT_LANG]
-    )
-    .max(
-      commentText.maxSize.value,
-      commentText.maxSize.warningText[DEFAULT_LANG]
-    ),
-});
+const getCommentSchema = (lang: ELanguage) =>
+  z.object({
+    [AUTHOR]: z
+      .string()
+      .min(authorName.minSize.value, authorName.minSize.warningText[lang])
+      .max(authorName.maxSize.value, authorName.maxSize.warningText[lang]),
+    [EMAIL]: z.union([
+      z.literal(''),
+      z.string().email(authorEmail.warningText[lang]),
+    ]),
+    [TEXT]: z
+      .string()
+      .min(commentText.minSize.value, commentText.minSize.warningText[lang])
+      .max(commentText.maxSize.value, commentText.maxSize.warningText[lang]),
+  });
 
 export const addCommentAction = async (
+  lang: ELanguage,
   articleId: string,
   userIp: string,
   userCountryCode: string,
@@ -64,7 +57,7 @@ export const addCommentAction = async (
   let res = 0;
 
   try {
-    const validFormData = commentSchema.parse({
+    const validFormData = getCommentSchema(lang).parse({
       [AUTHOR]: formData.get(AUTHOR),
       [EMAIL]: formData.get(EMAIL),
       [TEXT]: formData.get(TEXT),

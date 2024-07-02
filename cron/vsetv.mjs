@@ -9,7 +9,7 @@ import memoize from 'lodash.memoize';
 import axios from 'axios';
 import iconv from 'iconv-lite';
 import { sendMail } from './libs/sendMail.mjs';
-import { pool } from './libs/mysqldb.mjs';
+import { getPool } from './libs/mysqldb.mjs';
 import { insertDBVseTvChannels } from './libs/parseVseTv.controller.mjs';
 import {
   EDBTableTitles,
@@ -259,6 +259,7 @@ const R_U_N = async () => {
   const errorMessages = [];
   let resDbTableLength = '';
   const trapChannel = TRAP_CHANNEL;
+  const pool = getPool();
 
   try {
     const { zero, five } = catchTraps(

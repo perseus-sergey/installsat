@@ -237,7 +237,7 @@ export default async function Page({ params, searchParams }: IPageProps) {
             </Suspense>
           </>
         ) : (
-          <EmptyData />
+          <EmptyData lang={lang} />
         )}
       </article>
 
@@ -264,7 +264,7 @@ export default async function Page({ params, searchParams }: IPageProps) {
           articleName={`${channels[0][1][0].cat_title}. ${metaTitle[lang]}`}
         />
       ) : (
-        <EmptyData />
+        <EmptyData lang={lang} />
       )}
     </>
   );

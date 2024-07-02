@@ -7,7 +7,7 @@ import { getAdminChunkOfNews } from '@/controllers/admin.controller';
 import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
 import { getELangKey, validSearchParam } from '@/libs/utils/validSearchParam';
 import { ARTICLES } from '@/models/articles.model';
-import { EDBTableTitles, DEFAULT_LANG, TSearchParams } from '@/models/ui.model';
+import { EDBTableTitles, TSearchParams } from '@/models/ui.model';
 import {
   EUrlAdminParam,
   EUrlBaseParam,
@@ -60,12 +60,12 @@ export default async function Page({ searchParams, params }: IPageParams) {
         <Filter
           lang={lang}
           idName="article-search-input"
-          placeholder={placeholder[DEFAULT_LANG]}
-          labelTitle={labelTitle[DEFAULT_LANG]}
+          placeholder={placeholder[lang]}
+          labelTitle={labelTitle[lang]}
           searchQueryTitle={EUrlSearchParam.ARTICLE}
         />
       </Suspense>
-      <p className="text-blue-600 font-bold text-center text-lg">{`${articlesCountCaption[DEFAULT_LANG]}${articlesCount}`}</p>
+      <p className="text-blue-600 font-bold text-center text-lg">{`${articlesCountCaption[lang]}${articlesCount}`}</p>
       <Pagination
         lang={lang}
         page={pageNumber || 1}
@@ -101,7 +101,7 @@ export default async function Page({ searchParams, params }: IPageParams) {
               </tr>
             ))
           ) : (
-            <EmptyData />
+            <EmptyData lang={lang} />
           )}
         </tbody>
       </table>

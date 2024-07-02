@@ -1,10 +1,7 @@
 import { poolExecute } from '@/libs/db/mysqldb';
-import { TChannelCatsModel } from '@/models/tblChannelCateg.model';
-import { TSatModel } from '@/models/tblSat.model';
-import { NUMBER_OF_LAST_NEWS_WIDGET } from '@/models/widget.model';
-import { cache } from 'react';
 import { WRONG_CAT_IDS, satMapListSql } from './articles.controller';
-import { IAllMapsModel, IAllNewsModel } from '@/models/articles.model';
+import { IAllMapsModel } from '@/models/articles.model';
+import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
 
 export const getSatMapList = async () => {
   const res = await poolExecute<IAllMapsModel[]>(satMapListSql);
@@ -12,32 +9,76 @@ export const getSatMapList = async () => {
   return res instanceof Error ? [] : res;
 };
 
-export const getChannelCatList = cache(
-  async () =>
-    await poolExecute<TChannelCatsModel[]>(
-      `SELECT title, id, parent, cpu FROM tbl_chan_categ WHERE parent=0 AND title != '' AND id NOT IN (2,23,25) ORDER BY title`
-    )
-);
+export const getNewsForSiteMap = async () => {
+  const sql = `SELECT cpu FROM tbl_useful WHERE cat NOT IN ${WRONG_CAT_IDS}`;
+  const res = await poolExecute<{ cpu: string }[]>(sql);
 
-export const getChannelSatList = cache(
-  async (isFilling = true) =>
-    await poolExecute<TSatModel[]>(`
-  SELECT title,position,id,cpu,logo
-  FROM tbl_chan_sat
-  WHERE id != 1 
-  ${isFilling ? 'AND fill = 1' : ''}
-  ORDER BY grade
-  `)
-);
+  return res instanceof Error ? [] : res;
+};
 
-export const getLastNewsWidgetList = async () =>
-  await poolExecute<IAllNewsModel[]>(`
-    SELECT id, title, cpu FROM tbl_useful WHERE cat NOT IN ${WRONG_CAT_IDS} ORDER BY date DESC, id DESC LIMIT ${NUMBER_OF_LAST_NEWS_WIDGET}
-    `);
+export const getArticleCatListSiteMap = async () => {
+  const sql = `SELECT cpu FROM tbl_categories WHERE id NOT IN ${WRONG_CAT_IDS}`;
 
-export const getUsefulArticleList = cache(
-  async () =>
-    await poolExecute<IAllNewsModel[]>(`
-  SELECT title, id, cpu FROM tbl_useful WHERE cat=4 OR cat=5
-  `)
-);
+  const res = await poolExecute<{ cpu: string }[]>(sql);
+
+  return res instanceof Error ? [] : res;
+};
+
+export const getChannelsSiteMap = async () => {
+  const sql = `SELECT cpu FROM tbl_channals WHERE compress != 5`;
+
+  const res = await poolExecute<{ cpu: string }[]>(sql);
+
+  return res instanceof Error ? [] : res;
+};
+
+export const getPackagesSiteMap = async () => {
+  const sql = `SELECT cpu FROM tbl_chan_categ WHERE parent = 0 AND id NOT IN (2,23,25)`;
+
+  const res = await poolExecute<{ cpu: string }[]>(sql);
+
+  return res instanceof Error ? [] : res;
+};
+
+export const getSatellitesSiteMap = async () => {
+  const sql = `SELECT cpu FROM tbl_chan_sat WHERE id != 1 AND fill = 1`;
+
+  const res = await poolExecute<{ cpu: string }[]>(sql);
+
+  return res instanceof Error ? [] : res;
+};
+
+export const getSchedulesSiteMap = async () => {
+  const sql = `
+  SELECT cpu FROM tbl_channals
+  WHERE tema != 15 
+  AND ((vipiko != '' AND vipiko != 0) OR (vsetv != '' AND vsetv != 0))
+  `;
+
+  const res = await poolExecute<{ cpu: string }[]>(sql);
+
+  return res instanceof Error ? [] : res;
+};
+
+export const getOnlineChanSiteMap = async () => {
+  const sql = `
+  SELECT cpu FROM tbl_channals 
+  WHERE (compress = 5 AND tema != 15) OR (compress != 5 AND tema != 15 AND tvforsite_net != '' AND cat != 23)
+  `;
+
+  const res = await poolExecute<{ cpu: string }[]>(sql);
+
+  return res instanceof Error ? [] : res;
+};
+
+export const getTransNewsSiteMap = async () => {
+  const sql = `SELECT date FROM tbl_digest WHERE date >= CURDATE() - INTERVAL 180 DAY GROUP BY date;`;
+
+  const res = await poolExecute<{ date: string }[]>(sql);
+
+  return res instanceof Error
+    ? []
+    : res.map((r) => ({
+        cpu: getFormattedDateStrYearFirst(r.date),
+      }));
+};

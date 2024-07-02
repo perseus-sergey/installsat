@@ -1,5 +1,3 @@
-export const IS_PRODUCTION = true;
-
 export enum ELanguage {
   UA = 'ua',
   EN = 'en',

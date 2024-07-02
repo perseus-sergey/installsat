@@ -397,7 +397,7 @@ export default async function Page({
             <li key={channel.id}>
               <span>
                 <Link
-                  href={`${BASE_GURU_PATH}${EUrlAdminParam.CHANNELS_EDIT}/edit/${channel.id}`}
+                  href={`${BASE_GURU_PATH}/${EUrlAdminParam.CHANNELS_EDIT}/edit/${channel.id}`}
                 >
                   Edit «{channel.title}»
                 </Link>{' '}

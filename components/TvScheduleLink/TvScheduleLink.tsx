@@ -2,18 +2,19 @@ import Link from 'next/link';
 import styles from './TvScheduleLink.module.scss';
 import { META_CHANNEL } from '@/models/channel.model';
 import FillingValidImage from '../ui/Images/FillingValidImage';
-import { DEFAULT_LANG } from '@/models/ui.model';
+import { ELanguage } from '@/models/ui.model';
 
 interface ITvScheduleLinkProps {
   title: React.ReactNode;
   href: string;
+  lang: ELanguage;
 }
 
-const TvScheduleLink = ({ title, href }: ITvScheduleLinkProps) => (
+const TvScheduleLink = ({ title, href, lang }: ITvScheduleLinkProps) => (
   <div className={styles.TvScheduleLink} data-testid="TvScheduleLink">
     <FillingValidImage
       image={META_CHANNEL.images.scheduleImg}
-      alt={META_CHANNEL.images.scheduleImg.alt[DEFAULT_LANG]}
+      alt={META_CHANNEL.images.scheduleImg.alt[lang]}
       alternativeImgString={META_CHANNEL.images.scheduleImg.alternativeImgStr}
     />
     <Link className={styles.linkBtn} href={href}>

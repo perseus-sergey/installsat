@@ -5,10 +5,10 @@ import {
 } from '@/models/footer.model';
 import styles from './Footer.module.scss';
 import Link from 'next/link';
-import { ELanguage, DEFAULT_LANG } from '@/models/ui.model';
+import { ELanguage } from '@/models/ui.model';
 import { Fragment } from 'react';
 
-const Footer = ({ lang = DEFAULT_LANG }: { lang: ELanguage }) => (
+const Footer = ({ lang }: { lang: ELanguage }) => (
   <footer className={styles.footer}>
     <section className={styles.Copyright}>
       {COPYRIGHT_SECTION.title[lang]}

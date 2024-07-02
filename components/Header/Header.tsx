@@ -3,12 +3,12 @@ import Link from 'next/link';
 import ToggleSidebarLabel from '../ui/ToggleSidebarLabel/ToggleSidebarLabel';
 import { LOGO, TOGGLE_SIDEBAR_BUTTON_TITLE } from '@/models/header.model';
 import FillingImg from '../ui/Images/FillingImage';
-import { ELanguage, DEFAULT_LANG } from '@/models/ui.model';
+import { ELanguage } from '@/models/ui.model';
 import LangSwitchButton from '../LangSwitchButton/LangSwitchButton';
 
 const { title, siteLogo } = LOGO.link;
 
-const Header = ({ lang = DEFAULT_LANG }: { lang: ELanguage }) => (
+const Header = ({ lang }: { lang: ELanguage }) => (
   <header
     className="w-full flex items-center justify-between bg-gradient-to-b from-blue-800 to-white/0"
     data-testid="Header"

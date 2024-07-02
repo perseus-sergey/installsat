@@ -19,6 +19,7 @@ export default function robots(): MetadataRoute.Robots {
           (lang) => `/${lang}/${DELETE_COMMENT_SUBSCRIPTION}/`
         ),
         `/api/auth/`,
+        `/tvefir/`,
       ],
     },
     sitemap: `${BASE_URL}/sitemap.xml`,

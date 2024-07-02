@@ -1,72 +1,115 @@
-import { getSatMapList } from '@/controllers/siteMap.controller';
-import { ELanguage } from '@/models/ui.model';
+import {
+  getArticleCatListSiteMap,
+  getChannelsSiteMap,
+  getNewsForSiteMap,
+  getOnlineChanSiteMap,
+  getPackagesSiteMap,
+  getSatMapList,
+  getSatellitesSiteMap,
+  getSchedulesSiteMap,
+  getTransNewsSiteMap,
+} from '@/controllers/siteMap.controller';
+import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
+import { DEFAULT_LANG, ELanguage } from '@/models/ui.model';
 import { EUrlBaseParam, MAIN_URL } from '@/models/url.model';
 import { MetadataRoute } from 'next';
 
 const BASE = process.env.BASE_URL || MAIN_URL;
 const { UA, EN } = ELanguage;
-const { SAT_COVERAGE_MAP } = EUrlBaseParam;
+const {
+  SAT_COVERAGE_MAP,
+  NEWS_AND_ARTICLES,
+  ARTICLE,
+  CHANNEL_PARAMS,
+  CHANNELS_TV_PROGRAM,
+  SAT_FINDER,
+  PACKAGE_CHANNEL_LIST,
+  SAT_CHANNEL_LIST,
+  ONLINE_CHANNEL_LIST,
+  TRANSPONDER_NEWS,
+} = EUrlBaseParam;
+
+const getSiteMapItem = (startPath: EUrlBaseParam) => ({
+  url: `${BASE}/${DEFAULT_LANG}/${startPath}`,
+  lastModified: new Date(),
+  alternates: {
+    languages: {
+      en: `${BASE}/${EN}/${startPath}`,
+      uk: `${BASE}/${UA}/${startPath}`,
+    },
+  },
+});
+
+const getSiteMapItemList = (
+  startPath: EUrlBaseParam,
+  itemList: { cpu: string }[],
+  addedPath = '',
+  cpuIsDate = false
+) =>
+  itemList.map((item) => ({
+    url: `${BASE}/${DEFAULT_LANG}/${startPath}/${item.cpu}${addedPath ? `/${addedPath}` : ''}`,
+    lastModified: cpuIsDate
+      ? getFormattedDateStrYearFirst(item.cpu)
+      : new Date(),
+    alternates: {
+      languages: {
+        en: `${BASE}/${EN}/${startPath}/${item.cpu}${addedPath ? `/${addedPath}` : ''}`,
+        uk: `${BASE}/${UA}/${startPath}/${item.cpu}${addedPath ? `/${addedPath}` : ''}`,
+      },
+    },
+  }));
+
+// =================================================================
+// - add rows to tbl_digest_2023, tbl_digest_2022...
+// - schedule time on production
+// - siteMap with search parameters
+// - is it static sitemap.xml
+// when is sitemap() called (either when sitemap.json called or when the project is building)
+// =================================================================
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const satMapList = await getSatMapList();
+  const articleCatList = await getArticleCatListSiteMap();
+  const articleList = await getNewsForSiteMap();
+  const channelList = await getChannelsSiteMap();
+  const scheduleList = await getSchedulesSiteMap();
+  const packagesList = await getPackagesSiteMap();
+  const satellitesList = await getSatellitesSiteMap();
+  const onlineChannelList = await getOnlineChanSiteMap();
+  const transNewsList = await getTransNewsSiteMap();
 
   return [
     {
-      url: `${BASE}/${UA}/${SAT_COVERAGE_MAP}`,
+      url: `${BASE}/${DEFAULT_LANG}`,
       lastModified: new Date(),
       alternates: {
         languages: {
-          en: `${BASE}/${EN}/${SAT_COVERAGE_MAP}`,
-          uk: `${BASE}/${UA}/${SAT_COVERAGE_MAP}`,
+          en: `${BASE}/${EN}`,
+          uk: `${BASE}/${UA}`,
         },
       },
     },
-    ...satMapList.map((m) => ({
-      url: `${BASE}/${UA}/${SAT_COVERAGE_MAP}/${m.cpu}`,
-      lastModified: new Date(),
-      alternates: {
-        languages: {
-          en: `${BASE}/${EN}/${SAT_COVERAGE_MAP}/${m.cpu}`,
-          uk: `${BASE}/${UA}/${SAT_COVERAGE_MAP}/${m.cpu}`,
-        },
-      },
-    })),
+    getSiteMapItem(SAT_COVERAGE_MAP),
+    ...getSiteMapItemList(SAT_COVERAGE_MAP, satMapList),
+    getSiteMapItem(NEWS_AND_ARTICLES),
+    ...getSiteMapItemList(NEWS_AND_ARTICLES, articleCatList),
+    ...getSiteMapItemList(ARTICLE, articleList),
+    ...getSiteMapItemList(CHANNEL_PARAMS, channelList),
+    getSiteMapItem(CHANNELS_TV_PROGRAM),
+    ...getSiteMapItemList(
+      CHANNELS_TV_PROGRAM,
+      scheduleList,
+      getFormattedDateStrYearFirst()
+    ),
+    getSiteMapItem(SAT_FINDER),
+    getSiteMapItem(PACKAGE_CHANNEL_LIST),
+    ...getSiteMapItemList(PACKAGE_CHANNEL_LIST, packagesList),
+    getSiteMapItem(SAT_CHANNEL_LIST),
+    ...getSiteMapItemList(SAT_CHANNEL_LIST, satellitesList),
+    getSiteMapItem(ONLINE_CHANNEL_LIST),
+    ...getSiteMapItemList(ONLINE_CHANNEL_LIST, onlineChannelList),
+    getSiteMapItem(ONLINE_CHANNEL_LIST),
+    ...getSiteMapItemList(ONLINE_CHANNEL_LIST, onlineChannelList),
+    ...getSiteMapItemList(TRANSPONDER_NEWS, transNewsList, '', true),
   ];
-  // return products.map((product) => ({
-  //   url: `${BASE_URL}/product/${id}`,
-  //   lastModified: product.date,
-  // }))
-
-  // return [
-  //   {
-  //     url: BASE,
-  //     lastModified: new Date(),
-  //     alternates: {
-  //       languages: {
-  //         es: 'https://acme.com/es',
-  //         de: 'https://acme.com/de',
-  //       },
-  //     },
-  //   },
-  //   {
-  //     url: 'https://acme.com/about',
-  //     lastModified: new Date(),
-  //     alternates: {
-  //       languages: {
-  //         es: 'https://acme.com/es/about',
-  //         de: 'https://acme.com/de/about',
-  //       },
-  //     },
-  //   },
-  //   {
-  //     url: 'https://acme.com/blog',
-  //     lastModified: new Date(),
-  //     alternates: {
-  //       languages: {
-  //         es: 'https://acme.com/es/blog',
-  //         de: 'https://acme.com/de/blog',
-  //       },
-  //     },
-  //   },
-  // ];
 }

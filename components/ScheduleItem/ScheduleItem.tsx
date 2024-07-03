@@ -4,6 +4,7 @@ import { IScheduleTVModel, SCHEDULE_META } from '@/models/scheduleTV.model';
 import { cutText } from '@/libs/utils/utils';
 import DangerHtml from '../ui/DangerHtml/DangerHtml';
 import { decode } from 'html-entities';
+import { DEFAULT_TIME_ZONE } from '@/models/ui.model';
 
 const { descriptionMaxLength } = SCHEDULE_META.scheduleShort;
 
@@ -14,12 +15,16 @@ interface IScheduleItemProps {
 }
 
 const ScheduleItem = ({ schedule, now, addHour }: IScheduleItemProps) => {
-  const dateStart = DateTime.fromJSDate(schedule.start).minus({
-    hours: addHour,
-  });
-  const dateEnd = DateTime.fromJSDate(schedule.end).minus({
-    hours: addHour,
-  });
+  const dateStart = DateTime.fromJSDate(schedule.start)
+    .setZone(DEFAULT_TIME_ZONE)
+    .minus({
+      hours: addHour,
+    });
+  const dateEnd = DateTime.fromJSDate(schedule.end)
+    .setZone(DEFAULT_TIME_ZONE)
+    .minus({
+      hours: addHour,
+    });
 
   let timeClass = styles.timeFuture;
   let titleClass = styles.titleFuture;

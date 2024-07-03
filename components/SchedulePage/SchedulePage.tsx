@@ -6,7 +6,7 @@ import { Fragment } from 'react';
 import EmptyData from '../errors/EmptyData/EmptyData';
 import { TitleH2 } from '../ui/Titles/TitleH2';
 import { getDayOfMonthStr } from '@/libs/utils/dates';
-import { ELanguage } from '@/models/ui.model';
+import { DEFAULT_TIME_ZONE, ELanguage } from '@/models/ui.model';
 
 const {
   h2TitleForDate,
@@ -27,7 +27,7 @@ const SchedulePage = ({
   channelTitle,
   lang,
 }: ISchedulePageProps) => {
-  const now = DateTime.local();
+  const now = DateTime.local().setZone(DEFAULT_TIME_ZONE);
   const dayStr = getDayOfMonthStr(urlDate, lang);
   const availableSchedulesLength = !scheduleList
     ? 0

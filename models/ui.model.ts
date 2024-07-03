@@ -4,6 +4,7 @@ export enum ELanguage {
 }
 
 export const DEFAULT_LANG = ELanguage.EN;
+export const DEFAULT_TIME_ZONE = 'Europe/Kiev';
 
 export interface ILang {
   [ELanguage.UA]: string;

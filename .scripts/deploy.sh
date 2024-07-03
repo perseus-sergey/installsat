@@ -13,6 +13,11 @@ git fetch origin
 git reset --hard origin/main
 echo "New changes copied to server!"
 
+# Restart MySQL to clear any hanging connections
+echo "Restarting MySQL..."
+sudo systemctl restart mysql
+echo "MySQL restarted!"
+
 echo "Installing Dependencies..."
 yarn install
 

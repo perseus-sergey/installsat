@@ -29,42 +29,72 @@ const {
   TRANSPONDER_NEWS,
 } = EUrlBaseParam;
 
-const getSiteMapItem = (startPath: EUrlBaseParam) => ({
-  url: `${BASE}/${DEFAULT_LANG}/${startPath}`,
-  lastModified: new Date(),
-  alternates: {
-    languages: {
-      en: `${BASE}/${EN}/${startPath}`,
-      uk: `${BASE}/${UA}/${startPath}`,
-    },
-  },
-});
+type TChangeFrequency =
+  | 'always'
+  | 'never'
+  | 'hourly'
+  | 'daily'
+  | 'weekly'
+  | 'monthly'
+  | 'yearly';
 
-const getSiteMapItemList = (
-  startPath: EUrlBaseParam,
-  itemList: { cpu: string }[],
-  addedPath = '',
-  cpuIsDate = false
-) =>
-  itemList.map((item) => ({
-    url: `${BASE}/${DEFAULT_LANG}/${startPath}/${item.cpu}${addedPath ? `/${addedPath}` : ''}`,
-    lastModified: cpuIsDate
-      ? getFormattedDateStrYearFirst(item.cpu)
-      : new Date(),
+interface IItemData {
+  startPath?: EUrlBaseParam;
+  changeFrequency?: TChangeFrequency;
+  addedPath?: string;
+  cpuIsDate?: boolean;
+}
+
+interface IItemsData extends IItemData {
+  itemList: { cpu: string }[];
+}
+
+const getSiteMapItem = ({
+  startPath,
+  changeFrequency = 'never',
+}: IItemData) => {
+  const endPath = startPath ? `/${startPath}` : '';
+
+  return {
+    url: `${BASE}/${DEFAULT_LANG}${endPath}`,
+    lastModified: new Date(),
+    changeFrequency,
     alternates: {
       languages: {
-        en: `${BASE}/${EN}/${startPath}/${item.cpu}${addedPath ? `/${addedPath}` : ''}`,
-        uk: `${BASE}/${UA}/${startPath}/${item.cpu}${addedPath ? `/${addedPath}` : ''}`,
+        en: `${BASE}/${EN}${endPath}`,
+        uk: `${BASE}/${UA}${endPath}`,
       },
     },
-  }));
+  };
+};
+
+const getSiteMapItemList = ({
+  startPath,
+  itemList,
+  changeFrequency = 'never',
+  addedPath,
+  cpuIsDate,
+}: IItemsData) =>
+  itemList.map((item) => {
+    const endPath = `${startPath}/${item.cpu}${addedPath ? `/${addedPath}` : ''}`;
+
+    return {
+      url: `${BASE}/${DEFAULT_LANG}/${endPath}`,
+      lastModified: cpuIsDate
+        ? getFormattedDateStrYearFirst(item.cpu)
+        : new Date(),
+      changeFrequency,
+      alternates: {
+        languages: {
+          en: `${BASE}/${EN}/${endPath}`,
+          uk: `${BASE}/${UA}/${endPath}`,
+        },
+      },
+    };
+  });
 
 // =================================================================
 // - add rows to tbl_digest_2023, tbl_digest_2022...
-// - schedule time on production
-// - siteMap with search parameters
-// - is it static sitemap.xml
-// when is sitemap() called (either when sitemap.json called or when the project is building)
 // =================================================================
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
@@ -79,37 +109,69 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const transNewsList = await getTransNewsSiteMap();
 
   return [
-    {
-      url: `${BASE}/${DEFAULT_LANG}`,
-      lastModified: new Date(),
-      alternates: {
-        languages: {
-          en: `${BASE}/${EN}`,
-          uk: `${BASE}/${UA}`,
-        },
-      },
-    },
-    getSiteMapItem(SAT_COVERAGE_MAP),
-    ...getSiteMapItemList(SAT_COVERAGE_MAP, satMapList),
-    getSiteMapItem(NEWS_AND_ARTICLES),
-    ...getSiteMapItemList(NEWS_AND_ARTICLES, articleCatList),
-    ...getSiteMapItemList(ARTICLE, articleList),
-    ...getSiteMapItemList(CHANNEL_PARAMS, channelList),
-    getSiteMapItem(CHANNELS_TV_PROGRAM),
-    ...getSiteMapItemList(
-      CHANNELS_TV_PROGRAM,
-      scheduleList,
-      getFormattedDateStrYearFirst()
-    ),
-    getSiteMapItem(SAT_FINDER),
-    getSiteMapItem(PACKAGE_CHANNEL_LIST),
-    ...getSiteMapItemList(PACKAGE_CHANNEL_LIST, packagesList),
-    getSiteMapItem(SAT_CHANNEL_LIST),
-    ...getSiteMapItemList(SAT_CHANNEL_LIST, satellitesList),
-    getSiteMapItem(ONLINE_CHANNEL_LIST),
-    ...getSiteMapItemList(ONLINE_CHANNEL_LIST, onlineChannelList),
-    getSiteMapItem(ONLINE_CHANNEL_LIST),
-    ...getSiteMapItemList(ONLINE_CHANNEL_LIST, onlineChannelList),
-    ...getSiteMapItemList(TRANSPONDER_NEWS, transNewsList, '', true),
+    getSiteMapItem({ changeFrequency: 'daily' }),
+    getSiteMapItem({ startPath: SAT_COVERAGE_MAP, changeFrequency: 'monthly' }),
+    ...getSiteMapItemList({
+      startPath: SAT_COVERAGE_MAP,
+      itemList: satMapList,
+      changeFrequency: 'monthly',
+    }),
+    getSiteMapItem({ startPath: NEWS_AND_ARTICLES, changeFrequency: 'daily' }),
+    ...getSiteMapItemList({
+      startPath: NEWS_AND_ARTICLES,
+      itemList: articleCatList,
+      changeFrequency: 'yearly',
+    }),
+    ...getSiteMapItemList({
+      startPath: ARTICLE,
+      itemList: articleList,
+      changeFrequency: 'weekly',
+    }),
+    ...getSiteMapItemList({
+      startPath: CHANNEL_PARAMS,
+      itemList: channelList,
+      changeFrequency: 'weekly',
+    }),
+    getSiteMapItem({
+      startPath: CHANNELS_TV_PROGRAM,
+      changeFrequency: 'monthly',
+    }),
+    ...getSiteMapItemList({
+      startPath: CHANNELS_TV_PROGRAM,
+      itemList: scheduleList,
+      changeFrequency: 'daily',
+      addedPath: getFormattedDateStrYearFirst(),
+    }),
+    getSiteMapItem({ startPath: SAT_FINDER, changeFrequency: 'yearly' }),
+    getSiteMapItem({
+      startPath: PACKAGE_CHANNEL_LIST,
+      changeFrequency: 'monthly',
+    }),
+    ...getSiteMapItemList({
+      startPath: PACKAGE_CHANNEL_LIST,
+      itemList: packagesList,
+      changeFrequency: 'monthly',
+    }),
+    getSiteMapItem({ startPath: SAT_CHANNEL_LIST, changeFrequency: 'weekly' }),
+    ...getSiteMapItemList({
+      startPath: SAT_CHANNEL_LIST,
+      itemList: satellitesList,
+      changeFrequency: 'weekly',
+    }),
+    getSiteMapItem({
+      startPath: ONLINE_CHANNEL_LIST,
+      changeFrequency: 'monthly',
+    }),
+    ...getSiteMapItemList({
+      startPath: ONLINE_CHANNEL_LIST,
+      itemList: onlineChannelList,
+      changeFrequency: 'monthly',
+    }),
+    ...getSiteMapItemList({
+      startPath: TRANSPONDER_NEWS,
+      itemList: transNewsList,
+      changeFrequency: 'weekly',
+      cpuIsDate: true,
+    }),
   ];
 }

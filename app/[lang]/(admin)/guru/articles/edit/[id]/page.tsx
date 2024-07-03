@@ -30,7 +30,7 @@ const Page = async ({ params }: IParams) => {
       breadCrumbList={[
         {
           title: 'Article list',
-          href: `/${lang}/${EUrlAdminParam.BASE_PATH}/${EUrlAdminParam.ARTICLES_EDIT}/edit`,
+          href: `${EUrlAdminParam.BASE_PATH}/${EUrlAdminParam.ARTICLES_EDIT}/edit`,
         },
         {
           title: dbResult[0][0].title,

@@ -8,6 +8,7 @@ import FillingValidImage from '../ui/Images/FillingValidImage';
 import { ELanguage, ERRORS } from '@/models/ui.model';
 import EmptyPage from '../errors/EmptyPage/EmptyPage';
 import { decode } from 'html-entities';
+import { TitleH2Digest } from '../ui/Titles/TitleH2Digest';
 
 interface ITransNewsSingleProps {
   newsArray: [string, TSatDigest[]][] | null;
@@ -19,13 +20,13 @@ const TransNewsSingle = ({ newsArray, title, lang }: ITransNewsSingleProps) => (
   <>
     <Title>{title}</Title>
     {newsArray && newsArray.length > 0 ? (
-      <div className={satNewsStyles.newsBlock}>
+      <div>
         {newsArray.map((satNews) => {
           const { satLogo } = META_TRANS_NEWS_LIST.images;
 
           return (
             <>
-              <h2 className={satNewsStyles.groupTitle} key={satNews[0]}>
+              <TitleH2Digest key={satNews[0]}>
                 <FillingValidImage
                   image={{
                     ...satLogo,
@@ -36,7 +37,7 @@ const TransNewsSingle = ({ newsArray, title, lang }: ITransNewsSingleProps) => (
                   alt={`${satLogo.alt[lang]}${satNews[0]}`}
                 />
                 {decode(satNews[0])}
-              </h2>
+              </TitleH2Digest>
               <div className={satNewsStyles.newsList}>
                 <DangerHtmlUl
                   text={getDailyNews(satNews[1])}

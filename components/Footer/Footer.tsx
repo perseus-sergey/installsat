@@ -7,6 +7,7 @@ import styles from './Footer.module.scss';
 import Link from 'next/link';
 import { ELanguage } from '@/models/ui.model';
 import { Fragment } from 'react';
+import FillingImg from '../ui/Images/FillingImage';
 
 const Footer = ({ lang }: { lang: ELanguage }) => (
   <footer className={styles.footer}>
@@ -31,6 +32,18 @@ const Footer = ({ lang }: { lang: ELanguage }) => (
           );
         })}
       </ul>
+      <Link href="/?ez_force_cookie_consent=1">
+        <FillingImg
+          width={24}
+          height={24}
+          alt={
+            lang === ELanguage.UA
+              ? 'Налаштування використання cookies'
+              : 'Set up cookies'
+          }
+          src="/Images/cookie.png"
+        />
+      </Link>
     </nav>
   </footer>
 );

@@ -15,6 +15,8 @@ import {
   validSearchParamArray,
 } from '@/libs/utils/validSearchParam';
 import { EUrlSearchParam } from '@/models/url.model';
+import { TitleH2Digest } from '../ui/Titles/TitleH2Digest';
+import { TitleH3Digest } from '../ui/Titles/TitleH3Digest';
 
 interface ISatNewsListProps {
   searchParams: TSearchParams;
@@ -38,8 +40,8 @@ const SatNewsList = async ({ searchParams, lang }: ISatNewsListProps) => {
     const { satLogo } = META_TRANS_NEWS_LIST.images;
 
     return (
-      <div className={styles.newsBlock} key={news[0]}>
-        <h2 className={styles.groupTitle}>
+      <div key={news[0]}>
+        <TitleH2Digest>
           <FillingValidImage
             image={{
               ...satLogo,
@@ -51,14 +53,14 @@ const SatNewsList = async ({ searchParams, lang }: ISatNewsListProps) => {
           />
           <div>
             {META_TRANS_NEWS_LIST.h2start[lang]}
-            <span className={styles.groupTitleDate}>{news[0]}</span>
+            <span className="text-rose-500">{news[0]}</span>
           </div>
-        </h2>
+        </TitleH2Digest>
         {[...news[1]].map((satNews) => (
           <>
-            <h3 className={styles.groupSubTitle} key={satNews[0]}>
+            <TitleH3Digest key={satNews[0]}>
               {`${getDateInISO(satNews[0])} ....`}
-            </h3>
+            </TitleH3Digest>
             <div className={styles.newsList}>
               <DangerHtml text={getDailyNews(satNews[1])} wrapperTagName="ul" />
             </div>

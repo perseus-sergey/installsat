@@ -237,3 +237,9 @@ a {
     transition: 0s;
   }
 }
+
+.h2-shadow {
+  text-shadow:
+    0 1px 0 #ffffff,
+    1px 3px 3px #999999;
+}

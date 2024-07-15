@@ -12,6 +12,8 @@ import { META_TRANS_NEWS_SINGLE } from '@/models/satDigest.model';
 import { ELanguage } from '@/models/ui.model';
 import { getDateInISO } from '@/libs/utils/dates';
 import { decode } from 'html-entities';
+import { TitleH2Digest } from '../ui/Titles/TitleH2Digest';
+import { TitleH3Digest } from '../ui/Titles/TitleH3Digest';
 
 const DateNewsList = async ({ lang }: { lang: ELanguage }) => {
   const newsArray = await setGroupedNewsByDateMap();
@@ -23,21 +25,21 @@ const DateNewsList = async ({ lang }: { lang: ELanguage }) => {
     const dateInISO = getDateInISO(news[0]);
 
     return (
-      <div className={styles.newsBlock} key={news[0]}>
-        <h2 className={`${styles.groupTitle} ${styles.alignCenter}`}>
+      <div key={news[0]}>
+        <TitleH2Digest className="text-center justify-center">
           <Link
             href={`/${lang}/${EUrlBaseParam.TRANSPONDER_NEWS}/${dateInISO}`}
           >
             {META_TRANS_NEWS_SINGLE.metaH1start[lang]}
-            <span className={styles.groupTitleDate}> {dateInISO}</span>
+            <span className="text-rose-500"> {dateInISO}</span>
           </Link>
-        </h2>
+        </TitleH2Digest>
         {[...news[1]].map((satNews) => {
           return (
             <React.Fragment key={satNews[0]}>
-              <h3 className={styles.groupSubTitle}>
+              <TitleH3Digest>
                 {decode(`${satNews[0]} ${satNews[1][0].satPosition}`)}
-              </h3>
+              </TitleH3Digest>
               <div className={styles.newsList}>
                 <DangerHtmlUl
                   text={getDailyNews(satNews[1])}

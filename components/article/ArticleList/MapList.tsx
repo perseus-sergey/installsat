@@ -58,7 +58,7 @@ const MapList = ({ articleList, lang }: IArticleListProps) =>
               articleDescription={
                 <p>{makePostDescription(description)[lang]}</p>
               }
-              href={`/${EUrlBaseParam.SAT_COVERAGE_MAP}/${cpu}`}
+              href={`/${lang}/${EUrlBaseParam.SAT_COVERAGE_MAP}/${cpu}`}
               infoPanelItems={[
                 { name: viewsTitle[lang], value: view },
                 { name: commentsTitle[lang], value: comment_count },

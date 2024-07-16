@@ -29,8 +29,8 @@ export default function RootLayout({
         <input type="checkbox" id="toggle-sidebar" hidden />
         <Header lang={lang} />
         <ToastProvider>{children}</ToastProvider>
-        <span id="ezoic-privacy-policy-embed"></span>
         <Footer lang={lang} />
+        <span id="ezoic-privacy-policy-embed"></span>
       </body>
       <GoogleAnalytics gaId={gaId} />
     </html>

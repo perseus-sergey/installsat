@@ -1,4 +1,4 @@
-@use './var.scss' as *;
+@use '../var.scss' as *;
 
 @tailwind base;
 @tailwind components;
@@ -47,20 +47,22 @@ a {
 }
 
 .main {
-  width: 95%;
   margin: 0 auto;
   // overflow: auto;
   background-color: #03182d;
-  border-radius: 10px;
-  border: thin groove #cccccc;
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
   min-height: 70vh;
 
-  @media (max-width: $widthScreenForBurgerMenu) {
-    display: block;
+  @media (width > 420px) {
+    width: 95%;
+    border-radius: 10px;
+    border: thin groove #cccccc;
   }
+  // @media (max-width: $widthScreenForBurgerMenu) {
+  //   display: block;
+  // }
 }
 
 .groove-border {
@@ -76,12 +78,15 @@ a {
 }
 
 .article {
-  @include blockBorder;
   display: flex;
   flex-direction: column;
   background-color: var(--background-color);
   min-height: 75vh;
-  padding: 0.7rem;
+
+  @media (width > 420px) {
+    @include blockBorder;
+    padding: 0.7rem;
+  }
 }
 
 .article-text {
@@ -137,7 +142,7 @@ a {
     height: 100%;
     width: 85%;
     max-width: 500px;
-    min-width: 320px;
+    min-width: 300px;
     z-index: 101;
   }
 }
@@ -180,23 +185,14 @@ a {
 .grey_text {
   color: black;
   font-weight: bold;
-  text-shadow:
-    0 0 1px rgba(255, 255, 255, 1),
-    0 0 3px rgba(180, 180, 180, 0.7);
 }
 
 .left_chan {
   color: #a81246;
-  text-shadow:
-    0 0 1px rgba(255, 255, 255, 1),
-    0 0 2px rgba(255, 20, 75, 0.3);
 }
 
 .add_chan {
-  color: #2e8b57;
-  text-shadow:
-    0 0 1px rgba(255, 255, 255, 1),
-    0 0 3px rgba(20, 255, 20, 0.5);
+  background-color: #02ff1621;
 }
 
 .MovingButton {

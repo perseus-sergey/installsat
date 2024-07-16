@@ -18,7 +18,10 @@ const Header = ({ lang }: { lang: ELanguage }) => (
         {TOGGLE_SIDEBAR_BUTTON_TITLE}
       </ToggleSidebarLabel>
       <Link href={`/${lang}`} title={title[lang]} className="inline-block p-5">
-        <FillingImg {...siteLogo} alt={siteLogo.alt[lang]} isPriority />
+        <div className="hidden sm:block">
+          <FillingImg {...siteLogo} alt={siteLogo.alt[lang]} isPriority />
+        </div>
+        <i className="block sm:hidden text-blue-100 text-2xl">Installsat</i>
       </Link>
     </nav>
     <Suspense>

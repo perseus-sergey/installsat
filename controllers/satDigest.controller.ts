@@ -10,16 +10,18 @@ import {
   META_TRANS_NEWS_LIST,
   TSatDigest,
 } from '@/models/satDigest.model';
-import { ELanguage } from '@/models/ui.model';
+import { DEFAULT_LANG, ELanguage } from '@/models/ui.model';
 import { decode } from 'html-entities';
 import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
 
 export const getSatDigestNews = async ({
   satellites = undefined,
   timeInterval = 0,
+  lang = DEFAULT_LANG,
 }: {
   satellites?: string | string[] | undefined;
   timeInterval?: number;
+  lang?: ELanguage;
 }): Promise<Error | TSatDigest[]> => {
   let orderBy = 'ORDER BY d.date DESC, satGrade, satTitle';
   let tblName = 'tbl_digest';
@@ -44,7 +46,7 @@ export const getSatDigestNews = async ({
   }
 
   const sql = `
-    SELECT d.id, d.date, d.text, d.sat_name, d.sat_position,
+    SELECT d.id, d.date, ${lang === ELanguage.UA ? 'd.text' : 'd.text_en AS text'}, d.sat_name, d.sat_position,
     sat.parent AS satParent,
     sat.title AS satTitle,
     sat.logo AS satLogo,
@@ -173,10 +175,10 @@ export const getTransNewsForSingleDay = async (
   );
 };
 
-export const setGroupedNewsByDateMap = async (): Promise<
-  TGroupedNews | Error
-> => {
-  const newsResult = await getSatDigestNews({});
+export const setGroupedNewsByDateMap = async (
+  lang = DEFAULT_LANG
+): Promise<TGroupedNews | Error> => {
+  const newsResult = await getSatDigestNews({ lang });
 
   if (newsResult instanceof Error) return newsResult;
 

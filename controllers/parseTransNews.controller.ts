@@ -29,6 +29,7 @@ export const insertDBTransNews = async (data: ITblDigestParse[]) => {
     pool.escape(item.channel_title),
     pool.escape(item.action),
     pool.escape(item.text),
+    pool.escape(item.text_en),
     pool.escape(item.sat),
     pool.escape(item.sat_name),
     pool.escape(item.sat_position),
@@ -38,7 +39,7 @@ export const insertDBTransNews = async (data: ITblDigestParse[]) => {
 
   const sql = `
       INSERT INTO ${EDBTableTitles.TRANS_NEWS} 
-      (\`date\`, \`update\`, \`channel_title\`, \`action\`, \`text\`, \`sat\`, \`sat_name\`, \`sat_position\`, \`frequency_text\`, \`country\`)
+      (\`date\`, \`update\`, \`channel_title\`, \`action\`, \`text\`, \`text_en\`, \`sat\`, \`sat_name\`, \`sat_position\`, \`frequency_text\`, \`country\`)
       VALUES ${values.map((valueSet) => `(${valueSet.join(', ')})`).join(', ')};
     `;
   const res = await poolExecute<ResultSetHeader>(sql);

@@ -23,7 +23,7 @@ export default async function Page({ params }: IParams) {
         buttonTitle="Schedule VseTv"
         inputDefaultValue={346}
         inputType="number"
-        inputBaseHref={`/${lang}/${EUrlAdminParam.PARSE}/${EUrlAdminParam.PARSE_SCHEDULE_VSETV}`}
+        inputBaseHref={`/${lang}/${EUrlAdminParam.BASE_PATH}/${EUrlAdminParam.PARSE}/${EUrlAdminParam.PARSE_SCHEDULE_VSETV}`}
         searchParamName={EUrlSearchParam.COMMENT_ID}
         fieldSetTitle="Schedule VseTv"
         labelHtml={
@@ -45,7 +45,7 @@ export default async function Page({ params }: IParams) {
         buttonTitle="Transponder News"
         inputDefaultValue={4}
         inputType="number"
-        inputBaseHref={`/${lang}/${EUrlAdminParam.PARSE}/${EUrlAdminParam.PARSE_SAT_DIGEST}`}
+        inputBaseHref={`/${lang}/${EUrlAdminParam.BASE_PATH}/${EUrlAdminParam.PARSE}/${EUrlAdminParam.PARSE_SAT_DIGEST}`}
         searchParamName={EUrlSearchParam.INTERVAL}
         fieldSetTitle="Transponder News"
         labelHtml={
@@ -61,6 +61,16 @@ export default async function Page({ params }: IParams) {
             </Link>
           </>
         }
+      />
+      <ClientInputWithSubmit
+        inputId="trans-news-en-column"
+        buttonTitle="Add English Text"
+        inputDefaultValue={0}
+        inputType="number"
+        inputBaseHref={`/${lang}/${EUrlAdminParam.BASE_PATH}/${EUrlAdminParam.PARSE}/add-en-news`}
+        searchParamName={EUrlSearchParam.INTERVAL}
+        fieldSetTitle="Transponder News"
+        labelHtml={'Choose the Year or leave empty for current year.'}
       />
     </>
   );

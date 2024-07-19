@@ -29,10 +29,10 @@ const SatNewsList = async ({ searchParams, lang }: ISatNewsListProps) => {
   const newsIntervalResult = await getSatDigestNews({
     satellites: sats,
     timeInterval: Number(interval),
+    lang,
   });
 
-  if (newsIntervalResult instanceof Error)
-    return <EmptyData lang={lang} description={newsIntervalResult.message} />;
+  if (newsIntervalResult instanceof Error) return <EmptyData lang={lang} />;
 
   const newsArray = setGroupedNewsBySatMap(newsIntervalResult);
 
@@ -51,7 +51,7 @@ const SatNewsList = async ({ searchParams, lang }: ISatNewsListProps) => {
             alternativeImgString={satLogo.alternativeStr}
             alt={`${satLogo.alt[lang]}${news[0]}`}
           />
-          <div>
+          <div className="flex flex-wrap gap-2 justify-center">
             {META_TRANS_NEWS_LIST.h2start[lang]}
             <span className="text-rose-500">{news[0]}</span>
           </div>

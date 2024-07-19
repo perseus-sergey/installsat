@@ -16,10 +16,9 @@ import { TitleH2Digest } from '../ui/Titles/TitleH2Digest';
 import { TitleH3Digest } from '../ui/Titles/TitleH3Digest';
 
 const DateNewsList = async ({ lang }: { lang: ELanguage }) => {
-  const newsArray = await setGroupedNewsByDateMap();
+  const newsArray = await setGroupedNewsByDateMap(lang);
 
-  if (newsArray instanceof Error)
-    return <EmptyData lang={lang} description={newsArray.message} />;
+  if (newsArray instanceof Error) return <EmptyData lang={lang} />;
 
   return newsArray.map((news) => {
     const dateInISO = getDateInISO(news[0]);
@@ -29,6 +28,7 @@ const DateNewsList = async ({ lang }: { lang: ELanguage }) => {
         <TitleH2Digest className="text-center justify-center">
           <Link
             href={`/${lang}/${EUrlBaseParam.TRANSPONDER_NEWS}/${dateInISO}`}
+            className="flex flex-wrap gap-2 justify-center"
           >
             {META_TRANS_NEWS_SINGLE.metaH1start[lang]}
             <span className="text-rose-500"> {dateInISO}</span>

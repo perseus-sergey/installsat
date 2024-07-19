@@ -2,7 +2,7 @@
 
 import {
   META_TRANS_NEWS_LIST,
-  digestIntervalOptions,
+  getDigestIntervalOptions,
 } from '@/models/satDigest.model';
 import { Loader } from '../ui/loaders/Loader';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
@@ -22,7 +22,7 @@ import {
   IGroupedSatelliteOption,
   ISatelliteOption,
 } from '@/models/tblSat.model';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { makeSelectedOptions } from '@/controllers/satFinder.controller';
 import TooltipSimple from '../ui/tooltips/TooltipSimple/TooltipSimple';
 import BaseButton from '../ui/buttons/BaseButton/BaseButton';
@@ -41,6 +41,11 @@ const FormDigestInterval = ({
   const pathname = usePathname();
   const { replace, refresh } = useRouter();
 
+  const digestIntervalOptions = useMemo(
+    () => getDigestIntervalOptions(lang),
+    [lang]
+  );
+
   const [satSelectedOptions, setSatSelectedOptions] =
     useState<MultiValue<ISatelliteOption> | null>(null);
   const [intervalSelectedOptions, setIntervalSelectedOptions] =
@@ -53,6 +58,7 @@ const FormDigestInterval = ({
     const satUrlParams = searchParams.getAll(EUrlSearchParam.SAT);
     setSatSelectedOptions(makeSelectedOptions(satUrlParams, groupedSats));
     const intervalUrlParam = searchParams.get(EUrlSearchParam.INTERVAL);
+
     setIntervalSelectedOptions(
       digestIntervalOptions.find(
         (opt) => `${opt.value}` === intervalUrlParam

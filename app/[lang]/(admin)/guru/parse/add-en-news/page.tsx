@@ -1,20 +1,30 @@
 import { poolExecute } from '@/libs/db/mysqldb';
-
-const TBL = 'tbl_digest';
-// const TBL = 'tbl_digest_2023';
-// const TBL = 'tbl_digest_2022';
-// const TBL = 'tbl_digest_2021';
-// const TBL = 'tbl_digest_2020';
+import { validSearchParam } from '@/libs/utils/validSearchParam';
+import { TSearchParams } from '@/models/ui.model';
+import { EUrlSearchParam } from '@/models/url.model';
 
 const translateToEnglish = (text: string) => {
   const replacements = [
     { regex: /пакет/iu, replacement: 'package' },
-    { regex: /транслюється відкрито/iu, replacement: 'free broadcasting' },
+    {
+      regex: /транслюється відкрито|идет открыто/iu,
+      replacement: 'free broadcasting',
+    },
+    {
+      regex: /открыт/iu,
+      replacement: 'FTA',
+    },
+    {
+      regex: /обновил\w*/iu,
+      replacement: 'updated',
+    },
     {
       regex: /нова SR\(симв.+ швид.+\)/iu,
       replacement: 'new SR (symbol rate)',
     },
-    { regex: /закодовано на/iu, replacement: 'encrypted on' },
+    { regex: /закодовано на|закодирован на/iu, replacement: 'encrypted on' },
+    { regex: /закодированспутнике/iu, replacement: 'encrypted on satellite' },
+    { regex: /закодирован/iu, replacement: 'encrypted on satellite' },
     { regex: /відновив мовлення/iu, replacement: 'restored broadcasting' },
     { regex: /Знову в пакеті/iu, replacement: 'restored in the package' },
 
@@ -34,17 +44,26 @@ const translateToEnglish = (text: string) => {
     },
     { regex: /після зникнення/iu, replacement: 'after disappearance' },
     {
-      regex: /з'явився на супутнику/iu,
+      regex: /з'явився на супутнику|появился на спутнике/iu,
       replacement: 'appeared on the satellite',
     },
-    { regex: /припинив трансляції/iu, replacement: 'stopped broadcasting' },
-    { regex: /змінилися параметри/iu, replacement: 'parameters have changed' },
-    { regex: /повернувся/iu, replacement: 'returned' },
-    { regex: /старий/iu, replacement: 'old' },
-    { regex: /супутники/iu, replacement: 'satellites' },
-    { regex: /супутник/iu, replacement: 'satellite' },
-    { regex: /зараз/iu, replacement: 'now' },
-    { regex: /знову/iu, replacement: 'again' },
+    {
+      regex: /припинив трансляції|перестал транслироваться/iu,
+      replacement: 'stopped broadcasting',
+    },
+    {
+      regex: /змінилися параметри|изменились параметры/iu,
+      replacement: 'parameters have changed',
+    },
+    { regex: /поверну(вся|лись)|верну(лся|лись)/iu, replacement: 'returned' },
+    { regex: /стар(ий|і|ый|ые)/iu, replacement: 'old' },
+    {
+      regex: /супутник(и|ів|ах|ам|ами)|спутник(м|ов|ам|ами)/iu,
+      replacement: 'satellites',
+    },
+    { regex: /супутник(у|а|ом)?|спутник(е|у|а)?/iu, replacement: 'satellite' },
+    { regex: /зараз|сейчас/iu, replacement: 'now' },
+    { regex: /знову|снова/iu, replacement: 'again' },
     { regex: /на/iu, replacement: 'on' },
   ];
 
@@ -54,7 +73,10 @@ const translateToEnglish = (text: string) => {
   );
 };
 
-const updateDataInBatches = async (data: { id: string; text_en: string }[]) => {
+const updateDataInBatches = async (
+  data: { id: string; text_en: string }[],
+  tblName: string
+) => {
   const extractErrors = [];
   if (!data || data.length === 0)
     return [new Error('Error: Received empty data for batch update')];
@@ -64,7 +86,7 @@ const updateDataInBatches = async (data: { id: string; text_en: string }[]) => {
     const batch = data.slice(i, i + batchSize);
 
     const sql = `
-      UPDATE ${TBL}
+      UPDATE ${tblName}
       SET text_en = CASE id
         ${batch.map((row) => `WHEN ${row.id} THEN ?`).join(' ')}
       END
@@ -80,8 +102,17 @@ const updateDataInBatches = async (data: { id: string; text_en: string }[]) => {
   return extractErrors;
 };
 
-export default async function Page() {
-  const sql = `SELECT id, text FROM ${TBL}`;
+export default async function Page({
+  searchParams,
+}: {
+  searchParams?: TSearchParams;
+}) {
+  const searchQuery = validSearchParam(EUrlSearchParam.INTERVAL, searchParams);
+  const year = parseInt(searchQuery, 10) || 0;
+  let tblName = 'tbl_digest';
+  if (year) tblName += `_${year}`;
+
+  const sql = `SELECT id, text FROM ${tblName}`;
 
   const oldData = await poolExecute<{ id: string; text: string }[]>(sql);
   if (oldData instanceof Error) return JSON.stringify(oldData);
@@ -91,7 +122,7 @@ export default async function Page() {
     text_en: translateToEnglish(row.text),
   }));
 
-  const insertRes = await updateDataInBatches(translatedRows);
+  const insertRes = await updateDataInBatches(translatedRows, tblName);
 
   if (insertRes.length > 0) return JSON.stringify(insertRes);
 

@@ -22,7 +22,7 @@ import {
   IGroupedSatelliteOption,
   ISatelliteOption,
 } from '@/models/tblSat.model';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { makeSelectedOptions } from '@/controllers/satFinder.controller';
 import TooltipSimple from '../ui/tooltips/TooltipSimple/TooltipSimple';
 import BaseButton from '../ui/buttons/BaseButton/BaseButton';
@@ -33,8 +33,6 @@ interface IFormDigestIntervalProps {
   lang: ELanguage;
 }
 
-const digestIntervalOptions = getDigestIntervalOptions();
-
 const FormDigestInterval = ({
   groupedSats,
   lang,
@@ -42,6 +40,11 @@ const FormDigestInterval = ({
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const { replace, refresh } = useRouter();
+
+  const digestIntervalOptions = useMemo(
+    () => getDigestIntervalOptions(lang),
+    [lang]
+  );
 
   const [satSelectedOptions, setSatSelectedOptions] =
     useState<MultiValue<ISatelliteOption> | null>(null);

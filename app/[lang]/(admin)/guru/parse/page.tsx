@@ -62,6 +62,16 @@ export default async function Page({ params }: IParams) {
           </>
         }
       />
+      <ClientInputWithSubmit
+        inputId="trans-news-en-column"
+        buttonTitle="Add English Text"
+        inputDefaultValue={0}
+        inputType="number"
+        inputBaseHref={`/${lang}/${EUrlAdminParam.BASE_PATH}/${EUrlAdminParam.PARSE}/add-en-news`}
+        searchParamName={EUrlSearchParam.INTERVAL}
+        fieldSetTitle="Transponder News"
+        labelHtml={'Choose the Year or leave empty for current year.'}
+      />
     </>
   );
 }

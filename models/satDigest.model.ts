@@ -147,21 +147,38 @@ export interface IStateOption {
   readonly label: string;
 }
 
-export const getDigestIntervalOptions = (): readonly IStateOption[] => {
+export const getDigestIntervalOptions = (
+  lang: ELanguage
+): readonly IStateOption[] => {
   const currentDate = new Date();
   const currentYear = currentDate.getFullYear();
 
   const yearArray = [];
   for (let i = 0; i < 5; i++) {
     const year = currentYear - i;
-    yearArray.push({ value: year, label: `${year} рік` });
+    yearArray.push({
+      value: year,
+      label: `${year} ${lang === ELanguage.UA ? 'рік' : 'year'}`,
+    });
   }
 
   return [
-    { value: 7, label: 'Останні 7 днів' },
-    { value: 30, label: 'Останні 30 днів' },
-    { value: 90, label: 'Останні 90 днів' },
-    { value: 180, label: 'Останні півроку' },
+    {
+      value: 7,
+      label: lang === ELanguage.UA ? 'Останні 7 днів' : 'Last 7 days',
+    },
+    {
+      value: 30,
+      label: lang === ELanguage.UA ? 'Останні 30 днів' : 'Last 30 days',
+    },
+    {
+      value: 90,
+      label: lang === ELanguage.UA ? 'Останні 90 днів' : 'Last 90 days',
+    },
+    {
+      value: 180,
+      label: lang === ELanguage.UA ? 'Останні півроку' : 'Last six months',
+    },
     ...yearArray,
   ];
 };

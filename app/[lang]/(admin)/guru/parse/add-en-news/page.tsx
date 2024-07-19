@@ -23,8 +23,7 @@ const translateToEnglish = (text: string) => {
       replacement: 'new SR (symbol rate)',
     },
     { regex: /закодовано на|закодирован на/iu, replacement: 'encrypted on' },
-    { regex: /закодированспутнике/iu, replacement: 'encrypted on satellite' },
-    { regex: /закодирован/iu, replacement: 'encrypted on satellite' },
+    { regex: /закодирован/iu, replacement: 'encrypted on ' },
     { regex: /відновив мовлення/iu, replacement: 'restored broadcasting' },
     { regex: /Знову в пакеті/iu, replacement: 'restored in the package' },
 

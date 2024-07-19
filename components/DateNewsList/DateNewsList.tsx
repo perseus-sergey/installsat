@@ -18,8 +18,7 @@ import { TitleH3Digest } from '../ui/Titles/TitleH3Digest';
 const DateNewsList = async ({ lang }: { lang: ELanguage }) => {
   const newsArray = await setGroupedNewsByDateMap(lang);
 
-  if (newsArray instanceof Error)
-    return <EmptyData lang={lang} description={newsArray.message} />;
+  if (newsArray instanceof Error) return <EmptyData lang={lang} />;
 
   return newsArray.map((news) => {
     const dateInISO = getDateInISO(news[0]);

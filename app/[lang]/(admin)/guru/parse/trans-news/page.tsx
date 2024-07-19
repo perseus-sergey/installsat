@@ -53,8 +53,6 @@ const actionTextHandler = (
   chanTitle: string,
   frequency: string
 ) => {
-  const channelTitle = chanTitle.replace('/package/ui', 'Пакет');
-
   const replacements = [
     { regex: /package/iu, ua: 'Пакет', en: 'Package' },
     {
@@ -152,8 +150,8 @@ const actionTextHandler = (
   );
 
   return {
-    ua: `<li><p><span class='grey_text'>${channelTitle}</span> ${changed.ua} ${frequency}`,
-    en: `<li><p><span class='grey_text'>${channelTitle}</span> ${changed.en} ${frequency}`,
+    ua: `<li><p><span class='grey_text'>${chanTitle.replace('/package/ui', 'Пакет')}</span> ${changed.ua} ${frequency}`,
+    en: `<li><p><span class='grey_text'>${chanTitle.replace('/package/ui', 'Package')}</span> ${changed.en} ${frequency}`,
   };
 };
 

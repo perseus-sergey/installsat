@@ -147,13 +147,21 @@ export interface IStateOption {
   readonly label: string;
 }
 
-export const digestIntervalOptions: readonly IStateOption[] = [
-  { value: 7, label: 'Останні 7 днів' },
-  { value: 30, label: 'Останні 30 днів' },
-  { value: 90, label: 'Останні 90 днів' },
-  { value: 180, label: 'Останні півроку' },
-  { value: 2023, label: '2023 рік' },
-  { value: 2022, label: '2022 рік' },
-  { value: 2021, label: '2021 рік' },
-  { value: 2020, label: '2020 рік' },
-];
+export const getDigestIntervalOptions = (): readonly IStateOption[] => {
+  const currentDate = new Date();
+  const currentYear = currentDate.getFullYear();
+
+  const yearArray = [];
+  for (let i = 0; i < 5; i++) {
+    const year = currentYear - i;
+    yearArray.push({ value: year, label: `${year} рік` });
+  }
+
+  return [
+    { value: 7, label: 'Останні 7 днів' },
+    { value: 30, label: 'Останні 30 днів' },
+    { value: 90, label: 'Останні 90 днів' },
+    { value: 180, label: 'Останні півроку' },
+    ...yearArray,
+  ];
+};

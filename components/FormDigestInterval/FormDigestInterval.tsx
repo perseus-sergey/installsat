@@ -2,7 +2,7 @@
 
 import {
   META_TRANS_NEWS_LIST,
-  digestIntervalOptions,
+  getDigestIntervalOptions,
 } from '@/models/satDigest.model';
 import { Loader } from '../ui/loaders/Loader';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
@@ -33,6 +33,8 @@ interface IFormDigestIntervalProps {
   lang: ELanguage;
 }
 
+const digestIntervalOptions = getDigestIntervalOptions();
+
 const FormDigestInterval = ({
   groupedSats,
   lang,
@@ -53,6 +55,7 @@ const FormDigestInterval = ({
     const satUrlParams = searchParams.getAll(EUrlSearchParam.SAT);
     setSatSelectedOptions(makeSelectedOptions(satUrlParams, groupedSats));
     const intervalUrlParam = searchParams.get(EUrlSearchParam.INTERVAL);
+
     setIntervalSelectedOptions(
       digestIntervalOptions.find(
         (opt) => `${opt.value}` === intervalUrlParam

@@ -32,8 +32,7 @@ const SatNewsList = async ({ searchParams, lang }: ISatNewsListProps) => {
     lang,
   });
 
-  if (newsIntervalResult instanceof Error)
-    return <EmptyData lang={lang} description={newsIntervalResult.message} />;
+  if (newsIntervalResult instanceof Error) return <EmptyData lang={lang} />;
 
   const newsArray = setGroupedNewsBySatMap(newsIntervalResult);
 

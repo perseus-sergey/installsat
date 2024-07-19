@@ -23,6 +23,7 @@ export const getSatDigestNews = async ({
   timeInterval?: number;
   lang?: ELanguage;
 }): Promise<Error | TSatDigest[]> => {
+  const currentYear = new Date().getFullYear();
   let orderBy = 'ORDER BY d.date DESC, satGrade, satTitle';
   let tblName = 'tbl_digest';
   let where = `WHERE date >= CURDATE() - INTERVAL ${LAST_NEWS_INTERVAL} DAY`;
@@ -32,8 +33,7 @@ export const getSatDigestNews = async ({
     orderBy = 'ORDER BY satGrade, satTitle, d.date DESC';
     if (timeInterval > 180) {
       where = '';
-      if (timeInterval !== new Date().getFullYear())
-        tblName += `_${timeInterval}`;
+      if (timeInterval < currentYear) tblName += `_${timeInterval}`;
     } else {
       where = `WHERE date >= CURDATE() - INTERVAL ${timeInterval} DAY`;
     }

@@ -27,83 +27,106 @@ const parseChannelPage = async (browser, url) => {
 };
 
 const actionTextHandler = (text, chanTitle, frequency) => {
-  const channelTitle = chanTitle.replace('/package/ui', 'Пакет');
-
   const replacements = [
-    { regex: /package/iu, replacement: 'Пакет' },
+    { regex: /package/iu, ua: 'Пакет', en: 'Package' },
     {
       regex: /FTA(?: *\w*){0,2}/,
-      replacement: "<span class='free_chan'>транслюється відкрито</span>",
+      ua: "<span class='free_chan'>транслюється відкрито</span>",
+      en: "<span class='free_chan'>free broadcasting</span>",
     },
     {
       regex: /\bnew SR\b/gi,
-      replacement: "<span class='add_chan'>нова SR(символьна швидкість)</span>",
+      ua: "<span class='add_chan'>нова SR(символьна швидкість)</span>",
+      en: "<span class='add_chan'>new SR (symbol rate)</span>",
     },
     {
       regex: /(?:\b\w*\b\s)*encrypted(?:\b\w*\b\s)*/iu,
-      replacement: "<span class='left_chan'>закодовано на </span>",
+      ua: "<span class='left_chan'>закодовано на </span>",
+      en: "<span class='left_chan'>encrypted on </span>",
     },
     {
       regex: /^ *(st\w+ed ag\w+n(?: *on)*) *$/iu,
-      replacement: "<span class='add_chan'>відновив мовлення</span>",
+      ua: "<span class='add_chan'>відновив мовлення</span>",
+      en: "<span class='add_chan'>restored broadcasting</span>",
     },
     {
       regex: /^ *(in the pa\w+ge ag\w*n(?: *on)*) *$/iu,
-      replacement: "<span class='add_chan'>Знову в пакеті</span>",
+      ua: "<span class='add_chan'>Знову в пакеті</span>",
+      en: "<span class='add_chan'>restored in the package</span>",
     },
     {
       regex: /^ *(st\w+ed te\w+ng(?: *on)*) *$/iu,
-      replacement: "<span class='add_chan'>розпочав тестове мовлення</span>",
+      ua: "<span class='add_chan'>розпочав тестове мовлення</span>",
+      en: "<span class='add_chan'>started test broadcasting</span>",
     },
     {
       regex: /^ *(st\w+ed r\w+r p\w+m(?: *on)*) *$/iu,
-      replacement: "<span class='add_chan'>розпочав регулярне мовлення</span>",
+      ua: "<span class='add_chan'>розпочав регулярне мовлення</span>",
+      en: "<span class='add_chan'>started regular broadcasting</span>",
     },
     {
       regex: /^ *(st\w+ed p\w+m(?: *on)*) *$/iu,
-      replacement: "<span class='add_chan'>розпочав транслювати</span>",
+      ua: "<span class='add_chan'>розпочав транслювати</span>",
+      en: "<span class='add_chan'>started translating</span>",
     },
     {
       regex: /^ *(st\w+ed(?: *on)*) *$/iu,
-      replacement: "<span class='add_chan'>розпочав мовлення</span>",
+      ua: "<span class='add_chan'>розпочав мовлення</span>",
+      en: "<span class='add_chan'>started broadcasting</span>",
     },
     {
       regex: /b\w+[kc] (?:on)* *\w* *new/iu,
-      replacement:
-        "<span class='add_chan'>повернувся з новими параметрами</span>",
+      ua: "<span class='add_chan'>повернувся з новими параметрами</span>",
+      en: "<span class='add_chan'>returned with new parameters</span>",
     },
     {
       regex: /a\w+r a* *br\w*k/iu,
-      replacement: "<span class='add_chan'>після зникнення</span>",
+      ua: "<span class='add_chan'>після зникнення</span>",
+      en: "<span class='add_chan'>after disappearance</span>",
     },
     {
       regex: /^(ag\w*n)* *(on *(?:ag\w*n)*)/i,
-      replacement: "<span class='add_chan'>з'явився на супутнику</span> ",
+      ua: "<span class='add_chan'>з'явився на супутнику</span> ",
+      en: "<span class='add_chan'>appeared on the satellite </span>",
     },
     {
       regex: /^(ag\w*n)* *(left *(?:ag\w*n)*)/i,
-      replacement: "<span class='left_chan'>припинив трансляції</span> на ",
+      ua: "<span class='left_chan'>припинив трансляції</span> на ",
+      en: "<span class='left_chan'>stopped broadcasting</span> on ",
     },
-    { regex: / package /i, replacement: ' пакет ' },
-    { regex: /^ *(new) /iu, replacement: 'змінилися параметри ' },
+    { regex: / package /i, ua: ' пакет ', en: ' package ' },
+    {
+      regex: /^ *(new) /iu,
+      ua: 'змінилися параметри ',
+      en: 'parameters have changed ',
+    },
     {
       regex: /back on/iu,
-      replacement: "<span class='add_chan'>повернувся</span> на ",
+      ua: "<span class='add_chan'>повернувся</span> на ",
+      en: "<span class='add_chan'>returned</span> on ",
     },
-    { regex: /old/iu, replacement: 'старий' },
-    { regex: /satellites/iu, replacement: 'супутники' },
-    { regex: /satellite/iu, replacement: 'супутник' },
-    { regex: /now/iu, replacement: 'зараз' },
-    { regex: /again/iu, replacement: 'знову' },
-    { regex: /on/iu, replacement: '' },
+    { regex: /old/iu, ua: 'старий', en: 'old' },
+    { regex: /satellites/iu, ua: 'супутники', en: 'satellites' },
+    { regex: /satellite/iu, ua: 'супутник', en: 'satellite' },
+    { regex: /now/iu, ua: 'зараз', en: 'now' },
+    { regex: /again/iu, ua: 'знову', en: 'again' },
+    { regex: /on/iu, ua: '', en: '' },
   ];
 
   const changed = replacements.reduce(
-    (acc, { regex, replacement }) => acc.replace(regex, replacement),
-    text
+    (acc, { regex, ua, en }) => {
+      const uaRes = acc.ua.replace(regex, ua);
+      const enRes = acc.en.replace(regex, en);
+
+      return { ua: uaRes, en: enRes };
+    },
+    { ua: text, en: text }
   );
 
-  return `<li><p><span class='grey_text'>${channelTitle}</span> ${changed} ${frequency}`;
+  return {
+    ua: `<li><p><span class='grey_text'>${chanTitle.replace('/package/ui', 'Пакет')}</span> ${changed.ua} ${frequency}`,
+    en: `<li><p><span class='grey_text'>${chanTitle.replace('/package/ui', 'Package')}</span> ${changed.en} ${frequency}`,
+  };
 };
 
 const extractParsedData = ($, updateAmount) => {
@@ -178,13 +201,20 @@ const extractParsedData = ($, updateAmount) => {
             return;
           }
 
+          const { ua, en } = actionTextHandler(
+            action,
+            channel_title,
+            frequency_text
+          );
+
           // Encode the replaced text to handle HTML entities
           parsedData.push({
             date: dt.toISODate(),
             update,
             channel_title: channel_title,
             action: action,
-            text: actionTextHandler(action, channel_title, frequency_text),
+            text: ua,
+            text_en: en,
             frequency_text: frequency_text,
             sat_name: satName,
             sat_position: satPosition,

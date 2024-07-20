@@ -72,7 +72,7 @@ const translateToEnglish = (text: string) => {
     { regex: /вещание/giu, replacement: 'broadcasting' },
     { regex: /зараз|сейчас/giu, replacement: 'now' },
     { regex: /знову|снова/giu, replacement: 'again' },
-    { regex: /(?<!\S)на[^\s]*/giu, replacement: 'on' },
+    { regex: /(?<!\S)на/giu, replacement: 'on' },
   ];
 
   return replacements.reduce(

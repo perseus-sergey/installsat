@@ -5,69 +5,78 @@ import { EUrlSearchParam } from '@/models/url.model';
 
 const translateToEnglish = (text: string) => {
   const replacements = [
-    { regex: /пакет/iu, replacement: 'package' },
+    { regex: /пакет/giu, replacement: 'package' },
     {
-      regex: /транслюється відкрито|идет открыто/iu,
+      regex: /транслюється відкрито|идет открыто/giu,
       replacement: 'free broadcasting',
     },
     {
-      regex: /открыт/iu,
+      regex: /открыт/giu,
       replacement: 'FTA',
     },
     {
-      regex: /обновил\w*/iu,
+      regex: /возобновил\w*/giu,
+      replacement: 'resumed',
+    },
+    {
+      regex: /после перерыва/giu,
+      replacement: 'after the break',
+    },
+    {
+      regex: /(?<!\S)обновил[^\s]*/giu,
       replacement: 'updated',
     },
     {
-      regex: /нова SR\(симв.+ швид.+\)/iu,
+      regex: /нова SR\(симв.+ швид.+\)/giu,
       replacement: 'new SR (symbol rate)',
     },
-    { regex: /закодовано на|закодирован на/iu, replacement: 'encrypted on' },
-    { regex: /закодирован/iu, replacement: 'encrypted on ' },
-    { regex: /відновив мовлення/iu, replacement: 'restored broadcasting' },
-    { regex: /Знову в пакеті/iu, replacement: 'restored in the package' },
+    { regex: /закодовано на|закодирован на/giu, replacement: 'encrypted on' },
+    { regex: /закодирован/giu, replacement: 'encrypted on ' },
+    { regex: /відновив мовлення/giu, replacement: 'restored broadcasting' },
+    { regex: /Знову в пакеті/giu, replacement: 'restored in the package' },
 
     {
-      regex: /розпочав тестове мовлення/iu,
+      regex: /розпочав тестове мовлення/giu,
       replacement: 'started test broadcasting',
     },
     {
-      regex: /розпочав регулярне мовлення/iu,
+      regex: /розпочав регулярне мовлення/giu,
       replacement: 'started regular broadcasting',
     },
-    { regex: /розпочав транслювати/iu, replacement: 'started translating' },
-    { regex: /розпочав мовлення/iu, replacement: 'started broadcasting' },
+    { regex: /розпочав транслювати/giu, replacement: 'started translating' },
+    { regex: /розпочав мовлення/giu, replacement: 'started broadcasting' },
     {
-      regex: /повернувся з новими параметрами/iu,
+      regex: /повернувся з новими параметрами/giu,
       replacement: 'returned with new parameters',
     },
-    { regex: /після зникнення/iu, replacement: 'after disappearance' },
+    { regex: /після зникнення/giu, replacement: 'after disappearance' },
     {
-      regex: /з'явився на супутнику|появился на спутнике/iu,
+      regex: /з'явився на супутнику|появился на спутнике/giu,
       replacement: 'appeared on the satellite',
     },
     {
-      regex: /припинив трансляції|перестал транслироваться/iu,
+      regex: /припинив трансляції|перестал транслироваться/giu,
       replacement: 'stopped broadcasting',
     },
     {
-      regex: /змінилися параметри|изменились параметры/iu,
+      regex: /змінилися параметри|изменились параметры/giu,
       replacement: 'parameters have changed',
     },
-    { regex: /поверну(вся|лись)|верну(лся|лись)/iu, replacement: 'returned' },
-    { regex: /стар(ий|і|ый|ые)/iu, replacement: 'old' },
+    { regex: /поверну(вся|лись)|верну(лся|лись)/giu, replacement: 'returned' },
+    { regex: /стар(ий|і|ый|ые)/giu, replacement: 'old' },
     {
-      regex: /супутник(и|ів|ах|ам|ами)|спутник(м|ов|ам|ами)/iu,
+      regex: /супутник(и|ів|ах|ам|ами)|спутник(м|ов|ам|ами)/giu,
       replacement: 'satellites',
     },
-    { regex: /супутник(у|а|ом)?|спутник(е|у|а)?/iu, replacement: 'satellite' },
-    { regex: /зараз|сейчас/iu, replacement: 'now' },
-    { regex: /знову|снова/iu, replacement: 'again' },
-    { regex: /на/iu, replacement: 'on' },
+    { regex: /супутник(у|а|ом)?|спутник(е|у|а)?/giu, replacement: 'satellite' },
+    { regex: /вещание/giu, replacement: 'broadcasting' },
+    { regex: /зараз|сейчас/giu, replacement: 'now' },
+    { regex: /знову|снова/giu, replacement: 'again' },
+    { regex: /(?<!\S)на[^\s]*/giu, replacement: 'on' },
   ];
 
   return replacements.reduce(
-    (acc, { regex, replacement }) => acc.replace(regex, replacement),
+    (acc, { regex, replacement }) => acc.replaceAll(regex, replacement),
     text
   );
 };

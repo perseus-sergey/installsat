@@ -21,7 +21,7 @@ const ErrorPage = ({ error, resetFn }: IErrorPageProps) => (
       height={height}
       isPriority
     />
-    <h6 className="text-xs">{error.message}</h6>
+    <h6 className="text-xs hidden">{error.message}</h6>
     <TextButton ariaLabel="" onClick={() => resetFn()}>
       Try again
     </TextButton>

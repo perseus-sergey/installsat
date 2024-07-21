@@ -108,9 +108,8 @@ export default async function Page({ params }: IPageProps) {
               groupedSats={groupedSats instanceof Error ? [] : groupedSats}
             />
           </Suspense>
+          <DangerHtml text={text} />
         </div>
-
-        <DangerHtml text={text} />
 
         <BottomInfoPanel
           items={[{ name: viewsTitle[lang], value: view + 1 }]}

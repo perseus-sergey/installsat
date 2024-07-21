@@ -110,6 +110,10 @@ a {
     list-style-image: url(/Images/galka_blue.png);
   }
 
+  ol {
+    list-style: auto;
+  }
+
   a {
     color: #0000cc;
     &:hover {

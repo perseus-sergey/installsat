@@ -4,6 +4,8 @@ import { AccordionMenuItem } from '../AccordionMenuItem/AccordionMenuItem';
 import { MENU_ACCORDION_ADMIN } from '@/models/menuAccordionAdmin.model';
 import { ELanguage } from '@/models/ui.model';
 
+const { EN } = ELanguage;
+
 const AccordionAdmin = async () => {
   // const channelCatListResp = await getChannelCatList();
   // const channelSatListResp = await getChannelSatList();
@@ -30,15 +32,14 @@ const AccordionAdmin = async () => {
       <ul>
         {Object.values(MENU_ACCORDION_ADMIN).map((menuType, index) => {
           return menuType.links ? (
-            <AccordionMenuItem
-              lang={ELanguage.EN}
-              options={menuType}
-              key={index}
-            >
+            <AccordionMenuItem lang={EN} options={menuType} key={index}>
               <ul className={styles.accordionContent}>
                 {menuType.links.map((item) => (
                   <li key={item.title} className={styles.contentItem}>
-                    <Link href={item.href} className={styles.contentItemLink}>
+                    <Link
+                      href={`/${EN}${item.href}`}
+                      className={styles.contentItemLink}
+                    >
                       {item.title}
                     </Link>
                   </li>
@@ -46,7 +47,7 @@ const AccordionAdmin = async () => {
               </ul>
             </AccordionMenuItem>
           ) : (
-            <AccordionMenuItem lang={ELanguage.EN} options={menuType} />
+            <AccordionMenuItem lang={EN} options={menuType} />
           );
         })}
         {/* <AccordionMenuItem options={SATELLITE_TV} />

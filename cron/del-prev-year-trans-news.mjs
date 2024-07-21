@@ -1,5 +1,5 @@
 import { sendMail } from './libs/sendMail.mjs';
-import { poolExecute } from './libs/mysqldb.mjs';
+import { executePoolQuery } from './libs/mysqldb.mjs';
 import { EDBTableTitles } from './libs/commons.mjs';
 
 const sendReportMail = async (message) => {
@@ -21,7 +21,7 @@ const R_U_N = async () => {
     WHERE date < STR_TO_DATE('${currentYear}-01-01', '%Y-%m-%d')
   `;
 
-  const delRes = await poolExecute(deleteQuery);
+  const delRes = await executePoolQuery(deleteQuery);
   const message =
     delRes instanceof Error
       ? `<p>DB ERROR! Could not delete old data for ${previousYear} year from the <a href="${dbTblHref}">table</a>.</p><p>Error: ${delRes.message}</p><p>Query: ${deleteQuery}</p>`

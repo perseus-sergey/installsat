@@ -8,18 +8,30 @@ interface IProps {
   body: string;
 }
 
-const MAIN_EMAIL = process.env.MAIN_EMAIL;
 export async function sendMail({ to, subject, body }: IProps) {
+  const MAIN_EMAIL = process.env.MAIN_EMAIL;
   const MAIL_SMTP = process.env.MAIL_SMTP;
   const MAIL_SMTP_PASS = process.env.MAIL_SMTP_PASS;
+  const SMTP_HOST = 'smtp.hostinger.com';
+  const SMTP_PORT = 465;
 
   const transport = nodemailer.createTransport({
-    service: 'gmail',
+    host: SMTP_HOST,
+    port: SMTP_PORT,
+    secure: true, // true для порту 465, false для інших портів
     auth: {
       user: MAIL_SMTP,
       pass: MAIL_SMTP_PASS,
     },
   });
+
+  // const transport = nodemailer.createTransport({
+  //   service: 'gmail',
+  //   auth: {
+  //     user: MAIL_SMTP,
+  //     pass: MAIL_SMTP_PASS,
+  //   },
+  // });
 
   try {
     await transport.verify();

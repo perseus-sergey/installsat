@@ -1,11 +1,11 @@
 import BottomInfoPanel from '@/components/BottomInfoPanel/BottomInfoPanel';
 import FillingValidImage from '@/components/ui/Images/FillingValidImage';
-import SimilarArticles from '@/components/SimilarArticles/SimilarArticles';
-import SimilarChannel from '@/components/SimilarChannel/SimilarChannel';
+// import SimilarArticles from '@/components/SimilarArticles/SimilarArticles';
+// import SimilarChannel from '@/components/SimilarChannel/SimilarChannel';
 import { Title } from '@/components/ui/Titles/Title';
 import {
   getDBOnlineChannel,
-  getSimilarChannels,
+  // getSimilarChannels,
 } from '@/controllers/channel.controller';
 import { getCommentsNumber } from '@/controllers/comments.controller';
 import { cutText } from '@/libs/utils/utils';
@@ -41,7 +41,7 @@ const {
     channelLogo: { big: bigLogo },
   },
   infoPanelTitles: { comments: commentsTitle, views: viewsTitle },
-  similar: { channels: simChannelsBefore },
+  // similar: { channels: simChannelsBefore },
   noteTitle,
   getResponsibilityText,
   getOnlineLinkText,
@@ -126,9 +126,9 @@ export default async function Page({ params }: IPageProps) {
   const filteredSchedules = dbScheduleDataArr.filter((t) => t.scheduleId);
   const schedules = await getChanOneDaySchedule(filteredSchedules, url_date);
 
-  const similarChannelsResult = await getSimilarChannels(logo);
-  const similarChannels =
-    similarChannelsResult instanceof Error ? [] : similarChannelsResult;
+  // const similarChannelsResult = await getSimilarChannels(logo);
+  // const similarChannels =
+  //   similarChannelsResult instanceof Error ? [] : similarChannelsResult;
 
   const numberOfComments = await getCommentsNumber(
     EDBTableTitles.COMMENTS_CHANNEL,
@@ -190,7 +190,7 @@ export default async function Page({ params }: IPageProps) {
         />
       </article>
 
-      {similarChannels.length ? (
+      {/* {similarChannels.length ? (
         <SimilarArticles
           similarTitle={`${simChannelsBefore.title[lang]}"${title}"`}
           similarArticlesMapped={similarChannels.map((chan) => (
@@ -203,7 +203,7 @@ export default async function Page({ params }: IPageProps) {
             </li>
           ))}
         />
-      ) : null}
+      ) : null} */}
 
       <CommentBlock
         lang={lang}

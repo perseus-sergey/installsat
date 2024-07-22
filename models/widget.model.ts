@@ -8,8 +8,8 @@ export const WIDGET_LAST_NEWS = {
     [ELanguage.UA]: 'Останні новини',
     [ELanguage.EN]: 'Last news',
   },
-  href: `/${EUrlBaseParam.NEWS_AND_ARTICLES}`,
-  baseHrefOfList: `/${EUrlBaseParam.ARTICLE}`,
+  href: `${EUrlBaseParam.NEWS_AND_ARTICLES}`,
+  baseHrefOfList: `${EUrlBaseParam.ARTICLE}`,
 };
 
 export const WIDGET_ARTICLE_CATEGORY = {

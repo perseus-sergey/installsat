@@ -126,6 +126,7 @@ export default async function Page({ params }: IPageProps) {
   // const filteredSchedules = dbScheduleDataArr.filter((t) => t.scheduleId);
   // const schedules = await getChanOneDaySchedule(filteredSchedules, url_date);
   // console.log('🚀 ~ Page ~ schedules:', schedules);
+  // console.log('🚀 ~ Page ~ schedules:', schedules);
 
   const similarChannelsResult = await getSimilarChannels(logo);
   const similarChannels =

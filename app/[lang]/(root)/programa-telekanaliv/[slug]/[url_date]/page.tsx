@@ -32,9 +32,10 @@ import { BREAD_CRUMBS } from '@/models/breadCrumbs.model';
 import ChannelOnlineLink from '@/components/ui/buttons/ChannelOnlineLink/ChannelOnlineLink';
 import { decode } from 'html-entities';
 import { getELangKey } from '@/libs/utils/validSearchParam';
-import { getEnvVariable } from '@/libs/utils/envHandler';
+// import { getEnvVariable } from '@/libs/utils/envHandler';
 
-const BASE_URL = getEnvVariable('BASE_URL', MAIN_URL);
+// const BASE_URL = getEnvVariable('BASE_URL', MAIN_URL);
+const BASE_URL = MAIN_URL;
 
 const {
   images: {

@@ -27,7 +27,8 @@ import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
 import { SCHEDULE_META } from '@/models/scheduleTV.model';
 import { BREAD_CRUMBS } from '@/models/breadCrumbs.model';
 
-const BASE_URL = process.env.BASE_URL || MAIN_URL;
+const BASE_URL = MAIN_URL;
+// const BASE_URL = process.env.BASE_URL || MAIN_URL;
 
 const { metaDescription, metaH1, metaKeywords } = SCHEDULE_META.channelList;
 

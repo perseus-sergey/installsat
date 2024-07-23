@@ -8,23 +8,23 @@ import {
   getSimilarChannels,
 } from '@/controllers/channel.controller';
 import { getCommentsNumber } from '@/controllers/comments.controller';
-// import { cutText } from '@/libs/utils/utils';
+import { cutText } from '@/libs/utils/utils';
 import { META_CHANNEL } from '@/models/channel.model';
 import {
   EDBTableTitles,
-  // DEFAULT_META_DATA,
-  // ELanguage,
-  // DEFAULT_LANG,
+  DEFAULT_META_DATA,
+  ELanguage,
+  DEFAULT_LANG,
 } from '@/models/ui.model';
-import { EUrlBaseParam } from '@/models/url.model';
-// import { Metadata } from 'next';
+import { EUrlBaseParam, MAIN_URL } from '@/models/url.model';
+import { Metadata } from 'next';
 import BreadCrumbServer from '@/components/BreadCrumbs/BreadCrumbsServer';
 import { SCHEDULE_META } from '@/models/scheduleTV.model';
 // import { getChanOneDaySchedule } from '@/controllers/schedule.controller';
 import { notFound } from 'next/navigation';
 import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
 // import SchedulePage from '@/components/SchedulePage/SchedulePage';
-import { getValidDate } from '@/libs/utils/dates';
+import { getFormattedDateStrYearFirst, getValidDate } from '@/libs/utils/dates';
 import WeekScheduleTabs from '@/components/tabs/WeekScheduleTabs';
 import NoteBlock from '@/components/ui/NoteBlock/NoteBlock';
 import GrooveLine from '@/components/ui/GrooveLine';
@@ -32,9 +32,9 @@ import { BREAD_CRUMBS } from '@/models/breadCrumbs.model';
 import ChannelOnlineLink from '@/components/ui/buttons/ChannelOnlineLink/ChannelOnlineLink';
 import { decode } from 'html-entities';
 import { getELangKey } from '@/libs/utils/validSearchParam';
-// import { getEnvVariable } from '@/libs/utils/envHandler';
+import { getEnvVariable } from '@/libs/utils/envHandler';
 
-// const BASE_URL = getEnvVariable('BASE_URL', MAIN_URL);
+const BASE_URL = getEnvVariable('BASE_URL', MAIN_URL);
 // const BASE_URL = MAIN_URL;
 
 const {
@@ -48,53 +48,52 @@ const {
   getOnlineLinkText,
 } = META_CHANNEL;
 
-const { h1Start } = SCHEDULE_META;
-// const { getKeywords, getTitle, h1Start, descriptionStart } = SCHEDULE_META;
+const { getKeywords, getTitle, h1Start, descriptionStart } = SCHEDULE_META;
 
 export interface IPageProps {
   params: { [key in EUrlBaseParam]: string };
 }
 
-// export const dynamic = 'force-dynamic';
+export const dynamic = 'force-dynamic';
 
-// export const generateMetadata = async ({
-//   params,
-// }: IPageProps): Promise<Metadata> => {
-//   const slug = params[EUrlBaseParam.SLUG];
-//   const url_date = params[EUrlBaseParam.URL_DATE];
-//   const lang = getELangKey(params[EUrlBaseParam.LANG]);
+export const generateMetadata = async ({
+  params,
+}: IPageProps): Promise<Metadata> => {
+  const slug = params[EUrlBaseParam.SLUG];
+  const url_date = params[EUrlBaseParam.URL_DATE];
+  const lang = getELangKey(params[EUrlBaseParam.LANG]);
 
-//   const sqlResult = await getDBOnlineChannel(slug);
-//   if (!sqlResult) return DEFAULT_META_DATA[lang];
+  const sqlResult = await getDBOnlineChannel(slug);
+  if (!sqlResult) return DEFAULT_META_DATA[lang];
 
-//   const { title, description } = sqlResult;
+  const { title, description } = sqlResult;
 
-//   const metaDescription = `${descriptionStart[lang]} ${title}. ${cutText(description, 150)}`;
-//   const metaTitle = getTitle(title, url_date)[lang];
+  const metaDescription = `${descriptionStart[lang]} ${title}. ${cutText(description, 150)}`;
+  const metaTitle = getTitle(title, url_date)[lang];
 
-//   const slugPath = `${EUrlBaseParam.CHANNELS_TV_PROGRAM}/${slug}/${url_date}`;
+  const slugPath = `${EUrlBaseParam.CHANNELS_TV_PROGRAM}/${slug}/${url_date}`;
 
-//   return {
-//     metadataBase: new URL(BASE_URL),
-//     title: metaTitle,
-//     description: metaDescription,
-//     keywords: getKeywords(title)[lang],
-//     openGraph: {
-//       ...DEFAULT_META_DATA.openGraph,
-//       title: metaTitle,
-//       description: metaDescription,
-//       url: `/${lang}/${slugPath}`,
-//       publishedTime: getFormattedDateStrYearFirst(),
-//     },
-//     alternates: {
-//       canonical: `/${DEFAULT_LANG}/${slugPath}`,
-//       languages: {
-//         en: `/${ELanguage.EN}/${slugPath}`,
-//         uk: `/${ELanguage.UA}/${slugPath}`,
-//       },
-//     },
-//   };
-// };
+  return {
+    metadataBase: new URL(BASE_URL),
+    title: metaTitle,
+    description: metaDescription,
+    keywords: getKeywords(title)[lang],
+    openGraph: {
+      ...DEFAULT_META_DATA.openGraph,
+      title: metaTitle,
+      description: metaDescription,
+      url: `/${lang}/${slugPath}`,
+      publishedTime: getFormattedDateStrYearFirst(),
+    },
+    alternates: {
+      canonical: `/${DEFAULT_LANG}/${slugPath}`,
+      languages: {
+        en: `/${ELanguage.EN}/${slugPath}`,
+        uk: `/${ELanguage.UA}/${slugPath}`,
+      },
+    },
+  };
+};
 
 export default async function Page({ params }: IPageProps) {
   const slug = params[EUrlBaseParam.SLUG];

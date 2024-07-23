@@ -61,8 +61,8 @@ export const getChanOneDaySchedule = cache(
 
     return res instanceof Error
       ? null
-      : res.map((scged) =>
-          scged.map((r) => ({
+      : res.map((sched) =>
+          sched.map((r) => ({
             ...r,
             title: decode(r.title),
             prog_desc: decode(r.prog_desc),

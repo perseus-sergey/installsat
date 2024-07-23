@@ -72,10 +72,9 @@ LIMIT 1
   };
 });
 
-export const getDBOnlineChannel = async (
-  slug: string
-): Promise<IOnlineChannel | null> => {
-  const sql = `
+export const getDBOnlineChannel = cache(
+  async (slug: string): Promise<IOnlineChannel | null> => {
+    const sql = `
   SELECT 
     C.id, 
     C.title, 
@@ -106,17 +105,18 @@ export const getDBOnlineChannel = async (
   WHERE C.cpu =  ?
   LIMIT 1
 `;
-  const res = await poolExecute<IOnlineChannel[]>(sql, [slug]);
+    const res = await poolExecute<IOnlineChannel[]>(sql, [slug]);
 
-  return res instanceof Error || !res.length
-    ? null
-    : {
-        ...res[0],
-        title: decode(res[0].title),
-        description: decode(res[0].description),
-        other_stream: decode(res[0].other_stream),
-      };
-};
+    return res instanceof Error || !res.length
+      ? null
+      : {
+          ...res[0],
+          title: decode(res[0].title),
+          description: decode(res[0].description),
+          other_stream: decode(res[0].other_stream),
+        };
+  }
+);
 
 // export const getDBChannelSlugList = async () =>
 //   await poolExecute<{ cpu: string }[]>(`SELECT cpu FROM tbl_channals`);

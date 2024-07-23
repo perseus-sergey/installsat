@@ -107,15 +107,18 @@ export const getDBOnlineChannel = cache(
 `;
     const res = await poolExecute<IOnlineChannel[]>(sql, [slug]);
 
-    return res instanceof Error || !res.length
-      ? null
-      : {
-          ...res[0],
-          title: decode(res[0].title),
-          description: decode(res[0].description),
-          other_stream: decode(res[0].other_stream),
-        };
+    return res instanceof Error || !res.length ? null : res[0];
   }
+
+  //   return res instanceof Error || !res.length
+  //     ? null
+  //     : {
+  //         ...res[0],
+  //         title: decode(res[0].title),
+  //         description: decode(res[0].description),
+  //         other_stream: decode(res[0].other_stream),
+  //       };
+  // }
 );
 
 // export const getDBChannelSlugList = async () =>

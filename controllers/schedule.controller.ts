@@ -64,11 +64,13 @@ export const getChanOneDaySchedule = cache(
     return res instanceof Error || !Array.isArray(res) || !res.length
       ? null
       : res.map((sched) =>
-          sched.map((r) => ({
-            ...r,
-            title: decode(r.title),
-            prog_desc: decode(r.prog_desc),
-          }))
+          Array.isArray(sched)
+            ? sched.map((r) => ({
+                ...r,
+                title: decode(r.title),
+                prog_desc: decode(r.prog_desc),
+              }))
+            : []
         );
   }
 );

@@ -44,6 +44,8 @@ export const getChanOneDaySchedule = cache(
     scheduleTables: { tblName: EDBTableTitles; scheduleId: number }[],
     dateStr: string
   ): Promise<IScheduleTVModel[][] | null> => {
+    if (!scheduleTables.length) return null;
+
     const sql = scheduleTables
       .map(
         ({ tblName, scheduleId }) =>

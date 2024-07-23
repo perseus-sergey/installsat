@@ -240,8 +240,12 @@ export const getChannelsWithSchedule = async (searchQuery = '') => {
   LEFT JOIN 
       tbl_chan_tema AS T ON C.tema = T.id
   WHERE 
-      C.tema != 15 
-      AND ((C.vipiko != '' AND C.vipiko != 0) OR (C.vsetv != '' AND C.vsetv != 0))
+  C.tema != 15 
+  AND (
+    (C.vipiko IS NOT NULL AND C.vipiko != '' AND C.vipiko != 0)
+    OR 
+    (C.vsetv IS NOT NULL AND C.vsetv != '' AND C.vsetv != 0)
+  )
       ${searchPart}
   GROUP BY 
       C.title, C.tema

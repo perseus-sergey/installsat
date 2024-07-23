@@ -1,4 +1,4 @@
-import { poolExecute, poolQuery } from '@/libs/db/mysqldb';
+import { poolExecute } from '@/libs/db/mysqldb';
 import { IDbIdAmountModel } from '@/models/admin.model';
 import { IScheduleTVModel, IVseTvParsModel } from '@/models/scheduleTV.model';
 import { EDBTableTitles } from '@/models/ui.model';
@@ -44,32 +44,37 @@ export const getChanOneDaySchedule = cache(
     scheduleTables: { tblName: EDBTableTitles; scheduleId: number }[],
     dateStr: string
   ): Promise<IScheduleTVModel[][] | null> => {
-    if (!scheduleTables.length) return null;
+    console.log('🚀 ~ dateStr:', dateStr);
+    console.log('🚀 ~ scheduleTables.length:', scheduleTables.length);
+    console.log('🚀 ~ scheduleTables:', scheduleTables);
 
-    const sql = scheduleTables
-      .map(
-        ({ tblName, scheduleId }) =>
-          `
-      SELECT *
-      FROM ${tblName}
-      WHERE chan_id = ${scheduleId}
-      AND start < DATE_ADD('${dateStr}', INTERVAL 30 HOUR)
-      AND start > DATE_SUB('${dateStr}', INTERVAL 2 HOUR)     
-      ORDER BY start;
-      `
-      )
-      .join(' ');
-    const res = await poolQuery<[IScheduleTVModel[]]>(sql);
+    return null;
+    // if (!scheduleTables.length) return null;
 
-    return res instanceof Error
-      ? null
-      : res.map((sched) =>
-          sched.map((r) => ({
-            ...r,
-            title: decode(r.title),
-            prog_desc: decode(r.prog_desc),
-          }))
-        );
+    // const sql = scheduleTables
+    //   .map(
+    //     ({ tblName, scheduleId }) =>
+    //       `
+    //   SELECT *
+    //   FROM ${tblName}
+    //   WHERE chan_id = ${scheduleId}
+    //   AND start < DATE_ADD('${dateStr}', INTERVAL 30 HOUR)
+    //   AND start > DATE_SUB('${dateStr}', INTERVAL 2 HOUR)
+    //   ORDER BY start;
+    //   `
+    //   )
+    //   .join(' ');
+    // const res = await poolQuery<[IScheduleTVModel[]]>(sql);
+
+    // return res instanceof Error
+    //   ? null
+    //   : res.map((sched) =>
+    //       sched.map((r) => ({
+    //         ...r,
+    //         title: decode(r.title),
+    //         prog_desc: decode(r.prog_desc),
+    //       }))
+    //     );
   }
 );
 

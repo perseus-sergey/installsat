@@ -17,7 +17,7 @@
     "@inquirer/core": "^8.2.3",
     "@next/third-parties": "^14.2.4",
     "@react-email/components": "0.0.17",
-    "@react-email/render": "0.0.16",
+    "@react-email/render": "^0.0.12",
     "@tinymce/tinymce-react": "^5.0.1",
     "@types/bcryptjs": "^2.4.6",
     "@types/luxon": "^3.4.2",

@@ -20,7 +20,7 @@ import { EUrlBaseParam, MAIN_URL } from '@/models/url.model';
 import { Metadata } from 'next';
 import BreadCrumbServer from '@/components/BreadCrumbs/BreadCrumbsServer';
 import { SCHEDULE_META } from '@/models/scheduleTV.model';
-import { getChanOneDaySchedule } from '@/controllers/schedule.controller';
+// import { getChanOneDaySchedule } from '@/controllers/schedule.controller';
 import { notFound } from 'next/navigation';
 import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
 // import SchedulePage from '@/components/SchedulePage/SchedulePage';
@@ -125,8 +125,8 @@ export default async function Page({ params }: IPageProps) {
     },
   ];
   const filteredSchedules = dbScheduleDataArr.filter((t) => t.scheduleId);
-  const schedules = await getChanOneDaySchedule(filteredSchedules, url_date);
-  console.log('🚀 ~ Page ~ schedules:', schedules);
+  console.log('🚀 ~ Page ~ filteredSchedules:', filteredSchedules);
+  // const schedules = await getChanOneDaySchedule(filteredSchedules, url_date);
 
   const similarChannelsResult = await getSimilarChannels(logo);
   const similarChannels =

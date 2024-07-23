@@ -60,19 +60,16 @@ export const getChanOneDaySchedule = cache(
       )
       .join(' ');
     const res = await poolQuery<[IScheduleTVModel[]]>(sql);
-    console.log('🚀 ~ res:', res);
 
-    return null;
-
-    // return res instanceof Error
-    //   ? null
-    //   : res.map((sched) =>
-    //       sched.map((r) => ({
-    //         ...r,
-    //         title: decode(r.title),
-    //         prog_desc: decode(r.prog_desc),
-    //       }))
-    //     );
+    return res instanceof Error || !Array.isArray(res) || !res.length
+      ? null
+      : res.map((sched) =>
+          sched.map((r) => ({
+            ...r,
+            title: decode(r.title),
+            prog_desc: decode(r.prog_desc),
+          }))
+        );
   }
 );
 

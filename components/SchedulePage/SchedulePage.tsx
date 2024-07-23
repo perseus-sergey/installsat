@@ -29,11 +29,12 @@ const SchedulePage = ({
 }: ISchedulePageProps) => {
   const now = DateTime.local().setZone(DEFAULT_TIME_ZONE);
   const dayStr = getDayOfMonthStr(urlDate, lang);
-  const availableSchedulesLength = !scheduleList
-    ? 0
-    : scheduleList?.filter((scheduleList) => scheduleList.length).length;
+  const availableSchedulesLength =
+    scheduleList === null
+      ? 0
+      : scheduleList?.filter((scheduleList) => scheduleList.length).length;
 
-  return scheduleList && availableSchedulesLength > 0 ? (
+  return scheduleList !== null && availableSchedulesLength > 0 ? (
     <div className={'flex flex-wrap flex-col items-center'}>
       <TitleH2>{h2TitleForDate(channelTitle, dayStr)[lang]}</TitleH2>
 

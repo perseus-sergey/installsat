@@ -20,10 +20,10 @@ import { EUrlBaseParam, MAIN_URL } from '@/models/url.model';
 import { Metadata } from 'next';
 import BreadCrumbServer from '@/components/BreadCrumbs/BreadCrumbsServer';
 import { SCHEDULE_META } from '@/models/scheduleTV.model';
-// import { getChanOneDaySchedule } from '@/controllers/schedule.controller';
+import { getChanOneDaySchedule } from '@/controllers/schedule.controller';
 import { notFound } from 'next/navigation';
 import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
-// import SchedulePage from '@/components/SchedulePage/SchedulePage';
+import SchedulePage from '@/components/SchedulePage/SchedulePage';
 import { getFormattedDateStrYearFirst, getValidDate } from '@/libs/utils/dates';
 import WeekScheduleTabs from '@/components/tabs/WeekScheduleTabs';
 import NoteBlock from '@/components/ui/NoteBlock/NoteBlock';
@@ -107,26 +107,24 @@ export default async function Page({ params }: IPageProps) {
     title: chanTitle,
     logo,
     view,
-    // vipiko,
-    // vsetv,
+    vipiko,
+    vsetv,
     tvforsite_net,
   } = sqlResult;
   const title = decode(chanTitle);
 
-  // const dbScheduleDataArr = [
-  //   {
-  //     tblName: EDBTableTitles.TV_SCHEDULE_VIPIKO,
-  //     scheduleId: vipiko,
-  //   },
-  //   {
-  //     tblName: EDBTableTitles.TV_SCHEDULE_VSE_TV,
-  //     scheduleId: vsetv,
-  //   },
-  // ];
-  // const filteredSchedules = dbScheduleDataArr.filter((t) => t.scheduleId);
-  // const schedules = await getChanOneDaySchedule(filteredSchedules, url_date);
-  // console.log('🚀 ~ Page ~ schedules:', schedules);
-  // console.log('🚀 ~ Page ~ schedules:', schedules);
+  const dbScheduleDataArr = [
+    {
+      tblName: EDBTableTitles.TV_SCHEDULE_VIPIKO,
+      scheduleId: vipiko,
+    },
+    {
+      tblName: EDBTableTitles.TV_SCHEDULE_VSE_TV,
+      scheduleId: vsetv,
+    },
+  ];
+  const filteredSchedules = dbScheduleDataArr.filter((t) => t.scheduleId);
+  const schedules = await getChanOneDaySchedule(filteredSchedules, url_date);
 
   const similarChannelsResult = await getSimilarChannels(logo);
   const similarChannels =
@@ -162,12 +160,12 @@ export default async function Page({ params }: IPageProps) {
         </Title>
 
         <WeekScheduleTabs currentDate={url_date} lang={lang} />
-        {/* <SchedulePage
+        <SchedulePage
           lang={lang}
           scheduleList={schedules}
           urlDate={url_date}
           channelTitle={title}
-        /> */}
+        />
 
         {tvforsite_net && (
           <ChannelOnlineLink

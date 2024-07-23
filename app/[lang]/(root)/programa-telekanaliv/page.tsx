@@ -5,16 +5,17 @@ import {
   META_ALL_SAT_CHANNEL_LIST,
   META_ONLINE_CHANNEL_LIST,
 } from '@/models/channelList.model';
-import type { Metadata } from 'next';
+// import type { Metadata } from 'next';
 import FillingImg from '@/components/ui/Images/FillingImage';
 import Fieldset from '@/components/ui/Fieldset/Fieldset';
 import {
   TSearchParams,
-  DEFAULT_META_DATA,
-  DEFAULT_LANG,
-  ELanguage,
+  // DEFAULT_META_DATA,
+  // DEFAULT_LANG,
+  // ELanguage,
 } from '@/models/ui.model';
-import { EUrlBaseParam, EUrlSearchParam, MAIN_URL } from '@/models/url.model';
+import { EUrlBaseParam, EUrlSearchParam } from '@/models/url.model';
+// import { EUrlBaseParam, EUrlSearchParam, MAIN_URL } from '@/models/url.model';
 import Filter from '@/components/ui/Filter/Filter';
 import { Suspense } from 'react';
 import { getELangKey, validSearchParam } from '@/libs/utils/validSearchParam';
@@ -27,10 +28,11 @@ import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
 import { SCHEDULE_META } from '@/models/scheduleTV.model';
 import { BREAD_CRUMBS } from '@/models/breadCrumbs.model';
 
-const BASE_URL = MAIN_URL;
+// const BASE_URL = MAIN_URL;
 // const BASE_URL = process.env.BASE_URL || MAIN_URL;
 
-const { metaDescription, metaH1, metaKeywords } = SCHEDULE_META.channelList;
+const { metaH1 } = SCHEDULE_META.channelList;
+// const { metaDescription, metaH1, metaKeywords } = SCHEDULE_META.channelList;
 
 const {
   getH1After,
@@ -56,32 +58,32 @@ interface IPageProps {
 
 // export const dynamic = 'force-dynamic';
 
-export const generateMetadata = async ({
-  params,
-}: IPageProps): Promise<Metadata> => {
-  const lang = getELangKey(params[EUrlBaseParam.LANG]);
+// export const generateMetadata = async ({
+//   params,
+// }: IPageProps): Promise<Metadata> => {
+//   const lang = getELangKey(params[EUrlBaseParam.LANG]);
 
-  return {
-    metadataBase: new URL(BASE_URL),
-    title: metaH1[lang],
-    description: metaDescription[lang],
-    keywords: metaKeywords[lang],
-    openGraph: {
-      ...DEFAULT_META_DATA.openGraph,
-      title: metaH1[lang],
-      description: metaDescription[lang],
-      url: `/${lang}/${CHANNELS_TV_PROGRAM}`,
-      publishedTime: getFormattedDateStrYearFirst(),
-    },
-    alternates: {
-      canonical: `/${DEFAULT_LANG}/${CHANNELS_TV_PROGRAM}`,
-      languages: {
-        en: `/${ELanguage.EN}/${CHANNELS_TV_PROGRAM}`,
-        uk: `/${ELanguage.UA}/${CHANNELS_TV_PROGRAM}`,
-      },
-    },
-  };
-};
+//   return {
+//     metadataBase: new URL(BASE_URL),
+//     title: metaH1[lang],
+//     description: metaDescription[lang],
+//     keywords: metaKeywords[lang],
+//     openGraph: {
+//       ...DEFAULT_META_DATA.openGraph,
+//       title: metaH1[lang],
+//       description: metaDescription[lang],
+//       url: `/${lang}/${CHANNELS_TV_PROGRAM}`,
+//       publishedTime: getFormattedDateStrYearFirst(),
+//     },
+//     alternates: {
+//       canonical: `/${DEFAULT_LANG}/${CHANNELS_TV_PROGRAM}`,
+//       languages: {
+//         en: `/${ELanguage.EN}/${CHANNELS_TV_PROGRAM}`,
+//         uk: `/${ELanguage.UA}/${CHANNELS_TV_PROGRAM}`,
+//       },
+//     },
+//   };
+// };
 
 export default async function Page({ searchParams, params }: IPageProps) {
   const lang = getELangKey(params[EUrlBaseParam.LANG]);

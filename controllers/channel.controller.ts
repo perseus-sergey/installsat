@@ -118,9 +118,6 @@ export const getDBOnlineChannel = cache(
   }
 );
 
-// export const getDBChannelSlugList = async () =>
-//   await poolExecute<{ cpu: string }[]>(`SELECT cpu FROM tbl_channals`);
-
 export const getSimilarChannels = async (logo: string) => {
   const sql = `
   SELECT  

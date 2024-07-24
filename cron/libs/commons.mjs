@@ -49,6 +49,9 @@ export const EUrlSearchParam = {
   COMMENT_DEL_AUTHOR_EMAIL: 'm',
 };
 
+export const getDbTableLink = (tblName) =>
+  `https://installsat.tv/tvefir/index.php?route=/sql&pos=0&db=installsat&table=${tblName}`;
+
 export const getFormattedDate = memoize((date, format) =>
   DateTime.fromJSDate(date).toFormat(format)
 );

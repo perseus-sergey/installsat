@@ -11,7 +11,7 @@ const sendReportMail = async (message) => {
 };
 
 const R_U_N = async () => {
-  const dbTblHref = `https://installsat.tv/tvefir/index.php?route=/sql&pos=0&db=installsat&table=${EDBTableTitles.TRANS_NEWS}`;
+  const dbTblHref = getDbTableLink(EDBTableTitles.TRANS_NEWS);
 
   const currentYear = new Date().getFullYear();
   const previousYear = currentYear - 1;

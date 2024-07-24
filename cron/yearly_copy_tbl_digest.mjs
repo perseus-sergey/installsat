@@ -6,8 +6,8 @@ const { TRANS_NEWS } = EDBTableTitles;
 
 const sendReportMail = async (message) => {
   await sendMail({
-    title: `Delete previous year news from ${TRANS_NEWS}`,
-    subject: `Delete old Trans News`,
+    title: `Create Copy of table ${TRANS_NEWS} to previous year table`,
+    subject: `Create Last Year Trans News Table`,
     body: message,
   });
 };
@@ -32,6 +32,7 @@ const R_U_N = async () => {
   const createRes = await executePoolQuery(createTableQuery);
 
   if (!(createRes instanceof Error)) {
+    console.log('🚀 ~ constR_U_N= ~ createRes:', createRes);
     htmlText += `<p style='color: green;'>Таблиця ${newTableName} успішно створена</p>`;
 
     const copyRes = await executePoolQuery(copyDataQuery);

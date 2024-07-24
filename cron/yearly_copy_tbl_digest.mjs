@@ -30,10 +30,16 @@ const R_U_N = async () => {
   let htmlText = '';
 
   const createRes = await executePoolQuery(createTableQuery);
+  console.log('🚀 ~ constR_U_N= ~ createRes:', createRes);
+  console.log(
+    '🚀 ~ constR_U_N= ~ createRes instanceof Error:',
+    createRes instanceof Error
+  );
 
-  if (!(createRes instanceof Error)) {
-    console.log('🚀 ~ constR_U_N= ~ createRes:', createRes);
-    htmlText += `<p style='color: green;'>Таблиця ${newTableName} успішно створена</p>`;
+  if (createRes instanceof Error) {
+    htmlText += `<p style='color: red;>DB ERROR! Could not create new table ${newTableName}.</p><p>Error: ${createRes.message}</p><p>Query: ${createTableQuery}</p>`;
+  } else {
+    htmlText += `<p style='color: green;'>DB SUCCESS! Table ${newTableName} successfully created</p>`;
 
     const copyRes = await executePoolQuery(copyDataQuery);
 
@@ -41,8 +47,6 @@ const R_U_N = async () => {
       copyRes instanceof Error
         ? `<p style='color: red;>DB ERROR! Could not copy data from ${TRANS_NEWS} to ${newTableName} table.</p><p>Error: ${copyRes.message}</p><p>Query: ${copyDataQuery}</p>`
         : `<p style='color: green;'>DB SUCCESS! Data copied from ${TRANS_NEWS} to ${newTableName} table.</p><p>Copied rows: ${copyRes.affectedRows}</p>`;
-  } else {
-    htmlText += `<p style='color: red;>DB ERROR! Could not create new table ${newTableName}.</p><p>Error: ${createRes.message}</p><p>Query: ${createTableQuery}</p>`;
   }
 
   htmlText += `<p><a href="${getDbTableLink(TRANS_NEWS)}">Original table</a></p>`;

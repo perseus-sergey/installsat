@@ -6,9 +6,9 @@ import { HTMLInputTypeAttribute, ReactNode, useState } from 'react';
 import Fieldset from '../ui/Fieldset/Fieldset';
 
 interface IProps {
-  inputId: string;
-  inputType: HTMLInputTypeAttribute;
-  inputDefaultValue: string | number;
+  inputId?: string;
+  inputType?: HTMLInputTypeAttribute;
+  inputDefaultValue?: string | number;
   inputBaseHref: string;
   searchParamName?: EUrlSearchParam;
   fieldSetTitle: string;
@@ -27,6 +27,7 @@ const ClientInputWithSubmit = ({
   buttonTitle,
 }: IProps) => {
   const [val, setVal] = useState(inputDefaultValue);
+  const isInput = inputId !== undefined;
   const handleSubmit = () => {
     const url = searchParamName
       ? `${inputBaseHref}?${makeUrlSearchParams({ [searchParamName]: `${val}` })}`
@@ -37,15 +38,21 @@ const ClientInputWithSubmit = ({
   return (
     <form onSubmit={handleSubmit}>
       <Fieldset className="p-4" legendText={fieldSetTitle}>
-        <label htmlFor={inputId}>{labelHtml}</label>
+        {isInput ? (
+          <label htmlFor={inputId}>{labelHtml}</label>
+        ) : (
+          <p>{labelHtml}</p>
+        )}
         <div className="flex gap-4 mt-4">
-          <input
-            id={inputId}
-            type={inputType}
-            value={val}
-            onChange={(e) => setVal(parseInt(e.target.value, 10))}
-            className="p-2 rounded"
-          />
+          {isInput && (
+            <input
+              id={inputId}
+              type={inputType}
+              value={val}
+              onChange={(e) => setVal(parseInt(e.target.value, 10))}
+              className="p-2 rounded"
+            />
+          )}
           <button
             type="submit"
             className="bg-blue-500 text-white font-bold py-2 px-4 w-fit rounded hover:bg-blue-400"

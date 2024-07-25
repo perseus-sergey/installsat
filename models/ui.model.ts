@@ -113,3 +113,5 @@ export enum EDBTableTitles {
 }
 
 // satellite_equipments: tbl_eqp_comments
+export const getDbTableLink = (tblName: EDBTableTitles) =>
+  `https://installsat.tv/tvefir/index.php?route=/sql&pos=0&db=installsat&table=${tblName}`;

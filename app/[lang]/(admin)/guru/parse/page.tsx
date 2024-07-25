@@ -14,6 +14,7 @@ interface IParams {
 
 export default async function Page({ params }: IParams) {
   const lang = getELangKey(params[EUrlBaseParam.LANG]);
+  const VSE_TV_DEFAULT_ID = 346;
 
   return (
     <>
@@ -21,7 +22,7 @@ export default async function Page({ params }: IParams) {
       <ClientInputWithSubmit
         inputId="vse-tv"
         buttonTitle="Schedule VseTv"
-        inputDefaultValue={346}
+        inputDefaultValue={VSE_TV_DEFAULT_ID}
         inputType="number"
         inputBaseHref={`/${lang}/${EUrlAdminParam.BASE_PATH}/${EUrlAdminParam.PARSE}/${EUrlAdminParam.PARSE_SCHEDULE_VSETV}`}
         searchParamName={EUrlSearchParam.COMMENT_ID}
@@ -31,11 +32,28 @@ export default async function Page({ params }: IParams) {
             Choose channel id for find time traps{' '}
             <Link
               className="text-blue-600 underline"
-              href="http://www.vsetv.com/schedule_channel_346_week.html"
+              href={`http://www.vsetv.com/schedule_channel_${VSE_TV_DEFAULT_ID}_week.html`}
               target="_blank"
               rel="noopener noreferrer nofollow"
             >
-              vsetv.com/schedule_channel_346_week
+              vsetv.com/schedule_channel_{VSE_TV_DEFAULT_ID}_week
+            </Link>
+          </>
+        }
+      />
+      <ClientInputWithSubmit
+        buttonTitle="Schedule Vipiko"
+        inputBaseHref={`/${lang}/${EUrlAdminParam.BASE_PATH}/${EUrlAdminParam.PARSE}/${EUrlAdminParam.PARSE_SCHEDULE_VIPIKO}`}
+        fieldSetTitle="Schedule Vipiko"
+        labelHtml={
+          <>
+            <Link
+              className="text-blue-600 underline"
+              href="http://epg.it999.ru/edem.xml.gz"
+              target="_blank"
+              rel="noopener noreferrer nofollow"
+            >
+              Download schedule and check the link
             </Link>
           </>
         }

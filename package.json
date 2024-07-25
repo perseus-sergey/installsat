@@ -23,6 +23,7 @@
     "@types/luxon": "^3.4.2",
     "@types/nodemailer": "^6.4.14",
     "@types/puppeteer": "^7.0.4",
+    "@types/sax": "^1.2.7",
     "@types/tinymce": "^4.6.9",
     "@vis.gl/react-google-maps": "^0.8.3",
     "axios": "^1.7.2",
@@ -45,8 +46,10 @@
     "react-hot-toast": "^2.4.1",
     "react-select": "^5.8.0",
     "resend": "^3.2.0",
+    "sax": "^1.4.1",
     "sharp": "^0.33.4",
     "use-debounce": "^10.0.0",
+    "zlib": "^1.0.5",
     "zod": "^3.22.4"
   },
   "devDependencies": {

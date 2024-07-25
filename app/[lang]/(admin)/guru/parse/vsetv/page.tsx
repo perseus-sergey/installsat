@@ -225,7 +225,7 @@ const insertDataInBatches = async (data: string[]) => {
   if (!data || data.length === 0)
     return ['Error: Received empty data for batch insert'];
 
-  let message: string[] = [];
+  const message: string[] = [];
 
   for (let i = 0; i < data.length; i += BATCH_SIZE) {
     const batch = data.slice(i, i + BATCH_SIZE);

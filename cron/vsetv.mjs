@@ -245,7 +245,7 @@ const sendReportMail = async ({
         </a>
       </p>
       <p>
-        <a style="color: #267f00; font-size: 20px; padding: 10px 0" target="_blank" href="${BASE_URL}/guru/parse" >
+        <a style="color: #267f00; font-size: 20px; padding: 10px 0" target="_blank" href="${BASE_GURU_PATH}/${EUrlAdminParam.PARSE}" >
         Parse all channels again
         </a>
       </p>

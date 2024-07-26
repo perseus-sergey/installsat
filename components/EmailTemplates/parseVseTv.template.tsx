@@ -3,12 +3,56 @@ import { Heading, Hr, Html, Link, Text } from '@react-email/components';
 import * as React from 'react';
 
 interface IEmailTemplateProps {
+  dbTableHref?: string;
   pathToMainParsePage: string;
-  errorChannels: IVseTvErrorChannel[];
-  dbTableLength: string;
-  allFailedChannelsUrl: string;
+  errorChannels?: IVseTvErrorChannel[];
+  dbTableLength?: string;
+  allFailedChannelsUrl?: string;
   errorMessages: string[];
 }
+
+export const ParseVipikoEmailTemplate = async ({
+  pathToMainParsePage,
+  errorMessages,
+  dbTableHref,
+}: IEmailTemplateProps) => {
+  return (
+    <Html>
+      <Heading as="h1">
+        <Link
+          href={`${pathToMainParsePage}`}
+          style={{ ...link, fontSize: '20px' }}
+          target="_blank"
+        >
+          Parse Schedule Vipiko
+        </Link>
+      </Heading>
+
+      <Hr style={hr} />
+
+      {errorMessages.length > 0 && (
+        <>
+          <Text style={heading}>Messages:</Text>
+          <ul>
+            {errorMessages.map((message, i) => (
+              <li key={i}>{message}</li>
+            ))}
+          </ul>
+
+          <Text style={footer}>
+            <Link
+              href={dbTableHref}
+              target="_blank"
+              style={{ ...reportLink, color: '#267f00' }}
+            >
+              DB Table
+            </Link>
+          </Text>
+        </>
+      )}
+    </Html>
+  );
+};
 
 export const ParseVseTvEmailTemplate = async ({
   pathToMainParsePage,
@@ -32,10 +76,12 @@ export const ParseVseTvEmailTemplate = async ({
 
       <Hr style={hr} />
 
-      <Text style={heading}>
-        The number of records in the database table:
-        <span style={coloredText}> {dbTableLength}</span>
-      </Text>
+      {dbTableLength !== undefined && (
+        <Text style={heading}>
+          The number of records in the database table:
+          <span style={coloredText}> {dbTableLength}</span>
+        </Text>
+      )}
 
       {errorMessages.length > 0 && (
         <>
@@ -50,7 +96,7 @@ export const ParseVseTvEmailTemplate = async ({
 
       <Hr style={hr} />
 
-      {errorChannels.length > 0 && (
+      {errorChannels && errorChannels.length > 0 && (
         <>
           <Text style={heading}>Channels with errors:</Text>
           <ul>

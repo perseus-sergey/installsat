@@ -41,6 +41,7 @@ export enum EUrlAdminParam {
   CHANNELS_EDIT = 'channels',
   PARSE = 'parse',
   PARSE_SCHEDULE_VSETV = 'vsetv',
+  PARSE_SCHEDULE_VIPIKO = 'vipiko',
   PARSE_SAT_DIGEST = 'trans-news',
 }
 

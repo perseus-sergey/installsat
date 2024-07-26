@@ -73,7 +73,6 @@ export const executePoolQuery = async (sql, values = []) => {
 
     return err;
   } finally {
-    console.log('🚀 ~ executePoolQuery ~ connection.released');
     connection.release();
   }
 };

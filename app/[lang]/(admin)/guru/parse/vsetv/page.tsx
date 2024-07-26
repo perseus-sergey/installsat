@@ -225,27 +225,17 @@ const insertDataInBatches = async (data: string[]) => {
   if (!data || data.length === 0)
     return ['Error: Received empty data for batch insert'];
 
-  let message: string[] = [];
+  const message: string[] = [];
 
   for (let i = 0; i < data.length; i += BATCH_SIZE) {
     const batch = data.slice(i, i + BATCH_SIZE);
-    // const insertedStr = batch.join(',');
-    // const sql = `
-    //   INSERT INTO ${TV_SCHEDULE_VSE_TV} (start, end, chan_id, title)
-    //   VALUES ${insertedStr}
-    // `;
 
     try {
-      // await pool.query(sql);
       await insertDBVseTvChannels(batch);
-      // message.push(`Inserted batch, BATCH_SIZE = ${BATCH_SIZE}`);
     } catch (err) {
       message.push(
         `Error inserting batch: ${err instanceof Error ? err.message : 'Unknown error'}`
       );
-      // message.push(
-      //   `Error inserting batch: ${error instanceof Error ? error.message : 'Unknown error'}`
-      // );
     }
   }
 

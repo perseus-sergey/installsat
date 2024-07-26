@@ -103,21 +103,21 @@ export const poolQuery = async <T>(
   }
 };
 
-export const executePoolQuery = async <P, T>(
-  sql: string,
-  values?: P[]
-): Promise<T | Error> => {
-  const pool = getPool();
-  const connection = await pool.getConnection();
+// export const executePoolQuery = async <P, T>(
+//   sql: string,
+//   values?: P[]
+// ): Promise<T | Error> => {
+//   const pool = getPool();
+//   const connection = await pool.getConnection();
 
-  try {
-    const [rows] = await connection.query(sql, values ? [values] : []);
+//   try {
+//     const [rows] = await connection.query(sql, values ? [values] : []);
 
-    return rows as T;
-  } catch (err) {
-    console.error('MySQL query error:', err);
-    throw err;
-  } finally {
-    connection.release();
-  }
-};
+//     return rows as T;
+//   } catch (err) {
+//     console.error('MySQL query error:', err);
+//     throw err;
+//   } finally {
+//     connection.release();
+//   }
+// };

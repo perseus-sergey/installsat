@@ -1,9 +1,5 @@
 import { Title } from '@/components/ui/Titles/Title';
-import {
-  EDBTableTitles,
-  TSearchParams,
-  getDbTableLink,
-} from '@/models/ui.model';
+import { EDBTableTitles, getDbTableLink } from '@/models/ui.model';
 import { getELangKey } from '@/libs/utils/validSearchParam';
 import { EUrlAdminParam, EUrlBaseParam } from '@/models/url.model';
 import axios from 'axios';
@@ -31,8 +27,8 @@ interface IChannel {
 }
 
 const IS_LOGGED = true;
-const MAX_TABLE_LINES = 1000000;
-const BATCH_SIZE = 1000;
+const MAX_TABLE_LINES = 2000000;
+const BATCH_SIZE = 4096;
 
 const DOWNLOAD_URL = 'http://epg.one/epg2.xml.gz';
 const BASE_URL = process.env.BASE_URL;
@@ -40,7 +36,7 @@ const { TV_SCHEDULE_VIPIKO, VIPIKO_CHANNELS } = EDBTableTitles;
 // const filePath = 'edem.xml';
 const pool = getPool();
 
-let insertedTimes = 0;
+let insertedRows = 0;
 
 const clearTable = async (tableName: string) => {
   const res = await poolExecute(`TRUNCATE TABLE ${tableName}`);
@@ -65,7 +61,7 @@ const insertEmptyFirstRow = async () => {
 const insertProgrammeChunk = async (data: IProgramme[]) => {
   const dataLength = data.length;
   if (dataLength === 0) return;
-  if (insertedTimes > MAX_TABLE_LINES / dataLength + 1)
+  if (insertedRows > MAX_TABLE_LINES)
     throw new Error(`DB inserted rows > ${MAX_TABLE_LINES}`);
 
   const values = data.map((item) => [
@@ -86,9 +82,9 @@ const insertProgrammeChunk = async (data: IProgramme[]) => {
     throw new Error(`DB INSERT data: ${res.message}`);
   }
 
-  insertedTimes++;
-  if (dataLength < BATCH_SIZE)
-    console.log(`Inserted ${dataLength} programme rows.`);
+  insertedRows += dataLength;
+  // if (dataLength < BATCH_SIZE)
+  //   console.log(`Inserted ${dataLength} programme rows.`);
 };
 
 const insertChannelChunk = async (data: IChannel[]) => {
@@ -111,14 +107,12 @@ export default async function Page({
   params,
 }: {
   params: { [key in EUrlAdminParam | EUrlBaseParam]: string };
-  searchParams?: TSearchParams;
 }) {
   const lang = getELangKey(params[EUrlBaseParam.LANG]);
   const BASE_GURU_PATH = `${BASE_URL}/${lang}/${EUrlAdminParam.BASE_PATH}`;
   let messages: string[] = [];
   let insertInProgress = false;
   let lineCount = 0;
-  let fullBufferCount = 0;
 
   const addMessage = (message: string, error?: Error) => {
     messages.push(`${message}${error ? `: ${error.message}` : ''}`);
@@ -195,7 +189,6 @@ export default async function Page({
         lineCount += 1;
 
         if (bufferProgramme.length >= BATCH_SIZE) {
-          fullBufferCount += 1;
           while (insertInProgress) {
             // Зачекайте, поки поточна вставка завершиться
             await new Promise((resolve) => setTimeout(resolve, 100));
@@ -274,10 +267,14 @@ export default async function Page({
         }`
       );
 
+      saxStream.on('error', (error) => {
+        console.error('SAX Parser Error:', error);
+        saxStream._parser.error = new Error();
+        saxStream._parser.resume();
+      });
       addMessage(
-        `${TV_SCHEDULE_VIPIKO}: Inserted times: ${insertedTimes}. Batch size: ${BATCH_SIZE}`
+        `${TV_SCHEDULE_VIPIKO}: Inserted rows: ${insertedRows}. Batch size: ${BATCH_SIZE}`
       );
-      addMessage(`Full buffer Count: ${fullBufferCount}`);
 
       await sendMail({
         subject: `Parse schedule Vipiko-it999`,

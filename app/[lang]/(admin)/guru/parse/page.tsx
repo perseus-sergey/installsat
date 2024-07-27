@@ -49,11 +49,11 @@ export default async function Page({ params }: IParams) {
           <>
             <Link
               className="text-blue-600 underline"
-              href="http://epg.it999.ru/edem.xml.gz"
+              href="https://epg.one/"
               target="_blank"
               rel="noopener noreferrer nofollow"
             >
-              Download schedule and check the link
+              EPG SOURCE
             </Link>
           </>
         }

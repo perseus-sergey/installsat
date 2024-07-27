@@ -7,18 +7,18 @@ import axios from 'axios';
 import { sendMail } from './libs/sendMail.mjs';
 import { getPool, executePoolQuery } from './libs/mysqldb.mjs';
 import { getDbIdAmount } from './libs/parseTransNews.controller.mjs';
-import fs from 'fs';
+// import fs from 'fs';
 import { createGunzip } from 'zlib';
 import sax from 'sax';
 
 const IS_LOGGED = true;
-const MAX_TABLE_LINES = 1000000; // 0 for ignore
+const MAX_TABLE_LINES = 1000000;
 const BATCH_SIZE = 1000;
 
-const DOWNLOAD_URL = 'http://epg.it999.ru/edem.xml.gz';
+const DOWNLOAD_URL = 'http://epg.one/epg2.xml.gz';
 const BASE_URL = process.env.BASE_URL;
 const BASE_GURU_PATH = `${BASE_URL}/en/${EUrlAdminParam.BASE_PATH}`;
-const filePath = 'edem.xml';
+// const filePath = 'edem.xml';
 
 const { TV_SCHEDULE_VIPIKO, VIPIKO_CHANNELS } = EDBTableTitles;
 const pool = getPool();
@@ -116,8 +116,13 @@ const R_U_N = async () => {
   let insertInProgress = false;
   let lineCount = 0;
 
+  const addMessage = (message, error = undefined) => {
+    messages.push(`${message}${error ? `: ${error.message}` : ''}`);
+    if (IS_LOGGED)
+      console.log(`🚀 ~ ${message}${error ? ` ERROR: ${error}` : ''}`);
+  };
+
   try {
-    IS_LOGGED && console.log('🚀 ~ Starting download and extraction...');
     const response = await axios({
       url: DOWNLOAD_URL,
       method: 'GET',
@@ -126,15 +131,10 @@ const R_U_N = async () => {
 
     const gunzip = createGunzip();
 
-    IS_LOGGED && console.log('🚀 ~ Starting table clearing...');
-    const clearProgrammeTableMessage = await clearTable(TV_SCHEDULE_VIPIKO);
-    messages.push(clearProgrammeTableMessage);
-    const clearChannelTableMessage = await clearTable(VIPIKO_CHANNELS);
-    messages.push(clearChannelTableMessage);
-    IS_LOGGED && console.log('🚀 ~ Table clearing completed');
+    addMessage(await clearTable(TV_SCHEDULE_VIPIKO));
+    addMessage(await clearTable(VIPIKO_CHANNELS));
 
-    const insertEmptyRowMessage = await insertEmptyFirstRow();
-    messages.push(insertEmptyRowMessage);
+    addMessage(await insertEmptyFirstRow());
 
     const saxStream = sax.createStream(true);
 
@@ -184,16 +184,6 @@ const R_U_N = async () => {
         }
       }
     });
-    // <channel id="2066">
-    // 	<display-name lang="ru">Երկիր մեդիա</display-name>
-    // 	<display-name lang="ru">Երկիր մեդիա FHD</display-name>
-    // 	<icon src="http://epg.one/img/2066.png" />
-    // </channel>
-    // <programme start="20240724020000 +0300" stop="20240724030000 +0300" channel="681">
-    //   <title lang="ru">Хит нон-стоп</title>
-    //   <desc lang="ru">музыкальная программа</desc>
-    //   <category lang="ru">Досуг</category>
-    // </programme>
 
     saxStream.on('closetag', async (tagName) => {
       if (tagName === 'programme' && currentProgramme) {
@@ -231,69 +221,69 @@ const R_U_N = async () => {
 
     saxStream.on('end', async () => {
       if (bufferProgramme.length > 0) {
-        IS_LOGGED &&
-          console.log(
-            '🚀 ~ saxStream.end ~ final insert ~ bufferProgramme.length:',
-            bufferProgramme.length
-          );
         await insertProgrammeChunk(bufferProgramme);
         bufferProgramme = [];
       }
       if (bufferChannel.length > 0) {
-        IS_LOGGED &&
-          console.log(
-            '🚀 ~ saxStream.end ~ final insert ~ bufferChannel.length:',
-            bufferChannel.length
-          );
         await insertChannelChunk(bufferChannel);
         bufferChannel = [];
       }
-      messages.push('SUCCESS: Parsing and insertion completed');
-      IS_LOGGED &&
-        console.log(
-          '🚀 ~ Parsing and insertion completed. Handled line count:',
-          lineCount
-        );
+
+      addMessage(
+        `SUCCESS: End of file. Handled line count: ${lineCount.toLocaleString('en-US')}`
+      );
+
+      const resDbTableLength = await getDbIdAmount(TV_SCHEDULE_VIPIKO);
+      addMessage(
+        `The number of records in the db table: ${
+          typeof resDbTableLength === 'string'
+            ? resDbTableLength
+            : resDbTableLength[0].count.toLocaleString('en-US')
+        }`
+      );
+
+      sendReportMail({
+        foundLines: lineCount,
+        messages,
+        tblItemLength:
+          typeof resDbTableLength === 'string'
+            ? resDbTableLength
+            : resDbTableLength[0].count.toLocaleString('en-US'),
+      });
     });
 
     response.data
       .pipe(gunzip)
       .pipe(saxStream)
       .on('error', (err) => {
-        console.error('Error during parsing:', err);
-        messages.push(`ERROR: failed during parsing: ${err.message}`);
+        addMessage('ERROR: during parsing', err);
       });
 
-    messages.push('SUCCESS: Download and extraction completed');
-    IS_LOGGED && console.log('🚀 ~ Download and extraction completed');
+    addMessage('SUCCESS: Download and extraction completed');
   } catch (error) {
-    messages.push(
-      error instanceof Error
-        ? `ERROR: failed during processing: ${error.message}`
-        : 'ERROR: Unknown error occurred'
+    addMessage(
+      '`ERROR: failed during processing',
+      error instanceof Error ? error : new Error('Unknown error occurred')
     );
-    console.error('🚀 ~ Error during processing:', error);
   } finally {
     // Delete the file
-    fs.unlink(filePath, (err) => {
-      err
-        ? messages.push(`ERROR: failed deleting file: ${err.message}`)
-        : messages.push('SUCCESS: File deleted');
-    });
+    // fs.unlink(filePath, (err) => {
+    //   err
+    //     ? messages.push(`ERROR: failed deleting file: ${err.message}`)
+    //     : messages.push('SUCCESS: File deleted');
+    // });
   }
-
-  IS_LOGGED && console.log('🚀 ~ lineCount:', lineCount);
-
-  const resDbTableLength = await getDbIdAmount(TV_SCHEDULE_VIPIKO);
-
-  sendReportMail({
-    foundLines: lineCount,
-    messages,
-    tblItemLength:
-      typeof resDbTableLength === 'string'
-        ? resDbTableLength
-        : resDbTableLength[0].count.toLocaleString('en-US'),
-  });
 };
 
 R_U_N();
+
+// <channel id="2066">
+// 	<display-name lang="ru">Երկիր մեդիա</display-name>
+// 	<display-name lang="ru">Երկիր մեդիա FHD</display-name>
+// 	<icon src="http://epg.one/img/2066.png" />
+// </channel>
+// <programme start="20240724020000 +0300" stop="20240724030000 +0300" channel="681">
+//   <title lang="ru">Хит нон-стоп</title>
+//   <desc lang="ru">музыкальная программа</desc>
+//   <category lang="ru">Досуг</category>
+// </programme>

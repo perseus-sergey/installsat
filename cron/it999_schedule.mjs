@@ -12,8 +12,8 @@ import { createGunzip } from 'zlib';
 import sax from 'sax';
 
 const IS_LOGGED = true;
-const MAX_TABLE_LINES = 1000000;
-const BATCH_SIZE = 1000;
+const MAX_TABLE_LINES = 2000000;
+const BATCH_SIZE = 4096;
 
 const DOWNLOAD_URL = 'http://epg.one/epg2.xml.gz';
 const BASE_URL = process.env.BASE_URL;
@@ -23,7 +23,7 @@ const BASE_GURU_PATH = `${BASE_URL}/en/${EUrlAdminParam.BASE_PATH}`;
 const { TV_SCHEDULE_VIPIKO, VIPIKO_CHANNELS } = EDBTableTitles;
 const pool = getPool();
 
-let insertedTimes = 0;
+let insertedRows = 0;
 
 const clearTable = async (tableName) => {
   const res = await executePoolQuery(`TRUNCATE TABLE ${tableName}`);
@@ -46,7 +46,9 @@ const insertEmptyFirstRow = async () => {
 };
 
 const insertProgrammeChunk = async (data) => {
-  if (insertedTimes > MAX_TABLE_LINES / BATCH_SIZE + 1)
+  const dataLength = data.length;
+  if (dataLength === 0) return;
+  if (insertedRows > MAX_TABLE_LINES)
     throw new Error(`DB inserted rows > ${MAX_TABLE_LINES}`);
 
   const values = data.map((item) => [
@@ -58,13 +60,18 @@ const insertProgrammeChunk = async (data) => {
     pool.escape(item.desc),
   ]);
   const sql = `
-      INSERT INTO ${TV_SCHEDULE_VIPIKO} (start, end, chan_id, title, prog_cat, prog_desc)
-      VALUES ${values.map((valueSet) => `(${valueSet.join(', ')})`).join(', ')};
-    `;
+    INSERT INTO ${TV_SCHEDULE_VIPIKO} (start, end, chan_id, title, prog_cat, prog_desc)
+    VALUES ${values.map((valueSet) => `(${valueSet.join(', ')})`).join(', ')};
+  `;
   const res = await executePoolQuery(sql);
-  if (res instanceof Error) throw new Error(`DB INSERT data: ${res.message}`);
+  if (res instanceof Error) {
+    console.log('ERROR during programme chunk insertion:', res.message);
+    throw new Error(`DB INSERT data: ${res.message}`);
+  }
 
-  insertedTimes += 1;
+  insertedRows += dataLength;
+  // if (dataLength < BATCH_SIZE)
+  //   console.log(`Inserted ${dataLength} programme rows.`);
 };
 
 const insertChannelChunk = async (data) => {
@@ -190,9 +197,21 @@ const R_U_N = async () => {
         bufferProgramme.push(currentProgramme);
         lineCount += 1;
 
-        if (bufferProgramme.length >= BATCH_SIZE && !insertInProgress) {
+        if (bufferProgramme.length >= BATCH_SIZE) {
+          while (insertInProgress) {
+            // Зачекайте, поки поточна вставка завершиться
+            await new Promise((resolve) => setTimeout(resolve, 100));
+          }
+
           insertInProgress = true;
-          await insertProgrammeChunk(bufferProgramme);
+          try {
+            if (bufferProgramme.length > 0) {
+              // Перевірка на порожній буфер
+              await insertProgrammeChunk(bufferProgramme);
+            }
+          } catch (error) {
+            addMessage('ERROR: during programme chunk insertion', error);
+          }
           bufferProgramme = [];
           insertInProgress = false;
         }
@@ -207,9 +226,21 @@ const R_U_N = async () => {
             });
         });
 
-        if (bufferChannel.length >= BATCH_SIZE && !insertInProgress) {
+        if (bufferChannel.length >= BATCH_SIZE) {
+          while (insertInProgress) {
+            // Зачекайте, поки поточна вставка завершиться
+            await new Promise((resolve) => setTimeout(resolve, 100));
+          }
+
           insertInProgress = true;
-          await insertChannelChunk(bufferChannel);
+          try {
+            if (bufferChannel.length > 0) {
+              // Перевірка на порожній буфер
+              await insertChannelChunk(bufferChannel);
+            }
+          } catch (error) {
+            addMessage('ERROR: during channel chunk insertion', error);
+          }
           bufferChannel = [];
           insertInProgress = false;
         }
@@ -242,7 +273,17 @@ const R_U_N = async () => {
         }`
       );
 
-      sendReportMail({
+      saxStream.on('error', (error) => {
+        console.error('SAX Parser Error:', error);
+        saxStream._parser.error = new Error();
+        saxStream._parser.resume();
+      });
+
+      addMessage(
+        `${TV_SCHEDULE_VIPIKO}: Inserted rows: ${insertedRows}. Batch size: ${BATCH_SIZE}`
+      );
+
+      await sendReportMail({
         foundLines: lineCount,
         messages,
         tblItemLength:

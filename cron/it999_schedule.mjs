@@ -121,7 +121,6 @@ const sendReportMail = async ({ messages, tblItemLength, foundLines }) => {
 const R_U_N = async () => {
   let messages = [];
   let insertInProgress = false;
-  let isMailSent = false;
   let lineCount = 0;
 
   const addMessage = (message, error = undefined) => {
@@ -292,7 +291,6 @@ const R_U_N = async () => {
             ? resDbTableLength
             : resDbTableLength[0].count.toLocaleString('en-US'),
       });
-      isMailSent = true;
     });
 
     response.data
@@ -309,17 +307,6 @@ const R_U_N = async () => {
       error instanceof Error ? error : new Error('Unknown error occurred')
     );
   } finally {
-    if (!isMailSent) {
-      await sendReportMail({
-        foundLines: lineCount,
-        messages,
-        tblItemLength:
-          typeof resDbTableLength === 'string'
-            ? resDbTableLength
-            : resDbTableLength[0].count.toLocaleString('en-US'),
-      });
-      isMailSent = true;
-    }
     // Delete the file
     // fs.unlink(filePath, (err) => {
     //   err

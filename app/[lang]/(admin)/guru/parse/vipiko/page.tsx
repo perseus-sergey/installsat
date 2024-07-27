@@ -126,7 +126,6 @@ export default async function Page({
   const BASE_GURU_PATH = `${BASE_URL}/${lang}/${EUrlAdminParam.BASE_PATH}`;
   let messages: string[] = [];
   let insertInProgress = false;
-  let isMailSent = false;
   let lineCount = 0;
 
   const addMessage = (message: string, error?: Error) => {
@@ -301,7 +300,6 @@ export default async function Page({
           />
         ),
       });
-      isMailSent = true;
     });
 
     response.data
@@ -319,19 +317,6 @@ export default async function Page({
       error instanceof Error ? error : new Error('Unknown error occurred')
     );
   } finally {
-    if (!isMailSent) {
-      await sendMail({
-        subject: `Parse schedule Vipiko-it999`,
-        body: await renderAsync(
-          <ParseVipikoEmailTemplate
-            pathToMainParsePage={`${BASE_GURU_PATH}/${EUrlAdminParam.PARSE}`}
-            errorMessages={messages}
-            dbTableHref={getDbTableLink(TV_SCHEDULE_VIPIKO)}
-          />
-        ),
-      });
-      isMailSent = true;
-    }
     // Delete the file
     // fs.unlink(filePath, (err) => {
     //   err

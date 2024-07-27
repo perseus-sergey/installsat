@@ -11,9 +11,10 @@ import { sendMail } from '@/libs/mail/sendMail';
 import { renderAsync } from '@react-email/render';
 import { ParseVipikoEmailTemplate } from '@/components/EmailTemplates/parseVseTv.template';
 import { getPool, poolExecute } from '@/libs/db/mysqldb';
-import fs from 'fs';
+// import fs from 'fs';
 import { createGunzip } from 'zlib';
 import sax from 'sax';
+import { getDbIdAmount } from '@/controllers/schedule.controller';
 
 interface IProgramme {
   start: string;
@@ -30,14 +31,16 @@ interface IChannel {
 }
 
 const IS_LOGGED = true;
-const MAX_PARSING_LINES = 1000000; // 0 for ignore
+const MAX_TABLE_LINES = 1000000;
 const BATCH_SIZE = 1000;
 
-const DOWNLOAD_URL = 'http://epg.it999.ru/edem.xml.gz';
+const DOWNLOAD_URL = 'http://epg.one/epg2.xml.gz';
 const BASE_URL = process.env.BASE_URL;
 const { TV_SCHEDULE_VIPIKO, VIPIKO_CHANNELS } = EDBTableTitles;
-const filePath = 'edem.xml';
+// const filePath = 'edem.xml';
 const pool = getPool();
+
+let insertedTimes = 0;
 
 const clearTable = async (tableName: string) => {
   const res = await poolExecute(`TRUNCATE TABLE ${tableName}`);
@@ -60,6 +63,11 @@ const insertEmptyFirstRow = async () => {
 };
 
 const insertProgrammeChunk = async (data: IProgramme[]) => {
+  const dataLength = data.length;
+  if (dataLength === 0) return;
+  if (insertedTimes > MAX_TABLE_LINES / dataLength + 1)
+    throw new Error(`DB inserted rows > ${MAX_TABLE_LINES}`);
+
   const values = data.map((item) => [
     pool.escape(item.start),
     pool.escape(item.stop),
@@ -69,11 +77,18 @@ const insertProgrammeChunk = async (data: IProgramme[]) => {
     pool.escape(item.desc),
   ]);
   const sql = `
-      INSERT INTO ${TV_SCHEDULE_VIPIKO} (start, end, chan_id, title, prog_cat, prog_desc)
-      VALUES ${values.map((valueSet) => `(${valueSet.join(', ')})`).join(', ')};
-    `;
+    INSERT INTO ${TV_SCHEDULE_VIPIKO} (start, end, chan_id, title, prog_cat, prog_desc)
+    VALUES ${values.map((valueSet) => `(${valueSet.join(', ')})`).join(', ')};
+  `;
   const res = await poolExecute(sql);
-  if (res instanceof Error) throw new Error(`DB INSERT data: ${res.message}`);
+  if (res instanceof Error) {
+    console.log('ERROR during programme chunk insertion:', res.message);
+    throw new Error(`DB INSERT data: ${res.message}`);
+  }
+
+  insertedTimes++;
+  if (dataLength < BATCH_SIZE)
+    console.log(`Inserted ${dataLength} programme rows.`);
 };
 
 const insertChannelChunk = async (data: IChannel[]) => {
@@ -82,11 +97,14 @@ const insertChannelChunk = async (data: IChannel[]) => {
     pool.escape(item.vipiko_id),
   ]);
   const sql = `
-      INSERT INTO ${VIPIKO_CHANNELS} (title, vipiko_id)
-      VALUES ${values.map((valueSet) => `(${valueSet.join(', ')})`).join(', ')};
-    `;
+    INSERT INTO ${VIPIKO_CHANNELS} (title, vipiko_id)
+    VALUES ${values.map((valueSet) => `(${valueSet.join(', ')})`).join(', ')};
+  `;
   const res = await poolExecute(sql);
-  if (res instanceof Error) throw new Error(`DB INSERT data: ${res.message}`);
+  if (res instanceof Error) {
+    console.log('ERROR during channel chunk insertion:', res.message);
+    throw new Error(`DB INSERT data: ${res.message}`);
+  }
 };
 
 export default async function Page({
@@ -100,9 +118,15 @@ export default async function Page({
   let messages: string[] = [];
   let insertInProgress = false;
   let lineCount = 0;
+  let fullBufferCount = 0;
+
+  const addMessage = (message: string, error?: Error) => {
+    messages.push(`${message}${error ? `: ${error.message}` : ''}`);
+    if (IS_LOGGED)
+      console.log(`🚀 ~ ${message}${error ? ` ERROR: ${error}` : ''}`);
+  };
 
   try {
-    IS_LOGGED && console.log('🚀 ~ Starting download and extraction...');
     const response = await axios({
       url: DOWNLOAD_URL,
       method: 'GET',
@@ -111,15 +135,10 @@ export default async function Page({
 
     const gunzip = createGunzip();
 
-    IS_LOGGED && console.log('🚀 ~ Starting table clearing...');
-    const clearProgrammeTableMessage = await clearTable(TV_SCHEDULE_VIPIKO);
-    messages.push(clearProgrammeTableMessage);
-    const clearChannelTableMessage = await clearTable(VIPIKO_CHANNELS);
-    messages.push(clearChannelTableMessage);
-    IS_LOGGED && console.log('🚀 ~ Table clearing completed');
+    addMessage(await clearTable(TV_SCHEDULE_VIPIKO));
+    addMessage(await clearTable(VIPIKO_CHANNELS));
 
-    const insertEmptyRowMessage = await insertEmptyFirstRow();
-    messages.push(insertEmptyRowMessage);
+    addMessage(await insertEmptyFirstRow());
 
     const saxStream = sax.createStream(true);
 
@@ -130,8 +149,6 @@ export default async function Page({
     let displayNames: string[] = [];
 
     saxStream.on('opentag', (node) => {
-      if (MAX_PARSING_LINES && lineCount >= MAX_PARSING_LINES) return;
-
       if (node.name === 'programme') {
         currentProgramme = {
           start: String(node.attributes.start).slice(0, 14),
@@ -151,8 +168,6 @@ export default async function Page({
     });
 
     saxStream.on('text', (text) => {
-      if (MAX_PARSING_LINES && lineCount >= MAX_PARSING_LINES) return;
-
       if (currentProgramme) {
         const trimmedText = text.trim();
         switch (saxStream._parser.tag.name) {
@@ -173,22 +188,31 @@ export default async function Page({
         }
       }
     });
-    // <channel id="2066">
-    // 	<display-name lang="ru">Երկիր մեդիա</display-name>
-    // 	<display-name lang="ru">Երկիր մեդիա FHD</display-name>
-    // 	<icon src="http://epg.one/img/2066.png" />
-    // </channel>
 
     saxStream.on('closetag', async (tagName) => {
-      if (MAX_PARSING_LINES && lineCount >= MAX_PARSING_LINES) return;
-
       if (tagName === 'programme' && currentProgramme) {
         bufferProgramme.push(currentProgramme);
         lineCount += 1;
 
-        if (bufferProgramme.length >= BATCH_SIZE && !insertInProgress) {
+        if (bufferProgramme.length >= BATCH_SIZE) {
+          fullBufferCount += 1;
+          while (insertInProgress) {
+            // Зачекайте, поки поточна вставка завершиться
+            await new Promise((resolve) => setTimeout(resolve, 100));
+          }
+
           insertInProgress = true;
-          await insertProgrammeChunk(bufferProgramme);
+          try {
+            if (bufferProgramme.length > 0) {
+              // Перевірка на порожній буфер
+              await insertProgrammeChunk(bufferProgramme);
+            }
+          } catch (error) {
+            addMessage(
+              'ERROR: during programme chunk insertion',
+              error as Error
+            );
+          }
           bufferProgramme = [];
           insertInProgress = false;
         }
@@ -196,16 +220,29 @@ export default async function Page({
         currentProgramme = null;
       } else if (tagName === 'channel' && currentChannel) {
         displayNames.forEach((name) => {
-          if (currentChannel && name)
+          if (currentChannel && name) {
             bufferChannel.push({
               title: name,
               vipiko_id: currentChannel.vipiko_id,
             });
+          }
         });
 
-        if (bufferChannel.length >= BATCH_SIZE && !insertInProgress) {
+        if (bufferChannel.length >= BATCH_SIZE) {
+          while (insertInProgress) {
+            // Зачекайте, поки поточна вставка завершиться
+            await new Promise((resolve) => setTimeout(resolve, 100));
+          }
+
           insertInProgress = true;
-          await insertChannelChunk(bufferChannel);
+          try {
+            if (bufferChannel.length > 0) {
+              // Перевірка на порожній буфер
+              await insertChannelChunk(bufferChannel);
+            }
+          } catch (error) {
+            addMessage('ERROR: during channel chunk insertion', error as Error);
+          }
           bufferChannel = [];
           insertInProgress = false;
         }
@@ -217,69 +254,65 @@ export default async function Page({
 
     saxStream.on('end', async () => {
       if (bufferProgramme.length > 0) {
-        IS_LOGGED &&
-          console.log(
-            '🚀 ~ saxStream.end ~ final insert ~ bufferProgramme.length:',
-            bufferProgramme.length
-          );
         await insertProgrammeChunk(bufferProgramme);
         bufferProgramme = [];
       }
       if (bufferChannel.length > 0) {
-        IS_LOGGED &&
-          console.log(
-            '🚀 ~ saxStream.end ~ final insert ~ bufferChannel.length:',
-            bufferChannel.length
-          );
         await insertChannelChunk(bufferChannel);
         bufferChannel = [];
       }
-      messages.push('SUCCESS: Parsing and insertion completed');
-      IS_LOGGED &&
-        console.log(
-          '🚀 ~ Parsing and insertion completed. Handled line count:',
-          lineCount
-        );
+      addMessage(
+        `SUCCESS: End of file. Handled line count: ${lineCount.toLocaleString('en-US')}`
+      );
+
+      const resDbTableLength = await getDbIdAmount(TV_SCHEDULE_VIPIKO);
+      addMessage(
+        `The number of records in the db table: ${
+          typeof resDbTableLength === 'string'
+            ? resDbTableLength
+            : resDbTableLength[0].count.toLocaleString('en-US')
+        }`
+      );
+
+      addMessage(
+        `${TV_SCHEDULE_VIPIKO}: Inserted times: ${insertedTimes}. Batch size: ${BATCH_SIZE}`
+      );
+      addMessage(`Full buffer Count: ${fullBufferCount}`);
+
+      await sendMail({
+        subject: `Parse schedule Vipiko-it999`,
+        body: await renderAsync(
+          <ParseVipikoEmailTemplate
+            pathToMainParsePage={`${BASE_GURU_PATH}/${EUrlAdminParam.PARSE}`}
+            errorMessages={messages}
+            dbTableHref={getDbTableLink(TV_SCHEDULE_VIPIKO)}
+          />
+        ),
+      });
     });
 
     response.data
       .pipe(gunzip)
       .pipe(saxStream)
       .on('error', (err: Error) => {
-        console.error('Error during parsing:', err);
-        messages.push(`ERROR: failed during parsing: ${err.message}`);
+        addMessage('ERROR: during parsing', err);
       });
 
-    messages.push('SUCCESS: Download and extraction completed');
+    addMessage('SUCCESS: Download and extraction completed');
     IS_LOGGED && console.log('🚀 ~ Download and extraction completed');
   } catch (error) {
-    messages.push(
-      error instanceof Error
-        ? `ERROR: failed during processing: ${error.message}`
-        : 'ERROR: Unknown error occurred'
+    addMessage(
+      'ERROR: failed during processing',
+      error instanceof Error ? error : new Error('Unknown error occurred')
     );
-    console.error('🚀 ~ Error during processing:', error);
   } finally {
     // Delete the file
-    fs.unlink(filePath, (err) => {
-      err
-        ? messages.push(`ERROR: failed deleting file: ${err.message}`)
-        : messages.push('SUCCESS: File deleted');
-    });
+    // fs.unlink(filePath, (err) => {
+    //   err
+    //     ? messages.push(`ERROR: failed deleting file: ${err.message}`)
+    //     : messages.push('SUCCESS: File deleted');
+    // });
   }
-
-  console.log('🚀 ~ lineCount:', lineCount);
-
-  await sendMail({
-    subject: `Parse schedule Vipiko-it999`,
-    body: await renderAsync(
-      <ParseVipikoEmailTemplate
-        pathToMainParsePage={`${BASE_GURU_PATH}/${EUrlAdminParam.PARSE}`}
-        errorMessages={messages}
-        dbTableHref={getDbTableLink(TV_SCHEDULE_VIPIKO)}
-      />
-    ),
-  });
 
   return (
     <>

@@ -11,6 +11,7 @@ import {
 import { execSync } from 'child_process';
 
 const BASE_URL = process.env.BASE_URL;
+const BASE_GURU_PATH = `${BASE_URL}/en/${EUrlAdminParam.BASE_PATH}`;
 const isProductionMode = process.env.PRODUCTION_MODE === 'true';
 
 const PARSE_URL = 'https://www.flysat.com/en/news';
@@ -266,7 +267,7 @@ const sendReportMail = async (errorMessages, tblItemLength) => {
       ${messages}
     <hr />
     <p>
-      <a style="color: blue; font-size: 20px; padding: 10px 0" target="_blank" href="${BASE_URL}/guru/parse" >
+      <a style="color: blue; font-size: 20px; padding: 10px 0" target="_blank" href="${BASE_GURU_PATH}/${EUrlAdminParam.PARSE}" >
       Parse Transponder news again
       </a>
     </p>

@@ -15,6 +15,7 @@ interface IParams {
 export default async function Page({ params }: IParams) {
   const lang = getELangKey(params[EUrlBaseParam.LANG]);
   const VSE_TV_DEFAULT_ID = 346;
+  const IT999_DEFAULT_BATCH = 4096;
 
   return (
     <>
@@ -42,11 +43,16 @@ export default async function Page({ params }: IParams) {
         }
       />
       <ClientInputWithSubmit
+        inputId="it999"
         buttonTitle="Schedule Vipiko"
+        inputDefaultValue={IT999_DEFAULT_BATCH}
+        inputType="number"
         inputBaseHref={`/${lang}/${EUrlAdminParam.BASE_PATH}/${EUrlAdminParam.PARSE}/${EUrlAdminParam.PARSE_SCHEDULE_VIPIKO}`}
+        searchParamName={EUrlSearchParam.INTERVAL}
         fieldSetTitle="Schedule Vipiko"
         labelHtml={
           <>
+            Set batch size for DB inserting. (Tip: up to 4500){' '}
             <Link
               className="text-blue-600 underline"
               href="https://epg.one/"

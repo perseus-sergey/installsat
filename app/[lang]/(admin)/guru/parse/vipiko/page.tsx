@@ -1,7 +1,15 @@
 import { Title } from '@/components/ui/Titles/Title';
-import { EDBTableTitles, getDbTableLink } from '@/models/ui.model';
-import { getELangKey } from '@/libs/utils/validSearchParam';
-import { EUrlAdminParam, EUrlBaseParam } from '@/models/url.model';
+import {
+  EDBTableTitles,
+  TSearchParams,
+  getDbTableLink,
+} from '@/models/ui.model';
+import { getELangKey, validSearchParam } from '@/libs/utils/validSearchParam';
+import {
+  EUrlAdminParam,
+  EUrlBaseParam,
+  EUrlSearchParam,
+} from '@/models/url.model';
 import axios from 'axios';
 import { sendMail } from '@/libs/mail/sendMail';
 import { renderAsync } from '@react-email/render';
@@ -104,11 +112,17 @@ const insertChannelChunk = async (data: IChannel[]) => {
 };
 
 export default async function Page({
+  searchParams,
   params,
 }: {
   params: { [key in EUrlAdminParam | EUrlBaseParam]: string };
+  searchParams?: TSearchParams;
 }) {
   const lang = getELangKey(params[EUrlBaseParam.LANG]);
+  const seParBatchSize =
+    parseInt(validSearchParam(EUrlSearchParam.INTERVAL, searchParams), 10) ||
+    BATCH_SIZE;
+
   const BASE_GURU_PATH = `${BASE_URL}/${lang}/${EUrlAdminParam.BASE_PATH}`;
   let messages: string[] = [];
   let insertInProgress = false;
@@ -188,7 +202,7 @@ export default async function Page({
         bufferProgramme.push(currentProgramme);
         lineCount += 1;
 
-        if (bufferProgramme.length >= BATCH_SIZE) {
+        if (bufferProgramme.length >= seParBatchSize) {
           while (insertInProgress) {
             // Зачекайте, поки поточна вставка завершиться
             await new Promise((resolve) => setTimeout(resolve, 100));
@@ -221,7 +235,7 @@ export default async function Page({
           }
         });
 
-        if (bufferChannel.length >= BATCH_SIZE) {
+        if (bufferChannel.length >= seParBatchSize) {
           while (insertInProgress) {
             // Зачекайте, поки поточна вставка завершиться
             await new Promise((resolve) => setTimeout(resolve, 100));
@@ -273,7 +287,7 @@ export default async function Page({
         saxStream._parser.resume();
       });
       addMessage(
-        `${TV_SCHEDULE_VIPIKO}: Inserted rows: ${insertedRows}. Batch size: ${BATCH_SIZE}`
+        `${TV_SCHEDULE_VIPIKO}: Inserted rows: ${insertedRows}. Batch size: ${seParBatchSize}`
       );
 
       await sendMail({

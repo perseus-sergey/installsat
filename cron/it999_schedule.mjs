@@ -13,7 +13,7 @@ import sax from 'sax';
 
 const IS_LOGGED = true;
 const MAX_TABLE_LINES = 2000000;
-const BATCH_SIZE = 4096;
+const BATCH_SIZE = 8096;
 
 const DOWNLOAD_URL = 'http://epg.one/epg2.xml.gz';
 const BASE_URL = process.env.BASE_URL;

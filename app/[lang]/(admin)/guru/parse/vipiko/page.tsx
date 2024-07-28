@@ -15,10 +15,12 @@ import { sendMail } from '@/libs/mail/sendMail';
 import { renderAsync } from '@react-email/render';
 import { ParseVipikoEmailTemplate } from '@/components/EmailTemplates/parseVseTv.template';
 import { getPool, poolExecute } from '@/libs/db/mysqldb';
-// import fs from 'fs';
+import fs from 'fs';
 import { createGunzip } from 'zlib';
 import sax from 'sax';
 import { getDbIdAmount } from '@/controllers/schedule.controller';
+
+export const dynamic = 'force-dynamic';
 
 interface IProgramme {
   start: string;
@@ -41,7 +43,7 @@ const BATCH_SIZE = 4096;
 const DOWNLOAD_URL = 'http://epg.one/epg2.xml.gz';
 const BASE_URL = process.env.BASE_URL;
 const { TV_SCHEDULE_VIPIKO, VIPIKO_CHANNELS } = EDBTableTitles;
-// const filePath = 'edem.xml';
+const filePath = 'edem.xml';
 const pool = getPool();
 
 let insertedRows = 0;
@@ -141,176 +143,363 @@ export default async function Page({
       responseType: 'stream',
     });
 
-    const gunzip = createGunzip();
+    // =========================================================================
+    const writer = fs.createWriteStream(filePath);
 
-    addMessage(await clearTable(TV_SCHEDULE_VIPIKO));
-    addMessage(await clearTable(VIPIKO_CHANNELS));
+    response.data.pipe(writer);
 
-    addMessage(await insertEmptyFirstRow());
+    writer.on('finish', async () => {
+      console.log('File has been downloaded and saved.');
 
-    const saxStream = sax.createStream(true);
+      // Now you can read the file and process it with gunzip and sax
+      const fileStream = fs.createReadStream(filePath);
+      const gunzip = createGunzip();
+      const saxStream = sax.createStream(true);
 
-    let currentProgramme: IProgramme | null = null;
-    let currentChannel: IChannel | null = null;
-    let bufferProgramme: IProgramme[] = [];
-    let bufferChannel: IChannel[] = [];
-    let displayNames: string[] = [];
-
-    saxStream.on('opentag', (node) => {
-      if (node.name === 'programme') {
-        currentProgramme = {
-          start: String(node.attributes.start).slice(0, 14),
-          stop: String(node.attributes.stop).slice(0, 14),
-          channel: String(node.attributes.channel),
-          title: '',
-          category: '',
-          desc: '',
-        };
-      } else if (node.name === 'channel') {
-        currentChannel = {
-          title: '',
-          vipiko_id: String(node.attributes.id),
-        };
-        displayNames = [];
-      }
-    });
-
-    saxStream.on('text', (text) => {
-      if (currentProgramme) {
-        const trimmedText = text.trim();
-        switch (saxStream._parser.tag.name) {
-          case 'title':
-            currentProgramme.title += trimmedText;
-            break;
-          case 'category':
-            currentProgramme.category += trimmedText;
-            break;
-          case 'desc':
-            currentProgramme.desc += trimmedText;
-            break;
-        }
-      } else if (currentChannel) {
-        const trimmedText = text.trim();
-        if (saxStream._parser.tag.name === 'display-name') {
-          displayNames.push(trimmedText);
-        }
-      }
-    });
-
-    saxStream.on('closetag', async (tagName) => {
-      if (tagName === 'programme' && currentProgramme) {
-        bufferProgramme.push(currentProgramme);
-        lineCount += 1;
-
-        if (bufferProgramme.length >= seParBatchSize) {
-          while (insertInProgress) {
-            // Зачекайте, поки поточна вставка завершиться
-            await new Promise((resolve) => setTimeout(resolve, 100));
-          }
-
-          insertInProgress = true;
-          try {
-            if (bufferProgramme.length > 0) {
-              // Перевірка на порожній буфер
-              await insertProgrammeChunk(bufferProgramme);
-            }
-          } catch (error) {
-            addMessage(
-              'ERROR: during programme chunk insertion',
-              error as Error
-            );
-          }
-          bufferProgramme = [];
-          insertInProgress = false;
-        }
-
-        currentProgramme = null;
-      } else if (tagName === 'channel' && currentChannel) {
-        displayNames.forEach((name) => {
-          if (currentChannel && name) {
-            bufferChannel.push({
-              title: name,
-              vipiko_id: currentChannel.vipiko_id,
-            });
-          }
+      fileStream
+        .pipe(gunzip)
+        .pipe(saxStream)
+        .on('error', (err: Error) => {
+          addMessage('ERROR: during parsing', err);
         });
 
-        if (bufferChannel.length >= seParBatchSize) {
-          while (insertInProgress) {
-            // Зачекайте, поки поточна вставка завершиться
-            await new Promise((resolve) => setTimeout(resolve, 100));
-          }
+      addMessage(await clearTable(TV_SCHEDULE_VIPIKO));
+      addMessage(await clearTable(VIPIKO_CHANNELS));
 
-          insertInProgress = true;
-          try {
-            if (bufferChannel.length > 0) {
-              // Перевірка на порожній буфер
-              await insertChannelChunk(bufferChannel);
-            }
-          } catch (error) {
-            addMessage('ERROR: during channel chunk insertion', error as Error);
-          }
-          bufferChannel = [];
-          insertInProgress = false;
+      addMessage(await insertEmptyFirstRow());
+
+      // const saxStream = sax.createStream(true);
+
+      let currentProgramme: IProgramme | null = null;
+      let currentChannel: IChannel | null = null;
+      let bufferProgramme: IProgramme[] = [];
+      let bufferChannel: IChannel[] = [];
+      let displayNames: string[] = [];
+
+      saxStream.on('opentag', (node) => {
+        if (node.name === 'programme') {
+          currentProgramme = {
+            start: String(node.attributes.start).slice(0, 14),
+            stop: String(node.attributes.stop).slice(0, 14),
+            channel: String(node.attributes.channel),
+            title: '',
+            category: '',
+            desc: '',
+          };
+        } else if (node.name === 'channel') {
+          currentChannel = {
+            title: '',
+            vipiko_id: String(node.attributes.id),
+          };
+          displayNames = [];
         }
+      });
 
-        currentChannel = null;
-        displayNames = [];
-      }
+      saxStream.on('text', (text) => {
+        if (currentProgramme) {
+          const trimmedText = text.trim();
+          switch (saxStream._parser.tag.name) {
+            case 'title':
+              currentProgramme.title += trimmedText;
+              break;
+            case 'category':
+              currentProgramme.category += trimmedText;
+              break;
+            case 'desc':
+              currentProgramme.desc += trimmedText;
+              break;
+          }
+        } else if (currentChannel) {
+          const trimmedText = text.trim();
+          if (saxStream._parser.tag.name === 'display-name') {
+            displayNames.push(trimmedText);
+          }
+        }
+      });
+
+      saxStream.on('closetag', async (tagName) => {
+        if (tagName === 'programme' && currentProgramme) {
+          bufferProgramme.push(currentProgramme);
+          lineCount += 1;
+
+          if (bufferProgramme.length >= seParBatchSize) {
+            while (insertInProgress) {
+              // Зачекайте, поки поточна вставка завершиться
+              await new Promise((resolve) => setTimeout(resolve, 100));
+            }
+
+            insertInProgress = true;
+            try {
+              if (bufferProgramme.length > 0) {
+                // Перевірка на порожній буфер
+                await insertProgrammeChunk(bufferProgramme);
+              }
+            } catch (error) {
+              addMessage(
+                'ERROR: during programme chunk insertion',
+                error as Error
+              );
+            }
+            bufferProgramme = [];
+            insertInProgress = false;
+          }
+
+          currentProgramme = null;
+        } else if (tagName === 'channel' && currentChannel) {
+          displayNames.forEach((name) => {
+            if (currentChannel && name) {
+              bufferChannel.push({
+                title: name,
+                vipiko_id: currentChannel.vipiko_id,
+              });
+            }
+          });
+
+          if (bufferChannel.length >= seParBatchSize) {
+            while (insertInProgress) {
+              // Зачекайте, поки поточна вставка завершиться
+              await new Promise((resolve) => setTimeout(resolve, 100));
+            }
+
+            insertInProgress = true;
+            try {
+              if (bufferChannel.length > 0) {
+                // Перевірка на порожній буфер
+                await insertChannelChunk(bufferChannel);
+              }
+            } catch (error) {
+              addMessage(
+                'ERROR: during channel chunk insertion',
+                error as Error
+              );
+            }
+            bufferChannel = [];
+            insertInProgress = false;
+          }
+
+          currentChannel = null;
+          displayNames = [];
+        }
+      });
+
+      saxStream.on('end', async () => {
+        if (bufferProgramme.length > 0) {
+          await insertProgrammeChunk(bufferProgramme);
+          bufferProgramme = [];
+        }
+        if (bufferChannel.length > 0) {
+          await insertChannelChunk(bufferChannel);
+          bufferChannel = [];
+        }
+        addMessage(
+          `SUCCESS: End of file. Handled line count: ${lineCount.toLocaleString('en-US')}`
+        );
+
+        const resDbTableLength = await getDbIdAmount(TV_SCHEDULE_VIPIKO);
+        addMessage(
+          `The number of records in the db table: ${
+            typeof resDbTableLength === 'string'
+              ? resDbTableLength
+              : resDbTableLength[0].count.toLocaleString('en-US')
+          }`
+        );
+
+        saxStream.on('error', (error) => {
+          addMessage('SAX Parser Error:', error);
+          saxStream._parser.error = new Error();
+          saxStream._parser.resume();
+        });
+        addMessage(
+          `${TV_SCHEDULE_VIPIKO}: Inserted rows: ${insertedRows}. Batch size: ${seParBatchSize}`
+        );
+
+        await sendMail({
+          subject: `Parse schedule Vipiko-it999`,
+          body: await renderAsync(
+            <ParseVipikoEmailTemplate
+              pathToMainParsePage={`${BASE_GURU_PATH}/${EUrlAdminParam.PARSE}`}
+              errorMessages={messages}
+              dbTableHref={getDbTableLink(TV_SCHEDULE_VIPIKO)}
+            />
+          ),
+        });
+      });
     });
 
-    saxStream.on('end', async () => {
-      if (bufferProgramme.length > 0) {
-        await insertProgrammeChunk(bufferProgramme);
-        bufferProgramme = [];
-      }
-      if (bufferChannel.length > 0) {
-        await insertChannelChunk(bufferChannel);
-        bufferChannel = [];
-      }
-      addMessage(
-        `SUCCESS: End of file. Handled line count: ${lineCount.toLocaleString('en-US')}`
-      );
-
-      const resDbTableLength = await getDbIdAmount(TV_SCHEDULE_VIPIKO);
-      addMessage(
-        `The number of records in the db table: ${
-          typeof resDbTableLength === 'string'
-            ? resDbTableLength
-            : resDbTableLength[0].count.toLocaleString('en-US')
-        }`
-      );
-
-      saxStream.on('error', (error) => {
-        console.error('SAX Parser Error:', error);
-        saxStream._parser.error = new Error();
-        saxStream._parser.resume();
-      });
-      addMessage(
-        `${TV_SCHEDULE_VIPIKO}: Inserted rows: ${insertedRows}. Batch size: ${seParBatchSize}`
-      );
-
-      await sendMail({
-        subject: `Parse schedule Vipiko-it999`,
-        body: await renderAsync(
-          <ParseVipikoEmailTemplate
-            pathToMainParsePage={`${BASE_GURU_PATH}/${EUrlAdminParam.PARSE}`}
-            errorMessages={messages}
-            dbTableHref={getDbTableLink(TV_SCHEDULE_VIPIKO)}
-          />
-        ),
-      });
+    writer.on('error', (err) => {
+      addMessage('Error writing to file:', err);
     });
+    // =========================================================================
 
-    response.data
-      .pipe(gunzip)
-      .pipe(saxStream)
-      .on('error', (err: Error) => {
-        addMessage('ERROR: during parsing', err);
-      });
+    // const gunzip = createGunzip();
+
+    // addMessage(await clearTable(TV_SCHEDULE_VIPIKO));
+    // addMessage(await clearTable(VIPIKO_CHANNELS));
+
+    // addMessage(await insertEmptyFirstRow());
+
+    // const saxStream = sax.createStream(true);
+
+    // let currentProgramme: IProgramme | null = null;
+    // let currentChannel: IChannel | null = null;
+    // let bufferProgramme: IProgramme[] = [];
+    // let bufferChannel: IChannel[] = [];
+    // let displayNames: string[] = [];
+
+    // saxStream.on('opentag', (node) => {
+    //   if (node.name === 'programme') {
+    //     currentProgramme = {
+    //       start: String(node.attributes.start).slice(0, 14),
+    //       stop: String(node.attributes.stop).slice(0, 14),
+    //       channel: String(node.attributes.channel),
+    //       title: '',
+    //       category: '',
+    //       desc: '',
+    //     };
+    //   } else if (node.name === 'channel') {
+    //     currentChannel = {
+    //       title: '',
+    //       vipiko_id: String(node.attributes.id),
+    //     };
+    //     displayNames = [];
+    //   }
+    // });
+
+    // saxStream.on('text', (text) => {
+    //   if (currentProgramme) {
+    //     const trimmedText = text.trim();
+    //     switch (saxStream._parser.tag.name) {
+    //       case 'title':
+    //         currentProgramme.title += trimmedText;
+    //         break;
+    //       case 'category':
+    //         currentProgramme.category += trimmedText;
+    //         break;
+    //       case 'desc':
+    //         currentProgramme.desc += trimmedText;
+    //         break;
+    //     }
+    //   } else if (currentChannel) {
+    //     const trimmedText = text.trim();
+    //     if (saxStream._parser.tag.name === 'display-name') {
+    //       displayNames.push(trimmedText);
+    //     }
+    //   }
+    // });
+
+    // saxStream.on('closetag', async (tagName) => {
+    //   if (tagName === 'programme' && currentProgramme) {
+    //     bufferProgramme.push(currentProgramme);
+    //     lineCount += 1;
+
+    //     if (bufferProgramme.length >= seParBatchSize) {
+    //       while (insertInProgress) {
+    //         // Зачекайте, поки поточна вставка завершиться
+    //         await new Promise((resolve) => setTimeout(resolve, 100));
+    //       }
+
+    //       insertInProgress = true;
+    //       try {
+    //         if (bufferProgramme.length > 0) {
+    //           // Перевірка на порожній буфер
+    //           await insertProgrammeChunk(bufferProgramme);
+    //         }
+    //       } catch (error) {
+    //         addMessage(
+    //           'ERROR: during programme chunk insertion',
+    //           error as Error
+    //         );
+    //       }
+    //       bufferProgramme = [];
+    //       insertInProgress = false;
+    //     }
+
+    //     currentProgramme = null;
+    //   } else if (tagName === 'channel' && currentChannel) {
+    //     displayNames.forEach((name) => {
+    //       if (currentChannel && name) {
+    //         bufferChannel.push({
+    //           title: name,
+    //           vipiko_id: currentChannel.vipiko_id,
+    //         });
+    //       }
+    //     });
+
+    //     if (bufferChannel.length >= seParBatchSize) {
+    //       while (insertInProgress) {
+    //         // Зачекайте, поки поточна вставка завершиться
+    //         await new Promise((resolve) => setTimeout(resolve, 100));
+    //       }
+
+    //       insertInProgress = true;
+    //       try {
+    //         if (bufferChannel.length > 0) {
+    //           // Перевірка на порожній буфер
+    //           await insertChannelChunk(bufferChannel);
+    //         }
+    //       } catch (error) {
+    //         addMessage('ERROR: during channel chunk insertion', error as Error);
+    //       }
+    //       bufferChannel = [];
+    //       insertInProgress = false;
+    //     }
+
+    //     currentChannel = null;
+    //     displayNames = [];
+    //   }
+    // });
+
+    // saxStream.on('end', async () => {
+    //   if (bufferProgramme.length > 0) {
+    //     await insertProgrammeChunk(bufferProgramme);
+    //     bufferProgramme = [];
+    //   }
+    //   if (bufferChannel.length > 0) {
+    //     await insertChannelChunk(bufferChannel);
+    //     bufferChannel = [];
+    //   }
+    //   addMessage(
+    //     `SUCCESS: End of file. Handled line count: ${lineCount.toLocaleString('en-US')}`
+    //   );
+
+    //   const resDbTableLength = await getDbIdAmount(TV_SCHEDULE_VIPIKO);
+    //   addMessage(
+    //     `The number of records in the db table: ${
+    //       typeof resDbTableLength === 'string'
+    //         ? resDbTableLength
+    //         : resDbTableLength[0].count.toLocaleString('en-US')
+    //     }`
+    //   );
+
+    //   saxStream.on('error', (error) => {
+    //     console.error('SAX Parser Error:', error);
+    //     saxStream._parser.error = new Error();
+    //     saxStream._parser.resume();
+    //   });
+    //   addMessage(
+    //     `${TV_SCHEDULE_VIPIKO}: Inserted rows: ${insertedRows}. Batch size: ${seParBatchSize}`
+    //   );
+
+    //   await sendMail({
+    //     subject: `Parse schedule Vipiko-it999`,
+    //     body: await renderAsync(
+    //       <ParseVipikoEmailTemplate
+    //         pathToMainParsePage={`${BASE_GURU_PATH}/${EUrlAdminParam.PARSE}`}
+    //         errorMessages={messages}
+    //         dbTableHref={getDbTableLink(TV_SCHEDULE_VIPIKO)}
+    //       />
+    //     ),
+    //   });
+    // });
+
+    // response.data
+    //   .pipe(gunzip)
+    //   .pipe(saxStream)
+    //   .on('error', (err: Error) => {
+    //     addMessage('ERROR: during parsing', err);
+    //   });
 
     addMessage('SUCCESS: Download and extraction completed');
-    IS_LOGGED && console.log('🚀 ~ Download and extraction completed');
   } catch (error) {
     addMessage(
       'ERROR: failed during processing',

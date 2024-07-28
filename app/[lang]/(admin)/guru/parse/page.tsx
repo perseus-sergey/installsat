@@ -52,7 +52,7 @@ export default async function Page({ params }: IParams) {
         fieldSetTitle="Schedule Vipiko"
         labelHtml={
           <>
-            Set batch size for DB inserting. (Tip: up to 4500){' '}
+            Set batch size for DB inserting{' '}
             <Link
               className="text-blue-600 underline"
               href="https://epg.one/"

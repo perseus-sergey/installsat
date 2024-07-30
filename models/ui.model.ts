@@ -111,6 +111,7 @@ export enum EDBTableTitles {
   VIPIKO_CHANNELS = 'vipiko_chan',
   TV_SCHEDULE_VSE_TV = 'tv_shedule_vsetv',
   TV_SCHEDULE = 'tv_shedule',
+  FLY_SATELLITES = 'fly_satellites',
 }
 
 // satellite_equipments: tbl_eqp_comments

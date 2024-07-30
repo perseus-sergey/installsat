@@ -2,15 +2,21 @@ import { Heading, Hr, Html, Link, Text } from '@react-email/components';
 import * as React from 'react';
 
 interface IEmailTemplateProps {
+  title: string;
   pathToMainParsePage: string;
   dbTableLength: string;
   errorMessages: string[];
+  linkToDbTable: string;
+  linkToSourcePage: string;
 }
 
 export const ParseTransNews = async ({
+  title,
   pathToMainParsePage,
   dbTableLength,
   errorMessages,
+  linkToDbTable,
+  linkToSourcePage,
 }: IEmailTemplateProps) => {
   return (
     <Html>
@@ -20,7 +26,7 @@ export const ParseTransNews = async ({
           style={{ ...link, fontSize: '20px' }}
           target="_blank"
         >
-          Parse Trans News
+          {title}
         </Link>
       </Heading>
 
@@ -45,13 +51,32 @@ export const ParseTransNews = async ({
       <Hr style={hr} />
 
       <Text style={footer}>
-        <Link
-          href={`${pathToMainParsePage}`}
-          target="_blank"
-          style={{ ...reportLink, color: '#267f00' }}
-        >
-          Parse Transponder news again
-        </Link>
+        <ul>
+          {[
+            {
+              href: pathToMainParsePage,
+              text: 'Main Parsing Page',
+            },
+            {
+              href: linkToDbTable,
+              text: 'Check DB Table',
+            },
+            {
+              href: linkToSourcePage,
+              text: 'Source Page',
+            },
+          ].map(({ href, text }) => (
+            <li key={text}>
+              <Link
+                href={href}
+                target="_blank"
+                style={{ ...reportLink, color: '#267f00' }}
+              >
+                {text}
+              </Link>
+            </li>
+          ))}
+        </ul>
       </Text>
     </Html>
   );

@@ -2,7 +2,12 @@
 import puppeteer, { Browser } from 'puppeteer';
 import * as cheerio from 'cheerio';
 import { DateTime } from 'luxon';
-import { EDBTableTitles, TSearchParams } from '@/models/ui.model';
+import {
+  EDBTableTitles,
+  ELanguage,
+  TSearchParams,
+  getDbTableLink,
+} from '@/models/ui.model';
 import { validSearchParam } from '@/libs/utils/validSearchParam';
 import { EUrlAdminParam, EUrlSearchParam } from '@/models/url.model';
 import { IDbIdAmountModel } from '@/models/admin.model';
@@ -285,9 +290,12 @@ const sendReportMail = async (
     subject: `Parse transponder news`,
     body: await renderAsync(
       <ParseTransNews
-        pathToMainParsePage={`${BASE_URL}/${EUrlAdminParam.BASE_PATH}/${EUrlAdminParam.PARSE}`}
+        title="Parse Trans News"
+        pathToMainParsePage={`${BASE_URL}/${ELanguage.EN}/${EUrlAdminParam.BASE_PATH}/${EUrlAdminParam.PARSE}`}
         dbTableLength={tblItemLength}
         errorMessages={errorMessages}
+        linkToDbTable={getDbTableLink(EDBTableTitles.TRANS_NEWS)}
+        linkToSourcePage={PARSE_URL}
       />
     ),
   });
@@ -330,7 +338,6 @@ export default async function Page({
     finalData = dataWithSatIdRes.dataWithSatId;
     errorMessages.push(...dataWithSatIdRes.addSatIdErrors);
 
-    // await insertDataToDB(finalData);
     if (!SHOW_ONLY) {
       const deleteRes = await deleteDBOldTransNews(finalData);
       errorMessages.push(deleteRes);
@@ -368,7 +375,7 @@ export default async function Page({
     await sendReportMail(
       errorMessages,
       typeof resDbTableLength === 'string'
-        ? 'Not Defined'
+        ? resDbTableLength
         : resDbTableLength[0].count.toLocaleString('en-US')
     );
 

@@ -20,6 +20,7 @@ export const EDBTableTitles = {
   VIPIKO_CHANNELS: 'vipiko_chan',
   TV_SCHEDULE_VSE_TV: 'tv_shedule_vsetv',
   TV_SCHEDULE: 'tv_shedule',
+  FLY_SATELLITES: 'fly_satellites',
 };
 
 export const EUrlAdminParam = {
@@ -29,6 +30,7 @@ export const EUrlAdminParam = {
   CHANNELS_EDIT: 'channels',
   PARSE: 'parse',
   PARSE_SCHEDULE_VSETV: 'vsetv',
+  PARSE_FLY_SATELLITES: 'fly-satellites',
   PARSE_SAT_DIGEST: 'trans-news',
 };
 

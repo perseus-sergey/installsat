@@ -8,7 +8,8 @@ import LangSwitchButton from '../LangSwitchButton/LangSwitchButton';
 import AdsterraAd from '../AdsterraAd/AdsterraAd';
 
 const { title, siteLogo } = LOGO.link;
-const adsterraKey = process.env.ADSTERRA_KEY || '';
+const adsterraDesktopKey = process.env.ADSTERRA_728_KEY || '';
+const adsterraMobileKey = process.env.ADSTERRA_320_KEY || '';
 
 const Header = ({ lang }: { lang: ELanguage }) => (
   <header
@@ -36,11 +37,14 @@ const Header = ({ lang }: { lang: ELanguage }) => (
       </Suspense>
     </div>
 
-    {/* {process.env.NODE_ENV === 'production' && ( */}
-    <div className="block mx-auto my-2 w-[468px] h-14 bg-blue-950">
-      <AdsterraAd adsterraKey={adsterraKey} />
-    </div>
-    {/* )} */}
+    {process.env.NODE_ENV === 'production' && (
+      <div className="block mx-auto my-2 w-[468px] h-14 bg-blue-950">
+        <AdsterraAd
+          desktopKey={adsterraDesktopKey}
+          mobileKey={adsterraMobileKey}
+        />
+      </div>
+    )}
   </header>
 );
 

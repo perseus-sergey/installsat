@@ -38,7 +38,7 @@ const Header = ({ lang }: { lang: ELanguage }) => (
     </div>
 
     {process.env.NODE_ENV === 'production' && (
-      <div className="block mx-auto my-2 w-[468px] h-14 bg-blue-950">
+      <div className="block mx-auto my-2">
         <AdsterraAd
           desktopKey={adsterraDesktopKey}
           mobileKey={adsterraMobileKey}

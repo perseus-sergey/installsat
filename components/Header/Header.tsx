@@ -5,11 +5,11 @@ import { LOGO, TOGGLE_SIDEBAR_BUTTON_TITLE } from '@/models/header.model';
 import FillingImg from '../ui/Images/FillingImage';
 import { ELanguage } from '@/models/ui.model';
 import LangSwitchButton from '../LangSwitchButton/LangSwitchButton';
-import AdsterraAd from '../AdsterraAd/AdsterraAd';
+// import AdsterraAd from '../AdsterraAd/AdsterraAd';
 
 const { title, siteLogo } = LOGO.link;
-const adsterraDesktopKey = process.env.ADSTERRA_728_KEY || '';
-const adsterraMobileKey = process.env.ADSTERRA_320_KEY || '';
+// const adsterraDesktopKey = process.env.ADSTERRA_728_KEY || '';
+// const adsterraMobileKey = process.env.ADSTERRA_320_KEY || '';
 
 const Header = ({ lang }: { lang: ELanguage }) => (
   <header
@@ -36,7 +36,7 @@ const Header = ({ lang }: { lang: ELanguage }) => (
         <LangSwitchButton />
       </Suspense>
     </div>
-
+    {/* 
     {process.env.NODE_ENV === 'production' && (
       <div className="block mx-auto my-2">
         <AdsterraAd
@@ -44,7 +44,7 @@ const Header = ({ lang }: { lang: ELanguage }) => (
           mobileKey={adsterraMobileKey}
         />
       </div>
-    )}
+    )} */}
   </header>
 );
 

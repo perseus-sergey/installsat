@@ -54,6 +54,7 @@
   ```sh
   yarn add @types/cheerio --dev
   ```
+- [Sax js](https://www.npmjs.com/package/sax) - Parser for XML
 - [html-entities](https://www.npmjs.com/package/html-entities) - HTML entities library
 - [dotenv](https://www.npmjs.com/package/dotenv) - Loads from a .env file into process.env
 

@@ -37,8 +37,8 @@ const SelectControlled = ({
           value={selectValue}
           onChange={(e) => handleChange(e.target)}
         >
-          {optionValues.map((item) => (
-            <option key={item.id} value={item.id}>
+          {optionValues.map((item, idx) => (
+            <option key={`${idx}${item.title}`} value={item.id}>
               {item.title}
             </option>
           ))}

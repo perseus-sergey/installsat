@@ -51,86 +51,6 @@ export interface IChannelCategory {
   cpu: string;
 }
 
-// $beam = explode("|", $beam)[0];
-//   if (isset($title) && isset($cpu) && isset($description) && isset($cat1) && isset($sat) && isset($tema) && isset($compress) && isset($lang)){
-// 	if ($chb_old_new == 1)
-// 		$cat_fill="";
-// 	elseif ($chb_old_new == 0)
-// 		$cat_fill=",cat='$cat2'";
-// 	if ($chb_sat == 1){
-// 		$sat_fill=""; $freq_fill="";$beam_fill="";
-// 	}
-// 	elseif ($chb_sat == 0){
-// 		$sat_fill=",sat='$sat'"; $freq_fill=",frequency='$frequency'"; $beam_fill=",beam='$beam'";
-// 	}
-// 	add_to_db ("
-// 	UPDATE $tbl SET title='$title',cpu='$cpu',description='$description',text='$text',
-// 	tema='$tema',compress='$compress',lang='$lang',logo='$logo',url='$url',biss='$biss',country_id='$country_id',ip_deny='$ip_deny',
-// 	no_googlads='$noGoogAds',
-// 	encryption='$encryption',canonical='$canonical',programma='$programma',telegid_id='$telegid_id',vsetv='$vsetv',vipiko='$vipiko',potok='$potok',pars_uppod='$pars_uppod',pattern='$pattern',
-// 	tvforsite_net='$tvforsite_net',simpletv='$simpletv',tvforsite_ru='$tvforsite_ru',other_stream='$other_stream',
-// 	mark='$mark',aspect='$aspect'
-// 	$cat_fill$sat_fill$freq_fill$beam_fill
-// 	WHERE id='$id'");
-
-// 	$updateText = "";
-// 	  if ($chb_logo) {
-// 		  $updateText .= " `logo`='$logo'";
-// 	  }
-// 	  if ($chb_title) {
-// 		  $updateText .= ", `title`='$title'";
-// 	  }
-// 	  if ($chb_canonical) {
-// 		  $updateText .= ", `canonical`='$canonical'";
-// 	  }
-// 	  if ($chb_description) {
-// 		  $updateText .= ", `description`='$description'";
-// 	  }
-// 	  if ($chb_text) {
-// 		  $updateText .= ", `text`='$text'";
-// 	  }
-// 	  if ($chb_tema) {
-// 		  $updateText .= ", `tema`='$tema'";
-// 	  }
-// 	  if ($chb_lang) {
-// 		  $updateText .= ", `lang`='$lang'";
-// 	  }
-// 	  if ($chb_url) {
-// 		  $updateText .= ", `url`='$url'";
-// 	  }
-// 	  if ($chb_tvforsite_net) {
-// 		  $updateText .= ", `tvforsite_net`='$tvforsite_net'";
-// 	  }
-// 	  if ($chb_mark) {
-// 		  $updateText .= ", `mark`='$mark'";
-// 	  }
-// 	  $updateText = trim($updateText, " ,");
-
-// 	  if ($updateText != "") {
-// 		$canon = ($chb_canonical) ? $chb_canonical : $canonical;
-// 		echo $ask = "
-// 		UPDATE $tbl SET $updateText
-// 		WHERE `canonical` = '$canon'
-// 		";
-// 		add_to_db ($ask);
-// 	  }
-
-// 	  $updateText = "";
-// 	  if ($chb_vsetv) {
-// 		  $updateText .= ", `vsetv`='$vsetv'";
-// 	  }
-// 	  if ($chb_vipiko) {
-// 		  $updateText .= ", `vipiko`='$vipiko'";
-// 	  }
-// 	  $updateText = trim($updateText, " ,");
-// 	  if ($updateText != "") {
-// 		echo $ask = "
-// 		UPDATE $tbl SET $updateText
-// 		WHERE `title` = '$title'
-// 		";
-// 		add_to_db ($ask);
-// 	  }
-
 export enum EChannelEditFields {
   title = 'title',
   logo = 'logo',
@@ -246,6 +166,10 @@ export const META_CHANNEL = {
   titleBefore: {
     [ELanguage.UA]: `Канал`,
     [ELanguage.EN]: `Channel`,
+  },
+  preText: {
+    [ELanguage.UA]: `Канал відключено/закодовано на поточних параметрах`,
+    [ELanguage.EN]: `Channel is disabled/encoded on current parameters`,
   },
   keywordsBefore: {
     [ELanguage.UA]: `Телевізійний канал `,

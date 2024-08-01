@@ -67,21 +67,22 @@ const DependentSelects = ({
         {/* <p>
           {parentValueTitle}: {formData[parentValueTitle]}
         </p> */}
-        {(formData[parentValueTitle] as number) > 0 && (
-          <select
-            className="px-2 py-1"
-            name={parentValueTitle}
-            id={parentValueTitle}
-            value={formData[parentValueTitle] as number}
-            onChange={(e) => handleChange(e.target)}
-          >
-            {parentList.map((item) => (
-              <option key={item.id} value={item.id}>
-                {item.title}
-              </option>
-            ))}
-          </select>
-        )}
+        {/* {(formData[parentValueTitle] as number) > 0 && ( */}
+        <select
+          className="px-2 py-1"
+          name={parentValueTitle}
+          id={parentValueTitle}
+          value={formData[parentValueTitle] as number}
+          onChange={(e) => handleChange(e.target)}
+        >
+          {!Number(formData[parentValueTitle]) && <option value="0"></option>}
+          {parentList.map((item) => (
+            <option key={item.id} value={item.id}>
+              {item.title}
+            </option>
+          ))}
+        </select>
+        {/* )} */}
 
         {/* <p>finalValue: {finalValue}</p> */}
         {filteredList && filteredList.length > 0 && (

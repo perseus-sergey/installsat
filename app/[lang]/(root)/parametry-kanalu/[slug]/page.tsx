@@ -50,6 +50,7 @@ const {
   },
   titleBefore,
   keywordsBefore,
+  preText,
   scheduleLinkText: { channel: scheduleTitle },
   noteTitle,
   getOnlineLinkText,
@@ -203,6 +204,9 @@ export default async function Page({ params }: IChannelProps) {
         </Title>
 
         <div className="article-text">
+          {cat_id === 23 && (
+            <h2 style={{ color: '#ff0000' }}>{preText[lang]}</h2>
+          )}
           <DangerHtml text={text} />
 
           <GrooveLine className="py-4" />

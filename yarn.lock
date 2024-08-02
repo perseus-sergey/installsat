@@ -1218,6 +1218,11 @@
   resolved "https://registry.yarnpkg.com/@floating-ui/utils/-/utils-0.2.5.tgz#105c37d9d9620ce69b7f692a20c821bf1ad2cbf9"
   integrity sha512-sTcG+QZ6fdEUObICavU+aB3Mp8HY4n14wYHdxK4fXjPmv3PXZZeY5RaguJmGyeH/CJQhX3fqKUtS4qc1LoHwhQ==
 
+"@google/generative-ai@^0.16.0":
+  version "0.16.0"
+  resolved "https://registry.yarnpkg.com/@google/generative-ai/-/generative-ai-0.16.0.tgz#3d8cea2faf08dd8c249fa0726c9c7c460f65bb5f"
+  integrity sha512-doB5ZNxS6m+jUZqaLCeYXfBZCdq6Ho0ibkq5/17xe1qAUZpCLWlvCDGtqFPqqO+yezNmvGatS0KhV22yiOT3DA==
+
 "@humanwhocodes/config-array@^0.11.14":
   version "0.11.14"
   resolved "https://registry.yarnpkg.com/@humanwhocodes/config-array/-/config-array-0.11.14.tgz#d78e481a039f7566ecc9660b4ea7fe6b1fec442b"

@@ -3,6 +3,11 @@ import * as cheerio from 'cheerio';
 import { DateTime } from 'luxon';
 import { sendMail } from './libs/sendMail.mjs';
 import {
+  EDBTableTitles,
+  getDbTableLink,
+  EUrlAdminParam,
+} from './libs/commons.mjs';
+import {
   deleteDBOldTransNews,
   getDBSatID,
   insertDBTransNews,
@@ -13,6 +18,7 @@ import { execSync } from 'child_process';
 const BASE_URL = process.env.BASE_URL;
 const BASE_GURU_PATH = `${BASE_URL}/en/${EUrlAdminParam.BASE_PATH}`;
 const isProductionMode = process.env.PRODUCTION_MODE === 'true';
+const { TRANS_NEWS } = EDBTableTitles;
 
 const PARSE_URL = 'https://www.flysat.com/en/news';
 const PARSED_UPDATES = 4;
@@ -272,6 +278,11 @@ const sendReportMail = async (errorMessages, tblItemLength) => {
       </a>
     </p>
     <p>
+      <a style="color: #267f00; font-size: 20px; padding: 10px 0" target="_blank" href="${getDbTableLink(TRANS_NEWS)}" >
+      DB Table
+      </a>
+    </p>
+    <p>
       <a style="color: #267f00; font-size: 20px; padding: 10px 0" target="_blank" href="${PARSE_URL}" >
       Source page
       </a>
@@ -314,7 +325,7 @@ const R_U_N = async () => {
     const insertRes = await insertDBTransNews(finalData);
     errorMessages.push(insertRes);
 
-    resDbTableLength = await getDbIdAmount('tbl_digest');
+    resDbTableLength = await getDbIdAmount(TRANS_NEWS);
   } catch (error) {
     errorMessages.push(
       error instanceof Error

@@ -1,27 +1,155 @@
-import DangerHtml from '@/components/ui/DangerHtml/DangerHtml';
 import { Title } from '@/components/ui/Titles/Title';
+import { EUrlAdminParam } from '@/models/url.model';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import * as React from 'react';
+import puppeteer, { Browser } from 'puppeteer';
+import * as cheerio from 'cheerio';
+import {
+  getContentFromPuppeteerBrowser,
+  killChromeProcesses,
+} from '@/controllers/parse.controller';
+import { sleep } from '@/libs/utils/utils';
+// import DangerHtml from '@/components/ui/DangerHtml/DangerHtml';
+import { getPool, poolExecute } from '@/libs/db/mysqldb';
+import { EDBTableTitles, getDbTableLink } from '@/models/ui.model';
+import { ResultSetHeader } from 'mysql2';
+import { sendMail } from '@/libs/mail/sendMail';
+import { renderAsync } from '@react-email/render';
+import { ParseSatNewsTemplate } from '@/components/EmailTemplates/parseTransNews.template';
 
-export default async function Page() {
+interface IArticle {
+  originalTitle: string;
+  originalSource: string;
+  originalSlug: string;
+  originalText: string;
+  enAiTitle: string;
+  uaAiTitle: string;
+  enAiContent: string;
+  uaAiContent: string;
+  enAiDescription: string;
+  uaAiDescription: string;
+  enAiKeywords: string;
+  uaAiKeywords: string;
+  aiSlug: string;
+  category: string;
+}
+
+const SOURCE_ARTICLE_PARAMS = [
+  {
+    url: 'https://www.newscaststudio.com/',
+    linksSelector: '.news-feed-link',
+    h1Selector: '.head-post h1',
+    contentSelector: '.holder > p',
+  },
+  {
+    url: 'https://spacenews.com/section/news-archive/',
+    linksSelector: 'article figure a',
+    h1Selector: 'h1.entry-title',
+    contentSelector: '.entry-content > p',
+  },
+  {
+    url: 'https://www.satellitetoday.com/category/launch/',
+    linksSelector: '.j-sidebar h2 a',
+    h1Selector: '.single-content h1',
+    contentSelector: '.inner-content > p',
+  },
+];
+
+const IS_LOGGED = true;
+const NEWS_LENGTH_PER_SOURCE = 3;
+const BASE_URL = process.env.BASE_URL;
+const isProductionMode = process.env.NODE_ENV === 'production';
+const BASE_GURU_PATH = `${BASE_URL}/en/${EUrlAdminParam.BASE_PATH}`;
+const { ARTICLE: ARTICLE_TBL } = EDBTableTitles;
+
+const pool = getPool();
+
+let messages: string[] = [];
+
+const addMessage = (message: string, error?: Error) => {
+  messages.push(`${message}${error ? `: ${error.message}` : ''}`);
+  if (IS_LOGGED)
+    console.log(`🚀 ~ ${message}${error ? ` ERROR: ${error}` : ''}`);
+};
+
+const insertDataToDB = async (data: IArticle[]) => {
+  if (data.length === 0)
+    throw new Error(`DB INSERT data: inserted data is empty`);
+
+  const dateNow = new Date().toLocaleDateString('en-CA');
+
+  const values = data.map((item) => [
+    pool.escape(item.originalSlug),
+    pool.escape(item.originalSource),
+    pool.escape(item.enAiTitle),
+    pool.escape(item.uaAiTitle),
+    pool.escape(item.enAiContent),
+    pool.escape(item.uaAiContent),
+    pool.escape(item.enAiDescription),
+    pool.escape(item.uaAiDescription),
+    pool.escape(item.enAiKeywords),
+    pool.escape(item.uaAiKeywords),
+    pool.escape(item.aiSlug),
+    pool.escape(item.category),
+    pool.escape(dateNow),
+    pool.escape(dateNow),
+  ]);
+
+  const sql = `
+      INSERT INTO ${ARTICLE_TBL} 
+      (\`original_slug\`,\`source\`, \`title_en\`, \`title\`, \`text_en\`, \`text\`, \`description_en\`, \`description\`, \`keywords_en\`, \`keywords\`, \`cpu\`, \`cat\`, \`date\`, \`date_upd\`)
+      VALUES ${values.map((valueSet) => `(${valueSet.join(', ')})`).join(', ')};
+    `;
+  const res = await poolExecute<ResultSetHeader>(sql);
+
+  if (res instanceof Error) throw new Error(`DB INSERT data: ${res.message}`);
+
+  return `DB SUCCESS! inserted rows: ${res.affectedRows}`;
+};
+
+const getLastSlugsFromDB = async () => {
+  const sql = `SELECT original_slug FROM ${ARTICLE_TBL} ORDER BY id DESC LIMIT 20`;
+  const res = await poolExecute<{ original_slug: string }[]>(sql);
+
+  if (res instanceof Error)
+    throw new Error(`DB SELECT last SLUGs: ${res.message}`);
+
+  return res;
+};
+
+const generateAiText = async (originalText: string) => {
   const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
 
   const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
 
   const prompt = `
   Write a new article based on the original article so that it is not considered a copy of the original article by search engines.
-  From the given text, use only the text inside the tags.
-  Remove links and embedded scripts from the text.
-  Do not change the quotes.
-  In ukrainian and english. But write names, surnames, titles and abbreviations in the original language.
+  Don't change people's quotes.
+  Wrap important relevant words in the article in a tag <b>.
+  Make short description of the article about 150 - 200 characters length for the <meta name=description>.
+  Select relevant search keywords that will be used on the page in the <meta name=keywords>.
+  Make SLUG for this article based on the english title.
+  Choose a number from one of the categories: 
+  1 - News of satellite channels,
+  4 - Equipment overview,
+  5 - Equipment settings,
+  7 - Pay TV news,
+  10 - Television news.
+  Articles must be written in Ukrainian and English. But write names, surnames, titles and abbreviations in the original language.
   Use the HTML format like:
   <h2 id='title-en'>Title</h2>
+  <h3 id='description-en'>Description</h3>
+  <h4 id='keywords-en'>Keywords</h4>
+  <h5 id='slug'>slug-for-article</h5>
+  <h6 id='category-number'>10</h6>
   <div id='text-en'>
   <p>Paragraph 1</p> 
   <p>Paragraph 2</p> 
   <p>Paragraph N</p> 
   </div>
   <h2 id='title-ua'>Назва</h2>
+  <h3 id='description-ua'>Опис</h3>
+  <h4 id='keywords-ua'>Ключові слова</h4>
   <div id='text-ua'>
   <p>Параграф 1</p> 
   <p>Параграф 2</p> 
@@ -29,43 +157,265 @@ export default async function Page() {
   </div>
   Do not wrap the text in \`\`\`html \`\`\`
   Text of original article: 
-  <p><a href="/tag/donald-trump">Donald Trump</a> clashed with reporters at a July 31, 2024, appearance during the <a href="/tag/national-association-of-black-journalists">National Association of Black Journalists</a> annual convention.
-<p>Trump appeared before an audience at the Chicago event with <a href="/tag/abc-news">ABC News</a> Senior Congressional Correspondent <a href="/tag/rachel-scott">Rachel Scott</a>, Fox star <a href="/tag/harris-faulkner">Harris Faulkner</a> and Semafor reporter Kadia Goba asking questions. NABJ and PolitiFact published a realtime <a href="https://nabjonline.org/blog/nabj-to-host-former-president-trump-for-a-conversation-in-chicago-during-its-annual-convention/" target="_blank" rel="noopener">fact-check of the event</a>.
-<div class="responsive-embed"><iframe class="lazy lazy-hidden" width="680" height="365"  data-lazy-type="iframe" data-src="//www.youtube.com/embed/jgod-nqFEEc?rel=0&showinfo=0&modestbranding=1" frameborder="0" style="margin-bottom:20px;" allowfullscreen></iframe><noscript><iframe width="680" height="365" src="//www.youtube.com/embed/jgod-nqFEEc?rel=0&showinfo=0&modestbranding=1" frameborder="0" style="margin-bottom:20px;" allowfullscreen></iframe></noscript></div>
-<p>Scott asked Trump the first question, which centered on why Black voters should support him.
-<p>&#8220;I want to start by addressing the elephant in the room, sir. A lot of people did not think it was appropriate for you to be here today,&#8221; said Scott. &#8220;You have pushed false claims about some of your rivals, from Nikki Haley to former President Barack Obama, saying that they were not born in the United States, which is not true.
-<p>&#8220;You have told four congressmen, women of color who were American citizens, to go back to where they came from. You have used words like &#8216;animal&#8217; and &#8216;rabbit&#8217; to describe Black district attorneys. You&#8217;ve attacked Black journalists, calling them a &#8216;loser,&#8217; saying the questions that they ask are, &#8216;stupid and racist.&#8217; You&#8217;ve had dinner with a white supremacist at your Mar a Lago resort.&#8221;
-<p>After that lengthy lead-up, Scott drilled down. &#8220;So, my question, sir, now that you are asking Black supporters to vote for you, why should Black voters trust you after you have used language like that?&#8221;&nbsp;
-<p>Trump fired back with a jumbled response. &#8220;Well, first of all, I don&#8217;t think I&#8217;ve ever been asked a question. So, in in (sic) such a horrible manner, a first question. You don&#8217;t even say hello,&#8221; said Trump. &#8220;Who are you? Are you with ABC? Because I think they&#8217;re a fake news network. A terrible network.&#8221;
-<p>Trump has repeatedly called numerous mainstream media outlets &#8220;fake news,&#8221; including ABC, and frequently refers to ABC News anchor <a href="/tag/george-stephanopoulos">George Stephanopoulos</a> as &#8220;liddle George Slopadopolus.&#8221; He also has a bumpy relationship with Fox&#8217;s conservative cable network, though he recently called on the network to host the final debate between him and his presumptive general election opponent, <a href="/tag/kamala-harris">Vice President Kamala Harris</a>.&nbsp;<div class="g g-19"><div class="g-single a-309"><div style="text-align:center;">
-
-<div style="width:100%; text-align:center;margin-bottom:1rem;"><span style="    font-size: 9px;
-    text-transform: uppercase;
-    text-align: center;
-    color: #8c8c8c;
-    letter-spacing: 1px;">Advertisement</span></div><a class="gofollow" data-track="MzA5LDE5LDEsNjA=" href="https://alibimusic.com/?utm_source=NewscastStudio" target="_blank" rel="nofollow"><img class="lazy lazy-hidden" decoding="async" src="//www.newscaststudio.com/wp-content/plugins/a3-lazy-load/assets/images/lazy_placeholder.gif" data-lazy-type="image" data-src="https://www.newscaststudio.com/wp-content/banners/300x600_the_premier_licensable_music_collection_for_marketing_2_iteration_4.gif" style="width:auto;" /><noscript><img decoding="async" src="https://www.newscaststudio.com/wp-content/banners/300x600_the_premier_licensable_music_collection_for_marketing_2_iteration_4.gif" style="width:auto;" /></noscript></a></div></div></div>
-<p>Trump claimed that he &#8220;loves&#8221; Black Americans and pointed to his work with Sen. Tim Scott (R-S.C.) on building &#8220;opportunity&#8221; zones as evidence that he has made efforts to create programs to help Black citizens.&nbsp;
-<p>Scott pushed back to ask Trump to answer her original question about why Black voters should support him.
-<p>&#8220;I have answered the question. I have been the best president for the Black population since Abraham Lincoln,&#8221; he said.
-<p>The discussion continued with Trump complaining about NABJ starting the event later than planned and claiming he was invited with the promise that his opponent in the race for president would attend as well.
-<p>As the discussion continued, Trump was asked about GOP comments that she was a &#8220;DEI hire,&#8221; referring to a broad set of diversity, equity and inclusion practices used by many organizations.
-<p>He made numerous false and misleading statements throughout the event.
-<p>At one point he claimed Harris &#8220;became a Black person.&#8221;&nbsp;
-<p>Trump&#8217;s appearance at the event generated controversy before it began. Karen Attiah, the co-chair of the convention, turned in her resignation from the that role after NABJ announced Trump, though Attiah stated booking Trump was &#8220;influenced by a variety of factors.&#8221;
-<p>The NABJ later indicated it offered to host a virtual post-conference event with Harris.
+  ${originalText}
 `;
 
   const result = await model.generateContent(prompt);
   const response = result.response;
-  const text = response.text();
-  console.log(text);
+
+  return response.text();
+};
+
+const extractMainLinks = ($: cheerio.CheerioAPI, selector: string) => {
+  const links: string[] = [];
+
+  $(selector)
+    .slice(0, NEWS_LENGTH_PER_SOURCE)
+    .each((_, element) => {
+      const link = $(element).attr('href');
+      if (link) {
+        links.push(link);
+      }
+    });
+
+  return links;
+};
+
+const extractOriginalArticle = (
+  $: cheerio.CheerioAPI,
+  h1Selector: string,
+  contentSelector: string
+) => {
+  const articleTitle = $(h1Selector).text();
+
+  if (!articleTitle) return 'ERROR: cannot extract article TITLE';
+
+  const articleText: string[] = [];
+  $(contentSelector).each((_, elem) => {
+    articleText.push($(elem).text());
+  });
+
+  if (!articleText.length) return 'ERROR: cannot extract article CONTENT';
+  const articleContent = articleText.join(' ');
+
+  return { articleTitle, articleContent };
+};
+
+const extractAiArticleData = ($: cheerio.CheerioAPI) => {
+  const enAiTitle = $('#title-en').text().trim();
+  if (!enAiTitle)
+    return `ERROR: cannot extract article EN_TITLE from AI article: ${$.html()}`;
+
+  const uaAiTitle = $('#title-ua').text().trim();
+  if (!uaAiTitle)
+    return `ERROR: cannot extract article UA_TITLE from AI article: ${$.html()}`;
+
+  const enAiContent = $('#text-en').html();
+  if (!enAiContent)
+    return `ERROR: cannot extract article EN_CONTENT from AI article: ${$.html()}`;
+
+  const uaAiContent = $('#text-ua').html();
+  if (!uaAiContent)
+    return `ERROR: cannot extract article UA_CONTENT from AI article: ${$.html()}`;
+
+  const enAiDescription = $('#description-en').text().trim();
+  if (!enAiDescription)
+    return `ERROR: cannot extract article EN_DESCRIPTION from AI article: ${$.html()}`;
+
+  const uaAiDescription = $('#description-ua').text().trim();
+  if (!uaAiDescription)
+    return `ERROR: cannot extract article UA_DESCRIPTION from AI article: ${$.html()}`;
+
+  const uaAiKeywords = $('#keywords-ua').text().trim();
+  if (!uaAiKeywords)
+    return `ERROR: cannot extract article UA_KEYWORDS from AI article: ${$.html()}`;
+
+  const enAiKeywords = $('#keywords-en').text().trim();
+  if (!enAiKeywords)
+    return `ERROR: cannot extract article EN_KEYWORDS from AI article: ${$.html()}`;
+
+  const aiSlug = $('#slug').text().trim();
+  if (!aiSlug)
+    return `ERROR: cannot extract article SLUG from AI article: ${$.html()}`;
+
+  const category = $('#category-number').text().trim();
+  if (!category)
+    return `ERROR: cannot extract article CATEGORY from AI article: ${$.html()}`;
+
+  return {
+    enAiTitle,
+    uaAiTitle,
+    uaAiContent,
+    enAiContent,
+    enAiDescription,
+    uaAiDescription,
+    uaAiKeywords,
+    enAiKeywords,
+    aiSlug,
+    category,
+  };
+};
+
+const sendReportMail = async (messages: string[]) => {
+  await sendMail({
+    subject: `Parse Satellite news`,
+    body: await renderAsync(
+      <ParseSatNewsTemplate
+        pathToMainParsePage={`${BASE_GURU_PATH}/${EUrlAdminParam.PARSE}`}
+        dbTableHref={getDbTableLink(ARTICLE_TBL)}
+        errorMessages={messages}
+      />
+    ),
+  });
+};
+export default async function Page() {
+  let browser: Browser | null = null;
+  let mainLinks: string[] | string = '';
+  const newArticles: IArticle[] = [];
+
+  try {
+    const lastSlugsInDB = await getLastSlugsFromDB();
+
+    browser = await puppeteer.launch({
+      args: [
+        '--no-sandbox',
+        '--disable-setuid-sandbox',
+        '--disable-dev-shm-usage',
+      ],
+    });
+
+    for (const source of SOURCE_ARTICLE_PARAMS) {
+      const mainPageHtml = await getContentFromPuppeteerBrowser(
+        browser,
+        source.url
+      );
+      const mainPage$ = cheerio.load(mainPageHtml);
+
+      mainLinks = extractMainLinks(mainPage$, source.linksSelector);
+      if (mainLinks.length === 0) {
+        throw new Error('Cannot extract main links');
+      } else if (typeof mainLinks === 'string') {
+        throw new Error(mainLinks);
+      }
+
+      for (const link of mainLinks) {
+        const html = await getContentFromPuppeteerBrowser(browser, link);
+        const $ = cheerio.load(html);
+        const extractArticleResult = extractOriginalArticle(
+          $,
+          source.h1Selector,
+          source.contentSelector
+        );
+        if (typeof extractArticleResult === 'string') {
+          addMessage(`${extractArticleResult} Article: ${link}`);
+          continue;
+        }
+        const articleSlug = link.split('/').filter(Boolean).pop();
+        if (!articleSlug) {
+          addMessage(`Cannot extract main links from ${link}`);
+          continue;
+        } else if (
+          lastSlugsInDB.some((item) => item.original_slug === articleSlug)
+        ) {
+          addMessage(
+            `WARNING: Article with SLUG: ${articleSlug} already exists in table ${ARTICLE_TBL}`
+          );
+          continue;
+        }
+
+        const aiArticleHtml = await generateAiText(
+          extractArticleResult.articleContent
+        );
+
+        const extractedAiData = extractAiArticleData(
+          cheerio.load(aiArticleHtml)
+        );
+        if (typeof extractedAiData === 'string') {
+          addMessage(`${extractedAiData}. Article: ${link}`);
+          continue;
+        }
+
+        newArticles.push({
+          originalTitle: extractArticleResult.articleTitle,
+          originalSlug: articleSlug,
+          originalText: extractArticleResult.articleContent,
+          originalSource: link,
+          ...extractedAiData,
+        });
+
+        await sleep(500);
+      }
+    }
+
+    if (newArticles.length === 0)
+      throw new Error('New Articles Array is empty');
+
+    const insertToDbRes = await insertDataToDB(newArticles);
+    addMessage(insertToDbRes);
+  } catch (error) {
+    addMessage(
+      'ERROR: failed during processing',
+      error instanceof Error ? error : new Error('Unknown error occurred')
+    );
+  } finally {
+    if (browser) {
+      try {
+        await browser.close();
+      } catch (closeError) {
+        addMessage(
+          'ERROR closing browser',
+          closeError instanceof Error
+            ? closeError
+            : new Error('Error closing browser')
+        );
+      }
+    }
+    isProductionMode && killChromeProcesses();
+  }
+
+  await sendReportMail(messages);
 
   return (
     <>
-      <Title>Welcome to GEMINI Page</Title>
-      <React.Suspense>
-        <DangerHtml text={text} />
-      </React.Suspense>
+      <Title>Welcome to NewsCast Page</Title>
+      {messages.length > 0 && (
+        <>
+          <h2>Messages:</h2>
+          <ul>
+            {messages.map((message, i) => (
+              <li key={i}>{message}</li>
+            ))}
+          </ul>
+        </>
+      )}
+      {/* {newArticles.length > 0 && (
+        <>
+          <h2 className="text-center text-green-600 text-xl">New Articles:</h2>
+          {newArticles.map((article) => (
+            <React.Fragment key={article.originalTitle}>
+              <h3 className="text-center text-blue-700 text-xl border-b">
+                {article.originalTitle}
+              </h3>
+              <p>
+                <b>Original Slug: </b>
+                {article.originalSlug}
+              </p>
+              <p>
+                <b>Original HTML: </b>
+                {article.originalText}
+              </p>
+              <p>
+                <b>Date: </b>
+                {article.date.toLocaleDateString('en-CA')}
+              </p>
+            </React.Fragment>
+          ))}
+        </>
+      )} */}
+
+      {/* {response} */}
+      {/* <DangerHtml text={aiText} /> */}
+      {JSON.stringify(newArticles, null, 2)}
     </>
   );
 }

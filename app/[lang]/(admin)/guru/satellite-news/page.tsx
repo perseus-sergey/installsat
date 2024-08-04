@@ -23,8 +23,8 @@ import { DEFAULT_ARTICLE_LOGO_NAME } from '@/models/articles.model';
 // -- adapt stattia ta novyny-ta-statti to multilanguage
 // -- add edit english fields to edit article page
 // -- add new categories
-// change languages for categories
-// add mjs
+// -- change languages for categories
+// -- add mjs
 // try remote mjs
 // add link to main parse page
 // add image generator

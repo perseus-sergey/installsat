@@ -7,10 +7,12 @@ import {
   ISimilarArticleModel,
   ISingleCatArticlesModel,
 } from '@/models/articles.model';
+import { EDBTableTitles } from '@/models/ui.model';
 import { decode } from 'html-entities';
 import { cache } from 'react';
 
 export const WRONG_CAT_IDS = '(2,0,11,12,13)';
+const { ARTICLE: TBL_ARTICLE } = EDBTableTitles;
 
 export const getArticleCatList = cache(async () => {
   const sql = `SELECT id, title, cpu, description, text FROM tbl_categories WHERE id NOT IN ${WRONG_CAT_IDS}`;
@@ -58,11 +60,11 @@ export const getChunkOfNews = async (
   T.total_count,
   C2.title AS category_title,
   C2.cpu AS category_cpu
-FROM tbl_useful U
+FROM ${TBL_ARTICLE} U
 LEFT JOIN (SELECT post, COUNT(id) AS comment_count FROM tbl_comments GROUP BY post) C ON U.id = C.post
 LEFT JOIN tbl_categories C2 ON U.cat = C2.id
 CROSS JOIN
-  (SELECT COUNT(id) AS total_count FROM tbl_useful WHERE cat ${catValue} AND (title ${searchText} OR description ${searchText})) T
+  (SELECT COUNT(id) AS total_count FROM ${TBL_ARTICLE} WHERE cat ${catValue} AND (title ${searchText} OR description ${searchText})) T
 WHERE 
   U.cat ${catValue}
   AND (U.title ${searchText} OR U.description ${searchText})
@@ -159,11 +161,16 @@ export const getArticle = cache(
   U.cat AS cat_id,
   U.view,
   U.logo,
+  U.title_en,
+  U.description_en,
+  U.keywords,
+  U.keywords_en,
+  U.text_en,
   C.title AS cat_name,
   C.cpu AS cat_slug,
   C.folder AS cat_folder
 FROM
-  tbl_useful U
+  ${TBL_ARTICLE} U
 LEFT JOIN
   tbl_categories C ON U.cat = C.id
 WHERE U.cpu = ?
@@ -176,25 +183,41 @@ LIMIT 1
       : {
           ...res[0],
           title: decode(res[0].title),
+          title_en: decode(res[0].title_en),
           description: decode(res[0].description),
+          description_en: decode(res[0].description_en),
         };
   }
 );
 
-export const getSatFinderArticle = async () => {
-  const sql = `SELECT id, title, cpu, description, text, view, logo FROM tbl_useful WHERE cpu = ?`;
+export const getSatFinderArticle = cache(async () => {
+  const sql = `
+  SELECT 
+    id,
+    title,
+    cpu,
+    description,
+    text,
+    view,
+    title_en,
+    description_en,
+    keywords,
+    keywords_en,
+    text_en,
+    logo 
+  FROM ${TBL_ARTICLE} WHERE cpu = ?`;
 
   return await poolExecute<IArticleModel[]>(sql, [
     'napravlenie-antenny-po-karte',
   ]);
-};
+});
 
 export const getSimilarArticles = async (logo: string, id = -1) => {
   const removeId = id > -1 ? `AND id != ${id}` : '';
 
   const sql = `
-    SELECT id, title, cpu, date
-    FROM tbl_useful
+    SELECT id, title, title_en, cpu, date
+    FROM ${TBL_ARTICLE}
     WHERE logo = ?
     ${removeId}
     AND cat NOT IN ${WRONG_CAT_IDS}
@@ -209,11 +232,12 @@ export const getSimilarArticles = async (logo: string, id = -1) => {
     : res.map((r) => ({
         ...r,
         title: decode(r.title),
+        title_en: decode(r.title_en),
       }));
 };
 
 // export const getArticleSlugList = cache(async () => {
-//   const sql = `SELECT cpu FROM tbl_useful`;
+//   const sql = `SELECT cpu FROM ${TBL_ARTICLE}`;
 
 //   return await poolExecute<{ cpu: string }>(sql);
 // });

@@ -38,6 +38,7 @@ const {
   theme: themeTitle,
   views: viewsTitle,
 } = ARTICLES.infoPanelTitles;
+const DEFAULT_LOGO_NAME = 'zastavka.jpg';
 
 interface IArticleParams {
   params: { [key in EUrlBaseParam]: string };
@@ -53,19 +54,33 @@ export const generateMetadata = async ({
 
   if (!sqlResult) return DEFAULT_META_DATA[lang];
 
-  const { title, description, date, slug } = sqlResult;
+  const {
+    title,
+    title_en,
+    description_en,
+    keywords,
+    keywords_en,
+    description,
+    date,
+    slug,
+  } = sqlResult;
 
   const slugPath = `${ARTICLE}/${slug}`;
+  const t = lang === ELanguage.UA ? title : title_en || title;
+  const d = lang === ELanguage.UA ? description : description_en || description;
 
   return {
     metadataBase: new URL(BASE_URL),
-    title,
-    description,
-    keywords: description,
+    title: t,
+    description: d,
+    keywords:
+      lang === ELanguage.UA
+        ? keywords || description
+        : keywords_en || description_en || description,
     openGraph: {
       ...DEFAULT_META_DATA.openGraph,
-      title,
-      description,
+      title: t,
+      description: d,
       url: `/${lang}/${slugPath}`,
       publishedTime: getFormattedDateStrYearFirst(date),
     },
@@ -90,9 +105,23 @@ export default async function Page({ params }: IArticleParams) {
   if (sqlResult instanceof Error) return <EmptyData lang={lang} />;
   if (!sqlResult) notFound();
 
-  const { id, text, date, logo, view, title, slug, cat_slug, cat_name } =
-    sqlResult;
+  const {
+    id,
+    text,
+    text_en,
+    date,
+    logo: logoDB,
+    view,
+    title,
+    title_en,
+    slug,
+    cat_slug,
+    cat_name,
+  } = sqlResult;
 
+  const logo = logoDB || DEFAULT_LOGO_NAME;
+
+  const titleLang = lang === ELanguage.UA ? title : title_en || title;
   const similarArticles = await getSimilarArticles(logo, id);
 
   const numberOfComments = await getCommentsNumber(
@@ -115,12 +144,12 @@ export default async function Page({ params }: IArticleParams) {
             title: cat_name,
             href: `${NEWS_AND_ARTICLES}/${cat_slug}`,
           },
-          title,
+          titleLang,
         ]}
       />
       <article className="article">
         <Title>
-          {title}
+          {titleLang}
           <FillingValidImage
             image={{
               ...h1Image,
@@ -128,12 +157,12 @@ export default async function Page({ params }: IArticleParams) {
             }}
             defaultImage={h1Image.defaultImg}
             alternativeImgString={h1Image.alternativeStr}
-            alt={`${h1Image.altStart[lang]} ${title}`}
+            alt={`${h1Image.altStart[lang]} ${titleLang}`}
             isBlur
           />
         </Title>
         <div className="article-text">
-          <DangerHtml text={text} />
+          <DangerHtml text={lang === ELanguage.UA ? text : text_en || text} />
         </div>
         <BottomInfoPanel
           items={[
@@ -161,7 +190,9 @@ export default async function Page({ params }: IArticleParams) {
           similarTitle={SIMILAR_ARTICLES.title[lang]}
           similarArticlesMapped={similarArticles.map((art) => (
             <li key={art.cpu}>
-              <Link href={`/${lang}/${ARTICLE}/${art.cpu}`}>{art.title}</Link>
+              <Link href={`/${lang}/${ARTICLE}/${art.cpu}`}>
+                {lang === ELanguage.UA ? art.title : art.title_en || art.title}
+              </Link>
               <span>{` (${getFormattedDateStrYearFirst(art.date)})`}</span>
             </li>
           ))}
@@ -174,7 +205,7 @@ export default async function Page({ params }: IArticleParams) {
         revalidateUrl={`/${lang}/${ARTICLE}/${slug}`}
         dbCommentTableName={EDBTableTitles.COMMENTS_ARTICLE}
         articleId={`${id}`}
-        articleName={title}
+        articleName={titleLang}
       />
     </>
   );

@@ -1,6 +1,9 @@
 import { ELanguage } from './ui.model';
 import { z } from 'zod';
 
+export const DEFAULT_ARTICLE_LOGO_NAME = 'zastavka.jpg';
+export const DEFAULT_ARTICLE_LOGO_PATH = `/Images/channelsOptimized/${DEFAULT_ARTICLE_LOGO_NAME}`;
+
 export const ARTICLES = {
   article: {
     images: {
@@ -9,7 +12,7 @@ export const ARTICLES = {
         height: 100,
         width: 120,
         defaultImg: {
-          src: '/Images/channelsOptimized/zastavka.jpg',
+          src: DEFAULT_ARTICLE_LOGO_PATH,
           height: 100,
           width: 100,
         },
@@ -216,7 +219,7 @@ export const SAT_MAPS_MODEL = {
         height: 100,
         width: 140,
         defaultImg: {
-          src: '/Images/channelsOptimized/zastavka.jpg',
+          src: DEFAULT_ARTICLE_LOGO_PATH,
           height: 100,
           width: 100,
         },
@@ -299,6 +302,7 @@ export interface ISingleCatArticlesModel {
 export interface ISimilarArticleModel {
   id: number;
   title: string;
+  title_en: string;
   cpu: string;
   date: Date;
 }
@@ -317,6 +321,12 @@ export interface IArticleModel {
   cat_name: string;
   cat_slug: string;
   cat_folder: string;
+  title_en: string;
+  original_slug: string;
+  description_en: string;
+  keywords: string;
+  keywords_en: string;
+  text_en: string;
 }
 
 export enum EArticleEditFields {

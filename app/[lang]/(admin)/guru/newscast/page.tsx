@@ -14,10 +14,11 @@ import { ResultSetHeader } from 'mysql2';
 import { sendMail } from '@/libs/mail/sendMail';
 import { renderAsync } from '@react-email/render';
 import { ParseSatNewsTemplate } from '@/components/EmailTemplates/parseTransNews.template';
+import { DEFAULT_ARTICLE_LOGO_NAME } from '@/models/articles.model';
 
 // =================================================================
-// change satfinder and satellite tv pages in local db
-// copy local db to remote db
+// -- change satfinder and satellite tv pages in local db
+// -- copy local db to remote db
 // change keywords choosing for article
 // adapt stattia ta novyny-ta-statti to multilanguage
 // add mjs
@@ -25,6 +26,7 @@ import { ParseSatNewsTemplate } from '@/components/EmailTemplates/parseTransNews
 // add link to main parse page
 // add edit english fields to edit article page
 // add new categories
+// add image generator
 // =================================================================
 
 interface IArticle {
@@ -85,7 +87,7 @@ const insertDataToDB = async (v: IArticle) => {
 
   const sql = `
       INSERT INTO ${ARTICLE_TBL} 
-      (\`original_slug\`,\`source\`, \`title_en\`, \`title\`, \`text_en\`, \`text\`, \`description_en\`, \`description\`, \`keywords_en\`, \`keywords\`, \`cpu\`, \`cat\`, \`date\`, \`date_upd\`)
+      (\`original_slug\`,\`source\`, \`title_en\`, \`title\`, \`text_en\`, \`text\`, \`description_en\`, \`description\`, \`keywords_en\`, \`keywords\`, \`cpu\`, \`cat\`, \`date\`, \`date_upd\, \`logo\)
       VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)
     `;
   const res = await poolExecute<ResultSetHeader>(sql, [
@@ -103,6 +105,7 @@ const insertDataToDB = async (v: IArticle) => {
     v.category,
     dateNow,
     dateNow,
+    DEFAULT_ARTICLE_LOGO_NAME,
   ]);
 
   return res instanceof Error
@@ -128,7 +131,7 @@ const generateAiText = async (originalText: string) => {
   const prompt = `
   Write a new article based on the original article so that it is not considered a copy of the original article by search engines.
   Don't change people's quotes.
-  Wrap important relevant to article title words in the article in a tag <b>, but not more than 5% from the content of the article.
+  Wrap important relevant to article title words in the article in a tag <strong>, but not more than 5% from the content of the article.
   Make short description of the article about 150 - 200 characters length for the <meta name=description>.
   Select relevant search keywords that will be used on the page in the <meta name=keywords>.
   Make SLUG for this article based on the english title.

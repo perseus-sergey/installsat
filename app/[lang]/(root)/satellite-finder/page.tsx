@@ -36,30 +36,53 @@ const {
 } = META_CHANNEL;
 
 const {
-  keywords,
+  // keywords,
   images: { h1Image },
   dbArticleId,
 } = SAT_FINDER_META_DATA;
 
 const satFinderArticleDBResult = await getSatFinderArticle();
 
-const { title, description, text, view } =
+const {
+  title,
+  description,
+  text,
+  view,
+  title_en,
+  description_en,
+  keywords,
+  keywords_en,
+  text_en,
+} =
   satFinderArticleDBResult instanceof Error
-    ? { title: '', description: '', text: '', view: 0 }
+    ? {
+        title: '',
+        description: '',
+        text: '',
+        view: 0,
+        title_en: '',
+        description_en: '',
+        keywords: '',
+        keywords_en: '',
+        text_en: '',
+      }
     : satFinderArticleDBResult[0];
 
 export const generateMetadata = ({ params }: IPageProps): Metadata => {
   const lang = getELangKey(params[EUrlBaseParam.LANG]);
 
+  const t = lang === ELanguage.UA ? title : title_en;
+  const d = lang === ELanguage.UA ? description : description_en;
+
   return {
     metadataBase: new URL(BASE_URL),
-    title,
-    description,
-    keywords: keywords[lang],
+    title: t,
+    description: d,
+    keywords: lang === ELanguage.UA ? keywords : keywords_en,
     openGraph: {
       ...DEFAULT_META_DATA.openGraph,
-      title,
-      description,
+      title: t,
+      description: d,
       url: `/${lang}/${EUrlBaseParam.SAT_FINDER}`,
       publishedTime: getFormattedDateStrYearFirst(),
     },
@@ -76,6 +99,8 @@ export const generateMetadata = ({ params }: IPageProps): Metadata => {
 export default async function Page({ params }: IPageProps) {
   const lang = getELangKey(params[EUrlBaseParam.LANG]);
 
+  const titleLang = lang === ELanguage.UA ? title : title_en || title;
+
   const groupedSats = await getSatsForForm(false, lang);
 
   const numberOfComments = await getCommentsNumber(
@@ -87,10 +112,10 @@ export default async function Page({ params }: IPageProps) {
 
   return (
     <>
-      <BreadCrumbServer breadCrumbList={[title]} lang={lang} />
+      <BreadCrumbServer breadCrumbList={[titleLang]} lang={lang} />
       <article className="article">
         <Title>
-          {title}
+          {titleLang}
           <FillingValidImage
             image={h1Image}
             alternativeImgString={h1Image.alternativeStr}
@@ -108,7 +133,7 @@ export default async function Page({ params }: IPageProps) {
               groupedSats={groupedSats instanceof Error ? [] : groupedSats}
             />
           </Suspense>
-          <DangerHtml text={text} />
+          <DangerHtml text={lang === ELanguage.UA ? text : text_en} />
         </div>
 
         <BottomInfoPanel
@@ -122,7 +147,7 @@ export default async function Page({ params }: IPageProps) {
         revalidateUrl={`/${lang}/${EUrlBaseParam.SAT_FINDER}`}
         dbCommentTableName={EDBTableTitles.COMMENTS_ARTICLE}
         articleId={dbArticleId}
-        articleName={title}
+        articleName={titleLang}
       />
     </>
   );

@@ -24,7 +24,7 @@ const WidgetArticleCategories = async ({ lang }: { lang: ELanguage }) => {
             className={styles.itemLink}
             href={`/${lang}${WIDGET_ARTICLE_CATEGORY.baseHrefOfList}/${item.cpu}/`}
           >
-            {item.title}
+            {lang === ELanguage.UA ? item.title : item.title_en || item.title}
           </Link>
         </li>
       ))}

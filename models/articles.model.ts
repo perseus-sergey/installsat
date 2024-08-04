@@ -1,6 +1,9 @@
 import { ELanguage } from './ui.model';
 import { z } from 'zod';
 
+export const DEFAULT_ARTICLE_LOGO_NAME = 'zastavka.jpg';
+export const DEFAULT_ARTICLE_LOGO_PATH = `/Images/channelsOptimized/${DEFAULT_ARTICLE_LOGO_NAME}`;
+
 export const ARTICLES = {
   article: {
     images: {
@@ -9,7 +12,7 @@ export const ARTICLES = {
         height: 100,
         width: 120,
         defaultImg: {
-          src: '/Images/channelsOptimized/zastavka.jpg',
+          src: DEFAULT_ARTICLE_LOGO_PATH,
           height: 100,
           width: 100,
         },
@@ -216,7 +219,7 @@ export const SAT_MAPS_MODEL = {
         height: 100,
         width: 140,
         defaultImg: {
-          src: '/Images/channelsOptimized/zastavka.jpg',
+          src: DEFAULT_ARTICLE_LOGO_PATH,
           height: 100,
           width: 100,
         },
@@ -251,6 +254,8 @@ export interface IAllNewsModel {
   id: number;
   cat: number;
   title: string;
+  title_en?: string;
+  description_en?: string;
   cpu: string;
   description: string;
   date: Date;
@@ -261,6 +266,7 @@ export interface IAllNewsModel {
   comment_count: number | null;
   total_count: number;
   category_title: string;
+  category_title_en: string;
   category_cpu: string;
 }
 
@@ -292,13 +298,17 @@ export interface ISingleCatArticlesModel {
   id: number;
   title: string;
   description: string;
+  title_en: string;
+  description_en: string;
   cpu: string;
   text: string;
+  text_en: string;
 }
 
 export interface ISimilarArticleModel {
   id: number;
   title: string;
+  title_en: string;
   cpu: string;
   date: Date;
 }
@@ -315,8 +325,15 @@ export interface IArticleModel {
   view: number;
   logo: string;
   cat_name: string;
+  cat_name_en: string;
   cat_slug: string;
   cat_folder: string;
+  title_en: string;
+  original_slug: string;
+  description_en: string;
+  keywords: string;
+  keywords_en: string;
+  text_en: string;
 }
 
 export enum EArticleEditFields {
@@ -330,18 +347,39 @@ export enum EArticleEditFields {
   date = 'date',
   cat = 'cat',
   folder = 'folder',
+  title_en = 'title_en',
+  original_slug = 'original_slug',
+  description_en = 'description_en',
+  keywords = 'keywords',
+  keywords_en = 'keywords_en',
+  text_en = 'text_en',
 }
+
+const optionalOrMinString = (minNum: number) =>
+  z
+    .string()
+    .trim()
+    .max(0, `String must contains 0 OR > ${minNum - 1} characters`)
+    .or(z.string().trim().min(minNum))
+    .optional();
+
 export const editArticleSchema = z.object({
-  [EArticleEditFields.logo]: z.string().trim().optional(),
-  [EArticleEditFields.source]: z.string().trim().optional(),
+  [EArticleEditFields.logo]: optionalOrMinString(2),
+  [EArticleEditFields.source]: optionalOrMinString(2),
   [EArticleEditFields.title]: z.string().min(2).trim(),
   [EArticleEditFields.cpu]: z.string().min(2).trim(),
-  [EArticleEditFields.description]: z.string().min(2).trim(),
-  [EArticleEditFields.text]: z.string().min(2).trim(),
-  [EArticleEditFields.author]: z.string().trim().optional(),
+  [EArticleEditFields.description]: z.string().min(5).trim(),
+  [EArticleEditFields.text]: z.string().min(15).trim(),
+  [EArticleEditFields.author]: optionalOrMinString(2),
   [EArticleEditFields.date]: z.coerce.date(),
   [EArticleEditFields.cat]: z.coerce.number(),
-  [EArticleEditFields.folder]: z.string().trim().optional(),
+  [EArticleEditFields.folder]: optionalOrMinString(2),
+  [EArticleEditFields.title_en]: optionalOrMinString(2),
+  [EArticleEditFields.original_slug]: z.string().trim().optional(),
+  [EArticleEditFields.description_en]: optionalOrMinString(5),
+  [EArticleEditFields.keywords]: optionalOrMinString(5),
+  [EArticleEditFields.keywords_en]: optionalOrMinString(5),
+  [EArticleEditFields.text_en]: optionalOrMinString(15),
 });
 export type TArticleTableModel = z.infer<typeof editArticleSchema>;
 

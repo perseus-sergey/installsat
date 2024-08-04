@@ -43,6 +43,7 @@ export enum EUrlAdminParam {
   PARSE_SCHEDULE_VSETV = 'vsetv',
   PARSE_SCHEDULE_VIPIKO = 'vipiko',
   PARSE_SAT_DIGEST = 'trans-news',
+  PARSE_SAT_NEWS = 'satellite-news',
 }
 
 export enum EUrlSearchParam {

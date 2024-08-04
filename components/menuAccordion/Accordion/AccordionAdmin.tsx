@@ -47,7 +47,7 @@ const AccordionAdmin = async () => {
               </ul>
             </AccordionMenuItem>
           ) : (
-            <AccordionMenuItem lang={EN} options={menuType} />
+            <AccordionMenuItem lang={EN} options={menuType} key={index} />
           );
         })}
         {/* <AccordionMenuItem options={SATELLITE_TV} />

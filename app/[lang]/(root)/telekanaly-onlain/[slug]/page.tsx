@@ -215,7 +215,9 @@ export default async function Page({ params }: IChannelProps) {
           similarTitle={simArticlesBefore.title[lang]}
           similarArticlesMapped={similarArticles.map((art) => (
             <li key={art.cpu}>
-              <Link href={`/${lang}/${ARTICLE}/${art.cpu}`}>{art.title}</Link>
+              <Link href={`/${lang}/${ARTICLE}/${art.cpu}`}>
+                {lang === ELanguage.UA ? art.title : art.title_en || art.title}
+              </Link>
               <span>{` (${getFormattedDateStr(art.date)})`}</span>
             </li>
           ))}

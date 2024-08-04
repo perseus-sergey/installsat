@@ -3,8 +3,10 @@ import * as React from 'react';
 
 interface IEmailTemplateProps {
   pathToMainParsePage: string;
-  dbTableLength: string;
+  dbTableLength?: string;
   errorMessages: string[];
+  dbTableHref?: string;
+  hrefSources?: string[];
 }
 
 export const ParseTransNews = async ({
@@ -52,6 +54,68 @@ export const ParseTransNews = async ({
         >
           Parse Transponder news again
         </Link>
+      </Text>
+    </Html>
+  );
+};
+
+export const ParseSatNewsTemplate = async ({
+  pathToMainParsePage,
+  errorMessages,
+  dbTableHref,
+  hrefSources,
+}: IEmailTemplateProps) => {
+  return (
+    <Html>
+      <Heading as="h1">
+        <Link
+          href={`${pathToMainParsePage}`}
+          style={{ ...link, fontSize: '20px' }}
+          target="_blank"
+        >
+          Parse Satellite News
+        </Link>
+      </Heading>
+
+      <Hr style={hr} />
+
+      {errorMessages.length > 0 && (
+        <>
+          <Text style={heading}>Messages:</Text>
+          <ul>
+            {errorMessages.map((message, i) => (
+              <li key={i}>{message}</li>
+            ))}
+          </ul>
+        </>
+      )}
+      <Text style={footer}>
+        <Link
+          href={dbTableHref}
+          target="_blank"
+          style={{ ...reportLink, color: '#267f00' }}
+        >
+          DB Table
+        </Link>
+
+        {hrefSources && hrefSources.length > 0 && (
+          <>
+            <Text style={heading}>Messages:</Text>
+            <ul>
+              {hrefSources.map((source, i) => (
+                <li key={i}>
+                  <Link
+                    href={source}
+                    target="_blank"
+                    style={{ ...reportLink, color: '#267f00' }}
+                  >
+                    {source}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </>
+        )}
       </Text>
     </Html>
   );

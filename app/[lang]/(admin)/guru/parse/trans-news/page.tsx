@@ -1,4 +1,4 @@
-// import { Title } from '@/components/ui/Titles/Title';
+import { Title } from '@/components/ui/Titles/Title';
 import puppeteer, { Browser } from 'puppeteer';
 import * as cheerio from 'cheerio';
 import { DateTime } from 'luxon';
@@ -372,24 +372,24 @@ export default async function Page({
         : resDbTableLength[0].count.toLocaleString('en-US')
     );
 
-  // return (
-  //   <>
-  //     <Title>Parse FlySat</Title>
-  //     {errorMessages.length > 0 && (
-  //       <>
-  //         <h2 className="font-bold text-blue-700 text-xl">Messages:</h2>
-  //         <ul>
-  //           {errorMessages.map((message, i) => (
-  //             <li key={i}>{message}</li>
-  //           ))}
-  //         </ul>
-  //       </>
-  //     )}
-  //     <pre>{JSON.stringify(finalData, null, 2)}</pre>
-  //   </>
-  // );
+  return (
+    <>
+      <Title>Parse FlySat</Title>
+      {errorMessages.length > 0 && (
+        <>
+          <h2 className="font-bold text-blue-700 text-xl">Messages:</h2>
+          <ul>
+            {errorMessages.map((message, i) => (
+              <li key={i}>{message}</li>
+            ))}
+          </ul>
+        </>
+      )}
+      <pre>{JSON.stringify(finalData, null, 2)}</pre>
+    </>
+  );
 
-  return null;
+  // return null;
 }
 
 // =================================================================

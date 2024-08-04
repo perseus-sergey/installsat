@@ -116,11 +116,13 @@ export default async function Page({ params }: IArticleParams) {
     slug,
     cat_slug,
     cat_name,
+    cat_name_en,
   } = sqlResult;
 
   const logo = logoDB || DEFAULT_ARTICLE_LOGO_NAME;
 
   const titleLang = lang === ELanguage.UA ? title : title_en || title;
+  const catLang = lang === ELanguage.UA ? cat_name : cat_name_en || cat_name;
 
   const similarArticles = await getSimilarArticles(logo, id);
 
@@ -141,7 +143,7 @@ export default async function Page({ params }: IArticleParams) {
         breadCrumbList={[
           BREAD_CRUMBS.NEWS_AND_ARTICLES,
           {
-            title: cat_name,
+            title: catLang,
             href: `${NEWS_AND_ARTICLES}/${cat_slug}`,
           },
           titleLang,
@@ -172,7 +174,7 @@ export default async function Page({ params }: IArticleParams) {
                 <Link
                   href={`/${lang}/${EUrlBaseParam.NEWS_AND_ARTICLES}/${cat_slug}`}
                 >
-                  {cat_name}
+                  {catLang}
                 </Link>
               ),
             },

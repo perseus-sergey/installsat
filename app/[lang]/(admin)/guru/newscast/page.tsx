@@ -19,13 +19,14 @@ import { DEFAULT_ARTICLE_LOGO_NAME } from '@/models/articles.model';
 // =================================================================
 // -- change satfinder and satellite tv pages in local db
 // -- copy local db to remote db
-// change keywords choosing for article
-// adapt stattia ta novyny-ta-statti to multilanguage
+// -- change keywords choosing for article
+// -- adapt stattia ta novyny-ta-statti to multilanguage
+// -- add edit english fields to edit article page
+// -- add new categories
+// change languages for categories
 // add mjs
 // try remote mjs
 // add link to main parse page
-// add edit english fields to edit article page
-// add new categories
 // add image generator
 // =================================================================
 
@@ -141,6 +142,7 @@ const generateAiText = async (originalText: string) => {
   5 - Equipment settings,
   7 - Pay TV news,
   10 - Television news.
+  14 - Satellite news.
   Articles must be written in Ukrainian and English. But write names, surnames, titles and abbreviations in the original language.
   Use the HTML format like:
   <h2 id='title-en'>Title</h2>

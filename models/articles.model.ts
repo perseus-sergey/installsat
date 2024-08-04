@@ -266,6 +266,7 @@ export interface IAllNewsModel {
   comment_count: number | null;
   total_count: number;
   category_title: string;
+  category_title_en: string;
   category_cpu: string;
 }
 
@@ -297,8 +298,11 @@ export interface ISingleCatArticlesModel {
   id: number;
   title: string;
   description: string;
+  title_en: string;
+  description_en: string;
   cpu: string;
   text: string;
+  text_en: string;
 }
 
 export interface ISimilarArticleModel {
@@ -321,6 +325,7 @@ export interface IArticleModel {
   view: number;
   logo: string;
   cat_name: string;
+  cat_name_en: string;
   cat_slug: string;
   cat_folder: string;
   title_en: string;

@@ -15,7 +15,7 @@ export const WRONG_CAT_IDS = '(2,0,11,12,13)';
 const { ARTICLE: TBL_ARTICLE } = EDBTableTitles;
 
 export const getArticleCatList = cache(async () => {
-  const sql = `SELECT id, title, cpu, description, text FROM tbl_categories WHERE id NOT IN ${WRONG_CAT_IDS}`;
+  const sql = `SELECT id, title, cpu, description, text, title_en, description_en, text_en FROM tbl_categories WHERE id NOT IN ${WRONG_CAT_IDS}`;
 
   const res = await poolExecute<ISingleCatArticlesModel[]>(sql);
 
@@ -31,7 +31,16 @@ export const getCurrentCatParams = cache(
         : allCatResponse.find((cat) => cat.cpu === catCpu);
 
     return (
-      catParams || { title: '', description: '', id: -1, cpu: '', text: '' }
+      catParams || {
+        title: '',
+        description: '',
+        title_en: '',
+        description_en: '',
+        id: -1,
+        cpu: '',
+        text: '',
+        text_en: '',
+      }
     );
   }
 );
@@ -61,6 +70,7 @@ export const getChunkOfNews = async (
   C.comment_count,
   T.total_count,
   C2.title AS category_title,
+  C2.title_en AS category_title_en,
   C2.cpu AS category_cpu
 FROM ${TBL_ARTICLE} U
 LEFT JOIN (SELECT post, COUNT(id) AS comment_count FROM tbl_comments GROUP BY post) C ON U.id = C.post
@@ -173,6 +183,7 @@ export const getArticle = cache(
   U.keywords_en,
   U.text_en,
   C.title AS cat_name,
+  C.title_en AS cat_name_en,
   C.cpu AS cat_slug,
   C.folder AS cat_folder
 FROM

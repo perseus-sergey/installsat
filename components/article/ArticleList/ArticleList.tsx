@@ -41,6 +41,7 @@ const ArticleList = ({
           description,
           description_en,
           category_title,
+          category_title_en,
           view,
           date,
           comment_count,
@@ -51,6 +52,10 @@ const ArticleList = ({
           const titleLang = lang === ELanguage.UA ? title : title_en || title;
           const descriptionLang =
             lang === ELanguage.UA ? description : description_en || description;
+          const catTitleLang =
+            lang === ELanguage.UA
+              ? category_title
+              : category_title_en || category_title;
 
           return (
             <li key={id}>
@@ -94,7 +99,7 @@ const ArticleList = ({
                       <Link
                         href={`/${lang}/${EUrlBaseParam.NEWS_AND_ARTICLES}/${category_cpu}`}
                       >
-                        {category_title}
+                        {catTitleLang}
                       </Link>
                     ),
                   },

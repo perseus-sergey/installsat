@@ -51,19 +51,22 @@ export const generateMetadata = async ({
   const cat = params[EUrlBaseParam.CATEGORY];
   const lang = getELangKey(params[EUrlBaseParam.LANG]);
 
-  const { title, description, cpu } = await getCurrentCatParams(cat);
+  const { title, description, title_en, description_en, cpu } =
+    await getCurrentCatParams(cat);
 
   const slugPath = `${EUrlBaseParam.NEWS_AND_ARTICLES}/${cpu}`;
+  const t = lang === ELanguage.UA ? title : title_en || title;
+  const d = lang === ELanguage.UA ? description : description_en || description;
 
   return {
     metadataBase: new URL(BASE_URL),
-    title,
-    description,
+    title: t,
+    description: d,
     keywords: description,
     openGraph: {
       ...DEFAULT_META_DATA.openGraph,
-      title,
-      description,
+      title: t,
+      description: d,
       url: `/${lang}/${slugPath}`,
       publishedTime: getFormattedDateStrYearFirst(),
     },
@@ -95,7 +98,12 @@ export default async function Page({ params, searchParams }: IPageParams) {
   const cat = params[EUrlBaseParam.CATEGORY];
   const lang = getELangKey(params[EUrlBaseParam.LANG]);
 
-  const { id, description, text } = await getCurrentCatParams(cat);
+  const { id, description, text, description_en, text_en } =
+    await getCurrentCatParams(cat);
+
+  const descriptionLang =
+    lang === ELanguage.UA ? description : description_en || description;
+  const textLang = lang === ELanguage.UA ? text : text_en || text;
 
   const { perPage } = pagination;
 
@@ -120,12 +128,12 @@ export default async function Page({ params, searchParams }: IPageParams) {
   return (
     <>
       <BreadCrumbServer
-        breadCrumbList={[BREAD_CRUMBS.NEWS_AND_ARTICLES, description]}
+        breadCrumbList={[BREAD_CRUMBS.NEWS_AND_ARTICLES, descriptionLang]}
         lang={lang}
       />
       <article className="article">
         <Title>
-          {description}
+          {descriptionLang}
 
           <FillingValidImage
             image={images.h1Image}
@@ -145,7 +153,7 @@ export default async function Page({ params, searchParams }: IPageParams) {
           />
         </Suspense>
 
-        <TextUnderH1>{text}</TextUnderH1>
+        <TextUnderH1>{textLang}</TextUnderH1>
 
         <p className="text-blue-600 font-bold text-center text-lg">{`${articlesCountCaption[lang]}${mapsCount}`}</p>
 

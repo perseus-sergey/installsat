@@ -1,6 +1,6 @@
 import '../globals.scss';
 import Footer from '@/components/Footer/Footer';
-import GoogleAdsense from '@/components/GoogleAdsense/GoogleAdsense';
+// import GoogleAdsense from '@/components/GoogleAdsense/GoogleAdsense';
 import Header from '@/components/Header/Header';
 import ToastProvider from '@/libs/ToastProvider/ToastProvider';
 import { getELangKey } from '@/libs/utils/validSearchParam';
@@ -9,7 +9,7 @@ import { EUrlBaseParam } from '@/models/url.model';
 import { GoogleAnalytics } from '@next/third-parties/google';
 
 const gaId = process.env.GA_ID || '';
-const adsenseId = process.env.G_ADSENSE_ID || '';
+// const adsenseId = process.env.G_ADSENSE_ID || '';
 export async function generateStaticParams() {
   return Object.values(ELanguage).map((l) => ({ [EUrlBaseParam.LANG]: l }));
 }
@@ -34,7 +34,7 @@ export default function RootLayout({
         <Footer lang={lang} />
         <span id="ezoic-privacy-policy-embed"></span>
       </body>
-      <GoogleAdsense pId={adsenseId} />
+      {/* <GoogleAdsense pId={adsenseId} /> */}
       <GoogleAnalytics gaId={gaId} />
     </html>
   );

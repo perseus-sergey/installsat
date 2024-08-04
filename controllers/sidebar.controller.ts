@@ -6,6 +6,9 @@ import { NUMBER_OF_LAST_NEWS_WIDGET } from '@/models/widget.model';
 import { cache } from 'react';
 import { WRONG_CAT_IDS } from './articles.controller';
 import { IAllNewsModel } from '@/models/articles.model';
+import { EDBTableTitles } from '@/models/ui.model';
+
+const { ARTICLE: TBL_ARTICLE } = EDBTableTitles;
 
 export const getInstallationsList = cache(
   async () =>
@@ -34,12 +37,12 @@ export const getChannelSatList = cache(
 
 export const getLastNewsWidgetList = async () =>
   await poolExecute<IAllNewsModel[]>(`
-    SELECT id, title, cpu FROM tbl_useful WHERE cat NOT IN ${WRONG_CAT_IDS} ORDER BY date DESC, id DESC LIMIT ${NUMBER_OF_LAST_NEWS_WIDGET}
+    SELECT id, title, title_en, cpu FROM ${TBL_ARTICLE} WHERE cat NOT IN ${WRONG_CAT_IDS} ORDER BY date DESC, id DESC LIMIT ${NUMBER_OF_LAST_NEWS_WIDGET}
     `);
 
 export const getUsefulArticleList = cache(
   async () =>
     await poolExecute<IAllNewsModel[]>(`
-  SELECT title, id, cpu FROM tbl_useful WHERE cat=4 OR cat=5
+  SELECT title, title_en, id, cpu FROM ${TBL_ARTICLE} WHERE cat=4 OR cat=5
   `)
 );

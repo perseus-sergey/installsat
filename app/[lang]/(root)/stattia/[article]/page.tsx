@@ -1,7 +1,7 @@
 import EmptyData from '@/components/errors/EmptyData/EmptyData';
 import { Title } from '@/components/ui/Titles/Title';
 import FillingValidImage from '@/components/ui/Images/FillingValidImage';
-import { ARTICLES } from '@/models/articles.model';
+import { ARTICLES, DEFAULT_ARTICLE_LOGO_NAME } from '@/models/articles.model';
 import {
   getArticle,
   getSimilarArticles,
@@ -38,7 +38,6 @@ const {
   theme: themeTitle,
   views: viewsTitle,
 } = ARTICLES.infoPanelTitles;
-const DEFAULT_LOGO_NAME = 'zastavka.jpg';
 
 interface IArticleParams {
   params: { [key in EUrlBaseParam]: string };
@@ -119,9 +118,10 @@ export default async function Page({ params }: IArticleParams) {
     cat_name,
   } = sqlResult;
 
-  const logo = logoDB || DEFAULT_LOGO_NAME;
+  const logo = logoDB || DEFAULT_ARTICLE_LOGO_NAME;
 
   const titleLang = lang === ELanguage.UA ? title : title_en || title;
+
   const similarArticles = await getSimilarArticles(logo, id);
 
   const numberOfComments = await getCommentsNumber(

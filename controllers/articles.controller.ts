@@ -52,6 +52,8 @@ export const getChunkOfNews = async (
   U.title,
   U.cpu,
   U.description,
+  U.title_en,
+  U.description_en,
   U.date,
   U.author,
   U.logo,
@@ -79,7 +81,11 @@ LIMIT ?, ?
 
   return res instanceof Error
     ? []
-    : res.map((r) => ({ ...r, title: decode(r.title) }));
+    : res.map((r) => ({
+        ...r,
+        title: decode(r.title),
+        title_en: decode(r.title_en),
+      }));
 };
 
 export const satMapListSql = `

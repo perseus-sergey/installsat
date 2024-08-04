@@ -109,7 +109,9 @@ const Accordion = async ({ lang }: { lang: ELanguage }) => {
                   href={`/${lang}${USEFUL.baseHrefOfList}/${item.cpu}/`}
                   className={styles.contentItemLink}
                 >
-                  {item.title}
+                  {lang === ELanguage.UA
+                    ? item.title
+                    : item.title_en || item.title}
                 </Link>
               </li>
             ))}

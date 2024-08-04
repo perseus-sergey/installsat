@@ -254,6 +254,8 @@ export interface IAllNewsModel {
   id: number;
   cat: number;
   title: string;
+  title_en?: string;
+  description_en?: string;
   cpu: string;
   description: string;
   date: Date;

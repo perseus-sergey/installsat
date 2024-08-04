@@ -2,6 +2,9 @@ import { poolExecute } from '@/libs/db/mysqldb';
 import { WRONG_CAT_IDS, satMapListSql } from './articles.controller';
 import { IAllMapsModel } from '@/models/articles.model';
 import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
+import { EDBTableTitles } from '@/models/ui.model';
+
+const { ARTICLE: TBL_ARTICLE } = EDBTableTitles;
 
 export const getSatMapList = async () => {
   const res = await poolExecute<IAllMapsModel[]>(satMapListSql);
@@ -10,7 +13,7 @@ export const getSatMapList = async () => {
 };
 
 export const getNewsForSiteMap = async () => {
-  const sql = `SELECT cpu FROM tbl_useful WHERE cat NOT IN ${WRONG_CAT_IDS}`;
+  const sql = `SELECT cpu FROM ${TBL_ARTICLE} WHERE cat NOT IN ${WRONG_CAT_IDS}`;
   const res = await poolExecute<{ cpu: string }[]>(sql);
 
   return res instanceof Error ? [] : res;

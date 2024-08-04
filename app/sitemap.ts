@@ -93,10 +93,6 @@ const getSiteMapItemList = ({
     };
   });
 
-// =================================================================
-// - add rows to tbl_digest_2023, tbl_digest_2022...
-// =================================================================
-
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const satMapList = await getSatMapList();
   const articleCatList = await getArticleCatListSiteMap();

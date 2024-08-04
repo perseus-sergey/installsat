@@ -24,7 +24,8 @@ const WidgetLastNews = async ({ lang }: { lang: ELanguage }) => {
             <Link
               href={`/${lang}/${WIDGET_LAST_NEWS.baseHrefOfList}/${item.cpu}/`}
             >
-              {item.title} ...
+              {lang === ELanguage.UA ? item.title : item.title_en || item.title}{' '}
+              ...
             </Link>
           </li>
         ))}

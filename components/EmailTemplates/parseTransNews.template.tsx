@@ -6,6 +6,7 @@ interface IEmailTemplateProps {
   dbTableLength?: string;
   errorMessages: string[];
   dbTableHref?: string;
+  hrefSources?: string[];
 }
 
 export const ParseTransNews = async ({
@@ -62,6 +63,7 @@ export const ParseSatNewsTemplate = async ({
   pathToMainParsePage,
   errorMessages,
   dbTableHref,
+  hrefSources,
 }: IEmailTemplateProps) => {
   return (
     <Html>
@@ -85,18 +87,36 @@ export const ParseSatNewsTemplate = async ({
               <li key={i}>{message}</li>
             ))}
           </ul>
-
-          <Text style={footer}>
-            <Link
-              href={dbTableHref}
-              target="_blank"
-              style={{ ...reportLink, color: '#267f00' }}
-            >
-              DB Table
-            </Link>
-          </Text>
         </>
       )}
+      <Text style={footer}>
+        <Link
+          href={dbTableHref}
+          target="_blank"
+          style={{ ...reportLink, color: '#267f00' }}
+        >
+          DB Table
+        </Link>
+
+        {hrefSources && hrefSources.length > 0 && (
+          <>
+            <Text style={heading}>Messages:</Text>
+            <ul>
+              {hrefSources.map((source, i) => (
+                <li key={i}>
+                  <Link
+                    href={source}
+                    target="_blank"
+                    style={{ ...reportLink, color: '#267f00' }}
+                  >
+                    {source}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </>
+        )}
+      </Text>
     </Html>
   );
 };

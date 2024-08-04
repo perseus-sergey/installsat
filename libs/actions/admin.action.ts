@@ -58,12 +58,25 @@ export const deleteItemAction = async (
 export const editArticleAction = async (
   articleID: string,
   articleText: string,
+  articleTextEn: string,
   revalidateUrl: string,
   _formState: IFormState,
   formData: FormData
 ): Promise<IFormState> => {
-  const { logo, title, cpu, description, author, date, cat, folder } =
-    EArticleEditFields;
+  const {
+    logo,
+    title,
+    cpu,
+    description,
+    author,
+    date,
+    cat,
+    folder,
+    title_en,
+    description_en,
+    keywords,
+    keywords_en,
+  } = EArticleEditFields;
 
   let res: Error | ResultSetHeader | string = '';
 
@@ -74,10 +87,15 @@ export const editArticleAction = async (
       cpu: formData.get(cpu),
       description: formData.get(description),
       text: articleText,
+      text_en: articleTextEn,
       author: formData.get(author),
       date: formData.get(date),
       cat: formData.get(cat),
       folder: formData.get(folder),
+      title_en: formData.get(title_en),
+      description_en: formData.get(description_en),
+      keywords: formData.get(keywords),
+      keywords_en: formData.get(keywords_en),
     });
     res = await editArticleDB(articleID, validFormData);
     if (res instanceof Error) throw new Error(res.message);

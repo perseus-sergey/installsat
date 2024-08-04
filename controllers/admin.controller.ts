@@ -13,6 +13,7 @@ import { ResultSetHeader } from 'mysql2';
 import { cache } from 'react';
 
 // export const WRONG_CAT_IDS = '(2,0,11,12,13)';
+const { ARTICLE: TBL_ARTICLE } = EDBTableTitles;
 
 export const deleteItemFromDbTable = async (
   dbTableName: EDBTableTitles,
@@ -38,10 +39,10 @@ export const getAdminChunkOfNews = cache(
       U.date_upd,
       T.total_count,
       CAT.title AS category_title
-    FROM tbl_useful U
+    FROM ${TBL_ARTICLE} U
     LEFT JOIN tbl_categories CAT ON U.cat = CAT.id
     CROSS JOIN
-      (SELECT COUNT(id) AS total_count FROM tbl_useful WHERE title ${searchText}) T
+      (SELECT COUNT(id) AS total_count FROM ${TBL_ARTICLE} WHERE title ${searchText}) T
       WHERE U.title ${searchText}
     ORDER BY 
       U.date DESC, U.id 
@@ -57,7 +58,7 @@ export const getAdminChunkOfNews = cache(
 );
 
 export const getArticleAndCatDb = cache(async (articleId: string | number) => {
-  const sql = `SELECT * FROM tbl_useful WHERE id = ${articleId} LIMIT 1; SELECT title, id FROM tbl_categories`;
+  const sql = `SELECT * FROM ${TBL_ARTICLE} WHERE id = ${articleId} LIMIT 1; SELECT title, id FROM tbl_categories`;
 
   return poolQuery<[TArticleTableModel[], IArticleCategory[]]>(sql);
 });
@@ -68,7 +69,23 @@ export const editArticleDB = async (
 ) =>
   await poolExecute<ResultSetHeader>(
     `
-    UPDATE tbl_useful SET title = ?, cpu = ?, description = ?, text = ?, cat = ?, author = ?, logo = ?, folder = ?, date = ?, date_upd = ?
+    UPDATE ${TBL_ARTICLE} 
+    SET 
+      title = ?,
+      cpu = ?,
+      description = ?,
+      text = ?,
+      cat = ?,
+      author = ?,
+      logo = ?,
+      folder = ?,
+      title_en = ?,
+      description_en = ?,
+      keywords = ?,
+      keywords_en = ?,
+      text_en = ?,
+      date = ?,
+      date_upd = ?
     WHERE id = ?`,
     [
       articleData.title,
@@ -79,6 +96,11 @@ export const editArticleDB = async (
       articleData.author || '',
       articleData.logo || '',
       articleData.folder || '',
+      articleData.title_en || '',
+      articleData.description_en || '',
+      articleData.keywords || '',
+      articleData.keywords_en || '',
+      articleData.text_en || '',
       getFormattedDateStrYearFirst(articleData.date),
       getFormattedDateStrYearFirst(),
       articleID,

@@ -45,9 +45,16 @@ const FormEditArticle = ({
     [EArticleEditFields.cat]: initArticleData[0].cat || '',
     [EArticleEditFields.folder]: initArticleData[0].folder || '',
     [EArticleEditFields.text]: initArticleData[0].text || '',
+    [EArticleEditFields.title_en]: initArticleData[0].title_en || '',
+    [EArticleEditFields.description_en]:
+      initArticleData[0].description_en || '',
+    [EArticleEditFields.keywords]: initArticleData[0].keywords || '',
+    [EArticleEditFields.keywords_en]: initArticleData[0].keywords_en || '',
+    [EArticleEditFields.text_en]: initArticleData[0].text_en || '',
   });
 
-  const editorRef = useRef<CoreEditor | null>(null);
+  const editorUaRef = useRef<CoreEditor | null>(null);
+  const editorEnRef = useRef<CoreEditor | null>(null);
 
   const handleChange = ({
     name,
@@ -62,17 +69,25 @@ const FormEditArticle = ({
     }));
   };
 
-  const handleEditorChange = (content: string) => {
+  const handleEditorChange = (content: string, name: EArticleEditFields) => {
     setFormData((prevData) => ({
       ...prevData,
-      [EArticleEditFields.text]: content,
+      [name]: content,
     }));
   };
+
+  // const handleEditorChange = (content: string, name: EArticleEditFields) => {
+  //   setFormData((prevData) => ({
+  //     ...prevData,
+  //     [EArticleEditFields.text]: content,
+  //   }));
+  // };
 
   const editArticleHandler = editArticleAction.bind(
     null,
     articleId,
     formData[EArticleEditFields.text],
+    formData[EArticleEditFields.text_en],
     revalidateUrl
   );
 
@@ -98,11 +113,18 @@ const FormEditArticle = ({
       </p>
       <FormTextareaItem
         itemName={EArticleEditFields.title}
-        labelTitle="Article Title:"
+        labelTitle="Article Title UA:"
         value={formData.title}
         handleChange={handleChange}
         formState={formState}
         required
+      />
+      <FormTextareaItem
+        itemName={EArticleEditFields.title_en}
+        labelTitle="Article Title EN:"
+        value={formData.title_en}
+        handleChange={handleChange}
+        formState={formState}
       />
       <FormTextareaItem
         itemName={EArticleEditFields.cpu}
@@ -117,7 +139,7 @@ const FormEditArticle = ({
 
       <FormTextareaItem
         itemName={EArticleEditFields.description}
-        labelTitle="Short Description:"
+        labelTitle="Short Description UA:"
         description="(Enter text only without tags, replace double quotes
           with «», it will be written in meta_description)"
         value={formData.description}
@@ -125,20 +147,68 @@ const FormEditArticle = ({
         formState={formState}
         required
       />
+      <FormTextareaItem
+        itemName={EArticleEditFields.description_en}
+        labelTitle="Short Description EN:"
+        description="(Enter text only without tags, replace double quotes
+          with «», it will be written in meta_description)"
+        value={formData.description_en}
+        handleChange={handleChange}
+        formState={formState}
+      />
+      <FormTextareaItem
+        itemName={EArticleEditFields.keywords}
+        labelTitle="Keywords UA:"
+        description="(Enter text only without tags, replace double quotes
+          with «», it will be written in meta_keywords)"
+        value={formData.keywords}
+        handleChange={handleChange}
+        formState={formState}
+      />
+      <FormTextareaItem
+        itemName={EArticleEditFields.keywords_en}
+        labelTitle="Keywords EN:"
+        description="(Enter text only without tags, replace double quotes
+          with «», it will be written in meta_keywords)"
+        value={formData.keywords_en}
+        handleChange={handleChange}
+        formState={formState}
+      />
       <section className="w-full inline-block">
         <h2 className="text-center text-xl">
-          <b>Main Text</b>
+          <b>Main Text UA</b>
         </h2>
         <TinyEditor
-          onEditorChange={handleEditorChange}
+          onEditorChange={(content) =>
+            handleEditorChange(content, EArticleEditFields.text)
+          }
           id={EArticleEditFields.text}
           editorApiKey={editorApiKey}
           initialValue={initArticleData[0].text}
-          editorRef={editorRef}
+          editorRef={editorUaRef}
         />
         <FieldError
           formState={formState}
           name={EArticleEditFields.text}
+          className="text-red-700"
+        />
+      </section>
+      <section className="w-full inline-block">
+        <h2 className="text-center text-xl">
+          <b>Main Text EN</b>
+        </h2>
+        <TinyEditor
+          onEditorChange={(content) =>
+            handleEditorChange(content, EArticleEditFields.text_en)
+          }
+          id={EArticleEditFields.text_en}
+          editorApiKey={editorApiKey}
+          initialValue={initArticleData[0].text_en || ''}
+          editorRef={editorEnRef}
+        />
+        <FieldError
+          formState={formState}
+          name={EArticleEditFields.text_en}
           className="text-red-700"
         />
       </section>

@@ -4,7 +4,7 @@ import Footer from '@/components/Footer/Footer';
 import Header from '@/components/Header/Header';
 import ToastProvider from '@/libs/ToastProvider/ToastProvider';
 import { getELangKey } from '@/libs/utils/validSearchParam';
-import { DEFAULT_LANG, ELanguage } from '@/models/ui.model';
+import { ELanguage } from '@/models/ui.model';
 import { EUrlBaseParam } from '@/models/url.model';
 import { GoogleAnalytics } from '@next/third-parties/google';
 
@@ -26,7 +26,7 @@ export default function RootLayout({
   const lang = getELangKey(params[EUrlBaseParam.LANG]);
 
   return (
-    <html lang={lang || DEFAULT_LANG}>
+    <html lang={lang === ELanguage.UA ? 'uk' : 'en'}>
       <body suppressHydrationWarning={true}>
         <input type="checkbox" id="toggle-sidebar" hidden />
         <Header lang={lang} />

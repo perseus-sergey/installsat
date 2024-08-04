@@ -1,5 +1,5 @@
 import { Title } from '@/components/ui/Titles/Title';
-import { EUrlAdminParam } from '@/models/url.model';
+import { EUrlAdminParam, EUrlSearchParam } from '@/models/url.model';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import * as React from 'react';
 import puppeteer, { Browser } from 'puppeteer';
@@ -9,24 +9,20 @@ import {
   killChromeProcesses,
 } from '@/controllers/parse.controller';
 import { poolExecute } from '@/libs/db/mysqldb';
-import { EDBTableTitles, getDbTableLink } from '@/models/ui.model';
+import {
+  EDBTableTitles,
+  TSearchParams,
+  getDbTableLink,
+} from '@/models/ui.model';
 import { ResultSetHeader } from 'mysql2';
 import { sendMail } from '@/libs/mail/sendMail';
 import { renderAsync } from '@react-email/render';
 import { ParseSatNewsTemplate } from '@/components/EmailTemplates/parseTransNews.template';
 import { DEFAULT_ARTICLE_LOGO_NAME } from '@/models/articles.model';
+import { validSearchParam } from '@/libs/utils/validSearchParam';
 
 // =================================================================
-// -- change satfinder and satellite tv pages in local db
-// -- copy local db to remote db
-// -- change keywords choosing for article
-// -- adapt stattia ta novyny-ta-statti to multilanguage
-// -- add edit english fields to edit article page
-// -- add new categories
-// -- change languages for categories
-// -- add mjs
 // try remote mjs
-// add link to main parse page
 // add image generator
 // =================================================================
 
@@ -175,11 +171,15 @@ const generateAiText = async (originalText: string) => {
   return response.text();
 };
 
-const extractMainLinks = ($: cheerio.CheerioAPI, selector: string) => {
+const extractMainLinks = (
+  $: cheerio.CheerioAPI,
+  selector: string,
+  newsLengthPerSource: number
+) => {
   const links: string[] = [];
 
   $(selector)
-    .slice(0, NEWS_LENGTH_PER_SOURCE)
+    .slice(0, newsLengthPerSource)
     .each((_, element) => {
       const link = $(element).attr('href');
       if (link) {
@@ -278,7 +278,15 @@ const sendReportMail = async (messages: string[]) => {
     ),
   });
 };
-export default async function Page() {
+export default async function Page({
+  searchParams,
+}: {
+  searchParams?: TSearchParams;
+}) {
+  const newsLengthPerSource =
+    parseInt(validSearchParam(EUrlSearchParam.INTERVAL, searchParams), 10) ||
+    NEWS_LENGTH_PER_SOURCE;
+
   let browser: Browser | null = null;
   let mainLinks: string[] | string = '';
   const newArticles: IArticle[] = [];
@@ -301,7 +309,11 @@ export default async function Page() {
       );
       const mainPage$ = cheerio.load(mainPageHtml);
 
-      mainLinks = extractMainLinks(mainPage$, source.linksSelector);
+      mainLinks = extractMainLinks(
+        mainPage$,
+        source.linksSelector,
+        newsLengthPerSource
+      );
       if (mainLinks.length === 0) {
         throw new Error('Cannot extract main links');
       } else if (typeof mainLinks === 'string') {

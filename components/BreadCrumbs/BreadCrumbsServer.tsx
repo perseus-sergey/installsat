@@ -59,9 +59,7 @@ const BreadCrumbServer = ({
         )}
         {breadCrumbList && breadCrumbList.length > 0 && (
           <>
-            {hasHomeLink && (
-              <span className={styles.separator}> {separator} </span>
-            )}
+            {hasHomeLink && <li className={styles.separator}> {separator} </li>}
             {breadCrumbList.map((item, index) => {
               const isCurrentUrl = breadCrumbList.length === index + 1;
               const linkText =
@@ -99,7 +97,7 @@ const BreadCrumbServer = ({
                       <div>{linkText}</div>
                     )}
                   </li>
-                  <span className={styles.separator}> {separator} </span>
+                  <li className={styles.separator}> {separator} </li>
                 </React.Fragment>
               ) : (
                 <React.Fragment key={index}>

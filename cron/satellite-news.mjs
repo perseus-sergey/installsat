@@ -257,6 +257,24 @@ const sendReportMail = async (messages) => {
   });
 };
 
+const getOriginalArticleSlug = (link, lastSlugsInDB) => {
+  const slug = link.split('/').filter(Boolean).pop();
+
+  if (!slug) {
+    addMessage(`Cannot extract main links from ${link}`);
+
+    return null;
+  } else if (lastSlugsInDB.some((item) => item.original_slug === slug)) {
+    addMessage(
+      `WARNING: Article with SLUG: ${slug} already exists in table ${ARTICLE_TBL}`
+    );
+
+    return null;
+  }
+
+  return slug;
+};
+
 const R_U_N = async () => {
   let browser = null;
   let mainLinks = '';
@@ -288,6 +306,9 @@ const R_U_N = async () => {
       }
 
       for (const link of mainLinks) {
+        const articleSlug = getOriginalArticleSlug(link, lastSlugsInDB);
+        if (!articleSlug) continue;
+
         const html = await getContentFromPuppeteerBrowser(browser, link);
         const $ = cheerio.load(html);
         const extractArticleResult = extractOriginalArticle(
@@ -297,18 +318,6 @@ const R_U_N = async () => {
         );
         if (typeof extractArticleResult === 'string') {
           addMessage(`${extractArticleResult} Article: ${link}`);
-          continue;
-        }
-        const articleSlug = link.split('/').filter(Boolean).pop();
-        if (!articleSlug) {
-          addMessage(`Cannot extract main links from ${link}`);
-          continue;
-        } else if (
-          lastSlugsInDB.some((item) => item.original_slug === articleSlug)
-        ) {
-          addMessage(
-            `WARNING: Article with SLUG: ${articleSlug} already exists in table ${ARTICLE_TBL}`
-          );
           continue;
         }
 

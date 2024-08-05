@@ -81,7 +81,7 @@ WHERE
   U.cat ${catValue}
   AND (U.title ${searchText} OR U.description ${searchText})
 ORDER BY 
-  U.date DESC, U.id 
+  U.date DESC, U.id DESC
 LIMIT ?, ?
 `;
   const res = await poolExecute<IAllNewsModel[]>(sql, [

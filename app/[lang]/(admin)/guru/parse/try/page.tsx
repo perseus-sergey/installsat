@@ -3,10 +3,13 @@ import * as React from 'react';
 import { poolExecute } from '@/libs/db/mysqldb';
 import { EDBTableTitles } from '@/models/ui.model';
 import { ResultSetHeader } from 'mysql2';
+import { DEFAULT_ARTICLE_LOGO_NAME } from '@/models/articles.model';
 
 interface IArticle {
+  originalTitle: string;
   originalSource: string;
   originalSlug: string;
+  originalText: string;
   enAiTitle: string;
   uaAiTitle: string;
   enAiContent: string;
@@ -35,8 +38,8 @@ const insertDataToDB = async (v: IArticle) => {
 
   const sql = `
       INSERT INTO ${ARTICLE_TBL} 
-      (\`original_slug\`,\`source\`, \`title_en\`, \`title\`, \`text_en\`, \`text\`, \`description_en\`, \`description\`, \`keywords_en\`, \`keywords\`, \`cpu\`, \`cat\`, \`date\`, \`date_upd\`)
-      VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+      (\`original_slug\`,\`source\`, \`title_en\`, \`title\`, \`text_en\`, \`text\`, \`description_en\`, \`description\`, \`keywords_en\`, \`keywords\`, \`cpu\`, \`cat\`, \`date\`, \`date_upd\`, \`logo\`)
+      VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
     `;
   const res = await poolExecute<ResultSetHeader>(sql, [
     v.originalSlug,
@@ -53,6 +56,7 @@ const insertDataToDB = async (v: IArticle) => {
     v.category,
     dateNow,
     dateNow,
+    DEFAULT_ARTICLE_LOGO_NAME,
   ]);
 
   return res instanceof Error
@@ -61,17 +65,19 @@ const insertDataToDB = async (v: IArticle) => {
 };
 export default async function Page() {
   const newArticles = {
-    originalSource: 'string',
-    originalSlug: 'string',
-    enAiTitle: 'string',
-    uaAiTitle: 'string',
-    enAiContent: 'string',
-    uaAiContent: 'string',
-    enAiDescription: 'string',
-    uaAiDescription: 'string',
-    enAiKeywords: 'string',
-    uaAiKeywords: 'string',
-    aiSlug: 'string',
+    originalSource: 'originalSource',
+    originalSlug: 'originalSlug',
+    originalTitle: 'originalTitle',
+    originalText: 'originalText',
+    enAiTitle: 'enAiTitle',
+    uaAiTitle: 'uaAiTitle',
+    enAiContent: 'enAiContent',
+    uaAiContent: 'uaAiContent',
+    enAiDescription: 'enAiDescription',
+    uaAiDescription: 'uaAiDescription',
+    enAiKeywords: 'enAiKeywords',
+    uaAiKeywords: 'uaAiKeywords',
+    aiSlug: 'aiSlug',
     category: '5',
   };
 

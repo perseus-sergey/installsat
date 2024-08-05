@@ -84,8 +84,8 @@ const insertDataToDB = async (v: IArticle) => {
 
   const sql = `
       INSERT INTO ${ARTICLE_TBL} 
-      (\`original_slug\`,\`source\`, \`title_en\`, \`title\`, \`text_en\`, \`text\`, \`description_en\`, \`description\`, \`keywords_en\`, \`keywords\`, \`cpu\`, \`cat\`, \`date\`, \`date_upd\, \`logo\)
-      VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+      (\`original_slug\`,\`source\`, \`title_en\`, \`title\`, \`text_en\`, \`text\`, \`description_en\`, \`description\`, \`keywords_en\`, \`keywords\`, \`cpu\`, \`cat\`, \`date\`, \`date_upd\`, \`logo\`)
+      VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
     `;
   const res = await poolExecute<ResultSetHeader>(sql, [
     v.originalSlug,

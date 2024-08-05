@@ -1,19 +1,17 @@
 import * as cheerio from 'cheerio';
+import { GoogleGenerativeAI } from '@google/generative-ai';
+import puppeteer from 'puppeteer';
+
 import { sendMail } from './libs/sendMail.mjs';
 import {
   EDBTableTitles,
   getDbTableLink,
   EUrlAdminParam,
+  killChromeProcesses,
+  getContentFromPuppeteerBrowser,
+  DEFAULT_ARTICLE_LOGO_NAME,
 } from './libs/commons.mjs';
 import { executePoolQuery } from './libs/mysqldb.mjs';
-
-import { GoogleGenerativeAI } from '@google/generative-ai';
-import puppeteer from 'puppeteer';
-import {
-  getContentFromPuppeteerBrowser,
-  killChromeProcesses,
-} from '@/controllers/parse.controller';
-import { DEFAULT_ARTICLE_LOGO_NAME } from '@/models/articles.model';
 
 const SOURCE_ARTICLE_PARAMS = [
   {

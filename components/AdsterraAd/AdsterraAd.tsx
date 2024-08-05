@@ -65,7 +65,7 @@ const AdsterraAd = ({
 
   return (
     <div
-      className="flex justify-center items-center text-white text-center"
+      className="w-80 h-[50px] md:w-[728px] md:h-[90px] block m-auto"
       ref={banner}
     ></div>
   );

@@ -5,9 +5,11 @@ interface ITextUnderH1Props {
 }
 
 const TextUnderH1 = ({ children }: ITextUnderH1Props) => (
-  <section className={styles.TextUnderH1} data-testid="TextUnderH1">
-    {children}
-  </section>
+  <>
+    <section className={styles.TextUnderH1} data-testid="TextUnderH1">
+      {children}
+    </section>
+  </>
 );
 
 export default TextUnderH1;

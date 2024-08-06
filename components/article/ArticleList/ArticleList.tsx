@@ -57,6 +57,8 @@ const ArticleList = ({
               ? category_title
               : category_title_en || category_title;
 
+          const currDate = getFormattedDateStrYearFirst(date);
+
           return (
             <li key={id}>
               <ArticleCard
@@ -106,7 +108,7 @@ const ArticleList = ({
                   { name: viewsTitle[lang], value: view },
                   {
                     name: dateTitle[lang],
-                    value: getFormattedDateStrYearFirst(date),
+                    value: <time dateTime={currDate}>{currDate}</time>,
                   },
                   { name: commentsTitle[lang], value: comment_count },
                 ]}

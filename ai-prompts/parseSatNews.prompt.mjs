@@ -1,7 +1,6 @@
 export const SOURCE_ARTICLE_PARAMS = [
   {
     url: 'https://www.newscaststudio.com/',
-    // linksSelector: '.news-feed-link',
     h1Selector: 'article h1',
     contentSelector: '.holder > p',
     extractMainLinks: ($) => {
@@ -25,7 +24,6 @@ export const SOURCE_ARTICLE_PARAMS = [
   },
   {
     url: 'https://spacenews.com/section/news-archive/',
-    // linksSelector: 'article figure a',
     h1Selector: 'h1.entry-title',
     contentSelector: '.entry-content > p',
     extractMainLinks: ($) => {

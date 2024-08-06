@@ -33,6 +33,7 @@ import ChannelOnlineLink from '@/components/ui/buttons/ChannelOnlineLink/Channel
 import { decode } from 'html-entities';
 import { getELangKey } from '@/libs/utils/validSearchParam';
 import { getEnvVariable } from '@/libs/utils/envHandler';
+import { ARTICLES } from '@/models/articles.model';
 
 const BASE_URL = getEnvVariable('BASE_URL', MAIN_URL);
 
@@ -40,12 +41,17 @@ const {
   images: {
     channelLogo: { big: bigLogo },
   },
-  infoPanelTitles: { comments: commentsTitle, views: viewsTitle },
   similar: { channels: simChannelsBefore },
   noteTitle,
   getResponsibilityText,
   getOnlineLinkText,
 } = META_CHANNEL;
+
+const {
+  date: dateTitle,
+  views: viewsTitle,
+  comments: commentsTitle,
+} = ARTICLES.infoPanelTitles;
 
 const { getKeywords, getTitle, h1Start, descriptionStart } = SCHEDULE_META;
 
@@ -146,7 +152,10 @@ export default async function Page({ params }: IPageProps) {
       />
       <article className="article">
         <Title>
-          {`${h1Start[lang]} "${title}"`}
+          <span className="inline-block">
+            {`${h1Start[lang]} "${title}" ${lang === ELanguage.UA ? 'за ' : 'for '}`}
+            <time dateTime={url_date}>{url_date}</time>
+          </span>
           <FillingValidImage
             image={{
               ...bigLogo,
@@ -186,6 +195,10 @@ export default async function Page({ params }: IPageProps) {
           items={[
             { name: viewsTitle[lang], value: view + 1 },
             { name: commentsTitle[lang], value: numberOfComments },
+            {
+              name: dateTitle[lang],
+              value: <time dateTime={url_date}>{url_date}</time>,
+            },
           ]}
         />
       </article>

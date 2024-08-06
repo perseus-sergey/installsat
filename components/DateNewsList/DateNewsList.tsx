@@ -21,7 +21,8 @@ const DateNewsList = async ({ lang }: { lang: ELanguage }) => {
   if (newsArray instanceof Error) return <EmptyData lang={lang} />;
 
   return newsArray.map((news) => {
-    const dateInISO = getDateInISO(news[0]);
+    const dateInISO =
+      getDateInISO(news[0]) || new Date(news[0]).toLocaleDateString('en-CA');
 
     return (
       <div key={news[0]}>
@@ -31,7 +32,10 @@ const DateNewsList = async ({ lang }: { lang: ELanguage }) => {
             className="flex flex-wrap gap-2 justify-center"
           >
             {META_TRANS_NEWS_SINGLE.metaH1start[lang]}
-            <span className="text-rose-500"> {dateInISO}</span>
+            <time dateTime={dateInISO} className="text-rose-500">
+              {' '}
+              {dateInISO}
+            </time>
           </Link>
         </TitleH2Digest>
         {[...news[1]].map((satNews) => {

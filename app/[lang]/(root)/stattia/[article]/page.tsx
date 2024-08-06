@@ -28,6 +28,7 @@ import BreadCrumbServer from '@/components/BreadCrumbs/BreadCrumbsServer';
 import { BREAD_CRUMBS } from '@/models/breadCrumbs.model';
 import SimilarArticles from '@/components/SimilarArticles/SimilarArticles';
 import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
+import TextUnderH1 from '@/components/TextUnderH1/TextUnderH1';
 
 const { h1Image } = ARTICLES.article.images;
 
@@ -108,6 +109,8 @@ export default async function Page({ params }: IArticleParams) {
     id,
     text,
     text_en,
+    description,
+    description_en,
     date,
     logo: logoDB,
     view,
@@ -121,7 +124,10 @@ export default async function Page({ params }: IArticleParams) {
 
   const logo = logoDB || DEFAULT_ARTICLE_LOGO_NAME;
 
+  const currDate = getFormattedDateStrYearFirst(date);
+
   const titleLang = lang === ELanguage.UA ? title : title_en || title;
+  const descriptionLang = lang === ELanguage.UA ? description : description_en;
   const catLang = lang === ELanguage.UA ? cat_name : cat_name_en || cat_name;
 
   const similarArticles = await getSimilarArticles(logo, id);
@@ -163,6 +169,9 @@ export default async function Page({ params }: IArticleParams) {
             isBlur
           />
         </Title>
+
+        {description_en && <TextUnderH1>{descriptionLang}</TextUnderH1>}
+
         <div className="article-text">
           <DangerHtml text={lang === ELanguage.UA ? text : text_en || text} />
         </div>
@@ -181,7 +190,7 @@ export default async function Page({ params }: IArticleParams) {
             { name: viewsTitle[lang], value: view + 1 },
             {
               name: dateTitle[lang],
-              value: getFormattedDateStrYearFirst(date),
+              value: <time dateTime={currDate}>{currDate}</time>,
             },
           ]}
         />

@@ -42,14 +42,14 @@ export default async function Page({ params }: IParams) {
         }
       />
       <ClientInputWithSubmit
-        inputId={EUrlAdminParam.PARSE_SAT_NEWS}
+        // inputId={EUrlAdminParam.PARSE_SAT_NEWS}
         buttonTitle="Parse News"
-        inputDefaultValue={3}
-        inputType="number"
+        // inputDefaultValue={3}
+        // inputType="number"
         inputBaseHref={`${BASE_PARSE_HREF}/${EUrlAdminParam.PARSE_SAT_NEWS}`}
-        searchParamName={EUrlSearchParam.INTERVAL}
+        // searchParamName={EUrlSearchParam.INTERVAL}
         fieldSetTitle="Satellite News"
-        labelHtml="Choose the number of last news for 1 source"
+        labelHtml="Parse Satellite News"
       />
       <ClientInputWithSubmit
         inputId="vse-tv"

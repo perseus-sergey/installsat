@@ -56,16 +56,25 @@ const SatNewsList = async ({ searchParams, lang }: ISatNewsListProps) => {
             <span className="text-rose-500">{news[0]}</span>
           </div>
         </TitleH2Digest>
-        {[...news[1]].map((satNews) => (
-          <>
-            <TitleH3Digest key={satNews[0]}>
-              {`${getDateInISO(satNews[0])} ....`}
-            </TitleH3Digest>
-            <div className={styles.newsList}>
-              <DangerHtml text={getDailyNews(satNews[1])} wrapperTagName="ul" />
-            </div>
-          </>
-        ))}
+        {[...news[1]].map((satNews) => {
+          const dateInISO =
+            getDateInISO(satNews[0]) ||
+            new Date(satNews[0]).toLocaleDateString('en-CA');
+
+          return (
+            <>
+              <TitleH3Digest key={satNews[0]}>
+                <time dateTime={dateInISO}>{dateInISO}</time> ....
+              </TitleH3Digest>
+              <div className={styles.newsList}>
+                <DangerHtml
+                  text={getDailyNews(satNews[1])}
+                  wrapperTagName="ul"
+                />
+              </div>
+            </>
+          );
+        })}
       </div>
     );
   });

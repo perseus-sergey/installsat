@@ -23,6 +23,8 @@ import {
 
 // =================================================================
 // check logo in email
+// add json-ld
+// add description into article
 // add data tag to article and list of articles
 // add image generator
 // =================================================================
@@ -118,14 +120,16 @@ const extractOriginalArticle = (
 ) => {
   const articleTitle = $(h1Selector).text();
 
-  if (!articleTitle) return 'ERROR: cannot extract article TITLE';
+  if (!articleTitle)
+    return `ERROR: cannot extract article TITLE. Selector: '${h1Selector}'. $(${h1Selector}): ${$(h1Selector).html()}'`;
 
   const articleText: string[] = [];
   $(contentSelector).each((_, elem) => {
     articleText.push($(elem).text());
   });
 
-  if (!articleText.length) return 'ERROR: cannot extract article CONTENT';
+  if (!articleText.length)
+    return `ERROR: cannot extract article CONTENT. Selector: '${contentSelector}'.'`;
   const articleContent = articleText.join(' ');
 
   return { articleTitle, articleContent };

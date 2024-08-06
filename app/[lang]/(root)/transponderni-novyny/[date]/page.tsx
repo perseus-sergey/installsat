@@ -69,7 +69,12 @@ export default async function Page({ params }: IPageParams) {
       <article className="article">
         <TransNewsSingle
           lang={lang}
-          title={`${metaH1start[lang]} ${formattedDate}`}
+          title={
+            <>
+              {metaH1start[lang]}{' '}
+              <time dateTime={formattedDate}>{formattedDate}</time>
+            </>
+          }
           newsArray={newsArray}
         />
       </article>

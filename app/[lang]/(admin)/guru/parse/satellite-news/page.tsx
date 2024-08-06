@@ -1,5 +1,5 @@
 import { Title } from '@/components/ui/Titles/Title';
-import { EUrlAdminParam, EUrlSearchParam } from '@/models/url.model';
+import { EUrlAdminParam } from '@/models/url.model';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import * as React from 'react';
 import puppeteer, { Browser } from 'puppeteer';
@@ -9,23 +9,21 @@ import {
   killChromeProcesses,
 } from '@/controllers/parse.controller';
 import { poolExecute } from '@/libs/db/mysqldb';
-import {
-  EDBTableTitles,
-  TSearchParams,
-  getDbTableLink,
-} from '@/models/ui.model';
+import { EDBTableTitles, getDbTableLink } from '@/models/ui.model';
 import { ResultSetHeader } from 'mysql2';
 import { sendMail } from '@/libs/mail/sendMail';
 import { renderAsync } from '@react-email/render';
 import { ParseSatNewsTemplate } from '@/components/EmailTemplates/parseTransNews.template';
 import { DEFAULT_ARTICLE_LOGO_NAME } from '@/models/articles.model';
-import { validSearchParam } from '@/libs/utils/validSearchParam';
 import {
+  SOURCE_ARTICLE_PARAMS,
   extractAiArticleDataFromAiHTML,
   getChangedSatNews,
 } from '@/ai-prompts/parseSatNews.prompt.mjs';
 
 // =================================================================
+// check logo in email
+// add data tag to article and list of articles
 // add image generator
 // =================================================================
 
@@ -46,29 +44,7 @@ interface IArticle {
   category: string;
 }
 
-const SOURCE_ARTICLE_PARAMS = [
-  {
-    url: 'https://www.newscaststudio.com/',
-    linksSelector: '.news-feed-link',
-    h1Selector: '.head-post h1',
-    contentSelector: '.holder > p',
-  },
-  {
-    url: 'https://spacenews.com/section/news-archive/',
-    linksSelector: 'article figure a',
-    h1Selector: 'h1.entry-title',
-    contentSelector: '.entry-content > p',
-  },
-  {
-    url: 'https://www.satellitetoday.com/category/launch/',
-    linksSelector: '.j-sidebar h2 a',
-    h1Selector: '.single-content h1',
-    contentSelector: '.inner-content > p',
-  },
-];
-
 const IS_LOGGED = true;
-const NEWS_LENGTH_PER_SOURCE = 2;
 const BASE_URL = process.env.BASE_URL;
 const isProductionMode = process.env.NODE_ENV === 'production';
 const BASE_GURU_PATH = `${BASE_URL}/en/${EUrlAdminParam.BASE_PATH}`;
@@ -135,25 +111,6 @@ const generateAiText = async (originalText: string) => {
   return response.text();
 };
 
-const extractMainLinks = (
-  $: cheerio.CheerioAPI,
-  selector: string,
-  newsLengthPerSource: number
-) => {
-  const links: string[] = [];
-
-  $(selector)
-    .slice(0, newsLengthPerSource)
-    .each((_, element) => {
-      const link = $(element).attr('href');
-      if (link) {
-        links.push(link);
-      }
-    });
-
-  return links;
-};
-
 const extractOriginalArticle = (
   $: cheerio.CheerioAPI,
   h1Selector: string,
@@ -173,61 +130,6 @@ const extractOriginalArticle = (
 
   return { articleTitle, articleContent };
 };
-
-// const extractAiArticleData = ($: cheerio.CheerioAPI) => {
-//   const enAiTitle = $('#title-en').text().trim();
-//   if (!enAiTitle)
-//     return `ERROR: cannot extract article EN_TITLE from AI article: ${$.html()}`;
-
-//   const uaAiTitle = $('#title-ua').text().trim();
-//   if (!uaAiTitle)
-//     return `ERROR: cannot extract article UA_TITLE from AI article: ${$.html()}`;
-
-//   const enAiContent = $('#text-en').html();
-//   if (!enAiContent)
-//     return `ERROR: cannot extract article EN_CONTENT from AI article: ${$.html()}`;
-
-//   const uaAiContent = $('#text-ua').html();
-//   if (!uaAiContent)
-//     return `ERROR: cannot extract article UA_CONTENT from AI article: ${$.html()}`;
-
-//   const enAiDescription = $('#description-en').text().trim();
-//   if (!enAiDescription)
-//     return `ERROR: cannot extract article EN_DESCRIPTION from AI article: ${$.html()}`;
-
-//   const uaAiDescription = $('#description-ua').text().trim();
-//   if (!uaAiDescription)
-//     return `ERROR: cannot extract article UA_DESCRIPTION from AI article: ${$.html()}`;
-
-//   const uaAiKeywords = $('#keywords-ua').text().trim();
-//   if (!uaAiKeywords)
-//     return `ERROR: cannot extract article UA_KEYWORDS from AI article: ${$.html()}`;
-
-//   const enAiKeywords = $('#keywords-en').text().trim();
-//   if (!enAiKeywords)
-//     return `ERROR: cannot extract article EN_KEYWORDS from AI article: ${$.html()}`;
-
-//   const aiSlug = $('#slug').text().trim();
-//   if (!aiSlug)
-//     return `ERROR: cannot extract article SLUG from AI article: ${$.html()}`;
-
-//   const category = $('#category-number').text().trim();
-//   if (!category)
-//     return `ERROR: cannot extract article CATEGORY from AI article: ${$.html()}`;
-
-//   return {
-//     enAiTitle,
-//     uaAiTitle,
-//     uaAiContent,
-//     enAiContent,
-//     enAiDescription,
-//     uaAiDescription,
-//     uaAiKeywords,
-//     enAiKeywords,
-//     aiSlug,
-//     category,
-//   };
-// };
 
 const sendReportMail = async (messages: string[]) => {
   await sendMail({
@@ -266,15 +168,7 @@ const getOriginalArticleSlug = (
   return slug;
 };
 
-export default async function Page({
-  searchParams,
-}: {
-  searchParams?: TSearchParams;
-}) {
-  const newsLengthPerSource =
-    parseInt(validSearchParam(EUrlSearchParam.INTERVAL, searchParams), 10) ||
-    NEWS_LENGTH_PER_SOURCE;
-
+export default async function Page() {
   let browser: Browser | null = null;
   let mainLinks: string[] | string = '';
   const newArticles: IArticle[] = [];
@@ -297,11 +191,7 @@ export default async function Page({
       );
       const mainPage$ = cheerio.load(mainPageHtml);
 
-      mainLinks = extractMainLinks(
-        mainPage$,
-        source.linksSelector,
-        newsLengthPerSource
-      );
+      mainLinks = source.extractMainLinks(mainPage$);
       if (mainLinks.length === 0) {
         throw new Error('Cannot extract main links');
       } else if (typeof mainLinks === 'string') {

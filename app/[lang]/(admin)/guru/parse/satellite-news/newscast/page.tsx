@@ -8,7 +8,7 @@ import {
   getContentFromPuppeteerBrowser,
   killChromeProcesses,
 } from '@/controllers/parse.controller';
-import { sleep } from '@/libs/utils/utils';
+// import { sleep } from '@/libs/utils/utils';
 
 interface IArticle {
   originalTitle: string;
@@ -23,7 +23,7 @@ interface IArticle {
 }
 
 const IS_LOGGED = true;
-const PARSE_URL = 'https://www.broadbandtvnews.com/news/';
+const PARSE_URL = 'https://www.newscaststudio.com/';
 // const NEWS_LENGTH_PER_SOURCE = 7;
 // const BASE_URL = process.env.BASE_URL;
 const isProductionMode = process.env.NODE_ENV === 'production';
@@ -38,63 +38,39 @@ const addMessage = (message: string, error?: Error) => {
 };
 
 const extractMainLinks = ($: cheerio.CheerioAPI) => {
+  const newsLengthPerSource = 2;
   const links: string[] = [];
 
-  const allowedWords = [
-    'tech',
-    'tv',
-    'central & east europe',
-    'satellite',
-    'terrestrial',
-    'finance',
-    'top story',
-    '2nd story',
-  ];
-
-  const forbiddenWords = ['fast channels'];
-
-  $('article')
-    // .slice(0, NEWS_LENGTH_PER_SOURCE)
-    .each((_, article) => {
-      const categories = $(article)
-        .find('.entry-categories a')
-        .map((_i, el) => $(el).text().toLowerCase())
-        .get();
-
-      const containsAllowedWords = categories.some((cat) =>
-        allowedWords.includes(cat)
-      );
-
-      const containsForbiddenWords = categories.some((cat) =>
-        forbiddenWords.includes(cat)
-      );
-
-      if (containsAllowedWords && !containsForbiddenWords) {
-        const href = $(article).find('header h2 a').attr('href');
+  $('.news-container').each((_, element) => {
+    $(element)
+      .find('a')
+      .slice(0, newsLengthPerSource)
+      .each((_i, link) => {
+        const href = $(link).attr('href');
         if (href) {
           links.push(href);
         }
-      }
-    });
+      });
+  });
 
   return links;
 };
 
-const extractArticle = ($: cheerio.CheerioAPI) => {
-  const articleTitle = $('h1.entry-title').text().trim();
+// const extractArticle = ($: cheerio.CheerioAPI) => {
+//   const articleTitle = $('h1.entry-title').text().trim();
 
-  if (!articleTitle) return 'ERROR: cannot extract article TITLE';
+//   if (!articleTitle) return 'ERROR: cannot extract article TITLE';
 
-  const articleText: string[] = [];
-  $('.entry-content p').each((_, elem) => {
-    articleText.push($(elem).text());
-  });
+//   const articleText: string[] = [];
+//   $('.entry-content p').each((_, elem) => {
+//     articleText.push($(elem).text());
+//   });
 
-  if (!articleText.length) return 'ERROR: cannot extract article CONTENT';
-  const articleContent = articleText.join('\n');
+//   if (!articleText.length) return 'ERROR: cannot extract article CONTENT';
+//   const articleContent = articleText.join('\n');
 
-  return { articleTitle, articleContent };
-};
+//   return { articleTitle, articleContent };
+// };
 
 export default async function Page() {
   let browser: Browser | null = null;
@@ -125,35 +101,35 @@ export default async function Page() {
       throw new Error(mainLinks);
     }
 
-    for (const link of mainLinks) {
-      const articleSlug = link.split('/').filter(Boolean).pop();
-      if (!articleSlug) {
-        addMessage(`Cannot extract main links from ${link}`);
-        continue;
-      }
+    // for (const link of mainLinks) {
+    //   const articleSlug = link.split('/').filter(Boolean).pop();
+    //   if (!articleSlug) {
+    //     addMessage(`Cannot extract main links from ${link}`);
+    //     continue;
+    //   }
 
-      const html = await getContentFromPuppeteerBrowser(browser, link);
-      const $ = cheerio.load(html);
-      const extractArticleResult = extractArticle($);
-      if (typeof extractArticleResult === 'string') {
-        addMessage(`${extractArticleResult} Article: ${link}`);
-        continue;
-      }
+    //   const html = await getContentFromPuppeteerBrowser(browser, link);
+    //   const $ = cheerio.load(html);
+    //   const extractArticleResult = extractArticle($);
+    //   if (typeof extractArticleResult === 'string') {
+    //     addMessage(`${extractArticleResult} Article: ${link}`);
+    //     continue;
+    //   }
 
-      newArticles.push({
-        originalTitle: extractArticleResult.articleTitle,
-        originalSlug: articleSlug,
-        originalText: extractArticleResult.articleContent,
-        date: new Date(),
-        aiTitle: '',
-        aiHtml: '',
-        aiDescription: '',
-        aiKeywords: '',
-        slug: '',
-      });
+    //   newArticles.push({
+    //     originalTitle: extractArticleResult.articleTitle,
+    //     originalSlug: articleSlug,
+    //     originalText: extractArticleResult.articleContent,
+    //     date: new Date(),
+    //     aiTitle: '',
+    //     aiHtml: '',
+    //     aiDescription: '',
+    //     aiKeywords: '',
+    //     slug: '',
+    //   });
 
-      await sleep(1000);
-    }
+    //   await sleep(1000);
+    // }
     // aiText = await generateAiText(parsedText);
   } catch (error) {
     addMessage(

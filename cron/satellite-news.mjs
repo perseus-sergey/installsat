@@ -13,33 +13,12 @@ import {
 } from './libs/commons.mjs';
 import { executePoolQuery } from './libs/mysqldb.mjs';
 import {
-  getChangedSatNews,
+  SOURCE_ARTICLE_PARAMS,
   extractAiArticleDataFromAiHTML,
+  getChangedSatNews,
 } from '../ai-prompts/parseSatNews.prompt.mjs';
 
-const SOURCE_ARTICLE_PARAMS = [
-  {
-    url: 'https://www.newscaststudio.com/',
-    linksSelector: '.news-feed-link',
-    h1Selector: '.head-post h1',
-    contentSelector: '.holder > p',
-  },
-  {
-    url: 'https://spacenews.com/section/news-archive/',
-    linksSelector: 'article figure a',
-    h1Selector: 'h1.entry-title',
-    contentSelector: '.entry-content > p',
-  },
-  {
-    url: 'https://www.satellitetoday.com/category/launch/',
-    linksSelector: '.j-sidebar h2 a',
-    h1Selector: '.single-content h1',
-    contentSelector: '.inner-content > p',
-  },
-];
-
 const IS_LOGGED = true;
-const NEWS_LENGTH_PER_SOURCE = 2;
 const BASE_URL = process.env.BASE_URL;
 const isProductionMode = process.env.NODE_ENV === 'production';
 const BASE_GURU_PATH = `${BASE_URL}/en/${EUrlAdminParam.BASE_PATH}`;
@@ -107,21 +86,6 @@ const generateAiText = async (originalText) => {
   return response.text();
 };
 
-const extractMainLinks = ($, selector) => {
-  const links = [];
-
-  $(selector)
-    .slice(0, NEWS_LENGTH_PER_SOURCE)
-    .each((_, element) => {
-      const link = $(element).attr('href');
-      if (link) {
-        links.push(link);
-      }
-    });
-
-  return links;
-};
-
 const extractOriginalArticle = ($, h1Selector, contentSelector) => {
   const articleTitle = $(h1Selector).text();
 
@@ -137,61 +101,6 @@ const extractOriginalArticle = ($, h1Selector, contentSelector) => {
 
   return { articleTitle, articleContent };
 };
-
-// const extractAiArticleData = ($) => {
-//   const enAiTitle = $('#title-en').text().trim();
-//   if (!enAiTitle)
-//     return `ERROR: cannot extract article EN_TITLE from AI article: ${$.html()}`;
-
-//   const uaAiTitle = $('#title-ua').text().trim();
-//   if (!uaAiTitle)
-//     return `ERROR: cannot extract article UA_TITLE from AI article: ${$.html()}`;
-
-//   const enAiContent = $('#text-en').html();
-//   if (!enAiContent)
-//     return `ERROR: cannot extract article EN_CONTENT from AI article: ${$.html()}`;
-
-//   const uaAiContent = $('#text-ua').html();
-//   if (!uaAiContent)
-//     return `ERROR: cannot extract article UA_CONTENT from AI article: ${$.html()}`;
-
-//   const enAiDescription = $('#description-en').text().trim();
-//   if (!enAiDescription)
-//     return `ERROR: cannot extract article EN_DESCRIPTION from AI article: ${$.html()}`;
-
-//   const uaAiDescription = $('#description-ua').text().trim();
-//   if (!uaAiDescription)
-//     return `ERROR: cannot extract article UA_DESCRIPTION from AI article: ${$.html()}`;
-
-//   const uaAiKeywords = $('#keywords-ua').text().trim();
-//   if (!uaAiKeywords)
-//     return `ERROR: cannot extract article UA_KEYWORDS from AI article: ${$.html()}`;
-
-//   const enAiKeywords = $('#keywords-en').text().trim();
-//   if (!enAiKeywords)
-//     return `ERROR: cannot extract article EN_KEYWORDS from AI article: ${$.html()}`;
-
-//   const aiSlug = $('#slug').text().trim();
-//   if (!aiSlug)
-//     return `ERROR: cannot extract article SLUG from AI article: ${$.html()}`;
-
-//   const category = $('#category-number').text().trim();
-//   if (!category)
-//     return `ERROR: cannot extract article CATEGORY from AI article: ${$.html()}`;
-
-//   return {
-//     enAiTitle,
-//     uaAiTitle,
-//     uaAiContent,
-//     enAiContent,
-//     enAiDescription,
-//     uaAiDescription,
-//     uaAiKeywords,
-//     enAiKeywords,
-//     aiSlug,
-//     category,
-//   };
-// };
 
 const sendReportMail = async (messages) => {
   await sendMail({

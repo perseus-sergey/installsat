@@ -2,7 +2,7 @@ export const SOURCE_ARTICLE_PARAMS = [
   {
     url: 'https://www.newscaststudio.com/',
     // linksSelector: '.news-feed-link',
-    h1Selector: '.head-post h1',
+    h1Selector: 'article h1',
     contentSelector: '.holder > p',
     extractMainLinks: ($) => {
       const numberOfNews = 2;

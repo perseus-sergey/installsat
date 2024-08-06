@@ -173,7 +173,7 @@ const R_U_N = async () => {
       );
       const mainPage$ = cheerio.load(mainPageHtml);
 
-      mainLinks = extractMainLinks(mainPage$, source.linksSelector);
+      mainLinks = source.extractMainLinks(mainPage$);
       if (mainLinks.length === 0) {
         throw new Error('Cannot extract main links');
       } else if (typeof mainLinks === 'string') {

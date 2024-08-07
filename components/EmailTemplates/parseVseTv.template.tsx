@@ -38,18 +38,17 @@ export const ParseVipikoEmailTemplate = async ({
               <li key={i}>{message}</li>
             ))}
           </ul>
-
-          <Text style={footer}>
-            <Link
-              href={dbTableHref}
-              target="_blank"
-              style={{ ...reportLink, color: '#267f00' }}
-            >
-              DB Table
-            </Link>
-          </Text>
         </>
       )}
+      <Text style={footer}>
+        <Link
+          href={dbTableHref}
+          target="_blank"
+          style={{ ...reportLink, color: '#267f00' }}
+        >
+          DB Table
+        </Link>
+      </Text>
     </Html>
   );
 };

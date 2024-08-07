@@ -274,7 +274,7 @@ export default async function Page({ params }: IChannelProps) {
           similarArticlesMapped={similarArticles.map((art) => (
             <li key={art.cpu}>
               <Link href={`/${lang}/${EUrlBaseParam.ARTICLE}/${art.cpu}`}>
-                {art.title}
+                {lang === ELanguage.UA ? art.title : art.title_en || art.title}
               </Link>
               <span>{` (${getFormattedDateStrYearFirst(art.date)})`}</span>
             </li>

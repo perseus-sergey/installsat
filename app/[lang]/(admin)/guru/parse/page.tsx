@@ -28,7 +28,7 @@ export default async function Page({ params }: IParams) {
         fieldSetTitle="Flysat Satellites Table"
         labelHtml={
           <>
-            Choose channel id for find time traps{' '}
+            Parse main FlySat satellites page{' '}
             <Link
               className="text-blue-600 underline"
               href={FLYSAT_SATELLITES_HREF}
@@ -39,6 +39,16 @@ export default async function Page({ params }: IParams) {
             </Link>
           </>
         }
+      />
+      <ClientInputWithSubmit
+        // inputId={EUrlAdminParam.PARSE_SAT_NEWS}
+        buttonTitle="Parse News"
+        // inputDefaultValue={3}
+        // inputType="number"
+        inputBaseHref={`${BASE_PARSE_HREF}/${EUrlAdminParam.PARSE_SAT_NEWS}`}
+        // searchParamName={EUrlSearchParam.INTERVAL}
+        fieldSetTitle="Satellite News"
+        labelHtml="Parse Satellite News"
       />
       <ClientInputWithSubmit
         inputId="vse-tv"

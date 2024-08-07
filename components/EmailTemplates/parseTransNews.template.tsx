@@ -4,10 +4,10 @@ import * as React from 'react';
 interface IEmailTemplateProps {
   title: string;
   pathToMainParsePage: string;
-  dbTableLength: string;
+  dbTableLength?: string;
   errorMessages: string[];
-  linkToDbTable: string;
-  linkToSourcePage: string;
+  dbTableHref?: string;
+  hrefSources: string[] | string;
 }
 
 export const ParseTransNews = async ({
@@ -15,8 +15,8 @@ export const ParseTransNews = async ({
   pathToMainParsePage,
   dbTableLength,
   errorMessages,
-  linkToDbTable,
-  linkToSourcePage,
+  dbTableHref,
+  hrefSources,
 }: IEmailTemplateProps) => {
   return (
     <Html>
@@ -32,10 +32,12 @@ export const ParseTransNews = async ({
 
       <Hr style={hr} />
 
-      <Text style={heading}>
-        The number of records in the database table:
-        <span style={coloredText}> {dbTableLength}</span>
-      </Text>
+      {dbTableLength && (
+        <Text style={heading}>
+          The number of records in the database table:
+          <span style={coloredText}> {dbTableLength}</span>
+        </Text>
+      )}
 
       {errorMessages.length > 0 && (
         <>
@@ -58,22 +60,41 @@ export const ParseTransNews = async ({
               text: 'Main Parsing Page',
             },
             {
-              href: linkToDbTable,
+              href: dbTableHref,
               text: 'Check DB Table',
             },
             {
-              href: linkToSourcePage,
+              href: hrefSources,
               text: 'Source Page',
             },
           ].map(({ href, text }) => (
             <li key={text}>
-              <Link
-                href={href}
-                target="_blank"
-                style={{ ...reportLink, color: '#267f00' }}
-              >
-                {text}
-              </Link>
+              {Array.isArray(href) ? (
+                <>
+                  <Text style={heading}>{text}s:</Text>
+                  <ul>
+                    {href.map((link) => (
+                      <li key={link}>
+                        <Link
+                          href={link}
+                          target="_blank"
+                          style={{ ...reportLink, color: '#267f00' }}
+                        >
+                          {link}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </>
+              ) : (
+                <Link
+                  href={href}
+                  target="_blank"
+                  style={{ ...reportLink, color: '#267f00' }}
+                >
+                  {text}
+                </Link>
+              )}
             </li>
           ))}
         </ul>

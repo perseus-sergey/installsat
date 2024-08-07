@@ -7,12 +7,12 @@
     padding-right: 0.5rem;
     color: #777777;
     text-shadow: 0 0.5px 0 #ffffff;
-    margin-left: 2%;
+    margin-left: 1rem;
     animation: move 4s infinite linear alternate;
   }
   @keyframes move {
     100% {
-      margin-left: 10%;
+      margin-left: 2rem;
     }
   }
 }

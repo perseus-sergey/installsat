@@ -25,7 +25,7 @@ const AdsterraAd = ({
         const conf = document.createElement('script');
         const script = document.createElement('script');
         script.type = 'text/javascript';
-        script.src = `//www.topcreativeformat.com/${atOptions.key}/invoke.js`;
+        script.src = `//www.gapcontroversialprodigal.com/${atOptions.key}/invoke.js`;
         conf.innerHTML = `atOptions = ${JSON.stringify(atOptions)}`;
 
         banner.current.append(conf);
@@ -65,7 +65,7 @@ const AdsterraAd = ({
 
   return (
     <div
-      className="flex justify-center items-center text-white text-center"
+      className="w-80 h-[50px] md:w-[728px] md:h-[90px] block m-auto"
       ref={banner}
     ></div>
   );

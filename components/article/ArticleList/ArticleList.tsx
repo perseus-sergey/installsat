@@ -37,68 +37,85 @@ const ArticleList = ({
         ({
           id,
           title,
+          title_en,
           description,
+          description_en,
           category_title,
+          category_title_en,
           view,
           date,
           comment_count,
           category_cpu,
           logo,
           cpu,
-        }) => (
-          <li key={id}>
-            <ArticleCard
-              articleTitle={
-                <>
-                  {typeof articleTitleImg !== 'string' ? (
-                    <FillingImg {...articleTitleImg} />
-                  ) : (
-                    <span style={{ fontSize: '2rem' }}>{articleTitleImg}</span>
-                  )}
-                  {title}
-                </>
-              }
-              image={
-                <FillingValidImage
-                  image={{
-                    ...h1Image,
-                    src: `${h1Image.path}${logo}`,
-                  }}
-                  defaultImage={h1Image.defaultImg}
-                  alternativeImgString={h1Image.alternativeStr}
-                  alt={`${h1Image.altStart[lang]} ${title}`}
-                  isBlur
-                  isFillParent
-                />
-              }
-              articleDescription={
-                <DangerHtml
-                  text={cutText(description, 250)}
-                  wrapperTagName="span"
-                />
-              }
-              href={`/${lang}/${EUrlBaseParam.ARTICLE}/${cpu}`}
-              infoPanelItems={[
-                {
-                  name: themeTitle[lang],
-                  value: (
-                    <Link
-                      href={`/${lang}/${EUrlBaseParam.NEWS_AND_ARTICLES}/${category_cpu}`}
-                    >
-                      {category_title}
-                    </Link>
-                  ),
-                },
-                { name: viewsTitle[lang], value: view },
-                {
-                  name: dateTitle[lang],
-                  value: getFormattedDateStrYearFirst(date),
-                },
-                { name: commentsTitle[lang], value: comment_count },
-              ]}
-            />
-          </li>
-        )
+        }) => {
+          const titleLang = lang === ELanguage.UA ? title : title_en || title;
+          const descriptionLang =
+            lang === ELanguage.UA ? description : description_en || description;
+          const catTitleLang =
+            lang === ELanguage.UA
+              ? category_title
+              : category_title_en || category_title;
+
+          const currDate = getFormattedDateStrYearFirst(date);
+
+          return (
+            <li key={id}>
+              <ArticleCard
+                articleTitle={
+                  <>
+                    {typeof articleTitleImg !== 'string' ? (
+                      <FillingImg {...articleTitleImg} />
+                    ) : (
+                      <span style={{ fontSize: '2rem' }}>
+                        {articleTitleImg}
+                      </span>
+                    )}
+                    {titleLang}
+                  </>
+                }
+                image={
+                  <FillingValidImage
+                    image={{
+                      ...h1Image,
+                      src: `${h1Image.path}${logo}`,
+                    }}
+                    defaultImage={h1Image.defaultImg}
+                    alternativeImgString={h1Image.alternativeStr}
+                    alt={`${h1Image.altStart[lang]} ${titleLang}`}
+                    isBlur
+                    isFillParent
+                  />
+                }
+                articleDescription={
+                  <DangerHtml
+                    text={cutText(descriptionLang, 250)}
+                    wrapperTagName="span"
+                  />
+                }
+                href={`/${lang}/${EUrlBaseParam.ARTICLE}/${cpu}`}
+                infoPanelItems={[
+                  {
+                    name: themeTitle[lang],
+                    value: (
+                      <Link
+                        href={`/${lang}/${EUrlBaseParam.NEWS_AND_ARTICLES}/${category_cpu}`}
+                      >
+                        {catTitleLang}
+                      </Link>
+                    ),
+                  },
+                  { name: viewsTitle[lang], value: view },
+                  {
+                    name: dateTitle[lang],
+                    value: <time dateTime={currDate}>{currDate}</time>,
+                  },
+                  { name: commentsTitle[lang], value: comment_count },
+                ]}
+              />
+            </li>
+          );
+        }
       )}
     </ul>
   ) : (

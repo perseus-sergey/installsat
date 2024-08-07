@@ -1,5 +1,8 @@
 import { DateTime } from 'luxon';
 import memoize from 'lodash.memoize';
+import { execSync } from 'child_process';
+
+export const DEFAULT_ARTICLE_LOGO_NAME = 'zastavka.jpg';
 
 export const EDBTableTitles = {
   ARTICLE: 'tbl_useful',
@@ -82,4 +85,24 @@ export const createURLWithParams = (baseURL, searchParams = undefined) => {
   url.search = params.toString();
 
   return url.toString();
+};
+
+export const getContentFromPuppeteerBrowser = async (browser, url) => {
+  const page = await browser.newPage();
+  await page.goto(url, { waitUntil: 'domcontentloaded' });
+
+  const content = await page.content();
+  await page.close();
+
+  return content;
+};
+
+export const killChromeProcesses = () => {
+  try {
+    execSync('pkill -f chrome');
+
+    return null;
+  } catch (error) {
+    return error;
+  }
 };

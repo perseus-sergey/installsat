@@ -5,7 +5,11 @@ import GrooveLine from '@/components/ui/GrooveLine';
 import { Title } from '@/components/ui/Titles/Title';
 import { getArticleAndCatDb } from '@/controllers/admin.controller';
 import { getELangKey } from '@/libs/utils/validSearchParam';
-import { EUrlAdminParam, EUrlBaseParam } from '@/models/url.model';
+import {
+  EUrlAdminParam,
+  EUrlBaseParam,
+  EUrlSearchParam,
+} from '@/models/url.model';
 import Link from 'next/link';
 import * as React from 'react';
 
@@ -21,7 +25,8 @@ const Page = async ({ params }: IParams) => {
   if (dbResult instanceof Error)
     return <EmptyData lang={lang} description={dbResult.message} />;
 
-  const articleHref = `/${lang}/${EUrlBaseParam.ARTICLE}/${dbResult[0][0].cpu}`;
+  const productionHref = `/${lang}/${EUrlBaseParam.ARTICLE}/${dbResult[0][0].cpu}`;
+  const editHref = `${EUrlAdminParam.BASE_PATH}/${EUrlAdminParam.ARTICLES_EDIT}/edit`;
 
   const Breadcrumbs = () => (
     <BreadCrumbServer
@@ -30,11 +35,11 @@ const Page = async ({ params }: IParams) => {
       breadCrumbList={[
         {
           title: 'Article list',
-          href: `${EUrlAdminParam.BASE_PATH}/${EUrlAdminParam.ARTICLES_EDIT}/edit`,
+          href: editHref,
         },
         {
           title: dbResult[0][0].title,
-          href: articleHref,
+          href: `${editHref}?${EUrlSearchParam.ARTICLE}=${dbResult[0][0].title}`,
         },
       ]}
     />
@@ -45,7 +50,7 @@ const Page = async ({ params }: IParams) => {
       <Breadcrumbs />
       <Title className="flex flex-col">
         Edit Article:
-        <Link className="text-xl" target="_blank" href={articleHref}>
+        <Link className="text-xl" target="_blank" href={productionHref}>
           {dbResult[0][0].title} 🔗
         </Link>
       </Title>

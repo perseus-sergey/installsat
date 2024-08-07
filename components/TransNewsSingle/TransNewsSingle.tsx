@@ -1,6 +1,6 @@
 import { Title } from '../ui/Titles/Title';
 import satNewsStyles from '../SatNewsList/SatNewsList.module.scss';
-import React from 'react';
+import { ReactNode } from 'react';
 import DangerHtmlUl from '../ui/DangerHtml/DangerHtml';
 import { META_TRANS_NEWS_LIST, TSatDigest } from '@/models/satDigest.model';
 import { getDailyNews } from '@/controllers/satDigest.controller';
@@ -12,13 +12,13 @@ import { TitleH2Digest } from '../ui/Titles/TitleH2Digest';
 
 interface ITransNewsSingleProps {
   newsArray: [string, TSatDigest[]][] | null;
-  title: string;
+  title: ReactNode;
   lang: ELanguage;
 }
 
 const TransNewsSingle = ({ newsArray, title, lang }: ITransNewsSingleProps) => (
   <>
-    <Title>{title}</Title>
+    <Title className="!inline-block">{title}</Title>
     {newsArray && newsArray.length > 0 ? (
       <div>
         {newsArray.map((satNews) => {

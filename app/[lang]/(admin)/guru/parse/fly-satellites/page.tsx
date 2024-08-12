@@ -1,7 +1,7 @@
 import { Title } from '@/components/ui/Titles/Title';
 import puppeteer from 'puppeteer';
 import * as cheerio from 'cheerio';
-import { EDBTableTitles } from '@/models/ui.model';
+import { EDBTableTitles, TSearchParams } from '@/models/ui.model';
 // import { EDBTableTitles, ELanguage, getDbTableLink } from '@/models/ui.model';
 // import { EUrlAdminParam } from '@/models/url.model';
 // import { IDbIdAmountModel } from '@/models/admin.model';
@@ -18,6 +18,9 @@ import Link from 'next/link';
 import { poolExecute } from '@/libs/db/mysqldb';
 // import { getPool, poolExecute } from '@/libs/db/mysqldb';
 import { DateTime } from 'luxon';
+import { validSearchParam } from '@/libs/utils/validSearchParam';
+import { EUrlSearchParam } from '@/models/url.model';
+import { parseFlyChannels } from '../fly-channels/page';
 
 export const dynamic = 'force-dynamic';
 
@@ -31,6 +34,8 @@ export interface ITblFlySats {
   date_upd: Date;
 }
 
+const INTERVAL_FROM_LAST_UPDATE = 2;
+
 // const BASE_URL = process.env.BASE_URL;
 const isProductionMode = process.env.PRODUCTION_MODE === 'true';
 
@@ -38,6 +43,14 @@ const IS_LOGGED = true;
 const PARSE_URL = 'https://flysat.com/en/satellitelist';
 const { FLY_SATELLITES } = EDBTableTitles;
 // const pool = getPool();
+
+let messages: string[] = [];
+
+const addMessage = (message: string, error?: Error) => {
+  messages.push(`${message}${error ? `: ${error.message}` : ''}`);
+  if (IS_LOGGED)
+    console.log(`🚀 ~ ${message}${error ? ` ERROR: ${error}` : ''}`);
+};
 
 const getDataFromDB = async () => {
   const sql = `
@@ -78,7 +91,8 @@ const getDataFromDB = async () => {
 
 const extractParsedData = (
   $: cheerio.CheerioAPI,
-  dbSatellites: ITblFlySats[]
+  dbSatellites: ITblFlySats[],
+  intervalFromLastUpd: number
 ) => {
   // console.log('🚀 ~ extractParsedData ~ $:', $.html());
   const allParsedSats: ITblFlySats[] = [];
@@ -186,7 +200,7 @@ const extractParsedData = (
         DateTime.fromJSDate(date_upd),
         DateTime.fromJSDate(satInDb.date_upd)
       ) ||
-      getDayDifference(date_upd) < 2
+      getDayDifference(date_upd) < intervalFromLastUpd
     ) {
       updatedSats.push(parsedSat);
     }
@@ -240,51 +254,117 @@ const getDayDifference = (startDate: Date) => {
 const isSameDate = (parseDate: DateTime, dbDate: DateTime) =>
   parseDate.startOf('day').toISODate() === dbDate.startOf('day').toISODate();
 
-export default async function Page() {
+const processSatellitesInBatches = async (
+  allParsedSats: ITblFlySats[],
+  batchSize = 30
+) => {
+  const PARALLEL_LIMIT = 3;
+  let batchPromises = [];
+
+  // Розбиваємо всі супутники на групи
+  for (let i = 0; i < allParsedSats.length; i += batchSize) {
+    const batch = allParsedSats.slice(i, i + batchSize);
+
+    batchPromises.push(
+      (async () => {
+        const browser = await puppeteer.launch({
+          args: ['--no-sandbox', '--disable-setuid-sandbox'],
+        });
+
+        let batchMessages: string[] = [];
+
+        for (const sat of batch) {
+          try {
+            const parseFlyChannelsMessages = await parseFlyChannels({
+              currentSatSlug: sat.slug,
+              incomingBrowser: browser,
+            });
+            if (Array.isArray(parseFlyChannelsMessages)) {
+              batchMessages = [...batchMessages, ...parseFlyChannelsMessages];
+            }
+          } catch (error) {
+            batchMessages.push(
+              `ERROR: failed during channels parsing for satellite "${sat.slug}" ${error}`
+            );
+          }
+        }
+
+        await browser.close();
+
+        return batchMessages;
+      })()
+    );
+
+    // Обмежуємо кількість паралельних груп
+    if (batchPromises.length >= PARALLEL_LIMIT) {
+      const results = await Promise.all(batchPromises);
+      messages = [...messages, ...results.flat()];
+      batchPromises = [];
+    }
+  }
+
+  // Чекаємо завершення обробки всіх груп
+  if (batchPromises.length > 0) {
+    const results = await Promise.all(batchPromises);
+    messages = [...messages, ...results.flat()];
+  }
+};
+
+export default async function Page({
+  searchParams,
+}: {
+  searchParams?: TSearchParams;
+}) {
+  const intervalFromLastUpd =
+    parseInt(validSearchParam(EUrlSearchParam.INTERVAL, searchParams), 10) ||
+    INTERVAL_FROM_LAST_UPDATE;
+
   let browser;
-  let messages: string[] = [];
   let finalData: ITblFlySats[] = [];
   let overSats: ITblFlySats[] = [];
   let newSatList: ITblFlySats[] = [];
   let updatedSatList: ITblFlySats[] = [];
   // let resDbTableLength: IDbIdAmountModel[] | string = '';
 
-  const addMessage = (message: string, error?: Error) => {
-    messages.push(`${message}${error ? `: ${error.message}` : ''}`);
-    if (IS_LOGGED)
-      console.log(`🚀 ~ ${message}${error ? ` ERROR: ${error}` : ''}`);
-  };
-
   try {
     const dbSatellites = await getDataFromDB();
     browser = await puppeteer.launch({
       args: ['--no-sandbox', '--disable-setuid-sandbox'],
+      headless: true,
     });
 
     const html = await getContentFromPuppeteerBrowser(browser, PARSE_URL);
     const $ = cheerio.load(html);
 
     const { allParsedSats, newSats, updatedSats, extractErrors } =
-      extractParsedData($, dbSatellites);
+      extractParsedData($, dbSatellites, intervalFromLastUpd);
     extractErrors.forEach((er) => addMessage(er));
 
     updatedSatList = updatedSats;
     newSatList = newSats;
     overSats = findDbOverSats(dbSatellites, allParsedSats);
 
+    await processSatellitesInBatches(updatedSats);
+    // =================================================================
+    // For All Satellites
+    // =================================================================
+    // await processSatellitesInBatches(allParsedSats);
+
     finalData = allParsedSats;
 
-    if (!extractErrors.length) {
-      // const clearRes = await clearTable(FLY_SATELLITES);
-      // addMessage(clearRes);
-      // await insertDataToDB(finalData);
-    }
+    // if (!extractErrors.length) {
+    // const clearRes = await clearTable(FLY_SATELLITES);
+    // addMessage(clearRes);
+    // await insertDataToDB(finalData);
+    // }
 
     // resDbTableLength = await getDbIdAmount(FLY_SATELLITES);
   } catch (error) {
     addMessage(
-      'ERROR: failed during processing',
-      error instanceof Error ? error : new Error('Unknown error occurred')
+      'ERROR: failed during satellites page parsing',
+      error instanceof Error
+        ? error
+        : new Error('Unknown error occurred during satellites page parsing')
     );
   } finally {
     if (browser) {
@@ -354,9 +434,6 @@ const SatList = ({
 );
 
 // =================================================================
-// =================================================================
-
-// є html:
 
 // <tr bgcolor="#b9dcff">
 // <td align="center"><font color="#000099" size="1"></font></font></td>

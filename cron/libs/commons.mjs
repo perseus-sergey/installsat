@@ -24,6 +24,7 @@ export const EDBTableTitles = {
   TV_SCHEDULE_VSE_TV: 'tv_shedule_vsetv',
   TV_SCHEDULE: 'tv_shedule',
   FLY_SATELLITES: 'fly_satellites',
+  FLY_CHANNELS: 'fly_channels',
 };
 
 export const EUrlAdminParam = {

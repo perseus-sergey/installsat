@@ -8,6 +8,7 @@ interface IEmailTemplateProps {
   errorMessages: string[];
   dbTableHref?: string;
   hrefSources: string[] | string;
+  children?: React.ReactNode;
 }
 
 export const ParseTransNews = async ({
@@ -17,6 +18,7 @@ export const ParseTransNews = async ({
   errorMessages,
   dbTableHref,
   hrefSources,
+  children,
 }: IEmailTemplateProps) => {
   return (
     <Html>
@@ -37,6 +39,14 @@ export const ParseTransNews = async ({
           The number of records in the database table:
           <span style={coloredText}> {dbTableLength}</span>
         </Text>
+      )}
+
+      {children && (
+        <>
+          <Hr style={hr} />
+          {children}
+          <Hr style={hr} />
+        </>
       )}
 
       {errorMessages.length > 0 && (

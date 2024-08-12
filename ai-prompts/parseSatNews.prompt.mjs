@@ -112,7 +112,7 @@ export const SOURCE_ARTICLE_PARAMS = [
 export const getChangedSatNews = (originalText) => `
 Write a new article based on the original article so that it is not considered a copy of the original article by search engines.
 Don't change people's quotes.
-Wrap important relevant to article title words in the article in a tag <strong>, but not more than 5% from the content of the article.
+Wrap important relevant to article title words in the article in a tag <strong>, but not more than 5% (for each language) from the content of the article.
 Make short description of the article about 150 - 200 characters length for the <meta name=description>.
 Select relevant search keywords that will be used on the page in the <meta name=keywords>.
 Make SLUG for this article based on the english title.

@@ -1,5 +1,8 @@
-import ClientInputWithSubmit from '@/components/ClientInputWithSubmit/ClientInputWithSubmit';
+import ClientInputWithSubmit, {
+  ClientSelectWithSubmit,
+} from '@/components/ClientInputWithSubmit/ClientInputWithSubmit';
 import { Title } from '@/components/ui/Titles/Title';
+import { poolExecute } from '@/libs/db/mysqldb';
 import { getELangKey } from '@/libs/utils/validSearchParam';
 import {
   EUrlAdminParam,
@@ -19,34 +22,57 @@ export default async function Page({ params }: IParams) {
   const IT999_DEFAULT_BATCH = 8096;
   const FLYSAT_SATELLITES_HREF = 'https://flysat.com/en/satellitelist';
 
+  const flySatRes = await poolExecute<
+    { title: string; slug: string; position: string }[]
+  >(`SELECT title, slug, position FROM fly_satellites`);
+  const flySatOptions =
+    flySatRes instanceof Error
+      ? [{ title: '', value: '' }]
+      : flySatRes.map((sat) => ({
+          title: `${sat.title} ${sat.position}`,
+          value: sat.slug,
+        }));
+
   return (
     <>
       <Title>Parse Page</Title>
       <ClientInputWithSubmit
+        inputId={EUrlAdminParam.PARSE_FLY_SATELLITES}
+        inputDefaultValue={2}
+        inputType="number"
+        searchParamName={EUrlSearchParam.INTERVAL}
         buttonTitle="Parse"
         inputBaseHref={`${BASE_PARSE_HREF}/${EUrlAdminParam.PARSE_FLY_SATELLITES}`}
         fieldSetTitle="Flysat Satellites Table"
         labelHtml={
           <>
-            Parse main FlySat satellites page{' '}
+            Parse main{' '}
             <Link
               className="text-blue-600 underline"
               href={FLYSAT_SATELLITES_HREF}
               target="_blank"
               rel="noopener noreferrer nofollow"
             >
-              Flysat Satellites Page
-            </Link>
+              Flysat Satellites Page.
+            </Link>{' '}
+            Choose interval from last update:
           </>
         }
       />
+
+      <ClientSelectWithSubmit
+        selectOptions={flySatOptions}
+        inputId={EUrlAdminParam.PARSE_FLY_CHANNELS}
+        searchParamName={EUrlSearchParam.SAT}
+        buttonTitle="Parse"
+        inputBaseHref={`${BASE_PARSE_HREF}/${EUrlAdminParam.PARSE_FLY_CHANNELS}`}
+        fieldSetTitle="Flysat Channels Table"
+        labelHtml="Choose Satellite for parsing CHANNELS:"
+      />
+
       <ClientInputWithSubmit
-        // inputId={EUrlAdminParam.PARSE_SAT_NEWS}
         buttonTitle="Parse News"
-        // inputDefaultValue={3}
-        // inputType="number"
         inputBaseHref={`${BASE_PARSE_HREF}/${EUrlAdminParam.PARSE_SAT_NEWS}`}
-        // searchParamName={EUrlSearchParam.INTERVAL}
         fieldSetTitle="Satellite News"
         labelHtml="Parse Satellite News"
       />

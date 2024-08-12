@@ -22,10 +22,8 @@ import {
 } from '@/ai-prompts/parseSatNews.prompt.mjs';
 
 // =================================================================
-// check logo in email
+// refresh email in production
 // add json-ld
-// add description into article
-// add data tag to article and list of articles
 // add image generator
 // =================================================================
 

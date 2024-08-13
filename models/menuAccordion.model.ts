@@ -100,6 +100,23 @@ export const MENU_ACCORDION: { [key: string]: IAccordionItemOptions } = {
     },
     baseHrefOfList: `/${EUrlBaseParam.SAT_CHANNEL_LIST}`,
   },
+  SATELLITES_FLY: {
+    name: 'SATELLITES_FLY',
+    img: {
+      src: '/Images/accordion/satellite32.png',
+      width: 34,
+      height: 32,
+      alt: {
+        [ELanguage.UA]: 'Канали на супутниках',
+        [ELanguage.EN]: 'Channels on satellites',
+      },
+    },
+    title: {
+      [ELanguage.UA]: 'Канали на супутниках',
+      [ELanguage.EN]: 'Channels on satellites',
+    },
+    baseHrefOfList: `/${EUrlBaseParam.SAT_CHANNEL_LIST_FLY}`,
+  },
   PACKAGES: {
     name: 'PACKAGES',
     img: {

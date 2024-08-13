@@ -52,7 +52,10 @@ const FrequencySegment = ({
               {`${frequencyChannels[0].sr}, ${frequencyChannels[0].fec}`}
               <br />
             </strong>
-            <span className={styles.beam}>{frequencyChannels[0].beam} луч</span>
+            <span className={styles.beam}>
+              {frequencyChannels[0].beam}{' '}
+              {lang === ELanguage.UA ? 'луч' : 'beam'}
+            </span>
           </td>
         )}
         <td

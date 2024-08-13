@@ -8,7 +8,7 @@ import { WRONG_CAT_IDS } from './articles.controller';
 import { IAllNewsModel } from '@/models/articles.model';
 import { EDBTableTitles } from '@/models/ui.model';
 
-const { ARTICLE: TBL_ARTICLE } = EDBTableTitles;
+const { ARTICLE: TBL_ARTICLE, FLY_SATELLITES } = EDBTableTitles;
 
 export const getInstallationsList = cache(
   async () =>
@@ -29,6 +29,17 @@ export const getChannelSatList = cache(
     await poolExecute<TSatModel[]>(`
   SELECT title,position,id,cpu,logo
   FROM tbl_chan_sat
+  WHERE id != 1 
+  ${isFilling ? 'AND fill = 1' : ''}
+  ORDER BY grade
+  `)
+);
+
+export const getFlyChannelSatList = cache(
+  async (isFilling = false) =>
+    await poolExecute<TSatModel[]>(`
+  SELECT title, position, id, slug AS cpu, logo
+  FROM ${FLY_SATELLITES}
   WHERE id != 1 
   ${isFilling ? 'AND fill = 1' : ''}
   ORDER BY grade

@@ -7,7 +7,7 @@ import Tooltip from '../ui/tooltips/TooltipMoovingClient/Tooltip';
 
 interface ITooltipTextList {
   title: string;
-  description: string | number;
+  description?: string | number;
 }
 
 interface IChannelCardTooltipProps {

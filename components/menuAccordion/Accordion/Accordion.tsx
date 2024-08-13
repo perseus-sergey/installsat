@@ -2,6 +2,7 @@ import styles from './Accordion.module.scss';
 import {
   getChannelCatList,
   getChannelSatList,
+  getFlyChannelSatList,
   getUsefulArticleList,
 } from '@/controllers/sidebar.controller';
 import Link from 'next/link';
@@ -13,6 +14,7 @@ import { ELanguage } from '@/models/ui.model';
 const {
   SATELLITE_TV,
   SATELLITES,
+  SATELLITES_FLY,
   SAT_FINDER,
   MAPS,
   PACKAGES,
@@ -26,6 +28,7 @@ const Accordion = async ({ lang }: { lang: ELanguage }) => {
 
   const channelCatListResp = await getChannelCatList();
   const channelSatListResp = await getChannelSatList();
+  const flyChannelSatListResp = await getFlyChannelSatList();
   const usefulArticleListResp = await getUsefulArticleList();
   const mapsResp = await getSatMapList();
 
@@ -36,6 +39,9 @@ const Accordion = async ({ lang }: { lang: ELanguage }) => {
 
   const channelSatList =
     channelSatListResp instanceof Error ? [] : channelSatListResp;
+
+  const flyChannelSatList =
+    flyChannelSatListResp instanceof Error ? [] : flyChannelSatListResp;
 
   const usefulArticleList =
     usefulArticleListResp instanceof Error ? [] : usefulArticleListResp;
@@ -65,6 +71,20 @@ const Accordion = async ({ lang }: { lang: ELanguage }) => {
               <li key={item.id} className={styles.contentItem}>
                 <Link
                   href={`/${lang}${SATELLITES.baseHrefOfList}/${item.cpu}/`}
+                  className={styles.contentItemLink}
+                >
+                  {item.title} {item.position}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </AccordionMenuItem>
+        <AccordionMenuItem lang={lang} options={SATELLITES_FLY}>
+          <ul className={styles.accordionContent}>
+            {flyChannelSatList.map((item) => (
+              <li key={item.id} className={styles.contentItem}>
+                <Link
+                  href={`/${lang}${SATELLITES_FLY.baseHrefOfList}/${item.cpu}/`}
                   className={styles.contentItemLink}
                 >
                   {item.title} {item.position}

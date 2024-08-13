@@ -14,6 +14,7 @@ export enum EUrlBaseParam {
   // SAT_NEWS = 'suputnykovi-novyny',
   PACKAGE_CHANNEL_LIST = 'spysok-kanaliv-paketu',
   SAT_CHANNEL_LIST = 'spysok-kanaliv-suputnyka',
+  SAT_CHANNEL_LIST_FLY = 'actual-spysok-kanaliv-suputnyka',
   // ALL_SATS_CHANNEL_LIST = 'vsi-suputnyky',
   INSTALLATION_OPTIONS = 'varianty-vstanovlennia-anten',
   ARTICLE = 'stattia',

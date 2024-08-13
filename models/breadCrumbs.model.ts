@@ -34,6 +34,14 @@ export const BREAD_CRUMBS = {
     },
   },
 
+  SAT_CHANNEL_LIST_FLY: {
+    href: EUrlBaseParam.SAT_CHANNEL_LIST_FLY,
+    title: {
+      [ELanguage.UA]: 'Список каналів супутників',
+      [ELanguage.EN]: 'List of satellite channels',
+    },
+  },
+
   PACKAGE_CHANNEL_LIST: {
     href: EUrlBaseParam.PACKAGE_CHANNEL_LIST,
     title: {

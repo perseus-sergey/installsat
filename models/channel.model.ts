@@ -31,6 +31,40 @@ export interface IChannel {
   chan_lang: string;
 }
 
+export type TIsRadio = 0 | 1;
+
+export interface IFlyChannel {
+  id: number;
+  title: string;
+  slug: string;
+  sat_title: string;
+  sat_position: string;
+  sat_logo: string;
+  sat_slug: string;
+  sat_grade: number;
+  frequency: number;
+  theme_id?: number;
+  logo?: string;
+  encryption: string;
+  biss: string;
+  description_ua: string;
+  description_en: string;
+  sr: number;
+  fec: string;
+  polarization: string;
+  beam: string;
+  theme?: string;
+  compress: string;
+  lan?: string;
+  canonical: string;
+  cat_parent_title: string;
+  mode: string;
+  is_radio: TIsRadio;
+  sid: number | null;
+  v_pid: number | null;
+  a_pid: string;
+}
+
 export interface IOnlineChannel extends IChannel {
   vsetv: number;
   vipiko: number;

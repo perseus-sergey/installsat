@@ -388,36 +388,41 @@ export interface ISatChannelListModel {
   category: number;
 }
 
-export interface IFlySatChannelListModel {
-  id: number;
-  title: string;
-  slug: string;
-  sat_title: string;
-  sat_position: string;
-  sat_logo: string;
-  sat_slug: string;
-  sat_grade: number;
-  frequency: number;
-  // sat: number;
-  theme_id?: number;
-  logo?: string;
-  // programma: number;
-  encryption: string;
-  biss: string;
-  description_ua: string;
-  description_en: string;
-  // freq: number;
-  sr: number;
-  fec: string;
-  polarization: string;
-  beam: string;
-  theme?: string;
-  compress: string;
-  lan?: string;
-  canonical: string;
-  cat_parent_title: string;
-  category: number;
-}
+// export interface IFlySatChannelListModel {
+//   id: number;
+//   title: string;
+//   slug: string;
+//   sat_title: string;
+//   sat_position: string;
+//   sat_logo: string;
+//   sat_slug: string;
+//   sat_grade: number;
+//   frequency: number;
+//   // sat: number;
+//   theme_id?: number;
+//   logo?: string;
+//   // programma: number;
+//   encryption: string;
+//   biss: string;
+//   description_ua: string;
+//   description_en: string;
+//   // freq: number;
+//   sr: number;
+//   fec: string;
+//   polarization: string;
+//   beam: string;
+//   theme?: string;
+//   compress: string;
+//   lan?: string;
+//   canonical: string;
+//   cat_parent_title: string;
+//   mode: string;
+//   is_radio: TIsRadio;
+//   sid: number | null;
+//   v_pid: number | null;
+//   a_pid: string;
+//   // category: number;
+// }
 
 export interface IEditChannelListModel {
   id: number;
@@ -483,6 +488,8 @@ export const MCompressionColors = new Map([
   ['MPEG-4', '#FFEDCA'],
   ['DVB-S2', '#FFEDCA'],
   ['HD', '#C5F9F7'],
+  ['MPEG-4/HD', '#C5F9F7'],
+  ['HEVC/HD', '#C5F9F7'],
   ['4K UHD', '#81e3f3'],
 ]);
 

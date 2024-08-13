@@ -2,6 +2,7 @@ import { Title } from '@/components/ui/Titles/Title';
 import puppeteer, { Browser } from 'puppeteer';
 import * as cheerio from 'cheerio';
 import {
+  DB_ARRAY_SEPARATOR,
   EDBTableTitles,
   ELanguage,
   TSearchParams,
@@ -19,10 +20,9 @@ import { ResultSetHeader } from 'mysql2';
 import { ParseTransNews } from '@/components/EmailTemplates/parseTransNews.template';
 import { renderAsync } from '@react-email/render';
 import { sendMail } from '@/libs/mail/sendMail';
+import { TIsRadio } from '@/models/channel.model';
 
 export const dynamic = 'force-dynamic';
-
-type TIsRadio = 0 | 1;
 
 interface IFlyChannel {
   id?: string;
@@ -314,7 +314,7 @@ const titleHandler = (
 const aPidHandler = (
   aPidCell: cheerio.Cheerio<cheerio.Element>,
   $: cheerio.CheerioAPI
-) => extractTextFromElement(aPidCell.find('font'), $).join(' | ');
+) => extractTextFromElement(aPidCell.find('font'), $).join(DB_ARRAY_SEPARATOR);
 
 const encryptionHandler = (
   encryptionCell: cheerio.Cheerio<cheerio.Element>,
@@ -325,11 +325,15 @@ const encryptionHandler = (
     $
   ).map((text) => text.toLowerCase());
 
-  return encryptions.length !== 0 ||
-    !encryptions.includes('biss') ||
-    !encryptions.includes('fta')
-    ? encryptions.join('|')
-    : null;
+  return encryptions.length > 1
+    ? encryptions.join(DB_ARRAY_SEPARATOR)
+    : encryptions[0];
+
+  // return encryptions.length !== 0 ||
+  //   !encryptions.includes('biss') ||
+  //   !encryptions.includes('fta')
+  //   ? encryptions.join(DB_ARRAY_SEPARATOR)
+  //   : null;
 };
 
 const extractParsedData = ($: cheerio.CheerioAPI): IFlyChannel[] => {

@@ -37,6 +37,7 @@ const ChannelCardTooltip = ({
     style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}
   >
     <Tooltip
+      className="inline-block border-b border-dotted border-gray-600 leading-none"
       hintHtml={
         <>
           <FillingValidImage

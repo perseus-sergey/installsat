@@ -1,7 +1,7 @@
 import { poolExecute } from '@/libs/db/mysqldb';
+import { IFlyChannel } from '@/models/channel.model';
 import {
   IChannelPackagesModel,
-  IFlySatChannelListModel,
   IOnlineChannelListModel,
   IPackageChannelListModel,
   ISatChannelListModel,
@@ -149,7 +149,7 @@ export const getFlySatChannels = cache(
     satellites?: string | string[] | undefined,
     isMPG4 = false,
     isT2MI = false
-  ): Promise<IFlySatChannelListModel[]> => {
+  ): Promise<IFlyChannel[]> => {
     let inSatList = '';
     const searchPart = searchQuery
       ? `AND 	ch.title LIKE "%${searchQuery}%"`
@@ -182,6 +182,11 @@ export const getFlySatChannels = cache(
    ch.logo,
    ch.encryption,
    ch.biss,
+   ch.mode,
+   ch.is_radio,
+   ch.sid,
+   ch.v_pid,
+   ch.a_pid,
    ch.description_en,
     sat.title AS sat_title,
     sat.position AS sat_position,
@@ -199,10 +204,10 @@ export const getFlySatChannels = cache(
   ${inSatList}
   ${notMpg4}
   ${notT2mi}
-  ORDER BY ch.frequency, ch.polarization, ch.title
+  ORDER BY ch.frequency, ch.polarization, ch.sid, ch.title
   `;
 
-    const resp = await poolExecute<IFlySatChannelListModel[]>(sql, [satSlug]);
+    const resp = await poolExecute<IFlyChannel[]>(sql, [satSlug]);
 
     return resp instanceof Error || resp.length === 0
       ? []
@@ -466,10 +471,10 @@ export const getGroupedChannelsAllSat = (
 };
 
 export const getFlyGroupedChannelsAllSat = (
-  satChannels: IFlySatChannelListModel[][]
-): IFlySatChannelListModel[][][] => {
+  satChannels: IFlyChannel[][]
+): IFlyChannel[][][] => {
   const grouped: {
-    [sat: string]: { [freq: number]: IFlySatChannelListModel[] };
+    [sat: string]: { [freq: number]: IFlyChannel[] };
   } = {};
 
   satChannels.forEach((satGroup) => {
@@ -488,7 +493,6 @@ export const getFlyGroupedChannelsAllSat = (
   const sortedGroups = Object.values(grouped)
     .map((satGroup) => Object.values(satGroup))
     .sort((a, b) => a[0][0].sat_grade - b[0][0].sat_grade);
-  console.log('🚀 ~ sortedGroups:', sortedGroups);
 
   return sortedGroups;
 };

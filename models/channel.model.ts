@@ -31,7 +31,7 @@ export interface IChannel {
   chan_lang: string;
 }
 
-export type TIsRadio = 0 | 1;
+export type TDbBoolean = 0 | 1;
 
 export interface IFlyChannel {
   id: number;
@@ -45,7 +45,7 @@ export interface IFlyChannel {
   frequency: number;
   theme_id?: number;
   logo?: string;
-  encryption: string;
+  encryption: string | null;
   biss: string;
   description_ua: string;
   description_en: string;
@@ -59,10 +59,13 @@ export interface IFlyChannel {
   canonical: string;
   cat_parent_title: string;
   mode: string;
-  is_radio: TIsRadio;
+  is_radio: TDbBoolean;
   sid: number | null;
   v_pid: number | null;
   a_pid: string;
+  is_biss: TDbBoolean;
+  t2_stream: string | null;
+  date_updated: Date;
 }
 
 export interface IOnlineChannel extends IChannel {
@@ -234,7 +237,8 @@ export const META_CHANNEL = {
         width: 132,
         alternativeImgStr: { title: '🎞', fontSize: '6rem' },
         defaultImage: {
-          src: '/Images/1not_found_chan.png',
+          // src: '/Images/1not_found_chan.png',
+          src: '/Images/tv.png',
           height: 99,
           width: 132,
         },
@@ -249,7 +253,7 @@ export const META_CHANNEL = {
         width: 55,
         alternativeImgStr: { title: '🎞', fontSize: '2rem' },
         defaultImage: {
-          src: '/Images/1not_found_chan.png',
+          src: '/Images/tv.png',
           height: 42,
           width: 55,
         },

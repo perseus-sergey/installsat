@@ -124,15 +124,7 @@ const extractParsedData = (
       errors.push(`ERROR: unexpected row count: «${$(element).html()}»`);
     }
 
-    if (
-      !band ||
-      band === 'ka' ||
-      band === 'c' ||
-      band === 'c/ka' ||
-      band === 'ka/c'
-    ) {
-      return;
-    }
+    if (!band || band === 'ka') return;
 
     if (!title) {
       errors.push(`ERROR: extracting SAT NAME from: «${$(element).html()}»`);

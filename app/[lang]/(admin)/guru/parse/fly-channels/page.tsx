@@ -20,9 +20,18 @@ import { ResultSetHeader } from 'mysql2';
 import { ParseTransNews } from '@/components/EmailTemplates/parseTransNews.template';
 import { renderAsync } from '@react-email/render';
 import { sendMail } from '@/libs/mail/sendMail';
-import { TIsRadio } from '@/models/channel.model';
+import { TDbBoolean } from '@/models/channel.model';
+import React from 'react';
 
 export const dynamic = 'force-dynamic';
+
+// =================================================================
+// Add pagination to bottom of sat news page
+// Add C-diapason satellites
+// Add date_updated
+// Add is_biss column
+// Add t2_stream column
+// =================================================================
 
 interface IFlyChannel {
   id?: string;
@@ -32,13 +41,15 @@ interface IFlyChannel {
   sr: number;
   fec: string;
   title: string;
-  is_radio: TIsRadio;
+  is_radio: TDbBoolean;
   compress: string;
   sid: number | null;
   v_pid: number | null;
   a_pid: string;
   encryption: string;
+  is_biss: TDbBoolean;
   beam: string;
+  t2_stream: string;
 }
 
 const BASE_URL = process.env.BASE_URL;
@@ -48,6 +59,7 @@ const IS_LOGGED = true;
 const PARSE_URL_BASE = 'https://www.flysat.com/en/satellite/';
 const CURRENT_SAT_SLUG = 'astra-4a';
 const { FLY_CHANNELS } = EDBTableTitles;
+const dateNow = new Date().toLocaleDateString('en-CA');
 const pool = getPool();
 
 const messages: string[] = [];
@@ -63,22 +75,25 @@ const getSatChannelsFromDB = async (currentSatSlug: string, title?: string) => {
     ? ` WHERE title = "${title}" AND is_removed = 1 LIMIT 1`
     : ` WHERE sat_slug = "${currentSatSlug}" AND is_removed != 1`;
 
+  // must be with the same sequence as parsed Channels without id
   const sql = `
     SELECT 
-      id,
-      frequency,
-      polarization,
-      mode,
-      beam,
-      sr,
-      fec,
-      title,
-      is_radio,
-      compress,
-      sid,
-      v_pid,
-      a_pid,
-      encryption
+      \`id\`,
+      \`frequency\`,
+      \`polarization\`,
+      \`mode\`,
+      \`beam\`,
+      \`sr\`,
+      \`fec\`,
+      \`title\`,
+      \`is_radio\`,
+      \`compress\`,
+      \`sid\`,
+      \`v_pid\`,
+      \`a_pid\`,
+      \`t2_stream\`,
+      \`is_biss\`,
+      \`encryption\`
     FROM ${FLY_CHANNELS}
     ${where}
   `;
@@ -109,22 +124,25 @@ const updateTblChannels = async (
       `
       UPDATE ${FLY_CHANNELS} 
       SET 
-        sat_slug = ?,
-        package_id = ?,
-        is_removed = ?,
-        frequency = ?,
-        polarization = ?,
-        mode = ?,
-        beam = ?,
-        sr = ?,
-        fec = ?,
-        title = ?,
-        is_radio = ?,
-        compress = ?,
-        sid = ?,
-        v_pid = ?,
-        a_pid = ?,
-        encryption = ?
+        \`sat_slug\` = ?,
+        \`package_id\` = ?,
+        \`is_removed\` = ?,
+        \`frequency\` = ?,
+        \`polarization\` = ?,
+        \`mode\` = ?,
+        \`beam\` = ?,
+        \`sr\` = ?,
+        \`fec\` = ?,
+        \`title\` = ?,
+        \`is_radio\` = ?,
+        \`compress\` = ?,
+        \`sid\` = ?,
+        \`v_pid\` = ?,
+        \`a_pid\` = ?,
+        \`t2_stream\` = ?,
+        \`is_biss\` = ?,
+        \`date_updated\` = ?,
+        \`encryption\` = ?
       WHERE id = ?
       LIMIT 1
       `,
@@ -144,7 +162,10 @@ const updateTblChannels = async (
         channel.sid || null,
         channel.v_pid || null,
         channel.a_pid,
-        channel.encryption,
+        channel.t2_stream || null,
+        channel.is_biss,
+        dateNow,
+        channel.encryption || null,
         channel.id,
       ]
     );
@@ -178,11 +199,11 @@ const setDisableChannels = async (
     const res = await poolExecute(
       `
       UPDATE ${FLY_CHANNELS} 
-      SET is_removed = ?
+      SET \`is_removed\` = ?, \`date_updated\` = ?
       WHERE id = ?
       LIMIT 1
       `,
-      [1, channel.id]
+      [1, dateNow, channel.id]
     );
     if (res instanceof Error) {
       addMessage(
@@ -223,14 +244,38 @@ const insertTblChannels = async (
     pool.escape(item.sid || null),
     pool.escape(item.v_pid || null),
     pool.escape(item.a_pid),
-    pool.escape(item.encryption),
+    pool.escape(item.t2_stream || null),
+    pool.escape(item.is_biss),
+    pool.escape(item.encryption || null),
+    pool.escape(dateNow),
     2,
     0,
   ]);
 
   const sql = `
       INSERT INTO ${FLY_CHANNELS} 
-      (\`slug\`, \`sat_slug\`, \`frequency\`, \`polarization\`, \`mode\`, \`beam\`, \`sr\`, \`fec\`, \`title\`, \`is_radio\`, \`compress\`, \`sid\`, \`v_pid\`, \`a_pid\`, \`encryption\`,\`package_id\`,\`is_removed\`)
+      (
+       \`slug\`,
+       \`sat_slug\`,
+       \`frequency\`,
+       \`polarization\`,
+       \`mode\`,
+       \`beam\`,
+       \`sr\`,
+       \`fec\`,
+       \`title\`,
+       \`is_radio\`,
+       \`compress\`,
+       \`sid\`,
+       \`v_pid\`,
+       \`a_pid\`,
+       \`t2_stream\`,
+       \`is_biss\`,
+       \`encryption\`,
+       \`date_updated\`,
+       \`package_id\`,
+       \`is_removed\`
+       )
       VALUES ${values.map((valueSet) => `(${valueSet.join(', ')})`).join(', ')};
     `;
   const res = await poolExecute<ResultSetHeader>(sql);
@@ -273,7 +318,7 @@ const createSlug = (title: string) => {
 };
 
 interface TitleResult {
-  is_radio: TIsRadio;
+  is_radio: TDbBoolean;
   title: string;
 }
 
@@ -325,15 +370,14 @@ const encryptionHandler = (
     $
   ).map((text) => text.toLowerCase());
 
-  return encryptions.length > 1
-    ? encryptions.join(DB_ARRAY_SEPARATOR)
-    : encryptions[0];
+  const encryption =
+    encryptions.length > 1
+      ? encryptions.join(DB_ARRAY_SEPARATOR)
+      : encryptions[0];
 
-  // return encryptions.length !== 0 ||
-  //   !encryptions.includes('biss') ||
-  //   !encryptions.includes('fta')
-  //   ? encryptions.join(DB_ARRAY_SEPARATOR)
-  //   : null;
+  const isBiss = encryptions.includes('biss');
+
+  return { encryption, isBiss };
 };
 
 const extractParsedData = ($: cheerio.CheerioAPI): IFlyChannel[] => {
@@ -343,6 +387,7 @@ const extractParsedData = ($: cheerio.CheerioAPI): IFlyChannel[] => {
   let currentSr = 0;
   let currentFec = '';
   let currentBeam = '';
+  let t2_stream = '';
 
   const channels: IFlyChannel[] = [];
   let capture = false;
@@ -350,6 +395,7 @@ const extractParsedData = ($: cheerio.CheerioAPI): IFlyChannel[] => {
   $('table[bordercolor="#3366cc"] > tbody > tr').each((_, element) => {
     const $element = $(element);
 
+    // Start row
     if ($element.attr('bgcolor') === '#cee7ff') {
       capture = true;
 
@@ -358,9 +404,10 @@ const extractParsedData = ($: cheerio.CheerioAPI): IFlyChannel[] => {
 
     if (capture && $element.find('table').length === 0) {
       const tds = $element.find('td');
-      if (tds.length < 7) return;
 
       if (tds.length === 12) {
+        t2_stream = '';
+
         const freqPolar = tds.eq(2).find('b').text().trim();
         const [freq, polar] = freqPolar.split(' ');
         if (!freq || !polar) return;
@@ -369,7 +416,7 @@ const extractParsedData = ($: cheerio.CheerioAPI): IFlyChannel[] => {
         if (!currentFreq || !currentPolar || currentPolar.length > 1) return;
 
         currentMode = extractTextFromElement(tds.eq(2).find('font'), $).join(
-          '|'
+          DB_ARRAY_SEPARATOR
         );
         currentBeam = tds.eq(11).text().trim();
         if (!currentBeam) return;
@@ -391,9 +438,9 @@ const extractParsedData = ($: cheerio.CheerioAPI): IFlyChannel[] => {
         const sid = Number(tds.eq(6).text().trim()) || null;
         const v_pid = Number(tds.eq(7).text().trim()) || null;
         const a_pid = aPidHandler(tds.eq(8), $);
-        const encryption = encryptionHandler(tds.eq(9), $);
-        if (encryption === null) return;
+        const { encryption, isBiss } = encryptionHandler(tds.eq(9), $);
 
+        // must be with the same sequence as db SELECT without id
         channels.push({
           frequency: currentFreq,
           polarization: currentPolar,
@@ -407,6 +454,8 @@ const extractParsedData = ($: cheerio.CheerioAPI): IFlyChannel[] => {
           sid,
           v_pid,
           a_pid,
+          t2_stream,
+          is_biss: isBiss ? 1 : 0,
           encryption,
         });
       } else if (tds.length === 7) {
@@ -420,9 +469,9 @@ const extractParsedData = ($: cheerio.CheerioAPI): IFlyChannel[] => {
         const sid = Number(tds.eq(2).text().trim()) || null;
         const v_pid = Number(tds.eq(3).text().trim()) || null;
         const a_pid = aPidHandler(tds.eq(4), $);
-        const encryption = encryptionHandler(tds.eq(5), $);
-        if (encryption === null) return;
+        const { encryption, isBiss } = encryptionHandler(tds.eq(5), $);
 
+        // must be with the same sequence as db SELECT without id
         channels.push({
           frequency: currentFreq,
           polarization: currentPolar,
@@ -436,8 +485,15 @@ const extractParsedData = ($: cheerio.CheerioAPI): IFlyChannel[] => {
           sid,
           v_pid,
           a_pid,
+          t2_stream,
+          is_biss: isBiss ? 1 : 0,
           encryption,
         });
+      } else if (tds.length === 1) {
+        const t2Stream = tds.find('b').text().trim();
+        if (!t2Stream.startsWith('Stream')) return;
+
+        t2_stream = t2Stream;
       }
     }
   });
@@ -718,37 +774,62 @@ export default async function Page({
 
   await sendReportMail(messages, sourceUrl);
 
+  const shows = [
+    {
+      id: 'upd-tbl-list',
+      text: `Should Update Channels in table ${FLY_CHANNELS}. (${updateResCount} updated)`,
+      array: currTblShouldUpdChannels,
+    },
+    {
+      id: 'upd-all-list',
+      text: `Should Update Channels ALL table ${FLY_CHANNELS}. (${updateResCount} updated)`,
+      array: shouldUpdChannels,
+    },
+    {
+      id: 'disable-list',
+      text: `Should Disable Channels in table ${FLY_CHANNELS}. (${removeResCount} disabled)`,
+      array: shouldDeleteChannels,
+    },
+    {
+      id: 'new-list',
+      text: `New Channels Found. (${insertCount} inserted)`,
+      array: parsedNewChannels,
+    },
+  ];
+
   return (
     <>
       <Title>
         <Link href={sourceUrl}>Parse FlySat Channels Table</Link>
       </Title>
 
+      <ul id="anchors">
+        {shows.map((show) => (
+          <li key={show.id}>
+            <Link className="text-xl text-blue-700" href={`#${show.id}`}>
+              {show.text}
+            </Link>
+          </li>
+        ))}
+      </ul>
+
       <MessageBlock messages={messages} />
 
-      <h2 className="text-2xl text-red-700 bg-blue-300">
-        Should Update Channels in table {FLY_CHANNELS}. ({updateResCount}{' '}
-        updated)
-      </h2>
-      <pre>{JSON.stringify(currTblShouldUpdChannels, null, 2)}</pre>
-
-      <h2 className="text-2xl text-red-700 bg-blue-300">
-        Should Update Channels ALL table {FLY_CHANNELS}. ({updateResCount}{' '}
-        updated)
-      </h2>
-      <pre>{JSON.stringify(shouldUpdChannels, null, 2)}</pre>
-
-      <h2 className="text-2xl text-red-700 bg-blue-300">
-        Should Disable Channels in table {FLY_CHANNELS}. ({removeResCount}{' '}
-        disabled)
-      </h2>
-      <pre>{JSON.stringify(shouldDeleteChannels, null, 2)}</pre>
-      <hr />
-
-      <h2 className="text-2xl text-red-700 bg-blue-300">
-        {parsedNewChannels.length} New Channels Found. ({insertCount} inserted)
-      </h2>
-      <pre>{JSON.stringify(parsedNewChannels, null, 2)}</pre>
+      {shows.map((item) => (
+        <React.Fragment key={item.id}>
+          <h2 className="text-2xl text-red-700 bg-blue-300" id={item.id}>
+            {item.text}
+          </h2>
+          <Link className="text-red-700 bg-blue-300 rounded-lg" href="#anchors">
+            Go to Start
+          </Link>
+          <pre>{JSON.stringify(item.array, null, 2)}</pre>
+          <Link className="text-red-700 bg-blue-300 rounded-lg" href="#anchors">
+            Go to Start
+          </Link>
+          <hr />
+        </React.Fragment>
+      ))}
     </>
   );
 }

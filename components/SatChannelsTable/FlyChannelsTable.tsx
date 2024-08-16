@@ -4,6 +4,7 @@ import {
   META_ALL_SAT_CHANNEL_LIST,
   META_SAT_CHANNEL_LIST,
   CHANNEL_TOOLTIP_TITLES,
+  isFtaChannel,
 } from '@/models/channelList.model';
 import styles from './SatChannelsTable.module.scss';
 import Link from 'next/link';
@@ -12,7 +13,7 @@ import { cutText } from '@/libs/utils/utils';
 import FillingImg from '../ui/Images/FillingImage';
 import TooltipSimple from '../ui/tooltips/TooltipSimple/TooltipSimple';
 import FillingValidImage from '../ui/Images/FillingValidImage';
-import { IFlyChannel, META_CHANNEL } from '@/models/channel.model';
+import { IFlyChannel, META_CHANNEL, TDbBoolean } from '@/models/channel.model';
 import ChannelCardTooltip from '../ChannelCardTooltip/ChannelCardTooltip';
 import GoUpLink from '../ui/GoUpLink/GoUpLink';
 import { TitleH2List } from '../ui/Titles/TitleH2List';
@@ -25,7 +26,7 @@ const {
 } = META_ALL_SAT_CHANNEL_LIST;
 
 const {
-  images: { h1SatImage, genreImage },
+  images: { h1SatImage, genreImage, genreRadioImage, t2Image },
 } = META_SAT_CHANNEL_LIST;
 
 interface ISatChannelsTableProps {
@@ -48,7 +49,6 @@ const FrequencySegment = ({
         compress,
         title,
         theme,
-        lan,
         description_en,
         slug,
         biss,
@@ -59,59 +59,90 @@ const FrequencySegment = ({
         sid,
         v_pid,
         a_pid,
+        t2_stream,
       },
       idx
     ) => {
-      const encryptionList = encryption.split(DB_ARRAY_SEPARATOR);
+      const encryptionList = encryption
+        ? encryption.split(DB_ARRAY_SEPARATOR)
+        : [''];
       const aPidList = a_pid.split(DB_ARRAY_SEPARATOR);
+      const modeList = mode.split(DB_ARRAY_SEPARATOR);
+      const genreImgSrc = MChanTheme.get(theme_id || 1);
+      const isFta = isFtaChannel(encryptionList);
+
+      const languages = [...new Set(aPidList.map((aP) => aP.split(' ')[1]))];
 
       return (
-        <tr key={idx}>
+        <tr key={idx} className={isFta ? '' : 'bg-red-200'}>
           {!idx && (
             <td
               rowSpan={frequencyChannels.length}
-              className={styles.tdFrequency}
+              className="text-sm bg-blue-100"
             >
-              <strong>
-                {`${frequencyChannels[0].frequency} ${frequencyChannels[0].polarization}`}
-                <br />
-                {`${frequencyChannels[0].sr}, ${frequencyChannels[0].fec}`}
-                <br />
-              </strong>
-              <span className={styles.beam}>
-                {frequencyChannels[0].beam}{' '}
-                {lang === ELanguage.UA ? 'напр.' : 'beam'}
-              </span>
+              <ul>
+                <li className="font-bold">
+                  {`${frequencyChannels[0].frequency} ${frequencyChannels[0].polarization}`}
+                </li>
+                <li>
+                  {`${frequencyChannels[0].sr}, ${frequencyChannels[0].fec}`}
+                </li>
+                <li className="text-gray-500 text-sm">
+                  {frequencyChannels[0].beam}{' '}
+                  {lang === ELanguage.UA ? 'напр.' : 'beam'}
+                </li>
+                <li className="text-xs font-bold">
+                  {modeList.length === 1 ? (
+                    `(${modeList[0]})`
+                  ) : (
+                    <ul>
+                      {modeList.map((mod) => (
+                        <li key={mod}>({mod})</li>
+                      ))}
+                    </ul>
+                  )}
+                </li>
+              </ul>
             </td>
           )}
+
           <td
-            className="text-sm"
+            className="text-sm min-w-8"
             style={
               is_radio
                 ? {}
                 : {
-                    backgroundColor: `${MCompressionColors.get(compress.toUpperCase() || 'DEFAULT')}`,
+                    backgroundColor: `${MCompressionColors.get(compress.toUpperCase() || 'DEFAULT') || ''}`,
                   }
             }
           >
             <Tooltip
               hintHtml={
                 <ul className="flex flex-col gap-2 justify-center items-center text-sm">
-                  {is_radio ? (
-                    <li>
-                      <span className="bg-slate-50 rounded-sm px-1">🎼</span>{' '}
-                      Radio
-                    </li>
-                  ) : (
-                    <li>
-                      <span className="bg-slate-50 rounded-sm px-1">🎬</span> TV
+                  <li className="text-lg flex flex-row gap-2">
+                    -= {is_radio ? 'Radio' : 'TV'} =-
+                  </li>
+                  {t2_stream && (
+                    <li className="flex flex-row gap-2">
+                      <figure className="flex flex-col gap-1 items-center">
+                        <div className="bg-slate-50 rounded-lg p-1">
+                          <T2Icon t2Stream={t2_stream} lang={lang} />
+                        </div>
+                        <figcaption>
+                          DVB-T2 (
+                          {lang === ELanguage.UA
+                            ? 'Цифрове Ефірне ТБ'
+                            : 'Digital Terrestrial TV'}
+                          )
+                        </figcaption>
+                      </figure>
                     </li>
                   )}
-                  {compress || mode ? (
-                    <li>
-                      <b>Mode: </b>
-                      {compress} ({mode})
-                    </li>
+                  {compress || mode[0] ? (
+                    <HintItemList
+                      itemList={[compress, ...modeList]}
+                      title="Mode"
+                    />
                   ) : null}
                   {sid || v_pid ? (
                     <li>
@@ -130,43 +161,52 @@ const FrequencySegment = ({
                       </ul>
                     </li>
                   ) : null}
-                  {aPidList.length && aPidList[0] ? (
-                    <li>
-                      <b>Audio:</b>
-                      <ul>
-                        {aPidList.map((aPid) => (
-                          <li key={aPid}>{aPid}</li>
-                        ))}
-                      </ul>
-                    </li>
-                  ) : null}
-                  {encryptionList.length && encryptionList[0] ? (
-                    <li>
-                      <b>Encryption:</b>
-                      <ul>
-                        {encryptionList.map((enc) => (
-                          <li key={enc}>{enc}</li>
-                        ))}
-                      </ul>
-                    </li>
-                  ) : null}
+                  <HintItemList itemList={aPidList} title="Audio" />
+                  <HintItemList itemList={encryptionList} title="Encryption" />
                 </ul>
               }
             >
               {is_radio ? (
                 <ul className="flex flex-row flex-wrap gap-2 justify-center">
-                  <li className="text-sm">{mode}</li>
-                  <li className="bg-slate-50 rounded-sm px-1">🎼</li>
+                  <div className="sm:inline-block hidden">
+                    <RadioIcon is_radio={is_radio} lang={lang} />
+                  </div>
+                  {/* <li className="text-xs hidden sm:block">{mode}</li> */}
+                  <li className="bg-slate-50 border border-dotted border-gray-600 rounded-sm px-1 text-lg m-1 inline-block sm:hidden">
+                    🎼
+                  </li>
                 </ul>
               ) : (
                 <ul>
-                  <li>{compress}</li>
-                  <li className="text-red-800">({mode})</li>
+                  {t2_stream && (
+                    <div className="bg-slate-50 rounded-lg border border-dotted border-gray-600 p-1 inline-block sm:hidden">
+                      <T2Icon t2Stream={t2_stream} lang={lang} />
+                    </div>
+                  )}
+                  <li className="text-red-800 font-bold hidden sm:block">
+                    {compress}
+                  </li>
+                  {t2_stream && (
+                    <li className="text-red-950 text-xs hidden sm:block">
+                      ({t2_stream})
+                    </li>
+                  )}
+                  {/* <li className="text-xs hidden sm:block">({mode})</li> */}
+                  <li
+                    className={
+                      t2_stream
+                        ? 'hidden'
+                        : 'bg-slate-50 border border-dotted border-gray-600 rounded-sm px-1 text-lg m-1 inline-block sm:hidden'
+                    }
+                  >
+                    🎬
+                  </li>
                 </ul>
               )}
             </Tooltip>
           </td>
-          <td className="text-sm">
+
+          <td className="text-sm hidden sm:table-cell">
             {sid || v_pid ? (
               <ul>
                 {sid && <li>{sid}</li>}
@@ -174,18 +214,47 @@ const FrequencySegment = ({
               </ul>
             ) : null}
           </td>
-          <td className="text-sm text-left">
+
+          <td className="text-sm text-left hidden sm:table-cell">
             {aPidList.length > 1 ? (
               <ul>
-                {aPidList.map((aPid) => (
-                  <li key={aPid}>{aPid}</li>
+                {aPidList.map((aPid, i) => (
+                  <li
+                    key={`${i}${aPid}`}
+                    className={i % 2 ? 'bg-white/30' : 'bg-white/50'}
+                  >
+                    {aPid}
+                  </li>
                 ))}
               </ul>
             ) : (
-              aPidList[0]
+              <span className="bg-white/30">{aPidList[0]}</span>
             )}
           </td>
-          <td className="text-sm">
+
+          <td className="text-sm text-center hidden sm:table-cell">
+            {languages.length > 1 ? (
+              <ul>
+                {languages.map((language, i) => (
+                  <li
+                    key={`${i}${language}`}
+                    className={i % 2 ? 'bg-indigo-100' : 'bg-indigo-50'}
+                  >
+                    {language}
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <span className="bg-indigo-100">{languages[0]}</span>
+            )}
+          </td>
+
+          <td className="text-sm hidden sm:table-cell">
+            {t2_stream && (
+              <div className="flex justify-center">
+                <T2Icon t2Stream={t2_stream} lang={lang} />
+              </div>
+            )}
             {encryptionList.length > 1 ? (
               <ul>
                 {encryptionList.map((enc) => (
@@ -196,8 +265,10 @@ const FrequencySegment = ({
               encryptionList[0]
             )}
           </td>
+
           <td className={styles.tdChanLogo}>
-            {logo && (
+            {/* {logo && ( */}
+            {!is_radio && (
               <ChannelCardTooltip
                 mainImage={{
                   ...META_CHANNEL.images.channelLogo.small,
@@ -231,7 +302,7 @@ const FrequencySegment = ({
                   },
                   {
                     title: CHANNEL_TOOLTIP_TITLES.language[lang],
-                    description: lan,
+                    description: languages,
                   },
                   {
                     title: CHANNEL_TOOLTIP_TITLES.description[lang],
@@ -239,30 +310,42 @@ const FrequencySegment = ({
                   },
                   {
                     title: CHANNEL_TOOLTIP_TITLES.compression[lang],
-                    description: compress,
+                    description: [compress, ...modeList],
                   },
+                  // {
+                  //   title: CHANNEL_TOOLTIP_TITLES.compression[lang],
+                  //   description: `${compress} ${
+                  //     modeList.length === 1
+                  //       ? `(${modeList[0]})`
+                  //       : modeList.join(DB_ARRAY_SEPARATOR)
+                  //   }`,
+                  // },
                 ]}
               />
             )}
           </td>
-          <td className={styles.tdTitle}>
+
+          <td className={is_radio ? 'text-left' : ''}>
             <Link
+              className={is_radio ? styles.linkRadio : styles.linkTV}
               id={slug}
               href={`/${lang}/${EUrlBaseParam.CHANNEL_PARAMS}/${slug}`}
             >
+              <RadioIcon is_radio={is_radio} lang={lang} />
               {title}
             </Link>
             {biss && <p className={styles.biss}>{biss}</p>}
           </td>
-          <td className={styles.tdGenre}>
-            {theme_id && (
+
+          <td className="text-sm hidden sm:table-cell">
+            {genreImgSrc && !is_radio && (
               <div className="flex flex-col items-center">
                 <TooltipSimple tooltipText={theme}>
                   <FillingImg
                     width={genreImage.width}
                     height={genreImage.height}
                     alt={`${genreImage.altPre} ${theme}`}
-                    src={`${genreImage.path}${MChanTheme.get(theme_id)}`}
+                    src={`${genreImage.path}${genreImgSrc}`}
                   />
                 </TooltipSimple>
               </div>
@@ -314,6 +397,19 @@ const FlyChannelsTable = ({
             </TitleH2List>
           )}
           <table className={styles.SatChannelsTable}>
+            <thead>
+              <tr className="bg-gray-200 hidden sm:table-row">
+                <th>Frequency / Beam</th>
+                <th>Compress. / Mode</th>
+                <th>Sid (v.pid)</th>
+                <th>A.pid</th>
+                <th>Lang</th>
+                <th>Code</th>
+                <th>Logo</th>
+                <th>Title</th>
+                <th>Genre</th>
+              </tr>
+            </thead>
             <tbody>
               {sat.map((freqChannels, idx) => (
                 <FrequencySegment
@@ -330,5 +426,57 @@ const FlyChannelsTable = ({
   ) : (
     <EmptyData lang={lang} />
   );
+
+const RadioIcon = ({
+  is_radio,
+  lang,
+}: {
+  is_radio: TDbBoolean;
+  lang: ELanguage;
+}) =>
+  is_radio ? (
+    <FillingImg
+      width={genreRadioImage.width}
+      height={genreRadioImage.height}
+      alt={`${genreRadioImage.alt[lang]}`}
+      src={`${genreRadioImage.src}`}
+    />
+  ) : null;
+
+const T2Icon = ({
+  t2Stream,
+  lang,
+}: {
+  t2Stream: string | null;
+  lang: ELanguage;
+}) =>
+  t2Stream ? (
+    <FillingImg
+      width={t2Image.width}
+      height={t2Image.height}
+      alt={`${t2Image.alt[lang]}`}
+      src={`${t2Image.src}`}
+    />
+  ) : null;
+
+const HintItemList = ({
+  itemList,
+  title,
+}: {
+  itemList: string[];
+  title: string;
+}) =>
+  itemList.length && itemList[0] ? (
+    <li className="w-60">
+      <h3>-= {title} =-</h3>
+      <ul className="text-sm border border-gray-300 border-groove p-2 rounded-md grid grid-cols-[repeat(auto-fit,minmax(70px,1fr))] gap-2">
+        {itemList.map((item) => (
+          <li key={item} className="bg-indigo-900">
+            {item}
+          </li>
+        ))}
+      </ul>
+    </li>
+  ) : null;
 
 export default FlyChannelsTable;

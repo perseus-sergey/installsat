@@ -133,6 +133,14 @@ export default async function Page({ searchParams, params }: IProps) {
           articleTitleImg={articleTitleImg}
           lang={lang}
         />
+
+        <Pagination
+          lang={lang}
+          page={pageNumber || 1}
+          offsetNumber={pagination.offsetNumber}
+          totalPages={totalPages}
+          searchParams={searchParams}
+        />
       </article>
     </>
   );

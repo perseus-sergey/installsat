@@ -148,7 +148,7 @@ export const getFlySatChannels = cache(
     satSlug = '',
     satellites?: string | string[] | undefined,
     isMPG4 = false,
-    isT2MI = false
+    isT2 = false
   ): Promise<IFlyChannel[]> => {
     let inSatList = '';
     const searchPart = searchQuery
@@ -163,7 +163,7 @@ export const getFlySatChannels = cache(
 
     // =================================================================
     const notMpg4 = isMPG4 ? `AND co.id NOT IN(3,4,6,7)` : '';
-    const notT2mi = isT2MI ? `AND co.id NOT IN(8)` : '';
+    const notT2mi = isT2 ? `AND co.id NOT IN(8)` : '';
     // =================================================================
 
     const sql = `
@@ -188,6 +188,7 @@ export const getFlySatChannels = cache(
    ch.v_pid,
    ch.a_pid,
    ch.description_en,
+   ch.t2_stream,
     sat.title AS sat_title,
     sat.position AS sat_position,
     sat.logo AS sat_logo,
@@ -204,7 +205,7 @@ export const getFlySatChannels = cache(
   ${inSatList}
   ${notMpg4}
   ${notT2mi}
-  ORDER BY ch.frequency, ch.polarization, ch.sid, ch.title
+  ORDER BY ch.frequency, ch.polarization, ch.is_radio, ch.sid, ch.title
   `;
 
     const resp = await poolExecute<IFlyChannel[]>(sql, [satSlug]);
@@ -474,19 +475,21 @@ export const getFlyGroupedChannelsAllSat = (
   satChannels: IFlyChannel[][]
 ): IFlyChannel[][][] => {
   const grouped: {
-    [sat: string]: { [freq: number]: IFlyChannel[] };
+    [sat: string]: { [freqSr: string]: IFlyChannel[] };
   } = {};
 
   satChannels.forEach((satGroup) => {
     satGroup.forEach((channel) => {
-      const { sat_slug, frequency } = channel;
+      const { sat_slug, frequency, sr } = channel;
+      const freqSr = `${frequency}sr${sr}`;
+
       if (!grouped[sat_slug]) {
         grouped[sat_slug] = {};
       }
-      if (!grouped[sat_slug][frequency]) {
-        grouped[sat_slug][frequency] = [];
+      if (!grouped[sat_slug][freqSr]) {
+        grouped[sat_slug][freqSr] = [];
       }
-      grouped[sat_slug][frequency].push(channel);
+      grouped[sat_slug][freqSr].push(channel);
     });
   });
 

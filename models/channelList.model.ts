@@ -45,6 +45,24 @@ export const META_SAT_CHANNEL_LIST = {
         [ELanguage.EN]: 'Genre:',
       },
     },
+    genreRadioImage: {
+      src: '/Images/genre/radio.png',
+      height: 16,
+      width: 16,
+      alt: {
+        [ELanguage.UA]: 'Radio',
+        [ELanguage.EN]: 'Радіо',
+      },
+    },
+    t2Image: {
+      src: '/Images/t2_antenna_24.png',
+      height: 24,
+      width: 24,
+      alt: {
+        [ELanguage.UA]: 'Digital terrestrial television',
+        [ELanguage.EN]: 'Цифрове ефірне телебачення',
+      },
+    },
   },
 };
 
@@ -417,7 +435,7 @@ export interface ISatChannelListModel {
 //   canonical: string;
 //   cat_parent_title: string;
 //   mode: string;
-//   is_radio: TIsRadio;
+//   is_radio: TDbBoolean;
 //   sid: number | null;
 //   v_pid: number | null;
 //   a_pid: string;
@@ -484,12 +502,18 @@ export interface IChannelPackagesModel {
 export const MCompressionColors = new Map([
   ['MPEG-2', '#E9E3FD'],
   ['DEFAULT', '#E9E3FD'],
+
   ['T2-MI', '#f5b3cb'],
+
   ['MPEG-4', '#FFEDCA'],
+  ['MPEG-4/1SEG', '#FFEDCA'],
   ['DVB-S2', '#FFEDCA'],
+
   ['HD', '#C5F9F7'],
   ['MPEG-4/HD', '#C5F9F7'],
+  ['HEVC', '#C5F9F7'],
   ['HEVC/HD', '#C5F9F7'],
+
   ['4K UHD', '#81e3f3'],
 ]);
 
@@ -509,7 +533,27 @@ export const MChanTheme = new Map([
   [13, 'tv_shopping.png'],
   [14, 'fashion.png'],
 ]);
-// 656D7D
+// #656D7D
+
+// export const getCompressColor = (compress: string, mode: string) => {
+//     const lowerCompress = compress.toLowerCase();
+//     const lowerMode = mode.toLowerCase();
+//     if (lowerMode.startsWith('dvb-s2')) {
+//       if (lowerCompress.startsWith())
+//   }
+
+export const isFtaChannel = (codes: string[]) => {
+  if (codes.length === 1 && !codes[0]) return true;
+
+  for (const code of codes) {
+    const lowerCode = code.toLowerCase();
+    if (lowerCode === 'biss' || lowerCode === 'fta') {
+      return true;
+    }
+  }
+
+  return false;
+};
 
 export const CHANNEL_TOOLTIP_TITLES = {
   name: { [ELanguage.UA]: 'Назва', [ELanguage.EN]: 'Name' },

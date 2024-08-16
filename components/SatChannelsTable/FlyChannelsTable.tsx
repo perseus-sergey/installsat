@@ -1,10 +1,10 @@
 import {
   MChanTheme,
-  MCompressionColors,
   META_ALL_SAT_CHANNEL_LIST,
   META_SAT_CHANNEL_LIST,
   CHANNEL_TOOLTIP_TITLES,
   isFtaChannel,
+  getCompressColor,
 } from '@/models/channelList.model';
 import styles from './SatChannelsTable.module.scss';
 import Link from 'next/link';
@@ -68,13 +68,26 @@ const FrequencySegment = ({
         : [''];
       const aPidList = a_pid.split(DB_ARRAY_SEPARATOR);
       const modeList = mode.split(DB_ARRAY_SEPARATOR);
-      const genreImgSrc = MChanTheme.get(theme_id || 1);
+      // const genreImgSrc = MChanTheme.get(theme_id || 1);
+      const genreImgSrc = theme_id ? MChanTheme.get(theme_id) : theme_id;
       const isFta = isFtaChannel(encryptionList);
+      const compressColor = getCompressColor(compress, modeList, t2_stream);
 
       const languages = [...new Set(aPidList.map((aP) => aP.split(' ')[1]))];
 
       return (
-        <tr key={idx} className={isFta ? '' : 'bg-red-200'}>
+        <tr
+          key={idx}
+          className={
+            t2_stream
+              ? 'bg-yellow-100'
+              : !isFta
+                ? 'bg-red-200'
+                : is_radio
+                  ? 'bg-green-100'
+                  : 'bg-green-200'
+          }
+        >
           {!idx && (
             <td
               rowSpan={frequencyChannels.length}
@@ -107,12 +120,12 @@ const FrequencySegment = ({
           )}
 
           <td
-            className="text-sm min-w-8"
+            className={`text-sm min-w-8`}
             style={
               is_radio
                 ? {}
                 : {
-                    backgroundColor: `${MCompressionColors.get(compress.toUpperCase() || 'DEFAULT') || ''}`,
+                    backgroundColor: `${compressColor}`,
                   }
             }
           >
@@ -216,7 +229,27 @@ const FrequencySegment = ({
           </td>
 
           <td className="text-sm text-left hidden sm:table-cell">
-            {aPidList.length > 1 ? (
+            {aPidList.length > 2 ? (
+              <Tooltip
+                hintHtml={
+                  <ul>
+                    <HintItemList itemList={aPidList} title="Audio" />
+                  </ul>
+                }
+              >
+                <ul>
+                  {aPidList.slice(0, 2).map((aPid, i) => (
+                    <li
+                      key={`${i}${aPid}`}
+                      className={i % 2 ? 'bg-white/30' : 'bg-white/50'}
+                    >
+                      {aPid}
+                    </li>
+                  ))}
+                  <li>...</li>
+                </ul>
+              </Tooltip>
+            ) : aPidList.length > 1 ? (
               <ul>
                 {aPidList.map((aPid, i) => (
                   <li
@@ -231,7 +264,7 @@ const FrequencySegment = ({
               <span className="bg-white/30">{aPidList[0]}</span>
             )}
           </td>
-
+          {/* 
           <td className="text-sm text-center hidden sm:table-cell">
             {languages.length > 1 ? (
               <ul>
@@ -247,7 +280,7 @@ const FrequencySegment = ({
             ) : (
               <span className="bg-indigo-100">{languages[0]}</span>
             )}
-          </td>
+          </td> */}
 
           <td className="text-sm hidden sm:table-cell">
             {t2_stream && (
@@ -265,10 +298,9 @@ const FrequencySegment = ({
               encryptionList[0]
             )}
           </td>
-
+          {/* 
           <td className={styles.tdChanLogo}>
-            {/* {logo && ( */}
-            {!is_radio && (
+            {!is_radio && logo && (
               <ChannelCardTooltip
                 mainImage={{
                   ...META_CHANNEL.images.channelLogo.small,
@@ -312,31 +344,86 @@ const FrequencySegment = ({
                     title: CHANNEL_TOOLTIP_TITLES.compression[lang],
                     description: [compress, ...modeList],
                   },
-                  // {
-                  //   title: CHANNEL_TOOLTIP_TITLES.compression[lang],
-                  //   description: `${compress} ${
-                  //     modeList.length === 1
-                  //       ? `(${modeList[0]})`
-                  //       : modeList.join(DB_ARRAY_SEPARATOR)
-                  //   }`,
-                  // },
                 ]}
               />
             )}
-          </td>
+          </td> */}
 
           <td className={is_radio ? 'text-left' : ''}>
-            <Link
-              className={is_radio ? styles.linkRadio : styles.linkTV}
-              id={slug}
-              href={`/${lang}/${EUrlBaseParam.CHANNEL_PARAMS}/${slug}`}
+            <div
+              className={`flex items-center gap-2 px-2${logo || genreImgSrc || is_radio ? ' sm:justify-between' : ' sm:justify-center'}`}
             >
-              <RadioIcon is_radio={is_radio} lang={lang} />
-              {title}
-            </Link>
+              {!is_radio && logo && (
+                <ChannelCardTooltip
+                  mainImage={{
+                    ...META_CHANNEL.images.channelLogo.small,
+                    src: `${META_CHANNEL.images.channelLogo.small.path}${logo}`,
+                  }}
+                  mainDefaultImage={
+                    META_CHANNEL.images.channelLogo.small.defaultImage
+                  }
+                  mainAlternativeImgString={
+                    META_CHANNEL.images.channelLogo.small.alternativeImgStr
+                  }
+                  mainIsChangeToGif
+                  tooltipImage={{
+                    ...META_CHANNEL.images.channelLogo.big,
+                    src: `${META_CHANNEL.images.channelLogo.big.path}${logo}`,
+                  }}
+                  tooltipDefaultImage={
+                    META_CHANNEL.images.channelLogo.big.defaultImage
+                  }
+                  tooltipAlternativeImgString={
+                    META_CHANNEL.images.channelLogo.big.alternativeImgStr
+                  }
+                  tooltipTextList={[
+                    {
+                      title: CHANNEL_TOOLTIP_TITLES.name[lang],
+                      description: title,
+                    },
+                    {
+                      title: CHANNEL_TOOLTIP_TITLES.genre[lang],
+                      description: theme,
+                    },
+                    {
+                      title: CHANNEL_TOOLTIP_TITLES.language[lang],
+                      description: languages,
+                    },
+                    {
+                      title: CHANNEL_TOOLTIP_TITLES.description[lang],
+                      description: cutText(description_en, 100),
+                    },
+                    {
+                      title: CHANNEL_TOOLTIP_TITLES.compression[lang],
+                      description: [compress, ...modeList],
+                    },
+                  ]}
+                />
+              )}
+              <Link
+                className={is_radio ? styles.linkRadio : styles.linkTV}
+                id={slug}
+                href={`/${lang}/${EUrlBaseParam.CHANNEL_PARAMS}/${slug}`}
+              >
+                <RadioIcon is_radio={is_radio} lang={lang} />
+                {title}
+              </Link>
+              {genreImgSrc && !is_radio && (
+                <div className="flex-col items-center text-sm hidden sm:flex">
+                  <TooltipSimple tooltipText={theme}>
+                    <FillingImg
+                      width={genreImage.width}
+                      height={genreImage.height}
+                      alt={`${genreImage.altPre} ${theme}`}
+                      src={`${genreImage.path}${genreImgSrc}`}
+                    />
+                  </TooltipSimple>
+                </div>
+              )}
+            </div>
             {biss && <p className={styles.biss}>{biss}</p>}
           </td>
-
+          {/* 
           <td className="text-sm hidden sm:table-cell">
             {genreImgSrc && !is_radio && (
               <div className="flex flex-col items-center">
@@ -350,7 +437,7 @@ const FrequencySegment = ({
                 </TooltipSimple>
               </div>
             )}
-          </td>
+          </td> */}
         </tr>
       );
     }
@@ -399,15 +486,15 @@ const FlyChannelsTable = ({
           <table className={styles.SatChannelsTable}>
             <thead>
               <tr className="bg-gray-200 hidden sm:table-row">
-                <th>Frequency / Beam</th>
-                <th>Compress. / Mode</th>
+                <th>Frequency / Beam / Mode</th>
+                <th>Compress.</th>
                 <th>Sid (v.pid)</th>
                 <th>A.pid</th>
-                <th>Lang</th>
+                {/* <th>Lang</th> */}
                 <th>Code</th>
-                <th>Logo</th>
+                {/* <th>Logo</th> */}
                 <th>Title</th>
-                <th>Genre</th>
+                {/* <th>Genre</th> */}
               </tr>
             </thead>
             <tbody>

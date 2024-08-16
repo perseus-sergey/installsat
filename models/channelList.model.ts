@@ -535,12 +535,49 @@ export const MChanTheme = new Map([
 ]);
 // #656D7D
 
-// export const getCompressColor = (compress: string, mode: string) => {
-//     const lowerCompress = compress.toLowerCase();
-//     const lowerMode = mode.toLowerCase();
-//     if (lowerMode.startsWith('dvb-s2')) {
-//       if (lowerCompress.startsWith())
+export const getCompressColor = (
+  compress: string,
+  modeList: string[],
+  t2Stream: string | null
+) => {
+  if (t2Stream) return 'e9e3fd';
+
+  const compressLower = compress.toLowerCase();
+
+  if (compressLower.includes('4k') || compressLower.includes('uhd'))
+    return '#7aeeff';
+  if (compressLower.includes('hd') || compressLower.includes('hevc'))
+    return '#91fffd';
+  if (compressLower.startsWith('mpeg-4')) return '#daffca';
+
+  for (const mode of modeList) {
+    if (mode.toLowerCase().includes('dvb-s2')) return '#daffca';
+  }
+
+  return '#c5f9f7';
+};
+
+// export const getCompressColor = (
+//   compress: string,
+//   modeList: string[],
+//   t2Stream: string | null
+// ) => {
+//   if (t2Stream) return 'bg-yellow-200';
+
+//   const compressLower = compress.toLowerCase();
+
+//   if (compressLower.includes('4k') || compressLower.includes('uhd'))
+//     return 'bg-cyan-400';
+//   if (compressLower.includes('hd') || compressLower.includes('hevc'))
+//     return 'bg-green-400';
+//   if (compressLower.startsWith('mpeg-4')) return 'bg-amber-400';
+
+//   for (const mode of modeList) {
+//     if (mode.toLowerCase().includes('dvb-s2')) return 'bg-amber-400';
 //   }
+
+//   return 'bg-purple-300';
+// };
 
 export const isFtaChannel = (codes: string[]) => {
   if (codes.length === 1 && !codes[0]) return true;

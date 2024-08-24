@@ -44,21 +44,6 @@ const BASE_URL = process.env.BASE_URL || MAIN_URL;
 const { SATELLITE, LANG, SAT_CHANNEL_LIST } = EUrlBaseParam;
 
 // =================================================================
-// - Add pagination to bottom of sat news page
-// - Add C-diapason satellites
-// - Add date_updated
-// - Add is_biss column
-// - Add t2_stream column
-
-// - set up channel page
-// - localize channel description and text like transNews db sql
-// - check redirects
-// - meta for fly channels & fly satellites
-// - check comments
-// - sitemap for fly channels & fly satellites
-// - add old chan list folder to robots.txt
-// - truncate tbl_comments_sat on production
-// - copy db to production
 // execute script to add sat_slug for sat_digest in production
 //
 // Make mjs fly sat & channels parser

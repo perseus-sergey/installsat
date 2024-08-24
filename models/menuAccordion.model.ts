@@ -115,7 +115,7 @@ export const MENU_ACCORDION: { [key: string]: IAccordionItemOptions } = {
       [ELanguage.UA]: 'Канали на супутниках',
       [ELanguage.EN]: 'Channels on satellites',
     },
-    baseHrefOfList: `/${EUrlBaseParam.SAT_CHANNEL_LIST_FLY}`,
+    baseHrefOfList: `/${EUrlBaseParam.SAT_CHANNEL_LIST}`,
   },
   PACKAGES: {
     name: 'PACKAGES',

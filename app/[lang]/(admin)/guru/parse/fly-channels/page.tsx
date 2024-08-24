@@ -4,9 +4,7 @@ import * as cheerio from 'cheerio';
 import {
   DB_ARRAY_SEPARATOR,
   EDBTableTitles,
-  ELanguage,
   TSearchParams,
-  getDbTableLink,
 } from '@/models/ui.model';
 import {
   getContentFromPuppeteerBrowser,
@@ -15,23 +13,12 @@ import {
 import Link from 'next/link';
 import { getPool, poolExecute } from '@/libs/db/mysqldb';
 import { validSearchParam } from '@/libs/utils/validSearchParam';
-import { EUrlAdminParam, EUrlSearchParam } from '@/models/url.model';
+import { EUrlSearchParam } from '@/models/url.model';
 import { ResultSetHeader } from 'mysql2';
-import { ParseTransNews } from '@/components/EmailTemplates/parseTransNews.template';
-import { renderAsync } from '@react-email/render';
-import { sendMail } from '@/libs/mail/sendMail';
 import { TDbBoolean } from '@/models/channel.model';
 import React from 'react';
 
 export const dynamic = 'force-dynamic';
-
-// =================================================================
-// Add pagination to bottom of sat news page
-// Add C-diapason satellites
-// Add date_updated
-// Add is_biss column
-// Add t2_stream column
-// =================================================================
 
 interface IFlyChannel {
   id?: string;
@@ -46,19 +33,19 @@ interface IFlyChannel {
   sid: number | null;
   v_pid: number | null;
   a_pid: string;
-  encryption: string;
+  encryption: string | null;
   is_biss: TDbBoolean;
   beam: string;
-  t2_stream: string;
+  t2_stream: string | null;
 }
 
-const BASE_URL = process.env.BASE_URL;
+// const BASE_URL = process.env.BASE_URL;
 const isProductionMode = process.env.PRODUCTION_MODE === 'true';
 
 const IS_LOGGED = true;
 const PARSE_URL_BASE = 'https://www.flysat.com/en/satellite/';
 const CURRENT_SAT_SLUG = 'astra-4a';
-const { FLY_CHANNELS } = EDBTableTitles;
+const { FLY_CHANNELS, FLY_SATELLITES } = EDBTableTitles;
 const dateNow = new Date().toLocaleDateString('en-CA');
 const pool = getPool();
 
@@ -141,6 +128,7 @@ const updateTblChannels = async (
         \`a_pid\` = ?,
         \`t2_stream\` = ?,
         \`is_biss\` = ?,
+        \`biss\` = ?,
         \`date_updated\` = ?,
         \`encryption\` = ?
       WHERE id = ?
@@ -164,6 +152,7 @@ const updateTblChannels = async (
         channel.a_pid,
         channel.t2_stream || null,
         channel.is_biss,
+        null,
         dateNow,
         channel.encryption || null,
         channel.id,
@@ -216,6 +205,54 @@ const setDisableChannels = async (
   }
 
   return count;
+};
+
+const setFreeChannelCount = async (currentSatSlug: string) => {
+  const resCounts = await poolExecute<
+    { freeCount: number; allCount: number }[]
+  >(
+    `
+      SELECT 
+        COUNT(CASE WHEN is_biss = 1 OR encryption IS NULL OR encryption = '' THEN 1 END) AS freeCount,
+        COUNT(id) AS allCount
+      FROM ${FLY_CHANNELS} 
+      WHERE is_removed = 0
+      AND sat_slug = ?
+    `,
+    [currentSatSlug]
+  );
+
+  if (resCounts instanceof Error) {
+    addMessage(
+      `ERROR: during "SELECT COUNT(id)" for sat "${currentSatSlug}"`,
+      resCounts
+    );
+
+    return;
+  }
+
+  const resUpdate = await poolExecute(
+    `
+      UPDATE ${FLY_SATELLITES} 
+      SET free_count = ?, all_count = ?
+      WHERE slug = ?
+      LIMIT 1
+    `,
+    [resCounts[0].freeCount, resCounts[0].allCount, currentSatSlug]
+  );
+
+  if (resUpdate instanceof Error) {
+    addMessage(
+      `ERROR: during "SET free_count & all_count" for sat "${currentSatSlug}"`,
+      resUpdate
+    );
+  } else {
+    addMessage(
+      `SUCCESS: "SET free_count(${resCounts[0].freeCount}) & all_count(${resCounts[0].allCount})" for sat "${currentSatSlug}"`
+    );
+  }
+
+  return resCounts[0].freeCount;
 };
 
 const insertTblChannels = async (
@@ -373,7 +410,7 @@ const encryptionHandler = (
   const encryption =
     encryptions.length > 1
       ? encryptions.join(DB_ARRAY_SEPARATOR)
-      : encryptions[0];
+      : encryptions[0] || null;
 
   const isBiss = encryptions.includes('biss');
 
@@ -387,7 +424,7 @@ const extractParsedData = ($: cheerio.CheerioAPI): IFlyChannel[] => {
   let currentSr = 0;
   let currentFec = '';
   let currentBeam = '';
-  let t2_stream = '';
+  let t2_stream: string | null = null;
 
   const channels: IFlyChannel[] = [];
   let capture = false;
@@ -406,7 +443,7 @@ const extractParsedData = ($: cheerio.CheerioAPI): IFlyChannel[] => {
       const tds = $element.find('td');
 
       if (tds.length === 12) {
-        t2_stream = '';
+        t2_stream = null;
 
         const freqPolar = tds.eq(2).find('b').text().trim();
         const [freq, polar] = freqPolar.split(' ');
@@ -607,20 +644,20 @@ const findSimilarChannelFromAllSats = async (
   return { shouldUpdChannels, parsedNewChannelsFiltered };
 };
 
-const sendReportMail = async (messages: string[], hrefSource: string) => {
-  await sendMail({
-    subject: `Parse Fly Channels`,
-    body: await renderAsync(
-      <ParseTransNews
-        title="Parse Fly Channels"
-        pathToMainParsePage={`${BASE_URL}/${ELanguage.EN}/${EUrlAdminParam.BASE_PATH}/${EUrlAdminParam.PARSE}`}
-        errorMessages={messages}
-        dbTableHref={getDbTableLink(FLY_CHANNELS)}
-        hrefSources={hrefSource}
-      />
-    ),
-  });
-};
+// const sendReportMail = async (messages: string[], hrefSource: string) => {
+//   await sendMail({
+//     subject: `Parse Fly Channels`,
+//     body: await renderAsync(
+//       <ParseTransNews
+//         title="Parse Fly Channels"
+//         pathToMainParsePage={`${BASE_URL}/${ELanguage.EN}/${EUrlAdminParam.BASE_PATH}/${EUrlAdminParam.PARSE}`}
+//         errorMessages={messages}
+//         dbTableHref={getDbTableLink(FLY_CHANNELS)}
+//         hrefSources={hrefSource}
+//       />
+//     ),
+//   });
+// };
 
 const MessageBlock = ({ messages }: { messages: string[] }) =>
   messages.length > 0 && (
@@ -661,8 +698,15 @@ export const parseFlyChannels = async ({
 
     browser =
       incomingBrowser ||
-      (await puppeteer.launch({
-        args: ['--no-sandbox', '--disable-setuid-sandbox'],
+      (browser = await puppeteer.launch({
+        args: [
+          '--no-sandbox',
+          '--disable-setuid-sandbox',
+          '--disable-dev-shm-usage',
+          '--disable-gpu',
+          '--single-process',
+        ],
+        headless: true, // Запуск без графічного інтерфейсу
       }));
 
     const html = await getContentFromPuppeteerBrowser(browser, sourceUrl);
@@ -705,6 +749,8 @@ export const parseFlyChannels = async ({
       addMessage(
         `--== Disabled ${removeResCount} channels for satellite "${currentSatSlug}" ==--`
       );
+
+    await setFreeChannelCount(currentSatSlug);
   } catch (error) {
     addMessage(
       `ERROR: failed during channels parsing for satellite "${currentSatSlug}"`,
@@ -772,7 +818,7 @@ export default async function Page({
     insertCount,
   } = report;
 
-  await sendReportMail(messages, sourceUrl);
+  // await sendReportMail(messages, sourceUrl);
 
   const shows = [
     {

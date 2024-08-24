@@ -1,4 +1,4 @@
-import { Browser } from 'puppeteer';
+import { Browser, Page } from 'puppeteer';
 import { execSync } from 'child_process';
 import { poolExecute } from '@/libs/db/mysqldb';
 import { EDBTableTitles } from '@/models/ui.model';
@@ -8,10 +8,20 @@ export const getContentFromPuppeteerBrowser = async (
   url: string
 ) => {
   const page = await browser.newPage();
-  await page.goto(url, { waitUntil: 'domcontentloaded' });
 
-  const content = await page.content();
-  await page.close();
+  const content = await getContentFromPuppeteerPage(page, url);
+
+  return content;
+};
+
+export const getContentFromPuppeteerPage = async (
+  puppeteerPage: Page,
+  url: string
+) => {
+  await puppeteerPage.goto(url, { waitUntil: 'domcontentloaded' });
+
+  const content = await puppeteerPage.content();
+  await puppeteerPage.close();
 
   return content;
 };

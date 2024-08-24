@@ -56,6 +56,13 @@ export const EUrlSearchParam = {
   COMMENT_DEL_AUTHOR_EMAIL: 'm',
 };
 
+export const validSearchParam = (paramName, searchParams) =>
+  searchParams &&
+  searchParams[paramName] &&
+  typeof searchParams[paramName] === 'string'
+    ? decodeURIComponent(searchParams[paramName])
+    : '';
+
 export const getDbTableLink = (tblName) =>
   `https://installsat.tv/tvefir/index.php?route=/sql&pos=0&db=installsat&table=${tblName}`;
 

@@ -1,7 +1,7 @@
 import { poolExecute } from '@/libs/db/mysqldb';
 import { TChannelCatsModel } from '@/models/tblChannelCateg.model';
 import { TInstallationsModel } from '@/models/tblInstallations.model';
-import { TSatModel } from '@/models/tblSat.model';
+import { ISatModel } from '@/models/tblSat.model';
 import { NUMBER_OF_LAST_NEWS_WIDGET } from '@/models/widget.model';
 import { cache } from 'react';
 import { WRONG_CAT_IDS } from './articles.controller';
@@ -26,7 +26,7 @@ export const getChannelCatList = cache(
 
 export const getChannelSatList = cache(
   async (isFilling = true) =>
-    await poolExecute<TSatModel[]>(`
+    await poolExecute<ISatModel[]>(`
   SELECT title,position,id,cpu,logo
   FROM tbl_chan_sat
   WHERE id != 1 
@@ -35,16 +35,17 @@ export const getChannelSatList = cache(
   `)
 );
 
-export const getFlyChannelSatList = cache(
-  async (isFilling = false) =>
-    await poolExecute<TSatModel[]>(`
-  SELECT title, position, id, slug AS cpu, logo
+export const getFlyChannelSatList = cache(async (isFilling = false) => {
+  const res = await poolExecute<ISatModel[]>(`
+  SELECT title, position, id, slug AS cpu, logo, all_count, free_count
   FROM ${FLY_SATELLITES}
-  WHERE id != 1 
+  WHERE all_count > 0 
   ${isFilling ? 'AND fill = 1' : ''}
   ORDER BY grade
-  `)
-);
+  `);
+
+  return res instanceof Error || res.length === 0 ? [] : res;
+});
 
 export const getLastNewsWidgetList = async () =>
   await poolExecute<IAllNewsModel[]>(`

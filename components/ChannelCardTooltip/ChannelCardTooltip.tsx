@@ -2,7 +2,7 @@ import { IImgParams } from '@/models/ui.model';
 import FillingValidImage, {
   IAlternativeImgProps,
 } from '../ui/Images/FillingValidImage';
-import Tooltip from '../ui/tooltips/TooltipMoovingClient/Tooltip';
+import Tooltip from '../ui/tooltips/TooltipMovingClient/Tooltip';
 // import styles from './ChannelCardTooltip.module.scss';
 
 interface ITooltipTextList {

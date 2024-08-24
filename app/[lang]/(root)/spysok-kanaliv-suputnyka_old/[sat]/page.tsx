@@ -1,16 +1,17 @@
 import DangerHtmlUl from '@/components/ui/DangerHtml/DangerHtml';
 import { Title } from '@/components/ui/Titles/Title';
 import {
-  getFlySatChannels,
-  getFlyGroupedChannelsAllSat,
+  getSatChannels,
+  getGroupedChannelsAllSat,
 } from '@/controllers/channelList.controller';
-import { getFlyChannelSatList } from '@/controllers/sidebar.controller';
+import { getChannelSatList } from '@/controllers/sidebar.controller';
 import {
   META_SAT_CHANNEL_LIST,
   START_CONTENT,
 } from '@/models/channelList.model';
 import type { Metadata } from 'next';
 import StartArticleSection from '@/components/article/StartArticleSection/StartArticleSection';
+import SatChannelsTable from '@/components/SatChannelsTable/SatChannelsTable';
 import FillingValidImage from '@/components/ui/Images/FillingValidImage';
 import { cache } from 'react';
 import {
@@ -26,14 +27,13 @@ import BreadCrumbServer from '@/components/BreadCrumbs/BreadCrumbsServer';
 import { BREAD_CRUMBS } from '@/models/breadCrumbs.model';
 import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
 import { getELangKey } from '@/libs/utils/validSearchParam';
-import FlyChannelsTable from '@/components/SatChannelsTable/FlyChannelsTable';
 
 const BASE_URL = process.env.BASE_URL || MAIN_URL;
 
-const { SATELLITE, LANG, SAT_CHANNEL_LIST_FLY } = EUrlBaseParam;
+const { SATELLITE, LANG, SAT_CHANNEL_LIST } = EUrlBaseParam;
 
 const {
-  getH1,
+  h1Start,
   metaDescription,
   metaTitle,
   images: { h1SatImage },
@@ -43,13 +43,13 @@ export interface IPageParams {
   params: { [key in EUrlBaseParam]: string };
 }
 
-const satListResponse = await getFlyChannelSatList();
+const satListResponse = await getChannelSatList();
 
-const getCurrentSatParams = cache((satSlug: string) => {
+const getCurrentSatParams = cache((satCpu: string) => {
   const satParams =
     satListResponse instanceof Error
       ? ''
-      : satListResponse.find((sat) => sat.cpu === satSlug);
+      : satListResponse.find((sat) => sat.cpu === satCpu);
 
   return satParams
     ? {
@@ -73,7 +73,7 @@ export const generateMetadata = ({ params }: IPageParams): Metadata => {
   const satTitle = `${title} - ${satPosition}`;
   const fullMetaTitle = `${metaTitle[lang]} ${satTitle}`;
   const description = `${metaDescription[lang]} ${satTitle}`;
-  const slugPath = `${SAT_CHANNEL_LIST_FLY}/${slug}`;
+  const slugPath = `${SAT_CHANNEL_LIST}/${slug}`;
 
   return {
     metadataBase: new URL(BASE_URL),
@@ -115,7 +115,7 @@ export default async function Page({ params }: IPageParams) {
 
   const { id, slug, title, logo, satPosition } = getCurrentSatParams(sat);
 
-  const satChannels = await getFlySatChannels('', slug);
+  const satChannels = await getSatChannels('', id);
 
   const numberOfComments = await getCommentsNumber(
     EDBTableTitles.COMMENTS_SATELLITE,
@@ -127,13 +127,13 @@ export default async function Page({ params }: IPageParams) {
       <BreadCrumbServer
         lang={lang}
         breadCrumbList={[
-          BREAD_CRUMBS.SAT_CHANNEL_LIST_FLY,
+          BREAD_CRUMBS.SAT_CHANNEL_LIST,
           `${title} - ${satPosition}`,
         ]}
       />
       <article className="article">
         <Title>
-          {getH1(`${title} - ${satPosition}`)[lang]}
+          {h1Start[lang]} {title} - {satPosition}
           <FillingValidImage
             image={{
               ...h1SatImage,
@@ -148,17 +148,17 @@ export default async function Page({ params }: IPageParams) {
         <StartArticleSection>
           <DangerHtmlUl wrapperTagName="p" text={START_CONTENT[lang]} />
         </StartArticleSection>
-        <FlyChannelsTable
+        <SatChannelsTable
           lang={lang}
           isSingleSat
-          satChannels={getFlyGroupedChannelsAllSat([satChannels])}
+          satChannels={getGroupedChannelsAllSat([satChannels])}
         />
       </article>
 
       <CommentBlock
         lang={lang}
         numberOfComments={numberOfComments}
-        revalidateUrl={`/${lang}/${SAT_CHANNEL_LIST_FLY}/${slug}`}
+        revalidateUrl={`/${lang}/${SAT_CHANNEL_LIST}/${slug}`}
         dbCommentTableName={EDBTableTitles.COMMENTS_SATELLITE}
         articleId={id}
         articleName={`${metaTitle[lang]} ${title} - ${satPosition}`}

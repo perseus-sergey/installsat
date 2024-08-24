@@ -4,12 +4,15 @@ import ClientInputWithSubmit, {
 import { Title } from '@/components/ui/Titles/Title';
 import { poolExecute } from '@/libs/db/mysqldb';
 import { getELangKey } from '@/libs/utils/validSearchParam';
+import { EDBTableTitles } from '@/models/ui.model';
 import {
   EUrlAdminParam,
   EUrlBaseParam,
   EUrlSearchParam,
 } from '@/models/url.model';
 import Link from 'next/link';
+
+const { FLY_SATELLITES } = EDBTableTitles;
 
 interface IParams {
   params: { [key in EUrlAdminParam | EUrlBaseParam]: string };
@@ -24,7 +27,7 @@ export default async function Page({ params }: IParams) {
 
   const flySatRes = await poolExecute<
     { title: string; slug: string; position: string }[]
-  >(`SELECT title, slug, position FROM fly_satellites`);
+  >(`SELECT title, slug, position FROM ${FLY_SATELLITES} ORDER BY grade`);
   const flySatOptions =
     flySatRes instanceof Error
       ? [{ title: '', value: '' }]
@@ -121,7 +124,7 @@ export default async function Page({ params }: IParams) {
         }
       />
       <ClientInputWithSubmit
-        inputId="trans-news"
+        inputId={EUrlAdminParam.PARSE_SAT_DIGEST}
         buttonTitle="Transponder News"
         inputDefaultValue={4}
         inputType="number"
@@ -142,14 +145,24 @@ export default async function Page({ params }: IParams) {
           </>
         }
       />
-      <ClientInputWithSubmit
-        inputId="trans-news-en-column"
-        buttonTitle="Add English Text"
+      {/* <ClientInputWithSubmit
+        inputId="add-en-news"
+        buttonTitle="Add English Text for sat digest news"
         inputDefaultValue={0}
         inputType="number"
         inputBaseHref={`${BASE_PARSE_HREF}/add-en-news`}
         searchParamName={EUrlSearchParam.INTERVAL}
         fieldSetTitle="Transponder News"
+        labelHtml={'Choose the Year or leave empty for current year.'}
+      /> */}
+      <ClientInputWithSubmit
+        inputId="add-slug-grade"
+        buttonTitle="Add sat_slug & sat_grade for sat digest news"
+        inputDefaultValue={0}
+        inputType="number"
+        inputBaseHref={`${BASE_PARSE_HREF}/add-grade-trans`}
+        searchParamName={EUrlSearchParam.INTERVAL}
+        fieldSetTitle="Trans News Add SAT_GRADE & SAT_SLUG"
         labelHtml={'Choose the Year or leave empty for current year.'}
       />
     </>

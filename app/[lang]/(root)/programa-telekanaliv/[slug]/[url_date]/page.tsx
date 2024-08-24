@@ -1,11 +1,11 @@
 import BottomInfoPanel from '@/components/BottomInfoPanel/BottomInfoPanel';
 import FillingValidImage from '@/components/ui/Images/FillingValidImage';
 import SimilarArticles from '@/components/SimilarArticles/SimilarArticles';
-import SimilarChannel from '@/components/SimilarChannel/SimilarChannel';
+import { SimilarFlyChannel } from '@/components/SimilarChannel/SimilarChannel';
 import { Title } from '@/components/ui/Titles/Title';
 import {
   getDBOnlineChannel,
-  getSimilarChannels,
+  getSimilarFlyChannels,
 } from '@/controllers/channel.controller';
 import { getCommentsNumber } from '@/controllers/comments.controller';
 import { cutText } from '@/libs/utils/utils';
@@ -132,9 +132,7 @@ export default async function Page({ params }: IPageProps) {
   const filteredSchedules = dbScheduleDataArr.filter((t) => t.scheduleId);
   const schedules = await getChanOneDaySchedule(filteredSchedules, url_date);
 
-  const similarChannelsResult = await getSimilarChannels(logo);
-  const similarChannels =
-    similarChannelsResult instanceof Error ? [] : similarChannelsResult;
+  const similarChannels = await getSimilarFlyChannels(title);
 
   const numberOfComments = await getCommentsNumber(
     EDBTableTitles.COMMENTS_CHANNEL,
@@ -207,12 +205,8 @@ export default async function Page({ params }: IPageProps) {
         <SimilarArticles
           similarTitle={`${simChannelsBefore.title[lang]}"${title}"`}
           similarArticlesMapped={similarChannels.map((chan) => (
-            <li key={chan.cpu}>
-              <SimilarChannel
-                channelTitle={title}
-                chanParams={chan}
-                lang={lang}
-              />
+            <li key={chan.slug}>
+              <SimilarFlyChannel lang={lang} chanParams={chan} />
             </li>
           ))}
         />

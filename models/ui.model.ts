@@ -119,6 +119,13 @@ export enum EDBTableTitles {
   TV_SCHEDULE = 'tv_shedule',
   FLY_SATELLITES = 'fly_satellites',
   FLY_CHANNELS = 'fly_channels',
+  FLY_PACKAGES = 'fly_chan_packages',
+}
+
+export enum ESelectType {
+  SELECT_SATS = 'selectSats',
+  SELECT_LANG = 'selectLang',
+  SELECT_TIME_INTERVAL = 'timeInterval',
 }
 
 // satellite_equipments: tbl_eqp_comments

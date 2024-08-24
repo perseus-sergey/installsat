@@ -4,7 +4,7 @@ import { IAllMapsModel } from '@/models/articles.model';
 import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
 import { EDBTableTitles } from '@/models/ui.model';
 
-const { ARTICLE: TBL_ARTICLE } = EDBTableTitles;
+const { ARTICLE: TBL_ARTICLE, FLY_CHANNELS, FLY_SATELLITES } = EDBTableTitles;
 
 export const getSatMapList = async () => {
   const res = await poolExecute<IAllMapsModel[]>(satMapListSql);
@@ -35,6 +35,14 @@ export const getChannelsSiteMap = async () => {
   return res instanceof Error ? [] : res;
 };
 
+export const getFlyChannelsMap = async () => {
+  const sql = `SELECT slug AS cpu FROM ${FLY_CHANNELS} WHERE is_removed != 1`;
+
+  const res = await poolExecute<{ cpu: string }[]>(sql);
+
+  return res instanceof Error ? [] : res;
+};
+
 export const getPackagesSiteMap = async () => {
   const sql = `SELECT cpu FROM tbl_chan_categ WHERE parent = 0 AND id NOT IN (2,23,25)`;
 
@@ -44,7 +52,7 @@ export const getPackagesSiteMap = async () => {
 };
 
 export const getSatellitesSiteMap = async () => {
-  const sql = `SELECT cpu FROM tbl_chan_sat WHERE id != 1 AND fill = 1`;
+  const sql = `SELECT slug AS cpu FROM ${FLY_SATELLITES}`;
 
   const res = await poolExecute<{ cpu: string }[]>(sql);
 

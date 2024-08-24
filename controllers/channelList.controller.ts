@@ -1,12 +1,21 @@
 import { poolExecute } from '@/libs/db/mysqldb';
-import { IFlyChannel } from '@/models/channel.model';
+import {
+  IFlyChannel,
+  audioLanguages,
+  wrongAudio,
+} from '@/models/channel.model';
 import {
   IChannelPackagesModel,
   IOnlineChannelListModel,
   IPackageChannelListModel,
   ISatChannelListModel,
 } from '@/models/channelList.model';
-import { EDBTableTitles } from '@/models/ui.model';
+import { ISatelliteOption } from '@/models/tblSat.model';
+import {
+  DB_ARRAY_SEPARATOR,
+  EDBTableTitles,
+  ELanguage,
+} from '@/models/ui.model';
 import { decode } from 'html-entities';
 import { cache } from 'react';
 
@@ -144,26 +153,39 @@ export const getSatChannels = cache(
 
 export const getFlySatChannels = cache(
   async (
+    lang: ELanguage,
     searchQuery = '',
     satSlug = '',
-    satellites?: string | string[] | undefined,
-    isMPG4 = false,
-    isT2 = false
+    satellites?: string[],
+    isEncryptedHidden = true,
+    isRadio = false,
+    isCBand = false,
+    isT2 = false,
+    languages?: string[]
   ): Promise<IFlyChannel[]> => {
     let inSatList = '';
+
     const searchPart = searchQuery
-      ? `AND 	ch.title LIKE "%${searchQuery}%"`
+      ? `AND ch.title LIKE "%${searchQuery}%"`
       : '';
 
-    if (satellites && satellites[0]) {
-      const selectedSats =
-        typeof satellites === 'string' ? satellites : satellites.join('","');
-      inSatList = `AND ch.sat_slug IN ("${selectedSats}")`;
+    const langList = languages
+      ? languages.length > 1
+        ? ` AND (${languages.map((lang) => `ch.a_pid LIKE "%${lang}%"`).join(' OR ')})`
+        : ` AND ch.a_pid LIKE "%${languages[0]}%" `
+      : '';
+
+    if (!satSlug) {
+      const selectedSats = satellites ? satellites.join('","') : 0;
+      inSatList = `AND sat.grade IN ("${selectedSats}")`;
     }
 
-    // =================================================================
-    const notMpg4 = isMPG4 ? `AND co.id NOT IN(3,4,6,7)` : '';
-    const notT2mi = isT2 ? `AND co.id NOT IN(8)` : '';
+    const notT2mi = isT2 ? `AND (t2_stream = '' OR t2_stream IS NULL)` : '';
+    const notEncrypted = isEncryptedHidden
+      ? `AND (is_biss = 1 OR encryption IS NULL OR encryption = '')`
+      : '';
+    const notRadio = isRadio ? `AND is_radio = 0` : '';
+    const notCBand = isCBand ? `AND frequency > 10699` : '';
     // =================================================================
 
     const sql = `
@@ -187,7 +209,7 @@ export const getFlySatChannels = cache(
    ch.sid,
    ch.v_pid,
    ch.a_pid,
-   ch.description_en,
+   ${lang === ELanguage.UA ? 'CH.description_ua' : 'CH.description_en AS description'},
    ch.t2_stream,
     sat.title AS sat_title,
     sat.position AS sat_position,
@@ -199,15 +221,17 @@ export const getFlySatChannels = cache(
   LEFT JOIN ${CHANNEL_THEME} 		    AS te	 ON ch.theme_id 	= te.id
   LEFT JOIN ${FLY_SATELLITES} 			AS sat ON ch.sat_slug 	= sat.slug 
   LEFT JOIN ${TBL_LANGUAGE} 			  AS la	 ON ch.lang_id 		= la.id
-  WHERE ch.sat_slug ${satSlug ? '= ?' : '!= NULL'}
-  AND  	ch.is_removed != 1
+  WHERE ch.sat_slug ${satSlug ? '= ?' : 'IS NOT NULL'}
+  AND ch.is_removed != 1
   ${searchPart}
   ${inSatList}
-  ${notMpg4}
+  ${langList}
+  ${notEncrypted}
+  ${notRadio}
+  ${notCBand}
   ${notT2mi}
   ORDER BY ch.frequency, ch.polarization, ch.is_radio, ch.sid, ch.title
   `;
-
     const resp = await poolExecute<IFlyChannel[]>(sql, [satSlug]);
 
     return resp instanceof Error || resp.length === 0
@@ -216,7 +240,7 @@ export const getFlySatChannels = cache(
           ...r,
           sat_title: decode(r.sat_title),
           title: decode(r.title),
-          description_en: decode(r.description_en),
+          description_en: decode(r.description),
         }));
   }
 );
@@ -498,4 +522,56 @@ export const getFlyGroupedChannelsAllSat = (
     .sort((a, b) => a[0][0].sat_grade - b[0][0].sat_grade);
 
   return sortedGroups;
+};
+
+const getDBChannelsAudio = cache(async (satellites: string[] | undefined) => {
+  const selectedSats = satellites ? satellites.join('","') : 0;
+
+  const sql = `
+    SELECT ch.a_pid
+    FROM ${FLY_CHANNELS} AS ch 
+    LEFT JOIN ${FLY_SATELLITES} AS sat ON ch.sat_slug 	= sat.slug 
+    WHERE sat.grade IN ("${selectedSats}")
+    AND ch.is_removed != 1
+  `;
+  const resp = await poolExecute<{ a_pid: string }[]>(sql);
+
+  return resp instanceof Error || resp.length === 0 ? [] : resp;
+});
+
+export const getLanguageList = (audioPids: string[]) => {
+  const langsSet = new Set<string>();
+
+  audioPids.forEach((aPid) => {
+    aPid.split(DB_ARRAY_SEPARATOR).forEach((part) => {
+      const parts = part.trim().split(' ');
+
+      if (parts[1]) {
+        const langPart = parts[1].trim().toLowerCase();
+
+        if (!wrongAudio.includes(langPart)) {
+          langsSet.add(langPart);
+        }
+      }
+    });
+  });
+
+  return Array.from(langsSet)
+    .sort()
+    .map((lang) => ({
+      value: lang,
+      label: audioLanguages[lang] || lang,
+    }));
+};
+
+export const getChannelsLangList = async (
+  searchQuerySatellites?: string[]
+): Promise<ISatelliteOption[]> => {
+  const dbAudioList = await getDBChannelsAudio(searchQuerySatellites);
+
+  const audioPids = dbAudioList.map((item) => item.a_pid);
+
+  const langList = getLanguageList(audioPids);
+
+  return langList;
 };

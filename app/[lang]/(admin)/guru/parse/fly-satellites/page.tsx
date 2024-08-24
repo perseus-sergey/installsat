@@ -2,25 +2,17 @@ import { Title } from '@/components/ui/Titles/Title';
 import puppeteer from 'puppeteer';
 import * as cheerio from 'cheerio';
 import { EDBTableTitles, TSearchParams } from '@/models/ui.model';
-// import { EDBTableTitles, ELanguage, getDbTableLink } from '@/models/ui.model';
-// import { EUrlAdminParam } from '@/models/url.model';
-// import { IDbIdAmountModel } from '@/models/admin.model';
-// import { sendMail } from '@/libs/mail/sendMail';
-// import { renderAsync } from '@react-email/render';
-// import { getDbIdAmount } from '@/controllers/schedule.controller';
-// import { ParseTransNews } from '@/components/EmailTemplates/parseTransNews.template';
 import {
-  // clearTable,
   getContentFromPuppeteerBrowser,
   killChromeProcesses,
 } from '@/controllers/parse.controller';
 import Link from 'next/link';
 import { poolExecute } from '@/libs/db/mysqldb';
-// import { getPool, poolExecute } from '@/libs/db/mysqldb';
 import { DateTime } from 'luxon';
 import { validSearchParam } from '@/libs/utils/validSearchParam';
 import { EUrlSearchParam } from '@/models/url.model';
 import { parseFlyChannels } from '../fly-channels/page';
+import { ResultSetHeader } from 'mysql2';
 
 export const dynamic = 'force-dynamic';
 
@@ -34,6 +26,12 @@ export interface ITblFlySats {
   date_upd: Date;
 }
 
+// =================================================================
+// Parse List of Satellites from FlySat with date_upd parameter
+// Parse All Satellite wich satellite date_upd from my DB is different with parsed date_upd
+// ... OR parsed date_upd < then {INTERVAL_FROM_LAST_UPDATE} days ago
+// =================================================================
+
 const INTERVAL_FROM_LAST_UPDATE = 2;
 
 // const BASE_URL = process.env.BASE_URL;
@@ -42,7 +40,6 @@ const isProductionMode = process.env.PRODUCTION_MODE === 'true';
 const IS_LOGGED = true;
 const PARSE_URL = 'https://flysat.com/en/satellitelist';
 const { FLY_SATELLITES } = EDBTableTitles;
-// const pool = getPool();
 
 let messages: string[] = [];
 
@@ -65,142 +62,62 @@ const getDataFromDB = async () => {
   return res;
 };
 
-// const insertDataToDB = async (data: ITblFlySats[]) => {
-//   const dataLength = data.length;
-//   if (dataLength === 0) throw new Error(`ERROR: DB insert empty data`);
+const setSatDateUpd = async (currentSatSlug: string, dateUpd: Date) => {
+  const dateUpdStr = dateUpd.toISOString().split('T')[0];
+  const res = await poolExecute<ResultSetHeader>(
+    `
+      UPDATE ${FLY_SATELLITES} 
+      SET date_upd = ?
+      WHERE slug = ?
+      LIMIT 1
+    `,
+    [dateUpdStr, currentSatSlug]
+  );
 
-//   const values = data.map((item) => [
-//     pool.escape(item.cluster),
-//     pool.escape(item.title),
-//     pool.escape(item.url_link),
-//     pool.escape(item.slug),
-//     pool.escape(item.position),
-//     pool.escape(item.grade),
-//     pool.escape(item.date_upd),
-//   ]);
-//   const sql = `
-//     INSERT INTO ${FLY_SATELLITES} (cluster, title, url_link, slug, position, grade, date_upd)
-//     VALUES ${values.map((valueSet) => `(${valueSet.join(', ')})`).join(', ')};
-//   `;
-//   const res = await poolExecute(sql);
-//   if (res instanceof Error) {
-//     console.log('ERROR during insertion data:', res.message);
-//     throw res;
-//   }
-// };
-
-const extractParsedData = (
-  $: cheerio.CheerioAPI,
-  dbSatellites: ITblFlySats[],
-  intervalFromLastUpd: number
-) => {
-  // console.log('🚀 ~ extractParsedData ~ $:', $.html());
-  const allParsedSats: ITblFlySats[] = [];
-  const updatedSats: ITblFlySats[] = [];
-  const newSats: ITblFlySats[] = [];
-  const errors: string[] = [];
-  let currentCluster = '';
-
-  $('tr[bgcolor="#b9dcff"]').each((_, element) => {
-    // console.log('🚀 ~ $ ~ element:', $(element).html());
-    let title = '';
-    let position = '';
-    let band = '';
-    let parsedDate = '';
-    const tds = $(element).find('td');
-
-    if (tds.length === 6) {
-      currentCluster = tds.eq(0).find('a').text().trim();
-      title = tds.eq(1).text().trim();
-      position = tds.eq(2).text().trim();
-      band = tds.eq(4).text().trim().toLowerCase();
-      parsedDate = tds.eq(5).text().trim();
-    } else if (tds.length === 5) {
-      title = tds.eq(0).text().trim();
-      position = tds.eq(1).text().trim();
-      band = tds.eq(3).text().trim().toLowerCase();
-      parsedDate = tds.eq(4).text().trim();
-    } else {
-      errors.push(`ERROR: unexpected row count: «${$(element).html()}»`);
-    }
-
-    if (!band || band === 'ka') return;
-
-    if (!title) {
-      errors.push(`ERROR: extracting SAT NAME from: «${$(element).html()}»`);
-
-      return;
-    }
-
-    if (!position) {
-      errors.push(`ERROR: extracting POSITION from: «${$(element).html()}»`);
-
-      return;
-    }
-
-    if (!parsedDate) {
-      errors.push(`ERROR: extracting DATE from: «${$(element).html()}»`);
-
-      return;
-    }
-
-    const [grade, ew] = position.split('° ');
-    if (!grade || !ew) {
-      errors.push(`ERROR: extracting GRADE from: «${$(element).html()}»`);
-
-      return;
-    }
-
-    const url_link = tds.eq(1).find('a').attr('href');
-    if (!url_link) {
-      errors.push(`ERROR: extracting URL_LINK from: «${$(element).html()}»`);
-
-      return;
-    }
-    const slug = url_link.split('/').pop();
-    if (!slug) {
-      errors.push(`ERROR: extracting SLUG from: «${url_link}»`);
-
-      return;
-    }
-
-    const [day, month, year] = parsedDate.split('.');
-    const date_upd = new Date(`${year}-${month}-${day}`);
-
-    const parsedSat = {
-      cluster: currentCluster,
-      title,
-      url_link,
-      slug,
-      position,
-      grade: ew === 'E' ? grade : `-${grade}`,
-      date_upd,
-    };
-
-    const satInDb = dbSatellites.find(
-      (dbSat) =>
-        dbSat.title === parsedSat.title &&
-        dbSat.url_link.split('flysat.com')[1] ===
-          parsedSat.url_link.split('flysat.com')[1] &&
-        dbSat.position === parsedSat.position
+  if (res instanceof Error) {
+    addMessage(`ERROR: during "SET date_upd" for sat "${currentSatSlug}"`, res);
+  } else {
+    addMessage(
+      `SUCCESS: "SET ${res.affectedRows} date_upd(${dateUpdStr})" for sat "${currentSatSlug}"`
     );
+  }
+};
 
-    if (!satInDb) {
-      newSats.push(parsedSat);
-    } else if (
-      !isSameDate(
-        DateTime.fromJSDate(date_upd),
-        DateTime.fromJSDate(satInDb.date_upd)
-      ) ||
-      getDayDifference(date_upd) < intervalFromLastUpd
-    ) {
-      updatedSats.push(parsedSat);
-    }
+const insertNewSatsToDB = async (newSatellites: ITblFlySats[]) => {
+  const dataLength = newSatellites.length;
+  if (dataLength === 0)
+    throw new Error(`ERROR: DB insert empty NEW SATELLITE LIST`);
 
-    allParsedSats.push(parsedSat);
-  });
+  const placeholders = newSatellites
+    .map(() => '(?, ?, ?, ?, ?, ?, ?)')
+    .join(', ');
 
-  return { allParsedSats, newSats, updatedSats, extractErrors: errors };
+  const sql = `
+    INSERT INTO ${FLY_SATELLITES} (cluster, title, url_link, slug, position, grade, date_upd)
+    VALUES ${placeholders}
+  `;
+
+  // Flatten the array of values
+  const values = newSatellites.flatMap((item) => [
+    item.cluster,
+    item.title,
+    item.url_link,
+    item.slug,
+    item.position,
+    item.grade,
+    item.date_upd.toISOString().split('T')[0],
+  ]);
+
+  const res = await poolExecute<ResultSetHeader>(sql, values);
+
+  if (res instanceof Error) {
+    addMessage(
+      `ERROR: during INSERT ${newSatellites} new satellites to DB`,
+      res
+    );
+  } else {
+    addMessage(`SUCCESS: "SET INSERT ${res.affectedRows} new satellites to DB`);
+  }
 };
 
 const findDbOverSats = (dbSats: ITblFlySats[], parsedSats: ITblFlySats[]) =>
@@ -253,14 +170,18 @@ const processSatellitesInBatches = async (
   const PARALLEL_LIMIT = 3;
   let batchPromises = [];
 
-  // Розбиваємо всі супутники на групи
   for (let i = 0; i < allParsedSats.length; i += batchSize) {
     const batch = allParsedSats.slice(i, i + batchSize);
 
     batchPromises.push(
       (async () => {
         const browser = await puppeteer.launch({
-          args: ['--no-sandbox', '--disable-setuid-sandbox'],
+          args: [
+            '--no-sandbox',
+            '--disable-setuid-sandbox',
+            '--disable-dev-shm-usage',
+            '--disable-gpu',
+          ],
         });
 
         let batchMessages: string[] = [];
@@ -274,6 +195,7 @@ const processSatellitesInBatches = async (
             if (Array.isArray(parseFlyChannelsMessages)) {
               batchMessages = [...batchMessages, ...parseFlyChannelsMessages];
             }
+            await setSatDateUpd(sat.slug, sat.date_upd);
           } catch (error) {
             batchMessages.push(
               `ERROR: failed during channels parsing for satellite "${sat.slug}" ${error}`
@@ -287,7 +209,6 @@ const processSatellitesInBatches = async (
       })()
     );
 
-    // Обмежуємо кількість паралельних груп
     if (batchPromises.length >= PARALLEL_LIMIT) {
       const results = await Promise.all(batchPromises);
       messages = [...messages, ...results.flat()];
@@ -295,11 +216,129 @@ const processSatellitesInBatches = async (
     }
   }
 
-  // Чекаємо завершення обробки всіх груп
   if (batchPromises.length > 0) {
     const results = await Promise.all(batchPromises);
     messages = [...messages, ...results.flat()];
   }
+};
+
+const extractParsedData = (
+  $: cheerio.CheerioAPI,
+  dbSatellites: ITblFlySats[],
+  intervalFromLastUpd: number
+) => {
+  const allParsedSats: ITblFlySats[] = [];
+  const updatedSats: ITblFlySats[] = [];
+  const newSats: ITblFlySats[] = [];
+  const errors: string[] = [];
+  let currentCluster = '';
+
+  const satRows = $('tr[bgcolor="#b9dcff"]');
+
+  satRows.each((_, element) => {
+    const $element = $(element);
+    const tds = $element.find('td');
+
+    let title = '';
+    let position = '';
+    let band = '';
+    let parsedDate = '';
+
+    if (tds.length === 6) {
+      currentCluster = tds.eq(0).find('a').text().trim();
+      title = tds.eq(1).text().trim();
+      position = tds.eq(2).text().trim();
+      band = tds.eq(4).text().trim().toLowerCase();
+      parsedDate = tds.eq(5).text().trim();
+    } else if (tds.length === 5) {
+      title = tds.eq(0).text().trim();
+      position = tds.eq(1).text().trim();
+      band = tds.eq(3).text().trim().toLowerCase();
+      parsedDate = tds.eq(4).text().trim();
+    } else {
+      errors.push(`ERROR: unexpected row count: «${$element.html()}»`);
+
+      return;
+    }
+
+    if (!band || band === 'ka') return;
+
+    if (!title) {
+      errors.push(`ERROR: extracting SAT NAME from: «${$element.html()}»`);
+
+      return;
+    }
+
+    if (!position) {
+      errors.push(`ERROR: extracting POSITION from: «${$element.html()}»`);
+
+      return;
+    }
+
+    if (!parsedDate) {
+      errors.push(`ERROR: extracting DATE from: «${$element.html()}»`);
+
+      return;
+    }
+
+    const [grade, ew] = position.split('° ');
+    if (!grade || !ew) {
+      errors.push(`ERROR: extracting GRADE from: «${$element.html()}»`);
+
+      return;
+    }
+
+    const url_link = tds.eq(1).find('a').attr('href');
+    if (!url_link) {
+      errors.push(`ERROR: extracting URL_LINK from: «${$element.html()}»`);
+
+      return;
+    }
+
+    const slug = url_link.split('/').pop();
+    if (!slug) {
+      errors.push(`ERROR: extracting SLUG from: «${url_link}»`);
+
+      return;
+    }
+
+    const [day, month, year] = parsedDate.split('.');
+    const date_upd = new Date(`${year}-${month}-${day}`);
+
+    const parsedSat = {
+      cluster: currentCluster,
+      title,
+      url_link,
+      slug,
+      position,
+      grade: ew === 'E' ? grade : `-${grade}`,
+      date_upd,
+    };
+
+    const satInDb = dbSatellites.find(
+      (dbSat) =>
+        dbSat.title === parsedSat.title &&
+        dbSat.url_link.split('flysat.com')[1] ===
+          parsedSat.url_link.split('flysat.com')[1] &&
+        dbSat.position === parsedSat.position
+    );
+
+    if (!satInDb) {
+      newSats.push(parsedSat);
+    } else if (
+      !isSameDate(
+        DateTime.fromJSDate(date_upd),
+        DateTime.fromJSDate(satInDb.date_upd)
+      ) ||
+      getDayDifference(date_upd) < intervalFromLastUpd
+    ) {
+      updatedSats.push(parsedSat);
+    }
+
+    allParsedSats.push(parsedSat);
+  });
+
+  return { allParsedSats, newSats, updatedSats, extractErrors: errors };
 };
 
 export default async function Page({
@@ -312,17 +351,22 @@ export default async function Page({
     INTERVAL_FROM_LAST_UPDATE;
 
   let browser;
-  let finalData: ITblFlySats[] = [];
+  // let finalData: ITblFlySats[] = [];
   let overSats: ITblFlySats[] = [];
   let newSatList: ITblFlySats[] = [];
   let updatedSatList: ITblFlySats[] = [];
-  // let resDbTableLength: IDbIdAmountModel[] | string = '';
 
   try {
     const dbSatellites = await getDataFromDB();
+
     browser = await puppeteer.launch({
-      args: ['--no-sandbox', '--disable-setuid-sandbox'],
-      headless: true,
+      args: [
+        '--no-sandbox',
+        '--disable-setuid-sandbox',
+        '--disable-dev-shm-usage',
+        '--disable-gpu',
+      ],
+      headless: true, // Запуск без графічного інтерфейсу
     });
 
     const html = await getContentFromPuppeteerBrowser(browser, PARSE_URL);
@@ -336,21 +380,15 @@ export default async function Page({
     newSatList = newSats;
     overSats = findDbOverSats(dbSatellites, allParsedSats);
 
+    if (newSats.length) await insertNewSatsToDB(newSats);
+
     await processSatellitesInBatches(updatedSats);
     // =================================================================
     // For All Satellites
     // =================================================================
     // await processSatellitesInBatches(allParsedSats);
 
-    finalData = allParsedSats;
-
-    // if (!extractErrors.length) {
-    // const clearRes = await clearTable(FLY_SATELLITES);
-    // addMessage(clearRes);
-    // await insertDataToDB(finalData);
-    // }
-
-    // resDbTableLength = await getDbIdAmount(FLY_SATELLITES);
+    // finalData = allParsedSats;
   } catch (error) {
     addMessage(
       'ERROR: failed during satellites page parsing',
@@ -407,7 +445,7 @@ export default async function Page({
         satList={overSats}
       />
       <SatList title="Should Update Satellites" satList={updatedSatList} />
-      <SatList title="All Parsed Satellites" satList={finalData} />
+      {/* <SatList title="All Parsed Satellites" satList={finalData} /> */}
     </>
   );
 }

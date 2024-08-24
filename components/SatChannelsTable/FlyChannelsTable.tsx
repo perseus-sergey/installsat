@@ -1,10 +1,10 @@
 import {
   MChanTheme,
-  META_ALL_SAT_CHANNEL_LIST,
   META_SAT_CHANNEL_LIST,
   CHANNEL_TOOLTIP_TITLES,
   isFtaChannel,
   getCompressColor,
+  ECompressColors,
 } from '@/models/channelList.model';
 import styles from './SatChannelsTable.module.scss';
 import Link from 'next/link';
@@ -16,17 +16,12 @@ import FillingValidImage from '../ui/Images/FillingValidImage';
 import { IFlyChannel, META_CHANNEL, TDbBoolean } from '@/models/channel.model';
 import ChannelCardTooltip from '../ChannelCardTooltip/ChannelCardTooltip';
 import GoUpLink from '../ui/GoUpLink/GoUpLink';
-import { TitleH2List } from '../ui/Titles/TitleH2List';
 import EmptyData from '../errors/EmptyData/EmptyData';
 import { DB_ARRAY_SEPARATOR, ELanguage } from '@/models/ui.model';
-import Tooltip from '../ui/tooltips/TooltipMoovingClient/Tooltip';
+import Tooltip from '../ui/tooltips/TooltipMovingClient/Tooltip';
 
 const {
-  links: { satTitleLink },
-} = META_ALL_SAT_CHANNEL_LIST;
-
-const {
-  images: { h1SatImage, genreImage, genreRadioImage, t2Image },
+  images: { h2SatListImage, genreImage, genreRadioImage, t2Image },
 } = META_SAT_CHANNEL_LIST;
 
 interface ISatChannelsTableProps {
@@ -49,7 +44,7 @@ const FrequencySegment = ({
         compress,
         title,
         theme,
-        description_en,
+        description,
         slug,
         biss,
         theme_id,
@@ -75,6 +70,8 @@ const FrequencySegment = ({
 
       const languages = [...new Set(aPidList.map((aP) => aP.split(' ')[1]))];
 
+      const isCBand = frequencyChannels[0].frequency < 10700;
+
       return (
         <tr
           key={idx}
@@ -91,7 +88,7 @@ const FrequencySegment = ({
           {!idx && (
             <td
               rowSpan={frequencyChannels.length}
-              className="text-sm bg-blue-100"
+              className={`text-sm ${isCBand ? 'bg-rose-50' : 'bg-blue-100'}`}
             >
               <ul>
                 <li className="font-bold">
@@ -184,7 +181,6 @@ const FrequencySegment = ({
                   <div className="sm:inline-block hidden">
                     <RadioIcon is_radio={is_radio} lang={lang} />
                   </div>
-                  {/* <li className="text-xs hidden sm:block">{mode}</li> */}
                   <li className="bg-slate-50 border border-dotted border-gray-600 rounded-sm px-1 text-lg m-1 inline-block sm:hidden">
                     🎼
                   </li>
@@ -192,19 +188,19 @@ const FrequencySegment = ({
               ) : (
                 <ul>
                   {t2_stream && (
-                    <div className="bg-slate-50 rounded-lg border border-dotted border-gray-600 p-1 inline-block sm:hidden">
-                      <T2Icon t2Stream={t2_stream} lang={lang} />
-                    </div>
+                    <>
+                      <li className="bg-slate-50 rounded-lg border border-dotted border-gray-600 p-1 inline-block sm:hidden">
+                        <T2Icon t2Stream={t2_stream} lang={lang} />
+                      </li>
+                      <li className="text-red-950 text-xs hidden sm:block">
+                        ({t2_stream})
+                      </li>
+                    </>
                   )}
                   <li className="text-red-800 font-bold hidden sm:block">
                     {compress}
+                    {compressColor === ECompressColors.MPEG_2_S2 && '/S2'}
                   </li>
-                  {t2_stream && (
-                    <li className="text-red-950 text-xs hidden sm:block">
-                      ({t2_stream})
-                    </li>
-                  )}
-                  {/* <li className="text-xs hidden sm:block">({mode})</li> */}
                   <li
                     className={
                       t2_stream
@@ -298,56 +294,6 @@ const FrequencySegment = ({
               encryptionList[0]
             )}
           </td>
-          {/* 
-          <td className={styles.tdChanLogo}>
-            {!is_radio && logo && (
-              <ChannelCardTooltip
-                mainImage={{
-                  ...META_CHANNEL.images.channelLogo.small,
-                  src: `${META_CHANNEL.images.channelLogo.small.path}${logo}`,
-                }}
-                mainDefaultImage={
-                  META_CHANNEL.images.channelLogo.small.defaultImage
-                }
-                mainAlternativeImgString={
-                  META_CHANNEL.images.channelLogo.small.alternativeImgStr
-                }
-                mainIsChangeToGif
-                tooltipImage={{
-                  ...META_CHANNEL.images.channelLogo.big,
-                  src: `${META_CHANNEL.images.channelLogo.big.path}${logo}`,
-                }}
-                tooltipDefaultImage={
-                  META_CHANNEL.images.channelLogo.big.defaultImage
-                }
-                tooltipAlternativeImgString={
-                  META_CHANNEL.images.channelLogo.big.alternativeImgStr
-                }
-                tooltipTextList={[
-                  {
-                    title: CHANNEL_TOOLTIP_TITLES.name[lang],
-                    description: title,
-                  },
-                  {
-                    title: CHANNEL_TOOLTIP_TITLES.genre[lang],
-                    description: theme,
-                  },
-                  {
-                    title: CHANNEL_TOOLTIP_TITLES.language[lang],
-                    description: languages,
-                  },
-                  {
-                    title: CHANNEL_TOOLTIP_TITLES.description[lang],
-                    description: cutText(description_en, 100),
-                  },
-                  {
-                    title: CHANNEL_TOOLTIP_TITLES.compression[lang],
-                    description: [compress, ...modeList],
-                  },
-                ]}
-              />
-            )}
-          </td> */}
 
           <td className={is_radio ? 'text-left' : ''}>
             <div
@@ -391,7 +337,7 @@ const FrequencySegment = ({
                     },
                     {
                       title: CHANNEL_TOOLTIP_TITLES.description[lang],
-                      description: cutText(description_en, 100),
+                      description: cutText(description, 100),
                     },
                     {
                       title: CHANNEL_TOOLTIP_TITLES.compression[lang],
@@ -403,7 +349,7 @@ const FrequencySegment = ({
               <Link
                 className={is_radio ? styles.linkRadio : styles.linkTV}
                 id={slug}
-                href={`/${lang}/${EUrlBaseParam.CHANNEL_PARAMS}/${slug}`}
+                href={`/${lang}/${EUrlBaseParam.KANAL}/${slug}`}
               >
                 <RadioIcon is_radio={is_radio} lang={lang} />
                 {title}
@@ -423,21 +369,6 @@ const FrequencySegment = ({
             </div>
             {biss && <p className={styles.biss}>{biss}</p>}
           </td>
-          {/* 
-          <td className="text-sm hidden sm:table-cell">
-            {genreImgSrc && !is_radio && (
-              <div className="flex flex-col items-center">
-                <TooltipSimple tooltipText={theme}>
-                  <FillingImg
-                    width={genreImage.width}
-                    height={genreImage.height}
-                    alt={`${genreImage.altPre} ${theme}`}
-                    src={`${genreImage.path}${genreImgSrc}`}
-                  />
-                </TooltipSimple>
-              </div>
-            )}
-          </td> */}
         </tr>
       );
     }
@@ -453,48 +384,37 @@ const FlyChannelsTable = ({
       {satChannels.map((sat) => (
         <>
           {!isSingleSat && (
-            <TitleH2List id={sat[0][0].sat_slug}>
+            <h2
+              id={sat[0][0].sat_slug}
+              className="font-bold text-base sm:text-2xl text-blue-800 text-center py-2 flex items-center justify-between gap-4"
+              style={{
+                fontFamily: 'Verdana, Geneva, sans-serif',
+                textShadow: '1px 1px 1px #ffffff',
+              }}
+            >
               <GoUpLink lang={lang} />
-
-              <TooltipSimple tooltipText={satTitleLink.tooltipTitle[lang]}>
-                <Link
-                  className={styles.satTitleLink}
-                  href={`/${lang}${satTitleLink.linkUrl}/${sat[0][0].sat_slug}`}
-                >
-                  {`${sat[0][0].sat_title} - ${sat[0][0].sat_position}`}
-                </Link>
-              </TooltipSimple>
-              <TooltipSimple tooltipText={satTitleLink.tooltipTitle[lang]}>
-                <Link
-                  className={styles.satTitleLink}
-                  href={`/${lang}${satTitleLink.linkUrl}/${sat[0][0].sat_slug}`}
-                >
-                  <FillingValidImage
-                    image={{
-                      ...h1SatImage,
-                      src: `${h1SatImage.path}${sat[0][0].sat_logo}`,
-                    }}
-                    defaultImage={h1SatImage.defaultImage}
-                    alternativeImgString={h1SatImage.alternativeString}
-                    alt={`${h1SatImage.alt[lang]} ${sat[0][0].sat_title}`}
-                    isBlur
-                  />
-                </Link>
-              </TooltipSimple>
-            </TitleH2List>
+              {sat[0][0].sat_title} - {sat[0][0].sat_position}
+              <FillingValidImage
+                image={{
+                  ...h2SatListImage,
+                  src: `${h2SatListImage.path}${sat[0][0].sat_logo}`,
+                }}
+                defaultImage={h2SatListImage.defaultImage}
+                alternativeImgString={h2SatListImage.alternativeString}
+                alt={`${h2SatListImage.alt[lang]} ${sat[0][0].sat_title}`}
+                isBlur
+              />
+            </h2>
           )}
           <table className={styles.SatChannelsTable}>
             <thead>
-              <tr className="bg-gray-200 hidden sm:table-row">
+              <tr className="bg-violet-200 hidden sm:table-row">
                 <th>Frequency / Beam / Mode</th>
                 <th>Compress.</th>
                 <th>Sid (v.pid)</th>
                 <th>A.pid</th>
-                {/* <th>Lang</th> */}
                 <th>Code</th>
-                {/* <th>Logo</th> */}
                 <th>Title</th>
-                {/* <th>Genre</th> */}
               </tr>
             </thead>
             <tbody>
@@ -511,7 +431,14 @@ const FlyChannelsTable = ({
       ))}
     </>
   ) : (
-    <EmptyData lang={lang} />
+    <EmptyData
+      lang={lang}
+      description={
+        lang === ELanguage.UA
+          ? 'Зараз канали відсутні. Спробуйте обрати інший супутник, або  налаштувати фільтри.'
+          : 'There are currently no channels. Try to choose another satellite or adjust the filters.'
+      }
+    />
   );
 
 const RadioIcon = ({

@@ -1,7 +1,8 @@
 import styles from './Accordion.module.scss';
 import {
   getChannelCatList,
-  getChannelSatList,
+  // getChannelSatList,
+  getFlyChannelSatList,
   getUsefulArticleList,
 } from '@/controllers/sidebar.controller';
 import Link from 'next/link';
@@ -13,6 +14,7 @@ import { ELanguage } from '@/models/ui.model';
 const {
   SATELLITE_TV,
   SATELLITES,
+  // SATELLITES_FLY,
   SAT_FINDER,
   MAPS,
   PACKAGES,
@@ -25,7 +27,8 @@ const Accordion = async ({ lang }: { lang: ELanguage }) => {
   // const installationsList = await getInstallationsList();
 
   const channelCatListResp = await getChannelCatList();
-  const channelSatListResp = await getChannelSatList();
+  // const channelSatListResp = await getChannelSatList();
+  const flyChannelSatList = await getFlyChannelSatList();
   const usefulArticleListResp = await getUsefulArticleList();
   const mapsResp = await getSatMapList();
 
@@ -34,8 +37,8 @@ const Accordion = async ({ lang }: { lang: ELanguage }) => {
   const channelCatList =
     channelCatListResp instanceof Error ? [] : channelCatListResp;
 
-  const channelSatList =
-    channelSatListResp instanceof Error ? [] : channelSatListResp;
+  // const channelSatList =
+  //   channelSatListResp instanceof Error ? [] : channelSatListResp;
 
   const usefulArticleList =
     usefulArticleListResp instanceof Error ? [] : usefulArticleListResp;
@@ -59,7 +62,7 @@ const Accordion = async ({ lang }: { lang: ELanguage }) => {
             ))}
           </ul>
         </AccordionMenuItem> */}
-        <AccordionMenuItem lang={lang} options={SATELLITES}>
+        {/* <AccordionMenuItem lang={lang} options={SATELLITES}>
           <ul className={styles.accordionContent}>
             {channelSatList.map((item) => (
               <li key={item.id} className={styles.contentItem}>
@@ -68,6 +71,21 @@ const Accordion = async ({ lang }: { lang: ELanguage }) => {
                   className={styles.contentItemLink}
                 >
                   {item.title} {item.position}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </AccordionMenuItem> */}
+        <AccordionMenuItem lang={lang} options={SATELLITES}>
+          <ul className={styles.accordionContent}>
+            {flyChannelSatList.map((item) => (
+              <li key={item.id} className={styles.contentItem}>
+                <Link
+                  href={`/${lang}${SATELLITES.baseHrefOfList}/${item.cpu}/`}
+                  className={styles.contentItemLink}
+                >
+                  <span className="text-lime-200">{item.title}</span>{' '}
+                  {item.position}
                 </Link>
               </li>
             ))}

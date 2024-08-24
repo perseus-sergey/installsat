@@ -61,6 +61,8 @@ const BreadCrumbServer = ({
           <>
             {hasHomeLink && <li className={styles.separator}> {separator} </li>}
             {breadCrumbList.map((item, index) => {
+              if (!item) return;
+
               const isCurrentUrl = breadCrumbList.length === index + 1;
               const linkText =
                 typeof item === 'string'

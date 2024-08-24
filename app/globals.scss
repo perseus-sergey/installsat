@@ -80,6 +80,7 @@ a {
 .article {
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   background-color: var(--background-color);
   min-height: 75vh;
 

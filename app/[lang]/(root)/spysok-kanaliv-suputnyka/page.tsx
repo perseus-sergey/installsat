@@ -1,36 +1,38 @@
 import { Title } from '@/components/ui/Titles/Title';
 import {
-  getSatChannels,
-  getGroupedChannelsAllSat,
+  getFlySatChannels,
+  getFlyGroupedChannelsAllSat,
+  getChannelsLangList,
 } from '@/controllers/channelList.controller';
-import {
-  META_ALL_SAT_CHANNEL_LIST,
-  START_CONTENT,
-} from '@/models/channelList.model';
+import { META_ALL_SAT_CHANNEL_LIST } from '@/models/channelList.model';
 import type { Metadata } from 'next';
 import StartArticleSection from '@/components/article/StartArticleSection/StartArticleSection';
-import SatChannelsTable from '@/components/SatChannelsTable/SatChannelsTable';
-import FillingImg from '@/components/ui/Images/FillingImage';
-import Fieldset from '@/components/ui/Fieldset/Fieldset';
+import { Suspense } from 'react';
 import {
-  TSearchParams,
+  DEFAULT_LANG,
   DEFAULT_META_DATA,
   EDBTableTitles,
-  DEFAULT_LANG,
   ELanguage,
+  ESelectType,
+  TSearchParams,
 } from '@/models/ui.model';
 import { EUrlBaseParam, EUrlSearchParam, MAIN_URL } from '@/models/url.model';
-import Filter from '@/components/ui/Filter/Filter';
-import { Suspense } from 'react';
-import AnchorListItemWithCheckbox from '@/components/AnchorListItem/AnchorListItemWithCheckbox';
-import { getChannelSatList } from '@/controllers/sidebar.controller';
-import ChannelFormatSliders from '@/components/ui/ChannelFormatSliders/ChannelFormatSliders';
-import { getELangKey, validSearchParam } from '@/libs/utils/validSearchParam';
-import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
 import { getCommentsNumber } from '@/controllers/comments.controller';
+import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
 import BreadCrumbServer from '@/components/BreadCrumbs/BreadCrumbsServer';
-import { BREAD_CRUMBS } from '@/models/breadCrumbs.model';
 import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
+import {
+  getELangKey,
+  validSearchParam,
+  validSearchParamArray,
+} from '@/libs/utils/validSearchParam';
+import FlyChannelsTable from '@/components/SatChannelsTable/FlyChannelsTable';
+import Fieldset from '@/components/ui/Fieldset/Fieldset';
+import Filter from '@/components/ui/Filter/Filter';
+import ChannelFormatSliders from '@/components/ui/ChannelFormatSliders/ChannelFormatSliders';
+import { getSatsForForm } from '@/controllers/satDigest.controller';
+import FillingImg from '@/components/ui/Images/FillingImage';
+import { Selector } from '@/components/SatelliteSelector/Selector';
 
 const BASE_URL = process.env.BASE_URL || MAIN_URL;
 
@@ -39,24 +41,22 @@ const {
   metaDescription,
   metaKeywords,
   metaTitle,
-  image: { h1ImageParams },
+  image: { h1FlyImageParams },
   anchors,
   filtering: {
     filterByChannelName: { placeholder, labelTitle },
-    filterByChannelFormat: { formats },
+    filterByChannelFormatFly: { formats },
     resetAllFiltersButton,
-    satCheckBox,
-    satAnchor,
   },
   CHANNEL_LIST_DB_ID,
 } = META_ALL_SAT_CHANNEL_LIST;
-
-export const dynamic = 'force-dynamic';
 
 interface IPageProps {
   params: { [key in EUrlBaseParam]: string };
   searchParams?: TSearchParams;
 }
+
+export const dynamic = 'force-dynamic';
 
 export const generateMetadata = async ({
   params,
@@ -91,24 +91,30 @@ export default async function Page({ searchParams, params }: IPageProps) {
     EUrlSearchParam.CHANNEL,
     searchParams
   );
-
-  const satChannels = await getSatChannels(
-    searchQueryChannel,
-    '',
-    searchParams?.[EUrlSearchParam.SAT],
-    !!searchParams?.[EUrlSearchParam.CHANNEL_FORMAT_MPG4],
-    !!searchParams?.[EUrlSearchParam.CHANNEL_FORMAT_T2MI]
+  const searchQueryLanguages = validSearchParamArray(
+    EUrlSearchParam.LANGUAGE_URL,
+    searchParams
+  );
+  const searchQuerySatellites = validSearchParamArray(
+    EUrlSearchParam.SAT,
+    searchParams
   );
 
-  const satListResults = await getChannelSatList();
-  const satList = satListResults instanceof Error ? [] : satListResults;
+  const groupedSats = await getSatsForForm(false, lang, true);
 
-  const groupedChannelsAllSat = getGroupedChannelsAllSat([satChannels]);
+  const satChannels = await getFlySatChannels(
+    lang,
+    searchQueryChannel,
+    '',
+    searchQuerySatellites,
+    !searchParams?.[EUrlSearchParam.CHANNEL_ENCRYPTED],
+    !!searchParams?.[EUrlSearchParam.CHANNEL_RADIO],
+    !!searchParams?.[EUrlSearchParam.CHANNEL_C_BAND],
+    !!searchParams?.[EUrlSearchParam.CHANNEL_FORMAT_T2MI],
+    searchQueryLanguages
+  );
 
-  const satLinks = satList.map((sat) => ({
-    title: `${sat.title} - ${sat.position}`,
-    slug: sat.cpu,
-  }));
+  const channelsLangList = await getChannelsLangList(searchQuerySatellites);
 
   const numberOfComments = await getCommentsNumber(
     EDBTableTitles.COMMENTS_PACKAGES,
@@ -117,45 +123,57 @@ export default async function Page({ searchParams, params }: IPageProps) {
 
   return (
     <>
-      <BreadCrumbServer
-        lang={lang}
-        breadCrumbList={[BREAD_CRUMBS.PACKAGE_CHANNEL_LIST, metaH1[lang]]}
-      />
+      <BreadCrumbServer lang={lang} />
       <article className="article">
         <Title>
           {metaH1[lang]}
           <FillingImg
-            src={h1ImageParams.path}
-            alt={h1ImageParams.alt[lang]}
-            width={h1ImageParams.width}
-            height={h1ImageParams.height}
+            src={h1FlyImageParams.path}
+            alt={h1FlyImageParams.alt[lang]}
+            width={h1FlyImageParams.width}
+            height={h1FlyImageParams.height}
           />
         </Title>
+
         <Suspense>
           <Fieldset legendText={anchors.legendTitle[lang]}>
             <nav>
+              <div className="flex flex-wrap justify-center items-center gap-x-8 gap-y-4 p-2 text-gray-400">
+                <Selector
+                  selectName={ESelectType.SELECT_SATS}
+                  className="z-20 min-w-72"
+                  closeMenuOnSelect={false}
+                  searchParamName={EUrlSearchParam.SAT}
+                  itemList={groupedSats instanceof Error ? [] : groupedSats}
+                  caption={
+                    lang === ELanguage.UA
+                      ? 'Виберіть супутники'
+                      : 'Select satellites'
+                  }
+                />
+
+                {channelsLangList.length > 0 && (
+                  <Selector
+                    className="z-10"
+                    selectName={ESelectType.SELECT_LANG}
+                    searchParamName={EUrlSearchParam.LANGUAGE_URL}
+                    itemList={channelsLangList}
+                    caption={
+                      lang === ELanguage.UA
+                        ? 'Виберіть мову'
+                        : 'Choose a language'
+                    }
+                  />
+                )}
+              </div>
+
               <ul>
-                {satLinks.map((satLink) => (
-                  <li key={satLink.slug}>
-                    <AnchorListItemWithCheckbox
-                      linkParams={{
-                        title: satLink.title,
-                        href: `#${satLink.slug}`,
-                        'aria-label': satAnchor.tooltip[lang],
-                      }}
-                      inputAttributes={{
-                        value: satLink.slug,
-                        id: `chb-${satLink.slug}`,
-                        name: satLink.slug,
-                        'aria-label': satCheckBox.tooltip[lang],
-                      }}
-                      searchQueryName={EUrlSearchParam.SAT}
-                    />
-                  </li>
-                ))}
                 {formats.map((format) => (
                   <li key={format.searchQueryName}>
-                    <ChannelFormatSliders {...format} />
+                    <ChannelFormatSliders
+                      title={format.title[lang]}
+                      searchQueryName={format.searchQueryName}
+                    />
                   </li>
                 ))}
               </ul>
@@ -175,11 +193,19 @@ export default async function Page({ searchParams, params }: IPageProps) {
             </nav>
           </Fieldset>
         </Suspense>
+
         <StartArticleSection>
-          <p>{START_CONTENT[lang]}</p>
+          <p className="text-center">
+            {lang === ELanguage.UA ? 'Всього каналів: ' : 'Total channels: '}
+            {satChannels.length}
+          </p>
         </StartArticleSection>
-        <Suspense key={searchQueryChannel}>
-          <SatChannelsTable lang={lang} satChannels={groupedChannelsAllSat} />
+
+        <Suspense key="searchQueryChannel">
+          <FlyChannelsTable
+            lang={lang}
+            satChannels={getFlyGroupedChannelsAllSat([satChannels])}
+          />
         </Suspense>
       </article>
 

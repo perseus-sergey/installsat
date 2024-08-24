@@ -1,7 +1,7 @@
 import { ELanguage } from '@/models/ui.model';
 import styles from '../Accordion/Accordion.module.scss';
 
-import { ReactNode } from 'react';
+import React, { ReactNode } from 'react';
 import Link from 'next/link';
 import { IAccordionItemOptions } from '@/models/menuAccordion.model';
 import FillingImg from '../../ui/Images/FillingImage';

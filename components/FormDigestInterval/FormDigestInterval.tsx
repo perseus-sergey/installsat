@@ -4,10 +4,8 @@ import {
   META_TRANS_NEWS_LIST,
   getDigestIntervalOptions,
 } from '@/models/satDigest.model';
-import { Loader } from '../ui/loaders/Loader';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import {
-  ESelectType,
   MySelect,
   Group,
   formatGroupSatLabel,
@@ -17,7 +15,7 @@ import {
 import { MultiValue, SingleValue, components } from 'react-select';
 import { EUrlSearchParam } from '@/models/url.model';
 import Fieldset from '../ui/Fieldset/Fieldset';
-import { ELanguage } from '@/models/ui.model';
+import { ELanguage, ESelectType } from '@/models/ui.model';
 import {
   IGroupedSatelliteOption,
   ISatelliteOption,
@@ -130,11 +128,7 @@ const FormDigestInterval = ({
               }}
               formatGroupLabel={formatGroupSatLabel}
             />
-          ) : (
-            <h2>
-              <Loader /> Loading...
-            </h2>
-          )}
+          ) : null}
 
           {digestIntervalOptions[0] ? (
             <MySelect
@@ -153,11 +147,7 @@ const FormDigestInterval = ({
                 ),
               }}
             />
-          ) : (
-            <h2>
-              <Loader /> Loading...
-            </h2>
-          )}
+          ) : null}
         </div>
         <TooltipSimple tooltipText={resetButton.ariaLabel[lang]}>
           <BaseButton

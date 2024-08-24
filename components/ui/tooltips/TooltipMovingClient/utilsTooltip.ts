@@ -10,18 +10,23 @@ export const tooltipSetPosition = (
 
   const offsetFromCursorY = 15;
 
-  // const windowWidth = window.innerWidth - 20;
+  const windowWidth = window.innerWidth - 20;
   const windowHeight = window.innerHeight - 20;
 
-  // const rightEdge = windowWidth - e.clientX;
+  const rightEdge = windowWidth - e.clientX;
   const bottomEdge = windowHeight - e.clientY - offsetFromCursorY;
 
-  const styleLeft = `${pageX - hintElement.offsetWidth / 2}px`;
+  // const styleLeft = `${pageX - hintElement.offsetWidth / 2}px`;
 
   // const styleLeft =
   //   rightEdge < hintElement.offsetWidth
   //     ? `${pageX - hintElement.offsetWidth}px`
   //     : `${pageX}px`;
+
+  const styleLeft =
+    rightEdge < hintElement.offsetWidth
+      ? `${pageX - hintElement.offsetWidth / 2}px`
+      : `${pageX}px`;
 
   const styleTop =
     bottomEdge < hintElement.offsetHeight

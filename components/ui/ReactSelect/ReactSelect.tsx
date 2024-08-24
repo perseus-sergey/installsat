@@ -15,18 +15,22 @@ import {
   ISatelliteOption,
 } from '@/models/tblSat.model';
 import { META_TRANS_NEWS_LIST } from '@/models/satDigest.model';
-import { ELanguage } from '@/models/ui.model';
+import { ELanguage, ESelectType } from '@/models/ui.model';
 
 const { satSelect, timeIntervalSelect } = META_TRANS_NEWS_LIST.select;
-
-export enum ESelectType {
-  SELECT_SATS = 'selectSats',
-  SELECT_TIME_INTERVAL = 'timeInterval',
-}
 
 interface IReactSelectProps {
   selectName: ESelectType;
 }
+
+export const createIsMultiControlComponent = (title: string) => {
+  return (props: ControlProps<ISatelliteOption, true>) => (
+    <div className={`${styles.selectHeader} ${styles.satSelectHeader}`}>
+      <p>{title}</p>
+      <components.Control {...props} />
+    </div>
+  );
+};
 
 export const createControlComponentSat = (lang: ELanguage) => {
   return (props: ControlProps<ISatelliteOption, true>) => (

@@ -1,4 +1,8 @@
-import { ISimilarChannel, META_CHANNEL } from '@/models/channel.model';
+import {
+  IFlyChannel,
+  ISimilarChannel,
+  META_CHANNEL,
+} from '@/models/channel.model';
 import Link from 'next/link';
 import { EUrlBaseParam } from '@/models/url.model';
 import { ELanguage } from '@/models/ui.model';
@@ -7,6 +11,11 @@ import { CHANNEL_LIST_ANCHOR_START } from '@/models/channelList.model';
 interface ISimilarChannelProps {
   chanParams: ISimilarChannel;
   channelTitle: string;
+  lang: ELanguage;
+}
+
+interface ISimilarFlyChannelProps {
+  chanParams: IFlyChannel;
   lang: ELanguage;
 }
 
@@ -75,6 +84,60 @@ const SimilarChannel = ({
     );
 
   return null;
+};
+
+export const SimilarFlyChannel = ({
+  chanParams: {
+    // title,
+    sat_slug,
+    sat_position,
+    sat_title,
+    frequency,
+    // compress,
+    // slug,
+    package_id,
+    package_title,
+    package_slug,
+    // official_broadcast_url,
+  },
+  lang,
+}: ISimilarFlyChannelProps) => {
+  const {
+    // getOnlineChannelTitle,
+    getFrequencyTitle,
+    getSatChannelTitle,
+    packageTitle,
+  } = META_CHANNEL.similar.channels;
+
+  // if (official_broadcast_url)
+  //   return (
+  //     <>
+  //       <Link href={`/${lang}/${EUrlBaseParam.ONLINE_CHANNEL_LIST}/${slug}`}>
+  //         {getOnlineChannelTitle(title)[lang]}
+  //       </Link>
+  //     </>
+  //   );
+
+  if (package_id > 2)
+    return (
+      <>
+        {packageTitle[lang]}{' '}
+        <Link
+          href={`/${lang}/${EUrlBaseParam.PACKAGE_CHANNEL_LIST}/${package_slug}`}
+        >
+          {package_title}
+        </Link>
+      </>
+    );
+
+  return (
+    <>
+      <Link href={`/${lang}/${EUrlBaseParam.SAT_CHANNEL_LIST}/${sat_slug}`}>
+        {getSatChannelTitle(sat_title, sat_position)[lang]}
+      </Link>{' '}
+      {getFrequencyTitle(frequency)[lang]}
+    </>
+  );
 };
 
 export default SimilarChannel;

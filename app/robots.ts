@@ -16,6 +16,9 @@ export default function robots(): MetadataRoute.Robots {
         ...Object.values(ELanguage).map((lang) => `/${lang}/${ADMIN_BASE}/`),
         ...Object.values(ELanguage).map((lang) => `/${lang}/${SIGN_IN}/`),
         ...Object.values(ELanguage).map(
+          (lang) => `/${lang}/spysok-kanaliv-suputnyka_old/`
+        ),
+        ...Object.values(ELanguage).map(
           (lang) => `/${lang}/${DELETE_COMMENT_SUBSCRIPTION}/`
         ),
         `/api/auth/`,

@@ -121,7 +121,6 @@ export const editChannelAction = async (
   _formState: IFormState,
   formData: FormData
 ): Promise<IFormState> => {
-  // console.log('🚀 ~ formData:', formData);
   const {
     title,
     text,
@@ -188,7 +187,6 @@ export const editChannelAction = async (
     res = await editChannelDB(channelID, validFormData);
     if (res instanceof Error) throw new Error(res.message);
   } catch (error) {
-    // console.log('🚀 ~ error:', error);
     return fromErrorToFormState(error);
   }
 

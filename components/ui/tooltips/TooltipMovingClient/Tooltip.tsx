@@ -4,12 +4,17 @@ import { MouseEvent, ReactNode, useRef, useState } from 'react';
 import styles from './Tooltip.module.scss';
 import { tooltipSetPosition } from './utilsTooltip';
 
-interface ITooltipProps {
+interface ITooltipProps extends React.HTMLAttributes<HTMLElement> {
   children: ReactNode;
   hintHtml: ReactNode;
 }
 
-const Tooltip = ({ children, hintHtml }: ITooltipProps) => {
+const Tooltip = ({
+  children,
+  hintHtml,
+  className,
+  ...attributes
+}: ITooltipProps) => {
   const [elStyles, setElStyles] = useState({});
   const hintRef = useRef<HTMLDivElement>(null);
 
@@ -30,8 +35,9 @@ const Tooltip = ({ children, hintHtml }: ITooltipProps) => {
     <div
       onMouseMove={mouseMove}
       onMouseOut={mouseOut}
-      className={styles.Tooltip}
       data-testid="Tooltip"
+      className={`${styles.Tooltip}${className ? ` ${className}` : ''}`}
+      {...attributes}
     >
       {children}
 

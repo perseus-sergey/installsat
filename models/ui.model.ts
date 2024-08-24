@@ -5,7 +5,7 @@ export enum ELanguage {
 
 export const DEFAULT_LANG = ELanguage.EN;
 export const DEFAULT_TIME_ZONE = 'Europe/Kiev';
-
+export const DB_ARRAY_SEPARATOR = ' | ';
 export interface ILang {
   [ELanguage.UA]: string;
   [ELanguage.EN]: string;
@@ -97,6 +97,12 @@ export enum EDBTableTitles {
   TRANS_NEWS = 'tbl_digest',
   CHANNELS = 'tbl_channals',
   CHANNEL_SAT = 'tbl_chan_sat',
+  CHANNEL_THEME = 'tbl_chan_tema',
+  CHANNEL_ENCRYPTION = 'tbl_chan_encryption',
+  CHANNEL_FREQUENCY = 'tbl_chan_freq',
+  CHANNEL_BEAM = 'tbl_chan_beam',
+  CHANNEL_COMPRESSION = 'tbl_chan_compress',
+  TBL_LANGUAGE = 'tbl_language',
   CHANNEL_CATEGORY = 'tbl_chan_categ',
   COMMENTS_ARTICLE = 'tbl_comments',
   COMMENTS_CHANNEL = 'tbl_comments_chan',
@@ -111,6 +117,15 @@ export enum EDBTableTitles {
   VIPIKO_CHANNELS = 'vipiko_chan',
   TV_SCHEDULE_VSE_TV = 'tv_shedule_vsetv',
   TV_SCHEDULE = 'tv_shedule',
+  FLY_SATELLITES = 'fly_satellites',
+  FLY_CHANNELS = 'fly_channels',
+  FLY_PACKAGES = 'fly_chan_packages',
+}
+
+export enum ESelectType {
+  SELECT_SATS = 'selectSats',
+  SELECT_LANG = 'selectLang',
+  SELECT_TIME_INTERVAL = 'timeInterval',
 }
 
 // satellite_equipments: tbl_eqp_comments

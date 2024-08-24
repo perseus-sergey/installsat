@@ -28,7 +28,7 @@ const SatNewsList = async ({ searchParams, lang }: ISatNewsListProps) => {
   const interval = validSearchParam(EUrlSearchParam.INTERVAL, searchParams);
   const newsIntervalResult = await getSatDigestNews({
     satellites: sats,
-    timeInterval: Number(interval),
+    interval: Number(interval),
     lang,
   });
 

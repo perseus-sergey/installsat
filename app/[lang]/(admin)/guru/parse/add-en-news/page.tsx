@@ -3,6 +3,10 @@ import { validSearchParam } from '@/libs/utils/validSearchParam';
 import { TSearchParams } from '@/models/ui.model';
 import { EUrlSearchParam } from '@/models/url.model';
 
+// ****************************************************************
+// For translate and add english news column to old sat_digest tables
+// ****************************************************************
+
 const translateToEnglish = (text: string) => {
   const replacements = [
     { regex: /пакет/giu, replacement: 'package' },

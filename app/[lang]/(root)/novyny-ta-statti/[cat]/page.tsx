@@ -170,6 +170,14 @@ export default async function Page({ params, searchParams }: IPageParams) {
           articleList={allNews}
           articleTitleImg={articleTitleImg}
         />
+
+        <Pagination
+          lang={lang}
+          page={pageNumber || 1}
+          offsetNumber={pagination.offsetNumber}
+          totalPages={totalPages}
+          searchParams={searchParams}
+        />
       </article>
     </>
   );

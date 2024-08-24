@@ -17,7 +17,6 @@ import {
 import Fieldset from '../../ui/Fieldset/Fieldset';
 import {
   Group,
-  ESelectType,
   MySelect,
   formatGroupSatLabel,
   createControlComponentSat,
@@ -27,7 +26,7 @@ import { Loader } from '../../ui/loaders/Loader';
 import GoogleMap from '../GoogleMap/GoogleMap';
 import { makeSelectedOptions } from '@/controllers/satFinder.controller';
 import StyledInputField from '../../ui/StyledInputField/StyledInputField';
-import { ELanguage } from '@/models/ui.model';
+import { ELanguage, ESelectType } from '@/models/ui.model';
 import BaseButton from '../../ui/buttons/BaseButton/BaseButton';
 
 interface ISatFinderProps {

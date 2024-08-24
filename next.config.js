@@ -119,6 +119,12 @@ const nextConfig = {
         permanent: true,
       },
       {
+        source:
+          '/:p?/spysok-kanaliv-suputnyka/(sputnik-amos-2|sputnik-astra-4a|sputnik-eutelsat-9b|sputnik-hotbird|eutelsat-36|sputnik-azerspace-1|sputnik-yamal-402|sputnik-abs1|sputnik-intelsat-15|sputnik-yamal-201)',
+        destination: `${BASE}/spysok-kanaliv-suputnyka`,
+        permanent: true,
+      },
+      {
         source: '/spisok-kanalov-paketa/:package',
         destination: `${BASE}/spysok-kanaliv-paketu/:package`,
         permanent: true,

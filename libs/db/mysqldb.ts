@@ -65,7 +65,7 @@ export const getPool = (): mysql.Pool => {
 
 export const poolExecute = async <T>(
   sql: string,
-  values: (string | number | boolean)[] = []
+  values: (string | number | boolean | null)[] = []
 ): Promise<T | Error> => {
   const pool = getPool();
   const connection = await pool.getConnection();

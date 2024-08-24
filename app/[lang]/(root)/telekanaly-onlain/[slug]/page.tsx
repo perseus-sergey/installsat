@@ -3,7 +3,7 @@ import DangerHtml from '@/components/ui/DangerHtml/DangerHtml';
 import FillingValidImage from '@/components/ui/Images/FillingValidImage';
 import NoteBlock from '@/components/ui/NoteBlock/NoteBlock';
 import SimilarArticles from '@/components/SimilarArticles/SimilarArticles';
-import SimilarChannel from '@/components/SimilarChannel/SimilarChannel';
+import { SimilarFlyChannel } from '@/components/SimilarChannel/SimilarChannel';
 import { Title } from '@/components/ui/Titles/Title';
 import TvScheduleLink from '@/components/TvScheduleLink/TvScheduleLink';
 import {
@@ -12,7 +12,7 @@ import {
 } from '@/controllers/articles.controller';
 import {
   getDBOnlineChannel,
-  getSimilarChannels,
+  getSimilarFlyChannels,
 } from '@/controllers/channel.controller';
 import { META_CHANNEL, META_CHANNEL_ONLINE } from '@/models/channel.model';
 import {
@@ -113,9 +113,7 @@ export default async function Page({ params }: IChannelProps) {
 
   const { id, title, logo, text, view, chan_slug } = sqlResult;
 
-  const similarChannelsResult = await getSimilarChannels(logo);
-  const similarChannels =
-    similarChannelsResult instanceof Error ? [] : similarChannelsResult;
+  const similarChannels = await getSimilarFlyChannels(title);
 
   const similarArticles = await getSimilarArticles(logo);
 
@@ -199,12 +197,8 @@ export default async function Page({ params }: IChannelProps) {
         <SimilarArticles
           similarTitle={`${simChannelsBefore.title[lang]} "${title}"`}
           similarArticlesMapped={similarChannels.map((chan) => (
-            <li key={chan.cpu}>
-              <SimilarChannel
-                lang={lang}
-                channelTitle={title}
-                chanParams={chan}
-              />
+            <li key={chan.slug}>
+              <SimilarFlyChannel lang={lang} chanParams={chan} />
             </li>
           ))}
         />

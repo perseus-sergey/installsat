@@ -26,11 +26,19 @@ export const BREAD_CRUMBS = {
     },
   },
 
+  // SAT_CHANNEL_LIST: {
+  //   href: EUrlBaseParam.SAT_CHANNEL_LIST,
+  //   title: {
+  //     [ELanguage.UA]: 'Список безкоштовних каналів супутників',
+  //     [ELanguage.EN]: 'List of satellite free channels',
+  //   },
+  // },
+
   SAT_CHANNEL_LIST: {
     href: EUrlBaseParam.SAT_CHANNEL_LIST,
     title: {
-      [ELanguage.UA]: 'Список безкоштовних каналів супутників',
-      [ELanguage.EN]: 'List of satellite free channels',
+      [ELanguage.UA]: 'Список каналів супутників',
+      [ELanguage.EN]: 'List of satellite channels',
     },
   },
 

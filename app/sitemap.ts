@@ -1,6 +1,7 @@
 import {
   getArticleCatListSiteMap,
   getChannelsSiteMap,
+  getFlyChannelsMap,
   getNewsForSiteMap,
   getOnlineChanSiteMap,
   getPackagesSiteMap,
@@ -21,6 +22,7 @@ const {
   NEWS_AND_ARTICLES,
   ARTICLE,
   CHANNEL_PARAMS,
+  KANAL,
   CHANNELS_TV_PROGRAM,
   SAT_FINDER,
   PACKAGE_CHANNEL_LIST,
@@ -98,6 +100,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const articleCatList = await getArticleCatListSiteMap();
   const articleList = await getNewsForSiteMap();
   const channelList = await getChannelsSiteMap();
+  const flyChannelList = await getFlyChannelsMap();
   const scheduleList = await getSchedulesSiteMap();
   const packagesList = await getPackagesSiteMap();
   const satellitesList = await getSatellitesSiteMap();
@@ -127,6 +130,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       startPath: CHANNEL_PARAMS,
       itemList: channelList,
       changeFrequency: 'weekly',
+    }),
+    ...getSiteMapItemList({
+      startPath: KANAL,
+      itemList: flyChannelList,
+      changeFrequency: 'daily',
     }),
     getSiteMapItem({
       startPath: CHANNELS_TV_PROGRAM,

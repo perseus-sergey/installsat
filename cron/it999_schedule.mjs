@@ -7,6 +7,7 @@ import axios from 'axios';
 import { sendMail } from './libs/sendMail.mjs';
 import { getPool, executePoolQuery } from './libs/mysqldb.mjs';
 import { getDbIdAmount } from './libs/parseTransNews.controller.mjs';
+import { clearTable } from './libs/parse.controller.mjs';
 // import fs from 'fs';
 import { createGunzip } from 'zlib';
 import sax from 'sax';
@@ -24,14 +25,6 @@ const { TV_SCHEDULE_VIPIKO, VIPIKO_CHANNELS } = EDBTableTitles;
 const pool = getPool();
 
 let insertedRows = 0;
-
-const clearTable = async (tableName) => {
-  const res = await executePoolQuery(`TRUNCATE TABLE ${tableName}`);
-  if (res instanceof Error)
-    throw new Error(`DB TRUNCATE table ${tableName}: ${res.message}`);
-
-  return `SUCCESS: Table ${tableName} cleared`;
-};
 
 const insertEmptyFirstRow = async () => {
   const sql = `

@@ -2,68 +2,23 @@ import { Heading, Hr, Html, Link, Text } from '@react-email/components';
 import * as React from 'react';
 
 interface IEmailTemplateProps {
+  title: string;
   pathToMainParsePage: string;
   dbTableLength?: string;
   errorMessages: string[];
   dbTableHref?: string;
-  hrefSources?: string[];
+  hrefSources: string[] | string;
+  children?: React.ReactNode;
 }
 
 export const ParseTransNews = async ({
+  title,
   pathToMainParsePage,
   dbTableLength,
   errorMessages,
-}: IEmailTemplateProps) => {
-  return (
-    <Html>
-      <Heading as="h1">
-        <Link
-          href={`${pathToMainParsePage}`}
-          style={{ ...link, fontSize: '20px' }}
-          target="_blank"
-        >
-          Parse Trans News
-        </Link>
-      </Heading>
-
-      <Hr style={hr} />
-
-      <Text style={heading}>
-        The number of records in the database table:
-        <span style={coloredText}> {dbTableLength}</span>
-      </Text>
-
-      {errorMessages.length > 0 && (
-        <>
-          <Text style={heading}>Messages:</Text>
-          <ul>
-            {errorMessages.map((message, i) => (
-              <li key={i}>{message}</li>
-            ))}
-          </ul>
-        </>
-      )}
-
-      <Hr style={hr} />
-
-      <Text style={footer}>
-        <Link
-          href={`${pathToMainParsePage}`}
-          target="_blank"
-          style={{ ...reportLink, color: '#267f00' }}
-        >
-          Parse Transponder news again
-        </Link>
-      </Text>
-    </Html>
-  );
-};
-
-export const ParseSatNewsTemplate = async ({
-  pathToMainParsePage,
-  errorMessages,
   dbTableHref,
   hrefSources,
+  children,
 }: IEmailTemplateProps) => {
   return (
     <Html>
@@ -73,11 +28,26 @@ export const ParseSatNewsTemplate = async ({
           style={{ ...link, fontSize: '20px' }}
           target="_blank"
         >
-          Parse Satellite News
+          {title}
         </Link>
       </Heading>
 
       <Hr style={hr} />
+
+      {dbTableLength && (
+        <Text style={heading}>
+          The number of records in the database table:
+          <span style={coloredText}> {dbTableLength}</span>
+        </Text>
+      )}
+
+      {children && (
+        <>
+          <Hr style={hr} />
+          {children}
+          <Hr style={hr} />
+        </>
+      )}
 
       {errorMessages.length > 0 && (
         <>
@@ -89,33 +59,55 @@ export const ParseSatNewsTemplate = async ({
           </ul>
         </>
       )}
-      <Text style={footer}>
-        <Link
-          href={dbTableHref}
-          target="_blank"
-          style={{ ...reportLink, color: '#267f00' }}
-        >
-          DB Table
-        </Link>
 
-        {hrefSources && hrefSources.length > 0 && (
-          <>
-            <Text style={heading}>Messages:</Text>
-            <ul>
-              {hrefSources.map((source, i) => (
-                <li key={i}>
-                  <Link
-                    href={source}
-                    target="_blank"
-                    style={{ ...reportLink, color: '#267f00' }}
-                  >
-                    {source}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </>
-        )}
+      <Hr style={hr} />
+
+      <Text style={footer}>
+        <ul>
+          {[
+            {
+              href: pathToMainParsePage,
+              text: 'Main Parsing Page',
+            },
+            {
+              href: dbTableHref,
+              text: 'Check DB Table',
+            },
+            {
+              href: hrefSources,
+              text: 'Source Page',
+            },
+          ].map(({ href, text }) => (
+            <li key={text}>
+              {Array.isArray(href) ? (
+                <>
+                  <Text style={heading}>{text}s:</Text>
+                  <ul>
+                    {href.map((link) => (
+                      <li key={link}>
+                        <Link
+                          href={link}
+                          target="_blank"
+                          style={{ ...reportLink, color: '#267f00' }}
+                        >
+                          {link}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </>
+              ) : (
+                <Link
+                  href={href}
+                  target="_blank"
+                  style={{ ...reportLink, color: '#267f00' }}
+                >
+                  {text}
+                </Link>
+              )}
+            </li>
+          ))}
+        </ul>
       </Text>
     </Html>
   );

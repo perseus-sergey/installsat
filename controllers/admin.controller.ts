@@ -20,14 +20,6 @@ export const deleteItemFromDbTable = async (
   id: string
 ) => await poolExecute(`DELETE FROM ${dbTableName} WHERE id=?`, [id]);
 
-// export const getAllDbDataById = cache(
-//   async <T>(dbTableName: EDBTableTitles, id: string) => {
-//     const sql = `SELECT * FROM ${dbTableName} WHERE id = ?`;
-
-//     return await poolExecute<T>(sql, [`${id}`]);
-//   }
-// );
-
 export const getAdminChunkOfNews = cache(
   async (quantity: number, start = 0, searchQuery = '') => {
     const searchText = searchQuery ? `LIKE "%${searchQuery}%"` : '!= ""';

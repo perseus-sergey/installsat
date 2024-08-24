@@ -19,6 +19,7 @@ import { getPool, poolExecute } from '@/libs/db/mysqldb';
 import { createGunzip } from 'zlib';
 import sax from 'sax';
 import { getDbIdAmount } from '@/controllers/schedule.controller';
+import { clearTable } from '@/controllers/parse.controller';
 
 export const dynamic = 'force-dynamic';
 
@@ -47,14 +48,6 @@ const { TV_SCHEDULE_VIPIKO, VIPIKO_CHANNELS } = EDBTableTitles;
 const pool = getPool();
 
 let insertedRows = 0;
-
-const clearTable = async (tableName: string) => {
-  const res = await poolExecute(`TRUNCATE TABLE ${tableName}`);
-  if (res instanceof Error)
-    throw new Error(`DB TRUNCATE table ${tableName}: ${res.message}`);
-
-  return `SUCCESS: Table ${tableName} cleared`;
-};
 
 const insertEmptyFirstRow = async () => {
   const sql = `

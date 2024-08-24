@@ -12,6 +12,7 @@ import {
   getDBSatID,
   insertDBTransNews,
   getDbIdAmount,
+  actionTextHandler,
 } from './libs/parseTransNews.controller.mjs';
 import { execSync } from 'child_process';
 
@@ -31,109 +32,6 @@ const parseChannelPage = async (browser, url) => {
   await page.close();
 
   return content;
-};
-
-const actionTextHandler = (text, chanTitle, frequency) => {
-  const replacements = [
-    { regex: /package/giu, ua: 'Пакет', en: 'Package' },
-    {
-      regex: /FTA(?: *\w*){0,2}/giu,
-      ua: "<span class='free_chan'>транслюється відкрито</span>",
-      en: "<span class='free_chan'>free broadcasting</span>",
-    },
-    {
-      regex: /\bnew SR\b/giu,
-      ua: "<span class='add_chan'>нова SR(символьна швидкість)</span>",
-      en: "<span class='add_chan'>new SR (symbol rate)</span>",
-    },
-    {
-      regex: /(?:\b\w*\b\s)*encrypted(?:\b\w*\b\s)*/giu,
-      ua: "<span class='left_chan'>закодовано на </span>",
-      en: "<span class='left_chan'>encrypted on </span>",
-    },
-    {
-      regex: /^ *(st\w+ed ag\w+n(?: *on)*) *$/giu,
-      ua: "<span class='add_chan'>відновив мовлення</span>",
-      en: "<span class='add_chan'>restored broadcasting</span>",
-    },
-    {
-      regex: /^ *(in the pa\w+ge ag\w*n(?: *on)*) *$/giu,
-      ua: "<span class='add_chan'>Знову в пакеті</span>",
-      en: "<span class='add_chan'>restored in the package</span>",
-    },
-    {
-      regex: /^ *(st\w+ed te\w+ng(?: *on)*) *$/giu,
-      ua: "<span class='add_chan'>розпочав тестове мовлення</span>",
-      en: "<span class='add_chan'>started test broadcasting</span>",
-    },
-    {
-      regex: /^ *(st\w+ed r\w+r p\w+m(?: *on)*) *$/giu,
-      ua: "<span class='add_chan'>розпочав регулярне мовлення</span>",
-      en: "<span class='add_chan'>started regular broadcasting</span>",
-    },
-    {
-      regex: /^ *(st\w+ed p\w+m(?: *on)*) *$/giu,
-      ua: "<span class='add_chan'>розпочав транслювати</span>",
-      en: "<span class='add_chan'>started translating</span>",
-    },
-    {
-      regex: /^ *(st\w+ed(?: *on)*) *$/giu,
-      ua: "<span class='add_chan'>розпочав мовлення</span>",
-      en: "<span class='add_chan'>started broadcasting</span>",
-    },
-    {
-      regex: /b\w+[kc] (?:on)* *\w* *new/giu,
-      ua: "<span class='add_chan'>повернувся з новими параметрами</span>",
-      en: "<span class='add_chan'>returned with new parameters</span>",
-    },
-    {
-      regex: /a\w+r a* *br\w*k/giu,
-      ua: "<span class='add_chan'>після зникнення</span>",
-      en: "<span class='add_chan'>after disappearance</span>",
-    },
-    {
-      regex: /^(ag\w*n)* *(on *(?:ag\w*n)*)/giu,
-      ua: "<span class='add_chan'>з'явився на супутнику</span> ",
-      en: "<span class='add_chan'>appeared on the satellite </span>",
-    },
-    {
-      regex: /^(ag\w*n)* *(left *(?:ag\w*n)*)/giu,
-      ua: "<span class='left_chan'>припинив трансляції</span> на ",
-      en: "<span class='left_chan'>stopped broadcasting</span> on ",
-    },
-    { regex: / package /giu, ua: ' пакет ', en: ' package ' },
-    {
-      regex: /^ *(new) /giu,
-      ua: 'змінилися параметри ',
-      en: 'parameters have changed ',
-    },
-    {
-      regex: /back on/giu,
-      ua: "<span class='add_chan'>повернувся</span> на ",
-      en: "<span class='add_chan'>returned</span> on ",
-    },
-    { regex: /old/giu, ua: 'старий', en: 'old' },
-    { regex: /satellites/giu, ua: 'супутники', en: 'satellites' },
-    { regex: /satellite/giu, ua: 'супутник', en: 'satellite' },
-    { regex: /now/giu, ua: 'зараз', en: 'now' },
-    { regex: /again/giu, ua: 'знову', en: 'again' },
-    { regex: /on/giu, ua: '', en: 'on' },
-  ];
-
-  const changed = replacements.reduce(
-    (acc, { regex, ua, en }) => {
-      const uaRes = acc.ua.replaceAll(regex, ua);
-      const enRes = acc.en.replaceAll(regex, en);
-
-      return { ua: uaRes, en: enRes };
-    },
-    { ua: text, en: text }
-  );
-
-  return {
-    ua: `<li><p><span class='grey_text'>${chanTitle.replaceAll('/package/ui', 'Пакет')}</span> ${changed.ua} ${frequency}`,
-    en: `<li><p><span class='grey_text'>${chanTitle.replaceAll('/package/ui', 'Package')}</span> ${changed.en} ${frequency}`,
-  };
 };
 
 const extractParsedData = ($, updateAmount) => {

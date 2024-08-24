@@ -54,7 +54,7 @@ export const generateMetadata = async ({ params }: IPageParams) => {
 
 export default async function Page({ params }: IPageParams) {
   const lang = getELangKey(params[EUrlBaseParam.LANG]);
-  const newsArray = await getTransNewsForSingleDay(params.date);
+  const newsArray = await getTransNewsForSingleDay(params.date, lang);
 
   const formattedDate = getDateInISO(params.date);
 

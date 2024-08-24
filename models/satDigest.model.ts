@@ -132,14 +132,11 @@ export interface TSatDigest {
   update: number;
   text: string;
   sat: number;
-  sat_name: string;
   country: string;
-  satParent: string;
   satTitle: string;
   satLogo: string;
   satGrade: string;
   satPosition: string;
-  sat_position: string;
 }
 
 export interface IStateOption {

@@ -23,6 +23,8 @@ export const EDBTableTitles = {
   VIPIKO_CHANNELS: 'vipiko_chan',
   TV_SCHEDULE_VSE_TV: 'tv_shedule_vsetv',
   TV_SCHEDULE: 'tv_shedule',
+  FLY_SATELLITES: 'fly_satellites',
+  FLY_CHANNELS: 'fly_channels',
 };
 
 export const EUrlAdminParam = {
@@ -32,6 +34,7 @@ export const EUrlAdminParam = {
   CHANNELS_EDIT: 'channels',
   PARSE: 'parse',
   PARSE_SCHEDULE_VSETV: 'vsetv',
+  PARSE_FLY_SATELLITES: 'fly-satellites',
   PARSE_SAT_DIGEST: 'trans-news',
 };
 
@@ -52,6 +55,13 @@ export const EUrlSearchParam = {
   COMMENT_DEL_ARTICLE_NAME: 'n',
   COMMENT_DEL_AUTHOR_EMAIL: 'm',
 };
+
+export const validSearchParam = (paramName, searchParams) =>
+  searchParams &&
+  searchParams[paramName] &&
+  typeof searchParams[paramName] === 'string'
+    ? decodeURIComponent(searchParams[paramName])
+    : '';
 
 export const getDbTableLink = (tblName) =>
   `https://installsat.tv/tvefir/index.php?route=/sql&pos=0&db=installsat&table=${tblName}`;

@@ -2,20 +2,29 @@ import { Title } from '@/components/ui/Titles/Title';
 import puppeteer, { Browser } from 'puppeteer';
 import * as cheerio from 'cheerio';
 import { DateTime } from 'luxon';
-import { EDBTableTitles, TSearchParams } from '@/models/ui.model';
-import { validSearchParam } from '@/libs/utils/validSearchParam';
-import { EUrlAdminParam, EUrlSearchParam } from '@/models/url.model';
+import {
+  EDBTableTitles,
+  ELanguage,
+  TSearchParams,
+  getDbTableLink,
+} from '@/models/ui.model';
 import { IDbIdAmountModel } from '@/models/admin.model';
 import { sendMail } from '@/libs/mail/sendMail';
 import { renderAsync } from '@react-email/render';
-import {
-  deleteDBOldTransNews,
-  getDBSatID,
-  insertDBTransNews,
-} from '@/controllers/parseTransNews.controller';
 import { getDbIdAmount } from '@/controllers/schedule.controller';
 import { ParseTransNews } from '@/components/EmailTemplates/parseTransNews.template';
 import { execSync } from 'child_process';
+import {
+  EUrlAdminParam,
+  EUrlSearchParam,
+  validSearchParam,
+} from '@cron/libs/commons.mjs';
+import {
+  getDBSatID,
+  deleteDBOldTransNews,
+  insertDBTransNews,
+  actionTextHandler,
+} from '@cron/libs/parseTransNews.controller.mjs';
 
 export interface ITblDigestParse {
   date: string;
@@ -26,6 +35,8 @@ export interface ITblDigestParse {
   text_en: string;
   sat: string;
   sat_name: string;
+  sat_slug: string | null;
+  sat_grade: string | null;
   sat_position: string;
   frequency_text: string;
   country: string;
@@ -48,116 +59,18 @@ const parseChannelPage = async (browser: Browser, url: string) => {
   return content;
 };
 
-const actionTextHandler = (
-  text: string,
-  chanTitle: string,
-  frequency: string
-) => {
-  const replacements = [
-    { regex: /package/giu, ua: 'Пакет', en: 'Package' },
-    {
-      regex: /FTA(?: *\w*){0,2}/giu,
-      ua: "<span class='free_chan'>транслюється відкрито</span>",
-      en: "<span class='free_chan'>free broadcasting</span>",
-    },
-    {
-      regex: /\bnew SR\b/giu,
-      ua: "<span class='add_chan'>нова SR(символьна швидкість)</span>",
-      en: "<span class='add_chan'>new SR (symbol rate)</span>",
-    },
-    {
-      regex: /(?:\b\w*\b\s)*encrypted(?:\b\w*\b\s)*/giu,
-      ua: "<span class='left_chan'>закодовано на </span>",
-      en: "<span class='left_chan'>encrypted on </span>",
-    },
-    {
-      regex: /^ *(st\w+ed ag\w+n(?: *on)*) *$/giu,
-      ua: "<span class='add_chan'>відновив мовлення</span>",
-      en: "<span class='add_chan'>restored broadcasting</span>",
-    },
-    {
-      regex: /^ *(in the pa\w+ge ag\w*n(?: *on)*) *$/giu,
-      ua: "<span class='add_chan'>Знову в пакеті</span>",
-      en: "<span class='add_chan'>restored in the package</span>",
-    },
-    {
-      regex: /^ *(st\w+ed te\w+ng(?: *on)*) *$/giu,
-      ua: "<span class='add_chan'>розпочав тестове мовлення</span>",
-      en: "<span class='add_chan'>started test broadcasting</span>",
-    },
-    {
-      regex: /^ *(st\w+ed r\w+r p\w+m(?: *on)*) *$/giu,
-      ua: "<span class='add_chan'>розпочав регулярне мовлення</span>",
-      en: "<span class='add_chan'>started regular broadcasting</span>",
-    },
-    {
-      regex: /^ *(st\w+ed p\w+m(?: *on)*) *$/giu,
-      ua: "<span class='add_chan'>розпочав транслювати</span>",
-      en: "<span class='add_chan'>started translating</span>",
-    },
-    {
-      regex: /^ *(st\w+ed(?: *on)*) *$/giu,
-      ua: "<span class='add_chan'>розпочав мовлення</span>",
-      en: "<span class='add_chan'>started broadcasting</span>",
-    },
-    {
-      regex: /b\w+[kc] (?:on)* *\w* *new/giu,
-      ua: "<span class='add_chan'>повернувся з новими параметрами</span>",
-      en: "<span class='add_chan'>returned with new parameters</span>",
-    },
-    {
-      regex: /a\w+r a* *br\w*k/giu,
-      ua: "<span class='add_chan'>після зникнення</span>",
-      en: "<span class='add_chan'>after disappearance</span>",
-    },
-    {
-      regex: /^(ag\w*n)* *(on *(?:ag\w*n)*)/giu,
-      ua: "<span class='add_chan'>з'явився на супутнику</span> ",
-      en: "<span class='add_chan'>appeared on the satellite </span>",
-    },
-    {
-      regex: /^(ag\w*n)* *(left *(?:ag\w*n)*)/giu,
-      ua: "<span class='left_chan'>припинив трансляції</span> на ",
-      en: "<span class='left_chan'>stopped broadcasting</span> on ",
-    },
-    { regex: / package /giu, ua: ' пакет ', en: ' package ' },
-    {
-      regex: /^ *(new) /giu,
-      ua: 'змінилися параметри ',
-      en: 'parameters have changed ',
-    },
-    {
-      regex: /back on/giu,
-      ua: "<span class='add_chan'>повернувся</span> на ",
-      en: "<span class='add_chan'>returned</span> on ",
-    },
-    { regex: /old/giu, ua: 'старий', en: 'old' },
-    { regex: /satellites/giu, ua: 'супутники', en: 'satellites' },
-    { regex: /satellite/giu, ua: 'супутник', en: 'satellite' },
-    { regex: /now/giu, ua: 'зараз', en: 'now' },
-    { regex: /again/giu, ua: 'знову', en: 'again' },
-    { regex: /on/giu, ua: '', en: 'on' },
-  ];
-
-  const changed = replacements.reduce(
-    (acc, { regex, ua, en }) => {
-      const uaRes = acc.ua.replaceAll(regex, ua);
-      const enRes = acc.en.replaceAll(regex, en);
-
-      return { ua: uaRes, en: enRes };
-    },
-    { ua: text, en: text }
-  );
-
-  return {
-    ua: `<li><p><span class='grey_text'>${chanTitle.replaceAll('/package/ui', 'Пакет')}</span> ${changed.ua} ${frequency}`,
-    en: `<li><p><span class='grey_text'>${chanTitle.replaceAll('/package/ui', 'Package')}</span> ${changed.en} ${frequency}`,
-  };
-};
-
 const extractParsedData = ($: cheerio.CheerioAPI, updateAmount: number) => {
   const parsedData: ITblDigestParse[] = [];
   const extractErrors: string[] = [];
+
+  const addMessage = (
+    itemTitle: string,
+    from: string | null,
+    type: 'WARNING' | 'ERROR'
+  ) =>
+    extractErrors.push(
+      `${type}: Cannot extract ${itemTitle} from: «${from || 'CHEERIO HTML'}»`
+    );
 
   const baslikElements = $('p.baslik');
   const firstThreeBaslikElements = baslikElements.slice(0, updateAmount);
@@ -182,9 +95,7 @@ const extractParsedData = ($: cheerio.CheerioAPI, updateAmount: number) => {
         if ($(updateEl).hasClass('guncellemenormal')) {
           const channel_title = $(updateEl).find('b').eq(1).text().trim(); // Назва каналу
           if (!channel_title) {
-            extractErrors.push(
-              `Error extracting CHANNEL NAME from: «${$(updateEl).html()}»`
-            );
+            addMessage('CHANNEL NAME', $(updateEl).html(), 'ERROR');
 
             return;
           }
@@ -201,31 +112,36 @@ const extractParsedData = ($: cheerio.CheerioAPI, updateAmount: number) => {
               frequency_text = fallbackMatch[0];
             }
           }
-          if (!frequency_text) {
-            extractErrors.push(
-              `Error extracting FREQUENCY TEXT from: «${$(updateEl).html()}»`
-            );
-          }
+          if (!frequency_text)
+            addMessage('FREQUENCY TEXT', $(updateEl).html(), 'WARNING');
 
           const action = $(updateEl).find('font[color]').last().text().trim(); // Дія (left/on), другий <font>
           if (!action) {
-            extractErrors.push(
-              `Error extracting ACTION from: «${$(updateEl).html()}»`
-            );
+            addMessage('ACTION', $(updateEl).html(), 'ERROR');
 
             return;
           }
 
-          const fullSatName = $(updateEl).find('a').text().trim().split('@'); // Назва супутника
+          const satNameLink = $(updateEl).find('a');
+          const satHref = satNameLink.attr('href');
+          if (!satHref) addMessage('URL_LINK', $(updateEl).html(), 'WARNING');
+
+          const slug = satHref ? satHref.split('/').pop() : '';
+          if (!slug) addMessage('SLUG', satHref || '', 'WARNING');
+
+          const fullSatName = satNameLink.text().trim().split('@'); // Назва супутника
           const satName = fullSatName[0].trim();
-          const satPosition = fullSatName[1].trim();
-          if (!satPosition || !satName) {
-            extractErrors.push(
-              `Error extracting SATELLITE NAME or POSITION from: «${$(updateEl).html()}»`
-            );
+          if (!satName) {
+            addMessage('SATELLITE NAME', $(updateEl).html(), 'ERROR');
 
             return;
           }
+          const satPosition = fullSatName[1].trim();
+          if (!satPosition)
+            addMessage('SATELLITE POSITION', $(updateEl).html(), 'WARNING');
+
+          const [grade, ew] = satPosition.split('° ');
+          if (!grade || !ew) addMessage('GRADE', $(updateEl).html(), 'WARNING');
 
           const { ua, en } = actionTextHandler(
             action,
@@ -243,6 +159,8 @@ const extractParsedData = ($: cheerio.CheerioAPI, updateAmount: number) => {
             text_en: en,
             frequency_text: frequency_text,
             sat_name: satName,
+            sat_slug: slug || null,
+            sat_grade: ew === 'E' ? grade : `-${grade}`,
             sat_position: satPosition,
             sat: '',
             country: '',
@@ -259,7 +177,7 @@ const addSatId = async (parsedData: ITblDigestParse[]) => {
   const dataWithSatId: ITblDigestParse[] = [];
 
   for (const item of parsedData) {
-    const satResult = await getDBSatID(item.sat_name);
+    const satResult = await getDBSatID(item.sat_slug, item.sat_name);
     if (typeof satResult === 'string') {
       addSatIdErrors.push(satResult);
       dataWithSatId.push({
@@ -267,6 +185,11 @@ const addSatId = async (parsedData: ITblDigestParse[]) => {
         sat: '0',
       });
     } else {
+      if (parseFloat(satResult.grade) !== parseFloat(item.sat_grade || '')) {
+        addSatIdErrors.push(
+          `WARNING: SATELLITE GRADE from DB: «${satResult.grade}» is DIFFERENT from parsed GRADE: «${item.sat_grade}» for satellite slug «${item.sat_slug}» sat. name «${item.sat_name}»`
+        );
+      }
       dataWithSatId.push({
         ...item,
         sat: satResult.id,
@@ -285,9 +208,12 @@ const sendReportMail = async (
     subject: `Parse transponder news`,
     body: await renderAsync(
       <ParseTransNews
-        pathToMainParsePage={`${BASE_URL}/${EUrlAdminParam.BASE_PATH}/${EUrlAdminParam.PARSE}`}
+        title="Parse Trans News"
+        pathToMainParsePage={`${BASE_URL}/${ELanguage.EN}/${EUrlAdminParam.BASE_PATH}/${EUrlAdminParam.PARSE}`}
         dbTableLength={tblItemLength}
         errorMessages={errorMessages}
+        dbTableHref={getDbTableLink(EDBTableTitles.TRANS_NEWS)}
+        hrefSources={PARSE_URL}
       />
     ),
   });
@@ -330,7 +256,6 @@ export default async function Page({
     finalData = dataWithSatIdRes.dataWithSatId;
     errorMessages.push(...dataWithSatIdRes.addSatIdErrors);
 
-    // await insertDataToDB(finalData);
     if (!SHOW_ONLY) {
       const deleteRes = await deleteDBOldTransNews(finalData);
       errorMessages.push(deleteRes);
@@ -368,7 +293,7 @@ export default async function Page({
     await sendReportMail(
       errorMessages,
       typeof resDbTableLength === 'string'
-        ? 'Not Defined'
+        ? resDbTableLength
         : resDbTableLength[0].count.toLocaleString('en-US')
     );
 

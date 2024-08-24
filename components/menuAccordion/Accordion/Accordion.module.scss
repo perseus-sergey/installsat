@@ -58,6 +58,7 @@ $labelHeight: 54px;
 
 .accordionRadio:checked + .accordionItem .accordionLabel ~ .accordionContent {
   max-height: 700px;
+  overflow-y: auto;
 }
 
 .accordionRadio:checked + .accordionItem .accordionLabel.arrow::after {

@@ -6,9 +6,9 @@ import { META_TRANS_NEWS_LIST, TSatDigest } from '@/models/satDigest.model';
 import { getDailyNews } from '@/controllers/satDigest.controller';
 import FillingValidImage from '../ui/Images/FillingValidImage';
 import { ELanguage, ERRORS } from '@/models/ui.model';
-import EmptyPage from '../errors/EmptyPage/EmptyPage';
 import { decode } from 'html-entities';
 import { TitleH2Digest } from '../ui/Titles/TitleH2Digest';
+import EmptyData from '../errors/EmptyData/EmptyData';
 
 interface ITransNewsSingleProps {
   newsArray: [string, TSatDigest[]][] | null;
@@ -49,7 +49,10 @@ const TransNewsSingle = ({ newsArray, title, lang }: ITransNewsSingleProps) => (
         })}
       </div>
     ) : (
-      <EmptyPage title={ERRORS.EMPTY_DATE_NEWS_PAGE.title[lang]} />
+      <EmptyData
+        lang={lang}
+        description={ERRORS.EMPTY_DATE_NEWS_PAGE.title[lang]}
+      />
     )}
   </>
 );

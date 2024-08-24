@@ -1,18 +1,18 @@
-export const initSat = {
-  id: -1,
-  parent: -1,
-  title: '',
-  cpu: '',
-  description: '',
-  position: '',
-  grade: -1,
-  map_img: '',
-  logo: '',
-  view: -1,
-  fill: -1,
-};
-
-export type TSatModel = typeof initSat;
+export interface ISatModel {
+  id: number;
+  parent: number;
+  title: string;
+  cpu: string;
+  description: string;
+  position: string;
+  grade: number;
+  map_img: string;
+  logo: string;
+  view: number;
+  fill: number;
+  all_count: number;
+  free_count: number;
+}
 
 export interface ISatelliteOption {
   value: number | string;

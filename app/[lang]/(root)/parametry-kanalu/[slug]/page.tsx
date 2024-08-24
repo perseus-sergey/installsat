@@ -5,7 +5,7 @@ import DangerHtml from '@/components/ui/DangerHtml/DangerHtml';
 import FillingValidImage from '@/components/ui/Images/FillingValidImage';
 import NoteBlock from '@/components/ui/NoteBlock/NoteBlock';
 import SimilarArticles from '@/components/SimilarArticles/SimilarArticles';
-import SimilarChannel from '@/components/SimilarChannel/SimilarChannel';
+import { SimilarFlyChannel } from '@/components/SimilarChannel/SimilarChannel';
 import { Title } from '@/components/ui/Titles/Title';
 import TvScheduleLink from '@/components/TvScheduleLink/TvScheduleLink';
 import {
@@ -14,7 +14,7 @@ import {
 } from '@/controllers/articles.controller';
 import {
   getDBChannel,
-  getSimilarChannels,
+  getSimilarFlyChannels,
 } from '@/controllers/channel.controller';
 import { META_CHANNEL } from '@/models/channel.model';
 import {
@@ -30,7 +30,6 @@ import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
 import { getCommentsNumber } from '@/controllers/comments.controller';
 import GrooveLine from '@/components/ui/GrooveLine';
 import BreadCrumbServer from '@/components/BreadCrumbs/BreadCrumbsServer';
-import { CHANNEL_LIST_ANCHOR_START } from '@/models/channelList.model';
 import { BREAD_CRUMBS } from '@/models/breadCrumbs.model';
 import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
 import EditLinkButton from '@/components/admin/EditLinkButton/EditLinkButton';
@@ -44,7 +43,7 @@ const {
     channelLogo: { big: bigLogo },
   },
   infoPanelTitles: {
-    package: packageTitle,
+    // package: packageTitle,
     comments: commentsTitle,
     views: viewsTitle,
   },
@@ -135,27 +134,25 @@ export default async function Page({ params }: IChannelProps) {
     view,
     chan_slug,
     cat_id,
-    cat_title,
-    cat_parent_title,
-    cat_parent_id,
-    cat_parent_cpu,
-    cat_slug,
-    sat_slug,
-    sat_title,
+    // cat_title,
+    // cat_parent_title,
+    // cat_parent_id,
+    // cat_parent_cpu,
+    // cat_slug,
+    // sat_slug,
+    // sat_title,
     tvforsite_net,
   } = sqlResult;
 
-  const catLink =
-    cat_parent_id > 0
-      ? `${cat_parent_cpu}#${CHANNEL_LIST_ANCHOR_START}${cat_id}`
-      : cat_slug;
+  // const catLink =
+  //   cat_parent_id > 0
+  //     ? `${cat_parent_cpu}#${CHANNEL_LIST_ANCHOR_START}${cat_id}`
+  //     : cat_slug;
 
-  const catTitle =
-    cat_parent_id > 0 ? `${cat_parent_title} - ${cat_title}` : cat_title;
+  // const catTitle =
+  //   cat_parent_id > 0 ? `${cat_parent_title} - ${cat_title}` : cat_title;
 
-  const similarChannelsResult = await getSimilarChannels(logo);
-  const similarChannels =
-    similarChannelsResult instanceof Error ? [] : similarChannelsResult;
+  const similarChannels = await getSimilarFlyChannels(title);
 
   const similarArticles = await getSimilarArticles(logo);
 
@@ -176,15 +173,16 @@ export default async function Page({ params }: IChannelProps) {
       <BreadCrumbServer
         lang={lang}
         breadCrumbList={[
-          BREAD_CRUMBS.PACKAGE_CHANNEL_LIST,
-          {
-            href: `${EUrlBaseParam.PACKAGE_CHANNEL_LIST}/${catLink}`,
-            title: catTitle,
-          },
-          {
-            href: `${EUrlBaseParam.SAT_CHANNEL_LIST}/${sat_slug}`,
-            title: sat_title,
-          },
+          // BREAD_CRUMBS.PACKAGE_CHANNEL_LIST,
+          BREAD_CRUMBS.SAT_CHANNEL_LIST,
+          // {
+          //   href: `${EUrlBaseParam.PACKAGE_CHANNEL_LIST}/${catLink}`,
+          //   title: catTitle,
+          // },
+          // {
+          //   href: `${EUrlBaseParam.SAT_CHANNEL_LIST}/${sat_slug}`,
+          //   title: sat_title,
+          // },
           `${titleBefore[lang]} "${title}"`,
         ]}
       />
@@ -234,16 +232,16 @@ export default async function Page({ params }: IChannelProps) {
 
         <BottomInfoPanel
           items={[
-            {
-              name: packageTitle[lang],
-              value: (
-                <Link
-                  href={`/${lang}/${EUrlBaseParam.PACKAGE_CHANNEL_LIST}/${catLink}`}
-                >
-                  {catTitle}
-                </Link>
-              ),
-            },
+            // {
+            //   name: packageTitle[lang],
+            //   value: (
+            //     <Link
+            //       href={`/${lang}/${EUrlBaseParam.PACKAGE_CHANNEL_LIST}/${catLink}`}
+            //     >
+            //       {catTitle}
+            //     </Link>
+            //   ),
+            // },
             {
               name: viewsTitle[lang],
               value: (view + 1).toLocaleString('en-US'),
@@ -257,12 +255,8 @@ export default async function Page({ params }: IChannelProps) {
         <SimilarArticles
           similarTitle={`${simChannelsBefore.title[lang]} "${title}"`}
           similarArticlesMapped={similarChannels.map((chan) => (
-            <li key={chan.cpu}>
-              <SimilarChannel
-                lang={lang}
-                channelTitle={title}
-                chanParams={chan}
-              />
+            <li key={chan.slug}>
+              <SimilarFlyChannel lang={lang} chanParams={chan} />
             </li>
           ))}
         />

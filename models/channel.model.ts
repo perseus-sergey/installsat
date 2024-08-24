@@ -31,6 +31,65 @@ export interface IChannel {
   chan_lang: string;
 }
 
+export type TDbBoolean = 0 | 1;
+
+export interface IFlyChannel {
+  id: number;
+  title: string;
+  slug: string;
+  sat_title: string;
+  sat_position: string;
+  sat_logo: string;
+  sat_slug: string;
+  sat_grade: number;
+  frequency: number;
+  theme_id?: number;
+  logo?: string;
+  encryption: string | null;
+  biss: string;
+  description: string;
+  text: string;
+  official_site_url: string;
+  official_broadcast_url: string;
+  sr: number;
+  fec: string;
+  polarization: string;
+  beam: string;
+  theme?: string;
+  compress: string;
+  lan?: string;
+  canonical: string;
+  cat_parent_title: string;
+  mode: string;
+  is_radio: TDbBoolean;
+  sid: number | null;
+  v_pid: number | null;
+  a_pid: string;
+  is_biss: TDbBoolean;
+  t2_stream: string | null;
+  date_updated: Date;
+  vsetv: number;
+  vipiko: number;
+  view: number;
+  is_removed: TDbBoolean;
+  package_id: number;
+  package_title: string;
+  package_slug: string;
+}
+
+// export interface ISimilarFlyChannel {
+//   id: number;
+//   compress: number;
+//   frequency: number;
+//   encryption: string;
+//   biss: string;
+//   mode: string;
+//   slug: string;
+//   sat_title: string;
+//   sat_slug: string;
+//   sat_position: number;
+// }
+
 export interface IOnlineChannel extends IChannel {
   vsetv: number;
   vipiko: number;
@@ -200,7 +259,8 @@ export const META_CHANNEL = {
         width: 132,
         alternativeImgStr: { title: '🎞', fontSize: '6rem' },
         defaultImage: {
-          src: '/Images/1not_found_chan.png',
+          // src: '/Images/1not_found_chan.png',
+          src: '/Images/tv.png',
           height: 99,
           width: 132,
         },
@@ -215,7 +275,7 @@ export const META_CHANNEL = {
         width: 55,
         alternativeImgStr: { title: '🎞', fontSize: '2rem' },
         defaultImage: {
-          src: '/Images/1not_found_chan.png',
+          src: '/Images/tv.png',
           height: 42,
           width: 55,
         },
@@ -307,7 +367,7 @@ export const META_CHANNEL = {
           [ELanguage.EN]: `Watch the channel "${channelTitle}" live online`,
         };
       },
-      getSatChannelTitle(satTitle: string, satPosition: number) {
+      getSatChannelTitle(satTitle: string, satPosition: string | number) {
         return {
           [ELanguage.UA]: `Супутник: ${satTitle} ${satPosition}`,
           [ELanguage.EN]: `Satellite: ${satTitle} ${satPosition}`,
@@ -402,3 +462,195 @@ export const META_CHANNEL_ONLINE = {
     },
   },
 };
+
+export const audioLanguages: Record<string, string> = {
+  eng: 'English',
+  rus: 'Русский (Russian)',
+  pol: 'Polski (Polish)',
+  swe: 'Svenska (Swedish)',
+  por: 'Português (Portuguese)',
+  bel: 'Беларуская (Belarusian)',
+  tur: 'Türkçe (Turkish)',
+  spa: 'Español (Spanish)',
+  fra: 'Français (French)',
+  fre: 'Français (French)',
+  deu: 'Deutsch (German)',
+  ger: 'Deutsch (German)',
+  ita: 'Italiano (Italian)',
+  nld: 'Nederlands (Dutch)',
+  dut: 'Nederlands (Dutch)',
+  ukr: 'Українська (Ukrainian)',
+  chi: '中文 (Chinese)',
+  jpn: '日本語 (Japanese)',
+  kor: '한국어 (Korean)',
+  ara: 'العربية (Arabic)',
+  hin: 'हिन्दी (Hindi)',
+  heb: 'עברית (Hebrew)',
+  ces: 'Čeština (Czech)',
+  cze: 'Čeština (Czech)',
+  dan: 'Dansk (Danish)',
+  iri: 'Irish',
+  ell: 'Ελληνικά (Greek)',
+  gre: 'Ελληνικά (Greek)',
+  fin: 'Suomi (Finnish)',
+  hun: 'Magyar (Hungarian)',
+  nor: 'Norsk (Norwegian)',
+  mlt: 'Malti (Maltese)',
+  rom: 'Română (Romanian)',
+  rum: 'Română (Romanian)',
+  srp: 'Српски (Serbian)',
+  slk: 'Slovenčina (Slovak)',
+  slo: 'Slovenčina (Slovak)',
+  slv: 'Slovenščina (Slovenian)',
+  tha: 'ภาษาไทย (Thai)',
+  vie: 'Tiếng Việt (Vietnamese)',
+  bul: 'Български (Bulgarian)',
+  est: 'Eesti (Estonian)',
+  lat: 'Latviešu (Latvian)',
+  lit: 'Lietuvių (Lithuanian)',
+  hrv: 'Hrvatski (Croatian)',
+  isl: 'Íslenska (Icelandic)',
+  cat: 'Català (Catalan)',
+  glg: 'Galego (Galician)',
+  eus: 'Euskara (Basque)',
+  mal: 'മലയാളം (Malayalam)',
+  tam: 'தமிழ் (Tamil)',
+  tel: 'తెలుగు (Telugu)',
+  ben: 'বাংলা (Bengali)',
+  urd: 'اردو (Urdu)',
+  aym: 'Aymara',
+  que: 'Quechua',
+  kun: 'Kuna',
+  kek: 'Kekchi',
+  qui: 'Kichwa',
+  qup: 'Quechua',
+  gua: 'Guarani',
+  pap: 'Papiamento',
+  hai: 'Haitian Creole',
+  jap: '日本語 (Japanese)',
+  nep: 'नेपाली (Nepali)',
+  aze: 'Azərbaycan (Azerbaijani)',
+  baq: 'Euskara (Basque)',
+  ber: 'ⴰⵎⴰⵣⵉⵖ (Berber)',
+  bos: 'Bosanski (Bosnian)',
+  ful: 'Fulfulde (Fulah)',
+  hau: 'Hausa (Hausa)',
+  kur: 'Kurdî (Kurdish)',
+  man: '𞤃𞤢𞤤𞤢 (Mandingo)',
+  na: 'Nauruan (Nauruan)',
+  swa: 'Kiswahili (Swahili)',
+  tgl: 'Tagalog (Tagalog)',
+  per: 'فارسی (Persian)',
+  amh: 'አማርኛ (Amharic)',
+  ckb: 'کوردی (Central Kurdish)',
+  duo: 'Duala',
+  kurm: 'Kurmancî (Kurmanji)',
+  oro: 'Oromo',
+  oth: 'Other',
+  pus: 'پښتو (Pashto)',
+  qad: 'Qashqai',
+  sor: 'Sori',
+  syr: 'Syriac',
+  tig: 'ትግርኛ (Tigrinya)',
+  tir: 'ትግርኛ (Tigrinya)',
+  ice: 'Icelandic',
+  lav: 'Latvian',
+  mul: 'Multiple',
+  nya: 'Chichewa (Nyanja)',
+  yor: 'Yoruba',
+  aar: 'Afar',
+  afg: 'Afghan (Pashto)',
+  bem: 'Bemba',
+  che: 'Chechen',
+  com: 'Comorian',
+  dar: 'Dargwa',
+  hat: 'Haitian Creole',
+  igb: 'Igbo',
+  kik: 'Kikuyu',
+  kin: 'Kinyarwanda',
+  mai: 'Maithili',
+  orm: 'Oromo',
+  pcm: 'Nigerian Pidgin',
+  som: 'Somali',
+  use: 'Uspantso',
+  zul: 'Zulu',
+  zwe: 'Shona',
+  alb: 'Albanian',
+  arm: 'Armenian',
+  cue: 'Quechua',
+  kam: 'Kamba',
+  kaz: 'Kazakh',
+  kir: 'Kyrgyz',
+  mac: 'Macedonian',
+  mis: 'Miscellaneous languages',
+  mlg: 'Malagasy',
+  ser: 'Serbian',
+  tar: 'Tatar',
+  tuk: 'Turkmen',
+  uzb: 'Uzbek',
+  ama: 'Amharic',
+  chl: 'Chilean Spanish',
+  fry: 'Frisian',
+  lux: 'Luxembourgish',
+  sou: 'Southern Creole',
+  geo: 'Georgian',
+  gla: 'Scottish Gaelic',
+  gle: 'Irish Gaelic',
+  hnd: 'Hindi',
+  lah: 'Lahnda (Western Punjabi)',
+  nar: 'Nauru',
+  pan: 'Punjabi',
+  pas: 'Pashto',
+  pun: 'Punjabi',
+  san: 'Sanskrit',
+  sin: 'Sinhala',
+  snd: 'Sindhi',
+  tat: 'Tatar',
+  wel: 'Welsh',
+  gag: 'Gagauz',
+  gus: 'Ganda',
+  mer: 'Meru',
+  prs: 'Dari (Persian)',
+  tgk: 'Tajik',
+  turk: 'Turkish',
+  twi: 'Twi (Akan)',
+  zza: 'Zaza',
+  afi: 'Afrihili',
+  afr: 'Afrikaans',
+  asm: 'Assamese',
+  ass: 'Assamese',
+  bho: 'Bhojpuri',
+  bur: 'Burmese',
+  guj: 'Gujarati',
+  ind: 'Indonesian',
+  kan: 'Kannada',
+  mar: 'Marathi',
+  mon: 'Mongolian',
+  nag: 'Naga languages',
+  nbl: 'Ndebele (Southern)',
+  ori: 'Odia (Oriya)',
+  sot: 'Southern Sotho',
+  ssw: 'Swati (Swazi)',
+  tsn: 'Tswana',
+  tso: 'Tsonga',
+  uyg: 'Uyghur',
+  ven: 'Venda',
+  xho: 'Xhosa',
+  bak: 'Bashkir',
+  ban: 'Balinese',
+  chv: 'Chuvash',
+  div: 'Divehi (Dhivehi, Maldivian)',
+  dzo: 'Dzongkha (Bhutanese)',
+  kas: 'Kashmiri',
+  may: 'Malay',
+  odi: 'Odia (Oriya)',
+  raj: 'Rajasthani',
+  mdr: 'Mandar',
+  rwa: 'Kinyarwanda',
+  taj: 'Tajik',
+  zho: 'Chinese (Mandarin)',
+  int: 'Interlingua',
+  msa: 'Malay',
+};
+
+export const wrongAudio = ['ac3', 'aac', 'qaa', 'qis', 'org'];

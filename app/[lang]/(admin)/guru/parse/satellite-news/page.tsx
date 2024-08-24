@@ -13,7 +13,7 @@ import { EDBTableTitles, getDbTableLink } from '@/models/ui.model';
 import { ResultSetHeader } from 'mysql2';
 import { sendMail } from '@/libs/mail/sendMail';
 import { renderAsync } from '@react-email/render';
-import { ParseSatNewsTemplate } from '@/components/EmailTemplates/parseTransNews.template';
+import { ParseTransNews } from '@/components/EmailTemplates/parseTransNews.template';
 import { DEFAULT_ARTICLE_LOGO_NAME } from '@/models/articles.model';
 import {
   SOURCE_ARTICLE_PARAMS,
@@ -22,10 +22,8 @@ import {
 } from '@/ai-prompts/parseSatNews.prompt.mjs';
 
 // =================================================================
-// check logo in email
+// refresh email in production
 // add json-ld
-// add description into article
-// add data tag to article and list of articles
 // add image generator
 // =================================================================
 
@@ -139,7 +137,8 @@ const sendReportMail = async (messages: string[]) => {
   await sendMail({
     subject: `Parse Satellite news`,
     body: await renderAsync(
-      <ParseSatNewsTemplate
+      <ParseTransNews
+        title="Parse Satellite News"
         pathToMainParsePage={`${BASE_GURU_PATH}/${EUrlAdminParam.PARSE}`}
         dbTableHref={getDbTableLink(ARTICLE_TBL)}
         errorMessages={messages}

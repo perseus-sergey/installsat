@@ -46,6 +46,7 @@ const { SATELLITE, LANG, SAT_CHANNEL_LIST } = EUrlBaseParam;
 // =================================================================
 // execute script to add sat_slug for sat_digest in production
 //
+// Add satellite lincs to sat digest news
 // Make mjs fly sat & channels parser
 // Add cluster choise
 // add valid description to StartArticleSections

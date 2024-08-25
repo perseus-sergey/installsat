@@ -23,7 +23,6 @@ const TransNewsSingle = ({ newsArray, title, lang }: ITransNewsSingleProps) => (
     {newsArray && newsArray.length > 0 ? (
       <div>
         {newsArray.map((satNews) => {
-          console.log('🚀 ~ {newsArray.map ~ satNews:', satNews);
           const { satLogo } = META_TRANS_NEWS_LIST.images;
           const satTitle = decode(satNews[0]);
 
@@ -40,6 +39,7 @@ const TransNewsSingle = ({ newsArray, title, lang }: ITransNewsSingleProps) => (
                   alt={`${satLogo.alt[lang]}${satNews[0]}`}
                 />
                 <SatLink
+                  className="underline"
                   lang={lang}
                   satTitle={satTitle}
                   satSlug={satNews[1][0].sat_slug}

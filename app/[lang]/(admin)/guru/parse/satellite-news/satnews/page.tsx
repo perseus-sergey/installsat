@@ -4,10 +4,8 @@
 // import * as React from 'react';
 import puppeteer, { Browser } from 'puppeteer';
 import * as cheerio from 'cheerio';
-import {
-  getContentFromPuppeteerBrowser,
-  killChromeProcesses,
-} from '@/controllers/parse.controller';
+import { getContentFromPuppeteerBrowser } from '@/controllers/parse.controller';
+import { killChromeProcesses } from '@/cron/libs/commons.mjs';
 // import { sleep } from '@/libs/utils/utils';
 
 // interface IArticle {
@@ -186,7 +184,10 @@ export default async function Page() {
       }
     }
     // Закрити всі запущені процеси Chrome після завершення роботи функції
-    isProductionMode && killChromeProcesses();
+    if (isProductionMode) {
+      const killRes = killChromeProcesses();
+      messages = [...messages, ...killRes];
+    }
   }
 
   // return (

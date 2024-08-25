@@ -204,14 +204,6 @@ const sendReportMail = async (errorMessages, tblItemLength) => {
   });
 };
 
-const killChromeProcesses = () => {
-  try {
-    execSync('pkill -f chrome');
-  } catch (error) {
-    console.error('Error killing chrome processes:', error);
-  }
-};
-
 const R_U_N = async () => {
   let browser;
   const errorMessages = [];
@@ -258,7 +250,10 @@ const R_U_N = async () => {
       }
     }
     // Закрити всі запущені процеси Chrome після завершення роботи функції
-    isProductionMode && killChromeProcesses();
+    if (isProductionMode) {
+      const killRes = killChromeProcesses();
+      errorMessages.push(...killRes);
+    }
   }
 
   await sendReportMail(

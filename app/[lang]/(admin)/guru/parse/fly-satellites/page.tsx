@@ -2,10 +2,7 @@ import { Title } from '@/components/ui/Titles/Title';
 import puppeteer from 'puppeteer';
 import * as cheerio from 'cheerio';
 import { EDBTableTitles, TSearchParams } from '@/models/ui.model';
-import {
-  getContentFromPuppeteerBrowser,
-  killChromeProcesses,
-} from '@/controllers/parse.controller';
+import { getContentFromPuppeteerBrowser } from '@/controllers/parse.controller';
 import Link from 'next/link';
 import { poolExecute } from '@/libs/db/mysqldb';
 import { DateTime } from 'luxon';
@@ -13,6 +10,7 @@ import { validSearchParam } from '@/libs/utils/validSearchParam';
 import { EUrlSearchParam } from '@/models/url.model';
 import { parseFlyChannels } from '../fly-channels/page';
 import { ResultSetHeader } from 'mysql2';
+import { killChromeProcesses } from '@/cron/libs/commons.mjs';
 
 export const dynamic = 'force-dynamic';
 
@@ -411,9 +409,7 @@ export default async function Page({
     }
     if (isProductionMode) {
       const killRes = killChromeProcesses();
-      killRes instanceof Error
-        ? addMessage('ERROR: killing chrome processes', killRes)
-        : addMessage('SUCCESS: killing chrome processes.');
+      messages = [...messages, ...killRes];
     }
   }
 

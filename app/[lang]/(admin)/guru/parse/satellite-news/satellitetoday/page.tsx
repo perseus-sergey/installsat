@@ -3,11 +3,9 @@ import { Title } from '@/components/ui/Titles/Title';
 import * as React from 'react';
 import puppeteer, { Browser } from 'puppeteer';
 import * as cheerio from 'cheerio';
-import {
-  getContentFromPuppeteerBrowser,
-  killChromeProcesses,
-} from '@/controllers/parse.controller';
+import { getContentFromPuppeteerBrowser } from '@/controllers/parse.controller';
 import { sleep } from '@/libs/utils/utils';
+import { killChromeProcesses } from '@/cron/libs/commons.mjs';
 
 interface IArticle {
   originalTitle: string;
@@ -176,7 +174,10 @@ export default async function Page() {
         );
       }
     }
-    isProductionMode && killChromeProcesses();
+    if (isProductionMode) {
+      const killRes = killChromeProcesses();
+      messages = [...messages, ...killRes];
+    }
   }
 
   return (

@@ -2,7 +2,10 @@
 
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import styles from './ChannelFormatSliders.module.scss';
-import { EUrlSearchParam } from '@/models/url.model';
+import {
+  EUrlSearchParam,
+  URL_SEARCH_PARAM_VALUE_FALSE,
+} from '@/models/url.model';
 
 interface IChannelFormatSlidersProps {
   title: string;
@@ -20,7 +23,7 @@ const ChannelFormatSliders = ({
   const onChange = (isChecked: boolean) => {
     const params = new URLSearchParams(searchParams);
     if (isChecked) {
-      params.set(searchQueryName, 'off');
+      params.set(searchQueryName, URL_SEARCH_PARAM_VALUE_FALSE);
     } else {
       params.delete(searchQueryName);
     }

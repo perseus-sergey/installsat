@@ -107,7 +107,7 @@ export default async function Page({ searchParams, params }: IPageProps) {
     searchQueryChannel,
     '',
     searchQuerySatellites,
-    !searchParams?.[EUrlSearchParam.CHANNEL_ENCRYPTED],
+    !searchParams?.[EUrlSearchParam.CHANNEL_NOT_ENCRYPTED],
     !!searchParams?.[EUrlSearchParam.CHANNEL_RADIO],
     !!searchParams?.[EUrlSearchParam.CHANNEL_C_BAND],
     !!searchParams?.[EUrlSearchParam.CHANNEL_FORMAT_T2MI],

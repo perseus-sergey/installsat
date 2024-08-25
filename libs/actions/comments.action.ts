@@ -45,7 +45,7 @@ const getCommentSchema = (lang: ELanguage) =>
 
 export const addCommentAction = async (
   lang: ELanguage,
-  articleId: string,
+  articleId: string | number,
   userIp: string,
   userCountryCode: string,
   revalidateUrl: string,

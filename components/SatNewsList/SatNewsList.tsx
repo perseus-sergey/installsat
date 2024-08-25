@@ -9,7 +9,6 @@ import {
 import EmptyData from '../errors/EmptyData/EmptyData';
 import FillingValidImage from '../ui/Images/FillingValidImage';
 import { ELanguage, TSearchParams } from '@/models/ui.model';
-import { getDateInISO } from '@/libs/utils/dates';
 import {
   validSearchParam,
   validSearchParamArray,
@@ -17,6 +16,7 @@ import {
 import { EUrlSearchParam } from '@/models/url.model';
 import { TitleH2Digest } from '../ui/Titles/TitleH2Digest';
 import { TitleH3Digest } from '../ui/Titles/TitleH3Digest';
+import { DateLink, SatLink } from '../DateNewsList/DateNewsList';
 
 interface ISatNewsListProps {
   searchParams: TSearchParams;
@@ -38,10 +38,11 @@ const SatNewsList = async ({ searchParams, lang }: ISatNewsListProps) => {
 
   return newsArray.map((news) => {
     const { satLogo } = META_TRANS_NEWS_LIST.images;
+    const satSlug = news[1].get([...news[1].keys()][0])?.[0].sat_slug || '';
 
     return (
       <div key={news[0]}>
-        <TitleH2Digest>
+        <TitleH2Digest className="!justify-start">
           <FillingValidImage
             image={{
               ...satLogo,
@@ -51,20 +52,26 @@ const SatNewsList = async ({ searchParams, lang }: ISatNewsListProps) => {
             alternativeImgString={satLogo.alternativeStr}
             alt={`${satLogo.alt[lang]}${news[0]}`}
           />
-          <div className="flex flex-wrap gap-2 justify-center">
+          <div className="flex flex-wrap gap-2">
             {META_TRANS_NEWS_LIST.h2start[lang]}
-            <span className="text-rose-500">{news[0]}</span>
+            <SatLink
+              className="text-rose-500 underline"
+              lang={lang}
+              satTitle={news[0]}
+              satSlug={satSlug}
+            />
           </div>
         </TitleH2Digest>
         {[...news[1]].map((satNews) => {
-          const dateInISO =
-            getDateInISO(satNews[0]) ||
-            new Date(satNews[0]).toLocaleDateString('en-CA');
-
           return (
             <>
               <TitleH3Digest key={satNews[0]}>
-                <time dateTime={dateInISO}>{dateInISO}</time> ....
+                <DateLink
+                  lang={lang}
+                  dateStr={satNews[0]}
+                  className="underline"
+                />{' '}
+                ....
               </TitleH3Digest>
               <div className={styles.newsList}>
                 <DangerHtml

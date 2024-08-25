@@ -8,7 +8,12 @@ import { ResultSetHeader } from 'mysql2';
 import { cache } from 'react';
 
 export const getComments = cache(
-  async (tblName: EDBTableTitles, postId: string, start = 0, perPage = 20) => {
+  async (
+    tblName: EDBTableTitles,
+    postId: string | number,
+    start = 0,
+    perPage = 20
+  ) => {
     const sql = `
   SELECT * FROM ${tblName} WHERE post = ? ORDER BY id DESC LIMIT ?, ?
 `;
@@ -22,7 +27,7 @@ export const getComments = cache(
 );
 
 export const getCommentsNumber = cache(
-  async (tblName: EDBTableTitles, postId: string) => {
+  async (tblName: EDBTableTitles, postId: string | number) => {
     const sql = `
     SELECT COUNT(id) AS total_count FROM ${tblName} WHERE post = ?
 `;
@@ -54,7 +59,7 @@ export const getCommentFromDB = async (
 
 export const insertComment = async (
   dbTableName: EDBTableTitles,
-  articleId: string,
+  articleId: string | number,
   author: string,
   email: string,
   text: string,

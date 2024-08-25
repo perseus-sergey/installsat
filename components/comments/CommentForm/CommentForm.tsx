@@ -20,7 +20,7 @@ const { authorEmail, authorName, commentText, submit } =
 interface ICommentProps {
   revalidateUrl: string;
   dbCommentTableName: EDBTableTitles;
-  articleId: string;
+  articleId: string | number;
   articleName: string;
   userLocation: IUserLocation | null;
   baseUrl: string;

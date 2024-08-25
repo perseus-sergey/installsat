@@ -50,6 +50,8 @@ export enum EUrlAdminParam {
   PARSE_SAT_NEWS = 'satellite-news',
 }
 
+export const URL_SEARCH_PARAM_VALUE_FALSE = 'off';
+
 export enum EUrlSearchParam {
   ARTICLE = 'q',
   SAT = 'sat',
@@ -60,7 +62,7 @@ export enum EUrlSearchParam {
   LANGUAGE_URL = 'lang',
   CHANNEL_FORMAT_T2MI = 't2-mi',
   CHANNEL_FORMAT_MPG4 = 'mpeg4',
-  CHANNEL_ENCRYPTED = 'code',
+  CHANNEL_NOT_ENCRYPTED = 'no-coded',
   CHANNEL_RADIO = 'radio',
   CHANNEL_C_BAND = 'c-band',
   LATITUDE = 'lat',

@@ -226,7 +226,7 @@ const sendReportMail = async ({
   const allFailedChannelsUrl = createURLWithParams(
     `${BASE_GURU_PATH}/${EUrlAdminParam.PARSE}/${EUrlAdminParam.PARSE_SCHEDULE_VSETV}`,
     { [EUrlSearchParam.CHANNEL]: errorChannels.map((chan) => chan.vsetv) }
-  );
+  ).href;
 
   await sendMail({
     title: 'Parse VseTv Schedule Report',
@@ -292,7 +292,7 @@ const R_U_N = async () => {
             parseUrl: createURLWithParams(
               `${BASE_GURU_PATH}/${EUrlAdminParam.PARSE}/${EUrlAdminParam.PARSE_SCHEDULE_VSETV}`,
               { [EUrlSearchParam.CHANNEL]: channel.vsetv }
-            ),
+            ).href,
           });
           continue;
         }

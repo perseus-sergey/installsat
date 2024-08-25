@@ -375,7 +375,7 @@ export const META_ALL_SAT_CHANNEL_LIST = {
             [ELanguage.EN]: 'Only UNENCRYPTED channels',
             [ELanguage.UA]: 'Тільки НЕ КОДОВАНІ канали',
           },
-          searchQueryName: EUrlSearchParam.CHANNEL_ENCRYPTED,
+          searchQueryName: EUrlSearchParam.CHANNEL_NOT_ENCRYPTED,
         },
         {
           title: {

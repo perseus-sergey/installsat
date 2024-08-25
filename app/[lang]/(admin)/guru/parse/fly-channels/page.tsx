@@ -49,7 +49,7 @@ const { FLY_CHANNELS, FLY_SATELLITES } = EDBTableTitles;
 const dateNow = new Date().toLocaleDateString('en-CA');
 const pool = getPool();
 
-const messages: string[] = [];
+let messages: string[] = [];
 
 const addMessage = (message: string, error?: Error) => {
   messages.push(`${message}${error ? `: ${error.message}` : ''}`);
@@ -775,9 +775,7 @@ export const parseFlyChannels = async ({
     }
     if (isProductionMode) {
       const killRes = killChromeProcesses();
-      killRes instanceof Error
-        ? addMessage('ERROR: killing chrome processes', killRes)
-        : addMessage('SUCCESS: killing chrome processes.');
+      messages = [...messages, ...killRes];
     }
   }
 

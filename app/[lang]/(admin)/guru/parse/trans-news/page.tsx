@@ -13,10 +13,10 @@ import { sendMail } from '@/libs/mail/sendMail';
 import { renderAsync } from '@react-email/render';
 import { getDbIdAmount } from '@/controllers/schedule.controller';
 import { ParseTransNews } from '@/components/EmailTemplates/parseTransNews.template';
-import { execSync } from 'child_process';
 import {
   EUrlAdminParam,
   EUrlSearchParam,
+  killChromeProcesses,
   validSearchParam,
 } from '@cron/libs/commons.mjs';
 import {
@@ -219,14 +219,6 @@ const sendReportMail = async (
   });
 };
 
-const killChromeProcesses = () => {
-  try {
-    execSync('pkill -f chrome');
-  } catch (error) {
-    console.error('Error killing chrome processes:', error);
-  }
-};
-
 export default async function Page({
   searchParams,
 }: {
@@ -286,7 +278,10 @@ export default async function Page({
       }
     }
     // Закрити всі запущені процеси Chrome після завершення роботи функції
-    isProductionMode && killChromeProcesses();
+    if (isProductionMode) {
+      const killRes = killChromeProcesses();
+      errorMessages.push(...killRes);
+    }
   }
 
   if (!SHOW_ONLY)

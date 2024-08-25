@@ -4,10 +4,7 @@ import { GoogleGenerativeAI } from '@google/generative-ai';
 import * as React from 'react';
 import puppeteer, { Browser } from 'puppeteer';
 import * as cheerio from 'cheerio';
-import {
-  getContentFromPuppeteerBrowser,
-  killChromeProcesses,
-} from '@/controllers/parse.controller';
+import { getContentFromPuppeteerBrowser } from '@/controllers/parse.controller';
 import { poolExecute } from '@/libs/db/mysqldb';
 import { EDBTableTitles, getDbTableLink } from '@/models/ui.model';
 import { ResultSetHeader } from 'mysql2';
@@ -20,6 +17,7 @@ import {
   extractAiArticleDataFromAiHTML,
   getChangedSatNews,
 } from '@/ai-prompts/parseSatNews.prompt.mjs';
+import { killChromeProcesses } from '@/cron/libs/commons.mjs';
 
 // =================================================================
 // refresh email in production
@@ -275,7 +273,10 @@ export default async function Page() {
         );
       }
     }
-    isProductionMode && killChromeProcesses();
+    if (isProductionMode) {
+      const killRes = killChromeProcesses();
+      messages = [...messages, ...killRes];
+    }
   }
 
   await sendReportMail(messages);

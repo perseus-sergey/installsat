@@ -106,11 +106,37 @@ export const getContentFromPuppeteerBrowser = async (browser, url) => {
 };
 
 export const killChromeProcesses = () => {
-  try {
-    execSync('pkill -f chrome');
+  const messates = [];
 
-    return null;
+  try {
+    // Перевіряємо, чи є активні процеси Chrome
+    const activeChromeProcesses = execSync('pgrep -f chrome', { stdio: 'pipe' })
+      .toString()
+      .trim();
+
+    if (activeChromeProcesses) {
+      execSync('pkill -f chrome');
+      messates.push('SUCCESS: Chrome processes killed successfully.');
+    } else {
+      messates.push('WARNING: No active Chrome processes to kill.');
+    }
   } catch (error) {
-    return error;
+    // Перевіряємо, чи error є об'єктом і чи має поле 'code'
+    if (typeof error === 'object' && error !== null && 'code' in error) {
+      if (error.code === 1) {
+        // pgrep повертає код 1, якщо жоден процес не знайдено
+        messates.push('ERROR: No Chrome processes found.');
+      } else {
+        messates.push(
+          `ERROR: killing chrome processes: ${error instanceof Error ? error.message : new Error('Unknown error.')}`
+        );
+      }
+    } else {
+      messates.push(
+        `Unexpected error: ${error instanceof Error ? error.message : new Error('Unknown error.')}`
+      );
+    }
   }
+
+  return messates;
 };

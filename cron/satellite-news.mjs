@@ -246,7 +246,10 @@ const R_U_N = async () => {
         );
       }
     }
-    isProductionMode && killChromeProcesses();
+    if (isProductionMode) {
+      const killRes = killChromeProcesses();
+      messages = [...messages, ...killRes];
+    }
   }
 
   await sendReportMail(messages);

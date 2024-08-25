@@ -6,6 +6,7 @@ import {
   EDBTableTitles,
   getDbTableLink,
   EUrlAdminParam,
+  killChromeProcesses,
 } from './libs/commons.mjs';
 import {
   deleteDBOldTransNews,

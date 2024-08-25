@@ -6,10 +6,7 @@ import {
   EDBTableTitles,
   TSearchParams,
 } from '@/models/ui.model';
-import {
-  getContentFromPuppeteerBrowser,
-  killChromeProcesses,
-} from '@/controllers/parse.controller';
+import { getContentFromPuppeteerBrowser } from '@/controllers/parse.controller';
 import Link from 'next/link';
 import { getPool, poolExecute } from '@/libs/db/mysqldb';
 import { validSearchParam } from '@/libs/utils/validSearchParam';
@@ -17,6 +14,7 @@ import { EUrlSearchParam } from '@/models/url.model';
 import { ResultSetHeader } from 'mysql2';
 import { TDbBoolean } from '@/models/channel.model';
 import React from 'react';
+import { killChromeProcesses } from '@/cron/libs/commons.mjs';
 
 export const dynamic = 'force-dynamic';
 
@@ -774,8 +772,8 @@ export const parseFlyChannels = async ({
       }
     }
     if (isProductionMode) {
-      const killRes = killChromeProcesses();
-      messages = [...messages, ...killRes];
+      killChromeProcesses();
+      // messages = [...messages, ...killRes];
     }
   }
 

@@ -209,7 +209,7 @@ export const getFlySatChannels = cache(
    ch.sid,
    ch.v_pid,
    ch.a_pid,
-   ${lang === ELanguage.UA ? 'ch.description_ua' : 'ch.description_en AS description'},
+   ${lang === ELanguage.UA ? 'ch.description_ua' : 'ch.description_en'} AS description,
    ch.t2_stream,
     sat.title AS sat_title,
     sat.position AS sat_position,
@@ -240,7 +240,7 @@ export const getFlySatChannels = cache(
           ...r,
           sat_title: decode(r.sat_title),
           title: decode(r.title),
-          description_en: decode(r.description),
+          description: decode(r.description),
         }));
   }
 );

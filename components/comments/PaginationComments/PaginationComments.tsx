@@ -26,7 +26,7 @@ interface IPaginationProps {
   numberOfComments: number;
   commentsPerPage: number;
   commentsDBTblName: EDBTableTitles;
-  articleId: string;
+  articleId: string | number;
   lang: ELanguage;
 }
 

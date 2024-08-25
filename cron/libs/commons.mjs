@@ -92,7 +92,7 @@ export const createURLWithParams = (baseURL, searchParams = undefined) => {
   const params = makeUrlSearchParams(searchParams);
   url.search = params.toString();
 
-  return url.toString();
+  return url;
 };
 
 export const getContentFromPuppeteerBrowser = async (browser, url) => {

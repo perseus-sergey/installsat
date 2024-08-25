@@ -49,8 +49,8 @@ export const footerMenuList: IFooterMenu[] = [
   // },
   {
     title: {
-      [ELanguage.UA]: 'Теле-канали без щомісячної плати',
-      [ELanguage.EN]: 'TV channels without a monthly fee',
+      [ELanguage.UA]: 'Підбір каналів за параметрами',
+      [ELanguage.EN]: 'Select channels by parameters',
     },
     href: `/${EUrlBaseParam.SAT_CHANNEL_LIST}`,
   },

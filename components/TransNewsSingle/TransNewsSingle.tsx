@@ -9,6 +9,7 @@ import { ELanguage, ERRORS } from '@/models/ui.model';
 import { decode } from 'html-entities';
 import { TitleH2Digest } from '../ui/Titles/TitleH2Digest';
 import EmptyData from '../errors/EmptyData/EmptyData';
+import { SatLink } from '../DateNewsList/DateNewsList';
 
 interface ITransNewsSingleProps {
   newsArray: [string, TSatDigest[]][] | null;
@@ -22,11 +23,13 @@ const TransNewsSingle = ({ newsArray, title, lang }: ITransNewsSingleProps) => (
     {newsArray && newsArray.length > 0 ? (
       <div>
         {newsArray.map((satNews) => {
+          console.log('🚀 ~ {newsArray.map ~ satNews:', satNews);
           const { satLogo } = META_TRANS_NEWS_LIST.images;
+          const satTitle = decode(satNews[0]);
 
           return (
             <>
-              <TitleH2Digest key={satNews[0]}>
+              <TitleH2Digest key={satNews[0]} className="!justify-start">
                 <FillingValidImage
                   image={{
                     ...satLogo,
@@ -36,7 +39,11 @@ const TransNewsSingle = ({ newsArray, title, lang }: ITransNewsSingleProps) => (
                   alternativeImgString={satLogo.alternativeStr}
                   alt={`${satLogo.alt[lang]}${satNews[0]}`}
                 />
-                {decode(satNews[0])}
+                <SatLink
+                  lang={lang}
+                  satTitle={satTitle}
+                  satSlug={satNews[1][0].sat_slug}
+                />
               </TitleH2Digest>
               <div className={satNewsStyles.newsList}>
                 <DangerHtmlUl

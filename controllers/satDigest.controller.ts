@@ -13,6 +13,7 @@ import {
 import { DEFAULT_LANG, EDBTableTitles, ELanguage } from '@/models/ui.model';
 import { decode } from 'html-entities';
 import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
+import { cache } from 'react';
 
 const { FLY_SATELLITES, TRANS_NEWS } = EDBTableTitles;
 
@@ -49,6 +50,7 @@ export const getSatDigestNews = async ({
     SELECT 
       D.id,
       D.date,
+      D.sat_slug,
       ${lang === ELanguage.UA ? 'D.text' : 'D.text_en AS text'},
       D.sat_name  AS satTitle,
       D.sat_position AS satPosition,
@@ -196,6 +198,29 @@ export const getSatsForForm = async (
       );
 };
 
+interface IFlySatParams {
+  title: string;
+  position: string;
+  grade: string;
+  id: number;
+  slug: string;
+  logo: string;
+  all_count: number;
+  free_count: number;
+}
+export const getFlySatParams = cache(async (satSlug: string) => {
+  const res = await poolExecute<IFlySatParams[]>(
+    `
+  SELECT title, position, id, slug, logo, all_count, free_count, grade
+  FROM ${FLY_SATELLITES}
+  WHERE slug = ?
+  `,
+    [satSlug]
+  );
+
+  return res instanceof Error || res.length === 0 ? null : res[0];
+});
+
 // export const getSatsForForm = async (
 //   isDefaultValue = true,
 //   lang: ELanguage
@@ -224,6 +249,7 @@ export const getTransNewsForSingleDay = async (
   SELECT 
     D.id,
     D.date,
+    D.sat_slug,
     ${lang === ELanguage.UA ? 'D.text' : 'D.text_en AS text'},
     D.sat_name  AS satTitle,
     D.sat_position AS satPosition,

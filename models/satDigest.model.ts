@@ -131,6 +131,7 @@ export interface TSatDigest {
   date: Date | string;
   update: number;
   text: string;
+  sat_slug: string;
   sat: number;
   country: string;
   satTitle: string;

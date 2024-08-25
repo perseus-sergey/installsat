@@ -16,7 +16,7 @@ export const useFormCommentSendEmail = (
   articleName: string,
   articlePath: string,
   tblCommentName: EDBTableTitles,
-  articleId: string,
+  articleId: string | number,
   userLocation: IUserLocation | null,
   baseUrl: string,
   emailKey: string,

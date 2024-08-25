@@ -37,7 +37,7 @@ interface IEmailTemplateProps {
   commentText: string | undefined;
   authorEmail: string | undefined;
   articleName: string;
-  articleId: string;
+  articleId: string | number;
   articlePath: string;
   baseUrl: string;
   emailKey: string;

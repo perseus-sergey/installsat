@@ -4,7 +4,6 @@ import {
   getFlyGroupedChannelsAllSat,
   getChannelsLangList,
 } from '@/controllers/channelList.controller';
-import { getFlyChannelSatList } from '@/controllers/sidebar.controller';
 import {
   META_ALL_SAT_CHANNEL_LIST,
   META_SAT_CHANNEL_LIST,
@@ -12,7 +11,7 @@ import {
 import type { Metadata } from 'next';
 import StartArticleSection from '@/components/article/StartArticleSection/StartArticleSection';
 import FillingValidImage from '@/components/ui/Images/FillingValidImage';
-import { Suspense, cache } from 'react';
+import { Suspense } from 'react';
 import {
   DEFAULT_LANG,
   DEFAULT_META_DATA,
@@ -25,7 +24,6 @@ import { EUrlBaseParam, EUrlSearchParam, MAIN_URL } from '@/models/url.model';
 import { getCommentsNumber } from '@/controllers/comments.controller';
 import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
 import BreadCrumbServer from '@/components/BreadCrumbs/BreadCrumbsServer';
-import { BREAD_CRUMBS } from '@/models/breadCrumbs.model';
 import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
 import {
   getELangKey,
@@ -38,15 +36,18 @@ import Filter from '@/components/ui/Filter/Filter';
 import ChannelFormatSliders from '@/components/ui/ChannelFormatSliders/ChannelFormatSliders';
 import { Selector } from '@/components/SatelliteSelector/Selector';
 import EmptyPage from '@/components/errors/EmptyPage/EmptyPage';
+import { getFlySatParams } from '@/controllers/satDigest.controller';
+import { makeUrlSearchParams } from '@/libs/utils/utils';
 
 const BASE_URL = process.env.BASE_URL || MAIN_URL;
 
 const { SATELLITE, LANG, SAT_CHANNEL_LIST } = EUrlBaseParam;
 
 // =================================================================
-// execute script to add sat_slug for sat_digest in production
+// - execute script to add sat_slug for sat_digest in production
+// Add Satellite Links to satellite trans news digest
 //
-// Add satellite lincs to sat digest news
+// Change all Link to SeoLink
 // Make mjs fly sat & channels parser
 // Add cluster choise
 // add valid description to StartArticleSections
@@ -54,6 +55,8 @@ const { SATELLITE, LANG, SAT_CHANNEL_LIST } = EUrlBaseParam;
 // add color description to channel filters
 // improve similar channels & similar articles blocks
 // add comment block to fly channels with separate db tbl (fly_comments_channel))
+// Parse biss from lugasat (Or satsat.info) by sat grade & frequency & title
+// Try to get info about channel and it genre from gpt
 // =================================================================
 const {
   h1Start,
@@ -76,31 +79,20 @@ interface IPageProps {
   searchParams?: TSearchParams;
 }
 
-const satList = await getFlyChannelSatList();
-
-const getCurrentSatParams = cache((satSlug: string) => {
-  const satParams = satList.find((sat) => sat.cpu === satSlug);
-
-  return satParams
-    ? {
-        title: satParams.title,
-        id: `${satParams.id}`,
-        satPosition: satParams.position,
-        logo: satParams.logo,
-        slug: satParams.cpu,
-      }
-    : { title: '', id: '-1', satPosition: -1, logo: '', slug: '' };
-});
-
 export const dynamic = 'force-dynamic';
 
-export const generateMetadata = ({ params }: IPageProps): Metadata => {
-  const sat = params[SATELLITE];
+export const generateMetadata = async ({
+  params,
+}: IPageProps): Promise<Metadata> => {
+  const satUrlSlug = params[SATELLITE];
   const lang = getELangKey(params[LANG]);
 
-  const { title, satPosition, slug } = getCurrentSatParams(sat);
+  const resFlySatParams = await getFlySatParams(satUrlSlug);
+  if (!resFlySatParams) return DEFAULT_META_DATA[lang];
 
-  const satTitle = `${title} - ${satPosition}`;
+  const { title, position, slug } = resFlySatParams;
+
+  const satTitle = `${title} - ${position}`;
   const fullMetaTitle = `${metaTitle[lang]} ${satTitle}`;
   const description = `${metaDescription[lang]} ${satTitle}`;
   const slugPath = `${SAT_CHANNEL_LIST}/${slug}`;
@@ -142,10 +134,9 @@ export default async function Page({ searchParams, params }: IPageProps) {
     searchParams
   );
 
-  const { id, slug, title, logo, satPosition } =
-    getCurrentSatParams(urlSatSlug);
+  const resFlySatParams = await getFlySatParams(urlSatSlug);
 
-  if (!title)
+  if (!resFlySatParams)
     return (
       <EmptyPage
         title={
@@ -157,51 +148,51 @@ export default async function Page({ searchParams, params }: IPageProps) {
       />
     );
 
+  const { id, slug, title, logo, position, grade } = resFlySatParams;
+
   const satChannels = await getFlySatChannels(
     lang,
     searchQueryChannel,
     slug,
     undefined,
-    !searchParams?.[EUrlSearchParam.CHANNEL_ENCRYPTED],
+    !searchParams?.[EUrlSearchParam.CHANNEL_NOT_ENCRYPTED],
     !!searchParams?.[EUrlSearchParam.CHANNEL_RADIO],
     !!searchParams?.[EUrlSearchParam.CHANNEL_C_BAND],
     !!searchParams?.[EUrlSearchParam.CHANNEL_FORMAT_T2MI],
     searchQueryLanguages
   );
 
-  if (!satChannels.length)
-    return (
-      <EmptyPage
-        title={
-          lang === ELanguage.UA
-            ? `На обраному супутнику (${urlSatSlug}) каналів не знайдено.`
-            : `No channels were found on the selected satellite (${urlSatSlug}).`
-        }
-        lang={lang}
-      />
-    );
-
-  const channelsLangList = await getChannelsLangList([
-    satChannels[0].sat_grade.toString(),
-  ]);
+  const channelsLangList = satChannels.length
+    ? await getChannelsLangList([satChannels[0].sat_grade.toString()])
+    : [];
 
   const numberOfComments = await getCommentsNumber(
     EDBTableTitles.COMMENTS_SATELLITE,
     id
   );
 
+  const lastUpdatedSatsUrlSearchPar = makeUrlSearchParams({
+    [EUrlSearchParam.SAT]: grade,
+  }).toString();
+
   return (
     <>
       <BreadCrumbServer
         lang={lang}
         breadCrumbList={[
-          BREAD_CRUMBS.SAT_CHANNEL_LIST,
-          `${title} - ${satPosition}`,
+          {
+            href: `${EUrlBaseParam.SAT_CHANNEL_LIST}${lastUpdatedSatsUrlSearchPar ? `?${lastUpdatedSatsUrlSearchPar}` : ''}`,
+            title: {
+              [ELanguage.UA]: 'Список каналів супутників',
+              [ELanguage.EN]: 'List of satellite channels',
+            },
+          },
+          `${title} - ${position}`,
         ]}
       />
       <article className="article">
         <Title>
-          {h1Start[lang]} «{title} - {satPosition}»
+          {h1Start[lang]} «{title} - {position}»
           <FillingValidImage
             image={{
               ...h1SatImage,
@@ -275,7 +266,7 @@ export default async function Page({ searchParams, params }: IPageProps) {
         revalidateUrl={`/${lang}/${SAT_CHANNEL_LIST}/${slug}`}
         dbCommentTableName={EDBTableTitles.COMMENTS_SATELLITE}
         articleId={id}
-        articleName={`${metaTitle[lang]} ${title} - ${satPosition}`}
+        articleName={`${metaTitle[lang]} ${title} - ${position}`}
       />
     </>
   );

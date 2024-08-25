@@ -302,7 +302,7 @@ export default async function Page({
             parseUrl: createURLWithParams(
               `${BASE_GURU_PATH}/${EUrlAdminParam.PARSE}/${EUrlAdminParam.PARSE_SCHEDULE_VSETV}`,
               { [EUrlSearchParam.CHANNEL]: channel.vsetv }
-            ),
+            ).href,
           });
           continue;
         }
@@ -352,10 +352,16 @@ export default async function Page({
         }
         errorMessages={errorMessages}
         errorChannels={errorChannels}
-        allFailedChannelsUrl={createURLWithParams(
-          `${BASE_GURU_PATH}/${EUrlAdminParam.PARSE}/${EUrlAdminParam.PARSE_SCHEDULE_VSETV}`,
-          { [EUrlSearchParam.CHANNEL]: errorChannels.map((chan) => chan.vsetv) }
-        )}
+        allFailedChannelsUrl={
+          createURLWithParams(
+            `${BASE_GURU_PATH}/${EUrlAdminParam.PARSE}/${EUrlAdminParam.PARSE_SCHEDULE_VSETV}`,
+            {
+              [EUrlSearchParam.CHANNEL]: errorChannels.map(
+                (chan) => chan.vsetv
+              ),
+            }
+          ).href
+        }
       />
     ),
   });
@@ -393,10 +399,12 @@ export default async function Page({
                 </Link>{' '}
                 <Link href={getParseURL(channel.vsetv)}>VseTv</Link>{' '}
                 <Link
-                  href={createURLWithParams(
-                    `${BASE_GURU_PATH}/${EUrlAdminParam.PARSE}/${EUrlAdminParam.PARSE_SCHEDULE_VSETV}`,
-                    { [EUrlSearchParam.CHANNEL]: channel.vsetv }
-                  )}
+                  href={
+                    createURLWithParams(
+                      `${BASE_GURU_PATH}/${EUrlAdminParam.PARSE}/${EUrlAdminParam.PARSE_SCHEDULE_VSETV}`,
+                      { [EUrlSearchParam.CHANNEL]: channel.vsetv }
+                    ).href
+                  }
                 >
                   Parse Again
                 </Link>

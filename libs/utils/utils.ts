@@ -92,12 +92,12 @@ export const makeUrlSearchParams = (
 export const createURLWithParams = (
   baseURL: string,
   searchParams?: TSearchParams
-): string => {
-  if (!searchParams) return baseURL;
-
+): URL => {
   const url = new URL(baseURL);
+  if (!searchParams) return url;
+
   const params = makeUrlSearchParams(searchParams);
   url.search = params.toString();
 
-  return url.toString();
+  return url;
 };

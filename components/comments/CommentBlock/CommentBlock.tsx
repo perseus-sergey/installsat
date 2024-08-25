@@ -14,7 +14,7 @@ const {
 interface IProps {
   revalidateUrl: string;
   dbCommentTableName: EDBTableTitles;
-  articleId: string;
+  articleId: string | number;
   articleName: string;
   numberOfComments: number;
   lang: ELanguage;

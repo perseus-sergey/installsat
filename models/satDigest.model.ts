@@ -131,12 +131,12 @@ export interface TSatDigest {
   date: Date | string;
   update: number;
   text: string;
-  sat_slug: string;
+  sat_slug: string | null;
   sat: number;
   country: string;
   satTitle: string;
   satLogo: string;
-  satGrade: string;
+  satGrade: string | null;
   satPosition: string;
 }
 

@@ -94,7 +94,7 @@ export const DateLink = ({
 
 interface SatLinkProps extends React.HTMLAttributes<HTMLElement> {
   lang: ELanguage;
-  satSlug: string;
+  satSlug: string | null;
   satTitle: string;
 }
 
@@ -106,7 +106,7 @@ export const SatLink = ({
   ...attributes
 }: SatLinkProps) => {
   const satelliteHref = createURLWithParams(
-    `${BASE_URL}/${lang}/${EUrlBaseParam.SAT_CHANNEL_LIST}${satSlug && `/${satSlug}`}`,
+    `${BASE_URL}/${lang}/${EUrlBaseParam.SAT_CHANNEL_LIST}${satSlug ? `/${satSlug}` : ''}`,
     {
       [EUrlSearchParam.CHANNEL_NOT_ENCRYPTED]: URL_SEARCH_PARAM_VALUE_FALSE,
     }

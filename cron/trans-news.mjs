@@ -38,6 +38,11 @@ const extractParsedData = ($, updateAmount) => {
   const parsedData = [];
   const extractErrors = [];
 
+  const addMessage = (itemTitle, from, type) =>
+    extractErrors.push(
+      `${type}: Cannot extract ${itemTitle} from: «${from || 'CHEERIO HTML'}»`
+    );
+
   const baslikElements = $('p.baslik');
   const firstThreeBaslikElements = baslikElements.slice(0, updateAmount);
 
@@ -61,9 +66,7 @@ const extractParsedData = ($, updateAmount) => {
         if ($(updateEl).hasClass('guncellemenormal')) {
           const channel_title = $(updateEl).find('b').eq(1).text().trim(); // Назва каналу
           if (!channel_title) {
-            extractErrors.push(
-              `Error extracting CHANNEL NAME from: «${$(updateEl).html()}»`
-            );
+            addMessage('CHANNEL NAME', $(updateEl).html(), 'ERROR');
 
             return;
           }
@@ -80,31 +83,36 @@ const extractParsedData = ($, updateAmount) => {
               frequency_text = fallbackMatch[0];
             }
           }
-          if (!frequency_text) {
-            extractErrors.push(
-              `Error extracting FREQUENCY TEXT from: «${$(updateEl).html()}»`
-            );
-          }
+          if (!frequency_text)
+            addMessage('FREQUENCY TEXT', $(updateEl).html(), 'WARNING');
 
           const action = $(updateEl).find('font[color]').last().text().trim(); // Дія (left/on), другий <font>
           if (!action) {
-            extractErrors.push(
-              `Error extracting ACTION from: «${$(updateEl).html()}»`
-            );
+            addMessage('ACTION', $(updateEl).html(), 'ERROR');
 
             return;
           }
 
-          const fullSatName = $(updateEl).find('a').text().trim().split('@'); // Назва супутника
+          const satNameLink = $(updateEl).find('a');
+          const satHref = satNameLink.attr('href');
+          if (!satHref) addMessage('URL_LINK', $(updateEl).html(), 'WARNING');
+
+          const slug = satHref ? satHref.split('/').pop() : '';
+          if (!slug) addMessage('SLUG', satHref || '', 'WARNING');
+
+          const fullSatName = satNameLink.text().trim().split('@'); // Назва супутника
           const satName = fullSatName[0].trim();
-          const satPosition = fullSatName[1].trim();
-          if (!satPosition || !satName) {
-            extractErrors.push(
-              `Error extracting SATELLITE NAME or POSITION from: «${$(updateEl).html()}»`
-            );
+          if (!satName) {
+            addMessage('SATELLITE NAME', $(updateEl).html(), 'ERROR');
 
             return;
           }
+          const satPosition = fullSatName[1].trim();
+          if (!satPosition)
+            addMessage('SATELLITE POSITION', $(updateEl).html(), 'WARNING');
+
+          const [grade, ew] = satPosition.split('° ');
+          if (!grade || !ew) addMessage('GRADE', $(updateEl).html(), 'WARNING');
 
           const { ua, en } = actionTextHandler(
             action,
@@ -122,6 +130,8 @@ const extractParsedData = ($, updateAmount) => {
             text_en: en,
             frequency_text: frequency_text,
             sat_name: satName,
+            sat_slug: slug || null,
+            sat_grade: ew === 'E' ? grade : `-${grade}`,
             sat_position: satPosition,
             sat: '',
             country: '',
@@ -138,7 +148,7 @@ const addSatId = async (parsedData) => {
   const dataWithSatId = [];
 
   for (const item of parsedData) {
-    const satResult = await getDBSatID(item.sat_name);
+    const satResult = await getDBSatID(item.sat_slug, item.sat_name);
     if (typeof satResult === 'string') {
       addSatIdErrors.push(satResult);
       dataWithSatId.push({
@@ -146,6 +156,11 @@ const addSatId = async (parsedData) => {
         sat: '0',
       });
     } else {
+      if (parseFloat(satResult.grade) !== parseFloat(item.sat_grade || '')) {
+        addSatIdErrors.push(
+          `WARNING: SATELLITE GRADE from DB: «${satResult.grade}» is DIFFERENT from parsed GRADE: «${item.sat_grade}» for satellite slug «${item.sat_slug}» sat. name «${item.sat_name}»`
+        );
+      }
       dataWithSatId.push({
         ...item,
         sat: satResult.id,

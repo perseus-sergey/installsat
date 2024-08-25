@@ -24,42 +24,46 @@ export const getDBSatID = memoize(async (satSlug, satName) => {
 });
 
 export const insertDBTransNews = async (data) => {
-  const values = data.map((item) => [
-    pool.escape(item.date),
-    pool.escape(item.update),
-    pool.escape(item.channel_title),
-    pool.escape(item.action),
-    pool.escape(item.text),
-    pool.escape(item.text_en),
-    pool.escape(item.sat),
-    pool.escape(item.sat_name),
-    pool.escape(item.sat_slug),
-    pool.escape(item.sat_grade),
-    pool.escape(item.sat_position),
-    pool.escape(item.frequency_text),
-    pool.escape(item.country),
+  const placeholders = data
+    .map(() => `(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`)
+    .join(', ');
+
+  const values = data.flatMap((item) => [
+    item.date,
+    item.update,
+    item.channel_title,
+    item.action,
+    item.text,
+    item.text_en,
+    item.sat,
+    item.sat_name,
+    item.sat_slug,
+    item.sat_grade,
+    item.sat_position,
+    item.frequency_text,
+    item.country,
   ]);
 
   const sql = `
-      INSERT INTO ${EDBTableTitles.TRANS_NEWS} 
-      (
-       \`date\`,
-       \`update\`,
-       \`channel_title\`,
-       \`action\`,
-       \`text\`,
-       \`text_en\`,
-       \`sat\`,
-       \`sat_name\`,
-       \`sat_slug\`,
-       \`sat_grade\`,
-       \`sat_position\`,
-       \`frequency_text\`,
-       \`country\`
-       )
-      VALUES ${values.map((valueSet) => `(${valueSet.join(', ')})`).join(', ')};
-    `;
-  const res = await executePoolQuery(sql);
+    INSERT INTO ${EDBTableTitles.TRANS_NEWS} 
+    (
+      \`date\`,
+      \`update\`,
+      \`channel_title\`,
+      \`action\`,
+      \`text\`,
+      \`text_en\`,
+      \`sat\`,
+      \`sat_name\`,
+      \`sat_slug\`,
+      \`sat_grade\`,
+      \`sat_position\`,
+      \`frequency_text\`,
+      \`country\`
+    )
+    VALUES ${placeholders};
+  `;
+  const res = await executePoolQuery(sql, values);
 
   if (res instanceof Error) throw new Error(`DB INSERT data: ${res.message}`);
 

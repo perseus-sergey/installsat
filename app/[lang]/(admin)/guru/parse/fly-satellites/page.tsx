@@ -110,7 +110,7 @@ const insertNewSatsToDB = async (newSatellites: ITblFlySats[]) => {
 
   if (res instanceof Error) {
     addMessage(
-      `ERROR: during INSERT ${newSatellites} new satellites to DB`,
+      `ERROR: during INSERT ${newSatellites.length} new satellites to DB`,
       res
     );
   } else {

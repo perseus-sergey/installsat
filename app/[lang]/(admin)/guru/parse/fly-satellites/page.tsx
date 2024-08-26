@@ -177,7 +177,12 @@ const processSatellitesInBatches = async (allParsedSats: ITblFlySats[]) => {
 
         try {
           browser = await puppeteer.launch({
-            args: ['--disable-dev-shm-usage', '--disable-gpu'],
+            args: [
+              '--no-sandbox',
+              '--disable-setuid-sandbox',
+              '--disable-dev-shm-usage',
+              '--disable-gpu',
+            ],
             headless: true,
           });
 
@@ -370,7 +375,12 @@ export default async function Page({
     const dbSatellites = await getDataFromDB();
 
     browser = await puppeteer.launch({
-      args: ['--disable-dev-shm-usage', '--disable-gpu'],
+      args: [
+        '--no-sandbox',
+        '--disable-setuid-sandbox',
+        '--disable-dev-shm-usage',
+        '--disable-gpu',
+      ],
       headless: true, // Запуск без графічного інтерфейсу
     });
 

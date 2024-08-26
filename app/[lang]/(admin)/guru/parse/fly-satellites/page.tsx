@@ -35,9 +35,10 @@ const INTERVAL_FROM_LAST_UPDATE = 2;
 // const BASE_URL = process.env.BASE_URL;
 const isProductionMode = process.env.PRODUCTION_MODE === 'true';
 
-const IS_LOGGED = true;
+const IS_LOGGED = !isProductionMode;
 const PARSE_URL = 'https://flysat.com/en/satellitelist';
 const { FLY_SATELLITES } = EDBTableTitles;
+const PARALLEL_LIMIT = 1;
 
 let messages: string[] = [];
 
@@ -165,7 +166,6 @@ const processSatellitesInBatches = async (
   allParsedSats: ITblFlySats[],
   batchSize = 30
 ) => {
-  const PARALLEL_LIMIT = 3;
   let batchPromises = [];
 
   for (let i = 0; i < allParsedSats.length; i += batchSize) {
@@ -428,11 +428,12 @@ export default async function Page({
       {messages.length > 0 && (
         <>
           <h2 className="font-bold text-blue-700 text-xl">Messages:</h2>
-          <ul>
+          {/* <ul>
             {messages.map((message, i) => (
-              <li key={i}>{message}</li>
+              <li key={i + message}>{message}</li>
             ))}
-          </ul>
+          </ul> */}
+          <pre>{JSON.stringify(messages, null, 2)}</pre>
         </>
       )}
       <SatList title="New Satellites Found:" satList={newSatList} />

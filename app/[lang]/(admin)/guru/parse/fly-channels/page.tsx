@@ -40,9 +40,8 @@ interface IFlyChannel {
 // const BASE_URL = process.env.BASE_URL;
 const isProductionMode = process.env.PRODUCTION_MODE === 'true';
 
-const IS_LOGGED = true;
+const IS_LOGGED = !isProductionMode;
 const PARSE_URL_BASE = 'https://www.flysat.com/en/satellite/';
-const CURRENT_SAT_SLUG = 'astra-4a';
 const { FLY_CHANNELS, FLY_SATELLITES } = EDBTableTitles;
 const dateNow = new Date().toLocaleDateString('en-CA');
 const pool = getPool();
@@ -795,8 +794,15 @@ export default async function Page({
 }: {
   searchParams?: TSearchParams;
 }) {
-  const currentSatSlug =
-    validSearchParam(EUrlSearchParam.SAT, searchParams) || CURRENT_SAT_SLUG;
+  const currentSatSlug = validSearchParam(EUrlSearchParam.SAT, searchParams);
+
+  if (!currentSatSlug) {
+    addMessage(
+      `ERROR: searchParams"${EUrlSearchParam.SAT}" = "${searchParams?.[EUrlSearchParam.SAT]}"`
+    );
+
+    return null;
+  }
 
   const sourceUrl = `${PARSE_URL_BASE}${currentSatSlug}`;
 
@@ -845,13 +851,9 @@ export default async function Page({
         <Link href={sourceUrl}>Parse FlySat Channels Table</Link>
       </Title>
 
-      <ul id="anchors">
+      <ul>
         {shows.map((show) => (
-          <li key={show.id}>
-            <Link className="text-xl text-blue-700" href={`#${show.id}`}>
-              {show.text}
-            </Link>
-          </li>
+          <li key={show.id}>{show.text}</li>
         ))}
       </ul>
 
@@ -862,13 +864,7 @@ export default async function Page({
           <h2 className="text-2xl text-red-700 bg-blue-300" id={item.id}>
             {item.text}
           </h2>
-          <Link className="text-red-700 bg-blue-300 rounded-lg" href="#anchors">
-            Go to Start
-          </Link>
           <pre>{JSON.stringify(item.array, null, 2)}</pre>
-          <Link className="text-red-700 bg-blue-300 rounded-lg" href="#anchors">
-            Go to Start
-          </Link>
           <hr />
         </React.Fragment>
       ))}

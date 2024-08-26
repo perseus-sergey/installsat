@@ -32,13 +32,15 @@ export interface ITblFlySats {
 
 const INTERVAL_FROM_LAST_UPDATE = 2;
 
+const PARALLEL_LIMIT = 2;
+const PARSE_BATCH_SIZE = 5;
+
 // const BASE_URL = process.env.BASE_URL;
 const isProductionMode = process.env.PRODUCTION_MODE === 'true';
 
 const IS_LOGGED = !isProductionMode;
 const PARSE_URL = 'https://flysat.com/en/satellitelist';
 const { FLY_SATELLITES } = EDBTableTitles;
-const PARALLEL_LIMIT = 1;
 
 let messages: string[] = [];
 
@@ -162,14 +164,11 @@ const getDayDifference = (startDate: Date) => {
 const isSameDate = (parseDate: DateTime, dbDate: DateTime) =>
   parseDate.startOf('day').toISODate() === dbDate.startOf('day').toISODate();
 
-const processSatellitesInBatches = async (
-  allParsedSats: ITblFlySats[],
-  batchSize = 30
-) => {
+const processSatellitesInBatches = async (allParsedSats: ITblFlySats[]) => {
   let batchPromises = [];
 
-  for (let i = 0; i < allParsedSats.length; i += batchSize) {
-    const batch = allParsedSats.slice(i, i + batchSize);
+  for (let i = 0; i < allParsedSats.length; i += PARSE_BATCH_SIZE) {
+    const batch = allParsedSats.slice(i, i + PARSE_BATCH_SIZE);
 
     batchPromises.push(
       (async () => {
@@ -178,12 +177,7 @@ const processSatellitesInBatches = async (
 
         try {
           browser = await puppeteer.launch({
-            args: [
-              '--no-sandbox',
-              '--disable-setuid-sandbox',
-              '--disable-dev-shm-usage',
-              '--disable-gpu',
-            ],
+            args: ['--disable-dev-shm-usage', '--disable-gpu'],
             headless: true,
           });
 
@@ -235,6 +229,8 @@ const processSatellitesInBatches = async (
     messages.push(...results.flat());
   }
 };
+
+// ----------------------------------------------------------------
 
 const extractParsedData = (
   $: cheerio.CheerioAPI,
@@ -374,12 +370,7 @@ export default async function Page({
     const dbSatellites = await getDataFromDB();
 
     browser = await puppeteer.launch({
-      args: [
-        '--no-sandbox',
-        '--disable-setuid-sandbox',
-        '--disable-dev-shm-usage',
-        '--disable-gpu',
-      ],
+      args: ['--disable-dev-shm-usage', '--disable-gpu'],
       headless: true, // Запуск без графічного інтерфейсу
     });
 

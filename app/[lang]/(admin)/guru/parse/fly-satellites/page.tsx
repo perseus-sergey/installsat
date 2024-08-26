@@ -1,7 +1,12 @@
 import { Title } from '@/components/ui/Titles/Title';
 import puppeteer from 'puppeteer';
 import * as cheerio from 'cheerio';
-import { EDBTableTitles, TSearchParams } from '@/models/ui.model';
+import {
+  EDBTableTitles,
+  ELanguage,
+  TSearchParams,
+  getDbTableLink,
+} from '@/models/ui.model';
 import { getContentFromPuppeteerBrowser } from '@/controllers/parse.controller';
 import Link from 'next/link';
 import { poolExecute } from '@/libs/db/mysqldb';
@@ -10,7 +15,10 @@ import { validSearchParam } from '@/libs/utils/validSearchParam';
 import { EUrlSearchParam } from '@/models/url.model';
 import { parseFlyChannels } from '../fly-channels/page';
 import { ResultSetHeader } from 'mysql2';
-import { killChromeProcesses } from '@/cron/libs/commons.mjs';
+import { EUrlAdminParam, killChromeProcesses } from '@/cron/libs/commons.mjs';
+import { sendMail } from '@/libs/mail/sendMail';
+import { renderAsync } from '@react-email/render';
+import { ParseTransNews } from '@/components/EmailTemplates/parseTransNews.template';
 
 export const dynamic = 'force-dynamic';
 
@@ -35,7 +43,7 @@ const INTERVAL_FROM_LAST_UPDATE = 2;
 const PARALLEL_LIMIT = 2;
 const PARSE_BATCH_SIZE = 5;
 
-// const BASE_URL = process.env.BASE_URL;
+const BASE_URL = process.env.BASE_URL;
 const isProductionMode = process.env.PRODUCTION_MODE === 'true';
 
 const IS_LOGGED = !isProductionMode;
@@ -135,24 +143,20 @@ const findDbOverSats = (dbSats: ITblFlySats[], parsedSats: ITblFlySats[]) =>
       )
   );
 
-// const sendReportMail = async (
-//   errorMessages: string[],
-//   tblItemLength: string
-// ) => {
-//   await sendMail({
-//     subject: `Parse Fly Satellites`,
-//     body: await renderAsync(
-//       <ParseTransNews
-//         title="Parse Fly Satellites"
-//         pathToMainParsePage={`${BASE_URL}/${ELanguage.EN}/${EUrlAdminParam.BASE_PATH}/${EUrlAdminParam.PARSE}`}
-//         dbTableLength={tblItemLength}
-//         errorMessages={errorMessages}
-//         linkToDbTable={getDbTableLink(FLY_SATELLITES)}
-//         linkToSourcePage={PARSE_URL}
-//       />
-//     ),
-//   });
-// };
+const sendReportMail = async (errorMessages: string[]) => {
+  await sendMail({
+    subject: `Parse Fly Satellites`,
+    body: await renderAsync(
+      <ParseTransNews
+        title="Parse Fly Satellites"
+        pathToMainParsePage={`${BASE_URL}/${ELanguage.EN}/${EUrlAdminParam.BASE_PATH}/${EUrlAdminParam.PARSE}`}
+        errorMessages={errorMessages}
+        dbTableHref={getDbTableLink(FLY_SATELLITES)}
+        hrefSources={PARSE_URL}
+      />
+    ),
+  });
+};
 
 const getDayDifference = (startDate: Date) => {
   const currentDate = DateTime.now().startOf('day');
@@ -430,12 +434,7 @@ export default async function Page({
     }
   }
 
-  // await sendReportMail(
-  //   messages,
-  //   typeof resDbTableLength === 'string'
-  //     ? resDbTableLength
-  //     : resDbTableLength[0].count.toLocaleString('en-US')
-  // );
+  await sendReportMail(messages);
 
   return (
     <>

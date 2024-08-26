@@ -173,35 +173,51 @@ const processSatellitesInBatches = async (
 
     batchPromises.push(
       (async () => {
-        const browser = await puppeteer.launch({
-          args: [
-            '--no-sandbox',
-            '--disable-setuid-sandbox',
-            '--disable-dev-shm-usage',
-            '--disable-gpu',
-          ],
-        });
+        let browser;
+        let batchMessages = [];
 
-        let batchMessages: string[] = [];
+        try {
+          browser = await puppeteer.launch({
+            args: [
+              '--no-sandbox',
+              '--disable-setuid-sandbox',
+              '--disable-dev-shm-usage',
+              '--disable-gpu',
+            ],
+            headless: true,
+          });
 
-        for (const sat of batch) {
-          try {
-            const parseFlyChannelsMessages = await parseFlyChannels({
-              currentSatSlug: sat.slug,
-              incomingBrowser: browser,
-            });
-            if (Array.isArray(parseFlyChannelsMessages)) {
-              batchMessages = [...batchMessages, ...parseFlyChannelsMessages];
+          for (const sat of batch) {
+            try {
+              const parseFlyChannelsMessages = await parseFlyChannels({
+                currentSatSlug: sat.slug,
+                incomingBrowser: browser,
+              });
+              if (Array.isArray(parseFlyChannelsMessages)) {
+                batchMessages.push(...parseFlyChannelsMessages);
+              }
+              await setSatDateUpd(sat.slug, sat.date_upd);
+            } catch (error) {
+              batchMessages.push(
+                `ERROR: failed during channels parsing for satellite "${sat.slug}" ${error}`
+              );
             }
-            await setSatDateUpd(sat.slug, sat.date_upd);
-          } catch (error) {
-            batchMessages.push(
-              `ERROR: failed during channels parsing for satellite "${sat.slug}" ${error}`
-            );
+          }
+        } catch (error) {
+          batchMessages.push(
+            `ERROR: failed to launch browser: ${error instanceof Error ? error.message : 'Unknown error'}`
+          );
+        } finally {
+          if (browser) {
+            try {
+              await browser.close();
+            } catch (closeError) {
+              batchMessages.push(
+                `ERROR: closing browser: ${closeError instanceof Error ? closeError.message : 'Unknown error'}`
+              );
+            }
           }
         }
-
-        await browser.close();
 
         return batchMessages;
       })()
@@ -209,14 +225,14 @@ const processSatellitesInBatches = async (
 
     if (batchPromises.length >= PARALLEL_LIMIT) {
       const results = await Promise.all(batchPromises);
-      messages = [...messages, ...results.flat()];
+      messages.push(...results.flat());
       batchPromises = [];
     }
   }
 
   if (batchPromises.length > 0) {
     const results = await Promise.all(batchPromises);
-    messages = [...messages, ...results.flat()];
+    messages.push(...results.flat());
   }
 };
 
@@ -409,7 +425,7 @@ export default async function Page({
     }
     if (isProductionMode) {
       const killRes = killChromeProcesses();
-      messages = [...messages, ...killRes];
+      messages.push(...killRes);
     }
   }
 
@@ -428,12 +444,11 @@ export default async function Page({
       {messages.length > 0 && (
         <>
           <h2 className="font-bold text-blue-700 text-xl">Messages:</h2>
-          {/* <ul>
+          <ul>
             {messages.map((message, i) => (
               <li key={i + message}>{message}</li>
             ))}
-          </ul> */}
-          <pre>{JSON.stringify(messages, null, 2)}</pre>
+          </ul>
         </>
       )}
       <SatList title="New Satellites Found:" satList={newSatList} />

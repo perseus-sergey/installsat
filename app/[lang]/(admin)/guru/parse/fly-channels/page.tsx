@@ -671,9 +671,11 @@ const MessageBlock = ({ messages }: { messages: string[] }) =>
 export const parseFlyChannels = async ({
   currentSatSlug,
   incomingBrowser,
+  isAllSatParser = false,
 }: {
   currentSatSlug: string;
   incomingBrowser?: Browser;
+  isAllSatParser?: boolean;
 }) => {
   const sourceUrl = `${PARSE_URL_BASE}${currentSatSlug}`;
 
@@ -776,7 +778,7 @@ export const parseFlyChannels = async ({
     }
   }
 
-  return incomingBrowser
+  return isAllSatParser
     ? messages
     : {
         updateResCount,

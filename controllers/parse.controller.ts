@@ -1,4 +1,4 @@
-import { Browser, Page } from 'puppeteer';
+import { Browser } from 'puppeteer';
 import { poolExecute } from '@/libs/db/mysqldb';
 import { EDBTableTitles } from '@/models/ui.model';
 
@@ -8,22 +8,37 @@ export const getContentFromPuppeteerBrowser = async (
 ) => {
   const page = await browser.newPage();
 
-  const content = await getContentFromPuppeteerPage(page, url);
+  await page.goto(url, { waitUntil: 'domcontentloaded' });
+
+  const content = await page.content();
+
+  await page.close();
 
   return content;
 };
 
-export const getContentFromPuppeteerPage = async (
-  puppeteerPage: Page,
-  url: string
-) => {
-  await puppeteerPage.goto(url, { waitUntil: 'domcontentloaded' });
+// export const getContentFromPuppeteerBrowser = async (
+//   browser: Browser,
+//   url: string
+// ) => {
+//   const page = await browser.newPage();
 
-  const content = await puppeteerPage.content();
-  await puppeteerPage.close();
+//   const content = await getContentFromPuppeteerPage(page, url);
 
-  return content;
-};
+//   return content;
+// };
+
+// export const getContentFromPuppeteerPage = async (
+//   puppeteerPage: Page,
+//   url: string
+// ) => {
+//   await puppeteerPage.goto(url, { waitUntil: 'domcontentloaded' });
+
+//   const content = await puppeteerPage.content();
+//   await puppeteerPage.close();
+
+//   return content;
+// };
 
 // export const killChromeProcesses = () => {
 //   try {

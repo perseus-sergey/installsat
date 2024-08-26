@@ -677,7 +677,7 @@ export const parseFlyChannels = async ({
 }) => {
   const sourceUrl = `${PARSE_URL_BASE}${currentSatSlug}`;
 
-  let browser;
+  let browser = incomingBrowser;
   let parsedChannels: IFlyChannel[] = [];
   let filteredDbChannels: IFlyChannel[] = [];
   let filteredParsedChannels: IFlyChannel[] = [];
@@ -693,18 +693,18 @@ export const parseFlyChannels = async ({
   try {
     const dbChannels = await getSatChannelsFromDB(currentSatSlug);
 
-    browser =
-      incomingBrowser ||
-      (browser = await puppeteer.launch({
+    if (!browser) {
+      browser = await puppeteer.launch({
         args: [
           '--no-sandbox',
           '--disable-setuid-sandbox',
           '--disable-dev-shm-usage',
           '--disable-gpu',
-          '--single-process',
+          // '--single-process', // Optional: uncomment for single-process mode if necessary
         ],
-        headless: true, // Запуск без графічного інтерфейсу
-      }));
+        headless: true, // Run in headless mode (no UI)
+      });
+    }
 
     const html = await getContentFromPuppeteerBrowser(browser, sourceUrl);
     const $ = cheerio.load(html);

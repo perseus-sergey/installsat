@@ -7,7 +7,6 @@ import {
 
 const BASE_URL = process.env.BASE_URL;
 const BASE_GURU_PATH = `${BASE_URL}/en/${EUrlAdminParam.BASE_PATH}`;
-const INTERVAL_FROM_LAST_UPDATE = 2;
 
 const sendReportMail = async (errorMessages) => {
   const messages = errorMessages.length
@@ -43,10 +42,6 @@ const PARSE_LIST_OF_SATELLITES_URL = 'https://flysat.com/en/satellitelist';
 const { FLY_SATELLITES } = EDBTableTitles;
 
 const R_U_N = async () => {
-  const intervalFromLastUpd =
-    parseInt(validSearchParam(EUrlSearchParam.INTERVAL, searchParams), 10) ||
-    INTERVAL_FROM_LAST_UPDATE;
-
   const { messages } = await parseProcess(intervalFromLastUpd);
 
   await sendReportMail(messages);

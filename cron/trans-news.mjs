@@ -15,7 +15,6 @@ import {
   getDbIdAmount,
   actionTextHandler,
 } from './libs/parseTransNews.controller.mjs';
-import { execSync } from 'child_process';
 
 const BASE_URL = process.env.BASE_URL;
 const BASE_GURU_PATH = `${BASE_URL}/en/${EUrlAdminParam.BASE_PATH}`;

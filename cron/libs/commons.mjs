@@ -3,6 +3,7 @@ import memoize from 'lodash.memoize';
 import { execSync } from 'child_process';
 
 export const DEFAULT_ARTICLE_LOGO_NAME = 'zastavka.jpg';
+export const DB_ARRAY_SEPARATOR = ' | ';
 
 export const EDBTableTitles = {
   ARTICLE: 'tbl_useful',
@@ -106,7 +107,7 @@ export const getContentFromPuppeteerBrowser = async (browser, url) => {
 };
 
 export const killChromeProcesses = () => {
-  const messates = [];
+  const messages = [];
 
   try {
     // Перевіряємо, чи є активні процеси Chrome
@@ -116,27 +117,27 @@ export const killChromeProcesses = () => {
 
     if (activeChromeProcesses) {
       execSync('pkill -f chrome');
-      messates.push('SUCCESS: Chrome processes killed successfully.');
+      messages.push('SUCCESS: Chrome processes killed successfully.');
     } else {
-      messates.push('WARNING: No active Chrome processes to kill.');
+      messages.push('WARNING: No active Chrome processes to kill.');
     }
   } catch (error) {
     // Перевіряємо, чи error є об'єктом і чи має поле 'code'
     if (typeof error === 'object' && error !== null && 'code' in error) {
       if (error.code === 1) {
         // pgrep повертає код 1, якщо жоден процес не знайдено
-        messates.push('ERROR: No Chrome processes found.');
+        messages.push('ERROR: No Chrome processes found.');
       } else {
-        messates.push(
+        messages.push(
           `ERROR: killing chrome processes: ${error instanceof Error ? error.message : new Error('Unknown error.')}`
         );
       }
     } else {
-      messates.push(
+      messages.push(
         `Unexpected error: ${error instanceof Error ? error.message : new Error('Unknown error.')}`
       );
     }
   }
 
-  return messates;
+  return messages;
 };

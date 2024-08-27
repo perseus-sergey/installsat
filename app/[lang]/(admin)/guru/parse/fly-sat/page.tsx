@@ -1,24 +1,18 @@
 import { Title } from '@/components/ui/Titles/Title';
-import puppeteer from 'puppeteer';
-import * as cheerio from 'cheerio';
 import {
   EDBTableTitles,
   ELanguage,
   TSearchParams,
   getDbTableLink,
 } from '@/models/ui.model';
-import { getContentFromPuppeteerBrowser } from '@/controllers/parse.controller';
 import Link from 'next/link';
-import { poolExecute } from '@/libs/db/mysqldb';
-import { DateTime } from 'luxon';
 import { validSearchParam } from '@/libs/utils/validSearchParam';
 import { EUrlSearchParam } from '@/models/url.model';
-import { parseFlyChannels } from '../fly-channels/page';
-import { ResultSetHeader } from 'mysql2';
-import { EUrlAdminParam, killChromeProcesses } from '@/cron/libs/commons.mjs';
+import { EUrlAdminParam } from '@/cron/libs/commons.mjs';
 import { sendMail } from '@/libs/mail/sendMail';
 import { renderAsync } from '@react-email/render';
 import { ParseTransNews } from '@/components/EmailTemplates/parseTransNews.template';
+import { parseProcess } from '@/cron/libs/parseALLFlySats.controller.mjs';
 
 export const dynamic = 'force-dynamic';
 
@@ -41,104 +35,9 @@ export interface ITblFlySats {
 const INTERVAL_FROM_LAST_UPDATE = 2;
 
 const BASE_URL = process.env.BASE_URL;
-const isProductionMode = process.env.PRODUCTION_MODE === 'true';
 
-const IS_LOGGED = !isProductionMode;
-const PARSE_URL = 'https://flysat.com/en/satellitelist';
+const PARSE_LIST_OF_SATELLITES_URL = 'https://flysat.com/en/satellitelist';
 const { FLY_SATELLITES } = EDBTableTitles;
-
-let messages: string[] = [];
-
-const addMessage = (message: string, error?: Error) => {
-  messages.push(`${message}${error ? `: ${error.message}` : ''}`);
-  if (IS_LOGGED)
-    console.log(`🚀 ~ ${message}${error ? ` ERROR: ${error}` : ''}`);
-};
-
-const getDataFromDB = async () => {
-  const sql = `
-    SELECT cluster, title, url_link, slug, position, grade, date_upd FROM ${FLY_SATELLITES}
-  `;
-  const res = await poolExecute<ITblFlySats[]>(sql);
-  if (res instanceof Error) {
-    console.log('ERROR during SELECT data:', res.message);
-    throw res;
-  }
-
-  return res;
-};
-
-const setSatDateUpd = async (currentSatSlug: string, dateUpd: Date) => {
-  const dateUpdStr = dateUpd.toISOString().split('T')[0];
-  const res = await poolExecute<ResultSetHeader>(
-    `
-      UPDATE ${FLY_SATELLITES} 
-      SET date_upd = ?
-      WHERE slug = ?
-      LIMIT 1
-    `,
-    [dateUpdStr, currentSatSlug]
-  );
-
-  if (res instanceof Error) {
-    addMessage(`ERROR: during "SET date_upd" for sat "${currentSatSlug}"`, res);
-  } else {
-    addMessage(
-      `SUCCESS: "SET ${res.affectedRows} date_upd(${dateUpdStr})" for sat "${currentSatSlug}"`
-    );
-  }
-};
-
-const insertNewSatsToDB = async (newSatellites: ITblFlySats[]) => {
-  const dataLength = newSatellites.length;
-  if (dataLength === 0)
-    throw new Error(`ERROR: DB insert empty NEW SATELLITE LIST`);
-
-  const placeholders = newSatellites
-    .map(() => '(?, ?, ?, ?, ?, ?, ?)')
-    .join(', ');
-
-  const sql = `
-    INSERT INTO ${FLY_SATELLITES} (cluster, title, url_link, slug, position, grade, date_upd)
-    VALUES ${placeholders}
-  `;
-
-  // Flatten the array of values
-  const values = newSatellites.flatMap((item) => [
-    item.cluster,
-    item.title,
-    item.url_link,
-    item.slug,
-    item.position,
-    item.grade,
-    item.date_upd.toISOString().split('T')[0],
-  ]);
-
-  const res = await poolExecute<ResultSetHeader>(sql, values);
-
-  if (res instanceof Error) {
-    addMessage(
-      `ERROR: during INSERT ${newSatellites.length} new satellites to DB`,
-      res
-    );
-  } else {
-    addMessage(`SUCCESS: "SET INSERT ${res.affectedRows} new satellites to DB`);
-  }
-};
-
-const findDbOverSats = (dbSats: ITblFlySats[], parsedSats: ITblFlySats[]) =>
-  dbSats.filter(
-    (dbSat) =>
-      !parsedSats.some(
-        (parsedSat) =>
-          parsedSat.title === dbSat.title &&
-          parsedSat.url_link.split('flysat.com')[1] ===
-            dbSat.url_link.split('flysat.com')[1] &&
-          parsedSat.slug === dbSat.slug &&
-          parsedSat.position === dbSat.position &&
-          parsedSat.cluster === dbSat.cluster
-      )
-  );
 
 const sendReportMail = async (errorMessages: string[]) => {
   await sendMail({
@@ -149,224 +48,12 @@ const sendReportMail = async (errorMessages: string[]) => {
         pathToMainParsePage={`${BASE_URL}/${ELanguage.EN}/${EUrlAdminParam.BASE_PATH}/${EUrlAdminParam.PARSE}`}
         errorMessages={errorMessages}
         dbTableHref={getDbTableLink(FLY_SATELLITES)}
-        hrefSources={PARSE_URL}
+        hrefSources={PARSE_LIST_OF_SATELLITES_URL}
       />
     ),
   });
 };
 
-const getDayDifference = (startDate: Date) => {
-  const currentDate = DateTime.now().startOf('day');
-  const targetDate = DateTime.fromJSDate(startDate).startOf('day');
-
-  return currentDate.diff(targetDate, 'days').days;
-};
-
-const isSameDate = (parseDate: DateTime, dbDate: DateTime) =>
-  parseDate.startOf('day').toISODate() === dbDate.startOf('day').toISODate();
-
-const parseSatellitesChannels = async (allParsedSats: ITblFlySats[]) => {
-  for (const sat of allParsedSats) {
-    addMessage(`┌──────────────── "${sat.slug}" ────────────────┐`);
-
-    const { parseChannelMessages } = await parseFlyChannels({
-      currentSatSlug: sat.slug,
-    });
-    messages.push(...parseChannelMessages);
-
-    await setSatDateUpd(sat.slug, sat.date_upd);
-    addMessage(`└───────────────────────────────────────┘`);
-  }
-};
-// ----------------------------------------------------------------
-
-const extractParsedData = (
-  $: cheerio.CheerioAPI,
-  dbSatellites: ITblFlySats[],
-  intervalFromLastUpd: number
-) => {
-  const allParsedSats: ITblFlySats[] = [];
-  const updatedSats: ITblFlySats[] = [];
-  const newSats: ITblFlySats[] = [];
-  const errors: string[] = [];
-  let currentCluster = '';
-
-  const satRows = $('tr[bgcolor="#b9dcff"]');
-
-  satRows.each((_, element) => {
-    const $element = $(element);
-    const tds = $element.find('td');
-
-    let title = '';
-    let position = '';
-    let band = '';
-    let parsedDate = '';
-
-    if (tds.length === 6) {
-      currentCluster = tds.eq(0).find('a').text().trim();
-      title = tds.eq(1).text().trim();
-      position = tds.eq(2).text().trim();
-      band = tds.eq(4).text().trim().toLowerCase();
-      parsedDate = tds.eq(5).text().trim();
-    } else if (tds.length === 5) {
-      title = tds.eq(0).text().trim();
-      position = tds.eq(1).text().trim();
-      band = tds.eq(3).text().trim().toLowerCase();
-      parsedDate = tds.eq(4).text().trim();
-    } else {
-      errors.push(`ERROR: unexpected row count: «${$element.html()}»`);
-
-      return;
-    }
-
-    if (!band || band === 'ka') return;
-
-    if (!title) {
-      errors.push(`ERROR: extracting SAT NAME from: «${$element.html()}»`);
-
-      return;
-    }
-
-    if (!position) {
-      errors.push(`ERROR: extracting POSITION from: «${$element.html()}»`);
-
-      return;
-    }
-
-    if (!parsedDate) {
-      errors.push(`ERROR: extracting DATE from: «${$element.html()}»`);
-
-      return;
-    }
-
-    const [grade, ew] = position.split('° ');
-    if (!grade || !ew) {
-      errors.push(`ERROR: extracting GRADE from: «${$element.html()}»`);
-
-      return;
-    }
-
-    const url_link = tds.eq(1).find('a').attr('href');
-    if (!url_link) {
-      errors.push(`ERROR: extracting URL_LINK from: «${$element.html()}»`);
-
-      return;
-    }
-
-    const slug = url_link.split('/').pop();
-    if (!slug) {
-      errors.push(`ERROR: extracting SLUG from: «${url_link}»`);
-
-      return;
-    }
-
-    const [day, month, year] = parsedDate.split('.');
-    const date_upd = new Date(`${year}-${month}-${day}`);
-
-    const parsedSat = {
-      cluster: currentCluster,
-      title,
-      url_link,
-      slug,
-      position,
-      grade: ew === 'E' ? grade : `-${grade}`,
-      date_upd,
-    };
-
-    const satInDb = dbSatellites.find(
-      (dbSat) =>
-        dbSat.title === parsedSat.title &&
-        dbSat.url_link.split('flysat.com')[1] ===
-          parsedSat.url_link.split('flysat.com')[1] &&
-        dbSat.position === parsedSat.position
-    );
-
-    if (!satInDb) {
-      newSats.push(parsedSat);
-    } else if (
-      !isSameDate(
-        DateTime.fromJSDate(date_upd),
-        DateTime.fromJSDate(satInDb.date_upd)
-      ) ||
-      getDayDifference(date_upd) < intervalFromLastUpd
-    ) {
-      updatedSats.push(parsedSat);
-    }
-
-    allParsedSats.push(parsedSat);
-  });
-
-  return { allParsedSats, newSats, updatedSats, extractErrors: errors };
-};
-
-const parseProcess = async (intervalFromLastUpd: number) => {
-  let browser;
-  // let finalData: ITblFlySats[] = [];
-  let overSats: ITblFlySats[] = [];
-  let newSatList: ITblFlySats[] = [];
-  let updatedSatList: ITblFlySats[] = [];
-
-  try {
-    const dbSatellites = await getDataFromDB();
-
-    browser = await puppeteer.launch({
-      args: [
-        '--no-sandbox',
-        '--disable-setuid-sandbox',
-        '--disable-dev-shm-usage',
-        '--disable-gpu',
-      ],
-      headless: true, // Запуск без графічного інтерфейсу
-    });
-
-    const html = await getContentFromPuppeteerBrowser(browser, PARSE_URL);
-    const $ = cheerio.load(html);
-
-    const { allParsedSats, newSats, updatedSats, extractErrors } =
-      extractParsedData($, dbSatellites, intervalFromLastUpd);
-    extractErrors.forEach((er) => addMessage(er));
-
-    updatedSatList = updatedSats;
-    newSatList = newSats;
-    overSats = findDbOverSats(dbSatellites, allParsedSats);
-
-    if (newSats.length) await insertNewSatsToDB(newSats);
-
-    await parseSatellitesChannels(updatedSats);
-    // =================================================================
-    // For All Satellites
-    // =================================================================
-    // await parseSatellitesChannels(allParsedSats);
-
-    // finalData = allParsedSats;
-  } catch (error) {
-    addMessage(
-      'ERROR: failed during satellites page parsing',
-      error instanceof Error
-        ? error
-        : new Error('Unknown error occurred during satellites page parsing')
-    );
-  } finally {
-    if (browser) {
-      try {
-        await browser.close();
-      } catch (closeError) {
-        addMessage(
-          'ERROR: closing browser',
-          closeError instanceof Error
-            ? closeError
-            : new Error('Error closing browser')
-        );
-      }
-    }
-    if (isProductionMode) {
-      const killRes = killChromeProcesses();
-      messages.push(...killRes);
-    }
-  }
-
-  return { newSatList, overSats, updatedSatList };
-};
 export default async function Page({
   searchParams,
 }: {
@@ -376,7 +63,7 @@ export default async function Page({
     parseInt(validSearchParam(EUrlSearchParam.INTERVAL, searchParams), 10) ||
     INTERVAL_FROM_LAST_UPDATE;
 
-  const { newSatList, overSats, updatedSatList } =
+  const { newSatList, overSats, updatedSatList, messages } =
     await parseProcess(intervalFromLastUpd);
 
   // await sleep(1000);
@@ -386,13 +73,15 @@ export default async function Page({
   return (
     <>
       <Title>
-        <Link href={PARSE_URL}>Parse FlySat Satellites Table</Link>
+        <Link href={PARSE_LIST_OF_SATELLITES_URL}>
+          Parse FlySat Satellites Table
+        </Link>
       </Title>
       {messages.length > 0 && (
         <>
           <h2 className="font-bold text-blue-700 text-xl">Messages:</h2>
           <ul>
-            {messages.map((message, i) => (
+            {messages.map((message: string, i: number) => (
               <li key={i + message}>{message}</li>
             ))}
           </ul>

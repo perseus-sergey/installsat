@@ -13,12 +13,12 @@ import { poolExecute } from '@/libs/db/mysqldb';
 import { DateTime } from 'luxon';
 import { validSearchParam } from '@/libs/utils/validSearchParam';
 import { EUrlSearchParam } from '@/models/url.model';
-import { parseFlyChannels } from '../fly-channels/page';
 import { ResultSetHeader } from 'mysql2';
 import { EUrlAdminParam, killChromeProcesses } from '@/cron/libs/commons.mjs';
 import { sendMail } from '@/libs/mail/sendMail';
 import { renderAsync } from '@react-email/render';
 import { ParseTransNews } from '@/components/EmailTemplates/parseTransNews.template';
+import { parseFlyChannels } from '@/cron/libs/parseFlySat.controller.mjs';
 
 export const dynamic = 'force-dynamic';
 
@@ -194,7 +194,7 @@ const processSatellitesInBatches = async (allParsedSats: ITblFlySats[]) => {
             try {
               const parseFlyChannelsMessages = await parseFlyChannels({
                 currentSatSlug: sat.slug,
-                incomingBrowser: browser,
+                // incomingBrowser: browser,
               });
               if (Array.isArray(parseFlyChannelsMessages)) {
                 batchMessages.push(...parseFlyChannelsMessages);

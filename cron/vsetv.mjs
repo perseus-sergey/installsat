@@ -217,10 +217,10 @@ const sendReportMail = async ({
   errorChannels,
 }) => {
   const messages = errorMessages.length
-    ? `<p style="color: blue; font-size: 20px; padding: 10px 0">Messages:</p><ul style="padding-bottom: 10px">${errorMessages.map((msg) => `<li>${msg}</li>`)}</ul>`
+    ? `<p style="color: blue; font-size: 20px; padding: 10px 0">Messages:</p><ul style="padding-bottom: 10px">${errorMessages.map((msg) => `<li>${msg}</li>`).join('')}</ul>`
     : '';
   const wrongChannels = errorChannels.length
-    ? `<p style="color: red; font-size: 20px; padding: 10px 0">Channels with errors:</p><ul style="padding-bottom: 10px">${errorChannels.map((ch) => `<li><a href=${ch.channelEditUrl}>Edit «${ch.title}»</a> | <a style="color: darkgray" href=${ch.sourceChannelUrl}>SOURCE</a> | <a style="color: darkgreen" href=${ch.parseUrl}>Parse Again</a><span style="color: gray"> (${ch.error})</span></li>`)}</ul>`
+    ? `<p style="color: red; font-size: 20px; padding: 10px 0">Channels with errors:</p><ul style="padding-bottom: 10px">${errorChannels.map((ch) => `<li><a href=${ch.channelEditUrl}>Edit «${ch.title}»</a> | <a style="color: darkgray" href=${ch.sourceChannelUrl}>SOURCE</a> | <a style="color: darkgreen" href=${ch.parseUrl}>Parse Again</a><span style="color: gray"> (${ch.error})</span></li>`).join('')}</ul>`
     : '';
 
   const allFailedChannelsUrl = createURLWithParams(

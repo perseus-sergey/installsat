@@ -8,7 +8,7 @@ import {
 } from '@/models/ui.model';
 import { getContentFromPuppeteerBrowser } from '@/controllers/parse.controller';
 import Link from 'next/link';
-import { getPool, poolExecute } from '@/libs/db/mysqldb';
+import { poolExecute } from '@/libs/db/mysqldb';
 import { validSearchParam } from '@/libs/utils/validSearchParam';
 import { EUrlSearchParam } from '@/models/url.model';
 import { ResultSetHeader } from 'mysql2';
@@ -44,7 +44,6 @@ const IS_LOGGED = !isProductionMode;
 const PARSE_URL_BASE = 'https://www.flysat.com/en/satellite/';
 const { FLY_CHANNELS, FLY_SATELLITES } = EDBTableTitles;
 const dateNow = new Date().toLocaleDateString('en-CA');
-const pool = getPool();
 
 let messages: string[] = [];
 
@@ -94,11 +93,12 @@ const updateTblChannels = async (
   currentSatSlug: string,
   shouldUpdChannels: IFlyChannel[]
 ) => {
-  let count = 0;
+  const updateTblChannelsMessages = [];
+  let updatedChannelsCount = 0;
 
   for (const channel of shouldUpdChannels) {
     if (!channel.id) {
-      addMessage(
+      updateTblChannelsMessages.push(
         `ERROR: Cannot update channel ${channel.title}! channel.id = "${channel.id}"`
       );
       continue;
@@ -156,27 +156,27 @@ const updateTblChannels = async (
       ]
     );
     if (res instanceof Error) {
-      addMessage(
-        `ERROR: during UPDATE channel ${channel.title}! channel.id = "${channel.id}" for Sat_SLUG: "${currentSatSlug}"`,
-        res
+      updateTblChannelsMessages.push(
+        `ERROR: during UPDATE channel ${channel.title}! channel.id = "${channel.id}" for Sat_SLUG: "${currentSatSlug}". Error message: ${res.message}`
       );
     } else {
-      count += 1;
+      updatedChannelsCount += 1;
     }
   }
 
-  return count;
+  return { updatedChannelsCount, updateTblChannelsMessages };
 };
 
 const setDisableChannels = async (
   currentSatSlug: string,
   shouldDeleteChannels: IFlyChannel[]
 ) => {
-  let count = 0;
+  let disabledChannelsCount = 0;
+  const disableChannelsMessages = [];
 
   for (const channel of shouldDeleteChannels) {
     if (!channel.id) {
-      addMessage(
+      disableChannelsMessages.push(
         `ERROR: Cannot DISABLE channel ${channel.title}! channel.id = "${channel.id}"`
       );
       continue;
@@ -192,16 +192,15 @@ const setDisableChannels = async (
       [1, dateNow, channel.id]
     );
     if (res instanceof Error) {
-      addMessage(
-        `ERROR: during "SET is_removed = 1" for channel "${channel.title} ${channel.frequency} ${channel.polarization}"! channel.id = "${channel.id}" for Sat_SLUG: "${currentSatSlug}"`,
-        res
+      disableChannelsMessages.push(
+        `ERROR: during "SET is_removed = 1" for channel "${channel.title} ${channel.frequency} ${channel.polarization}"! channel.id = "${channel.id}" for Sat_SLUG: "${currentSatSlug}". Error message: ${res.message}`
       );
     } else {
-      count += 1;
+      disabledChannelsCount += 1;
     }
   }
 
-  return count;
+  return { disabledChannelsCount, disableChannelsMessages };
 };
 
 const setFreeChannelCount = async (currentSatSlug: string) => {
@@ -219,14 +218,8 @@ const setFreeChannelCount = async (currentSatSlug: string) => {
     [currentSatSlug]
   );
 
-  if (resCounts instanceof Error) {
-    addMessage(
-      `ERROR: during "SELECT COUNT(id)" for sat "${currentSatSlug}"`,
-      resCounts
-    );
-
-    return;
-  }
+  if (resCounts instanceof Error)
+    return `ERROR: during "SELECT COUNT(id)" for sat "${currentSatSlug}". Error message: ${resCounts.message}`;
 
   const resUpdate = await poolExecute(
     `
@@ -238,18 +231,9 @@ const setFreeChannelCount = async (currentSatSlug: string) => {
     [resCounts[0].freeCount, resCounts[0].allCount, currentSatSlug]
   );
 
-  if (resUpdate instanceof Error) {
-    addMessage(
-      `ERROR: during "SET free_count & all_count" for sat "${currentSatSlug}"`,
-      resUpdate
-    );
-  } else {
-    addMessage(
-      `SUCCESS: "SET free_count(${resCounts[0].freeCount}) & all_count(${resCounts[0].allCount})" for sat "${currentSatSlug}"`
-    );
-  }
-
-  return resCounts[0].freeCount;
+  return resUpdate instanceof Error
+    ? `ERROR: during "SET free_count & all_count" for sat "${currentSatSlug}". Error message: ${resUpdate.message}`
+    : `SUCCESS: "SET free_count(${resCounts[0].freeCount}) & all_count(${resCounts[0].allCount})" for sat "${currentSatSlug}"`;
 };
 
 const insertTblChannels = async (
@@ -257,80 +241,113 @@ const insertTblChannels = async (
   parsedNewChannels: IFlyChannel[]
 ) => {
   if (!parsedNewChannels.length) {
-    addMessage(
-      `DB INSERT: NO new channels to insert for sat_slug: ${currentSatSlug}`
-    );
-
-    return 0;
+    return {
+      insertCount: 0,
+      insertTblChannelsMessages: [
+        `DB INSERT: NO new channels to insert for sat_slug: ${currentSatSlug}`,
+      ],
+    };
   }
-  const values = parsedNewChannels.map((item) => [
-    pool.escape(createSlug(item.title)),
-    pool.escape(currentSatSlug),
-    pool.escape(item.frequency),
-    pool.escape(item.polarization),
-    pool.escape(item.mode),
-    pool.escape(item.beam),
-    pool.escape(item.sr),
-    pool.escape(item.fec),
-    pool.escape(item.title),
-    pool.escape(item.is_radio),
-    pool.escape(item.compress),
-    pool.escape(item.sid || null),
-    pool.escape(item.v_pid || null),
-    pool.escape(item.a_pid),
-    pool.escape(item.t2_stream || null),
-    pool.escape(item.is_biss),
-    pool.escape(item.encryption || null),
-    pool.escape(dateNow),
-    2,
-    0,
-  ]);
+
+  const insertTblChannelsMessages = [];
+  let insertCount = 0;
+  const validValues: (string | number | null)[] = [];
+  const placeholders: string[] = [];
+  const errors: string[] = [];
+
+  parsedNewChannels.forEach((item) => {
+    const { slug, message } = createSlug(item.title);
+
+    if (!slug) {
+      errors.push(message || '');
+
+      return;
+    }
+
+    const values = [
+      slug,
+      currentSatSlug,
+      item.frequency,
+      item.polarization,
+      item.mode,
+      item.beam,
+      item.sr,
+      item.fec,
+      item.title,
+      item.is_radio,
+      item.compress,
+      item.sid || null,
+      item.v_pid || null,
+      item.a_pid,
+      item.t2_stream || null,
+      item.is_biss,
+      item.encryption || null,
+      dateNow,
+      2,
+      0,
+    ];
+
+    validValues.push(...values);
+    placeholders.push(`(${new Array(values.length).fill('?').join(', ')})`);
+  });
+
+  if (!validValues.length) {
+    return {
+      insertCount: 0,
+      insertTblChannelsMessages: [
+        `DB INSERT: NO valid channels to insert for sat_slug: ${currentSatSlug}`,
+        ...errors,
+      ],
+    };
+  }
 
   const sql = `
-      INSERT INTO ${FLY_CHANNELS} 
-      (
-       \`slug\`,
-       \`sat_slug\`,
-       \`frequency\`,
-       \`polarization\`,
-       \`mode\`,
-       \`beam\`,
-       \`sr\`,
-       \`fec\`,
-       \`title\`,
-       \`is_radio\`,
-       \`compress\`,
-       \`sid\`,
-       \`v_pid\`,
-       \`a_pid\`,
-       \`t2_stream\`,
-       \`is_biss\`,
-       \`encryption\`,
-       \`date_updated\`,
-       \`package_id\`,
-       \`is_removed\`
-       )
-      VALUES ${values.map((valueSet) => `(${valueSet.join(', ')})`).join(', ')};
-    `;
-  const res = await poolExecute<ResultSetHeader>(sql);
+    INSERT INTO ${FLY_CHANNELS} 
+    (
+      \`slug\`,
+      \`sat_slug\`,
+      \`frequency\`,
+      \`polarization\`,
+      \`mode\`,
+      \`beam\`,
+      \`sr\`,
+      \`fec\`,
+      \`title\`,
+      \`is_radio\`,
+      \`compress\`,
+      \`sid\`,
+      \`v_pid\`,
+      \`a_pid\`,
+      \`t2_stream\`,
+      \`is_biss\`,
+      \`encryption\`,
+      \`date_updated\`,
+      \`package_id\`,
+      \`is_removed\`
+    )
+    VALUES ${placeholders.join(', ')};
+  `;
+  const res = await poolExecute<ResultSetHeader>(sql, validValues);
 
   res instanceof Error
-    ? addMessage(
-        `ERROR: DB INSERT channels failed for Sat_SLUG: "${currentSatSlug}"`,
-        res
+    ? insertTblChannelsMessages.push(
+        `ERROR: DB INSERT channels failed for Sat_SLUG: "${currentSatSlug}". Error message: ${res.message}`
       )
-    : addMessage(
+    : insertTblChannelsMessages.push(
         `--== SUCCESS: DB INSERT ${res.affectedRows} channels for Sat_SLUG: "${currentSatSlug}" ==--`
       );
 
-  return res instanceof Error ? 0 : res.affectedRows;
+  insertCount = res instanceof Error ? 0 : res.affectedRows;
+
+  return { insertCount, insertTblChannelsMessages };
 };
 
 const createSlug = (title: string) => {
   if (!title) {
-    addMessage('ERROR: Cannot create SLUG. No title provided.');
-
-    return null;
+    return {
+      slug: null,
+      message: 'ERROR: Cannot create SLUG. No title provided.',
+    };
   }
   const handledTitle = title
     .toLowerCase()
@@ -341,14 +358,18 @@ const createSlug = (title: string) => {
     .replace(/-+/g, '-');
 
   if (!title) {
-    addMessage(`ERROR: Cannot create SLUG from title: "${title}"`);
-
-    return null;
+    return {
+      slug: null,
+      message: `ERROR: Cannot create SLUG from title: "${title}"`,
+    };
   }
 
   const randomString = Math.random().toString(36).slice(2, 6);
 
-  return `${randomString}-${handledTitle}`;
+  return {
+    slug: `${randomString}-${handledTitle}`,
+    message: null,
+  };
 };
 
 interface TitleResult {
@@ -610,6 +631,7 @@ const findSimilarChannelFromAllSats = async (
   currTblShouldUpdChannels: IFlyChannel[],
   currentSatSlug: string
 ) => {
+  const similarChannelMessages = [];
   const shouldUpdChannels = currTblShouldUpdChannels.slice();
   let parsedNewChannelsFiltered = parsedNewChannels.slice();
 
@@ -631,14 +653,17 @@ const findSimilarChannelFromAllSats = async (
         );
       }
     } catch (error) {
-      addMessage(
-        `ERROR: Could not get channel by title: "${parsedNewChannel.title}" from table: "${FLY_CHANNELS}"`,
-        error instanceof Error ? error : new Error('Unknown error!')
+      similarChannelMessages.push(
+        `ERROR: Could not get channel by title: "${parsedNewChannel.title}" from table: "${FLY_CHANNELS}". Error message: ${error instanceof Error ? error.message : 'Unknown error!'}`
       );
     }
   }
 
-  return { shouldUpdChannels, parsedNewChannelsFiltered };
+  return {
+    shouldUpdChannels,
+    parsedNewChannelsFiltered,
+    similarChannelMessages,
+  };
 };
 
 // const sendReportMail = async (messages: string[], hrefSource: string) => {
@@ -671,11 +696,9 @@ const MessageBlock = ({ messages }: { messages: string[] }) =>
 export const parseFlyChannels = async ({
   currentSatSlug,
   incomingBrowser,
-  isAllSatParser = false,
 }: {
   currentSatSlug: string;
   incomingBrowser?: Browser;
-  isAllSatParser?: boolean;
 }) => {
   const sourceUrl = `${PARSE_URL_BASE}${currentSatSlug}`;
 
@@ -691,6 +714,14 @@ export const parseFlyChannels = async ({
   let updateResCount = 0;
   let insertCount = 0;
   let removeResCount = 0;
+  let parseChannelMessages: string[] = [];
+  let similarChannelMessages: string[] = [];
+
+  const addParseChannelMessage = (message: string, error?: Error) => {
+    parseChannelMessages.push(`${message}${error ? `: ${error.message}` : ''}`);
+    if (IS_LOGGED)
+      console.log(`🚀 ~ ${message}${error ? ` ERROR: ${error}` : ''}`);
+  };
 
   try {
     const dbChannels = await getSatChannelsFromDB(currentSatSlug);
@@ -724,51 +755,60 @@ export const parseFlyChannels = async ({
         filteredParsedChannels
       ));
 
-    ({ shouldUpdChannels, parsedNewChannelsFiltered } =
+    ({ shouldUpdChannels, parsedNewChannelsFiltered, similarChannelMessages } =
       await findSimilarChannelFromAllSats(
         parsedNewChannels,
         currTblShouldUpdChannels,
         currentSatSlug
       ));
 
-    updateResCount = await updateTblChannels(currentSatSlug, shouldUpdChannels);
+    parseChannelMessages.push(...similarChannelMessages);
+
+    const updateRes = await updateTblChannels(
+      currentSatSlug,
+      shouldUpdChannels
+    );
+    updateResCount = updateRes.updatedChannelsCount;
+    parseChannelMessages.push(...updateRes.updateTblChannelsMessages);
     if (updateResCount > 0)
-      addMessage(
+      parseChannelMessages.push(
         `--== Updated ${updateResCount} channels for satellite "${currentSatSlug}" ==--`
       );
-    insertCount = await insertTblChannels(
+
+    const insertRes = await insertTblChannels(
       currentSatSlug,
       parsedNewChannelsFiltered
     );
-    removeResCount = await setDisableChannels(
+    ({ insertCount } = insertRes);
+    parseChannelMessages.push(...insertRes.insertTblChannelsMessages);
+
+    const removeRes = await setDisableChannels(
       currentSatSlug,
       shouldDeleteChannels
     );
+    removeResCount = removeRes.disabledChannelsCount;
+    parseChannelMessages.push(...removeRes.disableChannelsMessages);
     if (removeResCount > 0)
-      addMessage(
+      parseChannelMessages.push(
         `--== Disabled ${removeResCount} channels for satellite "${currentSatSlug}" ==--`
       );
 
-    await setFreeChannelCount(currentSatSlug);
+    const setFreeChannelCountMessages =
+      await setFreeChannelCount(currentSatSlug);
+    parseChannelMessages.push(setFreeChannelCountMessages);
   } catch (error) {
-    addMessage(
+    addParseChannelMessage(
       `ERROR: failed during channels parsing for satellite "${currentSatSlug}"`,
-      error instanceof Error
-        ? error
-        : new Error(
-            `Unknown error occurred when channel parsing for satellite "${currentSatSlug}"`
-          )
+      error instanceof Error ? error : new Error(`Unknown error!`)
     );
   } finally {
     if (browser && !incomingBrowser) {
       try {
         await browser.close();
       } catch (closeError) {
-        addMessage(
+        addParseChannelMessage(
           'ERROR: closing browser',
-          closeError instanceof Error
-            ? closeError
-            : new Error('Error closing browser')
+          closeError instanceof Error ? closeError : new Error('Unknown error!')
         );
       }
     }
@@ -778,17 +818,18 @@ export const parseFlyChannels = async ({
     }
   }
 
-  return isAllSatParser
-    ? messages
-    : {
-        updateResCount,
-        currTblShouldUpdChannels,
-        shouldUpdChannels,
-        removeResCount,
-        shouldDeleteChannels,
-        parsedNewChannels,
-        insertCount,
-      };
+  messages.push(...parseChannelMessages);
+
+  return {
+    parseChannelMessages,
+    updateResCount,
+    currTblShouldUpdChannels,
+    shouldUpdChannels,
+    removeResCount,
+    shouldDeleteChannels,
+    parsedNewChannels,
+    insertCount,
+  };
 };
 
 export default async function Page({

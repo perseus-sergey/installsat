@@ -34,7 +34,7 @@ export interface ITblFlySats {
 
 // =================================================================
 // Parse List of Satellites from FlySat with date_upd parameter
-// Parse All Satellite wich satellite date_upd from my DB is different with parsed date_upd
+// Parse All Satellite which satellite date_upd from my DB is different with parsed date_upd
 // ... OR parsed date_upd < then {INTERVAL_FROM_LAST_UPDATE} days ago
 // =================================================================
 
@@ -165,25 +165,19 @@ const getDayDifference = (startDate: Date) => {
 const isSameDate = (parseDate: DateTime, dbDate: DateTime) =>
   parseDate.startOf('day').toISODate() === dbDate.startOf('day').toISODate();
 
-const processSatellitesInBatches = async (allParsedSats: ITblFlySats[]) => {
+const parseSatellitesChannels = async (allParsedSats: ITblFlySats[]) => {
   for (const sat of allParsedSats) {
-    try {
-      const parseFlyChannelsMessages = await parseFlyChannels({
-        currentSatSlug: sat.slug,
-        isAllSatParser: true,
-      });
-      if (Array.isArray(parseFlyChannelsMessages)) {
-        messages.push(...parseFlyChannelsMessages);
-      }
-      await setSatDateUpd(sat.slug, sat.date_upd);
-    } catch (error) {
-      addMessage(
-        `ERROR: failed during channels parsing for satellite "${sat.slug}" ${error}`
-      );
-    }
+    addMessage(`┌──────────────── "${sat.slug}" ────────────────┐`);
+
+    const { parseChannelMessages } = await parseFlyChannels({
+      currentSatSlug: sat.slug,
+    });
+    messages.push(...parseChannelMessages);
+
+    await setSatDateUpd(sat.slug, sat.date_upd);
+    addMessage(`└───────────────────────────────────────┘`);
   }
 };
-
 // ----------------------------------------------------------------
 
 const extractParsedData = (
@@ -305,15 +299,7 @@ const extractParsedData = (
   return { allParsedSats, newSats, updatedSats, extractErrors: errors };
 };
 
-export default async function Page({
-  searchParams,
-}: {
-  searchParams?: TSearchParams;
-}) {
-  const intervalFromLastUpd =
-    parseInt(validSearchParam(EUrlSearchParam.INTERVAL, searchParams), 10) ||
-    INTERVAL_FROM_LAST_UPDATE;
-
+const parseProcess = async (intervalFromLastUpd: number) => {
   let browser;
   // let finalData: ITblFlySats[] = [];
   let overSats: ITblFlySats[] = [];
@@ -346,11 +332,11 @@ export default async function Page({
 
     if (newSats.length) await insertNewSatsToDB(newSats);
 
-    await processSatellitesInBatches(updatedSats);
+    await parseSatellitesChannels(updatedSats);
     // =================================================================
     // For All Satellites
     // =================================================================
-    // await processSatellitesInBatches(allParsedSats);
+    // await parseSatellitesChannels(allParsedSats);
 
     // finalData = allParsedSats;
   } catch (error) {
@@ -378,6 +364,22 @@ export default async function Page({
       messages.push(...killRes);
     }
   }
+
+  return { newSatList, overSats, updatedSatList };
+};
+export default async function Page({
+  searchParams,
+}: {
+  searchParams?: TSearchParams;
+}) {
+  const intervalFromLastUpd =
+    parseInt(validSearchParam(EUrlSearchParam.INTERVAL, searchParams), 10) ||
+    INTERVAL_FROM_LAST_UPDATE;
+
+  const { newSatList, overSats, updatedSatList } =
+    await parseProcess(intervalFromLastUpd);
+
+  // await sleep(1000);
 
   await sendReportMail(messages);
 

@@ -173,7 +173,7 @@ const addSatId = async (parsedData) => {
 
 const sendReportMail = async (errorMessages, tblItemLength) => {
   const messages = errorMessages.length
-    ? `<p style="color: blue; font-size: 20px; padding: 10px 0">Messages:</p><ul style="padding-bottom: 10px">${errorMessages.map((msg) => `<li>${msg}</li>`)}</ul>`
+    ? `<p style="color: blue; font-size: 20px; padding: 10px 0">Messages:</p><ul style="padding-bottom: 10px">${errorMessages.map((msg) => `<li>${msg}</li>`).join('')}</ul>`
     : '';
 
   await sendMail({

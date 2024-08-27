@@ -93,7 +93,7 @@ const sendReportMail = async ({ messages, tblItemLength, foundLines }) => {
     <p>Found and handled tags "programme": <span style="color: green;"> ${foundLines}</span></p>
       ${
         messages.length
-          ? `<p style="color: blue; font-size: 20px; padding: 10px 0">Messages:</p><ul style="padding-bottom: 10px">${messages.map((msg) => `<li>${msg}</li>`)}</ul>`
+          ? `<p style="color: blue; font-size: 20px; padding: 10px 0">Messages:</p><ul style="padding-bottom: 10px">${messages.map((msg) => `<li>${msg}</li>`).join('')}</ul>`
           : ''
       }
       <hr />

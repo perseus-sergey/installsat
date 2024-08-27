@@ -110,7 +110,7 @@ const sendReportMail = async (messages) => {
       ${
         messages.length
           ? `<p style="color: blue; font-size: 20px; padding: 10px 0">Messages:</p>
-          <ul style="padding-bottom: 10px">${messages.map((msg) => `<li>${msg}</li>`)}</ul>`
+          <ul style="padding-bottom: 10px">${messages.map((msg) => `<li>${msg}</li>`).join('')}</ul>`
           : ''
       }
       <hr />
@@ -127,7 +127,7 @@ const sendReportMail = async (messages) => {
       </p>
       <hr />
       <p style="color: blue; font-size: 20px; padding: 10px 0">Sources:</p>
-      <ul style="padding-bottom: 10px">${SOURCE_ARTICLE_PARAMS.map((s) => `<li><a href="${s.url}" target="_blank" >${s.url}</a></li>`)}</ul>
+      <ul style="padding-bottom: 10px">${SOURCE_ARTICLE_PARAMS.map((s) => `<li><a href="${s.url}" target="_blank" >${s.url}</a></li>`).join('')}</ul>
     `,
   });
 };

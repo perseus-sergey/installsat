@@ -6,6 +6,8 @@ import {
 } from './libs/commons.mjs';
 import { parseProcess } from './libs/parseALLFlySats.controller.mjs';
 
+const INTERVAL_FROM_LAST_UPDATE = 2;
+
 const BASE_URL = process.env.BASE_URL;
 const BASE_GURU_PATH = `${BASE_URL}/en/${EUrlAdminParam.BASE_PATH}`;
 
@@ -43,7 +45,7 @@ const PARSE_LIST_OF_SATELLITES_URL = 'https://flysat.com/en/satellitelist';
 const { FLY_SATELLITES } = EDBTableTitles;
 
 const R_U_N = async () => {
-  const { messages } = await parseProcess(intervalFromLastUpd);
+  const { messages } = await parseProcess(INTERVAL_FROM_LAST_UPDATE);
 
   await sendReportMail(messages);
 };

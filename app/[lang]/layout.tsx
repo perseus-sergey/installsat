@@ -8,7 +8,8 @@ import { ELanguage } from '@/models/ui.model';
 import { EUrlBaseParam } from '@/models/url.model';
 import { GoogleTagManager } from '@next/third-parties/google';
 
-const gaId = process.env.GA_ID || '';
+const GOOGLE_GTM_ID = process.env.GOOGLE_GTM || '';
+// const gaId = process.env.GA_ID || '';
 const adsenseId = process.env.G_ADSENSE_ID || '';
 const isProductionMode = process.env.NODE_ENV === 'production';
 
@@ -29,7 +30,7 @@ export default function RootLayout({
 
   return (
     <html lang={lang === ELanguage.UA ? 'uk' : 'en'}>
-      {isProductionMode && <GoogleTagManager gtmId={gaId} />}
+      {isProductionMode && <GoogleTagManager gtmId={GOOGLE_GTM_ID} />}
       <body suppressHydrationWarning={true}>
         <input type="checkbox" id="toggle-sidebar" hidden />
         <Header lang={lang} />

@@ -36,7 +36,7 @@ export default function RootLayout({
         <Header lang={lang} />
         <ToastProvider>{children}</ToastProvider>
         <Footer lang={lang} />
-        <span id="ezoic-privacy-policy-embed"></span>
+        {/* <span id="ezoic-privacy-policy-embed"></span> */}
       </body>
       <GoogleAdsense pId={adsenseId} />
       {/* <GoogleAnalytics gaId={gaId} /> */}

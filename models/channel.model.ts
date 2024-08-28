@@ -57,7 +57,7 @@ export interface IFlyChannel {
   beam: string;
   theme?: string;
   compress: string;
-  lan?: string;
+  languages?: string;
   canonical: string;
   cat_parent_title: string;
   mode: string;

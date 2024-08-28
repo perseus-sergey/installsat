@@ -19,12 +19,6 @@ import {
 } from '@/ai-prompts/parseSatNews.prompt.mjs';
 import { killChromeProcesses } from '@/cron/libs/commons.mjs';
 
-// =================================================================
-// refresh email in production
-// add json-ld
-// add image generator
-// =================================================================
-
 interface IArticle {
   originalTitle: string;
   originalSource: string;
@@ -234,14 +228,6 @@ export default async function Page() {
           originalSource: link,
           ...extractedAiData,
         };
-
-        // newArticles.push({
-        //   originalTitle: extractArticleResult.articleTitle,
-        //   originalSlug: articleSlug,
-        //   originalText: extractArticleResult.articleContent,
-        //   originalSource: link,
-        //   ...extractedAiData,
-        // });
 
         const insertToDbRes = await insertDataToDB(newArticle);
         insertToDbRes instanceof Error

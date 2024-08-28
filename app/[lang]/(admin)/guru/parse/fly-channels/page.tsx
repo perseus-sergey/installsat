@@ -43,8 +43,6 @@ export default async function Page({
 
   const report = await parseFlyChannels({ currentSatSlug });
 
-  if (Array.isArray(report)) return <MessageBlock messages={messages} />;
-
   const {
     parseChannelMessages,
     updateResCount,

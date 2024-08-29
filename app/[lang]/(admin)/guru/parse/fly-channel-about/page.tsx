@@ -11,6 +11,9 @@ export const dynamic = 'force-dynamic';
 
 // =================================================================
 //
+// Add privacy.html
+// Improve adsense
+// Add anti adsense blocker
 // Change lang_id to languages in all flyChannels queries
 // Localize all request which includes Channel THEME
 // Try to get info about channel and it genre from gpt

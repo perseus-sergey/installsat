@@ -5,12 +5,13 @@ import { LOGO, TOGGLE_SIDEBAR_BUTTON_TITLE } from '@/models/header.model';
 import FillingImg from '../ui/Images/FillingImage';
 import { ELanguage } from '@/models/ui.model';
 import LangSwitchButton from '../LangSwitchButton/LangSwitchButton';
+import { GoogleAdsenseMediaHoriz } from '../GoogleAdsense/GoogleAdsense';
 // import AdsterraAd from '../AdsterraAd/AdsterraAd';
 
 const { title, siteLogo } = LOGO.link;
 // const adsterraDesktopKey = process.env.ADSTERRA_728_KEY || '';
 // const adsterraMobileKey = process.env.ADSTERRA_320_KEY || '';
-// const adsenseId = process.env.G_ADSENSE_ID || '';
+const adsenseId = process.env.G_ADSENSE_ID || '';
 
 const Header = ({ lang }: { lang: ELanguage }) => (
   <header
@@ -37,6 +38,8 @@ const Header = ({ lang }: { lang: ELanguage }) => (
         <LangSwitchButton />
       </Suspense>
     </div>
+
+    <GoogleAdsenseMediaHoriz pId={adsenseId} />
   </header>
 );
 

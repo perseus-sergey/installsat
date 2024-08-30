@@ -7,16 +7,16 @@ import { ELanguage } from '@/models/ui.model';
 import LangSwitchButton from '../LangSwitchButton/LangSwitchButton';
 // import { GoogleAdsenseMediaHoriz } from '../GoogleAdsense/GoogleAdsense';
 // import AdsterraAd from '../AdsterraAd/AdsterraAd';
-import dynamic from 'next/dynamic';
+// import dynamic from 'next/dynamic';
 
-const AdBanner = dynamic(() => import('../GoogleAdsense/AdsBanner'), {
-  ssr: false,
-});
+// const AdBanner = dynamic(() => import('../GoogleAdsense/AdsBanner'), {
+//   ssr: false,
+// });
 
 const { title, siteLogo } = LOGO.link;
 // const adsterraDesktopKey = process.env.ADSTERRA_728_KEY || '';
 // const adsterraMobileKey = process.env.ADSTERRA_320_KEY || '';
-const adsenseId = process.env.G_ADSENSE_ID || '';
+// const adsenseId = process.env.G_ADSENSE_ID || '';
 
 const Header = ({ lang }: { lang: ELanguage }) => (
   <header
@@ -43,21 +43,21 @@ const Header = ({ lang }: { lang: ELanguage }) => (
         <LangSwitchButton />
       </Suspense>
     </div>
-
-    {/* <GoogleAdsenseMediaHoriz pId={adsenseId} /> */}
-    <AdBanner
-      data-ad-client={adsenseId}
-      data-ad-slot="1581071444"
-      data-full-width-responsive="true"
-      data-ad-layout="in-article"
-      data-ad-format="fluid"
-    />
   </header>
 );
 
 export default Header;
 
 // <GoogleAdsenseMediaHoriz pId={adsenseId} />
+{
+  /* <AdBanner
+      data-ad-client={adsenseId}
+      data-ad-slot="1581071444"
+      data-full-width-responsive="true"
+      data-ad-layout="in-article"
+      data-ad-format="fluid"
+    /> */
+}
 
 // {process.env.NODE_ENV === 'production' && (
 //   <div className="block mx-auto my-2">

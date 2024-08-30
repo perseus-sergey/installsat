@@ -1,10 +1,6 @@
 import Script from 'next/script';
 
-type Props = {
-  pId: string;
-};
-
-const GoogleAdsense = ({ pId }: Props) => {
+const GoogleAdsense = ({ pId }: { pId: string }) => {
   if (process.env.NODE_ENV !== 'production') {
     return null;
   }

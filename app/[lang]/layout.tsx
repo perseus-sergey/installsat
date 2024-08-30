@@ -1,5 +1,6 @@
 import '../globals.scss';
 import Footer from '@/components/Footer/Footer';
+import AdBlockingRecovery from '@/components/GoogleAdsense/AdBlockingRecovery';
 import GoogleAdsense from '@/components/GoogleAdsense/GoogleAdsense';
 import Header from '@/components/Header/Header';
 import ToastProvider from '@/libs/ToastProvider/ToastProvider';
@@ -38,6 +39,7 @@ export default function RootLayout({
         <Footer lang={lang} />
       </body>
       <GoogleAdsense pId={adsenseId} />
+      <AdBlockingRecovery pId={adsenseId} />
     </html>
   );
 }

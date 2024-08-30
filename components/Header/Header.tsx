@@ -5,8 +5,13 @@ import { LOGO, TOGGLE_SIDEBAR_BUTTON_TITLE } from '@/models/header.model';
 import FillingImg from '../ui/Images/FillingImage';
 import { ELanguage } from '@/models/ui.model';
 import LangSwitchButton from '../LangSwitchButton/LangSwitchButton';
-import { GoogleAdsenseMediaHoriz } from '../GoogleAdsense/GoogleAdsense';
+// import { GoogleAdsenseMediaHoriz } from '../GoogleAdsense/GoogleAdsense';
 // import AdsterraAd from '../AdsterraAd/AdsterraAd';
+import dynamic from 'next/dynamic';
+
+const AdBanner = dynamic(() => import('../GoogleAdsense/AdsBanner'), {
+  ssr: false,
+});
 
 const { title, siteLogo } = LOGO.link;
 // const adsterraDesktopKey = process.env.ADSTERRA_728_KEY || '';
@@ -39,7 +44,14 @@ const Header = ({ lang }: { lang: ELanguage }) => (
       </Suspense>
     </div>
 
-    <GoogleAdsenseMediaHoriz pId={adsenseId} />
+    {/* <GoogleAdsenseMediaHoriz pId={adsenseId} /> */}
+    <AdBanner
+      data-ad-client={adsenseId}
+      data-ad-slot="1581071444"
+      data-full-width-responsive="true"
+      data-ad-layout="in-article"
+      data-ad-format="fluid"
+    />
   </header>
 );
 

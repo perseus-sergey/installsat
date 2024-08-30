@@ -5,7 +5,6 @@ import { LOGO, TOGGLE_SIDEBAR_BUTTON_TITLE } from '@/models/header.model';
 import FillingImg from '../ui/Images/FillingImage';
 import { ELanguage } from '@/models/ui.model';
 import LangSwitchButton from '../LangSwitchButton/LangSwitchButton';
-// import { GoogleAdsenseMediaHoriz } from '../GoogleAdsense/GoogleAdsense';
 // import AdsterraAd from '../AdsterraAd/AdsterraAd';
 // import dynamic from 'next/dynamic';
 
@@ -48,7 +47,6 @@ const Header = ({ lang }: { lang: ELanguage }) => (
 
 export default Header;
 
-// <GoogleAdsenseMediaHoriz pId={adsenseId} />
 {
   /* <AdBanner
       data-ad-client={adsenseId}

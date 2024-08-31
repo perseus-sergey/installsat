@@ -450,6 +450,7 @@ export interface ISatChannelListModel {
   polar: string;
   beam: string;
   tem: string;
+  genre_description: string;
   compr: string;
   lan: string;
   canonical: string;
@@ -477,6 +478,7 @@ export interface IChannelListModel {
   chan_description: string;
   genre_id: number;
   genre_title: string;
+  genre_description: string;
   lan: string;
 }
 
@@ -497,7 +499,6 @@ export interface IPackageChannelListModel extends IChannelListModel {
   cat_description: string;
   cat_view: number;
   genre_slug: string;
-  genre_description: string;
   genre_h1: string;
   genre_logo: string;
   price: number;

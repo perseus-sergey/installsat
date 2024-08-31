@@ -56,6 +56,7 @@ const PackageChannelList = ({
           className="flex-col md:flex-row"
         >
           <GoUpLink lang={lang} />
+
           {genreTitle}
           {'genre_logo' in chanList[0] ? (
             <FillingValidImage
@@ -70,7 +71,7 @@ const PackageChannelList = ({
           ) : (
             <GenreImage
               lang={lang}
-              tooltipText={genreTitle}
+              tooltipText={chanList[0].genre_description}
               genreMapPosition={chanList[0].genre_id}
               className={styles.genreImage}
             />

@@ -115,7 +115,7 @@ export default async function Page({ params }: IPageParams) {
 
   const { id, slug, title, logo, satPosition } = getCurrentSatParams(sat);
 
-  const satChannels = await getSatChannels('', id);
+  const satChannels = await getSatChannels(lang, '', id);
 
   const numberOfComments = await getCommentsNumber(
     EDBTableTitles.COMMENTS_SATELLITE,

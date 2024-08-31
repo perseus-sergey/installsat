@@ -77,7 +77,9 @@ export const generateMetadata = async ({
   const lang = getELangKey(params[LANG]);
 
   const res =
-    slug === T2_SLUG ? await getT2Channels() : await getPackageChannels(slug);
+    slug === T2_SLUG
+      ? await getT2Channels(lang)
+      : await getPackageChannels(slug);
 
   if (!res || !res.length) return DEFAULT_META_DATA[lang];
 
@@ -132,7 +134,7 @@ export default async function Page({ params, searchParams }: IPageProps) {
 
   const channels =
     slug === T2_SLUG
-      ? await getT2Channels(searchQueryChannel)
+      ? await getT2Channels(lang, searchQueryChannel)
       : await getPackageChannels(slug, searchQueryChannel);
 
   const numberOfComments = channels
@@ -197,7 +199,7 @@ export default async function Page({ params, searchParams }: IPageProps) {
                       {slug === 't2-efir' && (
                         <GenreImage
                           lang={lang}
-                          tooltipText={subCatTitle}
+                          tooltipText={chanList[0].genre_description}
                           genreMapPosition={chanList[0].genre_id}
                         />
                       )}

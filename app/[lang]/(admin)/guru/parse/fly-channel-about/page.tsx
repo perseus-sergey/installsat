@@ -10,15 +10,10 @@ import { PARSE_URL_BASE } from '@/cron/libs/parseFlySat.controller.mjs';
 export const dynamic = 'force-dynamic';
 
 // =================================================================
+// - Change lang_id to languages in all flyChannels queries
 //
-// Add privacy.html
-// Improve adsense
-// Add anti adsense blocker
-// Change lang_id to languages in all flyChannels queries
 // Localize all request which includes Channel THEME
 // Try to get info about channel and it genre from gpt
-// Add ads.txt
-// Remove Ezoic & add google consent mode
 // Remove console logging from production parsers (mjs & tsx)
 // Change all Link to SeoLink
 // Make mjs fly sat & channels parser

@@ -56,6 +56,7 @@ export interface IFlyChannel {
   polarization: string;
   beam: string;
   theme?: string;
+  genre_description?: string;
   compress: string;
   languages?: string;
   canonical: string;

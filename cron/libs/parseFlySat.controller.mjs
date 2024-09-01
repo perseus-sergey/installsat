@@ -5,6 +5,7 @@ import {
   getContentFromPuppeteerBrowser,
   killChromeProcesses,
 } from './commons.mjs';
+import { generateChannelAbout } from './flyChannelAbout.controller.mjs';
 import puppeteer from 'puppeteer';
 // import puppeteer, { Browser } from 'puppeteer';
 import * as cheerio from 'cheerio';
@@ -76,7 +77,53 @@ const getSatChannelsFromDB = async (currentSatSlug, title = undefined) => {
   return res;
 };
 
-const findChannelAboutInDB = async (title) => {
+const updateChannelsWithGeneratedData = async (
+  {
+    uaText,
+    enText,
+    enDescription,
+    uaDescription,
+    uaKeywords,
+    enKeywords,
+    languages,
+    siteUrl,
+    genreId,
+  },
+  channelName
+) => {
+  const sql = `
+      UPDATE ${FLY_CHANNELS}
+      SET 
+        text_ua = ?, 
+        text_en = ?, 
+        description_en = ?, 
+        description_ua = ?, 
+        keywords_ua = ?, 
+        keywords_en = ?, 
+        languages = ?, 
+        official_site_url = ?, 
+        theme_id = ?
+      WHERE title = ? AND (description_en IS NULL OR description_en != '')
+    `;
+  const res = await executePoolQuery(sql, [
+    uaText,
+    enText,
+    enDescription,
+    uaDescription,
+    uaKeywords,
+    enKeywords,
+    languages,
+    siteUrl,
+    genreId,
+    channelName,
+  ]);
+
+  return res instanceof Error
+    ? `ERROR: DB UPDATE data for channels with title "${channelName}". Error message: ${res.message}`
+    : res.affectedRows;
+};
+
+const findChannelAbout = async (title) => {
   const sql = `
     SELECT 
       \`text_ua\`,
@@ -87,7 +134,7 @@ const findChannelAboutInDB = async (title) => {
       \`keywords_en\`,
       \`languages\`,
       \`official_site_url\`,
-      \`theme_id\`,
+      \`theme_id\`
     FROM ${FLY_CHANNELS}
     WHERE title = ? AND description_en NOT IS NULL AND description_en != ''
     LIMIT 1
@@ -114,9 +161,21 @@ const findChannelAboutInDB = async (title) => {
   }
 
   if (res.length === 0) {
-    const generatedData = await channelAboutProcess(title);
+    const generatedDataRes = await generateChannelAbout(title);
+    if (typeof generatedDataRes === 'string')
+      return { aboutData: emptyData, aboutError: generatedDataRes };
 
-    return { aboutData: generatedData, aboutError: null };
+    const updateAllChanWithSameTitleRes = await updateChannelsWithGeneratedData(
+      generatedDataRes,
+      title
+    );
+    if (typeof updateAllChanWithSameTitleRes === 'string')
+      return {
+        aboutData: generatedDataRes,
+        aboutError: updateAllChanWithSameTitleRes,
+      };
+
+    return { aboutData: generatedDataRes, aboutError: null };
   }
 
   return { aboutData: res[0], aboutError: null };
@@ -287,8 +346,8 @@ const insertTblChannels = async (currentSatSlug, parsedNewChannels) => {
       return;
     }
 
-    const { aboutData, aboutError } = await findChannelAboutInDB(item.title);
-    if (aboutError) errors.push(channelAboutRes);
+    const { aboutData, aboutError } = await findChannelAbout(item.title);
+    if (aboutError) errors.push(aboutError);
 
     const values = [
       slug,

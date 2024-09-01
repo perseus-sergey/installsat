@@ -45,7 +45,7 @@ const getChannelPrompt = (channelTitle) => {
     Always use the original channel's name without translation and enclose it in Unicode curly quotes (« »).
     The content should be written in the third person. 
     Avoid promotional language or calls to action, and focus on providing factual and descriptive content about the channel, its programs, and its significance. The tone should be entirely neutral and informative.
-    If you do not have enough information about this channel, return: "<h1>NULL</h1>",
+    If you have no information about this channel, return: "",
   `;
 };
 

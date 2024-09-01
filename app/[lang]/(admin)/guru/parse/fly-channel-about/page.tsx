@@ -12,26 +12,6 @@ import { poolExecute } from '@/libs/db/mysqldb';
 
 export const dynamic = 'force-dynamic';
 
-// =================================================================
-// - Change lang_id to languages in all flyChannels queries
-// - Localize all request which includes Channel THEME
-//
-// Try to get info about channel and it genre from gpt
-// Remove console logging from production parsers (mjs & tsx)
-// Change all Link to SeoLink
-// Make mjs fly sat & channels parser
-// Add cluster choice
-// add valid description to StartArticleSections
-// change all reactSelects
-// add color description to channel filters
-// improve similar channels & similar articles blocks
-// add comment block to fly channels with separate db tbl (fly_comments_channel))
-// Parse biss from lugasat (Or satsat.info) by sat grade & frequency & title
-// refresh email in production
-// add json-ld
-// add image generator
-// =================================================================
-
 const { FLY_CHANNELS } = EDBTableTitles;
 
 const findChannelInDb = async (channelTitle: string) => {

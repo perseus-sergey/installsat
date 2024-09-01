@@ -85,6 +85,16 @@ export default async function Page({ params }: IParams) {
         labelHtml="Choose Satellite for parsing CHANNELS:"
       />
 
+      <ClientSelectWithSubmit
+        selectOptions={flySatOptions}
+        inputId={EUrlAdminParam.CHANNEL_ABOUT_ONE_SAT}
+        searchParamName={EUrlSearchParam.SAT}
+        buttonTitle="generate"
+        inputBaseHref={`${BASE_PARSE_HREF}/${EUrlAdminParam.CHANNEL_ABOUT_ONE_SAT}`}
+        fieldSetTitle="Generate Channel description for one satellite"
+        labelHtml="Choose Satellite for generate DESCRIPTIONS FOR CHANNELS:"
+      />
+
       <ClientInputWithSubmit
         buttonTitle="Parse News"
         inputBaseHref={`${BASE_PARSE_HREF}/${EUrlAdminParam.PARSE_SAT_NEWS}`}

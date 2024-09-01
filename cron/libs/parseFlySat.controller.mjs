@@ -103,7 +103,7 @@ const updateChannelsWithGeneratedData = async (
         languages = ?, 
         official_site_url = ?, 
         theme_id = ?
-      WHERE title = ? AND (description_en IS NULL OR description_en != '')
+      WHERE title = ? AND (description_en IS NULL OR description_en = '')
     `;
   const res = await executePoolQuery(sql, [
     uaText,
@@ -156,14 +156,14 @@ const findChannelAbout = async (title) => {
   if (res instanceof Error) {
     return {
       aboutData: emptyData,
-      aboutError: `ERROR during SELECT data when finding channel About for channel "${title}". Message: ${res.message}`,
+      aboutMessage: `ERROR during SELECT data when finding channel About for channel "${title}". Message: ${res.message}`,
     };
   }
 
   if (res.length === 0) {
     const generatedDataRes = await generateChannelAbout(title);
     if (typeof generatedDataRes === 'string')
-      return { aboutData: emptyData, aboutError: generatedDataRes };
+      return { aboutData: emptyData, aboutMessage: generatedDataRes };
 
     const updateAllChanWithSameTitleRes = await updateChannelsWithGeneratedData(
       generatedDataRes,
@@ -172,13 +172,16 @@ const findChannelAbout = async (title) => {
     if (typeof updateAllChanWithSameTitleRes === 'string')
       return {
         aboutData: generatedDataRes,
-        aboutError: updateAllChanWithSameTitleRes,
+        aboutMessage: updateAllChanWithSameTitleRes,
       };
 
-    return { aboutData: generatedDataRes, aboutError: null };
+    return {
+      aboutData: generatedDataRes,
+      aboutMessage: `SUCCESS: Add channel descriptions for ${updateAllChanWithSameTitleRes} channel(s)`,
+    };
   }
 
-  return { aboutData: res[0], aboutError: null };
+  return { aboutData: res[0], aboutMessage: null };
 };
 
 const updateTblChannels = async (currentSatSlug, shouldUpdChannels) => {
@@ -346,8 +349,8 @@ const insertTblChannels = async (currentSatSlug, parsedNewChannels) => {
       return;
     }
 
-    const { aboutData, aboutError } = await findChannelAbout(item.title);
-    if (aboutError) errors.push(aboutError);
+    const { aboutData, aboutMessage } = await findChannelAbout(item.title);
+    if (aboutMessage) errors.push(aboutMessage);
 
     const values = [
       slug,

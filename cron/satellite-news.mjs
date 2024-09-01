@@ -15,8 +15,8 @@ import { executePoolQuery } from './libs/mysqldb.mjs';
 import {
   SOURCE_ARTICLE_PARAMS,
   extractAiArticleDataFromAiHTML,
-  getChangedSatNews,
-} from '../ai-prompts/parseSatNews.prompt.mjs';
+  getAiPrompt,
+} from './libs/parseSatNews.controller.mjs';
 
 const IS_LOGGED = true;
 const BASE_URL = process.env.BASE_URL;
@@ -78,7 +78,7 @@ const generateAiText = async (originalText) => {
 
   const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
 
-  const prompt = getChangedSatNews(originalText);
+  const prompt = getAiPrompt(originalText);
 
   const result = await model.generateContent(prompt);
   const response = result.response;

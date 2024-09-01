@@ -11,18 +11,9 @@ import {
 
 export const dynamic = 'force-dynamic';
 
-const isProductionMode = process.env.PRODUCTION_MODE === 'true';
-
-const IS_LOGGED = !isProductionMode;
 const { FLY_CHANNELS } = EDBTableTitles;
 
 let messages: string[] = [];
-
-const addMessage = (message: string, error?: Error) => {
-  messages.push(`${message}${error ? `: ${error.message}` : ''}`);
-  if (IS_LOGGED)
-    console.log(`🚀 ~ ${message}${error ? ` ERROR: ${error}` : ''}`);
-};
 
 export default async function Page({
   searchParams,
@@ -32,18 +23,17 @@ export default async function Page({
   const currentSatSlug = validSearchParam(EUrlSearchParam.SAT, searchParams);
 
   if (!currentSatSlug) {
-    addMessage(
-      `ERROR: searchParams"${EUrlSearchParam.SAT}" = "${searchParams?.[EUrlSearchParam.SAT]}"`
+    return (
+      <p className="text-xl text-red-500 font-bold">
+        ERROR: searchParams {EUrlSearchParam.SAT} ={' '}
+        {searchParams?.[EUrlSearchParam.SAT]}
+      </p>
     );
-
-    return null;
   }
 
   const sourceUrl = `${PARSE_URL_BASE}${currentSatSlug}`;
 
   const report = await parseFlyChannels({ currentSatSlug });
-
-  if (Array.isArray(report)) return <MessageBlock messages={messages} />;
 
   const {
     parseChannelMessages,

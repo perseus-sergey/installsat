@@ -72,62 +72,6 @@ export const getSatDigestNews = async ({
       }));
 };
 
-// export const getSatDigestNews = async ({
-//   satellites = undefined,
-//   timeInterval = 0,
-//   lang = DEFAULT_LANG,
-// }: {
-//   satellites?: string | string[] | undefined;
-//   timeInterval?: number;
-//   lang?: ELanguage;
-// }): Promise<Error | TSatDigest[]> => {
-//   const currentYear = new Date().getFullYear();
-//   let orderBy = 'ORDER BY d.date DESC, satGrade, satTitle';
-//   let tblName = 'tbl_digest';
-//   let where = `WHERE date >= CURDATE() - INTERVAL ${LAST_NEWS_INTERVAL} DAY`;
-//   let inSatList = '';
-
-//   if (timeInterval) {
-//     orderBy = 'ORDER BY satGrade, satTitle, d.date DESC';
-//     if (timeInterval > 180) {
-//       where = '';
-//       if (timeInterval < currentYear) tblName += `_${timeInterval}`;
-//     } else {
-//       where = `WHERE date >= CURDATE() - INTERVAL ${timeInterval} DAY`;
-//     }
-//   }
-
-//   if (satellites && satellites[0]) {
-//     const selectedSats =
-//       typeof satellites === 'string' ? satellites : satellites.join('","');
-//     inSatList = `${timeInterval > 180 ? 'WHERE' : 'AND'} sat.grade IN ("${selectedSats}")`;
-//   }
-
-//   const sql = `
-//     SELECT d.id, d.date, ${lang === ELanguage.UA ? 'd.text' : 'd.text_en AS text'}, d.sat_name, d.sat_position,
-//     sat.parent AS satParent,
-//     sat.title AS satTitle,
-//     sat.logo AS satLogo,
-//     sat.grade AS satGrade,
-//     sat.position AS satPosition
-//     FROM ${tblName} AS d
-//     LEFT JOIN tbl_chan_sat AS sat ON d.sat = sat.id
-//     ${where}
-//     ${inSatList}
-//     ${orderBy}
-//   `;
-//   const res = await poolExecute<TSatDigest[]>(sql);
-
-//   return res instanceof Error
-//     ? res
-//     : res.map((r) => ({
-//         ...r,
-//         date: getFormattedDateStrYearFirst(r.date),
-//         satTitle: r.satTitle || r.sat_name || 'Unknown Satellite',
-//         satPosition: r.satPosition || r.sat_position || '',
-//       }));
-// };
-
 const getGroupedSatelliteOptions = (
   [eastSats, westSats]: ISatModel[][],
   isDefaultValue = true,

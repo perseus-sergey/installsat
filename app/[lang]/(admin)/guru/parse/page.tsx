@@ -39,6 +39,18 @@ export default async function Page({ params }: IParams) {
   return (
     <>
       <Title>Parse Page</Title>
+
+      <ClientInputWithSubmit
+        inputId={EUrlAdminParam.PARSE_FLY_CHANNEL_ABOUT}
+        inputDefaultValue=""
+        inputType="text"
+        searchParamName={EUrlSearchParam.CHANNEL}
+        buttonTitle="Generate"
+        inputBaseHref={`${BASE_PARSE_HREF}/${EUrlAdminParam.PARSE_FLY_CHANNEL_ABOUT}`}
+        fieldSetTitle="Generate AI Descriptions to FLY channel"
+        labelHtml="Insert Channel Name"
+      />
+
       <ClientInputWithSubmit
         inputId={EUrlAdminParam.PARSE_FLY_SATELLITES}
         inputDefaultValue={2}

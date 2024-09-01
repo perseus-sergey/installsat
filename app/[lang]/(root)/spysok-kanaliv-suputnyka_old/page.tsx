@@ -93,6 +93,7 @@ export default async function Page({ searchParams, params }: IPageProps) {
   );
 
   const satChannels = await getSatChannels(
+    lang,
     searchQueryChannel,
     '',
     searchParams?.[EUrlSearchParam.SAT],

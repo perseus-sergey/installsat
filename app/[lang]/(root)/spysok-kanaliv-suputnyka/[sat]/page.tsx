@@ -43,21 +43,6 @@ const BASE_URL = process.env.BASE_URL || MAIN_URL;
 
 const { SATELLITE, LANG, SAT_CHANNEL_LIST } = EUrlBaseParam;
 
-// =================================================================
-// - execute script to add sat_slug for sat_digest in production
-// Add Satellite Links to satellite trans news digest
-//
-// Change all Link to SeoLink
-// Make mjs fly sat & channels parser
-// Add cluster choise
-// add valid description to StartArticleSections
-// change all reactSelects
-// add color description to channel filters
-// improve similar channels & similar articles blocks
-// add comment block to fly channels with separate db tbl (fly_comments_channel))
-// Parse biss from lugasat (Or satsat.info) by sat grade & frequency & title
-// Try to get info about channel and it genre from gpt
-// =================================================================
 const {
   h1Start,
   metaDescription,

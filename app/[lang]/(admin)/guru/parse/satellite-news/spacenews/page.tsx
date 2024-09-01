@@ -1,6 +1,4 @@
 import { Title } from '@/components/ui/Titles/Title';
-// import { EUrlAdminParam } from '@/models/url.model';
-// import { GoogleGenerativeAI } from '@google/generative-ai';
 import * as React from 'react';
 import puppeteer, { Browser } from 'puppeteer';
 import * as cheerio from 'cheerio';
@@ -22,10 +20,7 @@ interface IArticle {
 
 const IS_LOGGED = true;
 const PARSE_URL = 'https://spacenews.com/section/news-archive/';
-// const NEWS_LENGTH_PER_SOURCE = 3;
-// const BASE_URL = process.env.BASE_URL;
 const isProductionMode = process.env.NODE_ENV === 'production';
-// const BASE_GURU_PATH = `${BASE_URL}/en/${EUrlAdminParam.BASE_PATH}`;
 
 let messages: string[] = [];
 
@@ -34,41 +29,6 @@ const addMessage = (message: string, error?: Error) => {
   if (IS_LOGGED)
     console.log(`🚀 ~ ${message}${error ? ` ERROR: ${error}` : ''}`);
 };
-
-// const generateAiText = async (originalText: string) => {
-//   const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
-
-//   const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
-
-//   const prompt = `
-//   Write a new article based on the original article so that it is not considered a copy of the original article by search engines.
-//   From the given text, use only the text inside the tags.
-//   Remove links and embedded scripts from the text.
-//   Do not change the quotes.
-//   In ukrainian and english. But write names, surnames, titles and abbreviations in the original language.
-//   Use the HTML format like:
-//   <h2 id='title-en'>Title</h2>
-//   <div id='text-en'>
-//   <p>Paragraph 1</p>
-//   <p>Paragraph 2</p>
-//   <p>Paragraph N</p>
-//   </div>
-//   <h2 id='title-ua'>Назва</h2>
-//   <div id='text-ua'>
-//   <p>Параграф 1</p>
-//   <p>Параграф 2</p>
-//   <p>Параграф N</p>
-//   </div>
-//   Do not wrap the text in \`\`\`html \`\`\`
-//   Text of original article:
-//   ${originalText}
-// `;
-
-//   const result = await model.generateContent(prompt);
-//   const response = result.response;
-
-//   return response.text();
-// };
 
 const extractMainLinks = ($: cheerio.CheerioAPI) => {
   const links: string[] = [];
@@ -156,7 +116,6 @@ export default async function Page() {
 
       await sleep(1000);
     }
-    // aiText = await generateAiText(parsedText);
   } catch (error) {
     addMessage(
       'ERROR: failed during processing',
@@ -231,5 +190,4 @@ export default async function Page() {
       {/* <DangerHtml text={aiText} /> */}
     </>
   );
-  // return null;
 }

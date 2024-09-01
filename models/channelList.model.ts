@@ -450,48 +450,13 @@ export interface ISatChannelListModel {
   polar: string;
   beam: string;
   tem: string;
+  genre_description: string;
   compr: string;
   lan: string;
   canonical: string;
   cat_parent_title: string;
   category: number;
 }
-
-// export interface IFlySatChannelListModel {
-//   id: number;
-//   title: string;
-//   slug: string;
-//   sat_title: string;
-//   sat_position: string;
-//   sat_logo: string;
-//   sat_slug: string;
-//   sat_grade: number;
-//   frequency: number;
-//   // sat: number;
-//   theme_id?: number;
-//   logo?: string;
-//   // programma: number;
-//   encryption: string;
-//   biss: string;
-//   description_ua: string;
-//   description_en: string;
-//   // freq: number;
-//   sr: number;
-//   fec: string;
-//   polarization: string;
-//   beam: string;
-//   theme?: string;
-//   compress: string;
-//   lan?: string;
-//   canonical: string;
-//   cat_parent_title: string;
-//   mode: string;
-//   is_radio: TDbBoolean;
-//   sid: number | null;
-//   v_pid: number | null;
-//   a_pid: string;
-//   // category: number;
-// }
 
 export interface IEditChannelListModel {
   id: number;
@@ -513,6 +478,7 @@ export interface IChannelListModel {
   chan_description: string;
   genre_id: number;
   genre_title: string;
+  genre_description: string;
   lan: string;
 }
 
@@ -533,7 +499,6 @@ export interface IPackageChannelListModel extends IChannelListModel {
   cat_description: string;
   cat_view: number;
   genre_slug: string;
-  genre_description: string;
   genre_h1: string;
   genre_logo: string;
   price: number;

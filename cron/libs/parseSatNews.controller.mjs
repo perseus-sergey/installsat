@@ -109,7 +109,7 @@ export const SOURCE_ARTICLE_PARAMS = [
   },
 ];
 
-export const getChangedSatNews = (originalText) => `
+export const getAiPrompt = (originalText) => `
 Write a new article based on the original article so that it is not considered a copy of the original article by search engines.
 Don't change people's quotes.
 Wrap important relevant to article title words in the article in a tag <strong>, but not more than 5% (for each language) from the content of the article.

@@ -90,7 +90,10 @@ export default async function Page({ searchParams, params }: IPageProps) {
     searchParams
   );
 
-  const onlineChannels = await getChannelsWithSchedule(searchQueryChannel);
+  const onlineChannels = await getChannelsWithSchedule(
+    lang,
+    searchQueryChannel
+  );
   const todayStr = getFormattedDateStrYearFirst();
 
   return (
@@ -113,7 +116,7 @@ export default async function Page({ searchParams, params }: IPageProps) {
                 <li key={genreTitle} className="flex items-center gap-4">
                   <GenreImage
                     lang={lang}
-                    tooltipText={genreTitle}
+                    tooltipText={chanList[0].genre_description}
                     genreMapPosition={chanList[0].genre_id}
                   />
                   <TooltipSimple

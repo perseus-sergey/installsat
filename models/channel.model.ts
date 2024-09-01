@@ -48,6 +48,7 @@ export interface IFlyChannel {
   encryption: string | null;
   biss: string;
   description: string;
+  keywords?: string;
   text: string;
   official_site_url: string;
   official_broadcast_url: string;
@@ -56,8 +57,9 @@ export interface IFlyChannel {
   polarization: string;
   beam: string;
   theme?: string;
+  genre_description?: string;
   compress: string;
-  lan?: string;
+  languages?: string;
   canonical: string;
   cat_parent_title: string;
   mode: string;
@@ -335,8 +337,8 @@ export const META_CHANNEL = {
     },
     getParamsSite(channelTitle: string) {
       return {
-        [ELanguage.UA]: `Сайт каналу "${channelTitle}"`,
-        [ELanguage.EN]: `Channel website "${channelTitle}"`,
+        [ELanguage.UA]: `Сайт каналу "${channelTitle}" : `,
+        [ELanguage.EN]: `Channel website "${channelTitle}" : `,
       };
     },
   },

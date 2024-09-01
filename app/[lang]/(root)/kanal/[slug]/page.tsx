@@ -39,7 +39,6 @@ const {
   },
   infoPanelTitles: { views: viewsTitle },
   titleBefore,
-  keywordsBefore,
   preText,
   scheduleLinkText: { channel: scheduleTitle },
   noteTitle,
@@ -73,6 +72,8 @@ export const generateMetadata = async ({
     sat_title,
     frequency,
     polarization,
+    beam,
+    a_pid,
   } = flyChannels;
 
   const metaTitle = `${titleBefore[lang]} ${title} | ${sat_title} ${frequency} ${polarization}`;
@@ -84,12 +85,13 @@ export const generateMetadata = async ({
   //   .reverse();
 
   // const addCanonical = canonical ? clearedCanonical : chan_slug;
+  const chanDescription = description || `${metaTitle} | ${beam} | ${a_pid}`;
 
   return {
     metadataBase: new URL(BASE_URL),
     title: metaTitle,
-    description: description || metaTitle,
-    keywords: keywords || keywordsBefore[lang] + description,
+    description: chanDescription,
+    keywords: keywords || chanDescription,
     alternates: {
       // canonical: `/${DEFAULT_LANG}/${EUrlBaseParam.KANAL}/${addCanonical}`,
       languages: {

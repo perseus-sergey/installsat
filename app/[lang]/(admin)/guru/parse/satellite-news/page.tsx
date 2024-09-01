@@ -15,8 +15,8 @@ import { DEFAULT_ARTICLE_LOGO_NAME } from '@/models/articles.model';
 import {
   SOURCE_ARTICLE_PARAMS,
   extractAiArticleDataFromAiHTML,
-  getChangedSatNews,
-} from '@/ai-prompts/parseSatNews.prompt.mjs';
+  getAiPrompt,
+} from '@cron/libs/parseSatNews.controller.mjs';
 import { killChromeProcesses } from '@/cron/libs/commons.mjs';
 
 interface IArticle {
@@ -95,7 +95,7 @@ const generateAiText = async (originalText: string) => {
   const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
 
   const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
-  const prompt = getChangedSatNews(originalText);
+  const prompt = getAiPrompt(originalText);
 
   const result = await model.generateContent(prompt);
   const response = result.response;

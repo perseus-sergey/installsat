@@ -225,8 +225,8 @@ const extractParsedData = ($, dbSatellites, intervalFromLastUpd) => {
     const satInDb = dbSatellites.find(
       (dbSat) =>
         dbSat.title === parsedSat.title &&
-        new URL(parsedSat.url_link).pathname ===
-          new URL(dbSat.url_link).pathname &&
+        dbSat.url_link.split('flysat.com')[1] ===
+          parsedSat.url_link.split('flysat.com')[1] &&
         dbSat.position === parsedSat.position
     );
 
@@ -252,12 +252,11 @@ export const parseProcess = async (intervalFromLastUpd) => {
   let browser;
   // let finalData = [];
   let overSats = [];
-  let dbSatList = [];
   let newSatList = [];
   let updatedSatList = [];
 
   try {
-    dbSatList = await getDataFromDB();
+    const dbSatellites = await getDataFromDB();
 
     browser = await puppeteer.launch({
       args: [
@@ -276,18 +275,16 @@ export const parseProcess = async (intervalFromLastUpd) => {
     const $ = cheerio.load(html);
 
     const { allParsedSats, newSats, updatedSats, extractErrors } =
-      extractParsedData($, dbSatList, intervalFromLastUpd);
+      extractParsedData($, dbSatellites, intervalFromLastUpd);
     extractErrors.forEach((er) => addMessage(er));
 
     updatedSatList = updatedSats;
     newSatList = newSats;
-    overSats = findDbOverSats(dbSatList, allParsedSats);
+    overSats = findDbOverSats(dbSatellites, allParsedSats);
 
     if (newSats.length) await insertNewSatsToDB(newSats);
 
     await parseSatellitesChannels(updatedSats);
-    // await parseSatellitesChannels(newSats);
-
     // =================================================================
     // For All Satellites
     // =================================================================
@@ -320,5 +317,5 @@ export const parseProcess = async (intervalFromLastUpd) => {
     }
   }
 
-  return { dbSatList, newSatList, overSats, updatedSatList, messages };
+  return { newSatList, overSats, updatedSatList, messages };
 };

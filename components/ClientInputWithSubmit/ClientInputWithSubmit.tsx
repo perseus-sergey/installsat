@@ -49,7 +49,13 @@ const ClientInputWithSubmit = ({
               id={inputId}
               type={inputType}
               value={val}
-              onChange={(e) => setVal(parseInt(e.target.value, 10))}
+              onChange={(e) =>
+                setVal(
+                  typeof inputType === 'number'
+                    ? parseInt(e.target.value, 10)
+                    : e.target.value
+                )
+              }
               className="p-2 rounded"
             />
           )}

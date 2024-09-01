@@ -66,6 +66,9 @@ export default async function Page({
   const { newSatList, overSats, updatedSatList, messages } =
     await parseProcess(intervalFromLastUpd);
 
+  // const { dbSatList, newSatList, overSats, updatedSatList, messages } =
+  //   await parseProcess(intervalFromLastUpd);
+
   // await sleep(1000);
 
   await sendReportMail(messages);
@@ -87,6 +90,7 @@ export default async function Page({
           </ul>
         </>
       )}
+      {/* <SatList title="Current List of Satellite In DB:" satList={dbSatList} /> */}
       <SatList title="New Satellites Found:" satList={newSatList} />
       <SatList
         title="Satellites From My DB NOT Found in FlySat:"

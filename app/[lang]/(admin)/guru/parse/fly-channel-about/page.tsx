@@ -1,18 +1,21 @@
 import { Title } from '@/components/ui/Titles/Title';
 import { TSearchParams } from '@/models/ui.model';
-// import { EDBTableTitles, TSearchParams } from '@/models/ui.model';
-import Link from 'next/link';
 import { validSearchParam } from '@/libs/utils/validSearchParam';
 import { EUrlSearchParam } from '@/models/url.model';
 import React from 'react';
-import { PARSE_URL_BASE } from '@/cron/libs/parseFlySat.controller.mjs';
+import {
+  generateChannelAbout,
+  updateGeneratedDataDB,
+} from '@/cron/libs/flyChannelAbout.controller.mjs';
+import { EDBTableTitles } from '@/cron/libs/commons.mjs';
+import { poolExecute } from '@/libs/db/mysqldb';
 
 export const dynamic = 'force-dynamic';
 
 // =================================================================
 // - Change lang_id to languages in all flyChannels queries
+// - Localize all request which includes Channel THEME
 //
-// Localize all request which includes Channel THEME
 // Try to get info about channel and it genre from gpt
 // Remove console logging from production parsers (mjs & tsx)
 // Change all Link to SeoLink
@@ -29,17 +32,19 @@ export const dynamic = 'force-dynamic';
 // add image generator
 // =================================================================
 
-const isProductionMode = process.env.NODE_ENV === 'production';
+const { FLY_CHANNELS } = EDBTableTitles;
 
-const IS_LOGGED = !isProductionMode;
-// const { FLY_CHANNELS } = EDBTableTitles;
+const findChannelInDb = async (channelTitle: string) => {
+  const sql = `
+      SELECT id FROM ${FLY_CHANNELS} WHERE title = ? LIMIT 1
+    `;
+  const res = await poolExecute<{ id: number }[]>(sql, [channelTitle]);
 
-let messages: string[] = [];
-
-const addMessage = (message: string, error?: Error) => {
-  messages.push(`${message}${error ? `: ${error.message}` : ''}`);
-  if (IS_LOGGED)
-    console.log(`🚀 ~ ${message}${error ? ` ERROR: ${error}` : ''}`);
+  return res instanceof Error
+    ? res
+    : res.length === 0
+      ? new Error(`ERROR: Channel "${channelTitle}" not found in database`)
+      : res;
 };
 
 export default async function Page({
@@ -50,83 +55,48 @@ export default async function Page({
   const urlChannelTitle = validSearchParam(
     EUrlSearchParam.CHANNEL,
     searchParams
-  );
+  ).trim();
 
   if (!urlChannelTitle) {
-    addMessage(
-      `ERROR: searchParams"${EUrlSearchParam.CHANNEL}" = "${searchParams?.[EUrlSearchParam.CHANNEL]}"`
+    return (
+      <p className="text-xl text-red-500 font-bold">
+        ERROR: searchParams {EUrlSearchParam.CHANNEL} ={' '}
+        {searchParams?.[EUrlSearchParam.CHANNEL]}
+      </p>
     );
-
-    return null;
   }
 
-  const sourceUrl = `${PARSE_URL_BASE}${urlChannelTitle}`;
+  const checkChanInDb = await findChannelInDb(urlChannelTitle);
+  if (checkChanInDb instanceof Error)
+    return (
+      <p className="text-xl text-red-500 font-bold">{checkChanInDb.message}</p>
+    );
 
-  // const report = await parseFlyChannels({ urlChannelTitle });
+  const generatedData = await generateChannelAbout(urlChannelTitle);
 
-  // const {
-  //   parseChannelMessages,
-  //   updateResCount,
-  //   currTblShouldUpdChannels,
-  //   shouldUpdChannels,
-  //   removeResCount,
-  //   shouldDeleteChannels,
-  //   parsedNewChannels,
-  //   insertCount,
-  // } = report;
+  if (typeof generatedData === 'string')
+    return <p className="text-xl text-red-500 font-bold">{generatedData}</p>;
 
-  // messages.push(...parseChannelMessages);
+  const insertToDbRes = await updateGeneratedDataDB(
+    generatedData,
+    urlChannelTitle
+  );
+
+  if (insertToDbRes instanceof Error)
+    return (
+      <p className="text-xl text-red-500 font-bold">{`ERROR: DB INSERT for channel "${urlChannelTitle}". Error message: ${insertToDbRes}`}</p>
+    );
 
   return (
     <>
-      <Title>
-        <Link href={sourceUrl}>Add Description to Fly Channel</Link>
-      </Title>
+      <Title>Add Description to Fly Channel</Title>
 
-      <MessageBlock messages={messages} />
+      <p className="text-xs">
+        <b>Updated channels: </b>
+        {insertToDbRes}
+      </p>
 
-      <ul>
-        {/* <li>
-          <h3 className="font-bold text-blue-700 text-xl">Genre</h3>
-          <div>{genre}</div>
-        </li>
-        <li>
-          <h3 className="font-bold text-blue-700 text-xl">Language(s)</h3>
-          <div>{language}</div>
-        </li>
-        <li>
-          <h3 className="font-bold text-blue-700 text-xl">Official Site</h3>
-          <div>{offSite}</div>
-        </li>
-        <li>
-          <h3 className="font-bold text-blue-700 text-xl">Description EN</h3>
-          <div>{descriptionEn}</div>
-        </li>
-        <li>
-          <h3 className="font-bold text-blue-700 text-xl">Description UA</h3>
-          <div>{descriptionUa}</div>
-        </li>
-        <li>
-          <h3 className="font-bold text-blue-700 text-xl">Text UA</h3>
-          <div>{textUa}</div>
-        </li>
-        <li>
-          <h3 className="font-bold text-blue-700 text-xl">Text EN</h3>
-          <div>{textEn}</div>
-        </li> */}
-      </ul>
+      <pre>{JSON.stringify(generatedData, null, 2)}</pre>
     </>
   );
 }
-
-const MessageBlock = ({ messages }: { messages: string[] }) =>
-  messages.length > 0 && (
-    <>
-      <h2 className="font-bold text-blue-700 text-xl">Messages:</h2>
-      <ul>
-        {messages.map((message, i) => (
-          <li key={i}>{message}</li>
-        ))}
-      </ul>
-    </>
-  );

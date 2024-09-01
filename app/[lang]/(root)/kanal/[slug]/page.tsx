@@ -27,6 +27,9 @@ import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
 import EditLinkButton from '@/components/admin/EditLinkButton/EditLinkButton';
 import { notFound } from 'next/navigation';
 import { getELangKey } from '@/libs/utils/validSearchParam';
+import TextUnderH1 from '@/components/TextUnderH1/TextUnderH1';
+import { MChanTheme, META_SAT_CHANNEL_LIST } from '@/models/channelList.model';
+import FillingImg from '@/components/ui/Images/FillingImage';
 
 const BASE_URL = process.env.BASE_URL || MAIN_URL;
 
@@ -45,6 +48,10 @@ const {
   similar: { channels: simChannelsBefore },
 } = META_CHANNEL;
 
+const {
+  images: { genreImage },
+} = META_SAT_CHANNEL_LIST;
+
 export interface IChannelProps {
   params: { [key in EUrlBaseParam]: string };
 }
@@ -61,6 +68,7 @@ export const generateMetadata = async ({
   const {
     title,
     description,
+    keywords,
     slug: chan_slug,
     sat_title,
     frequency,
@@ -81,7 +89,7 @@ export const generateMetadata = async ({
     metadataBase: new URL(BASE_URL),
     title: metaTitle,
     description: description || metaTitle,
-    keywords: keywordsBefore[lang] + description,
+    keywords: keywords || keywordsBefore[lang] + description,
     alternates: {
       // canonical: `/${DEFAULT_LANG}/${EUrlBaseParam.KANAL}/${addCanonical}`,
       languages: {
@@ -112,6 +120,9 @@ export default async function Page({ params }: IChannelProps) {
     title,
     logo,
     text,
+    theme,
+    genre_description,
+    theme_id,
     view,
     is_removed,
     sat_slug,
@@ -120,6 +131,8 @@ export default async function Page({ params }: IChannelProps) {
     vsetv,
     vipiko,
   } = flyChannels;
+
+  const genreImgSrc = theme_id ? MChanTheme.get(theme_id) : theme_id;
 
   const similarChannels = await getSimilarFlyChannels(title);
 
@@ -148,7 +161,8 @@ export default async function Page({ params }: IChannelProps) {
       />
       <article className="article">
         <Title>
-          {`${titleBefore[lang]} "${title}"`}
+          {`${titleBefore[lang]} ≪${title}≫`}
+          {/* {`${titleBefore[lang]} "${title}"`} */}
           {logo && (
             <FillingValidImage
               image={{
@@ -162,6 +176,20 @@ export default async function Page({ params }: IChannelProps) {
             />
           )}
         </Title>
+
+        {theme && (
+          <TextUnderH1>
+            <div className="flex flex-wrap items-center gap-2">
+              <FillingImg
+                width={genreImage.width}
+                height={genreImage.height}
+                alt={`${genreImage.altPre} ${theme}`}
+                src={`${genreImage.path}${genreImgSrc}`}
+              />
+              <b>{theme}:</b> {genre_description}
+            </div>
+          </TextUnderH1>
+        )}
 
         {text ? (
           <div className="article-text">

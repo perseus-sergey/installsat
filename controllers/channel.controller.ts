@@ -34,6 +34,7 @@ export const getDBFlyChannel = cache(
   CH.logo,
   ${lang === ELanguage.UA ? 'CH.description_ua' : 'CH.description_en'} AS description, 
   ${lang === ELanguage.UA ? 'CH.text_ua' : 'CH.text_en'} AS text, 
+  ${lang === ELanguage.UA ? 'CH.keywords_ua' : 'CH.keywords_en'} AS keywords, 
   CH.official_site_url, 
   CH.view, 
   CH.canonical, 
@@ -57,10 +58,12 @@ export const getDBFlyChannel = cache(
   CH.sat_slug,
   CH.is_removed,
   CH.languages,
+  CH.theme_id,
   S.title AS sat_title,
   S.position AS sat_position,
   S.grade AS sat_grade,
-  T.title AS theme
+  ${lang === ELanguage.UA ? 'T.title' : 'T.title_en'} AS theme, 
+  ${lang === ELanguage.UA ? 'T.description' : 'T.description_en'} AS genre_description 
 FROM ${FLY_CHANNELS} AS CH 
 LEFT JOIN ${CHANNEL_THEME} AS T ON CH.theme_id = T.id 
 LEFT JOIN ${FLY_SATELLITES} AS S ON CH.sat_slug = S.slug 

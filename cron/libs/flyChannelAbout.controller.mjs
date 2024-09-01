@@ -7,7 +7,14 @@ const { FLY_CHANNELS } = EDBTableTitles;
 
 const getChannelPrompt = (channelTitle) => {
   return `
-    Generate an HTML formatted text for the channel "${channelTitle}" that includes the following elements:
+    Generate text about the channel "${channelTitle}".
+    Important!: if you do not have enough information about this channel, return an empty string.
+    Ensure all generated text is presented in a neutral, descriptive tone suitable for an encyclopedia or informative website entry.
+    Always use the original channel's name without translation and enclose it in Unicode curly quotes (« »).
+    The content should be written in the third person. 
+    Avoid promotional language or calls to action, and focus on providing factual and descriptive content about the channel, its programs, and its significance. The tone should be entirely neutral and informative.
+  
+    The text must be formatted in HTML that includes the following elements:
 
     1. <h3 id='description-en'>[Description]</h3>: Provide a concise, 150-200 character description in English for this channel, suitable for a meta description tag for SEO.
 
@@ -40,13 +47,7 @@ const getChannelPrompt = (channelTitle) => {
     7. <h3 id='description-ua'>[Опис]</h3>: Provide a concise, 150-200 character description in Ukrainian for this channel, suitable for a meta description tag for SEO.
 
     8. <h4 id='keywords-ua'>[Ключові слова]</h4>: List relevant keywords in Ukrainian for this channel, separated by commas, suitable for a meta keywords tag for SEO.
-
-    Ensure all generated text is presented in a neutral, descriptive tone suitable for an encyclopedia or informative website entry.
-    Always use the original channel's name without translation and enclose it in Unicode curly quotes (« »).
-    The content should be written in the third person. 
-    Avoid promotional language or calls to action, and focus on providing factual and descriptive content about the channel, its programs, and its significance. The tone should be entirely neutral and informative.
-    If you do not have enough information about this channel, return an empty string.
-  `;
+    `;
 };
 
 const generateAiText = async (channelTitle) => {

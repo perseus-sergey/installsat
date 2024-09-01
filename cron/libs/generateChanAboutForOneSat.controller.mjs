@@ -6,7 +6,7 @@ const { FLY_CHANNELS } = EDBTableTitles;
 
 const getSatChannelsFromDB = async (currentSatSlug) => {
   const sql = `
-    SELECT title FROM ${FLY_CHANNELS} WHERE sat_slug = ? GROUP BY title
+    SELECT title FROM ${FLY_CHANNELS} WHERE sat_slug = ? AND (description_en IS NULL OR description_en = '') GROUP BY title
   `;
   const res = await executePoolQuery(sql, [currentSatSlug]);
 
@@ -64,15 +64,15 @@ const updateChannelsWithGeneratedData = async (
 const findChannelAbout = async (title) => {
   const sql = `
     SELECT 
-      \`text_ua\`,
-      \`text_en\`,
-      \`description_en\`,
-      \`description_ua\`,
-      \`keywords_ua\`,
-      \`keywords_en\`,
-      \`languages\`,
-      \`official_site_url\`,
-      \`theme_id\`
+      text_ua,
+      text_en,
+      description_en,
+      description_ua,
+      keywords_ua,
+      keywords_en,
+      languages,
+      official_site_url,
+      theme_id
     FROM ${FLY_CHANNELS}
     WHERE title = ? AND description_en IS NOT NULL AND description_en != ''
     LIMIT 1

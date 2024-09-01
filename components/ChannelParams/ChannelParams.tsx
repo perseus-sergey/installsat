@@ -144,6 +144,7 @@ export const FlyChannelParams = ({
     polarization,
     sr,
     official_broadcast_url,
+    official_site_url,
     a_pid,
     encryption,
     is_biss,
@@ -333,6 +334,8 @@ export const FlyChannelParams = ({
             </>
           }
         />
+
+        <Item param={official_site_url} title={getParamsSite(title)[lang]} />
       </ul>
     </section>
   );

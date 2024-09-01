@@ -42,7 +42,21 @@ const FrequencySegment = ({
   lang: ELanguage;
 }) =>
   frequencyChannels.map(
-    ({ logo, compr, title, tem, lan, description, cpu, biss, tema }, idx) => (
+    (
+      {
+        logo,
+        compr,
+        title,
+        tem,
+        genre_description,
+        lan,
+        description,
+        cpu,
+        biss,
+        tema,
+      },
+      idx
+    ) => (
       <tr key={idx}>
         {!idx && (
           <td rowSpan={frequencyChannels.length} className={styles.tdFrequency}>
@@ -124,7 +138,7 @@ const FrequencySegment = ({
         </td>
         <td className={styles.tdGenre}>
           <div className="flex flex-col items-center">
-            <TooltipSimple tooltipText={tem}>
+            <TooltipSimple tooltipText={genre_description}>
               <FillingImg
                 width={genreImage.width}
                 height={genreImage.height}

@@ -249,7 +249,6 @@ const R_U_N = async () => {
         );
       }
     }
-    // Закрити всі запущені процеси Chrome після завершення роботи функції
     if (isProductionMode) {
       const killRes = killChromeProcesses();
       errorMessages.push(...killRes);

@@ -46,6 +46,7 @@ export enum EUrlAdminParam {
   PARSE_SCHEDULE_VIPIKO = 'vipiko',
   PARSE_FLY_SATELLITES = 'fly-sat',
   PARSE_FLY_CHANNELS = 'fly-channels',
+  PARSE_FLY_CHANNEL_ABOUT = 'fly-channel-about',
   PARSE_SAT_DIGEST = 'trans-news',
   PARSE_SAT_NEWS = 'satellite-news',
 }

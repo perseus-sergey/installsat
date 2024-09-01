@@ -43,11 +43,12 @@ const FrequencySegment = ({
         logo,
         compress,
         title,
-        theme,
         description,
         slug,
         biss,
         theme_id,
+        theme,
+        genre_description,
         encryption,
         mode,
         is_radio,
@@ -356,7 +357,7 @@ const FrequencySegment = ({
               </Link>
               {genreImgSrc && !is_radio && (
                 <div className="flex-col items-center text-sm hidden sm:flex">
-                  <TooltipSimple tooltipText={theme}>
+                  <TooltipSimple tooltipText={genre_description}>
                     <FillingImg
                       width={genreImage.width}
                       height={genreImage.height}

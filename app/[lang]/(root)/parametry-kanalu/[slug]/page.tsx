@@ -67,7 +67,7 @@ export const generateMetadata = async ({
   const slug = params[EUrlBaseParam.SLUG];
   const lang = getELangKey(params[EUrlBaseParam.LANG]);
 
-  const sqlResult = await getDBChannel(slug);
+  const sqlResult = await getDBChannel(slug, lang);
   if (!sqlResult) return DEFAULT_META_DATA[lang];
 
   const {
@@ -122,7 +122,8 @@ export default async function Page({ params }: IChannelProps) {
   const slug = params[EUrlBaseParam.SLUG];
   const lang = getELangKey(params[EUrlBaseParam.LANG]);
 
-  const sqlResult = await getDBChannel(slug);
+  const sqlResult = await getDBChannel(slug, lang);
+  console.log('🚀 ~ Page ~ sqlResult:', sqlResult);
 
   if (!sqlResult) notFound();
 

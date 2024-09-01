@@ -32,8 +32,9 @@ export const getDBFlyChannel = cache(
   CH.title, 
   CH.slug, 
   CH.logo,
-  ${lang === ELanguage.UA ? 'CH.description_ua' : 'CH.description_en AS description'}, 
-  ${lang === ELanguage.UA ? 'CH.text_ua' : 'CH.text_en AS text'}, 
+  ${lang === ELanguage.UA ? 'CH.description_ua' : 'CH.description_en'} AS description, 
+  ${lang === ELanguage.UA ? 'CH.text_ua' : 'CH.text_en'} AS text, 
+  ${lang === ELanguage.UA ? 'CH.keywords_ua' : 'CH.keywords_en'} AS keywords, 
   CH.official_site_url, 
   CH.view, 
   CH.canonical, 
@@ -56,15 +57,16 @@ export const getDBFlyChannel = cache(
   CH.t2_stream,
   CH.sat_slug,
   CH.is_removed,
+  CH.languages,
+  CH.theme_id,
   S.title AS sat_title,
   S.position AS sat_position,
   S.grade AS sat_grade,
-  T.title AS theme,
-  L.title AS lan
+  ${lang === ELanguage.UA ? 'T.title' : 'T.title_en'} AS theme, 
+  ${lang === ELanguage.UA ? 'T.description' : 'T.description_en'} AS genre_description 
 FROM ${FLY_CHANNELS} AS CH 
 LEFT JOIN ${CHANNEL_THEME} AS T ON CH.theme_id = T.id 
 LEFT JOIN ${FLY_SATELLITES} AS S ON CH.sat_slug = S.slug 
-LEFT JOIN ${TBL_LANGUAGE} AS L ON CH.lang_id = L.id 
 WHERE CH.slug = ?
 LIMIT 1
 `;
@@ -81,7 +83,7 @@ LIMIT 1
   }
 );
 
-export const getDBChannel = cache(async (slug: string) => {
+export const getDBChannel = cache(async (slug: string, lang: ELanguage) => {
   const sql = `
   SELECT 
   CH.id, 
@@ -104,7 +106,7 @@ export const getDBChannel = cache(async (slug: string) => {
   S.title AS sat_title,
   S.cpu AS sat_slug,
   E.title AS encryption,
-  T.title AS genre,
+  ${lang === ELanguage.UA ? 'T.title' : 'T.title_en'}  AS genre, 
   CO.title AS compression,
   C.title AS cat_title,
   C.parent AS cat_parent_id,

@@ -85,6 +85,7 @@ const groupeChannelsBy = <T>(
 
 export const getSatChannels = cache(
   async (
+    lang: ELanguage,
     searchQuery = '',
     satId = '',
     satellites?: string | string[] | undefined,
@@ -106,7 +107,17 @@ export const getSatChannels = cache(
     const notT2mi = isT2MI ? `AND co.id NOT IN(8)` : '';
 
     const sql = `
-  SELECT ch.id, ch.title, ch.cpu, ch.frequency, ch.sat, ch.tema, ch.logo, ch.programma, ch.encryption, ch.biss, ch.description,
+  SELECT ch.id,
+   ch.title,
+   ch.cpu,
+   ch.frequency,
+   ch.sat,
+   ch.tema,
+   ch.logo,
+   ch.programma,
+   ch.encryption,
+   ch.biss,
+   ch.description,
   sat.title AS sat_title,
   sat.position AS sat_position,
   sat.logo AS sat_logo,
@@ -117,7 +128,8 @@ export const getSatChannels = cache(
   fr.fec,
   be.polar,
   be.title AS beam,
-  te.title AS tem,
+  ${lang === ELanguage.UA ? 'te.title' : 'te.title_en'}  AS tem, 
+  ${lang === ELanguage.UA ? 'te.description' : 'te.description_en'}  AS genre_description,
   co.title AS compr,
   la.title AS lan 
   FROM ${CHANNELS} AS ch 
@@ -206,6 +218,7 @@ export const getFlySatChannels = cache(
    ch.biss,
    ch.mode,
    ch.is_radio,
+   ch.languages,
    ch.sid,
    ch.v_pid,
    ch.a_pid,
@@ -215,12 +228,11 @@ export const getFlySatChannels = cache(
     sat.position AS sat_position,
     sat.logo AS sat_logo,
     sat.grade AS sat_grade,
-    te.title AS theme,
-    la.title AS lan 
+    ${lang === ELanguage.UA ? 'te.title' : 'te.title_en'}  AS theme, 
+    ${lang === ELanguage.UA ? 'te.description' : 'te.description_en'}  AS genre_description
   FROM ${FLY_CHANNELS} AS ch 
-  LEFT JOIN ${CHANNEL_THEME} 		    AS te	 ON ch.theme_id 	= te.id
-  LEFT JOIN ${FLY_SATELLITES} 			AS sat ON ch.sat_slug 	= sat.slug 
-  LEFT JOIN ${TBL_LANGUAGE} 			  AS la	 ON ch.lang_id 		= la.id
+  LEFT JOIN ${CHANNEL_THEME} AS te ON ch.theme_id = te.id
+  LEFT JOIN ${FLY_SATELLITES} AS sat ON ch.sat_slug = sat.slug 
   WHERE ch.sat_slug ${satSlug ? '= ?' : 'IS NOT NULL'}
   AND ch.is_removed != 1
   ${searchPart}
@@ -277,12 +289,29 @@ export const getChannelPackages = async (): Promise<
       }));
 };
 
-export const getOnlineChannels = cache(async (searchQuery = '') => {
-  const searchPart = searchQuery ? `AND C.title LIKE "%${searchQuery}%"` : '';
+export const getOnlineChannels = cache(
+  async (lang: ELanguage, searchQuery = '') => {
+    const searchPart = searchQuery ? `AND C.title LIKE "%${searchQuery}%"` : '';
 
-  const sql = `
-    SELECT C.id AS chan_id, C.title AS chan_title, C.cpu AS chan_cpu, C.logo AS chan_logo, C.encryption, C.description AS chan_description, C.view, C.tema AS genre_id, C.compress, C.potok,
-          CO.title AS compr, L.title AS lan, C.tvforsite_net, T.title AS genre_title
+    const sql = `
+    SELECT 
+    C.id AS chan_id,
+    C.title AS chan_title,
+    C.cpu AS chan_cpu,
+    C.logo AS chan_logo,
+    C.encryption,
+    C.description AS chan_description,
+    C.view,
+    C.tema AS genre_id,
+    C.compress,
+    C.potok,
+
+    CO.title AS compr,
+    L.title AS lan,
+    C.tvforsite_net,
+    ${lang === ELanguage.UA ? 'T.description' : 'T.description_en'}  AS genre_description,
+    ${lang === ELanguage.UA ? 'T.title' : 'T.title_en'}  AS genre_title
+
     FROM ${CHANNELS} AS C
     LEFT JOIN ${CHANNEL_COMPRESSION} AS CO ON C.compress = CO.id 
     LEFT JOIN ${TBL_LANGUAGE} AS L ON C.lang = L.id
@@ -294,51 +323,58 @@ export const getOnlineChannels = cache(async (searchQuery = '') => {
     ORDER BY C.tema, C.tvforsite_net DESC
   `;
 
-  const resp = await poolExecute<IOnlineChannelListModel[]>(sql);
+    const resp = await poolExecute<IOnlineChannelListModel[]>(sql);
 
-  if (resp instanceof Error || !resp.length) return [];
+    if (resp instanceof Error || !resp.length) return [];
 
-  const groupedData = resp.reduce(
-    (acc, channel) => {
-      const decodedChannel = {
-        ...channel,
-        chan_title: decode(channel.chan_title),
-        chan_description: decode(channel.chan_description),
-      };
+    const groupedData = resp.reduce(
+      (acc, channel) => {
+        const decodedChannel = {
+          ...channel,
+          chan_title: decode(channel.chan_title),
+          chan_description: decode(channel.chan_description),
+        };
 
-      const { chan_title, genre_title, potok, tvforsite_net } = decodedChannel;
-      if (!acc[genre_title]) {
-        acc[genre_title] = [];
-      }
+        const { chan_title, genre_title, potok, tvforsite_net } =
+          decodedChannel;
+        if (!acc[genre_title]) {
+          acc[genre_title] = [];
+        }
 
-      const existingChannel = acc[genre_title].find(
-        (otherChannel) =>
-          otherChannel.chan_title === chan_title ||
-          (otherChannel.compress === 5 &&
-            otherChannel.potok &&
-            otherChannel.potok === potok) ||
-          (otherChannel.tvforsite_net &&
-            otherChannel.tvforsite_net === tvforsite_net)
-      );
+        const existingChannel = acc[genre_title].find(
+          (otherChannel) =>
+            otherChannel.chan_title === chan_title ||
+            (otherChannel.compress === 5 &&
+              otherChannel.potok &&
+              otherChannel.potok === potok) ||
+            (otherChannel.tvforsite_net &&
+              otherChannel.tvforsite_net === tvforsite_net)
+        );
 
-      if (!existingChannel) {
-        acc[genre_title].push(decodedChannel);
-      }
+        if (!existingChannel) {
+          acc[genre_title].push(decodedChannel);
+        }
 
-      return acc;
-    },
-    {} as { [key: string]: IOnlineChannelListModel[] }
-  );
+        return acc;
+      },
+      {} as { [key: string]: IOnlineChannelListModel[] }
+    );
 
-  const result = Object.entries(groupedData).map(([genre_title, channels]) => [
-    genre_title,
-    channels.sort((a, b) => b.view - a.view),
-  ]) as [string, IOnlineChannelListModel[]][];
+    const result = Object.entries(groupedData).map(
+      ([genre_title, channels]) => [
+        genre_title,
+        channels.sort((a, b) => b.view - a.view),
+      ]
+    ) as [string, IOnlineChannelListModel[]][];
 
-  return result;
-});
+    return result;
+  }
+);
 
-export const getChannelsWithSchedule = async (searchQuery = '') => {
+export const getChannelsWithSchedule = async (
+  lang: ELanguage,
+  searchQuery = ''
+) => {
   const searchPart = searchQuery ? `AND C.title LIKE "%${searchQuery}%"` : '';
 
   const sql = `
@@ -351,7 +387,8 @@ export const getChannelsWithSchedule = async (searchQuery = '') => {
       MAX(C.view) AS view,
       C.tema AS genre_id,
       MAX(L.title) AS lan,
-      MAX(T.title) AS genre_title
+      ${lang === ELanguage.UA ? 'MAX(T.title)' : 'MAX(T.title_en)'}  AS genre_title,
+      ${lang === ELanguage.UA ? 'MAX(T.description)' : 'MAX(T.description_en)'}  AS genre_description
   FROM 
       ${CHANNELS} AS C
   LEFT JOIN 
@@ -382,12 +419,29 @@ export const getChannelsWithSchedule = async (searchQuery = '') => {
       ]);
 };
 
-export const getT2Channels = cache(async (searchQuery = '') => {
-  const searchPart = searchQuery ? `AND C.title LIKE "%${searchQuery}%"` : '';
+export const getT2Channels = cache(
+  async (lang: ELanguage, searchQuery = '') => {
+    const searchPart = searchQuery ? `AND C.title LIKE "%${searchQuery}%"` : '';
 
-  const sql = `
-    SELECT C.id AS chan_id, C.title AS chan_title, C.cpu AS chan_cpu, C.logo AS chan_logo, C.encryption, C.description AS chan_description, C.tema AS genre_id, C.cat AS cat_id,
-      CO.title AS compr, L.title AS lan, T.title AS genre_title, cat.logo AS cat_logo, cat.title AS cat_title, cat.cpu AS cat_slug, cat.description AS cat_description, cat.view AS cat_view
+    const sql = `
+    SELECT C.id AS chan_id,
+     C.title AS chan_title,
+     C.cpu AS chan_cpu,
+     C.logo AS chan_logo,
+     C.encryption,
+     C.description AS chan_description,
+     C.tema AS genre_id,
+     C.cat AS cat_id,
+
+      CO.title AS compr,
+      L.title AS lan,
+      ${lang === ELanguage.UA ? 'T.title' : 'T.title_en'}  AS genre_title,
+      ${lang === ELanguage.UA ? 'T.description' : 'T.description_en'}  AS genre_description,
+      cat.logo AS cat_logo,
+      cat.title AS cat_title,
+      cat.cpu AS cat_slug,
+      cat.description AS cat_description,
+      cat.view AS cat_view
     FROM ${CHANNELS} AS C
     LEFT JOIN ${CHANNEL_CATEGORY} AS cat ON C.cat = cat.id 
     LEFT JOIN ${CHANNEL_COMPRESSION} AS CO ON C.compress = CO.id 
@@ -398,18 +452,19 @@ export const getT2Channels = cache(async (searchQuery = '') => {
     ORDER BY C.tema, C.title
   `;
 
-  const resp =
-    await poolExecute<(IOnlineChannelListModel & IPackageChannelListModel)[]>(
-      sql
-    );
+    const resp =
+      await poolExecute<(IOnlineChannelListModel & IPackageChannelListModel)[]>(
+        sql
+      );
 
-  return resp instanceof Error || !resp.length
-    ? null
-    : groupeChannelsBy<IPackageChannelListModel>(resp, 'genre_title', [
-        'chan_title',
-        'chan_description',
-      ]);
-});
+    return resp instanceof Error || !resp.length
+      ? null
+      : groupeChannelsBy<IPackageChannelListModel>(resp, 'genre_title', [
+          'chan_title',
+          'chan_description',
+        ]);
+  }
+);
 
 export const getPackageChannels = cache(
   async (packageSlug: string, searchQuery = '') => {

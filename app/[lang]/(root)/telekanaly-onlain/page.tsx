@@ -92,7 +92,7 @@ export default async function Page({ params, searchParams }: IPageProps) {
     searchParams
   );
 
-  const onlineChannels = await getOnlineChannels(searchQueryChannel);
+  const onlineChannels = await getOnlineChannels(lang, searchQueryChannel);
 
   const numberOfComments = await getCommentsNumber(
     EDBTableTitles.COMMENTS_GENRE,
@@ -116,7 +116,7 @@ export default async function Page({ params, searchParams }: IPageProps) {
                 <li key={genreTitle} className="flex items-center gap-4">
                   <GenreImage
                     lang={lang}
-                    tooltipText={genreTitle}
+                    tooltipText={chanList[0].genre_description}
                     genreMapPosition={chanList[0].genre_id}
                   />
                   <TooltipSimple

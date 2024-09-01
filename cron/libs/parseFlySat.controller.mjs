@@ -76,6 +76,52 @@ const getSatChannelsFromDB = async (currentSatSlug, title = undefined) => {
   return res;
 };
 
+const findChannelAboutInDB = async (title) => {
+  const sql = `
+    SELECT 
+      \`text_ua\`,
+      \`text_en\`,
+      \`description_en\`,
+      \`description_ua\`,
+      \`keywords_ua\`,
+      \`keywords_en\`,
+      \`languages\`,
+      \`official_site_url\`,
+      \`theme_id\`,
+    FROM ${FLY_CHANNELS}
+    WHERE title = ? AND description_en NOT IS NULL AND description_en != ''
+    LIMIT 1
+  `;
+  const res = await executePoolQuery(sql, [title]);
+
+  const emptyData = {
+    text_ua: null,
+    text_en: null,
+    description_en: null,
+    description_ua: null,
+    keywords_ua: null,
+    keywords_en: null,
+    languages: null,
+    official_site_url: null,
+    theme_id: null,
+  };
+
+  if (res instanceof Error) {
+    return {
+      aboutData: emptyData,
+      aboutError: `ERROR during SELECT data when finding channel About for channel "${title}". Message: ${res.message}`,
+    };
+  }
+
+  if (res.length === 0) {
+    const generatedData = await channelAboutProcess(title);
+
+    return { aboutData: generatedData, aboutError: null };
+  }
+
+  return { aboutData: res[0], aboutError: null };
+};
+
 const updateTblChannels = async (currentSatSlug, shouldUpdChannels) => {
   const updateTblChannelsMessages = [];
   let updatedChannelsCount = 0;
@@ -232,7 +278,7 @@ const insertTblChannels = async (currentSatSlug, parsedNewChannels) => {
   const placeholders = [];
   const errors = [];
 
-  parsedNewChannels.forEach((item) => {
+  for (const item of parsedNewChannels) {
     const { slug, message } = createSlug(item.title);
 
     if (!slug) {
@@ -240,6 +286,9 @@ const insertTblChannels = async (currentSatSlug, parsedNewChannels) => {
 
       return;
     }
+
+    const { aboutData, aboutError } = await findChannelAboutInDB(item.title);
+    if (aboutError) errors.push(channelAboutRes);
 
     const values = [
       slug,
@@ -262,11 +311,12 @@ const insertTblChannels = async (currentSatSlug, parsedNewChannels) => {
       dateNow,
       2,
       0,
+      ...Object.values(aboutData),
     ];
 
     validValues.push(...values);
     placeholders.push(`(${new Array(values.length).fill('?').join(', ')})`);
-  });
+  }
 
   if (!validValues.length) {
     return {
@@ -300,7 +350,16 @@ const insertTblChannels = async (currentSatSlug, parsedNewChannels) => {
       \`encryption\`,
       \`date_updated\`,
       \`package_id\`,
-      \`is_removed\`
+      \`is_removed\`,
+      \`text_ua\`,
+      \`text_en\`,
+      \`description_en\`,
+      \`description_ua\`,
+      \`keywords_ua\`,
+      \`keywords_en\`,
+      \`languages\`,
+      \`official_site_url\`,
+      \`theme_id\`
     )
     VALUES ${placeholders.join(', ')};
   `;

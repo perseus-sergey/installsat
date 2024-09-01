@@ -136,7 +136,7 @@ const findChannelAbout = async (title) => {
       \`official_site_url\`,
       \`theme_id\`
     FROM ${FLY_CHANNELS}
-    WHERE title = ? AND description_en NOT IS NULL AND description_en != ''
+    WHERE title = ? AND description_en IS NOT NULL AND description_en != ''
     LIMIT 1
   `;
   const res = await executePoolQuery(sql, [title]);

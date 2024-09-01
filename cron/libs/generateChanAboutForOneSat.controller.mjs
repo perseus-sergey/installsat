@@ -74,7 +74,7 @@ const findChannelAbout = async (title) => {
       \`official_site_url\`,
       \`theme_id\`
     FROM ${FLY_CHANNELS}
-    WHERE title = ? AND description_en NOT IS NULL AND description_en != ''
+    WHERE title = ? AND description_en IS NOT NULL AND description_en != ''
     LIMIT 1
   `;
   const res = await executePoolQuery(sql, [title]);
@@ -93,21 +93,21 @@ export const addDescriptionForChannels = async (currentSatSlug) => {
   for (const chanTitle of chanTitlesRes) {
     let shouldUpdateData;
 
-    const findDbRes = await findChannelAbout(chanTitle);
+    const findDbRes = await findChannelAbout(chanTitle.title);
     if (typeof findDbRes === 'string') {
       messages.push(findDbRes);
       continue;
     }
 
     if (findDbRes.length === 0) {
-      const generatedDataRes = await generateChannelAbout(chanTitle);
+      const generatedDataRes = await generateChannelAbout(chanTitle.title);
       if (typeof generatedDataRes === 'string') {
         messages.push(generatedDataRes);
         continue;
       }
 
       messages.push(
-        `SUCCESS: Generated channel descriptions for "${chanTitle}" channel`
+        `SUCCESS: Generated channel descriptions for "${chanTitle.title}" channel`
       );
 
       shouldUpdateData = generatedDataRes;
@@ -117,12 +117,12 @@ export const addDescriptionForChannels = async (currentSatSlug) => {
 
     const updateAllChanWithSameTitleRes = await updateChannelsWithGeneratedData(
       shouldUpdateData,
-      chanTitle
+      chanTitle.title
     );
     messages.push(
       typeof updateAllChanWithSameTitleRes === 'string'
         ? updateAllChanWithSameTitleRes
-        : `SUCCESS: Add ${updateAllChanWithSameTitleRes} channel descriptions for "${chanTitle}" channel(s)`
+        : `SUCCESS: Add ${updateAllChanWithSameTitleRes} channel descriptions for "${chanTitle.title}" channel(s)`
     );
   }
 

@@ -13,7 +13,7 @@ const getChannelPrompt = (channelTitle) => {
     The content should be written in the third person. 
     Avoid promotional language or calls to action, and focus on providing factual and descriptive content about the channel, its programs, and its significance. The tone should be entirely neutral and informative.
     
-    Important: if you do not have enough information about this channel, return: "<h1>NULL</h1>".
+    If you do not have enough information about this channel, return: "<h1>NULL</h1>".
     If you have enough information about this channel the text must be formatted in HTML that includes the following elements:
 
     1. <h3 id='description-en'>[Description]</h3>: Provide a concise, 150-200 character description in English for this channel, suitable for a meta description tag for SEO.

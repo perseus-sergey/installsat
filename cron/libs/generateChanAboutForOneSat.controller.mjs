@@ -128,3 +128,16 @@ export const addDescriptionForChannels = async (currentSatSlug) => {
 
   return messages;
 };
+
+// UPDATE fly_channels
+//       SET
+//         text_ua = null,
+//         text_en = null,
+//         description_en = null,
+//         description_ua = null,
+//         keywords_ua = null,
+//         keywords_en = null,
+//         languages = null,
+//         official_site_url = null,
+//         theme_id = null
+//       WHERE title = 'Prime One'

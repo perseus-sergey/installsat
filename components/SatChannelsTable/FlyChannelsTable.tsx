@@ -297,9 +297,7 @@ const FrequencySegment = ({
           </td>
 
           <td className={is_radio ? 'text-left' : ''}>
-            <div
-              className={`flex items-center gap-2 px-2${logo || genreImgSrc || is_radio ? ' sm:justify-between' : ' sm:justify-center'}`}
-            >
+            <div className={`flex items-center gap-2 px-2 sm:justify-between`}>
               {!is_radio && logo && (
                 <ChannelCardTooltip
                   mainImage={{

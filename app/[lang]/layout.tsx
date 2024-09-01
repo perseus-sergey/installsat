@@ -35,6 +35,7 @@ export default function RootLayout({
       <body suppressHydrationWarning={true}>
         <input type="checkbox" id="toggle-sidebar" hidden />
         <Header lang={lang} />
+        <div className="min-h-72"></div>
         <ToastProvider>{children}</ToastProvider>
         <Footer lang={lang} />
       </body>

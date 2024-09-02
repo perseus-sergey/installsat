@@ -126,15 +126,15 @@ const updateChannelsWithGeneratedData = async (
 const findChannelAbout = async (title) => {
   const sql = `
     SELECT 
-      \`text_ua\`,
-      \`text_en\`,
-      \`description_en\`,
-      \`description_ua\`,
-      \`keywords_ua\`,
-      \`keywords_en\`,
-      \`languages\`,
-      \`official_site_url\`,
-      \`theme_id\`
+      text_ua,
+      text_en,
+      description_en,
+      description_ua,
+      keywords_ua,
+      keywords_en,
+      languages,
+      official_site_url,
+      theme_id
     FROM ${FLY_CHANNELS}
     WHERE title = ? AND description_en IS NOT NULL AND description_en != ''
     LIMIT 1
@@ -177,7 +177,7 @@ const findChannelAbout = async (title) => {
 
     return {
       aboutData: generatedDataRes,
-      aboutMessage: `SUCCESS: Add channel descriptions for ${updateAllChanWithSameTitleRes} channel(s)`,
+      aboutMessage: `SUCCESS: Add AI generated channel descriptions for ${updateAllChanWithSameTitleRes} channel(s)`,
     };
   }
 
@@ -373,7 +373,15 @@ const insertTblChannels = async (currentSatSlug, parsedNewChannels) => {
       dateNow,
       2,
       0,
-      ...Object.values(aboutData),
+      aboutData.text_ua,
+      aboutData.text_en,
+      aboutData.description_en,
+      aboutData.description_ua,
+      aboutData.keywords_ua,
+      aboutData.keywords_en,
+      aboutData.languages,
+      aboutData.official_site_url,
+      aboutData.theme_id,
     ];
 
     validValues.push(...values);

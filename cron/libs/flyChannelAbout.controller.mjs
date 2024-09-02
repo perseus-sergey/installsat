@@ -35,7 +35,7 @@ const getChannelPrompt = (channelTitle) => {
 
     6. <div id='text-en'><p>[Paragraph 1]</p><p>[Paragraph 2]</p><p>[Paragraph N]</p></div>
     <div id='text-ua'><p>[Параграф 1]</p><p>[Параграф 2]</p><p>[Параграф N]</p></div> 
-    : Write up to 10 paragraphs (<p>) for each languages (English and Ukrainian) that provide a descriptive overview of the channel. Wrap relevant and important keywords or phrases in <strong> tags to optimize for SEO, ensuring it enhances the readability and value of the content without appearing excessive or spammy. The text must be unique and not plagiarized.
+    : Write up to 10 paragraphs (<p>) for each languages (English and Ukrainian) that provide a descriptive overview of the channel. Wrap relevant and important keywords or phrases in <strong> tags to optimize for SEO, ensuring it enhances the readability and value of the content without appearing excessive or spammy. The text must be unique and not plagiarized. Do not insert any links into the content.
 
     Ensure all generated text is presented in a neutral, descriptive tone suitable for an encyclopedia or informative website entry.
     Always use the original channel's name without translation and enclose it in Unicode curly quotes (« »).

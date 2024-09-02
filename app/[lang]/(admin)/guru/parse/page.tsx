@@ -51,6 +51,16 @@ export default async function Page({ params }: IParams) {
         labelHtml="Insert Channel Name"
       />
 
+      <ClientSelectWithSubmit
+        selectOptions={flySatOptions}
+        inputId={EUrlAdminParam.CHANNEL_ABOUT_ONE_SAT}
+        searchParamName={EUrlSearchParam.SAT}
+        buttonTitle="generate"
+        inputBaseHref={`${BASE_PARSE_HREF}/${EUrlAdminParam.CHANNEL_ABOUT_ONE_SAT}`}
+        fieldSetTitle="Generate Channel description for one satellite"
+        labelHtml="Choose Satellite for generate DESCRIPTIONS FOR CHANNELS:"
+      />
+
       <ClientInputWithSubmit
         inputId={EUrlAdminParam.PARSE_FLY_SATELLITES}
         inputDefaultValue={2}
@@ -83,16 +93,6 @@ export default async function Page({ params }: IParams) {
         inputBaseHref={`${BASE_PARSE_HREF}/${EUrlAdminParam.PARSE_FLY_CHANNELS}`}
         fieldSetTitle="Flysat Channels Table"
         labelHtml="Choose Satellite for parsing CHANNELS:"
-      />
-
-      <ClientSelectWithSubmit
-        selectOptions={flySatOptions}
-        inputId={EUrlAdminParam.CHANNEL_ABOUT_ONE_SAT}
-        searchParamName={EUrlSearchParam.SAT}
-        buttonTitle="generate"
-        inputBaseHref={`${BASE_PARSE_HREF}/${EUrlAdminParam.CHANNEL_ABOUT_ONE_SAT}`}
-        fieldSetTitle="Generate Channel description for one satellite"
-        labelHtml="Choose Satellite for generate DESCRIPTIONS FOR CHANNELS:"
       />
 
       <ClientInputWithSubmit

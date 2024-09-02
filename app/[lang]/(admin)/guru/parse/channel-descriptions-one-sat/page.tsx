@@ -37,7 +37,7 @@ const BASE_URL = process.env.BASE_URL;
 
 const sendReportMail = async (errorMessages: string[], satTitle: string) => {
   await sendMail({
-    subject: `Parse Fly Satellites`,
+    subject: `Generate AI description for Satellite "${satTitle}"`,
     body: await renderAsync(
       <ParseTransNews
         title={`Generate AI description for Satellite "${satTitle}"`}

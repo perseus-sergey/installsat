@@ -7,12 +7,12 @@ import ToastProvider from '@/libs/ToastProvider/ToastProvider';
 import { getELangKey } from '@/libs/utils/validSearchParam';
 import { ELanguage } from '@/models/ui.model';
 import { EUrlBaseParam } from '@/models/url.model';
-import { GoogleTagManager } from '@next/third-parties/google';
+// import { GoogleTagManager } from '@next/third-parties/google';
 
-const GOOGLE_GTM_ID = process.env.GOOGLE_GTM || '';
+// const GOOGLE_GTM_ID = process.env.GOOGLE_GTM || '';
 // const gaId = process.env.GA_ID || '';
 const adsenseId = process.env.G_ADSENSE_ID || '';
-const isProductionMode = process.env.NODE_ENV === 'production';
+// const isProductionMode = process.env.NODE_ENV === 'production';
 
 export async function generateStaticParams() {
   return Object.values(ELanguage).map((l) => ({ [EUrlBaseParam.LANG]: l }));
@@ -31,7 +31,7 @@ export default function RootLayout({
 
   return (
     <html lang={lang === ELanguage.UA ? 'uk' : 'en'}>
-      {isProductionMode && <GoogleTagManager gtmId={GOOGLE_GTM_ID} />}
+      {/* {isProductionMode && <GoogleTagManager gtmId={GOOGLE_GTM_ID} />} */}
       <body suppressHydrationWarning={true}>
         <input type="checkbox" id="toggle-sidebar" hidden />
         <Header lang={lang} />

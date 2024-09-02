@@ -114,7 +114,9 @@ export default async function Page({ searchParams, params }: IPageProps) {
     searchQueryLanguages
   );
 
-  const channelsLangList = await getChannelsLangList(searchQuerySatellites);
+  const channelsLangList = await getChannelsLangList({
+    satGrades: searchQuerySatellites,
+  });
 
   const numberOfComments = await getCommentsNumber(
     EDBTableTitles.COMMENTS_PACKAGES,

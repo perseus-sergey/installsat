@@ -77,7 +77,7 @@ const extractDataFromAiHTML = ($) => {
   const siteUrl = $('#site-url').text().trim();
   // if (!siteUrl) return getErrorStr('SITE_URL');
 
-  const genreId = $('#category-number').text().trim();
+  const genreId = Number($('#category-number').text().trim());
   if (!genreId) return getErrorStr('GENRE_ID');
 
   const enText = $('#text-en').html();
@@ -101,7 +101,7 @@ const extractDataFromAiHTML = ($) => {
     uaDescription,
     uaKeywords,
     enKeywords,
-    genreId: Number(genreId),
+    genreId,
   };
 };
 

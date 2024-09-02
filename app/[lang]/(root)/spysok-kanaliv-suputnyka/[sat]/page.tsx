@@ -64,7 +64,7 @@ interface IPageProps {
   searchParams?: TSearchParams;
 }
 
-export const dynamic = 'force-dynamic';
+// export const dynamic = 'force-dynamic';
 
 export const generateMetadata = async ({
   params,
@@ -148,7 +148,7 @@ export default async function Page({ searchParams, params }: IPageProps) {
   );
 
   const channelsLangList = satChannels.length
-    ? await getChannelsLangList([satChannels[0].sat_grade.toString()])
+    ? await getChannelsLangList({ satSlug: urlSatSlug })
     : [];
 
   const numberOfComments = await getCommentsNumber(

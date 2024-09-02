@@ -7,7 +7,9 @@ const { FLY_CHANNELS } = EDBTableTitles;
 
 const getChannelPrompt = (channelTitle) => {
   return `
-    Generate an HTML formatted text about the channel "${channelTitle}" that includes the following elements:
+    What do you know about the "${channelTitle}" tv (or radio) channel? The name of the channel is written as a transcription of the original name, so determine the country of origin of the channel yourself.
+
+    Write the answer in HTML format with the following structure:
 
     1. <div id='description-en'>[Description]</div><div id='description-ua'>[Опис]</div>: Provide a concise description (in English and Ukrainian) for this channel, suitable for a meta description tag for SEO, up to 200 characters in each language.
 

@@ -178,7 +178,7 @@ const findChannelAbout = async (title) => {
 
     return {
       aboutData: generatedDataRes,
-      aboutMessage: `SUCCESS: Add AI generated channel descriptions for ${updateAllChanWithSameTitleRes} channel(s)`,
+      aboutMessage: `SUCCESS: Add AI generated channel descriptions for ${updateAllChanWithSameTitleRes} channel(s). Channel GENRE number: "${generatedDataRes.genreId}"`,
     };
   }
 

@@ -9,15 +9,15 @@ const getChannelPrompt = (channelTitle) => {
   return `
     Generate an HTML formatted text about the channel "${channelTitle}" that includes the following elements:
 
-    1. <h3 id='description-en'>[Description]</h3>: Provide a concise, 150-200 character description in English for this channel, suitable for a meta description tag for SEO.
+    1. <div id='description-en'>[Description]</div><div id='description-ua'>[Опис]</div>: Provide a concise description (in English and Ukrainian) for this channel, suitable for a meta description tag for SEO, up to 200 characters in each language.
 
-    2. <h4 id='keywords-en'>[Keywords]</h4>: List relevant keywords in English for this channel, separated by commas, suitable for a meta keywords tag for SEO.
+    2. <div id='keywords-en'>[Keywords]</div><div id='keywords-ua'>[Ключові слова]</div>: List relevant keywords (in English and Ukrainian) for this channel, separated by commas, suitable for a meta keywords tag for SEO, up to 200 characters in each language.
+    
+    3. <div id='languages'>[Main language]</div>: Specify the main language of the channel (e.g., English, Persian).
 
-    3. <h5 id='languages'>[Main language]</h5>: Specify the main language of the channel (e.g., English, Persian).
+    4. <div id='site-url'>[Url of official site]</div>: Include the URL of the official site for this channel. if not available, leave the tag blank.
 
-    4. <h5 id='site-url'>[Url of official site]</h5>: Include the URL of the official site for this channel. if not available, leave the tag blank.
-
-    5. <h6 id='category-number'>[n]</h6>: Choose a category number that best describes the channel from the following list:
+    5. <div id='category-number'>[n]</div>: Choose a category number that best describes the channel from the following list:
        - 1 - Public
        - 2 - News
        - 3 - Movies
@@ -36,10 +36,6 @@ const getChannelPrompt = (channelTitle) => {
     6. <div id='text-en'><p>[Paragraph 1]</p><p>[Paragraph 2]</p><p>[Paragraph N]</p></div>
     <div id='text-ua'><p>[Параграф 1]</p><p>[Параграф 2]</p><p>[Параграф N]</p></div> 
     : Write up to 10 paragraphs (<p>) for each languages (English and Ukrainian) that provide a descriptive overview of the channel. Wrap relevant and important keywords or phrases in <strong> tags to optimize for SEO, ensuring it enhances the readability and value of the content without appearing excessive or spammy. The text must be unique and not plagiarized.
-
-    7. <h3 id='description-ua'>[Опис]</h3>: Provide a concise, 150-200 character description in Ukrainian for this channel, suitable for a meta description tag for SEO.
-
-    8. <h4 id='keywords-ua'>[Ключові слова]</h4>: List relevant keywords in Ukrainian for this channel, separated by commas, suitable for a meta keywords tag for SEO.
 
     Ensure all generated text is presented in a neutral, descriptive tone suitable for an encyclopedia or informative website entry.
     Always use the original channel's name without translation and enclose it in Unicode curly quotes (« »).

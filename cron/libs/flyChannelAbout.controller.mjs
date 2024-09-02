@@ -42,11 +42,11 @@ const getChannelPrompt = (channelTitle) => {
       - If the channel is Russian news, write about it in a skeptical style.
 
     Use existing data, don't invent it.
+    If you do not have enough information about this channel, return: "",
     Ensure all generated text is presented in a neutral, descriptive tone suitable for an encyclopedia or informative website entry.
     Always use the original channel's name without translation and enclose it in Unicode curly quotes (« »).
     The content should be written in the third person. 
     Avoid promotional language or calls to action, and focus on providing factual and descriptive content about the channel, its programs, and its significance. The tone should be entirely neutral and informative.
-    If you have no information about this channel, return: "",
   `;
 };
 

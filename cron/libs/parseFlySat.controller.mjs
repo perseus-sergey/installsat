@@ -162,6 +162,7 @@ const findChannelAbout = async (title) => {
 
   if (res.length === 0) {
     const generatedDataRes = await generateChannelAbout(title);
+
     if (typeof generatedDataRes === 'string')
       return { aboutData: emptyData, aboutMessage: generatedDataRes };
 
@@ -338,19 +339,21 @@ const insertTblChannels = async (currentSatSlug, parsedNewChannels) => {
   let insertCount = 0;
   const validValues = [];
   const placeholders = [];
-  const errors = [];
 
   for (const item of parsedNewChannels) {
     const { slug, message } = createSlug(item.title);
 
     if (!slug) {
-      errors.push(message || '');
-
-      return;
+      return {
+        insertCount: 0,
+        insertTblChannelsMessages: [
+          message || `Cannot create slug for channel: "${item.title}"`,
+        ],
+      };
     }
 
     const { aboutData, aboutMessage } = await findChannelAbout(item.title);
-    if (aboutMessage) errors.push(aboutMessage);
+    if (aboutMessage) insertTblChannelsMessages.push(aboutMessage);
 
     const values = [
       slug,
@@ -392,8 +395,8 @@ const insertTblChannels = async (currentSatSlug, parsedNewChannels) => {
     return {
       insertCount: 0,
       insertTblChannelsMessages: [
+        ...insertTblChannelsMessages,
         `DB INSERT: NO valid channels to insert for sat_slug: ${currentSatSlug}`,
-        ...errors,
       ],
     };
   }

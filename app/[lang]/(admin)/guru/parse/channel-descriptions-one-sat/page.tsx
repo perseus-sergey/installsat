@@ -16,9 +16,9 @@ import { ParseTransNews } from '@/components/EmailTemplates/parseTransNews.templ
 export const dynamic = 'force-dynamic';
 
 // =================================================================
+// - Change select languages for satellite
+// - Create info about channel and it genre from gpt
 //
-// Change select languages for satellite
-// Try to get info about channel and it genre from gpt
 // Remove console logging from production parsers (mjs & tsx)
 // Change all Link to SeoLink
 // change fieldset legend css

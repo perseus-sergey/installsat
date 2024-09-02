@@ -579,14 +579,24 @@ export const getFlyGroupedChannelsAllSat = (
   return sortedGroups;
 };
 
-const getDBChannelsAudio = cache(async (satellites: string[] | undefined) => {
-  const selectedSats = satellites ? satellites.join('","') : 0;
+interface IGradeSlug {
+  satGrades?: string[];
+  satSlug?: string;
+}
+
+const getDBChannelsAudio = cache(async ({ satGrades, satSlug }: IGradeSlug) => {
+  let where = 'sat.grade = 0';
+  if (satGrades) {
+    where = `sat.grade IN ("${satGrades.join('","')}")`;
+  } else if (satSlug) {
+    where = `ch.sat_slug = "${satSlug}"`;
+  }
 
   const sql = `
     SELECT ch.a_pid
     FROM ${FLY_CHANNELS} AS ch 
-    LEFT JOIN ${FLY_SATELLITES} AS sat ON ch.sat_slug 	= sat.slug 
-    WHERE sat.grade IN ("${selectedSats}")
+    LEFT JOIN ${FLY_SATELLITES} AS sat ON ch.sat_slug = sat.slug 
+    WHERE ${where}
     AND ch.is_removed != 1
   `;
   const resp = await poolExecute<{ a_pid: string }[]>(sql);
@@ -619,10 +629,14 @@ export const getLanguageList = (audioPids: string[]) => {
     }));
 };
 
-export const getChannelsLangList = async (
-  searchQuerySatellites?: string[]
-): Promise<ISatelliteOption[]> => {
-  const dbAudioList = await getDBChannelsAudio(searchQuerySatellites);
+export const getChannelsLangList = async ({
+  satGrades,
+  satSlug,
+}: IGradeSlug): Promise<ISatelliteOption[]> => {
+  const dbAudioList = await getDBChannelsAudio({
+    satGrades,
+    satSlug,
+  });
 
   const audioPids = dbAudioList.map((item) => item.a_pid);
 

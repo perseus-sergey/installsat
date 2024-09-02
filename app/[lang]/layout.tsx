@@ -43,10 +43,10 @@ export default function RootLayout({
     </html>
   );
 }
+// </body>
+// <GoogleAdsense pId={adsenseId} />
+// <AdBlockingRecovery pId={adsenseId} />
+// </html>
 
-{
-  /* <span id="ezoic-privacy-policy-embed"></span> */
-}
-{
-  /* <GoogleAnalytics gaId={gaId} /> */
-}
+// <span id="ezoic-privacy-policy-embed"></span>
+// <GoogleAnalytics gaId={gaId} />

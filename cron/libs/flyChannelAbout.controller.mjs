@@ -41,6 +41,7 @@ const getChannelPrompt = (channelTitle) => {
       - Do not insert any links into the content.
       - If the channel is Russian news, write about it in a skeptical style.
 
+    Use existing data, don't invent it.
     Ensure all generated text is presented in a neutral, descriptive tone suitable for an encyclopedia or informative website entry.
     Always use the original channel's name without translation and enclose it in Unicode curly quotes (« »).
     The content should be written in the third person. 

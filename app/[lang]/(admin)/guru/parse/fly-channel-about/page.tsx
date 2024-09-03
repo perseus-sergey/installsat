@@ -77,7 +77,7 @@ export default async function Page({
 
   return (
     <>
-      <Title>Add Description to Fly Channel</Title>
+      <Title>{`Add Description for channel "${urlChannelTitle}"`}</Title>
 
       <p className="text-xs">
         <b>Updated channels: </b>

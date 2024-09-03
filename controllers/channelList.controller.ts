@@ -1,9 +1,5 @@
 import { poolExecute } from '@/libs/db/mysqldb';
-import {
-  IFlyChannel,
-  audioLanguages,
-  wrongAudio,
-} from '@/models/channel.model';
+import { IFlyChannel } from '@/models/channel.model';
 import {
   IChannelPackagesModel,
   IOnlineChannelListModel,
@@ -16,6 +12,7 @@ import {
   EDBTableTitles,
   ELanguage,
 } from '@/models/ui.model';
+import { audioLanguages, wrongAudio } from '@cron/libs/languages.mjs';
 import { decode } from 'html-entities';
 import { cache } from 'react';
 
@@ -630,7 +627,7 @@ export const getLanguageList = (audioPids: string[]) => {
     .sort()
     .map((lang) => ({
       value: lang,
-      label: audioLanguages[lang] || lang,
+      label: (audioLanguages as Record<string, string>)[lang] || lang,
     }));
 };
 

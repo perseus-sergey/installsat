@@ -1,12 +1,13 @@
 import { executePoolQuery } from './mysqldb.mjs';
-import { EDBTableTitles } from './commons.mjs';
+import { EDBTableTitles, DB_ARRAY_SEPARATOR } from './commons.mjs';
 import { generateChannelAbout } from './flyChannelAbout.controller.mjs';
+import { audioLanguages, wrongAudio } from './languages.mjs';
 
 const { FLY_CHANNELS } = EDBTableTitles;
 
 const getSatChannelsFromDB = async (currentSatSlug) => {
   const sql = `
-    SELECT title 
+    SELECT title, MAX(a_pid)
     FROM ${FLY_CHANNELS} 
     WHERE sat_slug = ? 
     AND (description_en IS NULL 
@@ -90,30 +91,57 @@ const findChannelAbout = async (title) => {
     : res;
 };
 
+const getLanguageString = (aPids) => {
+  if (!aPids) return '';
+
+  const langsSet = new Set();
+
+  aPids.split(DB_ARRAY_SEPARATOR).forEach((part) => {
+    const parts = part.trim().split(' ');
+
+    if (parts[1]) {
+      const langPart = parts[1].trim().toLowerCase();
+
+      if (!wrongAudio.includes(langPart)) {
+        langsSet.add(langPart);
+      }
+    }
+  });
+
+  return Array.from(langsSet)
+    .map((lang) => audioLanguages[lang] || lang)
+    .join(', ');
+};
+
 export const addDescriptionForChannels = async (currentSatSlug) => {
   const messages = [];
 
-  const chanTitlesRes = await getSatChannelsFromDB(currentSatSlug);
-  if (typeof chanTitlesRes === 'string') return [chanTitlesRes];
+  const dbChannelsRes = await getSatChannelsFromDB(currentSatSlug);
+  if (typeof dbChannelsRes === 'string') return [dbChannelsRes];
 
-  for (const chanTitle of chanTitlesRes) {
+  for (const channel of dbChannelsRes) {
     let shouldUpdateData;
 
-    const findDbRes = await findChannelAbout(chanTitle.title);
+    const findDbRes = await findChannelAbout(channel.title);
     if (typeof findDbRes === 'string') {
       messages.push(findDbRes);
       continue;
     }
 
     if (findDbRes.length === 0) {
-      const generatedDataRes = await generateChannelAbout(chanTitle.title);
+      const langString = getLanguageString(channel.a_pid);
+
+      const generatedDataRes = await generateChannelAbout(
+        channel.title,
+        langString
+      );
       if (typeof generatedDataRes === 'string') {
         messages.push(generatedDataRes);
         continue;
       }
 
       messages.push(
-        `SUCCESS: Generated channel descriptions for "${chanTitle.title}" channel`
+        `SUCCESS: Generated channel descriptions for "${channel.title}" channel`
       );
 
       shouldUpdateData = generatedDataRes;
@@ -123,12 +151,12 @@ export const addDescriptionForChannels = async (currentSatSlug) => {
 
     const updateAllChanWithSameTitleRes = await updateChannelsWithGeneratedData(
       shouldUpdateData,
-      chanTitle.title
+      channel.title
     );
     messages.push(
       typeof updateAllChanWithSameTitleRes === 'string'
         ? updateAllChanWithSameTitleRes
-        : `SUCCESS: Add ${updateAllChanWithSameTitleRes} channel descriptions for "${chanTitle.title}" channel(s)`
+        : `SUCCESS: Add ${updateAllChanWithSameTitleRes} channel descriptions for "${channel.title}" channel(s)`
     );
   }
 

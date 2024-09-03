@@ -37,6 +37,11 @@ export default async function Page({
     searchParams
   ).trim();
 
+  const urlLanguage = validSearchParam(
+    EUrlSearchParam.LANGUAGE_URL,
+    searchParams
+  ).trim();
+
   if (!urlChannelTitle) {
     return (
       <p className="text-xl text-red-500 font-bold">
@@ -52,7 +57,10 @@ export default async function Page({
       <p className="text-xl text-red-500 font-bold">{checkChanInDb.message}</p>
     );
 
-  const generatedData = await generateChannelAbout(urlChannelTitle);
+  const generatedData = await generateChannelAbout(
+    urlChannelTitle,
+    urlLanguage
+  );
 
   if (typeof generatedData === 'string')
     return <p className="text-xl text-red-500 font-bold">{generatedData}</p>;

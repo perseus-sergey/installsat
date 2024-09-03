@@ -1,5 +1,6 @@
 import ClientInputWithSubmit, {
   ClientSelectWithSubmit,
+  ClientTwoInputsWithSubmit,
 } from '@/components/ClientInputWithSubmit/ClientInputWithSubmit';
 import { Title } from '@/components/ui/Titles/Title';
 import { poolExecute } from '@/libs/db/mysqldb';
@@ -40,15 +41,16 @@ export default async function Page({ params }: IParams) {
     <>
       <Title>Parse Page</Title>
 
-      <ClientInputWithSubmit
+      <ClientTwoInputsWithSubmit
         inputId={EUrlAdminParam.PARSE_FLY_CHANNEL_ABOUT}
-        inputDefaultValue=""
-        inputType="text"
-        searchParamName={EUrlSearchParam.CHANNEL}
+        searchParamNames={[
+          EUrlSearchParam.CHANNEL,
+          EUrlSearchParam.LANGUAGE_URL,
+        ]}
         buttonTitle="Generate"
         inputBaseHref={`${BASE_PARSE_HREF}/${EUrlAdminParam.PARSE_FLY_CHANNEL_ABOUT}`}
         fieldSetTitle="Generate AI Descriptions to FLY channel"
-        labelHtml="Insert Channel Name"
+        labelHtml="Insert Channel Name & Channel Broadcast Language"
       />
 
       <ClientSelectWithSubmit

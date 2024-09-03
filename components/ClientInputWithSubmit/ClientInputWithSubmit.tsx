@@ -71,6 +71,89 @@ const ClientInputWithSubmit = ({
   );
 };
 
+interface IClientTwoInputs extends IProps {
+  searchParamNames: EUrlSearchParam[];
+}
+
+export const ClientTwoInputsWithSubmit = ({
+  inputId,
+  inputBaseHref,
+  searchParamNames,
+  fieldSetTitle,
+  labelHtml,
+  buttonTitle,
+}: IClientTwoInputs) => {
+  type TAcc = { [key: string]: string };
+
+  const ID_SEPARATOR = '|';
+
+  const [formData, setFormData] = useState(
+    searchParamNames.reduce((acc: TAcc, searchParamName) => {
+      acc[`${inputId}${ID_SEPARATOR}${searchParamName}`] = '';
+
+      return acc;
+    }, {})
+  );
+  const isInput = inputId !== undefined;
+
+  const handleChange = ({
+    id,
+    value,
+  }: EventTarget &
+    (HTMLTextAreaElement | HTMLInputElement | HTMLSelectElement)) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      [id]: value,
+    }));
+  };
+
+  const handleSubmit = () => {
+    const transformedFormData = Object.entries(formData).reduce(
+      (acc: TAcc, [key, value]) => {
+        const newKey = key.split(ID_SEPARATOR)[1];
+        acc[newKey] = value;
+
+        return acc;
+      },
+      {}
+    );
+
+    const url = `${inputBaseHref}?${makeUrlSearchParams(transformedFormData)}`;
+    window.open(url, '_blank');
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <Fieldset className="p-4" legendText={fieldSetTitle}>
+        {isInput ? (
+          <label htmlFor={inputId}>{labelHtml}</label>
+        ) : (
+          <p>{labelHtml}</p>
+        )}
+        <div className="flex gap-4 mt-4">
+          {Object.entries(formData).map(([key, val]) => (
+            <input
+              key={key}
+              placeholder={key.split(ID_SEPARATOR)[1]}
+              id={key}
+              type="text"
+              value={val}
+              onChange={(e) => handleChange(e.target)}
+              className="p-2 rounded"
+            />
+          ))}
+          <button
+            type="submit"
+            className="bg-blue-500 text-white font-bold py-2 px-4 w-fit rounded hover:bg-blue-400"
+          >
+            {buttonTitle}
+          </button>
+        </div>
+      </Fieldset>
+    </form>
+  );
+};
+
 interface ISelectOptions {
   title: string;
   value: string;

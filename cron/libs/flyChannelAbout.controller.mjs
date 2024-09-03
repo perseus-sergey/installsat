@@ -52,7 +52,7 @@ const { FLY_CHANNELS } = EDBTableTitles;
 //   `;
 // };
 
-const generateAiText = async (channelTitle) => {
+const generateAiText = async (channelTitle, language = '') => {
   const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
 
   // const model = genAI.getGenerativeModel({ model: 'gemini-1.5-pro' });
@@ -63,14 +63,14 @@ const generateAiText = async (channelTitle) => {
   });
 
   const generationConfig = {
-    temperature: 1,
+    temperature: 0.5,
     topP: 0.95,
     topK: 64,
     maxOutputTokens: 2000,
     responseMimeType: 'text/plain',
   };
 
-  const prompt = channelTitle;
+  const prompt = `Channel name: "${channelTitle}"${language ? `, Probable broadcast language: ${language}` : ''}`;
   // const prompt = getChannelPrompt(channelTitle);
 
   const result = await model.generateContent(prompt, generationConfig);
@@ -180,8 +180,8 @@ export const updateGeneratedDataDB = async (
   return res instanceof Error ? res : res.affectedRows;
 };
 
-export const generateChannelAbout = async (channelTitle) => {
-  const aiText = await generateAiText(channelTitle);
+export const generateChannelAbout = async (channelTitle, language = '') => {
+  const aiText = await generateAiText(channelTitle, language);
 
   if (!aiText) {
     return `ERROR: AI cannot generate content. Channel: ${channelTitle}`;

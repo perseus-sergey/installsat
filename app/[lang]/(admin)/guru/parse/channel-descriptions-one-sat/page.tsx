@@ -18,8 +18,8 @@ export const dynamic = 'force-dynamic';
 // =================================================================
 // - Change select languages for satellite
 // - Create info about channel and it genre from gpt
+// - Make channel search for all satellites  from 2 characters
 //
-// Make channel search for all satellites  from 2 characters
 // Check SEO by removing elements from the page step by step
 // Remove console logging from production parsers (mjs & tsx)
 // Change all Link to SeoLink

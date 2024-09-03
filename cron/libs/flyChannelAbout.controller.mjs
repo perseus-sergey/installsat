@@ -122,7 +122,7 @@ Avoid promotional language or calls to action, and focus on providing factual an
 };
 
 const extractDataFromAiHTML = ($) => {
-  const reliableThreshold = 7;
+  const reliableThreshold = 8;
   const getErrorStr = (errName) =>
     `ERROR: cannot extract channel ${errName} from AI channel: ${$.html()}`;
 

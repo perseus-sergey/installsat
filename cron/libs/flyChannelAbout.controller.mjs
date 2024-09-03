@@ -63,7 +63,7 @@ const generateAiText = async (channelTitle, language = '') => {
   });
 
   const generationConfig = {
-    temperature: 0.5,
+    temperature: 1,
     topP: 0.95,
     topK: 64,
     maxOutputTokens: 2000,

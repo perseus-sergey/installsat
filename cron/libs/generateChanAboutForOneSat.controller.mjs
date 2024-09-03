@@ -6,7 +6,13 @@ const { FLY_CHANNELS } = EDBTableTitles;
 
 const getSatChannelsFromDB = async (currentSatSlug) => {
   const sql = `
-    SELECT title FROM ${FLY_CHANNELS} WHERE sat_slug = ? AND (description_en IS NULL OR description_en = '') GROUP BY title
+    SELECT title 
+    FROM ${FLY_CHANNELS} 
+    WHERE sat_slug = ? 
+    AND (description_en IS NULL 
+    OR description_en = '') 
+    GROUP BY title
+    LIMIT 50
   `;
   const res = await executePoolQuery(sql, [currentSatSlug]);
 

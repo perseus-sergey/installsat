@@ -168,7 +168,7 @@ export const getFlySatChannels = cache(
     lang: ELanguage,
     searchQuery = '',
     satSlug = '',
-    satellites?: string[],
+    satGradeList?: string[],
     isEncryptedHidden = true,
     isRadio = false,
     isCBand = false,
@@ -188,8 +188,12 @@ export const getFlySatChannels = cache(
       : '';
 
     if (!satSlug) {
-      const selectedSats = satellites ? satellites.join('","') : 0;
-      inSatList = `AND sat.grade IN ("${selectedSats}")`;
+      if (!satGradeList && searchQuery.trim().length > 1) {
+        inSatList = '';
+      } else {
+        const selectedSats = satGradeList ? satGradeList.join('","') : 0;
+        inSatList = `AND sat.grade IN ("${selectedSats}")`;
+      }
     }
 
     const notT2mi = isT2 ? `AND (t2_stream = '' OR t2_stream IS NULL)` : '';
@@ -244,6 +248,7 @@ export const getFlySatChannels = cache(
   ${notT2mi}
   ORDER BY ch.frequency, ch.polarization, ch.is_radio, ch.sid, ch.title
   `;
+    console.log('🚀 ~ sql:', sql);
     const resp = await poolExecute<IFlyChannel[]>(sql, [satSlug]);
 
     return resp instanceof Error || resp.length === 0

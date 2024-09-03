@@ -84,7 +84,14 @@ export default async function Page({
         {insertToDbRes}
       </p>
 
-      <pre>{JSON.stringify(generatedData, null, 2)}</pre>
+      {Object.entries(generatedData).map(([key, val]) => (
+        <>
+          <h2 className="text-center text-blue-700 text-xl" key={key}>
+            {key.toLocaleUpperCase()}
+          </h2>
+          <div>{val}</div>
+        </>
+      ))}
     </>
   );
 }

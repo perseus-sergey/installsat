@@ -55,11 +55,53 @@ const { FLY_CHANNELS } = EDBTableTitles;
 const generateAiText = async (channelTitle, language = '') => {
   const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
 
-  // const model = genAI.getGenerativeModel({ model: 'gemini-1.5-pro' });
   const model = genAI.getGenerativeModel({
     model: 'gemini-1.5-pro',
-    systemInstruction:
-      "The request concerns a television or radio channel.\nThe name of the channel is written as a transcription of the original name, so determine the country of origin of the channel yourself.\nWrite the answer in HTML format with the following structure:\n\n1. <div id='description-en'>[Description]</div><div id='description-ua'>[Опис]</div>: Provide a concise description (in English and Ukrainian) for this channel, suitable for a meta description tag for SEO, up to 200 characters in each language.\n\n2. <div id='keywords-en'>[Keywords]</div><div id='keywords-ua'>[Ключові слова]</div>: List relevant keywords (in English and Ukrainian) for this channel, separated by commas, suitable for a meta keywords tag for SEO, up to 200 characters in each language.\n\n3. <div id='languages'>[Main language]</div>: Specify the main language of the channel (e.g., English, Persian).\n\n4. <div id='site-url'>[Url of official site]</div>: Include the URL of the official site for this channel. if not available, leave the tag blank.\n\n5. <div id='category-number'>[n]</div>: Choose a category number that best describes the channel from the following list:\n   - 1 - Public\n   - 2 - News\n   - 3 - Movies\n   - 4 - Sport\n   - 5 - Leisure, entertainment\n   - 6 - For Kids\n   - 7 - XXX, Adults\n   - 8 - Music\n   - 9 - Educational\n   - 10 - Entertainment, Humor\n   - 11 - Leisure, Sports, Entertainment\n   - 12 - Religious, Spiritual\n   - 13 - TV Sales\n   - 14 - Fashion\n\n6. <div id='text-en'><p>[Paragraph 1]</p><p>[Paragraph 2]</p><p>[Paragraph N]</p></div>\n<div id='text-ua'><p>[Параграф 1]</p><p>[Параграф 2]</p><p>[Параграф N]</p></div> \n: Write up to 10 paragraphs (<p>) for each languages (English and Ukrainian) that provide a descriptive overview of the channel.\n  - Wrap relevant and important keywords or phrases in <strong> tags to optimize for SEO, ensuring it enhances the readability and value of the content without appearing excessive or spammy.\n  - The text must be unique and not plagiarized.\n  - Do not insert any links into the content.\n  - If the channel is Russian news, write about it in a skeptical style.\n\nUse existing data, don't invent it.\nIf you do not have enough information about this channel, return: \"\",\nEnsure all generated text is presented in a neutral, descriptive tone suitable for an encyclopedia or informative website entry.\nAlways use the original channel's name without translation and enclose it in Unicode curly quotes (« »).\nThe content should be written in the third person. \nAvoid promotional language or calls to action, and focus on providing factual and descriptive content about the channel, its programs, and its significance. The tone should be entirely neutral and informative.",
+    systemInstruction: `
+The request concerns a television or radio channel.
+The name of the channel is written as a transcription of the original name, so determine the country of origin of the channel yourself.
+Write the answer in HTML format with the following structure:
+
+1. <div id='description-en'>[Description]</div><div id='description-ua'>[Опис]</div>: Provide a concise description (in English and Ukrainian) for this channel, suitable for a meta description tag for SEO, up to 200 characters in each language.
+
+2. <div id='keywords-en'>[Keywords]</div><div id='keywords-ua'>[Ключові слова]</div>: List relevant keywords (in English and Ukrainian) for this channel, separated by commas, suitable for a meta keywords tag for SEO, up to 200 characters in each language.
+
+3. <div id='languages'>[Main language]</div>: Specify the main language of the channel (e.g., English, Persian).
+
+4. <div id='site-url'>[Url of official site]</div>: Include the URL of the official site for this channel. if not available, leave the tag blank.
+
+5. <div id='category-number'>[n]</div>: Choose a category number that best describes the channel from the following list:
+   - 1 - Public
+   - 2 - News
+   - 3 - Movies
+   - 4 - Sport
+   - 5 - Leisure, entertainment
+   - 6 - For Kids
+   - 7 - XXX, Adults
+   - 8 - Music
+   - 9 - Educational
+   - 10 - Entertainment, Humor
+   - 11 - Leisure, Sports, Entertainment
+   - 12 - Religious, Spiritual
+   - 13 - TV Sales
+   - 14 - Fashion
+
+6. <div id='text-en'><p>[Paragraph 1]</p><p>[Paragraph 2]</p><p>[Paragraph N]</p></div>
+<div id='text-ua'><p>[Параграф 1]</p><p>[Параграф 2]</p><p>[Параграф N]</p></div> 
+: Write up to 10 paragraphs (<p>) for each languages (English and Ukrainian) that provide a descriptive overview of the channel.
+  - Wrap relevant and important keywords or phrases in <strong> tags to optimize for SEO, ensuring it enhances the readability and value of the content without appearing excessive or spammy.
+  - The text must be unique and not plagiarized.
+  - Do not insert any links into the content.
+  - If the channel is Russian news, write about it in a skeptical style.
+
+7. <div id='reliable-rate'>[n]</div>: Rating of your reliable information (from 0 to 10).
+
+Use existing data, don't invent it.
+Ensure all generated text is presented in a neutral, descriptive tone suitable for an encyclopedia or informative website entry.
+Always use the original channel's name without translation and enclose it in Unicode curly quotes (« »).
+The content should be written in the third person. 
+Avoid promotional language or calls to action, and focus on providing factual and descriptive content about the channel, its programs, and its significance. The tone should be entirely neutral and informative.
+`,
   });
 
   const generationConfig = {
@@ -71,7 +113,6 @@ const generateAiText = async (channelTitle, language = '') => {
   };
 
   const prompt = `Channel name: "${channelTitle}"${language ? `, Probable broadcast language: ${language}` : ''}`;
-  // const prompt = getChannelPrompt(channelTitle);
 
   const result = await model.generateContent(prompt, generationConfig);
 
@@ -81,8 +122,13 @@ const generateAiText = async (channelTitle, language = '') => {
 };
 
 const extractDataFromAiHTML = ($) => {
+  const reliableThreshold = 7;
   const getErrorStr = (errName) =>
     `ERROR: cannot extract channel ${errName} from AI channel: ${$.html()}`;
+
+  const reliableRate = Number($('#reliable-rate').text().trim());
+  if (!reliableRate || reliableRate < reliableThreshold)
+    return `ERROR: Reliable AI Rate ${reliableRate} < allowed threshold (${reliableThreshold})`;
 
   const enDescription = $('#description-en').text().trim();
   if (!enDescription) return getErrorStr('EN_DESCRIPTION');
@@ -121,6 +167,7 @@ const extractDataFromAiHTML = ($) => {
     uaKeywords,
     enKeywords,
     genreId,
+    reliableRate,
   };
 };
 

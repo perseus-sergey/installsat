@@ -58,7 +58,10 @@ const generateAiText = async (channelTitle) => {
   const model = genAI.getGenerativeModel({ model: 'gemini-1.5-pro' });
   const prompt = getChannelPrompt(channelTitle);
 
-  const result = await model.generateContent(prompt);
+  const result = await model.generateContent(prompt, {
+    temperature: 0.7,
+  });
+
   const response = result.response;
 
   return response.text();

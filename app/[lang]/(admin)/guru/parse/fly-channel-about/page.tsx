@@ -7,6 +7,7 @@ import {
   generateChannelAbout,
   updateGeneratedDataDB,
 } from '@/cron/libs/flyChannelAbout.controller.mjs';
+import { emptyChannelDescription } from '@cron/libs/generateChanAboutForOneSat.controller.mjs';
 import { EDBTableTitles } from '@/cron/libs/commons.mjs';
 import { poolExecute } from '@/libs/db/mysqldb';
 
@@ -62,11 +63,8 @@ export default async function Page({
     urlLanguage
   );
 
-  if (typeof generatedData === 'string')
-    return <p className="text-xl text-red-500 font-bold">{generatedData}</p>;
-
   const insertToDbRes = await updateGeneratedDataDB(
-    generatedData,
+    typeof generatedData === 'string' ? emptyChannelDescription : generatedData,
     urlChannelTitle
   );
 
@@ -84,10 +82,14 @@ export default async function Page({
         {insertToDbRes}
       </p>
 
+      {typeof generatedData === 'string' ? (
+        <p className="text-xl text-red-500 font-bold">{generatedData}</p>
+      ) : null}
+
       {Object.entries(generatedData).map(([key, val]) => (
         <>
           <h2 className="text-center text-blue-700 text-xl" key={key}>
-            {key.toLocaleUpperCase()}
+            {key}
           </h2>
           <div>{val}</div>
         </>

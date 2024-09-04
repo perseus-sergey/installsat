@@ -5,11 +5,24 @@ import { audioLanguages, wrongAudio } from './languages.mjs';
 
 const { FLY_CHANNELS } = EDBTableTitles;
 
+export const emptyChannelDescription = {
+  uaText: null,
+  enText: null,
+  enDescription: null,
+  uaDescription: null,
+  uaKeywords: null,
+  enKeywords: null,
+  languages: null,
+  siteUrl: null,
+  genreId: 0,
+};
+
 const getSatChannelsFromDB = async (currentSatSlug) => {
   const sql = `
     SELECT title, MAX(a_pid)
     FROM ${FLY_CHANNELS} 
     WHERE sat_slug = ? 
+    AND theme_id != 0
     AND (description_en IS NULL 
     OR description_en = '') 
     GROUP BY title
@@ -81,7 +94,9 @@ const findChannelAbout = async (title) => {
       official_site_url,
       theme_id
     FROM ${FLY_CHANNELS}
-    WHERE title = ? AND description_en IS NOT NULL AND description_en != ''
+    WHERE title = ? 
+    AND description_en IS NOT NULL 
+    AND description_en != ''
     LIMIT 1
   `;
   const res = await executePoolQuery(sql, [title]);
@@ -135,16 +150,16 @@ export const addDescriptionForChannels = async (currentSatSlug) => {
         channel.title,
         langString
       );
+
       if (typeof generatedDataRes === 'string') {
         messages.push(generatedDataRes);
-        continue;
+        shouldUpdateData = emptyChannelDescription;
+      } else {
+        messages.push(
+          `SUCCESS: Generated channel descriptions for "${channel.title}" channel`
+        );
+        shouldUpdateData = generatedDataRes;
       }
-
-      messages.push(
-        `SUCCESS: Generated channel descriptions for "${channel.title}" channel`
-      );
-
-      shouldUpdateData = generatedDataRes;
     } else {
       shouldUpdateData = findDbRes[0];
     }

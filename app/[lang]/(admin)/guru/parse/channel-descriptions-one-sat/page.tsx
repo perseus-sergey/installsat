@@ -20,6 +20,7 @@ export const dynamic = 'force-dynamic';
 // - Create info about channel and it genre from gpt
 // - Make channel search for all satellites  from 2 characters
 //
+// Add 'empty' to description_en for wrong ai generation
 // Check SEO by removing elements from the page step by step
 // Remove console logging from production parsers (mjs & tsx)
 // Change all Link to SeoLink

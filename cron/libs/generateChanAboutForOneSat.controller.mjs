@@ -25,7 +25,7 @@ const getSatChannelsFromDB = async (currentSatSlug) => {
     AND (theme_id != 0 OR theme_id IS NULL)
     AND (description_en IS NULL OR description_en = '') 
     GROUP BY title
-    LIMIT 50
+    LIMIT 30
   `;
   const res = await executePoolQuery(sql, [currentSatSlug]);
 

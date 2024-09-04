@@ -145,7 +145,9 @@ export const addDescriptionForChannels = async (currentSatSlug) => {
     messages.push(
       updateAllChanWithSameTitleRes instanceof Error
         ? `ERROR: DB UPDATE data for channels with title "${channel.title}". Error message: ${updateAllChanWithSameTitleRes.message}`
-        : `SUCCESS: Add ${updateAllChanWithSameTitleRes} channel descriptions for "${channel.title}" channel(s)`
+        : shouldUpdateData.genreId === 0
+          ? `- Add EMPTY descriptions for ${updateAllChanWithSameTitleRes} channel(s) with name "${channel.title}"`
+          : `SUCCESS: Add ${updateAllChanWithSameTitleRes} channel descriptions for "${channel.title}" channel(s)`
     );
   }
 

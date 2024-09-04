@@ -83,7 +83,7 @@ export const audioLanguages = {
   oro: 'Oromo',
   oth: 'Other',
   pus: 'پښتو (Pashto)',
-  qad: 'Qashqai',
+  // qad: 'Qashqai',
   sor: 'Sori',
   syr: 'Syriac',
   tig: 'ትግርኛ (Tigrinya)',
@@ -188,4 +188,4 @@ export const audioLanguages = {
   msa: 'Malay',
 };
 
-export const wrongAudio = ['ac3', 'aac', 'qaa', 'qis', 'org'];
+export const wrongAudio = ['ac3', 'aac', 'qaa', 'qad', 'qis', 'org'];

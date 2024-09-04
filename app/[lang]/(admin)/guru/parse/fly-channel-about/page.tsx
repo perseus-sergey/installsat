@@ -13,6 +13,12 @@ import { poolExecute } from '@/libs/db/mysqldb';
 
 export const dynamic = 'force-dynamic';
 
+// =================================================================
+// Generate AI description for extracted from urlSearchParams channel name and channel language (optional)
+// If AI could not generate description, descriptions in db updates by empty fields,
+//  but genre_id assigned 0.
+// =================================================================
+
 const { FLY_CHANNELS } = EDBTableTitles;
 
 const findChannelInDb = async (channelTitle: string) => {

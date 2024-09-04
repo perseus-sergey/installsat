@@ -16,25 +16,28 @@ import { ParseTransNews } from '@/components/EmailTemplates/parseTransNews.templ
 export const dynamic = 'force-dynamic';
 
 // =================================================================
-// - Change select languages for satellite
-// - Create info about channel and it genre from gpt
-// - Make channel search for all satellites  from 2 characters
 //
-// Add 'empty' to description_en for wrong ai generation
-// Check SEO by removing elements from the page step by step
-// Remove console logging from production parsers (mjs & tsx)
+// Find approximate grades from search params for spysok-kanaliv-suputnyka
 // Change all Link to SeoLink
-// change fieldset legend css
-// Add cluster choice
-// add valid description to StartArticleSections
 // change all reactSelects
+// Remove console logging from production parsers (mjs & tsx)
+// Check SEO by removing elements from the page step by step
+// Parse biss from lugasat (Or satsat.info) by sat grade & frequency & title
+// add valid description to StartArticleSections
 // add color description to channel filters
 // improve similar channels & similar articles blocks
 // add comment block to fly channels with separate db tbl (fly_comments_channel))
-// Parse biss from lugasat (Or satsat.info) by sat grade & frequency & title
 // refresh email in production
 // add json-ld
+// Add cluster choice
 // add image generator
+// =================================================================
+
+// =================================================================
+// Generate AI description for extracted from urlSearchParams sat_slug
+//  for channels whose genre_id equals 0 and description_en is empty.
+// If AI could not generate description, descriptions in db remains empty,
+//  but genre_id assigned 0.
 // =================================================================
 
 const BASE_URL = process.env.BASE_URL;

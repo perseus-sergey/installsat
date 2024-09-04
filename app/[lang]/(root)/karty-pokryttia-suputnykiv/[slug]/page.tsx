@@ -13,7 +13,6 @@ import {
   updateViewCount,
 } from '@/controllers/articles.controller';
 import SimilarArticles from '@/components/SimilarArticles/SimilarArticles';
-import Link from 'next/link';
 import { getCommentsNumber } from '@/controllers/comments.controller';
 import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
 import { ARTICLES, SAT_MAPS_MODEL } from '@/models/articles.model';
@@ -26,6 +25,8 @@ import EmptyData from '@/components/errors/EmptyData/EmptyData';
 import BeamMapList from '@/components/BeamMapList/BeamMapList';
 import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
 import { getELangKey } from '@/libs/utils/validSearchParam';
+import SeoLink from '@/components/ui/SeoLink/SeoLink';
+import { EUrlSearchParam } from '@/cron/libs/commons.mjs';
 
 interface IArticleParams {
   params: { [key in EUrlBaseParam]: string };
@@ -99,7 +100,7 @@ export default async function layout({ params }: IArticleParams) {
 
   const sqlResult = await getSatMap(slug);
 
-  const { sat_id, view, sat_title, position, logo } = sqlResult[0];
+  const { sat_id, view, sat_title, position, logo, grade } = sqlResult[0];
 
   const numberOfComments = await getCommentsNumber(
     EDBTableTitles.COMMENTS_MAPS,
@@ -107,6 +108,8 @@ export default async function layout({ params }: IArticleParams) {
   );
 
   const h1Title = getH1(`${sat_title}, ${position}`)[lang];
+
+  const relatedSatHref = `/${lang}/${EUrlBaseParam.SAT_CHANNEL_LIST}?${new URLSearchParams({ [EUrlSearchParam.SAT]: grade })}`;
 
   updateViewCount(EDBTableTitles.CHANNEL_SAT, `${sat_id}`, view);
 
@@ -151,9 +154,12 @@ export default async function layout({ params }: IArticleParams) {
         similarTitle={similarTitle[lang]}
         similarArticlesMapped={[
           <li key={0}>
-            <Link href={`/${lang}/${EUrlBaseParam.SAT_CHANNEL_LIST}/${slug}`}>
+            <SeoLink
+              title={`${lang === ELanguage.UA ? 'Перейти до списку каналів з супутника' : 'Go to related channel list from satellite'} "${sat_title} ${position}"`}
+              href={relatedSatHref}
+            >
               {similarStart[lang]} {sat_title} {position}
-            </Link>
+            </SeoLink>
           </li>,
         ]}
       />

@@ -143,7 +143,7 @@ export const getSatMapList = cache(async () => {
 
 export const getSatMap = cache(async (slug: string) => {
   const sql = `
-  SELECT s.id AS sat_id, s.title AS sat_title, s.position, s.view, s.logo,
+  SELECT s.id AS sat_id, s.title AS sat_title, s.position, s.view, s.logo, s.grade,
         b.title AS beam_title, b.description AS beam_description, b.cpu AS beam_slug, b.map_img
   FROM tbl_chan_sat AS s
   JOIN tbl_chan_beam AS b ON s.id = b.sat

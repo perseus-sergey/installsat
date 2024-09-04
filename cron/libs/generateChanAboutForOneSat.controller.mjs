@@ -160,7 +160,17 @@ export const addDescriptionForChannels = async (currentSatSlug) => {
         shouldUpdateData = generatedDataRes;
       }
     } else {
-      shouldUpdateData = findDbRes[0];
+      shouldUpdateData = {
+        uaText: findDbRes[0].text_ua,
+        enText: findDbRes[0].text_en,
+        enDescription: findDbRes[0].description_en,
+        uaDescription: findDbRes[0].description_ua,
+        uaKeywords: findDbRes[0].keywords_ua,
+        enKeywords: findDbRes[0].keywords_en,
+        languages: findDbRes[0].languages,
+        siteUrl: findDbRes[0].official_site_url,
+        genreId: findDbRes[0].theme_id,
+      };
     }
 
     const updateAllChanWithSameTitleRes = await updateChannelsWithGeneratedData(

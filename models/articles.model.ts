@@ -292,6 +292,7 @@ export interface IMapModel {
   beam_description: string;
   beam_slug: string;
   map_img: string;
+  grade: string;
 }
 
 export interface ISingleCatArticlesModel {

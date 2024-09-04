@@ -1,6 +1,9 @@
 import { executePoolQuery } from './mysqldb.mjs';
 import { EDBTableTitles, DB_ARRAY_SEPARATOR } from './commons.mjs';
-import { generateChannelAbout } from './flyChannelAbout.controller.mjs';
+import {
+  generateChannelAbout,
+  updateGeneratedDataDB,
+} from './flyChannelAbout.controller.mjs';
 import { audioLanguages, wrongAudio } from './languages.mjs';
 
 const { FLY_CHANNELS } = EDBTableTitles;
@@ -34,53 +37,7 @@ const getSatChannelsFromDB = async (currentSatSlug) => {
     : res;
 };
 
-const updateChannelsWithGeneratedData = async (
-  {
-    uaText,
-    enText,
-    enDescription,
-    uaDescription,
-    uaKeywords,
-    enKeywords,
-    languages,
-    siteUrl,
-    genreId,
-  },
-  channelName
-) => {
-  const sql = `
-      UPDATE ${FLY_CHANNELS}
-      SET 
-        text_ua = ?, 
-        text_en = ?, 
-        description_en = ?, 
-        description_ua = ?, 
-        keywords_ua = ?, 
-        keywords_en = ?, 
-        languages = ?, 
-        official_site_url = ?, 
-        theme_id = ?
-      WHERE title = ? AND (description_en IS NULL OR description_en = '')
-    `;
-  const res = await executePoolQuery(sql, [
-    uaText,
-    enText,
-    enDescription,
-    uaDescription,
-    uaKeywords,
-    enKeywords,
-    languages,
-    siteUrl,
-    genreId,
-    channelName,
-  ]);
-
-  return res instanceof Error
-    ? `ERROR: DB UPDATE data for channels with title "${channelName}". Error message: ${res.message}`
-    : res.affectedRows;
-};
-
-const findChannelAbout = async (title) => {
+export const findInDbChannelAbout = async (title) => {
   const sql = `
     SELECT 
       text_ua,
@@ -100,9 +57,7 @@ const findChannelAbout = async (title) => {
   `;
   const res = await executePoolQuery(sql, [title]);
 
-  return res instanceof Error
-    ? `ERROR: SELECT data when searching channel About for channel "${title}". Message: ${res.message}`
-    : res;
+  return res;
 };
 
 const getLanguageString = (aPids) => {
@@ -127,6 +82,48 @@ const getLanguageString = (aPids) => {
     .join(', ');
 };
 
+export const getShouldUpdateData = async (title, a_pid) => {
+  const findDbRes = await findInDbChannelAbout(title);
+
+  if (findDbRes instanceof Error) {
+    return {
+      shouldUpdateData: emptyChannelDescription,
+      shouldUpdateMessage: `ERROR: SELECT data when searching channel About in DB for channel "${title}". Message: ${findDbRes.message}`,
+    };
+  }
+
+  if (findDbRes.length === 0) {
+    const langString = getLanguageString(a_pid);
+
+    const generatedDataRes = await generateChannelAbout(title, langString);
+
+    return typeof generatedDataRes === 'string'
+      ? {
+          shouldUpdateData: emptyChannelDescription,
+          shouldUpdateMessage: generatedDataRes,
+        }
+      : {
+          shouldUpdateData: generatedDataRes,
+          shouldUpdateMessage: `SUCCESS: Generated channel descriptions for "${title}" channel`,
+        };
+  }
+
+  return {
+    shouldUpdateData: {
+      uaText: findDbRes[0].text_ua,
+      enText: findDbRes[0].text_en,
+      enDescription: findDbRes[0].description_en,
+      uaDescription: findDbRes[0].description_ua,
+      uaKeywords: findDbRes[0].keywords_ua,
+      enKeywords: findDbRes[0].keywords_en,
+      languages: findDbRes[0].languages,
+      siteUrl: findDbRes[0].official_site_url,
+      genreId: findDbRes[0].theme_id,
+    },
+    shouldUpdateMessage: null,
+  };
+};
+
 export const addDescriptionForChannels = async (currentSatSlug) => {
   const messages = [];
 
@@ -134,52 +131,20 @@ export const addDescriptionForChannels = async (currentSatSlug) => {
   if (typeof dbChannelsRes === 'string') return [dbChannelsRes];
 
   for (const channel of dbChannelsRes) {
-    let shouldUpdateData;
+    const { shouldUpdateData, shouldUpdateMessage } = await getShouldUpdateData(
+      channel.title,
+      channel.a_pid
+    );
 
-    const findDbRes = await findChannelAbout(channel.title);
-    if (typeof findDbRes === 'string') {
-      messages.push(findDbRes);
-      continue;
-    }
+    if (shouldUpdateMessage) messages.push(shouldUpdateMessage);
 
-    if (findDbRes.length === 0) {
-      const langString = getLanguageString(channel.a_pid);
-
-      const generatedDataRes = await generateChannelAbout(
-        channel.title,
-        langString
-      );
-
-      if (typeof generatedDataRes === 'string') {
-        messages.push(generatedDataRes);
-        shouldUpdateData = emptyChannelDescription;
-      } else {
-        messages.push(
-          `SUCCESS: Generated channel descriptions for "${channel.title}" channel`
-        );
-        shouldUpdateData = generatedDataRes;
-      }
-    } else {
-      shouldUpdateData = {
-        uaText: findDbRes[0].text_ua,
-        enText: findDbRes[0].text_en,
-        enDescription: findDbRes[0].description_en,
-        uaDescription: findDbRes[0].description_ua,
-        uaKeywords: findDbRes[0].keywords_ua,
-        enKeywords: findDbRes[0].keywords_en,
-        languages: findDbRes[0].languages,
-        siteUrl: findDbRes[0].official_site_url,
-        genreId: findDbRes[0].theme_id,
-      };
-    }
-
-    const updateAllChanWithSameTitleRes = await updateChannelsWithGeneratedData(
+    const updateAllChanWithSameTitleRes = await updateGeneratedDataDB(
       shouldUpdateData,
       channel.title
     );
     messages.push(
-      typeof updateAllChanWithSameTitleRes === 'string'
-        ? updateAllChanWithSameTitleRes
+      updateAllChanWithSameTitleRes instanceof Error
+        ? `ERROR: DB UPDATE data for channels with title "${channel.title}". Error message: ${updateAllChanWithSameTitleRes.message}`
         : `SUCCESS: Add ${updateAllChanWithSameTitleRes} channel descriptions for "${channel.title}" channel(s)`
     );
   }

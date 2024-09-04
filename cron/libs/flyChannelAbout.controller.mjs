@@ -195,7 +195,8 @@ export const updateGeneratedDataDB = async (
     siteUrl,
     genreId,
   },
-  channelName
+  channelName,
+  isForceUpdate = false
 ) => {
   const sql = `
       UPDATE ${FLY_CHANNELS}
@@ -209,7 +210,8 @@ export const updateGeneratedDataDB = async (
         languages = ?, 
         official_site_url = ?, 
         theme_id = ?
-      WHERE title = ?
+      WHERE title = ? 
+      ${isForceUpdate ? '' : 'AND (description_en IS NULL OR description_en = "")'}
     `;
   const res = await executePoolQuery(sql, [
     uaText,

@@ -71,7 +71,8 @@ export default async function Page({
 
   const insertToDbRes = await updateGeneratedDataDB(
     typeof generatedData === 'string' ? emptyChannelDescription : generatedData,
-    urlChannelTitle
+    urlChannelTitle,
+    true
   );
 
   if (insertToDbRes instanceof Error)

@@ -5,7 +5,15 @@ import {
   getContentFromPuppeteerBrowser,
   killChromeProcesses,
 } from './commons.mjs';
-import { generateChannelAbout } from './flyChannelAbout.controller.mjs';
+import {
+  // generateChannelAbout,
+  updateGeneratedDataDB,
+} from './flyChannelAbout.controller.mjs';
+import {
+  // emptyChannelDescription,
+  // findInDbChannelAbout,
+  getShouldUpdateData,
+} from './generateChanAboutForOneSat.controller.mjs';
 import puppeteer from 'puppeteer';
 // import puppeteer, { Browser } from 'puppeteer';
 import * as cheerio from 'cheerio';
@@ -77,113 +85,102 @@ const getSatChannelsFromDB = async (currentSatSlug, title = undefined) => {
   return res;
 };
 
-const updateChannelsWithGeneratedData = async (
-  {
-    uaText,
-    enText,
-    enDescription,
-    uaDescription,
-    uaKeywords,
-    enKeywords,
-    languages,
-    siteUrl,
-    genreId,
-  },
-  channelName
-) => {
-  const sql = `
-      UPDATE ${FLY_CHANNELS}
-      SET 
-        text_ua = ?, 
-        text_en = ?, 
-        description_en = ?, 
-        description_ua = ?, 
-        keywords_ua = ?, 
-        keywords_en = ?, 
-        languages = ?, 
-        official_site_url = ?, 
-        theme_id = ?
-      WHERE title = ? AND (description_en IS NULL OR description_en = '')
-    `;
-  const res = await executePoolQuery(sql, [
-    uaText,
-    enText,
-    enDescription,
-    uaDescription,
-    uaKeywords,
-    enKeywords,
-    languages,
-    siteUrl,
-    genreId,
-    channelName,
-  ]);
+// const updateChannelsWithGeneratedData = async (
+//   {
+//     uaText,
+//     enText,
+//     enDescription,
+//     uaDescription,
+//     uaKeywords,
+//     enKeywords,
+//     languages,
+//     siteUrl,
+//     genreId,
+//   },
+//   channelName
+// ) => {
+//   const sql = `
+//       UPDATE ${FLY_CHANNELS}
+//       SET
+//         text_ua = ?,
+//         text_en = ?,
+//         description_en = ?,
+//         description_ua = ?,
+//         keywords_ua = ?,
+//         keywords_en = ?,
+//         languages = ?,
+//         official_site_url = ?,
+//         theme_id = ?
+//       WHERE title = ? AND (description_en IS NULL OR description_en = '')
+//     `;
+//   const res = await executePoolQuery(sql, [
+//     uaText,
+//     enText,
+//     enDescription,
+//     uaDescription,
+//     uaKeywords,
+//     enKeywords,
+//     languages,
+//     siteUrl,
+//     genreId,
+//     channelName,
+//   ]);
 
-  return res instanceof Error
-    ? `ERROR: DB UPDATE data for channels with title "${channelName}". Error message: ${res.message}`
-    : res.affectedRows;
-};
+//   return res instanceof Error
+//     ? `ERROR: DB UPDATE data for channels with title "${channelName}". Error message: ${res.message}`
+//     : res.affectedRows;
+// };
 
-const findChannelAbout = async (title) => {
-  const sql = `
-    SELECT 
-      text_ua,
-      text_en,
-      description_en,
-      description_ua,
-      keywords_ua,
-      keywords_en,
-      languages,
-      official_site_url,
-      theme_id
-    FROM ${FLY_CHANNELS}
-    WHERE title = ? AND description_en IS NOT NULL AND description_en != ''
-    LIMIT 1
-  `;
-  const res = await executePoolQuery(sql, [title]);
+// const findChannelAbout = async (title, a_pid) => {
+//   const res = await findInDbChannelAbout(title);
 
-  const emptyData = {
-    text_ua: null,
-    text_en: null,
-    description_en: null,
-    description_ua: null,
-    keywords_ua: null,
-    keywords_en: null,
-    languages: null,
-    official_site_url: null,
-    theme_id: null,
-  };
+//   if (res instanceof Error) {
+//     return {
+//       aboutData: emptyChannelDescription,
+//       aboutMessage: `ERROR during SELECT data when finding channel About for channel "${title}". Message: ${res.message}`,
+//     };
+//   }
 
-  if (res instanceof Error) {
-    return {
-      aboutData: emptyData,
-      aboutMessage: `ERROR during SELECT data when finding channel About for channel "${title}". Message: ${res.message}`,
-    };
-  }
+//   if (res.length === 0) {
+//     const generatedDataRes = await generateChannelAbout(title);
 
-  if (res.length === 0) {
-    const generatedDataRes = await generateChannelAbout(title);
+//     if (typeof generatedDataRes === 'string')
+//       return {
+//         aboutData: emptyChannelDescription,
+//         aboutMessage: generatedDataRes,
+//       };
 
-    if (typeof generatedDataRes === 'string')
-      return { aboutData: emptyData, aboutMessage: generatedDataRes };
+//     const updateAllChanWithSameTitleRes = await updateChannelsWithGeneratedData(
+//       generatedDataRes,
+//       title
+//     );
+//     if (typeof updateAllChanWithSameTitleRes === 'string')
+//       return {
+//         aboutData: generatedDataRes,
+//         aboutMessage: updateAllChanWithSameTitleRes,
+//       };
 
-    const updateAllChanWithSameTitleRes = await updateChannelsWithGeneratedData(
-      generatedDataRes,
-      title
-    );
-    if (typeof updateAllChanWithSameTitleRes === 'string')
-      return {
-        aboutData: generatedDataRes,
-        aboutMessage: updateAllChanWithSameTitleRes,
-      };
+//     return {
+//       aboutData: generatedDataRes,
+//       aboutMessage: `SUCCESS: Add AI generated channel descriptions for ${updateAllChanWithSameTitleRes} channel(s) with title "${title}". Channel GENRE number: "${generatedDataRes.genreId}"`,
+//     };
+//   }
 
-    return {
-      aboutData: generatedDataRes,
-      aboutMessage: `SUCCESS: Add AI generated channel descriptions for ${updateAllChanWithSameTitleRes} channel(s) with title "${title}". Channel GENRE number: "${generatedDataRes.genreId}"`,
-    };
-  }
-
-  return { aboutData: res[0], aboutMessage: null };
-};
+//   return {
+//     aboutData: {
+//       uaText: res[0].text_ua,
+//       enText: res[0].text_en,
+//       enDescription: res[0].description_en,
+//       uaDescription: res[0].description_ua,
+//       uaKeywords: res[0].keywords_ua,
+//       enKeywords: res[0].keywords_en,
+//       languages: res[0].languages,
+//       siteUrl: res[0].official_site_url,
+//       genreId: res[0].theme_id,
+//     },
+//     aboutMessage: null,
+//   };
+// };
 
 const updateTblChannels = async (currentSatSlug, shouldUpdChannels) => {
   const updateTblChannelsMessages = [];
@@ -340,51 +337,65 @@ const insertTblChannels = async (currentSatSlug, parsedNewChannels) => {
   const validValues = [];
   const placeholders = [];
 
-  for (const item of parsedNewChannels) {
-    const { slug, message } = createSlug(item.title);
+  for (const channel of parsedNewChannels) {
+    const { slug, message } = createSlug(channel.title);
 
     if (!slug) {
       return {
         insertCount: 0,
         insertTblChannelsMessages: [
-          message || `Cannot create slug for channel: "${item.title}"`,
+          message || `Cannot create slug for channel: "${channel.title}"`,
         ],
       };
     }
 
-    const { aboutData, aboutMessage } = await findChannelAbout(item.title);
-    if (aboutMessage) insertTblChannelsMessages.push(aboutMessage);
+    const { shouldUpdateData, shouldUpdateMessage } = await getShouldUpdateData(
+      channel.title,
+      channel.a_pid
+    );
+    if (shouldUpdateMessage)
+      insertTblChannelsMessages.push(shouldUpdateMessage);
+
+    const updateAllChanWithSameTitleRes = await updateGeneratedDataDB(
+      shouldUpdateData,
+      channel.title
+    );
+    insertTblChannelsMessages.push(
+      updateAllChanWithSameTitleRes instanceof Error
+        ? `ERROR: DB UPDATE data for channels with title "${channel.title}". Error message: ${updateAllChanWithSameTitleRes.message}`
+        : `SUCCESS: Add ${updateAllChanWithSameTitleRes} channel descriptions for "${channel.title}" channel(s)`
+    );
 
     const values = [
       slug,
       currentSatSlug,
-      item.frequency,
-      item.polarization,
-      item.mode,
-      item.beam,
-      item.sr,
-      item.fec,
-      item.title,
-      item.is_radio,
-      item.compress,
-      item.sid || null,
-      item.v_pid || null,
-      item.a_pid,
-      item.t2_stream || null,
-      item.is_biss,
-      item.encryption || null,
+      channel.frequency,
+      channel.polarization,
+      channel.mode,
+      channel.beam,
+      channel.sr,
+      channel.fec,
+      channel.title,
+      channel.is_radio,
+      channel.compress,
+      channel.sid || null,
+      channel.v_pid || null,
+      channel.a_pid,
+      channel.t2_stream || null,
+      channel.is_biss,
+      channel.encryption || null,
       dateNow,
       2,
       0,
-      aboutData.text_ua || null,
-      aboutData.text_en || null,
-      aboutData.description_en || null,
-      aboutData.description_ua || null,
-      aboutData.keywords_ua || null,
-      aboutData.keywords_en || null,
-      aboutData.languages || null,
-      aboutData.official_site_url || null,
-      aboutData.theme_id || null,
+      shouldUpdateData.uaText || null,
+      shouldUpdateData.enText || null,
+      shouldUpdateData.enDescription || null,
+      shouldUpdateData.uaDescription || null,
+      shouldUpdateData.uaKeywords || null,
+      shouldUpdateData.enKeywords || null,
+      shouldUpdateData.languages || null,
+      shouldUpdateData.siteUrl || null,
+      shouldUpdateData.genreId || null,
     ];
 
     validValues.push(...values);

@@ -22,9 +22,8 @@ const getSatChannelsFromDB = async (currentSatSlug) => {
     SELECT title, MAX(a_pid)
     FROM ${FLY_CHANNELS} 
     WHERE sat_slug = ? 
-    AND theme_id != 0
-    AND (description_en IS NULL 
-    OR description_en = '') 
+    AND (theme_id != 0 OR theme_id IS NULL)
+    AND (description_en IS NULL OR description_en = '') 
     GROUP BY title
     LIMIT 50
   `;

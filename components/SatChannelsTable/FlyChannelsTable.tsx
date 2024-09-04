@@ -353,7 +353,7 @@ const FrequencySegment = ({
                 <RadioIcon is_radio={is_radio} lang={lang} />
                 {title}
               </Link>
-              {genreImgSrc && !is_radio && (
+              {genreImgSrc && !is_radio ? (
                 <div className="flex-col items-center text-sm hidden sm:flex">
                   <TooltipSimple tooltipText={genre_description}>
                     <FillingImg
@@ -364,7 +364,7 @@ const FrequencySegment = ({
                     />
                   </TooltipSimple>
                 </div>
-              )}
+              ) : null}
             </div>
             {biss && <p className={styles.biss}>{biss}</p>}
           </td>

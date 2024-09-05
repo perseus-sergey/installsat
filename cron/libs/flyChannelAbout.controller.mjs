@@ -107,7 +107,7 @@ where:
 
   // Channel name: "Gamma Cinema 5", Probable broadcast language: العربية (Arabic)
 
-  const prompt = `Channel name: "${channelTitle}"${language ? `, Probable broadcast language: ${language}` : ''}`;
+  const prompt = `Channel name: "${channelTitle}"${language ? `, Probable broadcast or translate language: ${language}` : ''}`;
 
   const result = await model.generateContent(prompt, generationConfig);
 

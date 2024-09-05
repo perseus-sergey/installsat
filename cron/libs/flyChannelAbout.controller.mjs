@@ -63,11 +63,11 @@ where:
 
 - 'reliable-rate' - RYRI.
 
-- 'description-en', 'description-ua' - If RYRI < 8, insert "NULL", otherwise Provide a concise description (in English and Ukrainian) for this channel, suitable for a meta description tag for SEO, up to 200 characters in each language.
+- 'description-en', 'description-ua' - If RYRI < ${RELIABLE_THRESHOLD}, insert "NULL", otherwise Provide a concise description (in English and Ukrainian) for this channel, suitable for a meta description tag for SEO, up to 200 characters in each language.
 
-- 'keywords-en', 'keywords-ua' - If RYRI < 8, insert "NULL", otherwise List relevant keywords (in English and Ukrainian) for this channel, separated by commas, suitable for a meta keywords tag for SEO, up to 200 characters in each language.
+- 'keywords-en', 'keywords-ua' - If RYRI < ${RELIABLE_THRESHOLD}, insert "NULL", otherwise List relevant keywords (in English and Ukrainian) for this channel, separated by commas, suitable for a meta keywords tag for SEO, up to 200 characters in each language.
 
-- 'text-en', 'text-ua' - If RYRI < 8, insert "NULL", otherwise write up to 10 paragraphs (<p>) for each languages (English and Ukrainian) that provide a descriptive overview of the channel. 
+- 'text-en', 'text-ua' - If RYRI < ${RELIABLE_THRESHOLD}, insert "NULL", otherwise write up to 10 paragraphs (<p>) for each languages (English and Ukrainian) that provide a descriptive overview of the channel. 
   - e.g., '<p>[Paragraph 1]</p><p>[Paragraph 2]</p><p>[Paragraph N]</p>'
  - Do not add newline character (\n).
   - Wrap relevant and important keywords or phrases in <strong> tags to optimize for SEO, ensuring it enhances the readability and value of the content without appearing excessive or spammy.
@@ -75,7 +75,7 @@ where:
   - Do not insert any links into the content.
   - If the channel is Russian news, write about it in a skeptical style.
 
-- 'languages' - Specify the main language of the channel (e.g., English, Persian).
+- 'languages' - Specify the main language of the channel (e.g., English, Persian). Up to 150 characters.
 
 - 'site-url' - Include the URL of the official site for this channel. if not available, leave the tag blank.
 

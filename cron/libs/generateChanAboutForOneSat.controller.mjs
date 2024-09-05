@@ -156,8 +156,10 @@ export const addDescriptionForChannels = async (currentSatSlug) => {
   if (typeof dbChannelsRes === 'string') return [dbChannelsRes];
 
   for (const channel of dbChannelsRes) {
+    messages.push(`┌──────────────── "${channel.title}" ────────────────┐`);
     const extractUpdateMessages = await extractAndUpdateData(channel);
     messages.push(...extractUpdateMessages);
+    messages.push('└───────────────────────────────────────┘');
   }
 
   return messages;

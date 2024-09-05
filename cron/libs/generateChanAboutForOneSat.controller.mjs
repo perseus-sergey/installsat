@@ -8,6 +8,8 @@ import { audioLanguages, wrongAudio } from './languages.mjs';
 
 const { FLY_CHANNELS } = EDBTableTitles;
 
+const SIMULTANEOUS_GENERATE_LIMIT = 70;
+
 export const emptyChannelDescription = {
   uaText: null,
   enText: null,
@@ -28,7 +30,7 @@ const getSatChannelsFromDB = async (currentSatSlug) => {
     AND (theme_id != 0 OR theme_id IS NULL)
     AND (description_en IS NULL OR description_en = '') 
     GROUP BY title
-    LIMIT 30
+    LIMIT ${SIMULTANEOUS_GENERATE_LIMIT}
   `;
   const res = await executePoolQuery(sql, [currentSatSlug]);
 

@@ -124,6 +124,31 @@ export const getShouldUpdateData = async (title, a_pid) => {
   };
 };
 
+export const extractAndUpdateData = async (channel) => {
+  const messages = [];
+
+  const { shouldUpdateData, shouldUpdateMessage } = await getShouldUpdateData(
+    channel.title,
+    channel.a_pid
+  );
+
+  if (shouldUpdateMessage) messages.push(shouldUpdateMessage);
+
+  const updateAllChanWithSameTitleRes = await updateGeneratedDataDB(
+    shouldUpdateData,
+    channel.title
+  );
+  messages.push(
+    updateAllChanWithSameTitleRes instanceof Error
+      ? `ERROR: DB UPDATE data for channels with title "${channel.title}". Error message: ${updateAllChanWithSameTitleRes.message}`
+      : shouldUpdateData.genreId === 0
+        ? `- Add EMPTY descriptions for ${updateAllChanWithSameTitleRes} channel(s) with name "${channel.title}"`
+        : `SUCCESS: Add ${updateAllChanWithSameTitleRes} channel descriptions for "${channel.title}" channel(s)`
+  );
+
+  return messages;
+};
+
 export const addDescriptionForChannels = async (currentSatSlug) => {
   const messages = [];
 
@@ -131,24 +156,8 @@ export const addDescriptionForChannels = async (currentSatSlug) => {
   if (typeof dbChannelsRes === 'string') return [dbChannelsRes];
 
   for (const channel of dbChannelsRes) {
-    const { shouldUpdateData, shouldUpdateMessage } = await getShouldUpdateData(
-      channel.title,
-      channel.a_pid
-    );
-
-    if (shouldUpdateMessage) messages.push(shouldUpdateMessage);
-
-    const updateAllChanWithSameTitleRes = await updateGeneratedDataDB(
-      shouldUpdateData,
-      channel.title
-    );
-    messages.push(
-      updateAllChanWithSameTitleRes instanceof Error
-        ? `ERROR: DB UPDATE data for channels with title "${channel.title}". Error message: ${updateAllChanWithSameTitleRes.message}`
-        : shouldUpdateData.genreId === 0
-          ? `- Add EMPTY descriptions for ${updateAllChanWithSameTitleRes} channel(s) with name "${channel.title}"`
-          : `SUCCESS: Add ${updateAllChanWithSameTitleRes} channel descriptions for "${channel.title}" channel(s)`
-    );
+    const extractUpdateMessages = await extractAndUpdateData(channel);
+    messages.push(...extractUpdateMessages);
   }
 
   return messages;

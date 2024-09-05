@@ -1,5 +1,5 @@
 import { executePoolQuery } from './mysqldb.mjs';
-import { EDBTableTitles, DB_ARRAY_SEPARATOR } from './commons.mjs';
+import { EDBTableTitles, DB_ARRAY_SEPARATOR, sleep } from './commons.mjs';
 import {
   generateChannelAbout,
   updateGeneratedDataDB,
@@ -162,6 +162,8 @@ export const addDescriptionForChannels = async (currentSatSlug) => {
     const extractUpdateMessages = await extractAndUpdateData(channel);
     messages.push(...extractUpdateMessages);
     messages.push('└───────────────────────────────────────┘');
+
+    await sleep(500);
   }
 
   return messages;

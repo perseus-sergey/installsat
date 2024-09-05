@@ -98,7 +98,7 @@ where:
   });
 
   const generationConfig = {
-    temperature: 2,
+    temperature: 0.5,
     topP: 0.95,
     topK: 64,
     maxOutputTokens: 4000,

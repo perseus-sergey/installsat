@@ -20,6 +20,7 @@ import {
 
 const IS_LOGGED = true;
 const BASE_URL = process.env.BASE_URL;
+const ALLOWED_CONTENT_LENGTH = 400;
 const isProductionMode = process.env.NODE_ENV === 'production';
 const BASE_GURU_PATH = `${BASE_URL}/en/${EUrlAdminParam.BASE_PATH}`;
 const { ARTICLE: ARTICLE_TBL } = EDBTableTitles;
@@ -193,6 +194,15 @@ const R_U_N = async () => {
         );
         if (typeof extractArticleResult === 'string') {
           addMessage(`${extractArticleResult} Article: ${link}`);
+          continue;
+        }
+
+        if (
+          extractArticleResult.articleContent.length < ALLOWED_CONTENT_LENGTH
+        ) {
+          addMessage(
+            `ERROR: Extracted Article Content is too short < ${ALLOWED_CONTENT_LENGTH}`
+          );
           continue;
         }
 

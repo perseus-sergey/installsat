@@ -1,4 +1,5 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
+import * as cheerio from 'cheerio';
 import { EDBTableTitles } from './commons.mjs';
 import { executePoolQuery } from './mysqldb.mjs';
 
@@ -10,76 +11,24 @@ const generateAiText = async (channelTitle, language = '') => {
   const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
 
   const model = genAI.getGenerativeModel({
-    model: 'gemini-1.5-flash',
+    model: 'gemini-1.5-pro',
     systemInstruction: `
 The request concerns a television or radio channel.
 The name of the channel is written as a transcription of the original name, so determine the country of origin of the channel yourself.
-
-Ensure all generated text is presented in a neutral, descriptive tone suitable for an encyclopedia or informative website entry.
-Always use the original channel's name without translation, without declination and enclose it in Unicode curly quotes (« »).
-The content should be written in the third person, without direct appeals to the reader. 
-Avoid promotional language or calls to action, and focus on providing factual and descriptive content about the channel, its programs, and its significance. The tone should be entirely neutral and informative.
-
 RYRI - Rating of your reliable information (Number from 0 to 10).
+Write the answer in HTML format with the following structure:
 
-Use this JSON schema:
-{
-  "type": "object",
-  "properties": {
-    "reliable-rate": {
-      "type": "number"
-    },
-    "category-number": {
-      "type": "number"
-    },
-    "description-en": {
-      "type": "string"
-    },
-    "description-ua": {
-      "type": "string"
-    },
-    "keywords-en": {
-      "type": "string"
-    },
-    "keywords-ua": {
-      "type": "string"
-    },
-    "text-en": {
-      "type": "string"
-    },
-    "text-ua": {
-      "type": "string"
-    },
-    "languages": {
-      "type": "string"
-    },
-    "site-url": {
-      "type": "string"
-    }
-  }
-}
+1. <div id='reliable-rate'>[RYRI]</div>
 
-where:
+2. <div id='description-en'>[Description]</div><div id='description-ua'>[Опис]</div>: If RYRI < ${RELIABLE_THRESHOLD}, insert "NULL", otherwise Provide a concise description (in English and Ukrainian) for this channel, suitable for a meta description tag for SEO, up to 200 characters in each language.
 
-- 'reliable-rate' - RYRI.
+3. <div id='keywords-en'>[Keywords]</div><div id='keywords-ua'>[Ключові слова]</div>: If RYRI < ${RELIABLE_THRESHOLD}, insert "NULL", otherwise List relevant keywords (in English and Ukrainian) for this channel, separated by commas, suitable for a meta keywords tag for SEO, up to 200 characters in each language.
 
-- 'description-en', 'description-ua' - If RYRI < 8, insert "NULL", otherwise Provide a concise description (in English and Ukrainian) for this channel, suitable for a meta description tag for SEO, up to 200 characters in each language.
+4. <div id='languages'>[Main language]</div>: Specify the main language of the channel (e.g., English, Persian).
 
-- 'keywords-en', 'keywords-ua' - If RYRI < 8, insert "NULL", otherwise List relevant keywords (in English and Ukrainian) for this channel, separated by commas, suitable for a meta keywords tag for SEO, up to 200 characters in each language.
+5. <div id='site-url'>[Url of official site]</div>: Include the URL of the official site for this channel. if not available, leave the tag blank.
 
-- 'text-en', 'text-ua' - If RYRI < 8, insert "NULL", otherwise write up to 10 paragraphs (<p>) for each languages (English and Ukrainian) that provide a descriptive overview of the channel. 
-  - e.g., '<p>[Paragraph 1]</p><p>[Paragraph 2]</p><p>[Paragraph N]</p>'
- - Do not add newline character (\n).
-  - Wrap relevant and important keywords or phrases in <strong> tags to optimize for SEO, ensuring it enhances the readability and value of the content without appearing excessive or spammy.
-  - The text must be unique and not plagiarized.
-  - Do not insert any links into the content.
-  - If the channel is Russian news, write about it in a skeptical style.
-
-- 'languages' - Specify the main language of the channel (e.g., English, Persian).
-
-- 'site-url' - Include the URL of the official site for this channel. if not available, leave the tag blank.
-
-- 'category-number' - Choose a category number that best describes the channel from the following list:
+6. <div id='category-number'>[n]</div>: Choose a category number that best describes the channel from the following list:
    - 1 - Public
    - 2 - News
    - 3 - Movies
@@ -94,14 +43,28 @@ where:
    - 12 - Religious, Spiritual
    - 13 - TV Sales
    - 14 - Fashion
-   `,
+
+7. <div id='text-en'><p>[Paragraph 1]</p><p>[Paragraph 2]</p><p>[Paragraph N]</p></div>
+<div id='text-ua'><p>[Параграф 1]</p><p>[Параграф 2]</p><p>[Параграф N]</p></div>
+: If RYRI < ${RELIABLE_THRESHOLD}, insert "NULL", otherwise write up to 10 paragraphs (<p>) for each languages (English and Ukrainian) that provide a descriptive overview of the channel.
+  - Wrap relevant and important keywords or phrases in <strong> tags to optimize for SEO, ensuring it enhances the readability and value of the content without appearing excessive or spammy.
+  - The text must be unique and not plagiarized.
+  - Do not insert any links into the content.
+  - If the channel is Russian news, write about it in a skeptical style.
+
+Use existing data, don't invent it.
+Ensure all generated text is presented in a neutral, descriptive tone suitable for an encyclopedia or informative website entry.
+Always use the original channel's name without translation and enclose it in Unicode curly quotes (« »).
+The content should be written in the third person.
+Avoid promotional language or calls to action, and focus on providing factual and descriptive content about the channel, its programs, and its significance. The tone should be entirely neutral and informative.
+`,
   });
 
   const generationConfig = {
-    temperature: 2,
+    temperature: 1,
     topP: 0.95,
     topK: 64,
-    maxOutputTokens: 4000,
+    maxOutputTokens: 2000,
     responseMimeType: 'text/plain',
   };
 
@@ -111,51 +74,44 @@ where:
 
   const result = await model.generateContent(prompt, generationConfig);
 
-  const { response } = result;
-  const cleanResult = response.text().replace(/```json|```/g, '');
+  const response = result.response;
 
-  try {
-    const jsonParsed = JSON.parse(cleanResult);
-
-    return jsonParsed;
-  } catch (error) {
-    return error instanceof Error ? error : new Error('Wrong JSON response');
-  }
+  return response.text();
 };
 
-const extractDataFromAiJson = (aiObject) => {
+const extractDataFromAiHTML = ($) => {
   const getErrorStr = (errName) =>
     `ERROR: cannot extract channel ${errName} from AI channel: ${$.html()}`;
 
-  const reliableRate = Number(aiObject['reliable-rate']);
+  const reliableRate = Number($('#reliable-rate').text().trim());
   if (!reliableRate || reliableRate < RELIABLE_THRESHOLD)
     return `ERROR: Reliable AI Rate ${reliableRate} < allowed threshold (${RELIABLE_THRESHOLD})`;
 
-  const enDescription = aiObject['description-en'].trim();
+  const enDescription = $('#description-en').text().trim();
   if (!enDescription) return getErrorStr('EN_DESCRIPTION');
 
-  const enKeywords = aiObject['keywords-en'].trim();
+  const enKeywords = $('#keywords-en').text().trim();
   if (!enKeywords) return getErrorStr('EN_KEYWORDS');
 
-  const languages = aiObject['languages'].trim();
+  const languages = $('#languages').text().trim();
   // if (!languages) return getErrorStr('LANGUAGES');
 
-  const siteUrl = aiObject['site-url'].trim();
+  const siteUrl = $('#site-url').text().trim();
   // if (!siteUrl) return getErrorStr('SITE_URL');
 
-  const genreId = aiObject['category-number'];
+  const genreId = Number($('#category-number').text().trim());
   if (!genreId) return getErrorStr('GENRE_ID');
 
-  const uaDescription = aiObject['description-ua'].trim();
-  if (!uaDescription) return getErrorStr('UA_DESCRIPTION');
-
-  const uaKeywords = aiObject['keywords-ua'].trim();
-  if (!uaKeywords) return getErrorStr('UA_KEYWORDS');
-
-  const enText = aiObject['text-en'].trim();
+  const enText = $('#text-en').html();
   if (!enText) return getErrorStr('EN_CONTENT');
 
-  const uaText = aiObject['text-ua'].trim();
+  const uaDescription = $('#description-ua').text().trim();
+  if (!uaDescription) return getErrorStr('UA_DESCRIPTION');
+
+  const uaKeywords = $('#keywords-ua').text().trim();
+  if (!uaKeywords) return getErrorStr('UA_KEYWORDS');
+
+  const uaText = $('#text-ua').html();
   if (!uaText) return getErrorStr('UA_CONTENT');
 
   return {
@@ -233,15 +189,11 @@ export const updateGeneratedDataDB = async (
 export const generateChannelAbout = async (channelTitle, language = '') => {
   const aiText = await generateAiText(channelTitle, language);
 
-  if (aiText instanceof Error) {
-    return `ERROR: AI cannot generate content. Channel: ${channelTitle}. Error message: ${aiText.message}`;
-  }
-
   if (!aiText) {
     return `ERROR: AI cannot generate content. Channel: ${channelTitle}`;
   }
 
-  const extractedAiData = extractDataFromAiJson(aiText);
+  const extractedAiData = extractDataFromAiHTML(cheerio.load(aiText));
 
   return typeof extractedAiData === 'string'
     ? `${extractedAiData}. Channel: ${channelTitle}`

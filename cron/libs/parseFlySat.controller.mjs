@@ -5,17 +5,8 @@ import {
   getContentFromPuppeteerBrowser,
   killChromeProcesses,
 } from './commons.mjs';
-import {
-  // generateChannelAbout,
-  updateGeneratedDataDB,
-} from './flyChannelAbout.controller.mjs';
-import {
-  // emptyChannelDescription,
-  // findInDbChannelAbout,
-  getShouldUpdateData,
-} from './generateChanAboutForOneSat.controller.mjs';
+import { extractAndUpdateData } from './generateChanAboutForOneSat.controller.mjs';
 import puppeteer from 'puppeteer';
-// import puppeteer, { Browser } from 'puppeteer';
 import * as cheerio from 'cheerio';
 
 // import { TDbBoolean } from '@/models/channel.model';
@@ -84,103 +75,6 @@ const getSatChannelsFromDB = async (currentSatSlug, title = undefined) => {
 
   return res;
 };
-
-// const updateChannelsWithGeneratedData = async (
-//   {
-//     uaText,
-//     enText,
-//     enDescription,
-//     uaDescription,
-//     uaKeywords,
-//     enKeywords,
-//     languages,
-//     siteUrl,
-//     genreId,
-//   },
-//   channelName
-// ) => {
-//   const sql = `
-//       UPDATE ${FLY_CHANNELS}
-//       SET
-//         text_ua = ?,
-//         text_en = ?,
-//         description_en = ?,
-//         description_ua = ?,
-//         keywords_ua = ?,
-//         keywords_en = ?,
-//         languages = ?,
-//         official_site_url = ?,
-//         theme_id = ?
-//       WHERE title = ? AND (description_en IS NULL OR description_en = '')
-//     `;
-//   const res = await executePoolQuery(sql, [
-//     uaText,
-//     enText,
-//     enDescription,
-//     uaDescription,
-//     uaKeywords,
-//     enKeywords,
-//     languages,
-//     siteUrl,
-//     genreId,
-//     channelName,
-//   ]);
-
-//   return res instanceof Error
-//     ? `ERROR: DB UPDATE data for channels with title "${channelName}". Error message: ${res.message}`
-//     : res.affectedRows;
-// };
-
-// const findChannelAbout = async (title, a_pid) => {
-//   const res = await findInDbChannelAbout(title);
-
-//   if (res instanceof Error) {
-//     return {
-//       aboutData: emptyChannelDescription,
-//       aboutMessage: `ERROR during SELECT data when finding channel About for channel "${title}". Message: ${res.message}`,
-//     };
-//   }
-
-//   if (res.length === 0) {
-//     const generatedDataRes = await generateChannelAbout(title);
-
-//     if (typeof generatedDataRes === 'string')
-//       return {
-//         aboutData: emptyChannelDescription,
-//         aboutMessage: generatedDataRes,
-//       };
-
-//     const updateAllChanWithSameTitleRes = await updateChannelsWithGeneratedData(
-//       generatedDataRes,
-//       title
-//     );
-//     if (typeof updateAllChanWithSameTitleRes === 'string')
-//       return {
-//         aboutData: generatedDataRes,
-//         aboutMessage: updateAllChanWithSameTitleRes,
-//       };
-
-//     return {
-//       aboutData: generatedDataRes,
-//       aboutMessage: `SUCCESS: Add AI generated channel descriptions for ${updateAllChanWithSameTitleRes} channel(s) with title "${title}". Channel GENRE number: "${generatedDataRes.genreId}"`,
-//     };
-//   }
-
-//   return {
-//     aboutData: {
-//       uaText: res[0].text_ua,
-//       enText: res[0].text_en,
-//       enDescription: res[0].description_en,
-//       uaDescription: res[0].description_ua,
-//       uaKeywords: res[0].keywords_ua,
-//       enKeywords: res[0].keywords_en,
-//       languages: res[0].languages,
-//       siteUrl: res[0].official_site_url,
-//       genreId: res[0].theme_id,
-//     },
-//     aboutMessage: null,
-//   };
-// };
 
 const updateTblChannels = async (currentSatSlug, shouldUpdChannels) => {
   const updateTblChannelsMessages = [];
@@ -349,22 +243,8 @@ const insertTblChannels = async (currentSatSlug, parsedNewChannels) => {
       };
     }
 
-    const { shouldUpdateData, shouldUpdateMessage } = await getShouldUpdateData(
-      channel.title,
-      channel.a_pid
-    );
-    if (shouldUpdateMessage)
-      insertTblChannelsMessages.push(shouldUpdateMessage);
-
-    const updateAllChanWithSameTitleRes = await updateGeneratedDataDB(
-      shouldUpdateData,
-      channel.title
-    );
-    insertTblChannelsMessages.push(
-      updateAllChanWithSameTitleRes instanceof Error
-        ? `ERROR: DB UPDATE data for channels with title "${channel.title}". Error message: ${updateAllChanWithSameTitleRes.message}`
-        : `SUCCESS: Add ${updateAllChanWithSameTitleRes} channel descriptions for "${channel.title}" channel(s)`
-    );
+    const extractUpdateMessages = await extractAndUpdateData(channel);
+    insertTblChannelsMessages.push(...extractUpdateMessages);
 
     const values = [
       slug,

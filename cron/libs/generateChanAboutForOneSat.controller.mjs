@@ -24,7 +24,7 @@ export const emptyChannelDescription = {
 
 const getSatChannelsFromDB = async (currentSatSlug) => {
   const sql = `
-    SELECT title, MAX(a_pid)
+    SELECT title, MAX(a_pid) as a_pid
     FROM ${FLY_CHANNELS} 
     WHERE sat_slug = ? 
     AND (theme_id != 0 OR theme_id IS NULL)
@@ -161,7 +161,7 @@ export const addDescriptionForChannels = async (currentSatSlug) => {
     messages.push(`┌──────────────── "${channel.title}" ────────────────┐`);
     const extractUpdateMessages = await extractAndUpdateData(channel);
     messages.push(...extractUpdateMessages);
-    messages.push('└───────────────────────────────────────┘');
+    messages.push(`└──────────── "${channel.a_pid}" ───────────┘`);
 
     await sleep(500);
   }

@@ -153,7 +153,7 @@ export const extractAndUpdateData = async ({ title, a_pid, is_radio }) => {
         : `SUCCESS: Add ${updateAllChanWithSameTitleRes} channel descriptions for "${title}" channel(s)`
   );
 
-  return messages;
+  return { extractAndUpdateMessages: messages, shouldUpdateData };
 };
 
 export const addDescriptionForChannels = async (currentSatSlug) => {
@@ -164,13 +164,13 @@ export const addDescriptionForChannels = async (currentSatSlug) => {
 
   for (const channel of dbChannelsRes) {
     messages.push(`┌──────────────── "${channel.title}" ────────────────┐`);
-    const extractUpdateMessages = await extractAndUpdateData({
+    const { extractAndUpdateMessages } = await extractAndUpdateData({
       title: channel.title,
       a_pid: channel.a_pid,
       is_radio: channel.is_radio,
     });
-    messages.push(...extractUpdateMessages);
-    messages.push(`└──────────── "${channel.a_pid}" ───────────┘`);
+    messages.push(...extractAndUpdateMessages);
+    messages.push(`└─────────────────────────────────┘`);
 
     await sleep(500);
   }

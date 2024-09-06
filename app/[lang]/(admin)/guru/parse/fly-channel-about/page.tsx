@@ -89,23 +89,23 @@ export default async function Page({
     <>
       <Title>{`Add Description for channel "${urlChannelTitle}"`}</Title>
 
-      <p className="text-xs">
+      <p className="text-xl">
         <b>Updated channels: </b>
         {insertToDbRes}
       </p>
 
       {typeof generatedData === 'string' ? (
         <p className="text-xl text-red-500 font-bold">{generatedData}</p>
-      ) : null}
-
-      {Object.entries(generatedData).map(([key, val]) => (
-        <>
-          <h2 className="text-center text-blue-700 text-xl" key={key}>
-            {key}
-          </h2>
-          <div>{val}</div>
-        </>
-      ))}
+      ) : (
+        Object.entries(generatedData).map(([key, val]) => (
+          <>
+            <h2 className="text-center text-blue-700 text-xl" key={key}>
+              {key}
+            </h2>
+            <div>{val}</div>
+          </>
+        ))
+      )}
     </>
   );
 }

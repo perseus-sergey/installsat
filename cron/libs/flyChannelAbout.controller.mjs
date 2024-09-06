@@ -115,6 +115,7 @@ where:
 
   const prompt = `Channel name: "${channelTitle}"${language ? `, Probable broadcast or translate language: ${language}` : ''}`;
 
+  console.log('🚀 ~ generateAiText ~ prompt:', prompt);
   const result = await model.generateContent(prompt, generationConfig);
 
   const { response } = result;

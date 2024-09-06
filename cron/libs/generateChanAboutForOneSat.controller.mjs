@@ -111,10 +111,12 @@ const getShouldUpdateData = async (title, a_pid, is_radio) => {
       ? {
           shouldUpdateData: emptyChannelDescription,
           shouldUpdateMessage: generatedDataRes,
+          langString,
         }
       : {
           shouldUpdateData: generatedDataRes,
           shouldUpdateMessage: `SUCCESS: Generated channel descriptions for "${title}" channel`,
+          langString,
         };
   }
 
@@ -168,16 +170,15 @@ export const addDescriptionForChannels = async (currentSatSlug) => {
 
   for (const channel of dbChannelsRes) {
     messages.push(`┌──────────────── "${channel.title}" ────────────────┐`);
-    const { extractAndUpdateMessages, shouldUpdateData } =
-      await extractAndUpdateData({
+    const { extractAndUpdateMessages, langString } = await extractAndUpdateData(
+      {
         title: channel.title,
         a_pid: channel.a_pid,
         is_radio: channel.is_radio,
-      });
-    messages.push(...extractAndUpdateMessages);
-    messages.push(
-      `└─────────────── "${shouldUpdateData.languages}" ──────────────────┘`
+      }
     );
+    messages.push(...extractAndUpdateMessages);
+    messages.push(`└──────── "${langString}" ───────────┘`);
 
     await sleep(500);
   }

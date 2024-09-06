@@ -81,7 +81,7 @@ const insertProgrammeChunk = async (data: IProgramme[]) => {
   `;
   const res = await poolExecute(sql);
   if (res instanceof Error) {
-    console.log('ERROR during programme chunk insertion:', res.message);
+    // console.log('ERROR during programme chunk insertion:', res.message);
     throw new Error(`DB INSERT data: ${res.message}`);
   }
 
@@ -101,7 +101,7 @@ const insertChannelChunk = async (data: IChannel[]) => {
   `;
   const res = await poolExecute(sql);
   if (res instanceof Error) {
-    console.log('ERROR during channel chunk insertion:', res.message);
+    // console.log('ERROR during channel chunk insertion:', res.message);
     throw new Error(`DB INSERT data: ${res.message}`);
   }
 };

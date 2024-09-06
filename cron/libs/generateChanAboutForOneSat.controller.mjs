@@ -33,13 +33,13 @@ const getSatChannelsFromDB = async (currentSatSlug) => {
     WHERE sat_slug = ? 
     AND (theme_id != 0 OR theme_id IS NULL)
     AND (description_en IS NULL OR description_en = '')
-    GROUP BY title;
+    GROUP BY title
     LIMIT ${SIMULTANEOUS_GENERATE_LIMIT}
   `;
   const res = await executePoolQuery(sql, [currentSatSlug]);
 
   return res instanceof Error
-    ? `ERROR: SELECT channel titles from satellite: "${currentSatSlug}"`
+    ? `ERROR: SELECT channel titles from satellite: "${currentSatSlug}". Error message: ${res.message}`
     : res;
 };
 

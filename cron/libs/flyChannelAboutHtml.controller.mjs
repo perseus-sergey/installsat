@@ -7,13 +7,15 @@ const { FLY_CHANNELS } = EDBTableTitles;
 
 const RELIABLE_THRESHOLD = 8;
 
-const generateAiText = async (channelTitle, language = '') => {
+const generateAiText = async ({ channelTitle, language, ifRadio }) => {
   const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
+  const tvRadio =
+    ifRadio === null ? 'TV or radio' : ifRadio === 1 ? 'radio' : 'TV';
 
   const model = genAI.getGenerativeModel({
     model: 'gemini-1.5-pro',
     systemInstruction: `
-The request concerns a television or radio channel.
+The request concerns a ${tvRadio} channel.
 The name of the channel is written as a transcription of the original name, so determine the country of origin of the channel yourself.
 RYRI - Rating of your reliable information (Number from 0 to 10).
 Write the answer in HTML format with the following structure:
@@ -186,8 +188,11 @@ export const updateGeneratedDataDB = async (
   return res instanceof Error ? res : res.affectedRows;
 };
 
-export const generateChannelAbout = async (channelTitle, language = '') => {
-  const aiText = await generateAiText(channelTitle, language);
+export const generateChannelAbout = async ({ channelTitle, language }) => {
+  const aiText = await generateAiText({
+    channelTitle,
+    language,
+  });
 
   if (!aiText) {
     return `ERROR: AI cannot generate content. Channel: ${channelTitle}`;

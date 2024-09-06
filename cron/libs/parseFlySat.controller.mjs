@@ -243,7 +243,11 @@ const insertTblChannels = async (currentSatSlug, parsedNewChannels) => {
       };
     }
 
-    const extractUpdateMessages = await extractAndUpdateData(channel);
+    const extractUpdateMessages = await extractAndUpdateData({
+      title: channel.title,
+      a_pid: channel.a_pid,
+      is_radio: channel.is_radio,
+    });
     insertTblChannelsMessages.push(...extractUpdateMessages);
 
     const values = [

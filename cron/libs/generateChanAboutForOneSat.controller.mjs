@@ -24,7 +24,7 @@ export const emptyChannelDescription = {
 
 const getSatChannelsFromDB = async (currentSatSlug) => {
   const sql = `
-    SELECT title, MAX(a_pid) as a_pid
+    SELECT title, MAX(a_pid) as a_pid, MAX(is_radio) as is_radio
     FROM ${FLY_CHANNELS} 
     WHERE sat_slug = ? 
     AND (theme_id != 0 OR theme_id IS NULL)
@@ -84,7 +84,7 @@ const getLanguageString = (aPids) => {
     .join(', ');
 };
 
-export const getShouldUpdateData = async (title, a_pid) => {
+const getShouldUpdateData = async (title, a_pid, is_radio) => {
   const findDbRes = await findInDbChannelAbout(title);
 
   if (findDbRes instanceof Error) {
@@ -97,7 +97,11 @@ export const getShouldUpdateData = async (title, a_pid) => {
   if (findDbRes.length === 0) {
     const langString = getLanguageString(a_pid);
 
-    const generatedDataRes = await generateChannelAbout(title, langString);
+    const generatedDataRes = await generateChannelAbout({
+      channelTitle: title,
+      language: langString,
+      ifRadio: is_radio,
+    });
 
     return typeof generatedDataRes === 'string'
       ? {
@@ -126,26 +130,27 @@ export const getShouldUpdateData = async (title, a_pid) => {
   };
 };
 
-export const extractAndUpdateData = async (channel) => {
+export const extractAndUpdateData = async ({ title, a_pid, is_radio }) => {
   const messages = [];
 
   const { shouldUpdateData, shouldUpdateMessage } = await getShouldUpdateData(
-    channel.title,
-    channel.a_pid
+    title,
+    a_pid,
+    is_radio
   );
 
   if (shouldUpdateMessage) messages.push(shouldUpdateMessage);
 
   const updateAllChanWithSameTitleRes = await updateGeneratedDataDB(
     shouldUpdateData,
-    channel.title
+    title
   );
   messages.push(
     updateAllChanWithSameTitleRes instanceof Error
-      ? `ERROR: DB UPDATE data for channels with title "${channel.title}". Error message: ${updateAllChanWithSameTitleRes.message}`
+      ? `ERROR: DB UPDATE data for channels with title "${title}". Error message: ${updateAllChanWithSameTitleRes.message}`
       : shouldUpdateData.genreId === 0
-        ? `- Add EMPTY descriptions for ${updateAllChanWithSameTitleRes} channel(s) with name "${channel.title}"`
-        : `SUCCESS: Add ${updateAllChanWithSameTitleRes} channel descriptions for "${channel.title}" channel(s)`
+        ? `- Add EMPTY descriptions for ${updateAllChanWithSameTitleRes} channel(s) with name "${title}"`
+        : `SUCCESS: Add ${updateAllChanWithSameTitleRes} channel descriptions for "${title}" channel(s)`
   );
 
   return messages;
@@ -159,7 +164,11 @@ export const addDescriptionForChannels = async (currentSatSlug) => {
 
   for (const channel of dbChannelsRes) {
     messages.push(`┌──────────────── "${channel.title}" ────────────────┐`);
-    const extractUpdateMessages = await extractAndUpdateData(channel);
+    const extractUpdateMessages = await extractAndUpdateData({
+      title: channel.title,
+      a_pid: channel.a_pid,
+      is_radio: channel.is_radio,
+    });
     messages.push(...extractUpdateMessages);
     messages.push(`└──────────── "${channel.a_pid}" ───────────┘`);
 

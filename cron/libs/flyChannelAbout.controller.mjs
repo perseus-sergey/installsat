@@ -6,13 +6,19 @@ const { FLY_CHANNELS } = EDBTableTitles;
 
 const RELIABLE_THRESHOLD = 8;
 
-const generateAiText = async (channelTitle, language = '') => {
+const generateAiText = async ({ channelTitle, language, ifRadio }) => {
   const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
+  const tvRadio =
+    ifRadio === undefined || ifRadio === null
+      ? 'TV or radio'
+      : ifRadio === 1
+        ? 'radio'
+        : 'TV';
 
   const model = genAI.getGenerativeModel({
     model: 'gemini-1.5-flash',
     systemInstruction: `
-The request concerns a television or radio channel.
+What do you know about this ${tvRadio} channel?
 The name of the channel is written as a transcription of the original name, so determine the country of origin of the channel yourself.
 
 Ensure all generated text is presented in a neutral, descriptive tone suitable for an encyclopedia or informative website entry.
@@ -20,7 +26,7 @@ Always use the original channel's name without translation, without declination 
 The content should be written in the third person, without direct appeals to the reader. 
 Avoid promotional language or calls to action, and focus on providing factual and descriptive content about the channel, its programs, and its significance. The tone should be entirely neutral and informative.
 
-RYRI - Rating of your reliable information (Number from 0 to 10).
+RYRI - Rating of your reliable information about this channel (Number from 0 to 10).
 
 Use this JSON schema:
 {
@@ -230,8 +236,12 @@ export const updateGeneratedDataDB = async (
   return res instanceof Error ? res : res.affectedRows;
 };
 
-export const generateChannelAbout = async (channelTitle, language = '') => {
-  const aiText = await generateAiText(channelTitle, language);
+export const generateChannelAbout = async ({
+  channelTitle,
+  language,
+  ifRadio,
+}) => {
+  const aiText = await generateAiText({ channelTitle, language, ifRadio });
 
   if (aiText instanceof Error) {
     return `ERROR: AI cannot generate content. Channel: ${channelTitle}. Error message: ${aiText.message}`;

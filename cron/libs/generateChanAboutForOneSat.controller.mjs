@@ -139,11 +139,8 @@ const getShouldUpdateData = async (title, a_pid, is_radio) => {
 export const extractAndUpdateData = async ({ title, a_pid, is_radio }) => {
   const messages = [];
 
-  const { shouldUpdateData, shouldUpdateMessage } = await getShouldUpdateData(
-    title,
-    a_pid,
-    is_radio
-  );
+  const { shouldUpdateData, shouldUpdateMessage, langString } =
+    await getShouldUpdateData(title, a_pid, is_radio);
 
   if (shouldUpdateMessage) messages.push(shouldUpdateMessage);
 
@@ -159,7 +156,7 @@ export const extractAndUpdateData = async ({ title, a_pid, is_radio }) => {
         : `SUCCESS: Add ${updateAllChanWithSameTitleRes} channel descriptions for "${title}" channel(s)`
   );
 
-  return { extractAndUpdateMessages: messages, shouldUpdateData };
+  return { extractAndUpdateMessages: messages, shouldUpdateData, langString };
 };
 
 export const addDescriptionForChannels = async (currentSatSlug) => {

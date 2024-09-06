@@ -8,7 +8,7 @@ import { audioLanguages, wrongAudio } from './languages.mjs';
 
 const { FLY_CHANNELS } = EDBTableTitles;
 
-const SIMULTANEOUS_GENERATE_LIMIT = 70;
+const SIMULTANEOUS_GENERATE_LIMIT = 50;
 
 export const emptyChannelDescription = {
   uaText: null,

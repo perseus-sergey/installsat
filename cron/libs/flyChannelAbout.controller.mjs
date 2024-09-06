@@ -7,101 +7,12 @@ const { FLY_CHANNELS } = EDBTableTitles;
 const RELIABLE_THRESHOLD = 8;
 
 const generateAiText = async ({ channelTitle, language, ifRadio }) => {
-  const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
   const tvRadio =
     ifRadio === undefined || ifRadio === null
       ? 'TV or radio'
       : ifRadio === 1
         ? 'radio'
         : 'TV';
-
-  const model = genAI.getGenerativeModel({
-    model: 'gemini-1.5-flash',
-    systemInstruction: `
-What do you know about this ${tvRadio} channel?
-The name of the channel is written as a transcription of the original name, so determine the country of origin of the channel yourself.
-
-Ensure all generated text is presented in a neutral, descriptive tone suitable for an encyclopedia or informative website entry.
-Always use the original channel's name without translation, without declination and enclose it in Unicode curly quotes (« »).
-The content should be written in the third person, without direct appeals to the reader. 
-Avoid promotional language or calls to action, and focus on providing factual and descriptive content about the channel, its programs, and its significance. The tone should be entirely neutral and informative.
-
-RYRI - Rating of your reliable information about this channel (Number from 0 to 10).
-
-Use this JSON schema:
-{
-  "type": "object",
-  "properties": {
-    "reliable-rate": {
-      "type": "number"
-    },
-    "category-number": {
-      "type": "number"
-    },
-    "description-en": {
-      "type": "string"
-    },
-    "description-ua": {
-      "type": "string"
-    },
-    "keywords-en": {
-      "type": "string"
-    },
-    "keywords-ua": {
-      "type": "string"
-    },
-    "text-en": {
-      "type": "string"
-    },
-    "text-ua": {
-      "type": "string"
-    },
-    "languages": {
-      "type": "string"
-    },
-    "site-url": {
-      "type": "string"
-    }
-  }
-}
-
-where:
-
-- 'reliable-rate' - RYRI.
-
-- 'description-en', 'description-ua' - If RYRI < ${RELIABLE_THRESHOLD}, insert "NULL", otherwise Provide a concise description (in English and Ukrainian) for this channel, suitable for a meta description tag for SEO, from 50 to 200 characters in each language.
-
-- 'keywords-en', 'keywords-ua' - If RYRI < ${RELIABLE_THRESHOLD}, insert "NULL", otherwise List relevant keywords (in English and Ukrainian) for this channel, separated by commas, suitable for a meta keywords tag for SEO, from 50 to 200 characters in each language.
-
-- 'text-en', 'text-ua' - If RYRI < ${RELIABLE_THRESHOLD}, insert "NULL", otherwise write up to 10 paragraphs (<p>) for each languages (English and Ukrainian) that provide a descriptive overview of the channel. 
-  - e.g., '<p>[Paragraph 1]</p><p>[Paragraph 2]</p><p>[Paragraph N]</p>'
- - Do not add newline character (\n).
-  - Wrap relevant and important keywords or phrases in <strong> tags to optimize for SEO, ensuring it enhances the readability and value of the content without appearing excessive or spammy.
-  - The text must be unique and not plagiarized.
-  - Do not insert any links into the content.
-  - If the channel is Russian news, write about it in a skeptical style.
-
-- 'languages' - Specify the main language of the channel (e.g., English, Persian). Up to 150 characters.
-
-- 'site-url' - Include the URL of the official site for this channel. If you are not sure about the existence of such a site, leave the field blank ("").
-
-- 'category-number' - Choose a category number that best describes the channel from the following list:
-   - 1 - Public channels broadcasting popular shows, programs, movies and news
-   - 2 - News and business channels
-   - 3 - Movies
-   - 4 - Sport
-   - 5 - Leisure, entertainment, popular talk shows, movies, music
-   - 6 - For Kids
-   - 7 - XXX, Adults
-   - 8 - Music
-   - 9 - Educational content, science, nature, history 
-   - 10 - Entertainment, Humor
-   - 11 - Leisure, Sports, Entertainment. About hobbies, non-traditional sports
-   - 12 - Religious and spiritual channels offering content related to various beliefs and spiritual practices
-   - 13 - TV Sales, shopping channels and infomercial networks 
-   - 14 - Fashion
-   `,
-  });
 
   const generationConfig = {
     temperature: 0.5,
@@ -115,17 +26,109 @@ where:
 
   const prompt = `Channel name: "${channelTitle}"${language ? `, Probable broadcast or translate language: ${language}` : ''}`;
 
-  const result = await model.generateContent(prompt, generationConfig);
-
-  const { response } = result;
-  const cleanResult = response.text().replace(/```json|```/g, '');
-
   try {
+    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
+
+    const model = genAI.getGenerativeModel({
+      model: 'gemini-1.5-flash',
+      systemInstruction: `
+  What do you know about this ${tvRadio} channel?
+  The name of the channel is written as a transcription of the original name, so determine the country of origin of the channel yourself.
+  
+  Ensure all generated text is presented in a neutral, descriptive tone suitable for an encyclopedia or informative website entry.
+  Always use the original channel's name without translation, without declination and enclose it in Unicode curly quotes (« »).
+  The content should be written in the third person, without direct appeals to the reader. 
+  Avoid promotional language or calls to action, and focus on providing factual and descriptive content about the channel, its programs, and its significance. The tone should be entirely neutral and informative.
+  
+  RYRI - Rating of your reliable information about this channel (Number from 0 to 10).
+  
+  Use this JSON schema:
+  {
+    "type": "object",
+    "properties": {
+      "reliable-rate": {
+        "type": "number"
+      },
+      "category-number": {
+        "type": "number"
+      },
+      "description-en": {
+        "type": "string"
+      },
+      "description-ua": {
+        "type": "string"
+      },
+      "keywords-en": {
+        "type": "string"
+      },
+      "keywords-ua": {
+        "type": "string"
+      },
+      "text-en": {
+        "type": "string"
+      },
+      "text-ua": {
+        "type": "string"
+      },
+      "languages": {
+        "type": "string"
+      },
+      "site-url": {
+        "type": "string"
+      }
+    }
+  }
+  
+  where:
+  
+  - 'reliable-rate' - RYRI.
+  
+  - 'description-en', 'description-ua' - If RYRI < ${RELIABLE_THRESHOLD}, insert "NULL", otherwise Provide a concise description (in English and Ukrainian) for this channel, suitable for a meta description tag for SEO, from 50 to 200 characters in each language.
+  
+  - 'keywords-en', 'keywords-ua' - If RYRI < ${RELIABLE_THRESHOLD}, insert "NULL", otherwise List relevant keywords (in English and Ukrainian) for this channel, separated by commas, suitable for a meta keywords tag for SEO, from 50 to 200 characters in each language.
+  
+  - 'text-en', 'text-ua' - If RYRI < ${RELIABLE_THRESHOLD}, insert "NULL", otherwise write up to 10 paragraphs (<p>) for each languages (English and Ukrainian) that provide a descriptive overview of the channel. 
+    - e.g., '<p>[Paragraph 1]</p><p>[Paragraph 2]</p><p>[Paragraph N]</p>'
+   - Do not add newline character (\n).
+    - Wrap relevant and important keywords or phrases in <strong> tags to optimize for SEO, ensuring it enhances the readability and value of the content without appearing excessive or spammy.
+    - The text must be unique and not plagiarized.
+    - Do not insert any links into the content.
+    - If the channel is Russian news, write about it in a skeptical style.
+  
+  - 'languages' - Specify the main language of the channel (e.g., English, Persian). Up to 150 characters.
+  
+  - 'site-url' - Include the URL of the official site for this channel. If you are not sure about the existence of such a site, leave the field blank ("").
+  
+  - 'category-number' - Choose a category number that best describes the channel from the following list:
+     - 1 - Public channels broadcasting popular shows, programs, movies and news
+     - 2 - News and business channels
+     - 3 - Movies
+     - 4 - Sport
+     - 5 - Leisure, entertainment, popular talk shows, movies, music
+     - 6 - For Kids
+     - 7 - XXX, Adults
+     - 8 - Music
+     - 9 - Educational content, science, nature, history 
+     - 10 - Entertainment, Humor
+     - 11 - Leisure, Sports, Entertainment. About hobbies, non-traditional sports
+     - 12 - Religious and spiritual channels offering content related to various beliefs and spiritual practices
+     - 13 - TV Sales, shopping channels and infomercial networks 
+     - 14 - Fashion
+     `,
+    });
+
+    const result = await model.generateContent(prompt, generationConfig);
+
+    const { response } = result;
+    const cleanResult = response.text().replace(/```json|```/g, '');
+
     const jsonParsed = JSON.parse(cleanResult);
 
     return jsonParsed;
   } catch (error) {
-    return error instanceof Error ? error : new Error('Wrong JSON response');
+    return error instanceof Error
+      ? error
+      : new Error('Wrong AI generation of JSON parsing');
   }
 };
 

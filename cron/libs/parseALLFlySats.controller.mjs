@@ -29,7 +29,7 @@ const getDataFromDB = async () => {
   `;
   const res = await executePoolQuery(sql);
   if (res instanceof Error) {
-    console.log('ERROR during SELECT data:', res.message);
+    addMessage('ERROR during SELECT data:', res);
     throw res;
   }
 

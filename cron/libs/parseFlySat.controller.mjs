@@ -69,7 +69,7 @@ const getSatChannelsFromDB = async (currentSatSlug, title = undefined) => {
   // const res = await executePoolQuery<IFlyChannel[]>(sql);
   const res = await executePoolQuery(sql);
   if (res instanceof Error) {
-    console.log('ERROR during SELECT data:', res.message);
+    // console.log('ERROR during SELECT data:', res.message);
     throw res;
   }
 

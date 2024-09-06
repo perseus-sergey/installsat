@@ -6,7 +6,7 @@ const useCommentNode = () => {
     commentId: number,
     item: string
   ): IComments {
-    console.log('🚀 ~ useCommentNode ~ tree:', tree);
+    // console.log('🚀 ~ useCommentNode ~ tree:', tree);
     if (tree.id === commentId) {
       tree.items.push({
         id: new Date().getTime(),

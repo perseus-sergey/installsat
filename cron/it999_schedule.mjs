@@ -58,7 +58,7 @@ const insertProgrammeChunk = async (data) => {
   `;
   const res = await executePoolQuery(sql);
   if (res instanceof Error) {
-    console.log('ERROR during programme chunk insertion:', res.message);
+    // console.log('ERROR during programme chunk insertion:', res.message);
     throw new Error(`DB INSERT data: ${res.message}`);
   }
 

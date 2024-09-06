@@ -83,7 +83,7 @@ where:
 
 - 'languages' - Specify the main language of the channel (e.g., English, Persian). Up to 150 characters.
 
-- 'site-url' - Include the URL of the official site for this channel. if not available, leave the tag blank.
+- 'site-url' - Include the URL of the official site for this channel. If you are not sure about the existence of such a site, leave the field blank ("").
 
 - 'category-number' - Choose a category number that best describes the channel from the following list:
    - 1 - Public

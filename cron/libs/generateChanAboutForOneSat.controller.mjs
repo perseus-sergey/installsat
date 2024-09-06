@@ -170,7 +170,7 @@ export const addDescriptionForChannels = async (currentSatSlug) => {
       is_radio: channel.is_radio,
     });
     messages.push(...extractAndUpdateMessages);
-    messages.push(`└─────────────────────────────────┘`);
+    messages.push(`└─────────────── "${channel.a_pid}" ──────────────────┘`);
 
     await sleep(500);
   }
@@ -190,4 +190,4 @@ export const addDescriptionForChannels = async (currentSatSlug) => {
 //         official_site_url = null,
 //         theme_id = null
 //       WHERE title = 'Prime One'
-//       WHERE title IN ('title1', 'title2', 'title3)
+//       WHERE title IN ('title1', 'title2', 'title3')

@@ -24,7 +24,7 @@ export const emptyChannelDescription = {
 
 const getSatChannelsFromDB = async (currentSatSlug) => {
   const sql = `
-    SELECT title, MAX(a_pid) as a_pid, MAX(is_radio) as is_radio
+    SELECT title, GROUP_CONCAT(a_pid SEPARATOR '${DB_ARRAY_SEPARATOR}') as a_pid, MAX(is_radio) as is_radio
     FROM ${FLY_CHANNELS} 
     WHERE sat_slug = ? 
     AND (theme_id != 0 OR theme_id IS NULL)
@@ -190,3 +190,4 @@ export const addDescriptionForChannels = async (currentSatSlug) => {
 //         official_site_url = null,
 //         theme_id = null
 //       WHERE title = 'Prime One'
+//       WHERE title IN ('title1', 'title2', 'title3)

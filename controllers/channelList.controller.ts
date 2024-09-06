@@ -245,7 +245,6 @@ export const getFlySatChannels = cache(
   ${notT2mi}
   ORDER BY ch.frequency, ch.polarization, ch.is_radio, ch.sid, ch.title
   `;
-    console.log('🚀 ~ sql:', sql);
     const resp = await poolExecute<IFlyChannel[]>(sql, [satSlug]);
 
     return resp instanceof Error || resp.length === 0

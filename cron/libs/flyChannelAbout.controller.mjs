@@ -1,4 +1,8 @@
-import { GoogleGenerativeAI } from '@google/generative-ai';
+import {
+  GoogleGenerativeAI,
+  HarmBlockThreshold,
+  HarmCategory,
+} from '@google/generative-ai';
 import { EDBTableTitles } from './commons.mjs';
 import { executePoolQuery } from './mysqldb.mjs';
 
@@ -19,8 +23,28 @@ const generateAiText = async ({ channelTitle, language, ifRadio }) => {
     topP: 0.95,
     topK: 64,
     maxOutputTokens: 4000,
+    stopSequences: ['something for everyone'],
     responseMimeType: 'text/plain',
   };
+
+  const safetySettings = [
+    {
+      category: HarmCategory.HARM_CATEGORY_HARASSMENT,
+      threshold: HarmBlockThreshold.BLOCK_ONLY_HIGH,
+    },
+    {
+      category: HarmCategory.HARM_CATEGORY_HATE_SPEECH,
+      threshold: HarmBlockThreshold.BLOCK_ONLY_HIGH,
+    },
+    {
+      category: HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT,
+      threshold: HarmBlockThreshold.BLOCK_NONE,
+    },
+    {
+      category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,
+      threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
+    },
+  ];
 
   // Channel name: "Gamma Cinema 5", Probable broadcast language: العربية (Arabic)
 
@@ -31,6 +55,7 @@ const generateAiText = async ({ channelTitle, language, ifRadio }) => {
 
     const model = genAI.getGenerativeModel({
       model: 'gemini-1.5-flash',
+      safetySettings,
       systemInstruction: `
   What do you know about this ${tvRadio} channel?
   The name of the channel is written as a transcription of the original name, so determine the country of origin of the channel yourself.

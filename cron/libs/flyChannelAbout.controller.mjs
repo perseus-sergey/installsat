@@ -69,9 +69,9 @@ where:
 
 - 'reliable-rate' - RYRI.
 
-- 'description-en', 'description-ua' - If RYRI < ${RELIABLE_THRESHOLD}, insert "NULL", otherwise Provide a concise description (in English and Ukrainian) for this channel, suitable for a meta description tag for SEO, up to 200 characters in each language.
+- 'description-en', 'description-ua' - If RYRI < ${RELIABLE_THRESHOLD}, insert "NULL", otherwise Provide a concise description (in English and Ukrainian) for this channel, suitable for a meta description tag for SEO, from 50 to 200 characters in each language.
 
-- 'keywords-en', 'keywords-ua' - If RYRI < ${RELIABLE_THRESHOLD}, insert "NULL", otherwise List relevant keywords (in English and Ukrainian) for this channel, separated by commas, suitable for a meta keywords tag for SEO, up to 200 characters in each language.
+- 'keywords-en', 'keywords-ua' - If RYRI < ${RELIABLE_THRESHOLD}, insert "NULL", otherwise List relevant keywords (in English and Ukrainian) for this channel, separated by commas, suitable for a meta keywords tag for SEO, from 50 to 200 characters in each language.
 
 - 'text-en', 'text-ua' - If RYRI < ${RELIABLE_THRESHOLD}, insert "NULL", otherwise write up to 10 paragraphs (<p>) for each languages (English and Ukrainian) that provide a descriptive overview of the channel. 
   - e.g., '<p>[Paragraph 1]</p><p>[Paragraph 2]</p><p>[Paragraph N]</p>'
@@ -138,11 +138,11 @@ const extractDataFromAiJson = (aiObject) => {
     return `ERROR: Reliable AI Rate ${reliableRate} < allowed threshold (${RELIABLE_THRESHOLD})`;
 
   const enDescription = aiObject['description-en'].trim();
-  if (!enDescription || enDescription.length < 50 || enDescription.length > 220)
+  if (!enDescription || enDescription.length < 50 || enDescription.length > 230)
     return getErrorStr('EN_DESCRIPTION');
 
   const enKeywords = aiObject['keywords-en'].trim();
-  if (!enKeywords || enKeywords.length < 50 || enKeywords.length > 220)
+  if (!enKeywords || enKeywords.length < 50 || enKeywords.length > 230)
     return getErrorStr('EN_KEYWORDS');
 
   const languages = aiObject['languages'].trim();
@@ -157,11 +157,11 @@ const extractDataFromAiJson = (aiObject) => {
   if (!genreId) return getErrorStr('GENRE_ID');
 
   const uaDescription = aiObject['description-ua'].trim();
-  if (!uaDescription || uaDescription.length < 50 || uaDescription.length > 220)
+  if (!uaDescription || uaDescription.length < 50 || uaDescription.length > 230)
     return getErrorStr('UA_DESCRIPTION');
 
   const uaKeywords = aiObject['keywords-ua'].trim();
-  if (!uaKeywords || uaKeywords.length < 50 || uaKeywords.length > 220)
+  if (!uaKeywords || uaKeywords.length < 50 || uaKeywords.length > 230)
     return getErrorStr('UA_KEYWORDS');
 
   const enText = aiObject['text-en'].trim();

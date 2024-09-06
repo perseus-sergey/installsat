@@ -24,12 +24,16 @@ export const emptyChannelDescription = {
 
 const getSatChannelsFromDB = async (currentSatSlug) => {
   const sql = `
-    SELECT title, GROUP_CONCAT(a_pid SEPARATOR '${DB_ARRAY_SEPARATOR}') as a_pid, MAX(is_radio) as is_radio
-    FROM ${FLY_CHANNELS} 
+    SELECT title, 
+       (SELECT GROUP_CONCAT(a_pid SEPARATOR '${DB_ARRAY_SEPARATOR}')
+        FROM ${FLY_CHANNELS} 
+        WHERE title = fc.title) as a_pid, 
+       MAX(is_radio) as is_radio
+    FROM ${FLY_CHANNELS} fc
     WHERE sat_slug = ? 
     AND (theme_id != 0 OR theme_id IS NULL)
-    AND (description_en IS NULL OR description_en = '') 
-    GROUP BY title
+    AND (description_en IS NULL OR description_en = '')
+    GROUP BY title;
     LIMIT ${SIMULTANEOUS_GENERATE_LIMIT}
   `;
   const res = await executePoolQuery(sql, [currentSatSlug]);

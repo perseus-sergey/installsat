@@ -123,7 +123,6 @@ export default async function Page({ params }: IChannelProps) {
   const lang = getELangKey(params[EUrlBaseParam.LANG]);
 
   const sqlResult = await getDBChannel(slug, lang);
-  console.log('🚀 ~ Page ~ sqlResult:', sqlResult);
 
   if (!sqlResult) notFound();
 

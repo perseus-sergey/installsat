@@ -138,11 +138,11 @@ const extractDataFromAiJson = (aiObject) => {
     return `ERROR: Reliable AI Rate ${reliableRate} < allowed threshold (${RELIABLE_THRESHOLD})`;
 
   const enDescription = aiObject['description-en'].trim();
-  if (!enDescription || enDescription.length < 50 || enDescription.length > 200)
+  if (!enDescription || enDescription.length < 50 || enDescription.length > 220)
     return getErrorStr('EN_DESCRIPTION');
 
   const enKeywords = aiObject['keywords-en'].trim();
-  if (!enKeywords || enKeywords.length < 50 || enKeywords.length > 200)
+  if (!enKeywords || enKeywords.length < 50 || enKeywords.length > 220)
     return getErrorStr('EN_KEYWORDS');
 
   const languages = aiObject['languages'].trim();
@@ -157,11 +157,11 @@ const extractDataFromAiJson = (aiObject) => {
   if (!genreId) return getErrorStr('GENRE_ID');
 
   const uaDescription = aiObject['description-ua'].trim();
-  if (!uaDescription || uaDescription.length < 50 || uaDescription.length > 200)
+  if (!uaDescription || uaDescription.length < 50 || uaDescription.length > 220)
     return getErrorStr('UA_DESCRIPTION');
 
   const uaKeywords = aiObject['keywords-ua'].trim();
-  if (!uaKeywords || uaKeywords.length < 50 || uaKeywords.length > 200)
+  if (!uaKeywords || uaKeywords.length < 50 || uaKeywords.length > 220)
     return getErrorStr('UA_KEYWORDS');
 
   const enText = aiObject['text-en'].trim();

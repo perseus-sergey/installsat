@@ -86,19 +86,19 @@ where:
 - 'site-url' - Include the URL of the official site for this channel. If you are not sure about the existence of such a site, leave the field blank ("").
 
 - 'category-number' - Choose a category number that best describes the channel from the following list:
-   - 1 - Public
-   - 2 - News
+   - 1 - Public channels broadcasting popular shows, programs, movies and news
+   - 2 - News and business channels
    - 3 - Movies
    - 4 - Sport
-   - 5 - Leisure, entertainment
+   - 5 - Leisure, entertainment, popular talk shows, movies, music
    - 6 - For Kids
    - 7 - XXX, Adults
    - 8 - Music
-   - 9 - Educational
+   - 9 - Educational content, science, nature, history 
    - 10 - Entertainment, Humor
-   - 11 - Leisure, Sports, Entertainment
-   - 12 - Religious, Spiritual
-   - 13 - TV Sales
+   - 11 - Leisure, Sports, Entertainment. About hobbies, non-traditional sports
+   - 12 - Religious and spiritual channels offering content related to various beliefs and spiritual practices
+   - 13 - TV Sales, shopping channels and infomercial networks 
    - 14 - Fashion
    `,
   });
@@ -115,7 +115,6 @@ where:
 
   const prompt = `Channel name: "${channelTitle}"${language ? `, Probable broadcast or translate language: ${language}` : ''}`;
 
-  console.log('🚀 ~ generateAiText ~ prompt:', prompt);
   const result = await model.generateContent(prompt, generationConfig);
 
   const { response } = result;
@@ -132,38 +131,52 @@ where:
 
 const extractDataFromAiJson = (aiObject) => {
   const getErrorStr = (errName) =>
-    `ERROR: cannot extract channel ${errName} from AI channel: ${$.html()}`;
+    `ERROR: cannot extract channel ${errName} from AI generated descriptions`;
 
   const reliableRate = Number(aiObject['reliable-rate']);
   if (!reliableRate || reliableRate < RELIABLE_THRESHOLD)
     return `ERROR: Reliable AI Rate ${reliableRate} < allowed threshold (${RELIABLE_THRESHOLD})`;
 
   const enDescription = aiObject['description-en'].trim();
-  if (!enDescription) return getErrorStr('EN_DESCRIPTION');
+  if (
+    !enDescription ||
+    enDescription.length < 100 ||
+    enDescription.length > 200
+  )
+    return getErrorStr('EN_DESCRIPTION');
 
   const enKeywords = aiObject['keywords-en'].trim();
-  if (!enKeywords) return getErrorStr('EN_KEYWORDS');
+  if (!enKeywords || enKeywords.length < 100 || enKeywords.length > 200)
+    return getErrorStr('EN_KEYWORDS');
 
   const languages = aiObject['languages'].trim();
-  // if (!languages) return getErrorStr('LANGUAGES');
+  if (languages.length > 150)
+    return `ERROR: Extracting channel languages from AI generated. Length: ${languages.length} characters > 150 allowed`;
 
   const siteUrl = aiObject['site-url'].trim();
-  // if (!siteUrl) return getErrorStr('SITE_URL');
+  if (siteUrl.length > 150)
+    return `ERROR: Extracting Site URL from AI generated. Length: ${siteUrl.length} characters > 150 allowed`;
 
-  const genreId = aiObject['category-number'];
+  const genreId = Number(aiObject['category-number']);
   if (!genreId) return getErrorStr('GENRE_ID');
 
   const uaDescription = aiObject['description-ua'].trim();
-  if (!uaDescription) return getErrorStr('UA_DESCRIPTION');
+  if (
+    !uaDescription ||
+    uaDescription.length < 100 ||
+    uaDescription.length > 200
+  )
+    return getErrorStr('UA_DESCRIPTION');
 
   const uaKeywords = aiObject['keywords-ua'].trim();
-  if (!uaKeywords) return getErrorStr('UA_KEYWORDS');
+  if (!uaKeywords || uaKeywords.length < 100 || uaKeywords.length > 200)
+    return getErrorStr('UA_KEYWORDS');
 
   const enText = aiObject['text-en'].trim();
-  if (!enText) return getErrorStr('EN_CONTENT');
+  if (!enText || enText.length < 100) return getErrorStr('EN_CONTENT');
 
   const uaText = aiObject['text-ua'].trim();
-  if (!uaText) return getErrorStr('UA_CONTENT');
+  if (!uaText || uaText.length < 100) return getErrorStr('UA_CONTENT');
 
   return {
     uaText,

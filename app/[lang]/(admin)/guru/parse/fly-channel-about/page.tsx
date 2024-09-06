@@ -3,6 +3,10 @@ import { TSearchParams } from '@/models/ui.model';
 import { validSearchParam } from '@/libs/utils/validSearchParam';
 import { EUrlSearchParam } from '@/models/url.model';
 import React from 'react';
+// import {
+//   generateChannelAbout,
+//   updateGeneratedDataDB,
+// } from '@/cron/libs/flyChannelAbout.controller';
 import {
   generateChannelAbout,
   updateGeneratedDataDB,
@@ -64,10 +68,11 @@ export default async function Page({
       <p className="text-xl text-red-500 font-bold">{checkChanInDb.message}</p>
     );
 
-  const generatedData = await generateChannelAbout(
-    urlChannelTitle,
-    urlLanguage
-  );
+  const generatedData = await generateChannelAbout({
+    channelTitle: urlChannelTitle,
+    language: urlLanguage,
+    ifRadio: null,
+  });
 
   const insertToDbRes = await updateGeneratedDataDB(
     typeof generatedData === 'string' ? emptyChannelDescription : generatedData,

@@ -11,20 +11,30 @@ const INTERVAL_FROM_LAST_UPDATE = 2;
 const BASE_URL = process.env.BASE_URL;
 const BASE_GURU_PATH = `${BASE_URL}/en/${EUrlAdminParam.BASE_PATH}`;
 
-const sendReportMail = async (errorMessages) => {
-  const messages = errorMessages.length
-    ? `<p style="color: blue; font-size: 20px; padding: 10px 0">Messages:</p><ul style="padding-bottom: 10px">${errorMessages.map((msg) => `<li>${msg}</li>`).join('')}</ul>`
+const sendReportMail = async (messages, newSatList, overSats) => {
+  const messages = messages.length
+    ? `<p style="color: blue; font-size: 20px; padding: 10px 0">Messages:</p><ul style="padding-bottom: 10px">${messages.map((msg) => `<li>${msg}</li>`).join('')}</ul>`
+    : '';
+
+  const newSats = newSatList.length
+    ? `<p style="color: blue; font-size: 20px; padding: 10px 0">New Satellites on FlySat:</p><ul style="padding-bottom: 10px">${newSatList.map((sat) => `<li>${JSON.stringify(sat, null, 2)}</li>`).join('')}</ul>`
+    : '';
+
+  const overSatList = overSats.length
+    ? `<p style="color: blue; font-size: 20px; padding: 10px 0">Over Sats: Satellites in My DB, That Not Found in FlySat:</p><ul style="padding-bottom: 10px">${overSats.map((sat) => `<li>${JSON.stringify(sat, null, 2)}</li>`).join('')}</ul>`
     : '';
 
   await sendMail({
-    title: 'Parse Trans News',
-    subject: `Parse transponder news`,
+    title: 'Parse Fly Satellites Report',
+    subject: `Parse Fly Satellites`,
     body: `
+      ${newSats}
+      ${overSatList}
       ${messages}
     <hr />
     <p>
       <a style="color: blue; font-size: 20px; padding: 10px 0" target="_blank" href="${BASE_GURU_PATH}/${EUrlAdminParam.PARSE}" >
-      Parse Transponder news again
+      Parse Fly Satellites again
       </a>
     </p>
     <p>
@@ -45,9 +55,21 @@ const PARSE_LIST_OF_SATELLITES_URL = 'https://flysat.com/en/satellitelist';
 const { FLY_SATELLITES } = EDBTableTitles;
 
 const R_U_N = async () => {
-  const { messages } = await parseProcess(INTERVAL_FROM_LAST_UPDATE);
+  const { messages, newSatList, overSats } = await parseProcess(
+    INTERVAL_FROM_LAST_UPDATE
+  );
 
-  await sendReportMail(messages);
+  await sendReportMail(messages, newSatList, overSats);
 };
 
 R_U_N();
+
+// interface ISat {
+//   cluster: string,
+//   title: string,
+//   url_link: string,
+//   slug: string,
+//   position: string,
+//   grade: string,
+//   date_upd: Date,
+// }

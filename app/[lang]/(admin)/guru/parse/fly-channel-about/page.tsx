@@ -11,7 +11,6 @@ import {
   generateChannelAbout,
   updateGeneratedDataDB,
 } from '@/cron/libs/flyChannelAbout.controller.mjs';
-import { emptyChannelDescription } from '@cron/libs/generateChanAboutForOneSat.controller.mjs';
 import { EDBTableTitles } from '@/cron/libs/commons.mjs';
 import { poolExecute } from '@/libs/db/mysqldb';
 
@@ -68,19 +67,15 @@ export default async function Page({
       <p className="text-xl text-red-500 font-bold">{checkChanInDb.message}</p>
     );
 
-  const generatedData = await generateChannelAbout({
-    channelTitle: urlChannelTitle,
-    language: urlLanguage,
-    ifRadio: null,
-  });
-
-  if (generatedData === 'string')
-    return (
-      <p className="text-xl text-red-500 font-bold">{`ERROR: GENERATE AI DATA. Error message: ${generatedData}`}</p>
-    );
+  const { aiDescription: generatedData, error: aiGeneratedError } =
+    await generateChannelAbout({
+      channelTitle: urlChannelTitle,
+      language: urlLanguage,
+      ifRadio: null,
+    });
 
   const insertToDbRes = await updateGeneratedDataDB(
-    typeof generatedData === 'string' ? emptyChannelDescription : generatedData,
+    generatedData,
     urlChannelTitle,
     true
   );
@@ -99,18 +94,18 @@ export default async function Page({
         {insertToDbRes}
       </p>
 
-      {typeof generatedData === 'string' ? (
-        <p className="text-xl text-red-500 font-bold">{generatedData}</p>
-      ) : (
-        Object.entries(generatedData).map(([key, val]) => (
-          <>
-            <h2 className="text-center text-blue-700 text-xl" key={key}>
-              {key}
-            </h2>
-            <div>{val}</div>
-          </>
-        ))
+      {aiGeneratedError && (
+        <p className="text-xl text-red-500 font-bold">{`ERROR: GENERATE AI DATA. Error message: ${aiGeneratedError}`}</p>
       )}
+
+      {Object.entries(generatedData).map(([key, val]) => (
+        <>
+          <h2 className="text-center text-blue-700 text-xl" key={key}>
+            {key}
+          </h2>
+          <div>{val}</div>
+        </>
+      ))}
     </>
   );
 }

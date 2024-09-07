@@ -8,7 +8,33 @@ import { executePoolQuery } from './mysqldb.mjs';
 
 const { FLY_CHANNELS } = EDBTableTitles;
 
-export const RELIABLE_THRESHOLD = 8;
+const RELIABLE_THRESHOLD = 8;
+
+export const emptyChannelDescription = {
+  uaText: null,
+  enText: null,
+  enDescription: null,
+  uaDescription: null,
+  uaKeywords: null,
+  enKeywords: null,
+  languages: null,
+  siteUrl: null,
+  genreId: 0,
+};
+
+const fullEmptyDescription = { ...emptyChannelDescription, genreId: null };
+
+// interface IChannelAbout {
+//   uaText: string;
+//   enText: string;
+//   enDescription: string;
+//   uaDescription: string;
+//   uaKeywords: string;
+//   enKeywords: string;
+//   languages: string;
+//   siteUrl: string;
+//   genreId: number;
+// }
 
 const generateAiText = async ({ channelTitle, language, ifRadio }) => {
   const tvRadio =
@@ -162,66 +188,96 @@ const extractDataFromAiJson = (aiObject) => {
     `ERROR: cannot extract channel ${errName} from AI generated descriptions`;
 
   const reliableRate = parseInt(aiObject['reliable-rate'], 10);
-  if (isNaN(reliableRate)) return getErrorStr('RELIABLE-RATE');
+  if (isNaN(reliableRate))
+    return {
+      aiDescription: fullEmptyDescription,
+      error: getErrorStr('RELIABLE-RATE'),
+    };
+  if (reliableRate < RELIABLE_THRESHOLD)
+    return {
+      aiDescription: emptyChannelDescription,
+      error: `ERROR: Reliable AI Rate ${reliableRate} < allowed threshold (${RELIABLE_THRESHOLD})`,
+    };
 
   const enDescription = aiObject['description-en'].trim();
-  if (!enDescription || enDescription.length < 50 || enDescription.length > 250)
-    return getErrorStr('EN_DESCRIPTION');
+  if (!enDescription || enDescription.length < 50 || enDescription.length > 230)
+    return {
+      aiDescription: fullEmptyDescription,
+      error: getErrorStr('EN_DESCRIPTION'),
+    };
 
   const enKeywords = aiObject['keywords-en'].trim();
-  if (!enKeywords || enKeywords.length < 50 || enKeywords.length > 250)
-    return getErrorStr('EN_KEYWORDS');
+  if (!enKeywords || enKeywords.length < 50 || enKeywords.length > 230)
+    return {
+      aiDescription: fullEmptyDescription,
+      error: getErrorStr('EN_KEYWORDS'),
+    };
 
   const languages = aiObject['languages'].trim();
   if (languages.length > 150)
-    return `ERROR: Extracting channel languages from AI generated. Length: ${languages.length} characters > 150 allowed`;
+    return {
+      aiDescription: fullEmptyDescription,
+      error: `ERROR: Extracting channel languages from AI generated. Length: ${languages.length} characters > 150 allowed`,
+    };
 
   const siteUrl = aiObject['site-url'].trim();
   if (siteUrl.length > 150)
-    return `ERROR: Extracting Site URL from AI generated. Length: ${siteUrl.length} characters > 150 allowed`;
+    return {
+      aiDescription: fullEmptyDescription,
+      error: `ERROR: Extracting Site URL from AI generated. Length: ${siteUrl.length} characters > 150 allowed`,
+    };
 
-  const genreId = Number(aiObject['category-number']);
-  if (!genreId) return getErrorStr('GENRE_ID');
+  const genreId = parseInt(aiObject['category-number'], 10);
+  if (!genreId)
+    return {
+      aiDescription: fullEmptyDescription,
+      error: getErrorStr('GENRE_ID'),
+    };
 
   const uaDescription = aiObject['description-ua'].trim();
-  if (!uaDescription || uaDescription.length < 50 || uaDescription.length > 250)
-    return getErrorStr('UA_DESCRIPTION');
+  if (!uaDescription || uaDescription.length < 50 || uaDescription.length > 230)
+    return {
+      aiDescription: fullEmptyDescription,
+      error: getErrorStr('UA_DESCRIPTION'),
+    };
 
   const uaKeywords = aiObject['keywords-ua'].trim();
-  if (!uaKeywords || uaKeywords.length < 50 || uaKeywords.length > 250)
-    return getErrorStr('UA_KEYWORDS');
+  if (!uaKeywords || uaKeywords.length < 50 || uaKeywords.length > 230)
+    return {
+      aiDescription: fullEmptyDescription,
+      error: getErrorStr('UA_KEYWORDS'),
+    };
 
   const enText = aiObject['text-en'].trim();
-  if (!enText || enText.length < 100) return getErrorStr('EN_CONTENT');
+  if (!enText || enText.length < 100)
+    return {
+      aiDescription: fullEmptyDescription,
+      error: getErrorStr('EN_CONTENT'),
+    };
 
   const uaText = aiObject['text-ua'].trim();
-  if (!uaText || uaText.length < 100) return getErrorStr('UA_CONTENT');
+  if (!uaText || uaText.length < 100)
+    return {
+      aiDescription: fullEmptyDescription,
+      error: getErrorStr('UA_CONTENT'),
+    };
 
   return {
-    uaText,
-    languages,
-    siteUrl,
-    enText,
-    enDescription,
-    uaDescription,
-    uaKeywords,
-    enKeywords,
-    genreId,
-    reliableRate,
+    aiDescription: {
+      uaText,
+      languages,
+      siteUrl,
+      enText,
+      enDescription,
+      uaDescription,
+      uaKeywords,
+      enKeywords,
+      genreId,
+      reliableRate,
+    },
+    error: null,
   };
 };
-
-// interface IChannelAbout {
-//   uaText: string;
-//   enText: string;
-//   enDescription: string;
-//   uaDescription: string;
-//   uaKeywords: string;
-//   enKeywords: string;
-//   languages: string;
-//   siteUrl: string;
-//   genreId: number;
-// }
 
 export const updateGeneratedDataDB = async (
   {
@@ -277,16 +333,20 @@ export const generateChannelAbout = async ({
   const aiText = await generateAiText({ channelTitle, language, ifRadio });
 
   if (aiText instanceof Error) {
-    return `ERROR: AI cannot generate content. Channel: ${channelTitle}. Error message: ${aiText.message}`;
+    return {
+      aiDescription: fullEmptyDescription,
+      error: `ERROR: AI cannot generate content. Channel: ${channelTitle}. Error message: ${aiText.message}`,
+    };
   }
 
   if (!aiText) {
-    return `ERROR: AI cannot generate content. Channel: ${channelTitle}`;
+    return {
+      aiDescription: fullEmptyDescription,
+      error: `ERROR: AI cannot generate content. Channel: ${channelTitle}`,
+    };
   }
 
   const extractedAiData = extractDataFromAiJson(aiText);
 
-  return typeof extractedAiData === 'string'
-    ? `${extractedAiData}. Channel: ${channelTitle}`
-    : extractedAiData;
+  return extractedAiData;
 };

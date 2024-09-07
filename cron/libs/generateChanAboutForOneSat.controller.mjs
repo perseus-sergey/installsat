@@ -3,25 +3,12 @@ import { EDBTableTitles, DB_ARRAY_SEPARATOR, sleep } from './commons.mjs';
 import {
   generateChannelAbout,
   updateGeneratedDataDB,
-  RELIABLE_THRESHOLD,
 } from './flyChannelAbout.controller.mjs';
 import { audioLanguages, wrongAudio } from './languages.mjs';
 
 const { FLY_CHANNELS } = EDBTableTitles;
 
 const SIMULTANEOUS_GENERATE_LIMIT = 5;
-
-export const emptyChannelDescription = {
-  uaText: null,
-  enText: null,
-  enDescription: null,
-  uaDescription: null,
-  uaKeywords: null,
-  enKeywords: null,
-  languages: null,
-  siteUrl: null,
-  genreId: 0,
-};
 
 // interface IDbChannelDataAbout {
 //   title: string | null;
@@ -123,23 +110,13 @@ const getAiChannelAbout = async (dbChannelData) => {
     ifRadio: dbChannelData.is_radio,
   });
 
-  return typeof generatedDataRes === 'string'
-    ? {
-        shouldUpdateData: { ...emptyChannelDescription, genreId: null },
-        shouldUpdateMessage: generatedDataRes,
-        langString,
-      }
-    : generatedDataRes.reliableRate < RELIABLE_THRESHOLD
-      ? {
-          shouldUpdateData: emptyChannelDescription,
-          shouldUpdateMessage: `ERROR: Reliable AI Rate ${generatedDataRes.reliableRate} < allowed threshold (${RELIABLE_THRESHOLD})`,
-          langString,
-        }
-      : {
-          shouldUpdateData: generatedDataRes,
-          shouldUpdateMessage: `SUCCESS: Generated channel descriptions for "${dbChannelData.title}" channel`,
-          langString,
-        };
+  return {
+    shouldUpdateData: generatedDataRes.aiDescription,
+    shouldUpdateMessage:
+      generatedDataRes.error ||
+      `SUCCESS: Generated channel descriptions for "${dbChannelData.title}" channel`,
+    langString,
+  };
 };
 
 const getShouldUpdateData = async (dbChannelData) => {

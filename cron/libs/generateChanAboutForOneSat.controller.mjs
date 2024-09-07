@@ -3,6 +3,7 @@ import { EDBTableTitles, DB_ARRAY_SEPARATOR, sleep } from './commons.mjs';
 import {
   generateChannelAbout,
   updateGeneratedDataDB,
+  RELIABLE_THRESHOLD,
 } from './flyChannelAbout.controller.mjs';
 import { audioLanguages, wrongAudio } from './languages.mjs';
 
@@ -109,15 +110,21 @@ const getShouldUpdateData = async (title, a_pid, is_radio) => {
 
     return typeof generatedDataRes === 'string'
       ? {
-          shouldUpdateData: emptyChannelDescription,
+          shouldUpdateData: { ...emptyChannelDescription, genreId: null },
           shouldUpdateMessage: generatedDataRes,
           langString,
         }
-      : {
-          shouldUpdateData: generatedDataRes,
-          shouldUpdateMessage: `SUCCESS: Generated channel descriptions for "${title}" channel`,
-          langString,
-        };
+      : generatedDataRes.reliableRate < RELIABLE_THRESHOLD
+        ? {
+            shouldUpdateData: emptyChannelDescription,
+            shouldUpdateMessage: `ERROR: Reliable AI Rate ${generatedDataRes.reliableRate} < allowed threshold (${RELIABLE_THRESHOLD})`,
+            langString,
+          }
+        : {
+            shouldUpdateData: generatedDataRes,
+            shouldUpdateMessage: `SUCCESS: Generated channel descriptions for "${title}" channel`,
+            langString,
+          };
   }
 
   return {

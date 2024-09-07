@@ -74,6 +74,11 @@ export default async function Page({
     ifRadio: null,
   });
 
+  if (generatedData === 'string')
+    return (
+      <p className="text-xl text-red-500 font-bold">{`ERROR: GENERATE AI DATA. Error message: ${generatedData}`}</p>
+    );
+
   const insertToDbRes = await updateGeneratedDataDB(
     typeof generatedData === 'string' ? emptyChannelDescription : generatedData,
     urlChannelTitle,
@@ -82,7 +87,7 @@ export default async function Page({
 
   if (insertToDbRes instanceof Error)
     return (
-      <p className="text-xl text-red-500 font-bold">{`ERROR: DB INSERT for channel "${urlChannelTitle}". Error message: ${insertToDbRes}`}</p>
+      <p className="text-xl text-red-500 font-bold">{`ERROR: DB INSERT for channel "${urlChannelTitle}". Error message: ${insertToDbRes.message}`}</p>
     );
 
   return (

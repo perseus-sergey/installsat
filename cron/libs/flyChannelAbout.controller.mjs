@@ -8,7 +8,7 @@ import { executePoolQuery } from './mysqldb.mjs';
 
 const { FLY_CHANNELS } = EDBTableTitles;
 
-const RELIABLE_THRESHOLD = 8;
+export const RELIABLE_THRESHOLD = 8;
 
 const generateAiText = async ({ channelTitle, language, ifRadio }) => {
   const tvRadio =
@@ -161,9 +161,8 @@ const extractDataFromAiJson = (aiObject) => {
   const getErrorStr = (errName) =>
     `ERROR: cannot extract channel ${errName} from AI generated descriptions`;
 
-  const reliableRate = Number(aiObject['reliable-rate']);
-  if (!reliableRate || reliableRate < RELIABLE_THRESHOLD)
-    return `ERROR: Reliable AI Rate ${reliableRate} < allowed threshold (${RELIABLE_THRESHOLD})`;
+  const reliableRate = parseInt(aiObject['reliable-rate'], 10);
+  if (isNaN(reliableRate)) return getErrorStr('RELIABLE-RATE');
 
   const enDescription = aiObject['description-en'].trim();
   if (!enDescription || enDescription.length < 50 || enDescription.length > 230)

@@ -287,5 +287,7 @@ export const generateChannelAbout = async ({
 
   const extractedAiData = extractDataFromAiJson(aiText);
 
-  return extractedAiData;
+  return typeof extractedAiData === 'string'
+    ? `${extractedAiData}. Channel: ${channelTitle}`
+    : extractedAiData;
 };

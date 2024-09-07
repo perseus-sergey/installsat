@@ -20,14 +20,11 @@ export const dynamic = 'force-dynamic';
 // Find approximate grades from search params for spysok-kanaliv-suputnyka
 // Change all Link to SeoLink
 // change all reactSelects
-// Remove console logging from production parsers (mjs & tsx)
 // Check SEO by removing elements from the page step by step
 // Parse biss from lugasat (Or satsat.info) by sat grade & frequency & title
-// add valid description to StartArticleSections
 // add color description to channel filters
 // improve similar channels & similar articles blocks
 // add comment block to fly channels with separate db tbl (fly_comments_channel))
-// refresh email in production
 // add json-ld
 // Add cluster choice
 // add image generator

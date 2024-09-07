@@ -157,10 +157,10 @@ export const extractAndUpdateData = async (dbChannelData) => {
   );
   messages.push(
     updateAllChanWithSameTitleRes instanceof Error
-      ? `ERROR: DB UPDATE data for channels with title "${title}". Error message: ${updateAllChanWithSameTitleRes.message}`
+      ? `ERROR: DB UPDATE data for channels with title "${dbChannelData.title}". Error message: ${updateAllChanWithSameTitleRes.message}`
       : shouldUpdateData.genreId === 0
-        ? `- Add EMPTY descriptions for ${updateAllChanWithSameTitleRes} channel(s) with name "${title}"`
-        : `SUCCESS: Add ${updateAllChanWithSameTitleRes} channel descriptions for "${title}" channel(s)`
+        ? `- Add EMPTY descriptions for ${updateAllChanWithSameTitleRes} channel(s) with name "${dbChannelData.title}"`
+        : `SUCCESS: Add ${updateAllChanWithSameTitleRes} channel descriptions for "${dbChannelData.title}" channel(s)`
   );
 
   return { extractAndUpdateMessages: messages, langString };

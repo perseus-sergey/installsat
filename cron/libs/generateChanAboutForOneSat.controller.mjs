@@ -23,48 +23,73 @@ export const emptyChannelDescription = {
   genreId: 0,
 };
 
+// interface IDbChannelDataAbout {
+//   title: string | null;
+//   text_ua: string | null;
+//   text_en: string | null;
+//   description_en: string | null;
+//   description_ua: string | null;
+//   keywords_ua: string | null;
+//   keywords_en: string | null;
+//   languages: string | null;
+//   official_site_url: string | null;
+//   theme_id: number | null;
+//   a_pid: string | null;
+//   is_radio: 0 | 1 | null;
+// }
+
 const getSatChannelsFromDB = async (currentSatSlug) => {
   const sql = `
-    SELECT title, 
-       (SELECT GROUP_CONCAT(a_pid SEPARATOR '${DB_ARRAY_SEPARATOR}')
-        FROM ${FLY_CHANNELS} 
-        WHERE title = fc.title) as a_pid, 
-       MAX(is_radio) as is_radio
-    FROM ${FLY_CHANNELS} fc
-    WHERE sat_slug = ? 
-    AND (theme_id != 0 OR theme_id IS NULL)
-    AND (description_en IS NULL OR description_en = '')
-    GROUP BY title
-    LIMIT ${SIMULTANEOUS_GENERATE_LIMIT}
+    SELECT 
+    F.title, 
+    MAX(F.is_radio) as is_radio,
+    (SELECT GROUP_CONCAT(a_pid SEPARATOR '${DB_ARRAY_SEPARATOR}')
+     FROM ${FLY_CHANNELS} 
+     WHERE title = F.title) as a_pid,
+    (SELECT MAX(text_en) 
+     FROM ${FLY_CHANNELS} 
+     WHERE title = F.title) as text_en,
+    (SELECT MAX(description_en) 
+     FROM ${FLY_CHANNELS} 
+     WHERE title = F.title) as description_en,
+    (SELECT MAX(description_ua) 
+     FROM ${FLY_CHANNELS} 
+     WHERE title = F.title) as description_ua,
+    (SELECT MAX(keywords_ua) 
+     FROM ${FLY_CHANNELS} 
+     WHERE title = F.title) as keywords_ua,
+    (SELECT MAX(keywords_en) 
+     FROM ${FLY_CHANNELS} 
+     WHERE title = F.title) as keywords_en,
+    (SELECT MAX(languages) 
+     FROM ${FLY_CHANNELS} 
+     WHERE title = F.title) as languages,
+    (SELECT MAX(official_site_url) 
+     FROM ${FLY_CHANNELS} 
+     WHERE title = F.title) as official_site_url,
+    (SELECT MAX(theme_id) 
+     FROM ${FLY_CHANNELS} 
+     WHERE title = F.title) as theme_id
+FROM 
+    ${FLY_CHANNELS} F
+WHERE 
+    F.sat_slug = ?
+    AND (F.theme_id != 0 OR F.theme_id IS NULL)
+    AND (F.description_en IS NULL OR F.description_en = '')
+GROUP BY 
+    F.title
+LIMIT 
+    ${SIMULTANEOUS_GENERATE_LIMIT};
+
   `;
   const res = await executePoolQuery(sql, [currentSatSlug]);
+  // const res = (await executePoolQuery(sql, [currentSatSlug])) as
+  //   | IDbChannelDataAbout[]
+  //   | Error;
 
   return res instanceof Error
     ? `ERROR: SELECT channel titles from satellite: "${currentSatSlug}". Error message: ${res.message}`
     : res;
-};
-
-export const findInDbChannelAbout = async (title) => {
-  const sql = `
-    SELECT 
-      text_ua,
-      text_en,
-      description_en,
-      description_ua,
-      keywords_ua,
-      keywords_en,
-      languages,
-      official_site_url,
-      theme_id
-    FROM ${FLY_CHANNELS}
-    WHERE title = ? 
-    AND description_en IS NOT NULL 
-    AND description_en != ''
-    LIMIT 1
-  `;
-  const res = await executePoolQuery(sql, [title]);
-
-  return res;
 };
 
 const getLanguageString = (aPids) => {
@@ -89,71 +114,69 @@ const getLanguageString = (aPids) => {
     .join(', ');
 };
 
-const getShouldUpdateData = async (title, a_pid, is_radio) => {
-  const findDbRes = await findInDbChannelAbout(title);
+const getAiChannelAbout = async (dbChannelData) => {
+  const langString = getLanguageString(dbChannelData.a_pid);
 
-  if (findDbRes instanceof Error) {
-    return {
-      shouldUpdateData: emptyChannelDescription,
-      shouldUpdateMessage: `ERROR: SELECT data when searching channel About in DB for channel "${title}". Message: ${findDbRes.message}`,
-    };
-  }
+  const generatedDataRes = await generateChannelAbout({
+    channelTitle: dbChannelData.title,
+    language: langString,
+    ifRadio: dbChannelData.is_radio,
+  });
 
-  if (findDbRes.length === 0) {
-    const langString = getLanguageString(a_pid);
-
-    const generatedDataRes = await generateChannelAbout({
-      channelTitle: title,
-      language: langString,
-      ifRadio: is_radio,
-    });
-
-    return typeof generatedDataRes === 'string'
+  return typeof generatedDataRes === 'string'
+    ? {
+        shouldUpdateData: { ...emptyChannelDescription, genreId: null },
+        shouldUpdateMessage: generatedDataRes,
+        langString,
+      }
+    : generatedDataRes.reliableRate < RELIABLE_THRESHOLD
       ? {
-          shouldUpdateData: { ...emptyChannelDescription, genreId: null },
-          shouldUpdateMessage: generatedDataRes,
+          shouldUpdateData: emptyChannelDescription,
+          shouldUpdateMessage: `ERROR: Reliable AI Rate ${generatedDataRes.reliableRate} < allowed threshold (${RELIABLE_THRESHOLD})`,
           langString,
         }
-      : generatedDataRes.reliableRate < RELIABLE_THRESHOLD
-        ? {
-            shouldUpdateData: emptyChannelDescription,
-            shouldUpdateMessage: `ERROR: Reliable AI Rate ${generatedDataRes.reliableRate} < allowed threshold (${RELIABLE_THRESHOLD})`,
-            langString,
-          }
-        : {
-            shouldUpdateData: generatedDataRes,
-            shouldUpdateMessage: `SUCCESS: Generated channel descriptions for "${title}" channel`,
-            langString,
-          };
-  }
-
-  return {
-    shouldUpdateData: {
-      uaText: findDbRes[0].text_ua,
-      enText: findDbRes[0].text_en,
-      enDescription: findDbRes[0].description_en,
-      uaDescription: findDbRes[0].description_ua,
-      uaKeywords: findDbRes[0].keywords_ua,
-      enKeywords: findDbRes[0].keywords_en,
-      languages: findDbRes[0].languages,
-      siteUrl: findDbRes[0].official_site_url,
-      genreId: findDbRes[0].theme_id,
-    },
-    shouldUpdateMessage: null,
-  };
+      : {
+          shouldUpdateData: generatedDataRes,
+          shouldUpdateMessage: `SUCCESS: Generated channel descriptions for "${dbChannelData.title}" channel`,
+          langString,
+        };
 };
 
-export const extractAndUpdateData = async ({ title, a_pid, is_radio }) => {
+const getShouldUpdateData = async (dbChannelData) => {
+  return dbChannelData.text_ua &&
+    dbChannelData.text_en &&
+    dbChannelData.description_en &&
+    dbChannelData.description_ua &&
+    dbChannelData.theme_id
+    ? {
+        shouldUpdateData: {
+          uaText: dbChannelData.text_ua,
+          enText: dbChannelData.text_en,
+          enDescription: dbChannelData.description_en,
+          uaDescription: dbChannelData.description_ua,
+          uaKeywords: dbChannelData.keywords_ua,
+          enKeywords: dbChannelData.keywords_en,
+          languages: dbChannelData.languages,
+          siteUrl: dbChannelData.official_site_url,
+          genreId: dbChannelData.theme_id,
+        },
+        shouldUpdateMessage: null,
+        langString: '',
+      }
+    : getAiChannelAbout(dbChannelData);
+};
+
+export const extractAndUpdateData = async (dbChannelData) => {
   const messages = [];
 
   const { shouldUpdateData, shouldUpdateMessage, langString } =
-    await getShouldUpdateData(title, a_pid, is_radio);
+    await getShouldUpdateData(dbChannelData);
 
   if (shouldUpdateMessage) messages.push(shouldUpdateMessage);
 
   const updateAllChanWithSameTitleRes = await updateGeneratedDataDB(
     shouldUpdateData,
-    title
+    dbChannelData.title
   );
   messages.push(
     updateAllChanWithSameTitleRes instanceof Error
@@ -163,7 +186,7 @@ export const extractAndUpdateData = async ({ title, a_pid, is_radio }) => {
         : `SUCCESS: Add ${updateAllChanWithSameTitleRes} channel descriptions for "${title}" channel(s)`
   );
 
-  return { extractAndUpdateMessages: messages, shouldUpdateData, langString };
+  return { extractAndUpdateMessages: messages, langString };
 };
 
 export const addDescriptionForChannels = async (currentSatSlug) => {
@@ -174,13 +197,8 @@ export const addDescriptionForChannels = async (currentSatSlug) => {
 
   for (const channel of dbChannelsRes) {
     messages.push(`┌──────────────── "${channel.title}" ────────────────┐`);
-    const { extractAndUpdateMessages, langString } = await extractAndUpdateData(
-      {
-        title: channel.title,
-        a_pid: channel.a_pid,
-        is_radio: channel.is_radio,
-      }
-    );
+    const { extractAndUpdateMessages, langString } =
+      await extractAndUpdateData(channel);
     messages.push(...extractAndUpdateMessages);
     messages.push(`└──────── "${langString}" ───────────┘`);
 

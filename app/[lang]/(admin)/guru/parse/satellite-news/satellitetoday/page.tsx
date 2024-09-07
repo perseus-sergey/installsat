@@ -19,11 +19,12 @@ interface IArticle {
   slug: string;
 }
 
-const IS_LOGGED = true;
+const isProductionMode = process.env.NODE_ENV === 'production';
+const IS_LOGGED = !isProductionMode;
+
 const PARSE_URL = 'https://www.satellitetoday.com/category/launch/';
 // const NEWS_LENGTH_PER_SOURCE = 3;
 // const BASE_URL = process.env.BASE_URL;
-const isProductionMode = process.env.NODE_ENV === 'production';
 // const BASE_GURU_PATH = `${BASE_URL}/en/${EUrlAdminParam.BASE_PATH}`;
 
 let messages: string[] = [];

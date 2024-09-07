@@ -9,7 +9,7 @@ import { DateTime } from 'luxon';
 import puppeteer from 'puppeteer';
 import * as cheerio from 'cheerio';
 
-const isProductionMode = process.env.PRODUCTION_MODE === 'true';
+const isProductionMode = process.env.NODE_ENV === 'production';
 
 const IS_LOGGED = !isProductionMode;
 const PARSE_LIST_OF_SATELLITES_URL = 'https://flysat.com/en/satellitelist';

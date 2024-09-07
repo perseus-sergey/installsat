@@ -33,7 +33,7 @@ import * as cheerio from 'cheerio';
 // const BASE_URL = process.env.BASE_URL;
 export const PARSE_URL_BASE = 'https://www.flysat.com/en/satellite/';
 
-const isProductionMode = process.env.PRODUCTION_MODE === 'true';
+const isProductionMode = process.env.NODE_ENV === 'production';
 
 const IS_LOGGED = !isProductionMode;
 const { FLY_CHANNELS, FLY_SATELLITES } = EDBTableTitles;

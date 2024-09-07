@@ -22,7 +22,9 @@ interface IArticle {
   category: string;
 }
 
-const IS_LOGGED = true;
+const isProductionMode = process.env.NODE_ENV === 'production';
+const IS_LOGGED = !isProductionMode;
+
 const { ARTICLE: ARTICLE_TBL } = EDBTableTitles;
 
 let messages: string[] = [];

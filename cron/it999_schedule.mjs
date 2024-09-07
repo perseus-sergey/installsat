@@ -12,7 +12,9 @@ import { clearTable } from './libs/parse.controller.mjs';
 import { createGunzip } from 'zlib';
 import sax from 'sax';
 
-const IS_LOGGED = true;
+const isProductionMode = process.env.NODE_ENV === 'production';
+const IS_LOGGED = !isProductionMode;
+
 const MAX_TABLE_LINES = 2000000;
 const BATCH_SIZE = 8096;
 

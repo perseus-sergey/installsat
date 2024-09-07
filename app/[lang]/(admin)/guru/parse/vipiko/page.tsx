@@ -37,7 +37,9 @@ interface IChannel {
   vipiko_id: string;
 }
 
-const IS_LOGGED = true;
+const isProductionMode = process.env.NODE_ENV === 'production';
+const IS_LOGGED = !isProductionMode;
+
 const MAX_TABLE_LINES = 2000000;
 const BATCH_SIZE = 4096;
 

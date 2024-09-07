@@ -18,7 +18,7 @@ import {
 
 const BASE_URL = process.env.BASE_URL;
 const BASE_GURU_PATH = `${BASE_URL}/en/${EUrlAdminParam.BASE_PATH}`;
-const isProductionMode = process.env.PRODUCTION_MODE === 'true';
+const isProductionMode = process.env.NODE_ENV === 'production';
 const { TRANS_NEWS } = EDBTableTitles;
 
 const PARSE_URL = 'https://www.flysat.com/en/news';

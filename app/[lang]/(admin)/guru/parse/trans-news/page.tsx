@@ -43,7 +43,7 @@ export interface ITblDigestParse {
 }
 
 const BASE_URL = process.env.BASE_URL;
-const isProductionMode = process.env.PRODUCTION_MODE === 'true';
+const isProductionMode = process.env.NODE_ENV === 'production';
 
 const SHOW_ONLY = false;
 const PARSE_URL = 'https://www.flysat.com/en/news';

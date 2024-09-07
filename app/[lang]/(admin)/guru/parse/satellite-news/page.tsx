@@ -36,9 +36,10 @@ interface IArticle {
   category: string;
 }
 
-const IS_LOGGED = true;
-const BASE_URL = process.env.BASE_URL;
 const isProductionMode = process.env.NODE_ENV === 'production';
+const IS_LOGGED = !isProductionMode;
+
+const BASE_URL = process.env.BASE_URL;
 const BASE_GURU_PATH = `${BASE_URL}/en/${EUrlAdminParam.BASE_PATH}`;
 const { ARTICLE: ARTICLE_TBL } = EDBTableTitles;
 

@@ -44,7 +44,7 @@ const PARALLEL_LIMIT = 2;
 const PARSE_BATCH_SIZE = 5;
 
 const BASE_URL = process.env.BASE_URL;
-const isProductionMode = process.env.PRODUCTION_MODE === 'true';
+const isProductionMode = process.env.NODE_ENV === 'production';
 
 const IS_LOGGED = !isProductionMode;
 const PARSE_URL = 'https://flysat.com/en/satellitelist';

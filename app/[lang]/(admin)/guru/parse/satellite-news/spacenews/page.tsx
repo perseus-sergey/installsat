@@ -18,9 +18,10 @@ interface IArticle {
   slug: string;
 }
 
-const IS_LOGGED = true;
 const PARSE_URL = 'https://spacenews.com/section/news-archive/';
+
 const isProductionMode = process.env.NODE_ENV === 'production';
+const IS_LOGGED = !isProductionMode;
 
 let messages: string[] = [];
 

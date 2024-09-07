@@ -165,11 +165,11 @@ const extractDataFromAiJson = (aiObject) => {
   if (isNaN(reliableRate)) return getErrorStr('RELIABLE-RATE');
 
   const enDescription = aiObject['description-en'].trim();
-  if (!enDescription || enDescription.length < 50 || enDescription.length > 230)
+  if (!enDescription || enDescription.length < 50 || enDescription.length > 250)
     return getErrorStr('EN_DESCRIPTION');
 
   const enKeywords = aiObject['keywords-en'].trim();
-  if (!enKeywords || enKeywords.length < 50 || enKeywords.length > 230)
+  if (!enKeywords || enKeywords.length < 50 || enKeywords.length > 250)
     return getErrorStr('EN_KEYWORDS');
 
   const languages = aiObject['languages'].trim();
@@ -184,11 +184,11 @@ const extractDataFromAiJson = (aiObject) => {
   if (!genreId) return getErrorStr('GENRE_ID');
 
   const uaDescription = aiObject['description-ua'].trim();
-  if (!uaDescription || uaDescription.length < 50 || uaDescription.length > 230)
+  if (!uaDescription || uaDescription.length < 50 || uaDescription.length > 250)
     return getErrorStr('UA_DESCRIPTION');
 
   const uaKeywords = aiObject['keywords-ua'].trim();
-  if (!uaKeywords || uaKeywords.length < 50 || uaKeywords.length > 230)
+  if (!uaKeywords || uaKeywords.length < 50 || uaKeywords.length > 250)
     return getErrorStr('UA_KEYWORDS');
 
   const enText = aiObject['text-en'].trim();

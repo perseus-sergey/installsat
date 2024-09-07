@@ -216,6 +216,58 @@ const setFreeChannelCount = async (currentSatSlug) => {
     : `SUCCESS: "SET free_count(${resCounts[0].freeCount}) & all_count(${resCounts[0].allCount})" for sat "${currentSatSlug}"`;
 };
 
+// interface IDbChannelDataAbout {
+//   title: string | null;
+//   text_ua: string | null;
+//   text_en: string | null;
+//   description_en: string | null;
+//   description_ua: string | null;
+//   keywords_ua: string | null;
+//   keywords_en: string | null;
+//   languages: string | null;
+//   official_site_url: string | null;
+//   theme_id: number | null;
+//   a_pid: string | null;
+//   is_radio: 0 | 1 | null;
+// }
+
+const getAboutOfChannelsFromDB = async (channelTitles) => {
+  const placeholders = new Array(channelTitles.length).fill('?').join(', ');
+  const sql = `
+    SELECT 
+        title, 
+        MAX(is_radio) AS is_radio,
+        GROUP_CONCAT(a_pid SEPARATOR '${DB_ARRAY_SEPARATOR}') AS a_pid,
+        MAX(text_en) AS text_en,
+        MAX(text_ua) AS text_ua,
+        MAX(description_en) AS description_en,
+        MAX(description_ua) AS description_ua,
+        MAX(keywords_ua) AS keywords_ua,
+        MAX(keywords_en) AS keywords_en,
+        MAX(languages) AS languages,
+        MAX(official_site_url) AS official_site_url,
+        MAX(theme_id) AS theme_id
+    FROM 
+        ${FLY_CHANNELS}
+    WHERE 
+        title IN (${placeholders})
+        AND (theme_id != 0 OR theme_id IS NULL)
+        AND (description_en IS NULL OR description_en = '')
+    GROUP BY 
+        title
+  `;
+
+  const res = await executePoolQuery(sql, [...channelTitles]);
+
+  // const res = (await executePoolQuery(sql, [...channelTitles])) as
+  //   | IDbChannelDataAbout[]
+  //   | Error;
+
+  return res instanceof Error
+    ? `ERROR: SELECT data of channels for channel titles : "${[...channelTitles]}". Error message: ${res.message}`
+    : res;
+};
+
 const insertTblChannels = async (currentSatSlug, parsedNewChannels) => {
   if (!parsedNewChannels.length) {
     return {
@@ -230,6 +282,7 @@ const insertTblChannels = async (currentSatSlug, parsedNewChannels) => {
   let insertCount = 0;
   const validValues = [];
   const placeholders = [];
+  const channelTitles = [];
 
   for (const channel of parsedNewChannels) {
     const { slug, message } = createSlug(channel.title);
@@ -242,14 +295,6 @@ const insertTblChannels = async (currentSatSlug, parsedNewChannels) => {
         ],
       };
     }
-
-    const { extractAndUpdateMessages, shouldUpdateData } =
-      await extractAndUpdateData({
-        title: channel.title,
-        a_pid: channel.a_pid,
-        is_radio: channel.is_radio,
-      });
-    insertTblChannelsMessages.push(...extractAndUpdateMessages);
 
     const values = [
       slug,
@@ -272,17 +317,9 @@ const insertTblChannels = async (currentSatSlug, parsedNewChannels) => {
       dateNow,
       2,
       0,
-      shouldUpdateData.uaText,
-      shouldUpdateData.enText,
-      shouldUpdateData.enDescription,
-      shouldUpdateData.uaDescription,
-      shouldUpdateData.uaKeywords,
-      shouldUpdateData.enKeywords,
-      shouldUpdateData.languages,
-      shouldUpdateData.siteUrl,
-      shouldUpdateData.genreId,
     ];
 
+    channelTitles.push(channel.title);
     validValues.push(...values);
     placeholders.push(`(${new Array(values.length).fill('?').join(', ')})`);
   }
@@ -319,16 +356,7 @@ const insertTblChannels = async (currentSatSlug, parsedNewChannels) => {
       \`encryption\`,
       \`date_updated\`,
       \`package_id\`,
-      \`is_removed\`,
-      \`text_ua\`,
-      \`text_en\`,
-      \`description_en\`,
-      \`description_ua\`,
-      \`keywords_ua\`,
-      \`keywords_en\`,
-      \`languages\`,
-      \`official_site_url\`,
-      \`theme_id\`
+      \`is_removed\`
     )
     VALUES ${placeholders.join(', ')};
   `;
@@ -343,6 +371,18 @@ const insertTblChannels = async (currentSatSlug, parsedNewChannels) => {
       );
 
   insertCount = res instanceof Error ? 0 : res.affectedRows;
+
+  const dbChannelsRes = await getAboutOfChannelsFromDB(channelTitles);
+  if (typeof dbChannelsRes === 'string')
+    return {
+      insertCount,
+      insertTblChannelsMessages: [...insertTblChannelsMessages, dbChannelsRes],
+    };
+
+  for (const channel of dbChannelsRes) {
+    const { extractAndUpdateMessages } = await extractAndUpdateData(channel);
+    insertTblChannelsMessages.push(...extractAndUpdateMessages);
+  }
 
   return { insertCount, insertTblChannelsMessages };
 };

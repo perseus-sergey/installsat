@@ -20,7 +20,7 @@ const Footer = ({ lang }: { lang: ELanguage }) => (
           return (
             <Fragment key={i}>
               {i ? (
-                <span className={styles.separator}>{MENU_SEPARATOR}</span>
+                <li className={styles.separator}>{MENU_SEPARATOR}</li>
               ) : null}
               <li>
                 <SeoLink

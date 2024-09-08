@@ -224,7 +224,6 @@ const setFreeChannelCount = async (currentSatSlug) => {
 //   description_ua: string | null;
 //   keywords_ua: string | null;
 //   keywords_en: string | null;
-//   languages: string | null;
 //   official_site_url: string | null;
 //   theme_id: number | null;
 //   a_pid: string | null;
@@ -244,7 +243,6 @@ const getAboutOfChannelsFromDB = async (channelTitles) => {
         MAX(description_ua) AS description_ua,
         MAX(keywords_ua) AS keywords_ua,
         MAX(keywords_en) AS keywords_en,
-        MAX(languages) AS languages,
         MAX(official_site_url) AS official_site_url,
         MAX(theme_id) AS theme_id
     FROM 

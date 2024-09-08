@@ -7,6 +7,7 @@ import Link from 'next/link';
 import { EUrlBaseParam } from '@/models/url.model';
 import { ELanguage } from '@/models/ui.model';
 import { CHANNEL_LIST_ANCHOR_START } from '@/models/channelList.model';
+import SeoLink from '../ui/SeoLink/SeoLink';
 
 interface ISimilarChannelProps {
   chanParams: ISimilarChannel;
@@ -17,6 +18,7 @@ interface ISimilarChannelProps {
 interface ISimilarFlyChannelProps {
   chanParams: IFlyChannel;
   lang: ELanguage;
+  chanName: string;
 }
 
 const SimilarChannel = ({
@@ -101,6 +103,7 @@ export const SimilarFlyChannel = ({
     // official_broadcast_url,
   },
   lang,
+  chanName,
 }: ISimilarFlyChannelProps) => {
   const {
     // getOnlineChannelTitle,
@@ -122,19 +125,31 @@ export const SimilarFlyChannel = ({
     return (
       <>
         {packageTitle[lang]}{' '}
-        <Link
+        <SeoLink
           href={`/${lang}/${EUrlBaseParam.PACKAGE_CHANNEL_LIST}/${package_slug}`}
+          title={
+            lang === ELanguage.UA
+              ? `Дивитись параметри каналу "${chanName}" в пакеті "${package_title}"`
+              : `Watch "${chanName}" channel parameters on satellite "${package_title}"`
+          }
         >
           {package_title}
-        </Link>
+        </SeoLink>
       </>
     );
 
   return (
     <>
-      <Link href={`/${lang}/${EUrlBaseParam.SAT_CHANNEL_LIST}/${sat_slug}`}>
+      <SeoLink
+        href={`/${lang}/${EUrlBaseParam.SAT_CHANNEL_LIST}/${sat_slug}`}
+        title={
+          lang === ELanguage.UA
+            ? `Дивитись параметри каналу "${chanName}" на супутнику "${sat_title} ${sat_position}"`
+            : `Watch "${chanName}" channel parameters on satellite "${sat_title} ${sat_position}"`
+        }
+      >
         {getSatChannelTitle(sat_title, sat_position)[lang]}
-      </Link>{' '}
+      </SeoLink>{' '}
       {getFrequencyTitle(frequency)[lang]}
     </>
   );

@@ -18,7 +18,6 @@ const SIMULTANEOUS_GENERATE_LIMIT = 50;
 //   description_ua: string | null;
 //   keywords_ua: string | null;
 //   keywords_en: string | null;
-//   languages: string | null;
 //   official_site_url: string | null;
 //   theme_id: number | null;
 //   a_pid: string | null;
@@ -48,10 +47,7 @@ const getSatChannelsFromDB = async (currentSatSlug) => {
     (SELECT MAX(keywords_en) 
      FROM ${FLY_CHANNELS} 
      WHERE title = F.title) as keywords_en,
-    (SELECT MAX(languages) 
-     FROM ${FLY_CHANNELS} 
-     WHERE title = F.title) as languages,
-    (SELECT MAX(official_site_url) 
+    (SELECT MAX(official_site_url)
      FROM ${FLY_CHANNELS} 
      WHERE title = F.title) as official_site_url,
     (SELECT MAX(theme_id) 
@@ -133,7 +129,6 @@ const getShouldUpdateData = async (dbChannelData) => {
           uaDescription: dbChannelData.description_ua,
           uaKeywords: dbChannelData.keywords_ua,
           enKeywords: dbChannelData.keywords_en,
-          languages: dbChannelData.languages,
           siteUrl: dbChannelData.official_site_url,
           genreId: dbChannelData.theme_id,
         },
@@ -193,7 +188,6 @@ export const addDescriptionForChannels = async (currentSatSlug) => {
 //         description_ua = null,
 //         keywords_ua = null,
 //         keywords_en = null,
-//         languages = null,
 //         official_site_url = null,
 //         theme_id = null
 //       WHERE title = 'Prime One'

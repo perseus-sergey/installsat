@@ -206,7 +206,11 @@ export default async function Page({ params }: IPageProps) {
           similarTitle={`${simChannelsBefore.title[lang]}"${title}"`}
           similarArticlesMapped={similarChannels.map((chan) => (
             <li key={chan.slug}>
-              <SimilarFlyChannel lang={lang} chanParams={chan} />
+              <SimilarFlyChannel
+                lang={lang}
+                chanParams={chan}
+                chanName={title}
+              />
             </li>
           ))}
         />

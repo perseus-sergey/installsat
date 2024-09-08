@@ -77,25 +77,29 @@ export const ARTICLES = {
       previousPageTitle: '<',
       nextPageTitle: '>',
       linkTitle: {
+        currentPage: {
+          [ELanguage.UA]: 'Зараз ви на сторінці: ',
+          [ELanguage.EN]: 'You are now on page: ',
+        },
         pageStartStr: {
-          [ELanguage.EN]: 'To page: ',
-          [ELanguage.UA]: 'На сторінку: ',
+          [ELanguage.UA]: 'Перейти на сторінку: ',
+          [ELanguage.EN]: 'Go to page: ',
         },
         firstPage: {
-          [ELanguage.EN]: 'To first page',
-          [ELanguage.UA]: 'На першу сторінку',
+          [ELanguage.UA]: 'Перейти на першу сторінку',
+          [ELanguage.EN]: 'Go to first page',
         },
         nextPage: {
-          [ELanguage.EN]: 'To next page',
-          [ELanguage.UA]: 'На наступну сторінку',
+          [ELanguage.UA]: 'Перейти на наступну сторінку',
+          [ELanguage.EN]: 'Go to next page',
         },
         previousPage: {
-          [ELanguage.EN]: 'To previous page',
-          [ELanguage.UA]: 'На попередню сторінку',
+          [ELanguage.UA]: 'Перейти на попередню сторінку',
+          [ELanguage.EN]: 'Go to previous page',
         },
         lastPage: {
-          [ELanguage.EN]: 'To last page',
-          [ELanguage.UA]: 'На останню сторінку',
+          [ELanguage.UA]: 'Перейти на останню сторінку',
+          [ELanguage.EN]: 'Go to last page',
         },
       },
     },

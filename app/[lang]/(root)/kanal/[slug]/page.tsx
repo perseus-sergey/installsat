@@ -40,9 +40,7 @@ const {
   infoPanelTitles: { views: viewsTitle },
   titleBefore,
   preText,
-  scheduleLinkText: { channel: scheduleTitle },
   noteTitle,
-  getOnlineLinkText,
   getResponsibilityText,
   similar: { channels: simChannelsBefore },
 } = META_CHANNEL;
@@ -208,7 +206,7 @@ export default async function Page({ params }: IChannelProps) {
         {vipiko || vsetv ? (
           <TvScheduleLink
             lang={lang}
-            title={`${scheduleTitle[lang]} "${title}"`}
+            title={title}
             href={`/${lang}/${EUrlBaseParam.CHANNELS_TV_PROGRAM}/${slug}/${currentDate}`}
           />
         ) : null}
@@ -217,9 +215,8 @@ export default async function Page({ params }: IChannelProps) {
           <ChannelOnlineLink
             lang={lang}
             href={`/${lang}/${EUrlBaseParam.ONLINE_CHANNEL_LIST}/${slug}`}
-          >
-            {getOnlineLinkText(title)[lang]}
-          </ChannelOnlineLink>
+            channelName={title}
+          />
         )}
         <FlyChannelParams channelDBParams={flyChannels} lang={lang} />
 

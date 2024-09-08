@@ -147,8 +147,8 @@ export const META_ONLINE_CHANNEL_LIST = {
     },
     anchorLink: {
       ariaLabel: {
-        [ELanguage.UA]: 'Перейти до жанру:',
-        [ELanguage.EN]: 'Go to genre:',
+        [ELanguage.UA]: 'Прокрутити сторінку до жанру:',
+        [ELanguage.EN]: 'Scroll the page to genre:',
       },
     },
   },
@@ -212,8 +212,8 @@ export const META_PACKAGE_CHANNEL_LIST = {
     },
     anchorLink: {
       ariaLabel: {
-        [ELanguage.UA]: 'Перейти до пакету:',
-        [ELanguage.EN]: 'Go to package:',
+        [ELanguage.UA]: 'Прокрутити сторінку до списку каналів пакету:',
+        [ELanguage.EN]: 'Scroll the page to package channels list:',
       },
     },
   },
@@ -299,8 +299,8 @@ export const META_ALL_SAT_CHANNEL_LIST = {
     },
     goUpLink: {
       title: {
-        [ELanguage.UA]: 'На початок',
-        [ELanguage.EN]: 'Go Up',
+        [ELanguage.UA]: 'Повернутися на початок сторінки',
+        [ELanguage.EN]: 'Return to the top of the page',
       },
       img: '⇧',
     },

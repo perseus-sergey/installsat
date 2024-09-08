@@ -1,12 +1,13 @@
-import Link from 'next/link';
 import styles from './ArticleCard.module.scss';
 import BottomInfoPanel, {
   IBottomInfoPanelItem,
 } from '../../BottomInfoPanel/BottomInfoPanel';
+import SeoLink from '@/components/ui/SeoLink/SeoLink';
 
 interface IArticleCardProps {
   articleTitle: React.ReactNode;
   href: string;
+  seoCardLinkTitle: string;
   image?: React.ReactNode;
   isTitleCentered?: boolean;
   articleDescription: React.ReactNode;
@@ -19,10 +20,11 @@ const ArticleCard = ({
   image,
   infoPanelItems,
   href,
+  seoCardLinkTitle,
   isTitleCentered = false,
 }: IArticleCardProps) => (
   <section className={styles.ArticleCard} data-testid="ArticleCard">
-    <Link href={href}>
+    <SeoLink href={href} title={seoCardLinkTitle}>
       <h2
         style={isTitleCentered ? { justifyContent: 'center' } : {}}
         className={styles.h2Title}
@@ -33,7 +35,7 @@ const ArticleCard = ({
         {articleDescription}
         {image && image}
       </div>
-    </Link>
+    </SeoLink>
     <BottomInfoPanel items={infoPanelItems} />
   </section>
 );

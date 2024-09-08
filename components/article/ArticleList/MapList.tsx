@@ -31,6 +31,11 @@ const MapList = ({ articleList, lang }: IArticleListProps) =>
           <li key={id}>
             <ArticleCard
               isTitleCentered
+              seoCardLinkTitle={
+                lang === ELanguage.UA
+                  ? `Перейти до перегляду карт покриття супутника "${title}"`
+                  : `Go to view the coverage maps of the "${title}" satellite`
+              }
               articleTitle={
                 <>
                   {typeof allMapsImg.titleImg !== 'string' ? (

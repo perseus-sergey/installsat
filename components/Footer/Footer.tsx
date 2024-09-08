@@ -4,9 +4,9 @@ import {
   footerMenuList,
 } from '@/models/footer.model';
 import styles from './Footer.module.scss';
-import Link from 'next/link';
 import { ELanguage } from '@/models/ui.model';
 import { Fragment } from 'react';
+import SeoLink from '../ui/SeoLink/SeoLink';
 
 const Footer = ({ lang }: { lang: ELanguage }) => (
   <footer className={styles.footer}>
@@ -23,9 +23,17 @@ const Footer = ({ lang }: { lang: ELanguage }) => (
                 <span className={styles.separator}>{MENU_SEPARATOR}</span>
               ) : null}
               <li>
-                <Link href={`/${lang}/${item.href}`} className={styles.navLink}>
+                <SeoLink
+                  href={`/${lang}/${item.href}`}
+                  className={styles.navLink}
+                  title={
+                    lang === ELanguage.UA
+                      ? `Натисніть, щоб перейти до перегляду сторінки "${item.title[lang]}"`
+                      : `Click to go to the view of the "${item.title[lang]}" page`
+                  }
+                >
                   {item.title[lang]}
-                </Link>
+                </SeoLink>
               </li>
             </Fragment>
           );

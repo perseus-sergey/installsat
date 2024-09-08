@@ -10,7 +10,6 @@ import {
 import DangerHtml from '@/components/ui/DangerHtml/DangerHtml';
 import { EUrlAdminParam, EUrlBaseParam, MAIN_URL } from '@/models/url.model';
 import BottomInfoPanel from '@/components/BottomInfoPanel/BottomInfoPanel';
-import Link from 'next/link';
 import {
   DEFAULT_LANG,
   DEFAULT_META_DATA,
@@ -29,6 +28,7 @@ import { BREAD_CRUMBS } from '@/models/breadCrumbs.model';
 import SimilarArticles from '@/components/SimilarArticles/SimilarArticles';
 import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
 import TextUnderH1 from '@/components/TextUnderH1/TextUnderH1';
+import SeoLink from '@/components/ui/SeoLink/SeoLink';
 
 const { h1Image } = ARTICLES.article.images;
 
@@ -180,11 +180,16 @@ export default async function Page({ params }: IArticleParams) {
             {
               name: themeTitle[lang],
               value: (
-                <Link
+                <SeoLink
                   href={`/${lang}/${EUrlBaseParam.NEWS_AND_ARTICLES}/${cat_slug}`}
+                  title={
+                    lang === ELanguage.UA
+                      ? `Перейти до списку статей категорії "${catLang}"`
+                      : `Go to the list of articles of the category "${catLang}"`
+                  }
                 >
                   {catLang}
-                </Link>
+                </SeoLink>
               ),
             },
             { name: viewsTitle[lang], value: view + 1 },
@@ -201,9 +206,16 @@ export default async function Page({ params }: IArticleParams) {
           similarTitle={SIMILAR_ARTICLES.title[lang]}
           similarArticlesMapped={similarArticles.map((art) => (
             <li key={art.cpu}>
-              <Link href={`/${lang}/${ARTICLE}/${art.cpu}`}>
+              <SeoLink
+                href={`/${lang}/${ARTICLE}/${art.cpu}`}
+                title={
+                  lang === ELanguage.UA
+                    ? `Перейти до перегляду статті "${art.title}"`
+                    : `Go to the view of the article "${art.title_en || art.title}"`
+                }
+              >
                 {lang === ELanguage.UA ? art.title : art.title_en || art.title}
-              </Link>
+              </SeoLink>
               <span>{` (${getFormattedDateStrYearFirst(art.date)})`}</span>
             </li>
           ))}

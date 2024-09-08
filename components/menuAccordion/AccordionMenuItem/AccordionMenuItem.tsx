@@ -2,9 +2,9 @@ import { ELanguage } from '@/models/ui.model';
 import styles from '../Accordion/Accordion.module.scss';
 
 import React, { ReactNode } from 'react';
-import Link from 'next/link';
 import { IAccordionItemOptions } from '@/models/menuAccordion.model';
 import FillingImg from '../../ui/Images/FillingImage';
+import SeoLink from '@/components/ui/SeoLink/SeoLink';
 
 interface IAccordionMenuItem {
   options: IAccordionItemOptions;
@@ -52,7 +52,12 @@ export const AccordionMenuItem = ({
     </>
   ) : (
     <li className={styles.accordionItem}>
-      <Link
+      <SeoLink
+        title={
+          lang === ELanguage.UA
+            ? `Перейти до сторінки "${title[lang]}"`
+            : `Go to the view of the "${title[lang]}" page`
+        }
         className={styles.titleWrapper}
         href={`/${lang}${titleHref}` || '#'}
       >
@@ -65,6 +70,6 @@ export const AccordionMenuItem = ({
           />
         )}
         {title[lang]}
-      </Link>
+      </SeoLink>
     </li>
   );

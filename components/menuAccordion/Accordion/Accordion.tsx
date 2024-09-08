@@ -5,11 +5,11 @@ import {
   getFlyChannelSatList,
   getUsefulArticleList,
 } from '@/controllers/sidebar.controller';
-import Link from 'next/link';
 import { AccordionMenuItem } from '../AccordionMenuItem/AccordionMenuItem';
 import { MENU_ACCORDION } from '@/models/menuAccordion.model';
 import { getSatMapList } from '@/controllers/articles.controller';
 import { ELanguage } from '@/models/ui.model';
+import SeoLink from '@/components/ui/SeoLink/SeoLink';
 
 const {
   SATELLITE_TV,
@@ -52,12 +52,12 @@ const Accordion = async ({ lang }: { lang: ELanguage }) => {
           <ul className={styles.accordionContent}>
             {installationsList.map((item) => (
               <li key={item.id} className={styles.contentItem}>
-                <Link
+                <SeoLink
                   href={`/${lang}${INSTALLATIONS.baseHrefOfList}/${item.cpu}/`}
                   className={styles.contentItemLink}
                 >
                   {item.title}
-                </Link>
+                </SeoLink>
               </li>
             ))}
           </ul>
@@ -66,12 +66,12 @@ const Accordion = async ({ lang }: { lang: ELanguage }) => {
           <ul className={styles.accordionContent}>
             {channelSatList.map((item) => (
               <li key={item.id} className={styles.contentItem}>
-                <Link
+                <SeoLink
                   href={`/${lang}${SATELLITES.baseHrefOfList}/${item.cpu}/`}
                   className={styles.contentItemLink}
                 >
                   {item.title} {item.position}
-                </Link>
+                </SeoLink>
               </li>
             ))}
           </ul>
@@ -80,13 +80,18 @@ const Accordion = async ({ lang }: { lang: ELanguage }) => {
           <ul className={styles.accordionContent}>
             {flyChannelSatList.map((item) => (
               <li key={item.id} className={styles.contentItem}>
-                <Link
+                <SeoLink
+                  title={
+                    lang === ELanguage.UA
+                      ? `Перейти до перегляду списку каналів з супутника "${item.title} / ${item.position}"`
+                      : `Go to view the list of channels broadcast from the "${item.title} / ${item.position}" satellite`
+                  }
                   href={`/${lang}${SATELLITES.baseHrefOfList}/${item.cpu}/`}
                   className={styles.contentItemLink}
                 >
                   <span className="text-lime-200">{item.title}</span>{' '}
                   {item.position}
-                </Link>
+                </SeoLink>
               </li>
             ))}
           </ul>
@@ -95,12 +100,17 @@ const Accordion = async ({ lang }: { lang: ELanguage }) => {
           <ul className={styles.accordionContent}>
             {maps.map((item) => (
               <li key={item.beam_id} className={styles.contentItem}>
-                <Link
+                <SeoLink
+                  title={
+                    lang === ELanguage.UA
+                      ? `Перейти до перегляду мап покриття супутника "${item.title} / ${item.position}"`
+                      : `Go to view the map coverage of the "${item.title} / ${item.position}" satellite`
+                  }
                   href={`/${lang}${MAPS.baseHrefOfList}/${item.cpu}`}
                   className={styles.contentItemLink}
                 >
                   {item.title} {item.position}
-                </Link>
+                </SeoLink>
               </li>
             ))}
           </ul>
@@ -109,12 +119,17 @@ const Accordion = async ({ lang }: { lang: ELanguage }) => {
           <ul className={styles.accordionContent}>
             {channelCatList.map((item) => (
               <li key={item.id} className={styles.contentItem}>
-                <Link
+                <SeoLink
+                  title={
+                    lang === ELanguage.UA
+                      ? `Перейти до перегляду списку каналів пакету "${item.title}"`
+                      : `Go to view the list of channels in the "${item.title}" package`
+                  }
                   href={`/${lang}${PACKAGES.baseHrefOfList}/${item.cpu}/`}
                   className={styles.contentItemLink}
                 >
                   {item.title}
-                </Link>
+                </SeoLink>
               </li>
             ))}
           </ul>
@@ -123,14 +138,19 @@ const Accordion = async ({ lang }: { lang: ELanguage }) => {
           <ul className={styles.accordionContent}>
             {usefulArticleList.map((item) => (
               <li key={item.id} className={styles.contentItem}>
-                <Link
+                <SeoLink
+                  title={
+                    lang === ELanguage.UA
+                      ? `Натисніть, щоб читати статтю "${item.title}"`
+                      : `Click to read the "${item.title_en || item.title}" article`
+                  }
                   href={`/${lang}${USEFUL.baseHrefOfList}/${item.cpu}/`}
                   className={styles.contentItemLink}
                 >
                   {lang === ELanguage.UA
                     ? item.title
                     : item.title_en || item.title}
-                </Link>
+                </SeoLink>
               </li>
             ))}
           </ul>
@@ -148,7 +168,7 @@ const Accordion = async ({ lang }: { lang: ELanguage }) => {
               <ul>
                 {menu_arrcat.map((item) => (
                   <li key={item.id} className={styles.contentItem}>
-                    <Link href={`/${lang}/kategorija-tovara/${item.cpu}/`} className={styles.contentItemLink}>
+                    <SeoLink href={`/${lang}/kategorija-tovara/${item.cpu}/`} className={styles.contentItemLink}>
                       <Image
                         height="16"
                         width="16"
@@ -156,7 +176,7 @@ const Accordion = async ({ lang }: { lang: ELanguage }) => {
                         alt={item.title}
                       />
                       {item.title}
-                    </Link>
+                    </SeoLink>
                   </li>
                 ))}
               </ul>

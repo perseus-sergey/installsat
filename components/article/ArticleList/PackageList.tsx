@@ -28,6 +28,11 @@ const PackageList = ({ packageList, lang }: IProps) =>
           ({ id, title, description, view, comment_count, logo, cpu }) => (
             <li key={id}>
               <ArticleCard
+                seoCardLinkTitle={
+                  lang === ELanguage.UA
+                    ? `Перейти до перегляду списку каналів пакету "${title}"`
+                    : `Go to view the list of channels in package "${title}"`
+                }
                 isTitleCentered
                 articleTitle={title}
                 image={

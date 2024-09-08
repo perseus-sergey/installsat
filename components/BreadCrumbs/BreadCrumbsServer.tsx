@@ -1,6 +1,5 @@
 import React, { ReactNode } from 'react';
 import styles from './BreadCrumbs.module.scss';
-import Link from 'next/link';
 import {
   BREAD_CRUMBS,
   BREAD_SEPARATOR,
@@ -10,6 +9,7 @@ import {
 import { ELanguage } from '@/models/ui.model';
 import { cutMiddleOfText } from '@/libs/utils/utils';
 import TooltipSimple from '../ui/tooltips/TooltipSimple/TooltipSimple';
+import SeoLink from '../ui/SeoLink/SeoLink';
 
 const { lengthThreshold, numberOfEndWords, numberOfStartWords } =
   CUT_LAST_ELEMENT;
@@ -48,13 +48,18 @@ const BreadCrumbServer = ({
       <ol className={styles.container}>
         {hasHomeLink && (
           <li className={`${styles.item} ${styles.firstItem}`}>
-            <Link
+            <SeoLink
               href={`/${lang}${BREAD_CRUMBS.BASE_PATH.href}`}
               style={{ fontSize: FIRST_ELEMENT_SIZE }}
               className="hover:underline"
+              title={
+                lang === ELanguage.UA
+                  ? `Перейти до початкової сторінки`
+                  : `Go to the home page`
+              }
             >
               {homeTitle || BREAD_CRUMBS.BASE_PATH.title[lang]}
-            </Link>
+            </SeoLink>
           </li>
         )}
         {breadCrumbList && breadCrumbList.length > 0 && (
@@ -89,12 +94,17 @@ const BreadCrumbServer = ({
                 <React.Fragment key={index}>
                   <li className={itemClassName} style={itemStyle}>
                     {typeof item !== 'string' && item.href ? (
-                      <Link
+                      <SeoLink
                         href={`/${lang}/${item.href}`}
                         className="hover:underline"
+                        title={
+                          lang === ELanguage.UA
+                            ? `Перейти до сторінки "${linkText}"`
+                            : `Go to page "${linkText}"`
+                        }
                       >
                         {linkText}
-                      </Link>
+                      </SeoLink>
                     ) : (
                       <div>{linkText}</div>
                     )}
@@ -112,12 +122,17 @@ const BreadCrumbServer = ({
                             linkText.length !== truncatedLinkText.length
                           }
                         >
-                          <Link
+                          <SeoLink
                             href={`/${lang}/${item.href}`}
                             className="hover:underline"
+                            title={
+                              lang === ELanguage.UA
+                                ? `Перейти до сторінки "${truncatedLinkText}"`
+                                : `Go to page "${truncatedLinkText}"`
+                            }
                           >
                             {truncatedLinkText}
-                          </Link>
+                          </SeoLink>
                         </LastBreadCrumbElement>
                       </>
                     ) : (

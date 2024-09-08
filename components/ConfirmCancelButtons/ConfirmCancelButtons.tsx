@@ -44,6 +44,7 @@ export const CancelLinkButton = ({
     <Link
       className={styles.cancelButton}
       aria-label={ariaLabel}
+      title={ariaLabel}
       href={href}
       role="button"
       {...attributes}

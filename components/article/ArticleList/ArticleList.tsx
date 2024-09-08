@@ -62,6 +62,11 @@ const ArticleList = ({
           return (
             <li key={id}>
               <ArticleCard
+                seoCardLinkTitle={
+                  lang === ELanguage.UA
+                    ? `Перейти до перегляду статті "${titleLang}"`
+                    : `Go to the view of the article "${titleLang}"`
+                }
                 articleTitle={
                   <>
                     {typeof articleTitleImg !== 'string' ? (

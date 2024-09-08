@@ -143,7 +143,11 @@ const PaginationComments = ({
               {numbersOfPages.map((numb) => (
                 <ControlButton
                   key={numb}
-                  ariaLabel={`${linkTitle.pageStartStr[lang]}${numb}`}
+                  ariaLabel={
+                    numb === pageNumber
+                      ? `${linkTitle.currentPage[lang]}${numb}`
+                      : `${linkTitle.pageStartStr[lang]}${numb}`
+                  }
                   onClick={() => setPageNumber(numb)}
                   innerText={numb}
                   className={

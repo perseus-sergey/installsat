@@ -63,8 +63,20 @@ export default async function Page({
     parseInt(validSearchParam(EUrlSearchParam.INTERVAL, searchParams), 10) ||
     INTERVAL_FROM_LAST_UPDATE;
 
-  const { newSatList, overSats, updatedSatList, messages } =
-    await parseProcess(intervalFromLastUpd);
+  let messages: string[] = [];
+  let newSatList = [];
+  let overSats = [];
+  let updatedSatList = [];
+  try {
+    ({ newSatList, overSats, updatedSatList, messages } =
+      await parseProcess(intervalFromLastUpd));
+  } catch (error) {
+    messages.push(
+      error instanceof Error
+        ? error.message
+        : 'Unknown error while parseProcess'
+    );
+  }
 
   // const { dbSatList, newSatList, overSats, updatedSatList, messages } =
   //   await parseProcess(intervalFromLastUpd);

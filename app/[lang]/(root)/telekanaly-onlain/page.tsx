@@ -22,12 +22,12 @@ import { getELangKey, validSearchParam } from '@/libs/utils/validSearchParam';
 import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
 import { getCommentsNumber } from '@/controllers/comments.controller';
 import TooltipSimple from '@/components/ui/tooltips/TooltipSimple/TooltipSimple';
-import Link from 'next/link';
 import GenreImage from '@/components/ui/Images/GenreImage/GenreImage';
 import OnlineChannelListAfterText from '@/components/online/OnlineChannelListAfterText/OnlineChannelListAfterText';
 import PackageChannelList from '@/components/channelList/PackageChannelList';
 import BreadCrumbServer from '@/components/BreadCrumbs/BreadCrumbsServer';
 import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
+import SeoLink from '@/components/ui/SeoLink/SeoLink';
 
 interface IPageProps {
   params: { [key in EUrlBaseParam]: string };
@@ -122,14 +122,13 @@ export default async function Page({ params, searchParams }: IPageProps) {
                   <TooltipSimple
                     tooltipText={`${ariaLabel[lang]} ${genreTitle}`}
                   >
-                    <Link
-                      title={genreTitle}
+                    <SeoLink
+                      title={`${ariaLabel[lang]} ${genreTitle}`}
                       href={`#${CHANNEL_LIST_ANCHOR_START}${chanList[0].genre_id}`}
                       className="text-indigo-800 text-lg hover:text-red-500"
-                      aria-label={`${ariaLabel[lang]} ${genreTitle}`}
                     >
                       {genreTitle}
-                    </Link>
+                    </SeoLink>
                   </TooltipSimple>
                 </li>
               ))}

@@ -1,8 +1,8 @@
-import Link from 'next/link';
 import styles from './WidgetLastNews.module.scss';
 import { getLastNewsWidgetList } from '@/controllers/sidebar.controller';
 import { WIDGET_LAST_NEWS } from '@/models/widget.model';
 import { ELanguage } from '@/models/ui.model';
+import SeoLink from '../ui/SeoLink/SeoLink';
 
 const WidgetLastNews = async ({ lang }: { lang: ELanguage }) => {
   const lastNewsWidgetList = await getLastNewsWidgetList();
@@ -11,24 +11,30 @@ const WidgetLastNews = async ({ lang }: { lang: ELanguage }) => {
   return (
     <div className="sidebar-widget" data-testid="WidgetLastNews">
       <h3 className={styles.title}>
-        <Link
+        <SeoLink
+          title={WIDGET_LAST_NEWS.ariaLabelForTitle[lang]}
           href={`/${lang}/${WIDGET_LAST_NEWS.href}`}
           className={styles.titleLink}
         >
           {WIDGET_LAST_NEWS.title[lang]}
-        </Link>
+        </SeoLink>
       </h3>
       <ul className={styles.listBody}>
-        {lastNewsWidgetList.map((item) => (
-          <li key={item.id} className={styles.listItem}>
-            <Link
-              href={`/${lang}/${WIDGET_LAST_NEWS.baseHrefOfList}/${item.cpu}/`}
-            >
-              {lang === ELanguage.UA ? item.title : item.title_en || item.title}{' '}
-              ...
-            </Link>
-          </li>
-        ))}
+        {lastNewsWidgetList.map((item) => {
+          const itemTitle =
+            lang === ELanguage.UA ? item.title : item.title_en || item.title;
+
+          return (
+            <li key={item.id} className={styles.listItem}>
+              <SeoLink
+                title={`${WIDGET_LAST_NEWS.ariaLabel[lang]}: "${itemTitle}"`}
+                href={`/${lang}/${WIDGET_LAST_NEWS.baseHrefOfList}/${item.cpu}/`}
+              >
+                {itemTitle} ...
+              </SeoLink>
+            </li>
+          );
+        })}
       </ul>
     </div>
   );

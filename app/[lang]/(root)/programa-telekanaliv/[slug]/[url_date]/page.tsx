@@ -44,7 +44,6 @@ const {
   similar: { channels: simChannelsBefore },
   noteTitle,
   getResponsibilityText,
-  getOnlineLinkText,
 } = META_CHANNEL;
 
 const {
@@ -166,7 +165,11 @@ export default async function Page({ params }: IPageProps) {
           />
         </Title>
 
-        <WeekScheduleTabs currentDate={url_date} lang={lang} />
+        <WeekScheduleTabs
+          currentDate={url_date}
+          lang={lang}
+          channelName={title}
+        />
         <SchedulePage
           lang={lang}
           scheduleList={schedules}
@@ -178,9 +181,8 @@ export default async function Page({ params }: IPageProps) {
           <ChannelOnlineLink
             lang={lang}
             href={`/${lang}/${EUrlBaseParam.ONLINE_CHANNEL_LIST}/${slug}`}
-          >
-            {getOnlineLinkText(title)[lang]}
-          </ChannelOnlineLink>
+            channelName={title}
+          />
         )}
 
         <GrooveLine className="py-4" />

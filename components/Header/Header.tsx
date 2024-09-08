@@ -1,10 +1,10 @@
 import React, { Suspense } from 'react';
-import Link from 'next/link';
 import ToggleSidebarLabel from '../ui/ToggleSidebarLabel/ToggleSidebarLabel';
 import { LOGO, TOGGLE_SIDEBAR_BUTTON_TITLE } from '@/models/header.model';
 import FillingImg from '../ui/Images/FillingImage';
 import { ELanguage } from '@/models/ui.model';
 import LangSwitchButton from '../LangSwitchButton/LangSwitchButton';
+import SeoLink from '../ui/SeoLink/SeoLink';
 // import AdsterraAd from '../AdsterraAd/AdsterraAd';
 // import dynamic from 'next/dynamic';
 
@@ -19,6 +19,7 @@ const { title, siteLogo } = LOGO.link;
 
 const Header = ({ lang }: { lang: ELanguage }) => (
   <header
+    id="top"
     className="w-full bg-gradient-to-b from-blue-800 to-white/0"
     data-testid="Header"
   >
@@ -27,7 +28,7 @@ const Header = ({ lang }: { lang: ELanguage }) => (
         <ToggleSidebarLabel className="px-2 pb-1 text-4xl text-gray-400 cursor-pointer border border-gray-300 rounded-md my-0 mx-4">
           {TOGGLE_SIDEBAR_BUTTON_TITLE}
         </ToggleSidebarLabel>
-        <Link
+        <SeoLink
           href={`/${lang}`}
           title={title[lang]}
           className="inline-block p-5"
@@ -36,7 +37,7 @@ const Header = ({ lang }: { lang: ELanguage }) => (
             <FillingImg {...siteLogo} alt={siteLogo.alt[lang]} isPriority />
           </div>
           <i className="block sm:hidden text-blue-100 text-2xl">Installsat</i>
-        </Link>
+        </SeoLink>
       </nav>
       <Suspense>
         <LangSwitchButton />

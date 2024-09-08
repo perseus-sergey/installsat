@@ -19,13 +19,13 @@ import Filter from '@/components/ui/Filter/Filter';
 import { Suspense } from 'react';
 import { getELangKey, validSearchParam } from '@/libs/utils/validSearchParam';
 import TooltipSimple from '@/components/ui/tooltips/TooltipSimple/TooltipSimple';
-import Link from 'next/link';
 import GenreImage from '@/components/ui/Images/GenreImage/GenreImage';
 import PackageChannelList from '@/components/channelList/PackageChannelList';
 import BreadCrumbServer from '@/components/BreadCrumbs/BreadCrumbsServer';
 import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
 import { SCHEDULE_META } from '@/models/scheduleTV.model';
 import { BREAD_CRUMBS } from '@/models/breadCrumbs.model';
+import SeoLink from '@/components/ui/SeoLink/SeoLink';
 
 const BASE_URL = process.env.BASE_URL || MAIN_URL;
 
@@ -122,14 +122,13 @@ export default async function Page({ searchParams, params }: IPageProps) {
                   <TooltipSimple
                     tooltipText={`${ariaLabel[lang]} ${genreTitle}`}
                   >
-                    <Link
-                      title={genreTitle}
+                    <SeoLink
+                      title={`${ariaLabel[lang]} ${genreTitle}`}
                       href={`#${CHANNEL_LIST_ANCHOR_START}${chanList[0].genre_id}`}
                       className="text-indigo-800 text-lg hover:text-red-500"
-                      aria-label={`${ariaLabel[lang]} ${genreTitle}`}
                     >
                       {genreTitle}
-                    </Link>
+                    </SeoLink>
                   </TooltipSimple>
                 </li>
               ))}

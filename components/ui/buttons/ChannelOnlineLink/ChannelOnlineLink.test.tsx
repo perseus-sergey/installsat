@@ -7,9 +7,11 @@ import { ELanguage } from '@/models/ui.model';
 describe('<ChannelOnlineLink />', () => {
   test('it should mount', () => {
     render(
-      <ChannelOnlineLink lang={ELanguage.EN} href="#">
-        ChannelOnlineLink
-      </ChannelOnlineLink>
+      <ChannelOnlineLink
+        lang={ELanguage.EN}
+        href="#"
+        channelName={'channelName'}
+      />
     );
 
     const channelOnlineLink = screen.getByTestId('ChannelOnlineLink');

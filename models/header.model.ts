@@ -5,8 +5,9 @@ export const TOGGLE_SIDEBAR_BUTTON_TITLE = '☰';
 export const LOGO = {
   link: {
     title: {
-      [ELanguage.EN]: 'To Home Page',
-      [ELanguage.UA]: 'На головну сторінку',
+      [ELanguage.UA]:
+        'Перейти до перегляду стартової сторінки сайту Installsat',
+      [ELanguage.EN]: 'Go to view the start page of the Installsat website',
     },
     siteLogo: {
       src: '/Images/InstallsatOrigBlue_200.png',

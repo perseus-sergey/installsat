@@ -11,13 +11,13 @@ import GoUpLink from '../ui/GoUpLink/GoUpLink';
 import { META_CHANNEL } from '@/models/channel.model';
 import ChannelCardTooltip from '../ChannelCardTooltip/ChannelCardTooltip';
 import { ELanguage } from '@/models/ui.model';
-import Link from 'next/link';
 import { cutText } from '@/libs/utils/utils';
 import FillingValidImage from '../ui/Images/FillingValidImage';
 import GenreImage from '../ui/Images/GenreImage/GenreImage';
 import EmptyData from '../errors/EmptyData/EmptyData';
 import { EUrlBaseParam } from '@/models/url.model';
 import { decode } from 'html-entities';
+import SeoLink from '../ui/SeoLink/SeoLink';
 
 const {
   name: tName,
@@ -27,7 +27,6 @@ const {
 } = ONLINE_CHANNEL_TOOLTIP_TITLES;
 
 const {
-  linkChannel: { ariaLabel },
   images: { subCatImage },
   getPriceString,
 } = META_PACKAGE_CHANNEL_LIST;
@@ -88,9 +87,13 @@ const PackageChannelList = ({
 
             return (
               <li key={channel.chan_id} className={styles.listItem}>
-                <Link
+                <SeoLink
                   href={`/${lang}/${pathToChannelDetails}/${channel.chan_cpu}${todayStr ? `/${todayStr}` : ''}`}
-                  aria-label={ariaLabel[lang]}
+                  title={
+                    lang === ELanguage.UA
+                      ? `Перейти до перегляду детальних параметрів каналу "${chanTitle}"`
+                      : `Go to view detailed parameters of "${chanTitle}" channel`
+                  }
                 >
                   <ChannelCardTooltip
                     mainImage={{
@@ -122,7 +125,7 @@ const PackageChannelList = ({
                   >
                     <span className="text-center">{chanTitle}</span>
                   </ChannelCardTooltip>
-                </Link>
+                </SeoLink>
               </li>
             );
           })}

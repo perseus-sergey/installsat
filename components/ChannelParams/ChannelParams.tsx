@@ -1,10 +1,10 @@
 import { IChannel, IFlyChannel, META_CHANNEL } from '@/models/channel.model';
-import Link from 'next/link';
 import { EUrlBaseParam } from '@/models/url.model';
 import { DB_ARRAY_SEPARATOR, ELanguage } from '@/models/ui.model';
 import { TitleH2 } from '../ui/Titles/TitleH2';
 import TooltipSimple from '../ui/tooltips/TooltipSimple/TooltipSimple';
 import { getLanguageList } from '@/controllers/channelList.controller';
+import SeoLink from '../ui/SeoLink/SeoLink';
 
 interface IChannelParamsProps {
   channelDBParams: IChannel;
@@ -136,6 +136,7 @@ interface IFlyChannelParamsProps {
 export const FlyChannelParams = ({
   channelDBParams: {
     title,
+    sat_position,
     compress,
     sat_title,
     frequency,
@@ -252,12 +253,19 @@ export const FlyChannelParams = ({
         {sat_title && (
           <li>
             {paramsSatellite[lang]}
-            <Link
+            <SeoLink
               className="text-blue-800 hover:text-red-600"
               href={`/${lang}/${EUrlBaseParam.SAT_CHANNEL_LIST}/${sat_slug}`}
+              title={
+                lang === ELanguage.UA
+                  ? `Перейти до перегляду списку каналів, що транслюються з супутника "${sat_title} / ${sat_position}"`
+                  : `Go to view the list of channels broadcast from the "${sat_title} / ${sat_position}" satellite`
+              }
             >
-              <strong>{sat_title}</strong>
-            </Link>{' '}
+              <strong>
+                {sat_title} / {sat_position}
+              </strong>
+            </SeoLink>{' '}
             ({beam})
           </li>
         )}

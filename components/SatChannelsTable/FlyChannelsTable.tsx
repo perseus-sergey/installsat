@@ -7,7 +7,6 @@ import {
   ECompressColors,
 } from '@/models/channelList.model';
 import styles from './SatChannelsTable.module.scss';
-import Link from 'next/link';
 import { EUrlBaseParam } from '@/models/url.model';
 import { cutText } from '@/libs/utils/utils';
 import FillingImg from '../ui/Images/FillingImage';
@@ -19,6 +18,7 @@ import GoUpLink from '../ui/GoUpLink/GoUpLink';
 import EmptyData from '../errors/EmptyData/EmptyData';
 import { DB_ARRAY_SEPARATOR, ELanguage } from '@/models/ui.model';
 import Tooltip from '../ui/tooltips/TooltipMovingClient/Tooltip';
+import SeoLink from '../ui/SeoLink/SeoLink';
 
 const {
   images: { h2SatListImage, genreImage, genreRadioImage, t2Image },
@@ -345,14 +345,19 @@ const FrequencySegment = ({
                   ]}
                 />
               )}
-              <Link
+              <SeoLink
+                title={
+                  lang === ELanguage.UA
+                    ? `Перейти до сторінки з детальним описом каналу "${title}"`
+                    : `Go to the detailed page of channel "${title}"`
+                }
                 className={is_radio ? styles.linkRadio : styles.linkTV}
                 id={slug}
                 href={`/${lang}/${EUrlBaseParam.KANAL}/${slug}`}
               >
                 <RadioIcon is_radio={is_radio} lang={lang} />
                 {title}
-              </Link>
+              </SeoLink>
               {genreImgSrc && !is_radio ? (
                 <div className="flex-col items-center text-sm hidden sm:flex">
                   <TooltipSimple tooltipText={genre_description}>

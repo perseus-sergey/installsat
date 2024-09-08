@@ -5,16 +5,18 @@ import {
 import styles from './OnlinePlayerTabs.module.scss';
 import { createArray } from '@/libs/utils/utils';
 import { SCHEDULE_META } from '@/models/scheduleTV.model';
-import Link from 'next/link';
 import { ELanguage } from '@/models/ui.model';
+import SeoLink from '../ui/SeoLink/SeoLink';
 
 const { tabsTitles } = SCHEDULE_META.tabsWeek;
 
 const WeekScheduleTabs = ({
   currentDate,
   lang,
+  channelName,
 }: {
   currentDate: string;
+  channelName: string;
   lang: ELanguage;
 }) => {
   const now = getFormattedDateStrYearFirst();
@@ -28,12 +30,17 @@ const WeekScheduleTabs = ({
     acc.push(
       <li key={i}>
         {dateString !== currentDate ? (
-          <Link
+          <SeoLink
+            title={
+              lang === ELanguage.UA
+                ? `Дивитись розклад передач каналу "${channelName}" за ${date.toLocaleDateString('en-CA')}`
+                : `Watch channel schedule for "${channelName}" on ${date.toLocaleDateString('en-CA')}`
+            }
             href={dateString}
             className={`${styles.tabButton}${dateString === now ? ` ${styles.currentTab}` : ''}`}
           >
             {tabsTitles[lang][i]}, {date.getDate()}
-          </Link>
+          </SeoLink>
         ) : (
           <span className={styles.currentDayTab}>
             {tabsTitles[lang][i]}, {date.getDate()}

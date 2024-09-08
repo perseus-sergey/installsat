@@ -23,7 +23,6 @@ import {
 } from '@/models/ui.model';
 import { EUrlBaseParam, MAIN_URL } from '@/models/url.model';
 import { Metadata } from 'next';
-import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
 import { getCommentsNumber } from '@/controllers/comments.controller';
@@ -40,6 +39,7 @@ import {
   getFormattedDateStrYearFirst,
 } from '@/libs/utils/dates';
 import { getELangKey } from '@/libs/utils/validSearchParam';
+import SeoLink from '@/components/ui/SeoLink/SeoLink';
 
 const BASE_URL = process.env.BASE_URL || MAIN_URL;
 const { LANG, SLUG, CHANNELS_TV_PROGRAM, ONLINE_CHANNEL_LIST, ARTICLE } =
@@ -50,7 +50,6 @@ const {
     channelLogo: { big: bigLogo },
   },
   infoPanelTitles: { comments: commentsTitle, views: viewsTitle },
-  scheduleLinkText: { onlineChannel: scheduleTitle },
   noteTitle,
   getResponsibilityText,
   similar: { channels: simChannelsBefore, articles: simArticlesBefore },
@@ -170,8 +169,9 @@ export default async function Page({ params }: IChannelProps) {
           <GrooveLine />
 
           <TvScheduleLink
+            isOnlinePage
             lang={lang}
-            title={`${scheduleTitle[lang]} "${title}"`}
+            title={title}
             href={`/${lang}/${CHANNELS_TV_PROGRAM}/${slug}/${getFormattedDateStrYearFirst()}`}
           />
 
@@ -213,9 +213,16 @@ export default async function Page({ params }: IChannelProps) {
           similarTitle={simArticlesBefore.title[lang]}
           similarArticlesMapped={similarArticles.map((art) => (
             <li key={art.cpu}>
-              <Link href={`/${lang}/${ARTICLE}/${art.cpu}`}>
+              <SeoLink
+                href={`/${lang}/${ARTICLE}/${art.cpu}`}
+                title={
+                  lang === ELanguage.UA
+                    ? `Перейти до перегляду статті "${art.title}"`
+                    : `Go to the view of the article "${art.title_en || art.title}"`
+                }
+              >
                 {lang === ELanguage.UA ? art.title : art.title_en || art.title}
-              </Link>
+              </SeoLink>
               <span>{` (${getFormattedDateStr(art.date)})`}</span>
             </li>
           ))}

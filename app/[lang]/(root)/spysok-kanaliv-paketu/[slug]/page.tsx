@@ -25,7 +25,6 @@ import { getELangKey, validSearchParam } from '@/libs/utils/validSearchParam';
 import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
 import { getCommentsNumber } from '@/controllers/comments.controller';
 import TooltipSimple from '@/components/ui/tooltips/TooltipSimple/TooltipSimple';
-import Link from 'next/link';
 import PackageChannelList from '@/components/channelList/PackageChannelList';
 import FillingValidImage from '@/components/ui/Images/FillingValidImage';
 import GenreImage from '@/components/ui/Images/GenreImage/GenreImage';
@@ -37,6 +36,7 @@ import BreadCrumbServer, {
 } from '@/components/BreadCrumbs/BreadCrumbsServer';
 import { BREAD_CRUMBS } from '@/models/breadCrumbs.model';
 import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
+import SeoLink from '@/components/ui/SeoLink/SeoLink';
 
 const BASE_URL = process.env.BASE_URL || MAIN_URL;
 
@@ -206,14 +206,13 @@ export default async function Page({ params, searchParams }: IPageProps) {
                       <TooltipSimple
                         tooltipText={`${ariaLabel[lang]} ${subCatTitle}`}
                       >
-                        <Link
-                          title={subCatTitle}
+                        <SeoLink
+                          title={`${ariaLabel[lang]} ${subCatTitle}`}
                           href={`#${CHANNEL_LIST_ANCHOR_START}${chanList[0].genre_id}`}
                           className="text-indigo-800 text-lg hover:text-red-500"
-                          aria-label={`${ariaLabel[lang]} ${subCatTitle}`}
                         >
                           {subCatTitle}
-                        </Link>
+                        </SeoLink>
                       </TooltipSimple>
                     </li>
                   ))}
@@ -248,9 +247,16 @@ export default async function Page({ params, searchParams }: IPageProps) {
           similarTitle={similarLinksTitle[lang]}
           similarArticlesMapped={similarLinks.map((link) => (
             <li key={link.cpu}>
-              <Link href={`/${lang}/${PACKAGE_CHANNEL_LIST}/${link.cpu}`}>
+              <SeoLink
+                href={`/${lang}/${PACKAGE_CHANNEL_LIST}/${link.cpu}`}
+                title={
+                  lang === ELanguage.UA
+                    ? `Перейти до списку каналів пакету "${link.title}"`
+                    : `Go to the package channels list "${link.title}"`
+                }
+              >
                 {beforeLinkText[lang]} {link.title}
-              </Link>
+              </SeoLink>
             </li>
           ))}
         />

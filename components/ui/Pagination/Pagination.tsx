@@ -1,10 +1,10 @@
-import Link from 'next/link';
 import styles from './Pagination.module.scss';
 import { EUrlSearchParam } from '@/models/url.model';
 import { ARTICLES } from '@/models/articles.model';
 import { ELanguage, TSearchParams } from '@/models/ui.model';
 import { makeUrlSearchParams } from '@/libs/utils/utils';
 import TooltipSimple from '../tooltips/TooltipSimple/TooltipSimple';
+import SeoLink from '../SeoLink/SeoLink';
 
 const {
   nextPageTitle,
@@ -80,7 +80,11 @@ const Pagination = ({
           {pageNumbers.map((pageNumber, index) => (
             <ControlButton
               key={index}
-              ariaLabel={`${linkTitle.pageStartStr[lang]}${pageNumber}`}
+              ariaLabel={
+                page === pageNumber
+                  ? `${linkTitle.currentPage[lang]}${pageNumber}`
+                  : `${linkTitle.pageStartStr[lang]}${pageNumber}`
+              }
               href={setUrlPage(pageNumber)}
               innerText={pageNumber}
               className={
@@ -119,14 +123,13 @@ interface IPrps extends React.HTMLAttributes<HTMLElement> {
 const ControlButton = ({ ariaLabel, href, innerText, className }: IPrps) => (
   <li>
     <TooltipSimple tooltipText={ariaLabel}>
-      <Link
+      <SeoLink
         className={className || styles.listItem}
         href={href}
-        aria-label={ariaLabel}
         title={ariaLabel}
       >
         {innerText}
-      </Link>
+      </SeoLink>
     </TooltipSimple>
   </li>
 );

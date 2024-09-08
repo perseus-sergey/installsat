@@ -7,6 +7,7 @@ describe('<ArticleCard />', () => {
   test('it should mount', () => {
     render(
       <ArticleCard
+        seoCardLinkTitle="seoCardLinkTitle"
         articleDescription="articleDescription"
         articleTitle="articleTitle"
         image=""

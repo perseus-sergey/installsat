@@ -10,6 +10,14 @@ export const WIDGET_LAST_NEWS = {
   },
   href: `${EUrlBaseParam.NEWS_AND_ARTICLES}`,
   baseHrefOfList: `${EUrlBaseParam.ARTICLE}`,
+  ariaLabel: {
+    [ELanguage.UA]: 'Перейти до перегляду статті',
+    [ELanguage.EN]: 'Go to view article',
+  },
+  ariaLabelForTitle: {
+    [ELanguage.UA]: 'Перейти до переліку всіх статей',
+    [ELanguage.EN]: 'Go to the list of all articles',
+  },
 };
 
 export const WIDGET_ARTICLE_CATEGORY = {
@@ -19,4 +27,12 @@ export const WIDGET_ARTICLE_CATEGORY = {
   },
   href: `/${EUrlBaseParam.TRANSPONDER_NEWS}`,
   baseHrefOfList: `/${EUrlBaseParam.NEWS_AND_ARTICLES}`,
+  ariaLabel: {
+    [ELanguage.UA]: 'Перейти до переліку статей категорії',
+    [ELanguage.EN]: 'Go to the list of articles of the category',
+  },
+  ariaLabelForTitle: {
+    [ELanguage.UA]: 'Перейти до переліку транспондерних новин',
+    [ELanguage.EN]: 'Go to the list of transponder news',
+  },
 };

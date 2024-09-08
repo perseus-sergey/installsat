@@ -25,7 +25,6 @@ import {
 } from '@/models/ui.model';
 import { EUrlAdminParam, EUrlBaseParam, MAIN_URL } from '@/models/url.model';
 import { Metadata } from 'next';
-import Link from 'next/link';
 import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
 import { getCommentsNumber } from '@/controllers/comments.controller';
 import GrooveLine from '@/components/ui/GrooveLine';
@@ -35,6 +34,7 @@ import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
 import EditLinkButton from '@/components/admin/EditLinkButton/EditLinkButton';
 import { notFound } from 'next/navigation';
 import { getELangKey } from '@/libs/utils/validSearchParam';
+import SeoLink from '@/components/ui/SeoLink/SeoLink';
 
 const BASE_URL = process.env.BASE_URL || MAIN_URL;
 
@@ -256,7 +256,11 @@ export default async function Page({ params }: IChannelProps) {
           similarTitle={`${simChannelsBefore.title[lang]} "${title}"`}
           similarArticlesMapped={similarChannels.map((chan) => (
             <li key={chan.slug}>
-              <SimilarFlyChannel lang={lang} chanParams={chan} />
+              <SimilarFlyChannel
+                lang={lang}
+                chanParams={chan}
+                chanName={title}
+              />
             </li>
           ))}
         />
@@ -265,14 +269,26 @@ export default async function Page({ params }: IChannelProps) {
       {similarArticles.length ? (
         <SimilarArticles
           similarTitle={simArticlesBefore.title[lang]}
-          similarArticlesMapped={similarArticles.map((art) => (
-            <li key={art.cpu}>
-              <Link href={`/${lang}/${EUrlBaseParam.ARTICLE}/${art.cpu}`}>
-                {lang === ELanguage.UA ? art.title : art.title_en || art.title}
-              </Link>
-              <span>{` (${getFormattedDateStrYearFirst(art.date)})`}</span>
-            </li>
-          ))}
+          similarArticlesMapped={similarArticles.map((art) => {
+            const artTitle =
+              lang === ELanguage.UA ? art.title : art.title_en || art.title;
+
+            return (
+              <li key={art.cpu}>
+                <SeoLink
+                  href={`/${lang}/${EUrlBaseParam.ARTICLE}/${art.cpu}`}
+                  title={
+                    lang === ELanguage.UA
+                      ? `Читати статтю ${artTitle}, яка пов'язана з каналом "${title}"`
+                      : `Read article ${artTitle}, related to channel "${title}"`
+                  }
+                >
+                  {artTitle}
+                </SeoLink>
+                <span>{` (${getFormattedDateStrYearFirst(art.date)})`}</span>
+              </li>
+            );
+          })}
         />
       ) : null}
 

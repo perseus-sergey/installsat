@@ -17,7 +17,6 @@ export const emptyChannelDescription = {
   uaDescription: null,
   uaKeywords: null,
   enKeywords: null,
-  languages: null,
   siteUrl: null,
   genreId: 0,
 };
@@ -31,7 +30,6 @@ const fullEmptyDescription = { ...emptyChannelDescription, genreId: null };
 //   uaDescription: string;
 //   uaKeywords: string;
 //   enKeywords: string;
-//   languages: string;
 //   siteUrl: string;
 //   genreId: number;
 // }
@@ -121,9 +119,6 @@ const generateAiText = async ({ channelTitle, language, ifRadio }) => {
       "text-ua": {
         "type": "string"
       },
-      "languages": {
-        "type": "string"
-      },
       "site-url": {
         "type": "string"
       }
@@ -145,8 +140,6 @@ const generateAiText = async ({ channelTitle, language, ifRadio }) => {
     - The text must be unique and not plagiarized.
     - Do not insert any links into the content.
     - If the channel is Russian news, write about it in a skeptical style.
-  
-  - 'languages' - Specify the main language of the channel (e.g., English, Persian). Up to 150 characters.
   
   - 'site-url' - Include the URL of the official site for this channel. If you are not sure about the existence of such a site, leave the field blank ("").
   
@@ -213,13 +206,6 @@ const extractDataFromAiJson = (aiObject) => {
       error: getErrorStr('EN_KEYWORDS'),
     };
 
-  const languages = aiObject['languages'].trim();
-  if (languages.length > 150)
-    return {
-      aiDescription: fullEmptyDescription,
-      error: `ERROR: Extracting channel languages from AI generated. Length: ${languages.length} characters > 150 allowed`,
-    };
-
   const siteUrl = aiObject['site-url'].trim();
   if (siteUrl.length > 150)
     return {
@@ -265,7 +251,6 @@ const extractDataFromAiJson = (aiObject) => {
   return {
     aiDescription: {
       uaText,
-      languages,
       siteUrl,
       enText,
       enDescription,
@@ -287,7 +272,6 @@ export const updateGeneratedDataDB = async (
     uaDescription,
     uaKeywords,
     enKeywords,
-    languages,
     siteUrl,
     genreId,
   },
@@ -303,7 +287,6 @@ export const updateGeneratedDataDB = async (
         description_ua = ?, 
         keywords_ua = ?, 
         keywords_en = ?, 
-        languages = ?, 
         official_site_url = ?, 
         theme_id = ?
       WHERE title = ? 
@@ -316,7 +299,6 @@ export const updateGeneratedDataDB = async (
     uaDescription,
     uaKeywords,
     enKeywords,
-    languages,
     siteUrl,
     genreId,
     channelName,

@@ -196,7 +196,7 @@ const extractDataFromAiJson = (aiObject) => {
   if (reliableRate < RELIABLE_THRESHOLD)
     return {
       aiDescription: emptyChannelDescription,
-      error: `ERROR: Reliable AI Rate ${reliableRate} < allowed threshold (${RELIABLE_THRESHOLD})`,
+      error: `${reliableRate} < allowed threshold (${RELIABLE_THRESHOLD})`,
     };
 
   const enDescription = aiObject['description-en'].trim();

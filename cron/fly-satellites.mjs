@@ -12,7 +12,7 @@ const BASE_URL = process.env.BASE_URL;
 const BASE_GURU_PATH = `${BASE_URL}/en/${EUrlAdminParam.BASE_PATH}`;
 
 const sendReportMail = async (messages, newSatList, overSats) => {
-  const messages = messages.length
+  const reportMessages = messages.length
     ? `<p style="color: blue; font-size: 20px; padding: 10px 0">Messages:</p><ul style="padding-bottom: 10px">${messages.map((msg) => `<li>${msg}</li>`).join('')}</ul>`
     : '';
 
@@ -30,7 +30,7 @@ const sendReportMail = async (messages, newSatList, overSats) => {
     body: `
       ${newSats}
       ${overSatList}
-      ${messages}
+      ${reportMessages}
     <hr />
     <p>
       <a style="color: blue; font-size: 20px; padding: 10px 0" target="_blank" href="${BASE_GURU_PATH}/${EUrlAdminParam.PARSE}" >
@@ -55,7 +55,7 @@ const PARSE_LIST_OF_SATELLITES_URL = 'https://flysat.com/en/satellitelist';
 const { FLY_SATELLITES } = EDBTableTitles;
 
 const R_U_N = async () => {
-  let messages = [];
+  let messages: string[] = [];
   let newSatList = [];
   let overSats = [];
   try {
@@ -63,7 +63,11 @@ const R_U_N = async () => {
       INTERVAL_FROM_LAST_UPDATE
     ));
   } catch (error) {
-    messages.push(error.message);
+    messages.push(
+      error instanceof Error
+        ? error.message
+        : 'ERROR: Unknown error occurred while parseProcess'
+    );
   }
 
   await sendReportMail(messages, newSatList, overSats);

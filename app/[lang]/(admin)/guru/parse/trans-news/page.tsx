@@ -25,6 +25,7 @@ import {
   insertDBTransNews,
   actionTextHandler,
 } from '@cron/libs/parseTransNews.controller.mjs';
+import { revalidatePath } from 'next/cache';
 
 export interface ITblDigestParse {
   date: string;
@@ -291,6 +292,8 @@ export default async function Page({
         ? resDbTableLength
         : resDbTableLength[0].count.toLocaleString('en-US')
     );
+
+  Object.values(ELanguage).forEach((l) => revalidatePath(`/${l}`));
 
   return (
     <>

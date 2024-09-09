@@ -322,3 +322,13 @@ export const parseProcess = async (intervalFromLastUpd) => {
 
   return { dbSatList, newSatList, overSats, updatedSatList, messages };
 };
+
+// interface IParsedSat {
+//   cluster: string,
+//   title: string,
+//   url_link: string,
+//   slug: string,
+//   position: string,
+//   grade: string,
+//   date_upd: string,
+// }

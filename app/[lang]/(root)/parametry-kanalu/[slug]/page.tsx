@@ -59,6 +59,8 @@ export interface IChannelProps {
   params: { [key in EUrlBaseParam]: string };
 }
 
+export const revalidate = 3600 * 24; // invalidate cache every 24 hours
+
 export const generateMetadata = async ({
   params,
 }: IChannelProps): Promise<Metadata> => {

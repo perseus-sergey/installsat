@@ -17,6 +17,8 @@ export interface IPageProps {
 
 const { metaDescription, metaH1, metaKeywords, metaTitle } = META_PACKAGES;
 
+export const revalidate = 3600 * 24; // invalidate cache every 1 day
+
 export const generateMetadata = ({ params }: IPageProps): Metadata => {
   const lang = getELangKey(params[EUrlBaseParam.LANG]);
 

@@ -68,7 +68,8 @@ interface IPageProps {
   searchParams?: TSearchParams;
 }
 
-export const dynamic = 'force-dynamic';
+// export const dynamic = 'force-dynamic';
+export const revalidate = 3600 * 48; // invalidate cache every 48 hours
 
 export const generateMetadata = async ({
   params,

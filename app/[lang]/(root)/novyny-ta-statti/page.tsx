@@ -38,6 +38,7 @@ const articleTitleImg = imagePathValidate(
 );
 
 // export const dynamic = 'force-dynamic';
+export const revalidate = 3600 * 12; // invalidate cache every 12 hours
 
 interface IProps {
   params: { [key in EUrlBaseParam]: string };

@@ -57,6 +57,7 @@ interface IPageProps {
 }
 
 // export const dynamic = 'force-dynamic';
+export const revalidate = 3600 * 6; // invalidate cache every 6 hours
 
 export const generateMetadata = async ({
   params,

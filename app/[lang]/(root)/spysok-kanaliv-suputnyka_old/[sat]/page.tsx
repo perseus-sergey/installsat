@@ -62,7 +62,7 @@ const getCurrentSatParams = cache((satCpu: string) => {
     : { title: '', id: '-1', satPosition: -1, logo: '', slug: '' };
 });
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 3600 * 12; // invalidate cache every 12 hours
 
 export const generateMetadata = ({ params }: IPageParams): Metadata => {
   const sat = params[SATELLITE];

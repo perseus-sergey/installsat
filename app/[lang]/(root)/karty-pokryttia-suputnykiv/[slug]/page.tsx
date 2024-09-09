@@ -34,6 +34,8 @@ interface IArticleParams {
 
 const BASE_URL = process.env.BASE_URL || MAIN_URL;
 
+export const revalidate = 3600 * 24 * 7; // invalidate cache every 7 days
+
 const {
   metaSingleMap: { metaKeywords, metaTitle, getDescription, getH1 },
   similar: { similarStart, similarTitle },
@@ -94,7 +96,7 @@ export async function generateStaticParams(): Promise<
 
 export const dynamicParams = false;
 
-export default async function layout({ params }: IArticleParams) {
+export default async function Page({ params }: IArticleParams) {
   const lang = getELangKey(params[EUrlBaseParam.LANG]);
   const slug = params[EUrlBaseParam.SLUG];
 

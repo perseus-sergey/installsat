@@ -51,8 +51,6 @@ const {
   CHANNEL_LIST_DB_ID,
 } = META_ALL_SAT_CHANNEL_LIST;
 
-export const dynamic = 'force-dynamic';
-
 interface IPageProps {
   params: { [key in EUrlBaseParam]: string };
   searchParams?: TSearchParams;

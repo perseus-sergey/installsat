@@ -68,6 +68,8 @@ const {
       }
     : satFinderArticleDBResult[0];
 
+export const revalidate = 3600 * 24 * 7; // invalidate cache every 7 days
+
 export const generateMetadata = ({ params }: IPageProps): Metadata => {
   const lang = getELangKey(params[EUrlBaseParam.LANG]);
 

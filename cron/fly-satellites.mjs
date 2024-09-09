@@ -3,6 +3,7 @@ import {
   EDBTableTitles,
   getDbTableLink,
   EUrlAdminParam,
+  EUrlBaseParam,
 } from './libs/commons.mjs';
 import { parseProcess } from './libs/parseALLFlySats.controller.mjs';
 
@@ -59,7 +60,7 @@ const R_U_N = async () => {
   let newSatList = [];
   let overSats = [];
   try {
-    ({ messages, newSatList, overSats } = await parseProcess(
+    ({ messages, newSatList, overSats, updatedSatList } = await parseProcess(
       INTERVAL_FROM_LAST_UPDATE
     ));
   } catch (error) {
@@ -71,6 +72,12 @@ const R_U_N = async () => {
   }
 
   await sendReportMail(messages, newSatList, overSats);
+
+  Object.values(ELanguage).forEach((l) =>
+    updatedSatList.forEach((sat) =>
+      revalidatePath(`/${l}/${EUrlBaseParam.SAT_CHANNEL_LIST}/${sat.slug}`)
+    )
+  );
 };
 
 R_U_N();

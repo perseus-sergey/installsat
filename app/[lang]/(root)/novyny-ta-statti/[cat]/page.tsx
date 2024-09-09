@@ -38,7 +38,8 @@ const articleTitleImg = imagePathValidate(
   images.titleImg.alternativeStr.title
 );
 
-export const dynamic = 'force-dynamic';
+// export const dynamic = 'force-dynamic';
+export const revalidate = 3600 * 12; // invalidate cache every 12 hours
 
 export interface IPageParams {
   params: { [key in EUrlBaseParam]: string };

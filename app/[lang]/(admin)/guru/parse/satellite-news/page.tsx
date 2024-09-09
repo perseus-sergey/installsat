@@ -17,7 +17,12 @@ import {
   extractAiArticleDataFromAiHTML,
   getAiPrompt,
 } from '@cron/libs/parseSatNews.controller.mjs';
-import { killChromeProcesses } from '@/cron/libs/commons.mjs';
+import {
+  ELanguage,
+  EUrlBaseParam,
+  killChromeProcesses,
+} from '@/cron/libs/commons.mjs';
+import { revalidatePath } from 'next/cache';
 
 interface IArticle {
   originalTitle: string;
@@ -164,6 +169,39 @@ const getOriginalArticleSlug = (
   return slug;
 };
 
+const getCatSlugsFromDBArr = async (newArticles: IArticle[]) => {
+  if (!newArticles.length) return [];
+
+  const catIds = [...new Set(newArticles.map((art) => art.category))];
+  const placeholders = catIds.map(() => '?').join(',');
+  const sql = `SELECT cpu FROM tbl_categories WHERE id IN (${placeholders})`;
+  const res = await poolExecute<{ cpu: string }[]>(sql, [...catIds]);
+
+  if (res instanceof Error) return `DB SELECT last SLUGs: ${res.message}`;
+
+  return res.map((r) => r.cpu);
+};
+
+const revalidateArticleLists = async (newArticles: IArticle[]) => {
+  const catList = await getCatSlugsFromDBArr(newArticles);
+  if (typeof catList === 'string')
+    addMessage(
+      `ERROR: Failed to revalidate Article List. Error message: "${catList}"`
+    );
+  else {
+    catList.push('');
+
+    Object.values(ELanguage).forEach((l) =>
+      catList.forEach((catSlug) =>
+        revalidatePath(
+          `/${l}/${EUrlBaseParam.NEWS_AND_ARTICLES}${catSlug ? `/${catSlug}` : ''}`
+        )
+      )
+    );
+    addMessage('SUCCESS: Article Lists Revalidated');
+  }
+};
+
 export default async function Page() {
   let browser: Browser | null = null;
   let mainLinks: string[] | string = '';
@@ -265,6 +303,8 @@ export default async function Page() {
       messages = [...messages, ...killRes];
     }
   }
+
+  await revalidateArticleLists(newArticles);
 
   await sendReportMail(messages);
 

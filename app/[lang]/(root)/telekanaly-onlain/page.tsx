@@ -57,7 +57,7 @@ const {
   },
 } = META_ALL_SAT_CHANNEL_LIST;
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 3600 * 48; // invalidate cache every 48 hours
 
 export const generateMetadata = ({ params }: IPageProps): Metadata => {
   const lang = getELangKey(params[LANG]);

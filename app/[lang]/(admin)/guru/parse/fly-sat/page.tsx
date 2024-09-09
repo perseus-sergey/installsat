@@ -8,11 +8,12 @@ import {
 import Link from 'next/link';
 import { validSearchParam } from '@/libs/utils/validSearchParam';
 import { EUrlSearchParam } from '@/models/url.model';
-import { EUrlAdminParam } from '@/cron/libs/commons.mjs';
+import { EUrlAdminParam, EUrlBaseParam } from '@/cron/libs/commons.mjs';
 import { sendMail } from '@/libs/mail/sendMail';
 import { renderAsync } from '@react-email/render';
 import { ParseTransNews } from '@/components/EmailTemplates/parseTransNews.template';
 import { parseProcess } from '@/cron/libs/parseALLFlySats.controller.mjs';
+import { revalidatePath } from 'next/cache';
 
 export const dynamic = 'force-dynamic';
 
@@ -30,6 +31,8 @@ export interface ITblFlySats {
 // Parse List of Satellites from FlySat with date_upd parameter
 // Parse All Satellite which satellite date_upd from my DB is different with parsed date_upd
 // ... OR parsed date_upd < then {INTERVAL_FROM_LAST_UPDATE} days ago
+// Than parse channels from all updated satellite
+// if new channels found generate ai description for its
 // =================================================================
 
 const INTERVAL_FROM_LAST_UPDATE = 2;
@@ -84,6 +87,12 @@ export default async function Page({
   // await sleep(1000);
 
   await sendReportMail(messages);
+
+  Object.values(ELanguage).forEach((l) =>
+    updatedSatList.forEach((sat) =>
+      revalidatePath(`/${l}/${EUrlBaseParam.SAT_CHANNEL_LIST}/${sat.slug}`)
+    )
+  );
 
   return (
     <>

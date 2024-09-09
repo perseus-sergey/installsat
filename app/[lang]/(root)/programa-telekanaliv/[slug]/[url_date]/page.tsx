@@ -58,7 +58,8 @@ export interface IPageProps {
   params: { [key in EUrlBaseParam]: string };
 }
 
-export const dynamic = 'force-dynamic';
+// export const dynamic = 'force-dynamic';
+export const revalidate = 3600 * 12; // invalidate cache every 12 hours
 
 export const generateMetadata = async ({
   params,

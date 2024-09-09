@@ -139,7 +139,7 @@ const generateAiText = async ({ channelTitle, language, ifRadio }) => {
     - Wrap relevant and important keywords or phrases in <strong> tags to optimize for SEO, ensuring it enhances the readability and value of the content without appearing excessive or spammy.
     - The text must be unique and not plagiarized.
     - Do not insert any links into the content.
-    - If the channel is Russian news, write about it in a skeptical style.
+    - If the channel is Russian or Belarusian news, write about it in a skeptical style.
   
   - 'site-url' - Include the URL of the official site for this channel. If you are not sure about the existence of such a site, leave the field blank ("").
   

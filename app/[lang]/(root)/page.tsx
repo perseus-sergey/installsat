@@ -16,7 +16,7 @@ interface IProps {
   params: { [key in EUrlBaseParam]: string };
 }
 
-export const dynamic = 'force-dynamic';
+// export const dynamic = 'force-dynamic';
 
 export default async function Page({ searchParams, params }: IProps) {
   const lang = getELangKey(params[EUrlBaseParam.LANG]);

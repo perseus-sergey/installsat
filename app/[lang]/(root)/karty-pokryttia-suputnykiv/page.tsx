@@ -12,8 +12,6 @@ import { getELangKey } from '@/libs/utils/validSearchParam';
 
 const BASE_URL = process.env.BASE_URL || MAIN_URL;
 
-// export const dynamic = 'force-dynamic';
-
 const {
   metaAllMaps: { metaDescription, metaKeywords, metaTitle },
   images: { allMaps: allMapsImg },

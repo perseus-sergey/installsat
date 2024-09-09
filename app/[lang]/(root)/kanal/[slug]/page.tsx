@@ -33,6 +33,8 @@ import FillingImg from '@/components/ui/Images/FillingImage';
 
 const BASE_URL = process.env.BASE_URL || MAIN_URL;
 
+export const revalidate = 3600 * 12; // invalidate cache every 12 hours
+
 const {
   images: {
     channelLogo: { big: bigLogo },

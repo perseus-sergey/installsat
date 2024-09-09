@@ -11,26 +11,6 @@ import * as cheerio from 'cheerio';
 
 // import { TDbBoolean } from '@/models/channel.model';
 
-// interface IFlyChannel {
-//   id?;
-//   frequency: number;
-//   polarization;
-//   mode;
-//   sr: number;
-//   fec;
-//   title;
-//   is_radio: TDbBoolean;
-//   compress;
-//   sid: number | null;
-//   v_pid: number | null;
-//   a_pid;
-//   encryption | null;
-//   is_biss: TDbBoolean;
-//   beam;
-//   t2_stream | null;
-// }
-
-// const BASE_URL = process.env.BASE_URL;
 export const PARSE_URL_BASE = 'https://www.flysat.com/en/satellite/';
 
 const isProductionMode = process.env.NODE_ENV === 'production';

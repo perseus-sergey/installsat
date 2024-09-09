@@ -20,7 +20,7 @@ interface IPageParams {
   params: { [key in EUrlBaseParam]: string };
 }
 
-export const dynamic = 'force-dynamic';
+// export const dynamic = 'force-dynamic';
 
 export const generateMetadata = async ({ params }: IPageParams) => {
   const { date } = params;

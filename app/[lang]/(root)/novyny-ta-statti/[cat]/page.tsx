@@ -114,12 +114,13 @@ export default async function Page({ params, searchParams }: IPageParams) {
   const pageNumber = parseInt(page, 10);
   if (isNaN(pageNumber)) notFound();
 
-  const allNews = await getChunkOfNews(
-    perPage,
-    (pageNumber - 1) * perPage,
-    id,
-    searchQuery
-  );
+  const allNews = await getChunkOfNews({
+    quantity: perPage,
+    start: (pageNumber - 1) * perPage,
+    catId: id,
+    searchQuery,
+    lang,
+  });
 
   const mapsCount = !allNews.length ? 0 : allNews[0].total_count;
 

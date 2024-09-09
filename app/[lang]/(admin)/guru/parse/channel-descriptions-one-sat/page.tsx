@@ -17,6 +17,7 @@ export const dynamic = 'force-dynamic';
 
 // =================================================================
 //
+// Set indexes in DB
 // Find approximate grades from search params for spysok-kanaliv-suputnyka
 // Change all Link to SeoLink
 // change all reactSelects

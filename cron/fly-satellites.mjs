@@ -55,7 +55,7 @@ const PARSE_LIST_OF_SATELLITES_URL = 'https://flysat.com/en/satellitelist';
 const { FLY_SATELLITES } = EDBTableTitles;
 
 const R_U_N = async () => {
-  let messages: string[] = [];
+  let messages = [];
   let newSatList = [];
   let overSats = [];
   try {

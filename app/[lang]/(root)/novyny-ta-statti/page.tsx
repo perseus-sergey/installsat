@@ -37,7 +37,7 @@ const articleTitleImg = imagePathValidate(
   images.titleImg.alternativeStr.title
 );
 
-export const dynamic = 'force-dynamic';
+// export const dynamic = 'force-dynamic';
 
 interface IProps {
   params: { [key in EUrlBaseParam]: string };
@@ -79,12 +79,12 @@ export default async function Page({ searchParams, params }: IProps) {
   const pageNumber = parseInt(page, 10);
   if (isNaN(pageNumber)) notFound();
 
-  const allNews = await getChunkOfNews(
-    perPage,
-    (pageNumber - 1) * perPage,
-    undefined,
-    searchQuery
-  );
+  const allNews = await getChunkOfNews({
+    quantity: perPage,
+    start: (pageNumber - 1) * perPage,
+    searchQuery,
+    lang,
+  });
 
   const mapsCount = !allNews.length ? 0 : allNews[0].total_count;
 

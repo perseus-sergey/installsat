@@ -7,7 +7,7 @@ import {
   ISimilarArticleModel,
   ISingleCatArticlesModel,
 } from '@/models/articles.model';
-import { EDBTableTitles } from '@/models/ui.model';
+import { EDBTableTitles, ELanguage } from '@/models/ui.model';
 import { decode } from 'html-entities';
 import { cache } from 'react';
 
@@ -45,14 +45,33 @@ export const getCurrentCatParams = cache(
   }
 );
 
-export const getChunkOfNews = async (
-  quantity: number,
+interface IChankOfNews {
+  quantity: number;
+  start?: number;
+  catId?: number;
+  searchQuery?: string;
+  lang: ELanguage;
+}
+
+export const getChunkOfNews = async ({
+  quantity,
   start = 0,
-  catId?: number,
-  searchQuery = ''
-) => {
+  catId,
+  searchQuery,
+  lang,
+}: IChankOfNews) => {
   const catValue = catId ? `=${catId}` : `NOT IN ${WRONG_CAT_IDS}`;
-  const searchText = searchQuery ? `LIKE "%${searchQuery}%"` : '!= ""';
+
+  const getSearchText = (alias = 'U.') => {
+    const uaStr = `${alias}title LIKE "%${searchQuery}%" OR ${alias}description LIKE "%${searchQuery}%"`;
+
+    return searchQuery
+      ? lang === ELanguage.UA
+        ? `AND (${uaStr})`
+        : `AND (${alias}title_en LIKE "%${searchQuery}%" OR ${alias}description_en LIKE "%${searchQuery}%" OR ${uaStr})`
+      : '';
+  };
+  // const searchText = searchQuery ? `LIKE "%${searchQuery}%"` : '!= ""';
 
   const sql = `
   SELECT 
@@ -76,10 +95,10 @@ FROM ${TBL_ARTICLE} U
 LEFT JOIN (SELECT post, COUNT(id) AS comment_count FROM tbl_comments GROUP BY post) C ON U.id = C.post
 LEFT JOIN tbl_categories C2 ON U.cat = C2.id
 CROSS JOIN
-  (SELECT COUNT(id) AS total_count FROM ${TBL_ARTICLE} WHERE cat ${catValue} AND (title ${searchText} OR description ${searchText})) T
+  (SELECT COUNT(id) AS total_count FROM ${TBL_ARTICLE} WHERE cat ${catValue} ${getSearchText('')}) T
 WHERE 
   U.cat ${catValue}
-  AND (U.title ${searchText} OR U.description ${searchText})
+${getSearchText()}
 ORDER BY 
   U.date DESC, U.id DESC
 LIMIT ?, ?

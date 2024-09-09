@@ -73,14 +73,14 @@ export const MENU_ACCORDION: { [key: string]: IAccordionItemOptions } = {
       width: 32,
       height: 24,
       alt: {
-        [ELanguage.UA]: 'Пакети каналів',
-        [ELanguage.EN]: 'Channels packages',
+        [ELanguage.UA]:
+          'Іконка з зображенням фільмової стрічки. Для пакетів каналів',
+        [ELanguage.EN]: 'Icon with film strip. For channels packages',
       },
     },
     title: {
-      [ELanguage.UA]:
-        'Іконка з зображенням фільмової стрічки. Для пакетів каналів',
-      [ELanguage.EN]: 'Icon with film strip. For channels packages',
+      [ELanguage.UA]: 'Пакети каналів',
+      [ELanguage.EN]: 'Channels packages',
     },
     baseHrefOfList: `/${EUrlBaseParam.PACKAGE_CHANNEL_LIST}`,
   },

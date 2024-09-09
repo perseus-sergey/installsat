@@ -15,23 +15,6 @@ export interface IAccordionItemOptions {
 }
 
 export const MENU_ACCORDION: { [key: string]: IAccordionItemOptions } = {
-  SATELLITE_TV: {
-    name: 'SATELLITE_TV',
-    img: {
-      src: '/Images/accordion/folder_home_3055.png',
-      width: 32,
-      height: 32,
-      alt: {
-        [ELanguage.UA]: 'Супутникове телебачення InstallSat',
-        [ELanguage.EN]: 'Satellite TV Installsat',
-      },
-    },
-    title: {
-      [ELanguage.UA]: 'Цифрове телебачення',
-      [ELanguage.EN]: 'Digital TV',
-    },
-    titleHref: `/${EUrlBaseParam.ARTICLE}/sputnikovoe-televidenie`,
-  },
   SAT_FINDER: {
     name: 'SAT_FINDER',
     img: {
@@ -39,8 +22,8 @@ export const MENU_ACCORDION: { [key: string]: IAccordionItemOptions } = {
       width: 32,
       height: 32,
       alt: {
-        [ELanguage.EN]: 'Satellite Finder',
-        [ELanguage.UA]: 'Пошук супутників',
+        [ELanguage.UA]: 'Іконка пошуку супутників',
+        [ELanguage.EN]: 'Satellite search icon',
       },
     },
     title: {
@@ -56,8 +39,8 @@ export const MENU_ACCORDION: { [key: string]: IAccordionItemOptions } = {
       width: 32,
       height: 32,
       alt: {
-        [ELanguage.UA]: 'Карти покриття телевізійних супутників',
-        [ELanguage.EN]: 'Satellite coverage maps',
+        [ELanguage.UA]: 'Іконка для карт покриття телевізійних супутників',
+        [ELanguage.EN]: 'Satellite coverage maps icon',
       },
     },
     title: {
@@ -66,23 +49,6 @@ export const MENU_ACCORDION: { [key: string]: IAccordionItemOptions } = {
     },
     baseHrefOfList: `/${EUrlBaseParam.SAT_COVERAGE_MAP}`,
   },
-  // INSTALLATIONS: {
-  //   name: 'INSTALLATIONS',
-  //   img: {
-  //     src: '/Images/accordion/advancedsettings_2775.png',
-  //     width: 32,
-  //     height: 32,
-  //     alt: {
-  //       [ELanguage.UA]: 'Варіанти встановлення супутникового тб',
-  //       [ELanguage.EN]: 'Installing options for satellite TV',
-  //     },
-  //   },
-  //   title: {
-  //     [ELanguage.UA]: 'Варіанти встановлення',
-  //     [ELanguage.EN]: 'Installing options',
-  //   },
-  //   baseHrefOfList: `/${EUrlBaseParam.INSTALLATION_OPTIONS}`,
-  // },
   SATELLITES: {
     name: 'SATELLITES',
     img: {
@@ -90,25 +56,8 @@ export const MENU_ACCORDION: { [key: string]: IAccordionItemOptions } = {
       width: 34,
       height: 32,
       alt: {
-        [ELanguage.UA]: 'Канали на супутниках',
-        [ELanguage.EN]: 'Channels on satellites',
-      },
-    },
-    title: {
-      [ELanguage.UA]: 'Канали на супутниках',
-      [ELanguage.EN]: 'Channels on satellites',
-    },
-    baseHrefOfList: `/${EUrlBaseParam.SAT_CHANNEL_LIST}`,
-  },
-  SATELLITES_FLY: {
-    name: 'SATELLITES_FLY',
-    img: {
-      src: '/Images/accordion/satellite32.png',
-      width: 34,
-      height: 32,
-      alt: {
-        [ELanguage.UA]: 'Канали на супутниках',
-        [ELanguage.EN]: 'Channels on satellites',
+        [ELanguage.UA]: 'Іконка з зображенням супутника',
+        [ELanguage.EN]: 'Satellite icon',
       },
     },
     title: {
@@ -129,8 +78,9 @@ export const MENU_ACCORDION: { [key: string]: IAccordionItemOptions } = {
       },
     },
     title: {
-      [ELanguage.UA]: 'Пакети каналів',
-      [ELanguage.EN]: 'Channel packages',
+      [ELanguage.UA]:
+        'Іконка з зображенням фільмової стрічки. Для пакетів каналів',
+      [ELanguage.EN]: 'Icon with film strip. For channels packages',
     },
     baseHrefOfList: `/${EUrlBaseParam.PACKAGE_CHANNEL_LIST}`,
   },
@@ -141,8 +91,10 @@ export const MENU_ACCORDION: { [key: string]: IAccordionItemOptions } = {
       width: 32,
       height: 32,
       alt: {
-        [ELanguage.UA]: 'Корисні статті',
-        [ELanguage.EN]: 'Useful articles',
+        [ELanguage.UA]:
+          'Іконка з зображенням листа паперу з ключем. Для корисних статей',
+        [ELanguage.EN]:
+          'Icon with the image of a sheet of paper with a key. For useful articles',
       },
     },
     title: {
@@ -158,8 +110,10 @@ export const MENU_ACCORDION: { [key: string]: IAccordionItemOptions } = {
       width: 37,
       height: 32,
       alt: {
-        [ELanguage.UA]: 'Онлайн ТБ',
-        [ELanguage.EN]: 'Online TV',
+        [ELanguage.UA]:
+          'Іконка з зображенням бобини з кіноплівкою. Для онлайн ТБ',
+        [ELanguage.EN]:
+          'An icon with the image of a reel with film. For online TV',
       },
     },
     title: { [ELanguage.UA]: 'Онлайн ТБ', [ELanguage.EN]: 'Online TV' },
@@ -172,8 +126,8 @@ export const MENU_ACCORDION: { [key: string]: IAccordionItemOptions } = {
       width: 32,
       height: 32,
       alt: {
-        [ELanguage.UA]: 'Розклад передач ТБ',
-        [ELanguage.EN]: 'TV schedule',
+        [ELanguage.UA]: 'Іконка з календарем розкладу телевізійних передач',
+        [ELanguage.EN]: 'An icon with a schedule of television programs',
       },
     },
     title: { [ELanguage.UA]: 'Програма ТБ', [ELanguage.EN]: 'TV schedule' },

@@ -188,4 +188,13 @@ export const audioLanguages = {
   msa: 'Malay',
 };
 
-export const wrongAudio = ['ac3', 'aac', 'qaa', 'qad', 'qis', 'org'];
+export const wrongAudio = [
+  'ac3',
+  'aac',
+  'aac-adts',
+  'aac-latm',
+  'qaa',
+  'qad',
+  'qis',
+  'org',
+];

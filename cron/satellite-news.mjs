@@ -10,8 +10,6 @@ import {
   killChromeProcesses,
   getContentFromPuppeteerBrowser,
   DEFAULT_ARTICLE_LOGO_NAME,
-  ELanguage,
-  EUrlBaseParam,
 } from './libs/commons.mjs';
 import { executePoolQuery } from './libs/mysqldb.mjs';
 import {
@@ -19,7 +17,6 @@ import {
   extractAiArticleDataFromAiHTML,
   getAiPrompt,
 } from './libs/parseSatNews.controller.mjs';
-import { revalidatePath } from 'next/cache';
 
 // ----------------------------------------------------------------
 // Parse last articles from specified sites then change them by AI
@@ -81,19 +78,6 @@ const getLastSlugsFromDB = async () => {
   return res;
 };
 
-const getCatSlugsFromDBArr = async (newArticles) => {
-  if (!newArticles.length) return [];
-
-  const catIds = [...new Set(newArticles.map((art) => art.category))];
-  const placeholders = catIds.map((_) => '?').join(',');
-  const sql = `SELECT cpu FROM tbl_categories WHERE id IN (${placeholders})`;
-  const res = await executePoolQuery(sql, [...catIds]);
-
-  if (res instanceof Error) return `DB SELECT last SLUGs: ${res.message}`;
-
-  return res.map((r) => r.cpu);
-};
-
 const generateAiText = async (originalText) => {
   const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
 
@@ -121,26 +105,6 @@ const extractOriginalArticle = ($, h1Selector, contentSelector) => {
   const articleContent = articleText.join(' ');
 
   return { articleTitle, articleContent };
-};
-
-const revalidateArticleLists = async (newArticles) => {
-  const catList = await getCatSlugsFromDBArr(newArticles);
-  if (typeof catList === 'string')
-    addMessage(
-      `ERROR: Failed to revalidate Article List. Error message: "${catList}"`
-    );
-  else {
-    catList.push('');
-
-    Object.values(ELanguage).forEach((l) =>
-      catList.forEach((catSlug) =>
-        revalidatePath(
-          `/${l}/${EUrlBaseParam.NEWS_AND_ARTICLES}${catSlug ? `/${catSlug}` : ''}`
-        )
-      )
-    );
-    addMessage('SUCCESS: Article Lists Revalidated');
-  }
 };
 
 const sendReportMail = async (messages) => {
@@ -302,8 +266,6 @@ const R_U_N = async () => {
       messages = [...messages, ...killRes];
     }
   }
-
-  await revalidateArticleLists(newArticles);
 
   await sendReportMail(messages);
 };

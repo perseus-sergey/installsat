@@ -7,7 +7,6 @@ import {
   getDbTableLink,
   EUrlAdminParam,
   killChromeProcesses,
-  ELanguage,
 } from './libs/commons.mjs';
 import {
   deleteDBOldTransNews,
@@ -16,7 +15,6 @@ import {
   getDbIdAmount,
   actionTextHandler,
 } from './libs/parseTransNews.controller.mjs';
-import { revalidatePath } from 'next/cache';
 
 const BASE_URL = process.env.BASE_URL;
 const BASE_GURU_PATH = `${BASE_URL}/en/${EUrlAdminParam.BASE_PATH}`;
@@ -263,8 +261,6 @@ const R_U_N = async () => {
       ? 'Not Defined'
       : resDbTableLength[0].count.toLocaleString('en-US')
   );
-
-  Object.values(ELanguage).forEach((l) => revalidatePath(`/${l}`));
 };
 
 R_U_N();

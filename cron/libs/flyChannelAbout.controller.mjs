@@ -66,7 +66,7 @@ const generateAiText = async ({ channelTitle, language, ifRadio }) => {
     },
     {
       category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,
-      threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
+      threshold: HarmBlockThreshold.BLOCK_ONLY_HIGH,
     },
   ];
 

@@ -1,15 +1,15 @@
 import styles from './WidgetArticleCategories.module.scss';
 import { WIDGET_ARTICLE_CATEGORY } from '@/models/widget.model';
 import { ELanguage } from '@/models/ui.model';
-import { getArticleCatList } from '@/controllers/articles.controller';
+import { getArtCatListSideBar } from '@/controllers/articles.controller';
 import SeoLink from '../ui/SeoLink/SeoLink';
 
 const WidgetArticleCategories = async ({ lang }: { lang: ELanguage }) => {
-  const articleCatWidgetList = await getArticleCatList();
+  const articleCatWidgetList = await getArtCatListSideBar(lang);
 
   return articleCatWidgetList.length > 0 ? (
     <ul className="sidebar-widget" data-testid="WidgetArticleCategories">
-      <li className={styles.listItem}>
+      <li className="font-bold pb-2">
         <SeoLink
           title={WIDGET_ARTICLE_CATEGORY.ariaLabelForTitle[lang]}
           className={styles.itemLink}
@@ -20,17 +20,14 @@ const WidgetArticleCategories = async ({ lang }: { lang: ELanguage }) => {
         <br />
       </li>
       {articleCatWidgetList.map((item) => {
-        const itemTitle =
-          lang === ELanguage.UA ? item.title : item.title_en || item.title;
-
         return (
-          <li key={item.id} className={styles.listItem}>
+          <li key={item.cpu} className="font-bold pb-2">
             <SeoLink
-              title={`${WIDGET_ARTICLE_CATEGORY.ariaLabel[lang]}: "${itemTitle}"`}
+              title={`${WIDGET_ARTICLE_CATEGORY.ariaLabel[lang]}: "${item.title}"`}
               className={styles.itemLink}
               href={`/${lang}${WIDGET_ARTICLE_CATEGORY.baseHrefOfList}/${item.cpu}/`}
             >
-              {itemTitle}
+              {item.title}
             </SeoLink>
           </li>
         );

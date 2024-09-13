@@ -9,7 +9,7 @@ interface IEmptyDataProps {
 }
 
 const EmptyData = ({ description, lang }: IEmptyDataProps) => (
-  <h3
+  <section
     className="p-5 font-bold text-purple-600 flex flex-col items-center gap-12"
     data-testid="EmptyData"
   >
@@ -18,10 +18,8 @@ const EmptyData = ({ description, lang }: IEmptyDataProps) => (
       alternativeImgString={ERRORS.EMPTY_DATE_NEWS_PAGE.img.alternativeImgStr}
       alt="Empty Data Image"
     />
-    {/* {ERRORS.ERROR_EMPTY_DATA[lang]} */}
-    {description || ERRORS.ERROR_EMPTY_DATA[lang]}
-    {/* {description && !IS_PRODUCTION ? <span>: {description}</span> : null} */}
-  </h3>
+    <p>{description || ERRORS.ERROR_EMPTY_DATA[lang]}</p>
+  </section>
 );
 
 export default EmptyData;

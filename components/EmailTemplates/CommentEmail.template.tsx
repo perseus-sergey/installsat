@@ -23,7 +23,6 @@ import {
   Section,
   Text,
 } from '@react-email/components';
-import * as React from 'react';
 
 const {
   COMMENT_DEL_ARTICLE_ID,

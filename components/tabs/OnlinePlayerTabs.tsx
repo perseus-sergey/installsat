@@ -1,7 +1,7 @@
 'use client';
 
 import styles from './OnlinePlayerTabs.module.scss';
-import Video from 'next-video';
+// import Video from 'next-video';
 import FakePlayer from '../online/FakePlayer/FakePlayer';
 import BaseButton from '../ui/buttons/BaseButton/BaseButton';
 import React, { useState } from 'react';
@@ -10,6 +10,7 @@ import {
   META_CHANNEL_ONLINE,
 } from '../../models/channel.model';
 import { ELanguage } from '@/models/ui.model';
+// import dynamic from 'next/dynamic';
 
 const {
   tabs: {
@@ -34,7 +35,7 @@ const OnlinePlayerTabs = ({
   const streams = [
     {
       stream: potok,
-      player: ONLINE_PLAYERS.MAIN_STREAM(potok),
+      player: ONLINE_PLAYERS.MAIN_STREAM(potok, title, lang),
     },
     {
       stream: tvforsite_net,
@@ -95,7 +96,7 @@ const OnlinePlayerTabs = ({
 export default OnlinePlayerTabs;
 
 const ONLINE_PLAYERS = {
-  MAIN_STREAM(stream: string) {
+  MAIN_STREAM(stream: string, chanTitle: string, lang: ELanguage) {
     return !stream ? null : /.*youtu.*/.test(stream) ? (
       <iframe
         style={{
@@ -107,9 +108,11 @@ const ONLINE_PLAYERS = {
         height={yHeight}
         src={`${yEmbedPath}${stream.replace(/\/$/, '').split('/').reverse()[0]}`}
         allowFullScreen
-      ></iframe>
+      />
     ) : (
-      <Video src={stream} />
+      // <Video src={stream} />
+      // <DynamicVideo src={stream} />
+      <FakePlayer lang={lang} chanTitle={chanTitle} url={stream} />
     );
   },
   TV_FOR_SITE_NET(stream: string, chanTitle: string, lang: ELanguage) {
@@ -121,3 +124,7 @@ const ONLINE_PLAYERS = {
   //   return !stream ? null : <DangerHtml text={stream} />;
   // },
 };
+
+// const DynamicVideo = dynamic(() => import('next-video'), {
+//   ssr: false, // Вимикаємо SSR для компонентів, що використовують клієнтські ресурси
+// });

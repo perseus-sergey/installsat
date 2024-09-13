@@ -1,7 +1,5 @@
 import { auth, signOut } from '@/auth';
 import BaseButton from '../ui/buttons/BaseButton/BaseButton';
-// import Link from 'next/link';
-// import { EUrlBaseParam } from '@/models/url.model';
 
 const UserWelcome = async () => {
   const session = await auth();

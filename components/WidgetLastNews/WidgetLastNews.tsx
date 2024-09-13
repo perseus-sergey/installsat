@@ -10,22 +10,22 @@ const WidgetLastNews = async ({ lang }: { lang: ELanguage }) => {
 
   return (
     <div className="sidebar-widget" data-testid="WidgetLastNews">
-      <h3 className={styles.title}>
+      <h3 className={`${styles.title} min-h-12 pb-2 font-bold text-xl`}>
         <SeoLink
           title={WIDGET_LAST_NEWS.ariaLabelForTitle[lang]}
           href={`/${lang}/${WIDGET_LAST_NEWS.href}`}
-          className={styles.titleLink}
+          className={`${styles.titleLink} flex items-center gap-4 text-white`}
         >
           {WIDGET_LAST_NEWS.title[lang]}
         </SeoLink>
       </h3>
-      <ul className={styles.listBody}>
+      <ul>
         {lastNewsWidgetList.map((item) => {
           const itemTitle =
             lang === ELanguage.UA ? item.title : item.title_en || item.title;
 
           return (
-            <li key={item.id} className={styles.listItem}>
+            <li key={item.id} className={`${styles.listItem} py-1`}>
               <SeoLink
                 title={`${WIDGET_LAST_NEWS.ariaLabel[lang]}: "${itemTitle}"`}
                 href={`/${lang}/${WIDGET_LAST_NEWS.baseHrefOfList}/${item.cpu}/`}

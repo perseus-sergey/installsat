@@ -1,46 +1,6 @@
-.CommentForm {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 0.2rem;
-  padding: 1rem;
-
-  .inputField {
-    margin-top: 3px;
-    padding: 5px;
-    color: rgb(66, 66, 66);
-    border: 1px solid lightgray;
-    cursor: auto;
-    border-width: 2px;
-    border-style: inset;
-    background-image: linear-gradient(
-      to bottom,
-      rgba(255, 255, 255, 1) 0%,
-      rgba(243, 243, 243, 1) 50%,
-      rgba(237, 237, 237, 1) 51%,
-      rgba(255, 255, 255, 1) 100%
-    );
-
-    @media (max-width: 650px) {
-      max-width: 300px;
-    }
-
-    @media (max-width: 370px) {
-      max-width: 270px;
-    }
-  }
-
-  label {
-    color: #d7ecff;
-  }
-
-  .required {
-    padding-left: 0.1rem;
-
-    &::after {
-      content: '*';
-      color: #c6ff33;
-      font-size: 1.2rem;
-    }
-  }
+.required::after {
+  content: '*';
+  color: #c6ff33;
+  font-size: 1.2rem;
+  padding-left: 0.1rem;
 }

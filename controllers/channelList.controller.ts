@@ -292,7 +292,7 @@ export const getChannelPackages = async (): Promise<
 
 export const getOnlineChannels = cache(
   async (lang: ELanguage, searchQuery = '') => {
-    const searchPart = searchQuery ? `AND C.title LIKE "%${searchQuery}%"` : '';
+    const searchPart = searchQuery ? `AND C.title LIKE ?` : '';
 
     const sql = `
     SELECT 
@@ -318,13 +318,14 @@ export const getOnlineChannels = cache(
     LEFT JOIN ${TBL_LANGUAGE} AS L ON C.lang = L.id
     LEFT JOIN 
           ${CHANNEL_THEME} AS T ON C.tema = T.id 
-    WHERE ((C.compress = 5 AND C.tema != 15) OR 
+    WHERE ((C.compress = 5 AND C.tema != 15 AND C.potok LIKE "%youtu%") OR 
           (C.compress != 5 AND C.tema != 15 AND C.tvforsite_net != '' AND C.cat != 23))
           ${searchPart}
     ORDER BY C.tema, C.tvforsite_net DESC
   `;
-
-    const resp = await poolExecute<IOnlineChannelListModel[]>(sql);
+    const resp = await poolExecute<IOnlineChannelListModel[]>(sql, [
+      `%${searchQuery}%`,
+    ]);
 
     if (resp instanceof Error || !resp.length) return [];
 

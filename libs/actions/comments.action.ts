@@ -1,23 +1,8 @@
 'use server';
 
-import {
-  deleteComment,
-  deleteSubscriptionEmail,
-  editCommentDB,
-  insertComment,
-} from '@/controllers/comments.controller';
-import {
-  IFormState,
-  fromErrorToFormState,
-  toFormState,
-} from '@/controllers/toast.controller';
-import { EEditCommentFieldNames } from '@/models/admin.model';
-import { COMMENTS_MODEL, ECommentFormNames } from '@/models/comments.model';
+import { IFormState } from '@/controllers/toast.controller';
+import { ECommentFormNames } from '@/models/comments.model';
 import { EDBTableTitles, ELanguage } from '@/models/ui.model';
-import { revalidatePath } from 'next/cache';
-import { z } from 'zod';
-
-const { authorName, authorEmail, commentText } = COMMENTS_MODEL.commentForm;
 
 const emptyFieldValues = {
   authorName: '',
@@ -27,8 +12,15 @@ const emptyFieldValues = {
 
 const { AUTHOR, EMAIL, TEXT } = ECommentFormNames;
 
-const getCommentSchema = (lang: ELanguage) =>
-  z.object({
+const getCommentSchema = async (lang: ELanguage) => {
+  const { z } = await import('zod');
+  const {
+    COMMENTS_MODEL: {
+      commentForm: { authorName, authorEmail, commentText },
+    },
+  } = await import('@/models/comments.model');
+
+  return z.object({
     [AUTHOR]: z
       .string()
       .min(authorName.minSize.value, authorName.minSize.warningText[lang])
@@ -42,6 +34,7 @@ const getCommentSchema = (lang: ELanguage) =>
       .min(commentText.minSize.value, commentText.minSize.warningText[lang])
       .max(commentText.maxSize.value, commentText.maxSize.warningText[lang]),
   });
+};
 
 export const addCommentAction = async (
   lang: ELanguage,
@@ -53,11 +46,15 @@ export const addCommentAction = async (
   _formState: IFormState,
   formData: FormData
 ) => {
+  const { insertComment } = await import('@/controllers/comments.controller');
+  const { fromErrorToFormState, toFormState } = await import(
+    '@/controllers/toast.controller'
+  );
   let fieldValues = emptyFieldValues;
   let res = 0;
 
   try {
-    const validFormData = getCommentSchema(lang).parse({
+    const validFormData = (await getCommentSchema(lang)).parse({
       [AUTHOR]: formData.get(AUTHOR),
       [EMAIL]: formData.get(EMAIL),
       [TEXT]: formData.get(TEXT),
@@ -82,6 +79,8 @@ export const addCommentAction = async (
     return fromErrorToFormState(error);
   }
 
+  const { revalidatePath } = await import('next/cache');
+
   revalidatePath(revalidateUrl);
 
   return toFormState('SUCCESS', `${res} comment added`, fieldValues);
@@ -92,10 +91,17 @@ export const deleteCommentAction = async (
   dbTableName: EDBTableTitles,
   revalidateUrl: string
 ) => {
+  const { fromErrorToFormState, toFormState } = await import(
+    '@/controllers/toast.controller'
+  );
+  const { deleteComment } = await import('@/controllers/comments.controller');
+
   const delCommentResult = await deleteComment(dbTableName, commentID);
 
   if (delCommentResult instanceof Error)
     return fromErrorToFormState(delCommentResult.message);
+
+  const { revalidatePath } = await import('next/cache');
 
   revalidatePath(revalidateUrl);
 
@@ -111,6 +117,13 @@ export const delSubscriptionAction = async (
   commentDbTable: EDBTableTitles,
   mail: string
 ) => {
+  const { deleteSubscriptionEmail } = await import(
+    '@/controllers/comments.controller'
+  );
+  const { fromErrorToFormState, toFormState } = await import(
+    '@/controllers/toast.controller'
+  );
+
   const delResult = await deleteSubscriptionEmail(
     commentDbTable,
     articleId,
@@ -129,16 +142,23 @@ export const editCommentAction = async (
   _formState: IFormState,
   formData: FormData
 ) => {
-  const { COMMENT_TEXT } = EEditCommentFieldNames;
-
-  const commentSchema = z.object({
-    [COMMENT_TEXT]: z
-      .string()
-      .min(2, 'At least 2 characters')
-      .max(450, '450 characters maximum'),
-  });
+  const { editCommentDB } = await import('@/controllers/comments.controller');
+  const { fromErrorToFormState, toFormState } = await import(
+    '@/controllers/toast.controller'
+  );
+  const {
+    EEditCommentFieldNames: { COMMENT_TEXT },
+  } = await import('@/models/admin.model');
 
   try {
+    const { z } = await import('zod');
+
+    const commentSchema = z.object({
+      [COMMENT_TEXT]: z
+        .string()
+        .min(2, 'At least 2 characters')
+        .max(450, '450 characters maximum'),
+    });
     const validFormData = commentSchema.parse({
       [COMMENT_TEXT]: formData.get(COMMENT_TEXT),
     });
@@ -149,8 +169,9 @@ export const editCommentAction = async (
       validFormData[COMMENT_TEXT]
     );
 
+    const { revalidatePath } = await import('next/cache');
+
     revalidatePath(revalidateUrl);
-    // redirect(revalidateUrl);
 
     return toFormState('SUCCESS', `${res} comment changed`);
   } catch (error) {

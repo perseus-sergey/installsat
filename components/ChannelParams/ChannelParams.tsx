@@ -3,8 +3,8 @@ import { EUrlBaseParam } from '@/models/url.model';
 import { DB_ARRAY_SEPARATOR, ELanguage } from '@/models/ui.model';
 import { TitleH2 } from '../ui/Titles/TitleH2';
 import TooltipSimple from '../ui/tooltips/TooltipSimple/TooltipSimple';
-import { getLanguageList } from '@/controllers/channelList.controller';
 import SeoLink from '../ui/SeoLink/SeoLink';
+import { getLanguageList } from '@/controllers/languageList.controller';
 
 interface IChannelParamsProps {
   channelDBParams: IChannel;

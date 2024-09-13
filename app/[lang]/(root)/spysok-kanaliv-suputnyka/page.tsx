@@ -118,11 +118,13 @@ export default async function Page({ searchParams, params }: IPageProps) {
       searchParams
     );
 
-    const {
-      getFlySatChannels,
-      getFlyGroupedChannelsAllSat,
-      getChannelsLangList,
-    } = await import('@/controllers/channelList.controller');
+    const { getFlySatChannels, getFlyGroupedChannelsAllSat } = await import(
+      '@/controllers/channelList.controller'
+    );
+
+    const { getChannelsLangList } = await import(
+      '@/controllers/languageList.controller'
+    );
 
     satChannels = await getFlySatChannels(
       lang,

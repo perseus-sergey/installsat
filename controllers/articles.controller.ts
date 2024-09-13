@@ -133,32 +133,25 @@ LIMIT ?, ?
 
 export const satMapListSql = `
   SELECT 
-      MAX(b.id) AS beam_id,
-      s.id,
-      s.title,
-      s.description,
-      s.cpu,
-      s.logo,
-      s.view,
-      s.position,
-      MAX(C.comment_count) AS comment_count
-  FROM (
-      SELECT * 
-      FROM tbl_chan_beam
-      WHERE map_img != ''
-  ) AS b
+    MAX(b.id) AS beam_id,
+    s.id,
+    s.title,
+    s.description,
+    s.cpu,
+    s.logo,
+    s.view,
+    s.position,
+    MAX(C.comment_count) AS comment_count
+  FROM tbl_chan_beam AS b
   LEFT JOIN tbl_chan_sat AS s ON b.sat = s.id
   LEFT JOIN (
       SELECT post, COUNT(id) AS comment_count 
       FROM tbl_comments_maps 
       GROUP BY post
-  ) C ON s.id = C.post
-  GROUP BY s.id, s.title, s.description, s.cpu, s.logo, s.view, s.position
-  ORDER BY (
-      SELECT grade 
-      FROM tbl_chan_sat
-      WHERE id = s.id
-  );
+  ) AS C ON s.id = C.post
+  WHERE b.map_img != ''
+  GROUP BY s.id, s.title, s.description, s.cpu, s.logo, s.view, s.position, s.grade
+  ORDER BY s.grade;
 `;
 
 export const getSatMapList = cache(async () => {

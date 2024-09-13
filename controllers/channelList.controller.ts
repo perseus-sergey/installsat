@@ -6,14 +6,8 @@ import {
   IPackageChannelListModel,
   ISatChannelListModel,
 } from '@/models/channelList.model';
-import { ISatelliteOption } from '@/models/tblSat.model';
-import {
-  DB_ARRAY_SEPARATOR,
-  EDBTableTitles,
-  ELanguage,
-} from '@/models/ui.model';
-import { audioLanguages, wrongAudio } from '@cron/libs/languages.mjs';
-import { decode } from 'html-entities';
+import { EDBTableTitles, ELanguage } from '@/models/ui.model';
+// import { decode } from 'html-entities';
 import { cache } from 'react';
 
 const {
@@ -33,7 +27,7 @@ const {
 const groupeChannelsBy = <T>(
   channelList: T[],
   groupChanBy: keyof T,
-  decodeFields?: (keyof T)[],
+  _decodeFields?: (keyof T)[],
   sortChanBy?: keyof T
 ): [string, T[]][] => {
   const groupedData = channelList.reduce(
@@ -45,15 +39,15 @@ const groupeChannelsBy = <T>(
 
       const decodedChannel = { ...channel };
 
-      if (decodeFields) {
-        decodeFields.forEach((field) => {
-          if (typeof channel[field] === 'string') {
-            (decodedChannel[field] as unknown as string) = decode(
-              channel[field] as string
-            );
-          }
-        });
-      }
+      // if (decodeFields) {
+      //   decodeFields.forEach((field) => {
+      //     if (typeof channel[field] === 'string') {
+      //       (decodedChannel[field] as unknown as string) = decode(
+      //         channel[field] as string
+      //       );
+      //     }
+      //   });
+      // }
 
       acc[groupedField].push(decodedChannel);
 
@@ -149,14 +143,16 @@ export const getSatChannels = cache(
 
     const resp = await poolExecute<ISatChannelListModel[]>(sql, [satId]);
 
-    return resp instanceof Error || resp.length === 0
-      ? []
-      : resp.map((r) => ({
-          ...r,
-          sat_title: decode(r.sat_title),
-          title: decode(r.title),
-          description: decode(r.description),
-        }));
+    return resp instanceof Error || resp.length === 0 ? [] : resp;
+
+    // return resp instanceof Error || resp.length === 0
+    //   ? []
+    //   : resp.map((r) => ({
+    //       ...r,
+    //       sat_title: decode(r.sat_title),
+    //       title: decode(r.title),
+    //       description: decode(r.description),
+    //     }));
   }
 );
 
@@ -247,15 +243,18 @@ export const getFlySatChannels = cache(
   `;
     const resp = await poolExecute<IFlyChannel[]>(sql, [satSlug]);
 
-    return resp instanceof Error || resp.length === 0
-      ? []
-      : resp.map((r) => ({
-          ...r,
-          sat_title: decode(r.sat_title),
-          title: decode(r.title),
-          description: decode(r.description),
-        }));
+    return resp instanceof Error || resp.length === 0 ? [] : resp;
   }
+
+  //   return resp instanceof Error || resp.length === 0
+  //     ? []
+  //     : resp.map((r) => ({
+  //         ...r,
+  //         sat_title: decode(r.sat_title),
+  //         title: decode(r.title),
+  //         description: decode(r.description),
+  //       }));
+  // }
 );
 
 export const getChannelPackages = async (): Promise<
@@ -281,13 +280,15 @@ export const getChannelPackages = async (): Promise<
 
   const resp = await poolExecute<IChannelPackagesModel[]>(sql);
 
-  return resp instanceof Error || resp.length === 0
-    ? []
-    : resp.map((r) => ({
-        ...r,
-        title: decode(r.title),
-        description: decode(r.description),
-      }));
+  return resp instanceof Error || resp.length === 0 ? [] : resp;
+
+  // return resp instanceof Error || resp.length === 0
+  //   ? []
+  //   : resp.map((r) => ({
+  //       ...r,
+  //       title: decode(r.title),
+  //       description: decode(r.description),
+  //     }));
 };
 
 export const getOnlineChannels = cache(
@@ -331,11 +332,12 @@ export const getOnlineChannels = cache(
 
     const groupedData = resp.reduce(
       (acc, channel) => {
-        const decodedChannel = {
-          ...channel,
-          chan_title: decode(channel.chan_title),
-          chan_description: decode(channel.chan_description),
-        };
+        // const decodedChannel = {
+        //   ...channel,
+        //   chan_title: decode(channel.chan_title),
+        //   chan_description: decode(channel.chan_description),
+        // };
+        const decodedChannel = channel;
 
         const { chan_title, genre_title, potok, tvforsite_net } =
           decodedChannel;
@@ -581,68 +583,68 @@ export const getFlyGroupedChannelsAllSat = (
   return sortedGroups;
 };
 
-interface IGradeSlug {
-  satGrades?: string[];
-  satSlug?: string;
-}
+// interface IGradeSlug {
+//   satGrades?: string[];
+//   satSlug?: string;
+// }
 
-const getDBChannelsAudio = cache(async ({ satGrades, satSlug }: IGradeSlug) => {
-  let where = 'sat.grade = 0';
-  if (satGrades) {
-    where = `sat.grade IN ("${satGrades.join('","')}")`;
-  } else if (satSlug) {
-    where = `ch.sat_slug = "${satSlug}"`;
-  }
+// const getDBChannelsAudio = cache(async ({ satGrades, satSlug }: IGradeSlug) => {
+//   let where = 'sat.grade = 0';
+//   if (satGrades) {
+//     where = `sat.grade IN ("${satGrades.join('","')}")`;
+//   } else if (satSlug) {
+//     where = `ch.sat_slug = "${satSlug}"`;
+//   }
 
-  const sql = `
-    SELECT ch.a_pid
-    FROM ${FLY_CHANNELS} AS ch 
-    LEFT JOIN ${FLY_SATELLITES} AS sat ON ch.sat_slug = sat.slug 
-    WHERE ${where}
-    AND ch.is_removed != 1
-  `;
-  const resp = await poolExecute<{ a_pid: string }[]>(sql);
+//   const sql = `
+//     SELECT ch.a_pid
+//     FROM ${FLY_CHANNELS} AS ch
+//     LEFT JOIN ${FLY_SATELLITES} AS sat ON ch.sat_slug = sat.slug
+//     WHERE ${where}
+//     AND ch.is_removed != 1
+//   `;
+//   const resp = await poolExecute<{ a_pid: string }[]>(sql);
 
-  return resp instanceof Error || resp.length === 0 ? [] : resp;
-});
+//   return resp instanceof Error || resp.length === 0 ? [] : resp;
+// });
 
-export const getLanguageList = (audioPids: string[]) => {
-  const langsSet = new Set<string>();
+// export const getLanguageList = (audioPids: string[]) => {
+//   const langsSet = new Set<string>();
 
-  audioPids.forEach((aPid) => {
-    aPid.split(DB_ARRAY_SEPARATOR).forEach((part) => {
-      const parts = part.trim().split(' ');
+//   audioPids.forEach((aPid) => {
+//     aPid.split(DB_ARRAY_SEPARATOR).forEach((part) => {
+//       const parts = part.trim().split(' ');
 
-      if (parts[1]) {
-        const langPart = parts[1].trim().toLowerCase();
+//       if (parts[1]) {
+//         const langPart = parts[1].trim().toLowerCase();
 
-        if (!wrongAudio.includes(langPart)) {
-          langsSet.add(langPart);
-        }
-      }
-    });
-  });
+//         if (!wrongAudio.includes(langPart)) {
+//           langsSet.add(langPart);
+//         }
+//       }
+//     });
+//   });
 
-  return Array.from(langsSet)
-    .sort()
-    .map((lang) => ({
-      value: lang,
-      label: (audioLanguages as Record<string, string>)[lang] || lang,
-    }));
-};
+//   return Array.from(langsSet)
+//     .sort()
+//     .map((lang) => ({
+//       value: lang,
+//       label: (audioLanguages as Record<string, string>)[lang] || lang,
+//     }));
+// };
 
-export const getChannelsLangList = async ({
-  satGrades,
-  satSlug,
-}: IGradeSlug): Promise<ISatelliteOption[]> => {
-  const dbAudioList = await getDBChannelsAudio({
-    satGrades,
-    satSlug,
-  });
+// export const getChannelsLangList = async ({
+//   satGrades,
+//   satSlug,
+// }: IGradeSlug): Promise<ISatelliteOption[]> => {
+//   const dbAudioList = await getDBChannelsAudio({
+//     satGrades,
+//     satSlug,
+//   });
 
-  const audioPids = dbAudioList.map((item) => item.a_pid);
+//   const audioPids = dbAudioList.map((item) => item.a_pid);
 
-  const langList = getLanguageList(audioPids);
+//   const langList = getLanguageList(audioPids);
 
-  return langList;
-};
+//   return langList;
+// };

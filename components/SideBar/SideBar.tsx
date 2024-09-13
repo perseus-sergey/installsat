@@ -1,11 +1,9 @@
 import { ELanguage, SIDE_BAR_CLOSE_BTN } from '@/models/ui.model';
-// import Accordion from '../menuAccordion/Accordion/Accordion';
 import ToggleSidebarLabel from '../ui/ToggleSidebarLabel/ToggleSidebarLabel';
 import WidgetArticleCategories from '../WidgetArticleCategories/WidgetArticleCategories';
 import WidgetLastNews from '../WidgetLastNews/WidgetLastNews';
 import UserWelcome from '../UserWelcome/UserWelcome';
 import dynamic from 'next/dynamic';
-// import AccordionAdmin from '../menuAccordion/Accordion/AccordionAdmin';
 
 const SideBar = async ({
   isAdmin = false,

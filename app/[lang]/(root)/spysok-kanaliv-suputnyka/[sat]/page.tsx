@@ -2,7 +2,6 @@ import { Title } from '@/components/ui/Titles/Title';
 import {
   getFlySatChannels,
   getFlyGroupedChannelsAllSat,
-  getChannelsLangList,
 } from '@/controllers/channelList.controller';
 import {
   META_ALL_SAT_CHANNEL_LIST,
@@ -38,6 +37,7 @@ import { Selector } from '@/components/SatelliteSelector/Selector';
 import EmptyPage from '@/components/errors/EmptyPage/EmptyPage';
 import { getFlySatParams } from '@/controllers/satDigest.controller';
 import { makeUrlSearchParams } from '@/libs/utils/utils';
+import { getChannelsLangList } from '@/controllers/languageList.controller';
 
 const BASE_URL = process.env.BASE_URL || MAIN_URL;
 

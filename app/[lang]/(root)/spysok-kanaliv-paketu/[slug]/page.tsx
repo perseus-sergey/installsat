@@ -145,7 +145,7 @@ export default async function Page({ params, searchParams }: IPageProps) {
       )
     : 0;
 
-  const packagesResp = await getChannelCatList();
+  const packagesResp = await getChannelCatList(lang);
   const similarLinks =
     packagesResp instanceof Error
       ? []

@@ -1,16 +1,9 @@
 import { poolExecute } from '@/libs/db/mysqldb';
-import { WRONG_CAT_IDS, satMapListSql } from './articles.controller';
-import { IAllMapsModel } from '@/models/articles.model';
+import { WRONG_CAT_IDS } from './articles.controller';
 import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
 import { EDBTableTitles } from '@/models/ui.model';
 
 const { ARTICLE: TBL_ARTICLE, FLY_CHANNELS, FLY_SATELLITES } = EDBTableTitles;
-
-export const getSatMapList = async () => {
-  const res = await poolExecute<IAllMapsModel[]>(satMapListSql);
-
-  return res instanceof Error ? [] : res;
-};
 
 export const getNewsForSiteMap = async () => {
   const sql = `SELECT cpu FROM ${TBL_ARTICLE} WHERE cat NOT IN ${WRONG_CAT_IDS}`;

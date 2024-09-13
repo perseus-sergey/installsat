@@ -7,11 +7,7 @@ import {
   DEFAULT_LANG,
   ELanguage,
 } from '@/models/ui.model';
-import {
-  getSatMap,
-  getSatMapList,
-  updateViewCount,
-} from '@/controllers/articles.controller';
+import { getSatMap, updateViewCount } from '@/controllers/articles.controller';
 import SimilarArticles from '@/components/SimilarArticles/SimilarArticles';
 import { getCommentsNumber } from '@/controllers/comments.controller';
 import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
@@ -27,6 +23,7 @@ import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
 import { getELangKey } from '@/libs/utils/validSearchParam';
 import SeoLink from '@/components/ui/SeoLink/SeoLink';
 import { EUrlSearchParam } from '@/cron/libs/commons.mjs';
+import { getSatMapsSideBar } from '@/controllers/sidebar.controller';
 
 interface IArticleParams {
   params: { [key in EUrlBaseParam]: string };
@@ -87,7 +84,7 @@ export async function generateStaticParams(): Promise<
     slug: string;
   }[]
 > {
-  const allMaps = await getSatMapList();
+  const allMaps = await getSatMapsSideBar();
 
   return !allMaps.length
     ? [{ slug: '' }]

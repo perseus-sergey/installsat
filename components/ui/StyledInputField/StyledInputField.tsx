@@ -1,5 +1,4 @@
 import { ChangeEvent, RefObject } from 'react';
-import TooltipSimple from '../tooltips/TooltipSimple/TooltipSimple';
 import BaseButton from '../buttons/BaseButton/BaseButton';
 import styles from './StyledInputField.module.scss';
 
@@ -34,9 +33,7 @@ const StyledInputField = ({
   const basesAttributes = {
     id: idName,
     name: idName,
-    className: className
-      ? `${styles.inputField} ${className}`
-      : styles.inputField,
+    className: `${styles.inputField} py-2 px-10 rounded-md font-verdana m-1 cursor-auto placeholder:font-georgia text-stone-400 placeholder:pl-4 ${className ? ` ${className}` : ''}`,
     style: { width: `${widthPx - 40}px`, height: '2.3rem' },
     placeholder: placeholder,
     onChange: (e: ChangeEvent<HTMLInputElement>) => {
@@ -50,11 +47,11 @@ const StyledInputField = ({
         {hiddenLabelTitle}
       </label>
       <div
-        className={styles.inputWrapper}
+        className={`${styles.inputWrapper} relative rounded-md flex items-center gap-0.5`}
         style={{ width: `${widthPx}px`, height: '2.85rem' }}
         data-testid="StyledInputField"
       >
-        <div className={styles.inputBlock}>
+        <div>
           {inputRef ? (
             <input
               ref={inputRef}
@@ -66,16 +63,16 @@ const StyledInputField = ({
             <input value={value} {...basesAttributes} {...rest} />
           )}
           {searchIconStr && (
-            <span className={styles.searchIcon}>{searchIconStr}</span>
+            <span className="text-3xl absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400">
+              {searchIconStr}
+            </span>
           )}
         </div>
-        <TooltipSimple tooltipText={cancelBtnAriaLabel}>
-          <BaseButton
-            onClick={cancelClick}
-            className={styles.cancelButton}
-            ariaLabel={cancelBtnAriaLabel}
-          />
-        </TooltipSimple>
+        <BaseButton
+          onClick={cancelClick}
+          className={`${styles.cancelButton} relative w-5 h-5 bg-gray-400 rounded-3xl flex justify-center items-center hover:bg-red-300 hover:text-red-600`}
+          ariaLabel={cancelBtnAriaLabel}
+        />
       </div>
     </>
   );

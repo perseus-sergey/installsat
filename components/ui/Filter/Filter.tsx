@@ -44,7 +44,7 @@ export default function Filter({
   };
 
   return (
-    <div className={styles.filterInputBlock}>
+    <div className="flex p-4 items-center flex-wrap gap-4 justify-center sm:justify-between">
       <StyledInputField
         idName={idName}
         handleOnChange={handleSearchDebounced}
@@ -59,7 +59,7 @@ export default function Filter({
       {resetButton && (
         <TooltipSimple tooltipText={resetButton.ariaLabel}>
           <BaseButton
-            className={styles.ResetAllButton}
+            className={`${styles.ResetAllButton} text-4xl text-green-600 w-10 h-10 rounded-full hover:text-red-700`}
             data-testid="ResetFiltersButton"
             ariaLabel={resetButton.ariaLabel}
             onClick={resetAll}

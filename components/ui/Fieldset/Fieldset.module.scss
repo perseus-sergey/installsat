@@ -1,18 +1,3 @@
 .fieldset {
   border: var(--groove-border);
-  border-radius: 0.5rem;
-
-  .legend {
-    padding-left: 0.5rem;
-    padding-right: 0.5rem;
-    color: #777777;
-    text-shadow: 0 0.5px 0 #ffffff;
-    margin-left: 1rem;
-    // animation: move 4s infinite linear alternate;
-  }
-  // @keyframes move {
-  //   100% {
-  //     margin-left: 2rem;
-  //   }
-  // }
 }

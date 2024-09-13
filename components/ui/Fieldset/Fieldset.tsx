@@ -13,11 +13,11 @@ const Fieldset = ({
   ...attributes
 }: IFieldsetProps) => (
   <fieldset
-    className={className ? `${styles.fieldset} ${className}` : styles.fieldset}
+    className={`${styles.fieldset} rounded-md${className ? ` ${className}` : ''}`}
     data-testid="Fieldset"
     {...attributes}
   >
-    <legend className={styles.legend}>{legendText}</legend>
+    <legend className={'px-2 ml-4 text-stone-500'}>{legendText}</legend>
 
     {children}
   </fieldset>

@@ -31,17 +31,24 @@ const ChannelFormatSliders = ({
   };
 
   return (
-    <div className={styles.sliderItem} data-testid="ChannelFormatSliders">
-      <div className={styles.sliderWrapper}>
-        <div className={styles.slider}>
+    <div
+      className="flex items-center gap-4 py-1 px-4"
+      data-testid="ChannelFormatSliders"
+    >
+      <div className={`${styles.sliderWrapper} rounded-full h-6 w-14`}>
+        <div className={`${styles.slider} h-5 m-0.5 relative rounded-full`}>
           <input
+            className={`${styles.sliderCheckbox} hidden`}
             type="checkbox"
             checked={searchParams.has(searchQueryName)}
             onChange={(e) => onChange(e.target.checked)}
             id={searchQueryName}
             name={searchQueryName}
           />
-          <label htmlFor={searchQueryName}></label>
+          <label
+            htmlFor={searchQueryName}
+            className={`${styles.sliderLabel} block h-4 w-6 cursor-pointer absolute top-0.5 left-1 z-[1] rounded-full transition-all duration-300 ease`}
+          ></label>
         </div>
       </div>
       {title}

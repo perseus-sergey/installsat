@@ -28,7 +28,9 @@ const TooltipSimple = ({
             : `${commonStyles} absolute w-36 -ml-16 left-1/2 bg-indigo-950 bottom-[125%] transition-opacity duration-500 invisible opacity-0 group-hover:visible group-hover:opacity-100`
         }
       >
-        <span className="absolute top-full left-1/2 -ml-2 w-0 h-0 border-8 border-solid border-indigo-950 border-b-transparent border-x-transparent"></span>
+        {!isTooltipBottomOfPage && (
+          <span className="absolute top-full left-1/2 -ml-2 w-0 h-0 border-8 border-solid border-indigo-950 border-b-transparent border-x-transparent"></span>
+        )}
 
         {tooltipText}
       </span>

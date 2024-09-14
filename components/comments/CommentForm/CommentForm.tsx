@@ -1,6 +1,5 @@
 'use client';
 
-import styles from './CommentForm.module.scss';
 import { SubmitPendingButton } from '@/components/ui/buttons/SubmitPendingBtn';
 import { useFormState } from 'react-dom';
 import { COMMENTS_MODEL, ECommentFormNames } from '@/models/comments.model';
@@ -75,8 +74,11 @@ const CommentForm = ({
   );
   const formRef = useFormReset(formState);
 
-  const inputField =
+  const inputFieldStyle =
     'max-w-72 sm:max-w-full mt-1 p-1 text-gray-700 border-lightgray border-2 cursor-auto bg-[linear-gradient(to_bottom,rgba(255,255,255,1)_0%,rgba(243,243,243,1)_50%,rgba(237,237,237,1)_51%,rgba(255,255,255,1)_100%)] border-inset';
+
+  const requiredStyle =
+    "after:text-lime-200 after:text-xl after:content-['_*']";
 
   return (
     <form
@@ -86,13 +88,13 @@ const CommentForm = ({
       action={formAction}
     >
       <div className="pb-4 pt-1 flex flex-col">
-        <label htmlFor={AUTHOR} className={styles.required}>
+        <label htmlFor={AUTHOR} className={requiredStyle}>
           {authorName.labelText[lang]}
         </label>
         <input
           id={AUTHOR}
           name={AUTHOR}
-          className={inputField}
+          className={inputFieldStyle}
           maxLength={authorName.maxSize.value}
           size={20}
           required
@@ -110,7 +112,7 @@ const CommentForm = ({
           id={EMAIL}
           name={EMAIL}
           maxLength={40}
-          className={inputField}
+          className={inputFieldStyle}
           size={30}
           placeholder={authorEmail.placeholder}
           aria-label={authorEmail.ariaLabel[lang]}
@@ -120,13 +122,13 @@ const CommentForm = ({
       </div>
 
       <div className="pb-4 pt-1 flex flex-col">
-        <label htmlFor={TEXT} className={styles.required}>
+        <label htmlFor={TEXT} className={requiredStyle}>
           {commentText.labelText[lang]}
         </label>
         <textarea
           id={TEXT}
           name={TEXT}
-          className={inputField}
+          className={inputFieldStyle}
           placeholder={commentText.placeholder[lang]}
           aria-label={commentText.ariaLabel[lang]}
           rows={4}

@@ -5,9 +5,12 @@ import {
   getT2Channels,
 } from '@/controllers/channelList.controller';
 import {
+  ALL_SAT_CHANNEL_LIST_FILTERS,
   CHANNEL_LIST_ANCHOR_START,
-  META_ALL_SAT_CHANNEL_LIST,
   META_PACKAGE_CHANNEL_LIST,
+  PACKAGE_CHANNEL_LIST_DATA,
+  PACKAGE_CHANNEL_LIST_IMAGES,
+  T2_SLUG,
 } from '@/models/channelList.model';
 import type { Metadata } from 'next';
 import Fieldset from '@/components/ui/Fieldset/Fieldset';
@@ -40,26 +43,22 @@ import SeoLink from '@/components/ui/SeoLink/SeoLink';
 
 const BASE_URL = process.env.BASE_URL || MAIN_URL;
 
+const { getH1, metaKeywords, metaTitle } = META_PACKAGE_CHANNEL_LIST;
+
 const {
-  getH1,
-  metaKeywords,
-  metaTitle,
-  T2_SLUG,
-  images: { h1Image },
+  similarLinks: { title: similarLinksTitle, beforeLinkText },
   fieldsetFilters: {
     legendText,
     anchorLink: { ariaLabel },
   },
-  similarLinks: { title: similarLinksTitle, beforeLinkText },
-} = META_PACKAGE_CHANNEL_LIST;
+} = PACKAGE_CHANNEL_LIST_DATA;
+const { h1Image } = PACKAGE_CHANNEL_LIST_IMAGES;
 
 const { SLUG, LANG, PACKAGE_CHANNEL_LIST, CHANNEL_PARAMS } = EUrlBaseParam;
 
 const {
-  filtering: {
-    filterByChannelName: { placeholder, labelTitle },
-  },
-} = META_ALL_SAT_CHANNEL_LIST;
+  filterByChannelName: { placeholder, labelTitle },
+} = ALL_SAT_CHANNEL_LIST_FILTERS;
 
 const getH1Cached = cache(getH1);
 

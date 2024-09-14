@@ -2,8 +2,9 @@ import {
   CHANNEL_LIST_ANCHOR_START,
   IOnlineChannelListModel,
   IPackageChannelListModel,
-  META_PACKAGE_CHANNEL_LIST,
   ONLINE_CHANNEL_TOOLTIP_TITLES,
+  PACKAGE_CHANNEL_LIST_DATA,
+  PACKAGE_CHANNEL_LIST_IMAGES,
 } from '@/models/channelList.model';
 import styles from './channelList.module.scss';
 import { TitleH2List } from '../ui/Titles/TitleH2List';
@@ -26,10 +27,8 @@ const {
   language: tLanguage,
 } = ONLINE_CHANNEL_TOOLTIP_TITLES;
 
-const {
-  images: { subCatImage },
-  getPriceString,
-} = META_PACKAGE_CHANNEL_LIST;
+const { getPriceString } = PACKAGE_CHANNEL_LIST_DATA;
+const { subCatImage } = PACKAGE_CHANNEL_LIST_IMAGES;
 
 const { channelLogo } = META_CHANNEL.images;
 

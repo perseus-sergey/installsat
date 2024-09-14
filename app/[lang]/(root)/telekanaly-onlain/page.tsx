@@ -1,9 +1,12 @@
 import { Title } from '@/components/ui/Titles/Title';
 import { getOnlineChannels } from '@/controllers/channelList.controller';
 import {
+  ALL_SAT_CHANNEL_LIST_FILTERS,
   CHANNEL_LIST_ANCHOR_START,
-  META_ALL_SAT_CHANNEL_LIST,
   META_ONLINE_CHANNEL_LIST,
+  ONLINE_CHANNEL_LIST_DATA,
+  ONLINE_CHANNEL_LIST_DB_ID,
+  ONLINE_CHANNEL_LIST_IMAGES,
 } from '@/models/channelList.model';
 import type { Metadata } from 'next';
 import FillingImg from '@/components/ui/Images/FillingImage';
@@ -37,25 +40,20 @@ interface IPageProps {
 const BASE_URL = process.env.BASE_URL || MAIN_URL;
 const { LANG, ONLINE_CHANNEL_LIST } = EUrlBaseParam;
 
+const { metaDescription, metaH1, getH1After, metaKeywords, metaTitle } =
+  META_ONLINE_CHANNEL_LIST;
+
 const {
-  metaDescription,
-  metaH1,
-  getH1After,
-  metaKeywords,
-  metaTitle,
-  images: { h1Image },
-  ONLINE_CHANNEL_LIST_DB_ID,
   fieldsetFilters: {
     legendText,
     anchorLink: { ariaLabel },
   },
-} = META_ONLINE_CHANNEL_LIST;
+} = ONLINE_CHANNEL_LIST_DATA;
+const { h1Image } = ONLINE_CHANNEL_LIST_IMAGES;
 
 const {
-  filtering: {
-    filterByChannelName: { placeholder, labelTitle },
-  },
-} = META_ALL_SAT_CHANNEL_LIST;
+  filterByChannelName: { placeholder, labelTitle },
+} = ALL_SAT_CHANNEL_LIST_FILTERS;
 
 export const revalidate = 3600 * 48; // invalidate cache every 48 hours
 

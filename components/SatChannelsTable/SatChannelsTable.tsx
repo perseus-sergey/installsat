@@ -1,10 +1,10 @@
 import {
   MChanTheme,
   MCompressionColors,
-  META_ALL_SAT_CHANNEL_LIST,
-  META_SAT_CHANNEL_LIST,
   CHANNEL_TOOLTIP_TITLES,
   ISatChannelListModel,
+  ALL_SAT_CHANNEL_LIST_LINKS,
+  SAT_CHANNEL_LIST_IMAGES,
 } from '@/models/channelList.model';
 import styles from './SatChannelsTable.module.scss';
 import Link from 'next/link';
@@ -22,11 +22,9 @@ import { ELanguage } from '@/models/ui.model';
 
 const {
   links: { satTitleLink },
-} = META_ALL_SAT_CHANNEL_LIST;
+} = ALL_SAT_CHANNEL_LIST_LINKS;
 
-const {
-  images: { h1SatImage, genreImage },
-} = META_SAT_CHANNEL_LIST;
+const { h1SatImage, genreImage } = SAT_CHANNEL_LIST_IMAGES;
 
 interface ISatChannelsTableProps {
   lang: ELanguage;

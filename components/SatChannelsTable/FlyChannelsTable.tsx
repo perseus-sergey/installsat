@@ -1,10 +1,10 @@
 import {
   MChanTheme,
-  META_SAT_CHANNEL_LIST,
   CHANNEL_TOOLTIP_TITLES,
   isFtaChannel,
   getCompressColor,
   ECompressColors,
+  SAT_CHANNEL_LIST_IMAGES,
 } from '@/models/channelList.model';
 import styles from './SatChannelsTable.module.scss';
 import { EUrlBaseParam } from '@/models/url.model';
@@ -20,9 +20,8 @@ import { DB_ARRAY_SEPARATOR, ELanguage } from '@/models/ui.model';
 import Tooltip from '../ui/tooltips/TooltipMovingClient/Tooltip';
 import SeoLink from '../ui/SeoLink/SeoLink';
 
-const {
-  images: { h2SatListImage, genreImage, genreRadioImage, t2Image },
-} = META_SAT_CHANNEL_LIST;
+const { h2SatListImage, genreImage, genreRadioImage, t2Image } =
+  SAT_CHANNEL_LIST_IMAGES;
 
 interface ISatChannelsTableProps {
   lang: ELanguage;

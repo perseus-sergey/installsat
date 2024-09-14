@@ -3,7 +3,7 @@
 import { usePathname, useRouter } from 'next/navigation';
 import styles from './Filter.module.scss';
 import { EUrlSearchParam } from '@/models/url.model';
-import { META_ALL_SAT_CHANNEL_LIST } from '@/models/channelList.model';
+import { ALL_SAT_CHANNEL_LIST_FILTERS } from '@/models/channelList.model';
 import BaseButton from '../buttons/BaseButton/BaseButton';
 import TooltipSimple from '../tooltips/TooltipSimple/TooltipSimple';
 import useSearch from '@/libs/hooks/useSearch';
@@ -11,7 +11,7 @@ import StyledInputField from '../StyledInputField/StyledInputField';
 import { ELanguage } from '@/models/ui.model';
 
 const { cancelBtnAriaLabel, searchIconStr } =
-  META_ALL_SAT_CHANNEL_LIST.filtering.filterByChannelName;
+  ALL_SAT_CHANNEL_LIST_FILTERS.filterByChannelName;
 
 interface IFilterProps {
   lang: ELanguage;

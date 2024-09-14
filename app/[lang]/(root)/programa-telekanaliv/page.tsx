@@ -1,9 +1,11 @@
 import { Title } from '@/components/ui/Titles/Title';
 import { getChannelsWithSchedule } from '@/controllers/channelList.controller';
 import {
+  ALL_SAT_CHANNEL_LIST_FILTERS,
   CHANNEL_LIST_ANCHOR_START,
-  META_ALL_SAT_CHANNEL_LIST,
   META_ONLINE_CHANNEL_LIST,
+  ONLINE_CHANNEL_LIST_DATA,
+  ONLINE_CHANNEL_LIST_IMAGES,
 } from '@/models/channelList.model';
 import type { Metadata } from 'next';
 import FillingImg from '@/components/ui/Images/FillingImage';
@@ -31,20 +33,19 @@ const BASE_URL = process.env.BASE_URL || MAIN_URL;
 
 const { metaDescription, metaH1, metaKeywords } = SCHEDULE_META.channelList;
 
+const { getH1After } = META_ONLINE_CHANNEL_LIST;
+
+const { h1Image } = ONLINE_CHANNEL_LIST_IMAGES;
 const {
-  getH1After,
-  images: { h1Image },
   fieldsetFilters: {
     legendText,
     anchorLink: { ariaLabel },
   },
-} = META_ONLINE_CHANNEL_LIST;
+} = ONLINE_CHANNEL_LIST_DATA;
 
 const {
-  filtering: {
-    filterByChannelName: { placeholder, labelTitle },
-  },
-} = META_ALL_SAT_CHANNEL_LIST;
+  filterByChannelName: { placeholder, labelTitle },
+} = ALL_SAT_CHANNEL_LIST_FILTERS;
 
 const { CHANNELS_TV_PROGRAM } = EUrlBaseParam;
 

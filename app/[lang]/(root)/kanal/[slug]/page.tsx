@@ -28,7 +28,10 @@ import EditLinkButton from '@/components/admin/EditLinkButton/EditLinkButton';
 import { notFound } from 'next/navigation';
 import { getELangKey } from '@/libs/utils/validSearchParam';
 import TextUnderH1 from '@/components/TextUnderH1/TextUnderH1';
-import { MChanTheme, META_SAT_CHANNEL_LIST } from '@/models/channelList.model';
+import {
+  MChanTheme,
+  SAT_CHANNEL_LIST_IMAGES,
+} from '@/models/channelList.model';
 import FillingImg from '@/components/ui/Images/FillingImage';
 
 const BASE_URL = process.env.BASE_URL || MAIN_URL;
@@ -47,9 +50,7 @@ const {
   similar: { channels: simChannelsBefore },
 } = META_CHANNEL;
 
-const {
-  images: { genreImage },
-} = META_SAT_CHANNEL_LIST;
+const { genreImage } = SAT_CHANNEL_LIST_IMAGES;
 
 export interface IChannelProps {
   params: { [key in EUrlBaseParam]: string };

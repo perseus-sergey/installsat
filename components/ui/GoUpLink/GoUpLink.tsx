@@ -1,12 +1,12 @@
 import styles from './GoUpLink.module.scss';
-import { META_ALL_SAT_CHANNEL_LIST } from '@/models/channelList.model';
+import { ALL_SAT_CHANNEL_LIST_LINKS } from '@/models/channelList.model';
 import TooltipSimple from '../tooltips/TooltipSimple/TooltipSimple';
 import { ELanguage } from '@/models/ui.model';
 import SeoLink from '../SeoLink/SeoLink';
 
 const {
   anchors: { goUpLink },
-} = META_ALL_SAT_CHANNEL_LIST;
+} = ALL_SAT_CHANNEL_LIST_LINKS;
 
 const GoUpLink = ({ lang }: { lang: ELanguage }) => (
   <TooltipSimple tooltipText={goUpLink.title[lang]}>

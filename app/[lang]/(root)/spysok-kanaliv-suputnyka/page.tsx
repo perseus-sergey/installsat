@@ -4,7 +4,13 @@ import { Title } from '@/components/ui/Titles/Title';
 //   getFlyGroupedChannelsAllSat,
 //   getChannelsLangList,
 // } from '@/controllers/channelList.controller';
-import { META_ALL_SAT_CHANNEL_LIST } from '@/models/channelList.model';
+import {
+  ALL_SAT_CHANNEL_LIST_FILTERS,
+  ALL_SAT_CHANNEL_LIST_IMAGES,
+  ALL_SAT_CHANNEL_LIST_LINKS,
+  CHANNEL_LIST_DB_ID,
+  META_ALL_SAT_CHANNEL_LIST,
+} from '@/models/channelList.model';
 import type { Metadata } from 'next';
 import StartArticleSection from '@/components/article/StartArticleSection/StartArticleSection';
 import { Suspense } from 'react';
@@ -43,20 +49,16 @@ import dynamic from 'next/dynamic';
 
 const BASE_URL = process.env.BASE_URL || MAIN_URL;
 
+const { metaH1, metaDescription, metaKeywords, metaTitle } =
+  META_ALL_SAT_CHANNEL_LIST;
+
 const {
-  metaH1,
-  metaDescription,
-  metaKeywords,
-  metaTitle,
-  image: { h1FlyImageParams },
-  anchors,
-  filtering: {
-    filterByChannelName: { placeholder, labelTitle },
-    filterByChannelFormatFly: { formats },
-    resetAllFiltersButton,
-  },
-  CHANNEL_LIST_DB_ID,
-} = META_ALL_SAT_CHANNEL_LIST;
+  filterByChannelName: { placeholder, labelTitle },
+  filterByChannelFormatFly: { formats },
+  resetAllFiltersButton,
+} = ALL_SAT_CHANNEL_LIST_FILTERS;
+const { anchors } = ALL_SAT_CHANNEL_LIST_LINKS;
+const { h1FlyImageParams } = ALL_SAT_CHANNEL_LIST_IMAGES;
 
 interface IPageProps {
   params: { [key in EUrlBaseParam]: string };
@@ -197,8 +199,8 @@ export default async function Page({ searchParams, params }: IPageProps) {
                     itemList={channelsLangList}
                     caption={
                       lang === ELanguage.UA
-                        ? 'Виберіть мову'
-                        : 'Choose a language'
+                        ? 'Виберіть мову каналу'
+                        : 'Choose a channel language'
                     }
                   />
                 )}

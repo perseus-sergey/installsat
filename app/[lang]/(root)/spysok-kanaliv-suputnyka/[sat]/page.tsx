@@ -4,8 +4,10 @@ import {
   getFlyGroupedChannelsAllSat,
 } from '@/controllers/channelList.controller';
 import {
-  META_ALL_SAT_CHANNEL_LIST,
+  ALL_SAT_CHANNEL_LIST_FILTERS,
+  ALL_SAT_CHANNEL_LIST_LINKS,
   META_SAT_CHANNEL_LIST,
+  SAT_CHANNEL_LIST_IMAGES,
 } from '@/models/channelList.model';
 import type { Metadata } from 'next';
 import StartArticleSection from '@/components/article/StartArticleSection/StartArticleSection';
@@ -43,28 +45,22 @@ const BASE_URL = process.env.BASE_URL || MAIN_URL;
 
 const { SATELLITE, LANG, SAT_CHANNEL_LIST } = EUrlBaseParam;
 
-const {
-  h1Start,
-  metaDescription,
-  metaTitle,
-  images: { h1SatImage },
-} = META_SAT_CHANNEL_LIST;
+const { h1Start, metaDescription, metaTitle } = META_SAT_CHANNEL_LIST;
+
+const { h1SatImage } = SAT_CHANNEL_LIST_IMAGES;
 
 const {
-  anchors,
-  filtering: {
-    filterByChannelName: { placeholder, labelTitle },
-    filterByChannelFormatFly: { formats },
-    resetAllFiltersButton,
-  },
-} = META_ALL_SAT_CHANNEL_LIST;
+  filterByChannelName: { placeholder, labelTitle },
+  filterByChannelFormatFly: { formats },
+  resetAllFiltersButton,
+} = ALL_SAT_CHANNEL_LIST_FILTERS;
+const { anchors } = ALL_SAT_CHANNEL_LIST_LINKS;
 
 interface IPageProps {
   params: { [key in EUrlBaseParam]: string };
   searchParams?: TSearchParams;
 }
 
-// export const dynamic = 'force-dynamic';
 export const revalidate = 3600 * 12; // invalidate cache every 12 hours
 
 export const generateMetadata = async ({
@@ -224,8 +220,8 @@ export default async function Page({ searchParams, params }: IPageProps) {
                   itemList={channelsLangList}
                   caption={
                     lang === ELanguage.UA
-                      ? 'Виберіть мову'
-                      : 'Choose a language'
+                      ? 'Виберіть мову каналу'
+                      : 'Choose a channel language'
                   }
                 />
               )}

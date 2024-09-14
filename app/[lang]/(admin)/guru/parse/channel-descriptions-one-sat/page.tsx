@@ -14,6 +14,7 @@ export const dynamic = 'force-dynamic';
 
 // =================================================================
 //
+// Split all models into smaller models
 // Add separate tbl_comments for fly satellites
 // Renew tbl_chan_categ by adding english language
 // Mobile Accordion Lazy loading

@@ -2,7 +2,7 @@
 
 import { useFormStatus } from 'react-dom';
 import BaseButton from './BaseButton/BaseButton';
-import React, { ButtonHTMLAttributes, ReactNode } from 'react';
+import { ButtonHTMLAttributes, ReactNode } from 'react';
 
 interface IProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   ariaLabel: string;

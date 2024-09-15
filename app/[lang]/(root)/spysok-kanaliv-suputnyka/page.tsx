@@ -1,9 +1,4 @@
 import { Title } from '@/components/ui/Titles/Title';
-// import {
-//   getFlySatChannels,
-//   getFlyGroupedChannelsAllSat,
-//   getChannelsLangList,
-// } from '@/controllers/channelList.controller';
 import {
   ALL_SAT_CHANNEL_LIST_FILTERS,
   ALL_SAT_CHANNEL_LIST_IMAGES,
@@ -23,29 +18,24 @@ import {
   TSearchParams,
 } from '@/models/ui.model';
 import { EUrlBaseParam, EUrlSearchParam, MAIN_URL } from '@/models/url.model';
-// import { getCommentsNumber } from '@/controllers/comments.controller';
-// import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
+
 const CommentBlock = dynamic(
   () => import('@/components/comments/CommentBlock/CommentBlock')
 );
 
 import BreadCrumbServer from '@/components/BreadCrumbs/BreadCrumbsServer';
 import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
-import {
-  getELangKey,
-  // validSearchParam,
-  // validSearchParamArray,
-} from '@/libs/utils/validSearchParam';
+import { getELangKey } from '@/libs/utils/validSearchParam';
 import FlyChannelsTable from '@/components/SatChannelsTable/FlyChannelsTable';
 import Fieldset from '@/components/ui/Fieldset/Fieldset';
 import Filter from '@/components/ui/Filter/Filter';
 import ChannelFormatSliders from '@/components/ui/ChannelFormatSliders/ChannelFormatSliders';
-// import { getSatsForForm } from '@/controllers/satDigest.controller';
 import FillingImg from '@/components/ui/Images/FillingImage';
 import { Selector } from '@/components/SatelliteSelector/Selector';
 import { IFlyChannel } from '@/models/channel.model';
 import { ISatelliteOption } from '@/models/tblSat.model';
 import dynamic from 'next/dynamic';
+import { TRANS_NEWS_LIST_FILTERS } from '@/models/satDigest.model';
 
 const BASE_URL = process.env.BASE_URL || MAIN_URL;
 
@@ -198,9 +188,7 @@ export default async function Page({ searchParams, params }: IPageProps) {
                     searchParamName={EUrlSearchParam.LANGUAGE_URL}
                     itemList={channelsLangList}
                     caption={
-                      lang === ELanguage.UA
-                        ? 'Виберіть мову каналу'
-                        : 'Choose a channel language'
+                      TRANS_NEWS_LIST_FILTERS.select.satSelect.title[lang]
                     }
                   />
                 )}

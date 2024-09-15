@@ -1,10 +1,15 @@
-import React, { Suspense } from 'react';
+import { Suspense } from 'react';
 import ToggleSidebarLabel from '../ui/ToggleSidebarLabel/ToggleSidebarLabel';
-import { LOGO, TOGGLE_SIDEBAR_BUTTON_TITLE } from '@/models/header.model';
-import FillingImg from '../ui/Images/FillingImage';
+import { LOGO, OPEN_SIDE_BAR_BTN } from '@/models/header.model';
 import { ELanguage } from '@/models/ui.model';
 import LangSwitchButton from '../LangSwitchButton/LangSwitchButton';
 import SeoLink from '../ui/SeoLink/SeoLink';
+import siteLogotype from 'public/Images/InstallsatOrigBlue_200.png';
+import Image from 'next/image';
+import sideBarIconImg from 'public/Images/accordion/sidebar_icon.png';
+
+const { sideBarIcon } = OPEN_SIDE_BAR_BTN;
+
 // import AdsterraAd from '../AdsterraAd/AdsterraAd';
 // import dynamic from 'next/dynamic';
 
@@ -20,23 +25,24 @@ const { title, siteLogo } = LOGO.link;
 const Header = ({ lang }: { lang: ELanguage }) => (
   <header
     id="top"
-    className="w-full bg-gradient-to-b from-blue-800 to-white/0"
+    className="w-full p-2 bg-gradient-to-b from-blue-800 to-white/0"
     data-testid="Header"
   >
     <div className="flex items-center justify-between">
-      <nav className="flex items-center">
-        <ToggleSidebarLabel className="px-2 pb-1 text-4xl text-gray-400 cursor-pointer border border-gray-300 rounded-md my-0 mx-4">
-          {TOGGLE_SIDEBAR_BUTTON_TITLE}
-        </ToggleSidebarLabel>
-        <SeoLink
-          href={`/${lang}`}
-          title={title[lang]}
-          className="inline-block p-5"
+      <nav className="flex items-center gap-2">
+        <ToggleSidebarLabel
+          ariaLabel={sideBarIcon.ariaLabel[lang]}
+          className="cursor-pointer px-4"
         >
-          <div className="hidden sm:block">
-            <FillingImg {...siteLogo} alt={siteLogo.alt[lang]} isPriority />
-          </div>
-          <i className="block sm:hidden text-blue-100 text-2xl">Installsat</i>
+          <Image src={sideBarIconImg} alt={sideBarIcon.alt[lang]} />
+        </ToggleSidebarLabel>
+        <SeoLink href={`/${lang}`} title={title[lang]} className="sm:px-5">
+          <Image
+            className="h-12 w-28 sm:h-20 sm:w-48"
+            src={siteLogotype}
+            alt={siteLogo.alt[lang]}
+            placeholder="blur"
+          />
         </SeoLink>
       </nav>
       <Suspense>

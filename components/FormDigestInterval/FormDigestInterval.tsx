@@ -1,31 +1,24 @@
 'use client';
 
 import {
-  META_TRANS_NEWS_LIST,
+  TRANS_NEWS_LIST_FILTERS,
   getDigestIntervalOptions,
 } from '@/models/satDigest.model';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import {
-  MySelect,
-  Group,
-  formatGroupSatLabel,
-  createControlComponentInterval,
-  createControlComponentSat,
-} from '../ui/ReactSelect/ReactSelect';
-import { MultiValue, SingleValue, components } from 'react-select';
+import { usePathname, useRouter } from 'next/navigation';
 import { EUrlSearchParam } from '@/models/url.model';
 import Fieldset from '../ui/Fieldset/Fieldset';
 import { ELanguage, ESelectType } from '@/models/ui.model';
-import {
-  IGroupedSatelliteOption,
-  ISatelliteOption,
-} from '@/models/tblSat.model';
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import { makeSelectedOptions } from '@/controllers/satFinder.controller';
+import { IGroupedSatelliteOption } from '@/models/tblSat.model';
 import TooltipSimple from '../ui/tooltips/TooltipSimple/TooltipSimple';
 import BaseButton from '../ui/buttons/BaseButton/BaseButton';
+import { Selector } from '../SatelliteSelector/Selector';
+import { SelectorSingle } from '../SatelliteSelector/SelectorSingle';
 
-const { fieldsetTitle, resetButton } = META_TRANS_NEWS_LIST;
+const {
+  fieldsetTitle,
+  resetButton,
+  select: { satSelect, timeIntervalSelect },
+} = TRANS_NEWS_LIST_FILTERS;
 interface IFormDigestIntervalProps {
   groupedSats: IGroupedSatelliteOption[];
   lang: ELanguage;
@@ -35,69 +28,10 @@ const FormDigestInterval = ({
   groupedSats,
   lang,
 }: IFormDigestIntervalProps) => {
-  const searchParams = useSearchParams();
   const pathname = usePathname();
   const { replace, refresh } = useRouter();
 
-  const digestIntervalOptions = useMemo(
-    () => getDigestIntervalOptions(lang),
-    [lang]
-  );
-
-  const [satSelectedOptions, setSatSelectedOptions] =
-    useState<MultiValue<ISatelliteOption> | null>(null);
-  const [intervalSelectedOptions, setIntervalSelectedOptions] =
-    useState<SingleValue<ISatelliteOption> | null>(null);
-  const [satGradeList, setSatGradeList] = useState(
-    searchParams.getAll(EUrlSearchParam.SAT)
-  );
-
-  useEffect(() => {
-    const satUrlParams = searchParams.getAll(EUrlSearchParam.SAT);
-    setSatSelectedOptions(makeSelectedOptions(satUrlParams, groupedSats));
-    const intervalUrlParam = searchParams.get(EUrlSearchParam.INTERVAL);
-
-    setIntervalSelectedOptions(
-      digestIntervalOptions.find(
-        (opt) => `${opt.value}` === intervalUrlParam
-      ) || digestIntervalOptions[1]
-    );
-  }, [groupedSats, satGradeList, searchParams]);
-
-  const getUrlSerPar = useCallback(
-    () => new URLSearchParams(searchParams.toString()),
-    [searchParams]
-  );
-
-  const handleSatSelect = (selected: MultiValue<ISatelliteOption>) => {
-    setSatSelectedOptions(selected);
-    const urlSePar = getUrlSerPar();
-
-    urlSePar.delete(EUrlSearchParam.SAT);
-    let gradeList: string[] = [];
-    setSatGradeList([]);
-
-    selected.forEach((option) => {
-      urlSePar.append(EUrlSearchParam.SAT, `${option.value}`);
-      gradeList = [...gradeList, `${option.value}`];
-    });
-    setSatGradeList(gradeList);
-
-    replace(`${pathname}?${urlSePar.toString()}`, { scroll: false });
-  };
-
-  const handleIntervalSelect = (selected: SingleValue<ISatelliteOption>) => {
-    setIntervalSelectedOptions(selected);
-    if (!selected) return;
-
-    const urlSePar = getUrlSerPar();
-
-    urlSePar.delete(EUrlSearchParam.INTERVAL);
-
-    urlSePar.append(EUrlSearchParam.INTERVAL, `${selected.value}`);
-
-    replace(`${pathname}?${urlSePar.toString()}`, { scroll: false });
-  };
+  const digestIntervalOptions = getDigestIntervalOptions(lang);
 
   const resetAll = () => {
     replace(pathname);
@@ -109,43 +43,25 @@ const FormDigestInterval = ({
       <div className="flex flex-col justify-center items-center gap-2 pb-4">
         <div className="flex flex-wrap justify-center items-center gap-x-8 gap-y-4 p-2 text-gray-400">
           {groupedSats.length > 0 ? (
-            <MySelect
+            <Selector
               selectName={ESelectType.SELECT_SATS}
-              isMulti
+              className="z-20"
               closeMenuOnSelect
-              value={satSelectedOptions}
-              onChange={(selected) => handleSatSelect(selected)}
-              options={groupedSats}
-              components={{
-                Group,
-                Control: createControlComponentSat(lang),
-                Input: (props) => (
-                  <components.Input
-                    {...props}
-                    aria-activedescendant={undefined}
-                  />
-                ),
-              }}
-              formatGroupLabel={formatGroupSatLabel}
+              isMulti
+              searchParamName={EUrlSearchParam.SAT}
+              itemList={groupedSats instanceof Error ? [] : groupedSats}
+              caption={satSelect.title[lang]}
             />
           ) : null}
 
           {digestIntervalOptions[0] ? (
-            <MySelect
+            <SelectorSingle
               selectName={ESelectType.SELECT_TIME_INTERVAL}
+              className="z-20"
               closeMenuOnSelect
-              value={intervalSelectedOptions}
-              onChange={(selected) => handleIntervalSelect(selected)}
-              options={digestIntervalOptions}
-              components={{
-                Control: createControlComponentInterval(lang),
-                Input: (props) => (
-                  <components.Input
-                    {...props}
-                    aria-activedescendant={undefined}
-                  />
-                ),
-              }}
+              searchParamName={EUrlSearchParam.INTERVAL}
+              itemList={digestIntervalOptions}
+              caption={timeIntervalSelect.title[lang]}
             />
           ) : null}
         </div>

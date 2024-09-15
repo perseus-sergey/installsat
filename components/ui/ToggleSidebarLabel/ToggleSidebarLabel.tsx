@@ -1,22 +1,21 @@
-import styles from './ToggleSidebarLabel.module.scss';
-
 interface IToggleSidebarLabelProps
   extends React.LabelHTMLAttributes<HTMLLabelElement> {
   children?: React.ReactNode;
+  ariaLabel: string;
 }
 
 const ToggleSidebarLabel = ({
   children,
   className,
+  ariaLabel,
   ...attributes
 }: IToggleSidebarLabelProps) => (
   <label
     htmlFor="toggle-sidebar"
-    className={
-      className
-        ? `${styles.ToggleSidebarLabel} ${className}`
-        : styles.ToggleSidebarLabel
-    }
+    role="button"
+    aria-label={ariaLabel}
+    title={ariaLabel}
+    className={`lg:hidden inline-block ${className ? ` ${className}` : ''}`}
     data-testid="ToggleSidebarLabel"
     {...attributes}
   >

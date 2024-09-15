@@ -25,6 +25,7 @@ interface ISimpleProps extends React.HTMLAttributes<HTMLElement> {
   searchParamName: EUrlSearchParam;
   selectName: ESelectType;
   closeMenuOnSelect?: boolean;
+  isMulti?: true;
   parentSeParName?: EUrlSearchParam;
   caption: string;
 }
@@ -36,6 +37,7 @@ export const Selector = ({
   closeMenuOnSelect = true,
   className,
   caption,
+  isMulti,
 }: ISimpleProps) => {
   const searchParams = useSearchParams();
   const pathname = usePathname();
@@ -85,7 +87,7 @@ export const Selector = ({
     <MySelect
       className={className}
       selectName={selectName}
-      isMulti
+      isMulti={isMulti}
       closeMenuOnSelect={closeMenuOnSelect}
       value={selectedOptions}
       onChange={(selected) => handleSatSelect(selected)}

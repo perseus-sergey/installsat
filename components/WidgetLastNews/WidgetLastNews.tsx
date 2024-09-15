@@ -9,7 +9,10 @@ const WidgetLastNews = async ({ lang }: { lang: ELanguage }) => {
   if (lastNewsWidgetList instanceof Error) return null;
 
   return (
-    <div className="sidebar-widget" data-testid="WidgetLastNews">
+    <nav
+      className="text-stone-300 p-4 rounded border border-solid border-stone-400 my-1 mx-auto overflow-hidden bg-gradient-to-b from-black to-blue-900"
+      data-testid="WidgetLastNews"
+    >
       <h3 className={`${styles.title} min-h-12 pb-2 font-bold text-xl`}>
         <SeoLink
           title={WIDGET_LAST_NEWS.ariaLabelForTitle[lang]}
@@ -36,7 +39,7 @@ const WidgetLastNews = async ({ lang }: { lang: ELanguage }) => {
           );
         })}
       </ul>
-    </div>
+    </nav>
   );
 };
 

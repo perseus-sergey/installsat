@@ -183,6 +183,7 @@ export default async function Page({ searchParams, params }: IPageProps) {
             defaultImage={h1SatImage.defaultImage}
             alternativeImgString={h1SatImage.alternativeString}
             alt={`${h1SatImage.alt[lang]} ${title}`}
+            isFillParent
             isBlur
           />
         </Title>
@@ -235,11 +236,14 @@ export default async function Page({ searchParams, params }: IPageProps) {
             {satChannels.length}
           </p>
         </StartArticleSection>
-        <FlyChannelsTable
-          lang={lang}
-          isSingleSat
-          satChannels={getFlyGroupedChannelsAllSat([satChannels])}
-        />
+
+        <Suspense>
+          <FlyChannelsTable
+            lang={lang}
+            isSingleSat
+            satChannels={getFlyGroupedChannelsAllSat([satChannels])}
+          />
+        </Suspense>
       </article>
 
       <CommentBlock

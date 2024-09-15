@@ -30,8 +30,8 @@ export const SAT_CHANNEL_LIST_IMAGES = {
     height: 99,
     width: 132,
     alt: {
-      [ELanguage.UA]: `Телевізійні і радіо канали супутника`,
-      [ELanguage.EN]: `Television and radio channels broadcasted from the satellite`,
+      [ELanguage.UA]: `Логотип супутника`,
+      [ELanguage.EN]: `Logo of the satellite`,
     },
     defaultImage: {
       src: '/Images/satellite_7144.png',

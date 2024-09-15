@@ -48,6 +48,9 @@ export const META_TRANS_NEWS_LIST = {
     [ELanguage.EN]: 'News of the satellite ',
     [ELanguage.UA]: 'Новини супутника ',
   },
+};
+
+export const TRANS_NEWS_LIST_FILTERS = {
   fieldsetTitle: {
     [ELanguage.UA]: 'Виберіть супутники та проміжок часу',
     [ELanguage.EN]: 'Select satellites and time slot',
@@ -88,21 +91,22 @@ export const META_TRANS_NEWS_LIST = {
       [ELanguage.UA]: 'Скинути всі фільтри',
     },
   },
-  images: {
-    satLogo: {
-      path: '/Images/satellites/',
-      height: 50,
-      width: 67,
-      defaultImg: {
-        src: '/Images/satellites/wrong_sat_64.png',
-        height: 64,
-        width: 64,
-      },
-      alternativeStr: { title: '🌏', fontSize: '4rem' },
-      alt: {
-        [ELanguage.UA]: `Логотип супутника `,
-        [ELanguage.EN]: `Satellite logo `,
-      },
+};
+
+export const TRANS_NEWS_LIST_IMAGES = {
+  satLogo: {
+    path: '/Images/satellites/',
+    height: 50,
+    width: 67,
+    defaultImg: {
+      src: '/Images/satellites/wrong_sat_64.png',
+      height: 64,
+      width: 64,
+    },
+    alternativeStr: { title: '🌏', fontSize: '4rem' },
+    alt: {
+      [ELanguage.UA]: `Логотип супутника `,
+      [ELanguage.EN]: `Satellite logo `,
     },
   },
 };

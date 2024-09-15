@@ -55,7 +55,10 @@ const FillingImg = ({
     <Image
       width={width}
       height={height}
-      style={{ minWidth: width, height: 'auto' }}
+      style={{ width, height: 'auto' }}
+      // style={{ minWidth: 'auto', minHeight: height }}
+      // style={{ minWidth: width, minHeight: height }}
+      // style={{ minWidth: width, height: 'auto' }}
       placeholder={isBlur ? 'blur' : 'empty'}
       blurDataURL={blurImgPath}
       src={src}

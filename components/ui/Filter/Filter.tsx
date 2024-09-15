@@ -1,7 +1,6 @@
 'use client';
 
 import { usePathname, useRouter } from 'next/navigation';
-import styles from './Filter.module.scss';
 import { EUrlSearchParam } from '@/models/url.model';
 import { ALL_SAT_CHANNEL_LIST_FILTERS } from '@/models/channelList.model';
 import BaseButton from '../buttons/BaseButton/BaseButton';
@@ -59,7 +58,12 @@ export default function Filter({
       {resetButton && (
         <TooltipSimple tooltipText={resetButton.ariaLabel}>
           <BaseButton
-            className={`${styles.ResetAllButton} text-4xl text-green-600 w-10 h-10 rounded-full hover:text-red-700`}
+            style={{
+              textShadow: '0 1px 0px #ffffffa6',
+              boxShadow:
+                'inset 0px 1px 1px white, 0px 1px 3px rgba(0, 0, 0, 0.5)',
+            }}
+            className={`bg-gradient-to-b from-yellow-50 to-gray-400 text-4xl text-green-600 w-10 h-10 rounded-full hover:text-red-700`}
             data-testid="ResetFiltersButton"
             ariaLabel={resetButton.ariaLabel}
             onClick={resetAll}

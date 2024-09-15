@@ -33,7 +33,7 @@ const StyledInputField = ({
   const basesAttributes = {
     id: idName,
     name: idName,
-    className: `${styles.inputField} py-2 px-10 rounded-md font-verdana m-1 cursor-auto placeholder:font-georgia text-stone-400 placeholder:pl-4 ${className ? ` ${className}` : ''}`,
+    className: `${styles.inputField} text-sm py-2 px-10 rounded-md font-verdana m-1 cursor-auto placeholder:font-georgia text-stone-400 placeholder:pl-4 ${className ? ` ${className}` : ''}`,
     style: { width: `${widthPx - 40}px`, height: '2.3rem' },
     placeholder: placeholder,
     onChange: (e: ChangeEvent<HTMLInputElement>) => {

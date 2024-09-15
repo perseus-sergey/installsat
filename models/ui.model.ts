@@ -19,11 +19,15 @@ export interface IImgParams {
 }
 
 export const IMG_PROPERTIES = {
-  defaultImgBlur: '/Images/1blur.gif',
+  defaultImgBlur:
+    'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNctu1mPQAG9QK2i+zUtgAAAABJRU5ErkJggg==',
 };
 
+// export const IMG_PROPERTIES = {
+//   defaultImgBlur: '/Images/1blur.gif',
+// };
+
 export const BREADCRUMBS_SEPARATOR = '჻';
-export const SIDE_BAR_CLOSE_BTN = '⚔';
 
 export const ERRORS = {
   ERROR_EMPTY_DATA: {

@@ -1,5 +1,10 @@
+import { StaticImageData } from 'next/image';
 import { ELanguage, ILang } from './ui.model';
 import { EUrlAdminParam } from './url.model';
+
+import parseIcon from 'public/Images/accordion/html.png';
+import satelliteIcon from 'public/Images/accordion/satellite32.png';
+import usefulArticlesIcon from 'public/Images/accordion/icon_info_key.png';
 
 interface ILink {
   title: string;
@@ -7,9 +12,7 @@ interface ILink {
 }
 
 interface IImage {
-  src: string;
-  width: number;
-  height: number;
+  src: StaticImageData;
   alt: ILang;
 }
 
@@ -29,9 +32,7 @@ export const MENU_ACCORDION_ADMIN: IMenuAccordionAdmin = {
   ARTICLES: {
     name: 'ARTICLES',
     img: {
-      src: '/Images/accordion/icon_info_key.png',
-      width: 32,
-      height: 32,
+      src: usefulArticlesIcon,
       alt: {
         [ELanguage.EN]: 'Articles',
         [ELanguage.UA]: 'Статті',
@@ -56,9 +57,7 @@ export const MENU_ACCORDION_ADMIN: IMenuAccordionAdmin = {
   CHANNELS: {
     name: 'CHANNELS',
     img: {
-      src: '/Images/accordion/satellite32.png',
-      width: 34,
-      height: 32,
+      src: satelliteIcon,
       alt: {
         [ELanguage.UA]: 'Канали на супутниках',
         [ELanguage.EN]: 'Channels on satellites',
@@ -83,9 +82,7 @@ export const MENU_ACCORDION_ADMIN: IMenuAccordionAdmin = {
   PARSING: {
     name: 'PARSING',
     img: {
-      src: '/Images/accordion/html.png',
-      width: 32,
-      height: 32,
+      src: parseIcon,
       alt: {
         [ELanguage.UA]: 'Парсинг',
         [ELanguage.EN]: 'Parsing',
@@ -97,93 +94,4 @@ export const MENU_ACCORDION_ADMIN: IMenuAccordionAdmin = {
     },
     titleHref: `/${EUrlAdminParam.BASE_PATH}/${EUrlAdminParam.PARSE}`,
   },
-
-  // MAPS: {
-  //   name: 'MAPS',
-  //   img: {
-  //     src: '/Images/accordion/point.png',
-  //     width: 32,
-  //     height: 32,
-  //     alt: {
-  //       [ELanguage.UA]: 'Карти покриття телевізійних супутників',
-  //       [ELanguage.EN]: 'Satellite coverage maps',
-  //     },
-  //   },
-  //   title: {
-  //     [ELanguage.UA]: 'Карти покриття',
-  //     [ELanguage.EN]: 'Satellite Maps',
-  //   },
-  //   baseHrefOfList: `/${EUrlBaseParam.SAT_COVERAGE_MAP}`,
-  // },
-  // INSTALLATIONS: {
-  //   name: 'INSTALLATIONS',
-  //   img: {
-  //     src: '/Images/accordion/advancedsettings_2775.png',
-  //     width: 32,
-  //     height: 32,
-  //     alt: {
-  //       [ELanguage.UA]: 'Варіанти встановлення супутникового тб',
-  //       [ELanguage.EN]: 'Installing options for satellite TV',
-  //     },
-  //   },
-  //   title: {
-  //     [ELanguage.UA]: 'Варіанти встановлення',
-  //     [ELanguage.EN]: 'Installing options',
-  //   },
-  //   baseHrefOfList: `/${EUrlBaseParam.INSTALLATION_OPTIONS}`,
-  // },
-  // PACKAGES: {
-  //   name: 'PACKAGES',
-  //   img: {
-  //     src: '/Images/accordion/film24.png',
-  //     width: 32,
-  //     height: 24,
-  //     alt: {
-  //       [ELanguage.UA]: 'Пакети каналів',
-  //       [ELanguage.EN]: 'Channels packages',
-  //     },
-  //   },
-  //   title: {
-  //     [ELanguage.UA]: 'Пакети каналів',
-  //     [ELanguage.EN]: 'Channel packages',
-  //   },
-  //   baseHrefOfList: `/${EUrlBaseParam.PACKAGE_CHANNEL_LIST}`,
-  // },
-  // ONLINE_TV: {
-  //   name: 'ONLINE_TV',
-  //   img: {
-  //     src: '/Images/accordion/trailer-icon_37.png',
-  //     width: 37,
-  //     height: 32,
-  //     alt: {
-  //       [ELanguage.UA]: 'Онлайн ТБ',
-  //       [ELanguage.EN]: 'Online TV',
-  //     },
-  //   },
-  //   title: { [ELanguage.UA]: 'Онлайн ТБ', [ELanguage.EN]: 'Online TV' },
-  //   titleHref: `/${EUrlBaseParam.ONLINE_CHANNEL_LIST}`,
-  // },
-  // SCHEDULE: {
-  //   name: 'SCHEDULE',
-  //   img: {
-  //     src: '/Images/accordion/calendar.png',
-  //     width: 32,
-  //     height: 32,
-  //     alt: {
-  //       [ELanguage.UA]: 'Розклад передач ТБ',
-  //       [ELanguage.EN]: 'TV schedule',
-  //     },
-  //   },
-  //   title: { [ELanguage.UA]: 'Програма ТБ', [ELanguage.EN]: 'TV schedule' },
-  //   titleHref: `/${EUrlBaseParam.CHANNELS_TV_PROGRAM}`,
-  // },
 };
-
-// export const ADDED_ITEMS = {
-//   freeChannels: {
-//     title: {
-//       [ELanguage.UA]: 'Безкоштовні',
-//       [ELanguage.EN]: 'Free channels',
-//     },
-//     link: `/${EUrlBaseParam.SAT_CHANNEL_LIST}`,
-//   },

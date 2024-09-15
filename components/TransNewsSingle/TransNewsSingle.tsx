@@ -2,7 +2,7 @@ import { Title } from '../ui/Titles/Title';
 import satNewsStyles from '../SatNewsList/SatNewsList.module.scss';
 import { ReactNode } from 'react';
 import DangerHtmlUl from '../ui/DangerHtml/DangerHtml';
-import { META_TRANS_NEWS_LIST, TSatDigest } from '@/models/satDigest.model';
+import { TRANS_NEWS_LIST_IMAGES, TSatDigest } from '@/models/satDigest.model';
 import { getDailyNews } from '@/controllers/satDigest.controller';
 import FillingValidImage from '../ui/Images/FillingValidImage';
 import { ELanguage, ERRORS } from '@/models/ui.model';
@@ -23,7 +23,7 @@ const TransNewsSingle = ({ newsArray, title, lang }: ITransNewsSingleProps) => (
     {newsArray && newsArray.length > 0 ? (
       <div>
         {newsArray.map((satNews) => {
-          const { satLogo } = META_TRANS_NEWS_LIST.images;
+          const { satLogo } = TRANS_NEWS_LIST_IMAGES;
           const satTitle = decode(satNews[0]);
 
           return (

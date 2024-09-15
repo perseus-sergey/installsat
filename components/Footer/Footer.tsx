@@ -3,29 +3,30 @@ import {
   MENU_SEPARATOR,
   footerMenuList,
 } from '@/models/footer.model';
-import styles from './Footer.module.scss';
 import { ELanguage } from '@/models/ui.model';
 import { Fragment } from 'react';
 import SeoLink from '../ui/SeoLink/SeoLink';
 
 const Footer = ({ lang }: { lang: ELanguage }) => (
-  <footer className={styles.footer}>
-    <section className={styles.Copyright}>
+  <footer className="text-white">
+    <section
+      style={{ textShadow: '#000033 4px 4px 4px' }}
+      className="text-center my-2 p-4 border-y border-slate-200 text-sm font-verdana bg-gradient-to-b from-indigo-900 to-sky-400"
+    >
       {COPYRIGHT_SECTION.title[lang]}
     </section>
 
-    <nav className={styles.footerMenu}>
-      <ul className={styles.menuList}>
+    <nav className="py-4 bg-slate-900">
+      <ul className="flex flex-wrap justify-around items-center text-gray-200">
         {footerMenuList.map((item, i) => {
           return (
             <Fragment key={i}>
               {i ? (
-                <li className={styles.separator}>{MENU_SEPARATOR}</li>
+                <li className="text-red-500 text-2xl">{MENU_SEPARATOR}</li>
               ) : null}
-              <li>
+              <li className="max-w-28 text-center">
                 <SeoLink
                   href={`/${lang}/${item.href}`}
-                  className={styles.navLink}
                   title={
                     lang === ELanguage.UA
                       ? `Натисніть, щоб перейти до перегляду сторінки "${item.title[lang]}"`

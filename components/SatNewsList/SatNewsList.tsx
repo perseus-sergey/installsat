@@ -1,6 +1,9 @@
 import styles from './SatNewsList.module.scss';
 import DangerHtml from '../ui/DangerHtml/DangerHtml';
-import { META_TRANS_NEWS_LIST } from '@/models/satDigest.model';
+import {
+  META_TRANS_NEWS_LIST,
+  TRANS_NEWS_LIST_IMAGES,
+} from '@/models/satDigest.model';
 import {
   getDailyNews,
   getSatDigestNews,
@@ -37,7 +40,7 @@ const SatNewsList = async ({ searchParams, lang }: ISatNewsListProps) => {
   const newsArray = setGroupedNewsBySatMap(newsIntervalResult);
 
   return newsArray.map((news) => {
-    const { satLogo } = META_TRANS_NEWS_LIST.images;
+    const { satLogo } = TRANS_NEWS_LIST_IMAGES;
     const satSlug = news[1].get([...news[1].keys()][0])?.[0].sat_slug || '';
 
     return (

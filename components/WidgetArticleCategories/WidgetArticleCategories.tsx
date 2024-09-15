@@ -8,8 +8,11 @@ const WidgetArticleCategories = async ({ lang }: { lang: ELanguage }) => {
   const articleCatWidgetList = await getArtCatListSideBar(lang);
 
   return articleCatWidgetList.length > 0 ? (
-    <ul className="sidebar-widget" data-testid="WidgetArticleCategories">
-      <li className="font-bold pb-2">
+    <ul
+      className="sidebar-widget text-stone-300 p-4 rounded border border-solid border-stone-400 my-1 mx-auto overflow-hidden bg-gradient-to-b from-black to-blue-900"
+      data-testid="WidgetArticleCategories"
+    >
+      <li className="font-bold py-2">
         <SeoLink
           title={WIDGET_ARTICLE_CATEGORY.ariaLabelForTitle[lang]}
           className={styles.itemLink}
@@ -21,7 +24,7 @@ const WidgetArticleCategories = async ({ lang }: { lang: ELanguage }) => {
       </li>
       {articleCatWidgetList.map((item) => {
         return (
-          <li key={item.cpu} className="font-bold pb-2">
+          <li key={item.cpu} className="font-bold py-2">
             <SeoLink
               title={`${WIDGET_ARTICLE_CATEGORY.ariaLabel[lang]}: "${item.title}"`}
               className={styles.itemLink}

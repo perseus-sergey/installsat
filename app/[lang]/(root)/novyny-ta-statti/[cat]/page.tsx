@@ -1,7 +1,6 @@
 import { Title } from '@/components/ui/Titles/Title';
 import type { Metadata } from 'next';
 import FillingValidImage from '@/components/ui/Images/FillingValidImage';
-import { ARTICLES } from '@/models/articles.model';
 import {
   getArticleCatList,
   getChunkOfNews,
@@ -25,20 +24,24 @@ import { BREAD_CRUMBS } from '@/models/breadCrumbs.model';
 import Filter from '@/components/ui/Filter/Filter';
 import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
 import { Suspense } from 'react';
+import {
+  ARTICLE_LIST_MODEL,
+  ARTICLE_PAGINATION_PARAMS,
+} from '@/models/articles.model';
 
 const BASE_URL = process.env.BASE_URL || MAIN_URL;
 
 const {
-  articleList: { pagination, images, articlesCountCaption },
+  images,
+  articlesCountCaption,
   search: { placeholder, labelTitle },
-} = ARTICLES;
+} = ARTICLE_LIST_MODEL;
 
 const articleTitleImg = imagePathValidate(
   images.titleImg,
   images.titleImg.alternativeStr.title
 );
 
-// export const dynamic = 'force-dynamic';
 export const revalidate = 3600 * 12; // invalidate cache every 12 hours
 
 export interface IPageParams {
@@ -106,7 +109,7 @@ export default async function Page({ params, searchParams }: IPageParams) {
     lang === ELanguage.UA ? description : description_en || description;
   const textLang = lang === ELanguage.UA ? text : text_en || text;
 
-  const { perPage } = pagination;
+  const { perPage } = ARTICLE_PAGINATION_PARAMS;
 
   const page = validSearchParam(EUrlSearchParam.PAGE, searchParams) || '1';
 
@@ -162,7 +165,7 @@ export default async function Page({ params, searchParams }: IPageParams) {
         <Pagination
           lang={lang}
           page={pageNumber || 1}
-          offsetNumber={pagination.offsetNumber}
+          offsetNumber={ARTICLE_PAGINATION_PARAMS.offsetNumber}
           totalPages={totalPages}
           searchParams={searchParams}
         />
@@ -176,7 +179,7 @@ export default async function Page({ params, searchParams }: IPageParams) {
         <Pagination
           lang={lang}
           page={pageNumber || 1}
-          offsetNumber={pagination.offsetNumber}
+          offsetNumber={ARTICLE_PAGINATION_PARAMS.offsetNumber}
           totalPages={totalPages}
           searchParams={searchParams}
         />

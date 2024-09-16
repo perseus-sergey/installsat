@@ -100,11 +100,9 @@ export const COMMENTS_MODEL = {
       [ELanguage.EN]: 'Comments',
     },
     image: {
-      width: 60,
-      height: 60,
       alt: {
-        [ELanguage.UA]: 'Секція коментарів',
-        [ELanguage.EN]: 'Comments section',
+        [ELanguage.UA]: 'Зображення поштовоЇ розсилки коментарів',
+        [ELanguage.EN]: 'Postcard image for comments',
       },
       src: '/Images/mail_post_to_5295.png',
     },

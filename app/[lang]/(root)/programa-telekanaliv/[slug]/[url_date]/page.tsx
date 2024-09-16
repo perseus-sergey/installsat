@@ -33,7 +33,7 @@ import ChannelOnlineLink from '@/components/ui/buttons/ChannelOnlineLink/Channel
 import { decode } from 'html-entities';
 import { getELangKey } from '@/libs/utils/validSearchParam';
 import { getEnvVariable } from '@/libs/utils/envHandler';
-import { ARTICLES } from '@/models/articles.model';
+import { INFO_PANEL_TITLES } from '@/models/articles.model';
 
 const BASE_URL = getEnvVariable('BASE_URL', MAIN_URL);
 
@@ -50,7 +50,7 @@ const {
   date: dateTitle,
   views: viewsTitle,
   comments: commentsTitle,
-} = ARTICLES.infoPanelTitles;
+} = INFO_PANEL_TITLES;
 
 const { getKeywords, getTitle, h1Start, descriptionStart } = SCHEDULE_META;
 

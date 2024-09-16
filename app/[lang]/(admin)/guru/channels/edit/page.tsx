@@ -3,7 +3,7 @@ import Filter from '@/components/ui/Filter/Filter';
 import { Title } from '@/components/ui/Titles/Title';
 import { getEditDbChannels } from '@/controllers/admin.controller';
 import { getELangKey, validSearchParam } from '@/libs/utils/validSearchParam';
-import { ARTICLES } from '@/models/articles.model';
+import { ARTICLE_LIST_MODEL } from '@/models/articles.model';
 import { TSearchParams } from '@/models/ui.model';
 import {
   EUrlAdminParam,
@@ -15,7 +15,7 @@ import { Suspense } from 'react';
 
 const { BASE_PATH, CHANNELS_EDIT } = EUrlAdminParam;
 
-const { placeholder, labelTitle } = ARTICLES.search;
+const { placeholder, labelTitle } = ARTICLE_LIST_MODEL.search;
 
 export default async function Page({
   searchParams,

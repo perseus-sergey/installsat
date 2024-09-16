@@ -11,7 +11,6 @@ import { getSatMap, updateViewCount } from '@/controllers/articles.controller';
 import SimilarArticles from '@/components/SimilarArticles/SimilarArticles';
 import { getCommentsNumber } from '@/controllers/comments.controller';
 import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
-import { ARTICLES, SAT_MAPS_MODEL } from '@/models/articles.model';
 import BreadCrumbServer from '@/components/BreadCrumbs/BreadCrumbsServer';
 import { BREAD_CRUMBS } from '@/models/breadCrumbs.model';
 import { Title } from '@/components/ui/Titles/Title';
@@ -24,6 +23,11 @@ import { getELangKey } from '@/libs/utils/validSearchParam';
 import SeoLink from '@/components/ui/SeoLink/SeoLink';
 import { EUrlSearchParam } from '@/cron/libs/commons.mjs';
 import { getSatMapsSideBar } from '@/controllers/sidebar.controller';
+import {
+  INFO_PANEL_TITLES,
+  META_SINGLE_SAT_MAP,
+  SINGLE_SAT_MAP_DATA,
+} from '@/models/articles.model';
 
 interface IArticleParams {
   params: { [key in EUrlBaseParam]: string };
@@ -34,12 +38,14 @@ const BASE_URL = process.env.BASE_URL || MAIN_URL;
 export const revalidate = 3600 * 24 * 7; // invalidate cache every 7 days
 
 const {
-  metaSingleMap: { metaKeywords, metaTitle, getDescription, getH1 },
   similar: { similarStart, similarTitle },
-  images: { singleMap },
-} = SAT_MAPS_MODEL;
+} = SINGLE_SAT_MAP_DATA;
 
-const { views: viewsTitle, comments: commentsTitle } = ARTICLES.infoPanelTitles;
+const { images: singleMapImg } = SINGLE_SAT_MAP_DATA;
+
+const { metaKeywords, metaTitle, getDescription, getH1 } = META_SINGLE_SAT_MAP;
+
+const { views: viewsTitle, comments: commentsTitle } = INFO_PANEL_TITLES;
 
 export const generateMetadata = async ({
   params,
@@ -126,12 +132,12 @@ export default async function Page({ params }: IArticleParams) {
           {h1Title}
           <FillingValidImage
             image={{
-              ...singleMap.h1Image,
-              src: `${singleMap.h1Image.path}${logo}`,
+              ...singleMapImg.h1Image,
+              src: `${singleMapImg.h1Image.path}${logo}`,
             }}
-            defaultImage={singleMap.h1Image.defaultImg}
-            alternativeImgString={singleMap.h1Image.alternativeStr}
-            alt={`${singleMap.h1Image.altStart[lang]} ${h1Title}`}
+            defaultImage={singleMapImg.h1Image.defaultImg}
+            alternativeImgString={singleMapImg.h1Image.alternativeStr}
+            alt={`${singleMapImg.h1Image.altStart[lang]} ${h1Title}`}
             isBlur
             isFillParent
           />

@@ -1,10 +1,10 @@
 import styles from './Pagination.module.scss';
 import { EUrlSearchParam } from '@/models/url.model';
-import { ARTICLES } from '@/models/articles.model';
 import { ELanguage, TSearchParams } from '@/models/ui.model';
 import { makeUrlSearchParams } from '@/libs/utils/utils';
 import TooltipSimple from '../tooltips/TooltipSimple/TooltipSimple';
 import SeoLink from '../SeoLink/SeoLink';
+import { ARTICLE_PAGINATION_PARAMS } from '@/models/articles.model';
 
 const {
   nextPageTitle,
@@ -12,7 +12,7 @@ const {
   firstPageTitle,
   lastPageTitle,
   linkTitle,
-} = ARTICLES.articleList.pagination;
+} = ARTICLE_PAGINATION_PARAMS;
 
 interface IPaginationProps {
   page: number;

@@ -1,6 +1,5 @@
 import { Title } from '@/components/ui/Titles/Title';
 import type { Metadata } from 'next';
-import { ARTICLES } from '@/models/articles.model';
 import { getChunkOfNews } from '@/controllers/articles.controller';
 import FillingValidImage from '@/components/ui/Images/FillingValidImage';
 import ArticleList from '@/components/article/ArticleList/ArticleList';
@@ -19,18 +18,21 @@ import BreadCrumbServer from '@/components/BreadCrumbs/BreadCrumbsServer';
 import Filter from '@/components/ui/Filter/Filter';
 import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
 import { Suspense } from 'react';
+import {
+  ARTICLE_LIST_MODEL,
+  ARTICLE_PAGINATION_PARAMS,
+  META_ALL_ARTICLES,
+} from '@/models/articles.model';
 
 const BASE_URL = process.env.BASE_URL || MAIN_URL;
 
 const {
   search: { placeholder, labelTitle },
-  articleList: {
-    meta: { description, h1Start, title },
-    pagination,
-    images,
-    articlesCountCaption,
-  },
-} = ARTICLES;
+  images,
+  articlesCountCaption,
+} = ARTICLE_LIST_MODEL;
+
+const { description, h1Start, title } = META_ALL_ARTICLES;
 
 const articleTitleImg = imagePathValidate(
   images.titleImg,
@@ -71,7 +73,7 @@ export const generateMetadata = ({ params }: IProps): Metadata => {
 };
 export default async function Page({ searchParams, params }: IProps) {
   const lang = getELangKey(params[EUrlBaseParam.LANG]);
-  const { perPage } = pagination;
+  const { perPage } = ARTICLE_PAGINATION_PARAMS;
 
   const page = validSearchParam(EUrlSearchParam.PAGE, searchParams) || '1';
 
@@ -124,7 +126,7 @@ export default async function Page({ searchParams, params }: IProps) {
         <Pagination
           lang={lang}
           page={pageNumber || 1}
-          offsetNumber={pagination.offsetNumber}
+          offsetNumber={ARTICLE_PAGINATION_PARAMS.offsetNumber}
           totalPages={totalPages}
           searchParams={searchParams}
         />
@@ -138,7 +140,7 @@ export default async function Page({ searchParams, params }: IProps) {
         <Pagination
           lang={lang}
           page={pageNumber || 1}
-          offsetNumber={pagination.offsetNumber}
+          offsetNumber={ARTICLE_PAGINATION_PARAMS.offsetNumber}
           totalPages={totalPages}
           searchParams={searchParams}
         />

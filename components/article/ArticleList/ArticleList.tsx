@@ -1,4 +1,8 @@
-import { ARTICLES, IAllNewsModel } from '@/models/articles.model';
+import {
+  ARTICLE_CARD,
+  IAllNewsModel,
+  INFO_PANEL_TITLES,
+} from '@/models/articles.model';
 import styles from './ArticleList.module.scss';
 import ArticleCard from '../ArticleCard/ArticleCard';
 import FillingImg from '../../ui/Images/FillingImage';
@@ -11,14 +15,14 @@ import DangerHtml from '../../ui/DangerHtml/DangerHtml';
 import EmptyData from '@/components/errors/EmptyData/EmptyData';
 import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
 
-const { h1Image } = ARTICLES.article.images;
+const { h1Image } = ARTICLE_CARD.images;
 
 const {
   date: dateTitle,
   theme: themeTitle,
   views: viewsTitle,
   comments: commentsTitle,
-} = ARTICLES.infoPanelTitles;
+} = INFO_PANEL_TITLES;
 
 interface IArticleListProps {
   lang: ELanguage;

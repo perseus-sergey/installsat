@@ -1,6 +1,5 @@
 import { Title } from '@/components/ui/Titles/Title';
 import type { Metadata } from 'next';
-import { SAT_MAPS_MODEL } from '@/models/articles.model';
 import { getSatMapList } from '@/controllers/articles.controller';
 import { EUrlBaseParam, MAIN_URL } from '@/models/url.model';
 import { DEFAULT_META_DATA, DEFAULT_LANG, ELanguage } from '@/models/ui.model';
@@ -9,13 +8,16 @@ import MapList from '@/components/article/ArticleList/MapList';
 import BreadCrumbServer from '@/components/BreadCrumbs/BreadCrumbsServer';
 import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
 import { getELangKey } from '@/libs/utils/validSearchParam';
+import { META_ALL_SAT_MAPS_MODEL } from '@/models/articles.model';
 
 const BASE_URL = process.env.BASE_URL || MAIN_URL;
 
 const {
-  metaAllMaps: { metaDescription, metaKeywords, metaTitle },
+  metaDescription,
+  metaKeywords,
+  metaTitle,
   images: { allMaps: allMapsImg },
-} = SAT_MAPS_MODEL;
+} = META_ALL_SAT_MAPS_MODEL;
 
 interface IProps {
   params: { [key in EUrlBaseParam]: string };

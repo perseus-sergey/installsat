@@ -26,7 +26,7 @@ const SideBar = async ({
 
   return (
     <aside
-      className="sidebar bg-slate-900 lg:bg-transparent flex-1 p-2 transition-all ease-linear duration-300 lg:static fixed -left-full top-0 h-full w-5/6 max-w-lg min-w-72 z-[101]"
+      className="sidebar bg-slate-900 lg:bg-transparent flex-1 p-2 transition-all ease-linear duration-300 lg:static fixed -left-full top-0 h-full w-5/6 max-w-lg min-w-72 lg:z-0 z-[101]"
       data-testid="SideBar"
     >
       <ToggleSidebarLabel

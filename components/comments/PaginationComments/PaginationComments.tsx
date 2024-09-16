@@ -1,15 +1,15 @@
 'use client';
 
-import styles from './PaginationComments.module.scss';
-import { ARTICLES } from '@/models/articles.model';
+import { ARTICLE_PAGINATION_PARAMS } from '@/models/articles.model';
 import { EDBTableTitles, ELanguage } from '@/models/ui.model';
 import TooltipSimple from '../../ui/tooltips/TooltipSimple/TooltipSimple';
 import { useEffect, useState } from 'react';
 import BaseButton from '../../ui/buttons/BaseButton/BaseButton';
 import { getComments } from '@/controllers/comments.controller';
-import FillingImg from '@/components/ui/Images/FillingImage';
 import { COMMENTS_MODEL, ICommentsModel } from '@/models/comments.model';
 import { getFormattedDateStr } from '@/libs/utils/dates';
+import Image from 'next/image';
+import commentTitleImg from 'public/Images/mail_post_to_5295.png';
 
 const { commentList } = COMMENTS_MODEL;
 
@@ -19,7 +19,7 @@ const {
   firstPageTitle,
   lastPageTitle,
   linkTitle,
-} = ARTICLES.articleList.pagination;
+} = ARTICLE_PAGINATION_PARAMS;
 
 interface IPaginationProps {
   offsetNumber: number;
@@ -45,6 +45,13 @@ const getPageNumbers = (
 
   return pageNumbers;
 };
+
+const minSizeSmallStyle = 'min-w-7 min-h-7';
+const minSizeBigStyle = 'sm:min-w-9 sm:min-h-9';
+const listItemBaseStyle = `${minSizeSmallStyle} ${minSizeBigStyle} flex flex-wrap justify-center items-center font-normal no-underline border border-solid border-black/25 border-l-0`;
+const listItemStyle = `${listItemBaseStyle} text-white/85 hover:bg-white/20 active:border-l-[1px] active:shadow shadow-[inset_0px_1px_0px_0px_rgba(255,255,255,0.35)]`;
+const currentPageNStyle = `${listItemBaseStyle} pt-0.5 sm:pt-1 text-white bg-white/35 cursor-default pointer-events-none shadow-[inset_0px_2px_1px_0px_rgba(0,0,0,0.25)]`;
+const commentTextShadow = { textShadow: '1px 1px 0px black' };
 
 const PaginationComments = ({
   offsetNumber,
@@ -96,34 +103,41 @@ const PaginationComments = ({
     comments &&
     comments.length > 0 && (
       <>
-        <h3 className={styles.commentsTitle}>
-          <FillingImg
-            {...commentList.image}
-            alt={commentList.image.alt[lang]}
-          />
+        <h3
+          className="flex items-center justify-center gap-4 p-2 text-2xl italic font-bold font-verdana border-t-4 border-double"
+          style={commentTextShadow}
+        >
+          <Image src={commentTitleImg} alt={commentList.image.alt[lang]} />
           {commentList.title[lang]} ({numberOfComments})
         </h3>
-        <ul className={styles.CommentList}>
+        <ul>
           {comments.map((comment) => {
             const country = comment.country ? `(${comment.country})` : '';
 
             return (
-              <li key={comment.id} className={styles.commentContainer}>
+              <li
+                key={comment.id}
+                className="pb-2 font-verdana"
+                style={{ borderTop: '2px groove #777777' }}
+              >
+                <span className="text-stone-300 text-sm">{`(${getFormattedDateStr(comment.date)})  `}</span>
                 <span
-                  className={styles.commentDate}
-                >{`(${getFormattedDateStr(comment.date)})  `}</span>
-                <span
-                  className={styles.commentAuthor}
+                  className="text-stone-300 font-georgia"
+                  style={commentTextShadow}
                 >{`${comment.author} ${country}`}</span>
-                <p className={styles.commentText}>... {comment.text}</p>
+                <p className="p-2 font-bold text-sm" style={commentTextShadow}>
+                  ... {comment.text}
+                </p>
               </li>
             );
           })}
         </ul>
 
         {totalPages > 1 && (
-          <nav className={styles.Pagination} data-testid="Pagination">
-            <ul className={styles.paginationList}>
+          <nav className="flex justify-center py-4" data-testid="Pagination">
+            <ul
+              className={`shadow-[0px_3px_5px_rgba(0,0,0,0.25)] w-fit p-0 sm:p-2 bg-white/60 flex justify-center items-center border`}
+            >
               <Controls
                 isDisabled={pageNumber === 1}
                 controls={[
@@ -151,9 +165,7 @@ const PaginationComments = ({
                   onClick={() => setPageNumber(numb)}
                   innerText={numb}
                   className={
-                    numb === pageNumber
-                      ? styles.currentPageNumber
-                      : styles.listItem
+                    numb === pageNumber ? currentPageNStyle : listItemStyle
                   }
                 />
               ))}
@@ -192,10 +204,10 @@ const ControlButton = ({
   className,
   ...attributes
 }: IPrps) => (
-  <li>
+  <li className="bg-cyan-600">
     <TooltipSimple tooltipText={ariaLabel}>
       <BaseButton
-        className={className || styles.listItem}
+        className={className || listItemStyle}
         ariaLabel={ariaLabel}
         title={ariaLabel}
         {...attributes}
@@ -209,7 +221,7 @@ const ControlButton = ({
 const ControlDisabled = ({ innerText }: { innerText: string | number }) => (
   <li>
     <div
-      className={`${styles.listItem} ${styles.disabled}`}
+      className={`${listItemStyle} bg-stone-500/70 text-stone-200 cursor-default pointer-events-none`}
       aria-disabled="true"
     >
       {innerText}

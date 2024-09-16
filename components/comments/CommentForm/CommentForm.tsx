@@ -75,7 +75,7 @@ const CommentForm = ({
   const formRef = useFormReset(formState);
 
   const inputFieldStyle =
-    'max-w-72 sm:max-w-full mt-1 p-1 text-gray-700 border-lightgray border-2 cursor-auto bg-[linear-gradient(to_bottom,rgba(255,255,255,1)_0%,rgba(243,243,243,1)_50%,rgba(237,237,237,1)_51%,rgba(255,255,255,1)_100%)] border-inset';
+    'max-w-64 sm:max-w-full mt-1 p-1 text-gray-700 border-lightgray border-2 cursor-auto bg-[linear-gradient(to_bottom,rgba(255,255,255,1)_0%,rgba(243,243,243,1)_50%,rgba(237,237,237,1)_51%,rgba(255,255,255,1)_100%)] border-inset';
 
   const requiredStyle =
     "after:text-lime-200 after:text-xl after:content-['_*']";

@@ -1,7 +1,9 @@
 import {
-  ARTICLES,
   IAllMapsModel,
-  SAT_MAPS_MODEL,
+  INFO_PANEL_TITLES,
+  META_ALL_SAT_MAPS_MODEL,
+  META_SINGLE_SAT_MAP,
+  SINGLE_SAT_MAP_DATA,
 } from '@/models/articles.model';
 import styles from './ArticleList.module.scss';
 import ArticleCard from '../ArticleCard/ArticleCard';
@@ -13,11 +15,14 @@ import EmptyData from '@/components/errors/EmptyData/EmptyData';
 
 const {
   makePostDescription,
-  images: { allMaps: allMapsImg, singleMap },
-  metaSingleMap: { metaTitle },
-} = SAT_MAPS_MODEL;
+  images: { allMaps: allMapsImg },
+} = META_ALL_SAT_MAPS_MODEL;
 
-const { views: viewsTitle, comments: commentsTitle } = ARTICLES.infoPanelTitles;
+const { metaTitle } = META_SINGLE_SAT_MAP;
+
+const { h1Image } = SINGLE_SAT_MAP_DATA.images;
+
+const { views: viewsTitle, comments: commentsTitle } = INFO_PANEL_TITLES;
 
 interface IArticleListProps {
   articleList: IAllMapsModel[];
@@ -51,12 +56,12 @@ const MapList = ({ articleList, lang }: IArticleListProps) =>
               image={
                 <FillingValidImage
                   image={{
-                    ...singleMap.h1Image,
-                    src: `${singleMap.h1Image.path}${logo}`,
+                    ...h1Image,
+                    src: `${h1Image.path}${logo}`,
                   }}
-                  defaultImage={singleMap.h1Image.defaultImg}
-                  alternativeImgString={singleMap.h1Image.alternativeStr}
-                  alt={`${singleMap.h1Image.altStart[lang]} ${metaTitle[lang]} ${title}`}
+                  defaultImage={h1Image.defaultImg}
+                  alternativeImgString={h1Image.alternativeStr}
+                  alt={`${h1Image.altStart[lang]} ${metaTitle[lang]} ${title}`}
                   isBlur
                 />
               }

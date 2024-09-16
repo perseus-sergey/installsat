@@ -2,7 +2,7 @@ import { useRef, useEffect } from 'react';
 import { EDBTableTitles, ELanguage } from '@/models/ui.model';
 import { IFormState } from '@/controllers/toast.controller';
 import { COMMENTS_MODEL } from '@/models/comments.model';
-import { IUserLocation } from '@/models/userLocation.model';
+// import { IUserLocation } from '@/models/userLocation.model';
 
 export const useFormCommentSendEmail = (
   formState: IFormState,
@@ -10,7 +10,7 @@ export const useFormCommentSendEmail = (
   articlePath: string,
   tblCommentName: EDBTableTitles,
   articleId: string | number,
-  userLocation: IUserLocation | null,
+  // userLocation: IUserLocation | null,
   baseUrl: string,
   emailKey: string,
   lang: ELanguage
@@ -48,7 +48,7 @@ export const useFormCommentSendEmail = (
           articlePath,
           tblCommentName,
           subscribers,
-          userLocation,
+          // userLocation,
           baseUrl,
           emailKey,
           lang,

@@ -39,8 +39,8 @@ const getCommentSchema = async (lang: ELanguage) => {
 export const addCommentAction = async (
   lang: ELanguage,
   articleId: string | number,
-  userIp: string,
-  userCountryCode: string,
+  // userIp: string,
+  // userCountryCode: string,
   revalidateUrl: string,
   dbTableName: EDBTableTitles,
   _formState: IFormState,
@@ -50,6 +50,17 @@ export const addCommentAction = async (
   const { fromErrorToFormState, toFormState } = await import(
     '@/controllers/toast.controller'
   );
+  const { fetchUserLocation } = await import('../utils/getUserIP');
+  const userLocation = await fetchUserLocation();
+
+  const userCountryCode =
+    userLocation && userLocation.status === 'success'
+      ? userLocation.countryCode
+      : '';
+
+  const userIp =
+    userLocation && userLocation.status === 'success' ? userLocation.query : '';
+
   let fieldValues = emptyFieldValues;
   let res = 0;
 

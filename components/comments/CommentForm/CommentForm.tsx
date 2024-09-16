@@ -11,11 +11,7 @@ import { useFormCommentSendEmail } from '@/libs/hooks/useFormCommentSendEmail';
 import { EMPTY_FORM_STATE } from '@/controllers/toast.controller';
 import { IUserLocation } from '@/models/userLocation.model';
 import { addCommentAction } from '@/libs/actions/comments.action';
-import dynamic from 'next/dynamic';
-
-const FieldError = dynamic(() => import('../FieldError/FieldError'), {
-  ssr: false,
-});
+import FieldError from '../FieldError/FieldError';
 
 const { AUTHOR, EMAIL, TEXT } = ECommentFormNames;
 const { authorEmail, authorName, commentText, submit } =
@@ -37,7 +33,7 @@ const CommentForm = ({
   dbCommentTableName,
   articleId,
   articleName,
-  userLocation,
+  // userLocation,
   baseUrl,
   emailKey,
   lang,
@@ -46,10 +42,10 @@ const CommentForm = ({
     null,
     lang,
     articleId,
-    userLocation && userLocation.status === 'success' ? userLocation.query : '',
-    userLocation && userLocation.status === 'success'
-      ? userLocation.countryCode
-      : '',
+    // userLocation && userLocation.status === 'success' ? userLocation.query : '',
+    // userLocation && userLocation.status === 'success'
+    //   ? userLocation.countryCode
+    //   : '',
     revalidateUrl,
     dbCommentTableName
   );
@@ -67,7 +63,7 @@ const CommentForm = ({
     revalidateUrl,
     dbCommentTableName,
     articleId,
-    userLocation,
+    // userLocation,
     baseUrl,
     emailKey,
     lang

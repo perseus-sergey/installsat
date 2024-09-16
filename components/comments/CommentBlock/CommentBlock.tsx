@@ -3,7 +3,7 @@ import CommentForm from '../CommentForm/CommentForm';
 import { EDBTableTitles, ELanguage } from '@/models/ui.model';
 import { COMMENTS_MODEL } from '@/models/comments.model';
 import { EUrlSearchParam, MAIN_URL } from '@/models/url.model';
-import { fetchUserLocation } from '@/libs/utils/getUserIP';
+// import { fetchUserLocation } from '@/libs/utils/getUserIP';
 import PaginationComments from '@/components/comments/PaginationComments/PaginationComments';
 
 const {
@@ -28,7 +28,7 @@ const CommentBlock = async ({
   numberOfComments,
   lang,
 }: IProps) => {
-  const userLocation = await fetchUserLocation();
+  // const userLocation = await fetchUserLocation();
 
   return (
     <section
@@ -51,7 +51,7 @@ const CommentBlock = async ({
         dbCommentTableName={dbCommentTableName}
         articleId={articleId}
         articleName={articleName}
-        userLocation={userLocation}
+        // userLocation={userLocation}
         baseUrl={process.env.BASE_URL || MAIN_URL}
         emailKey={process.env.MAIL_ENCRYPT_KEY || ''}
       />

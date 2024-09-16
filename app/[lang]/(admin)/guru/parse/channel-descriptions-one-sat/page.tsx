@@ -14,7 +14,7 @@ export const dynamic = 'force-dynamic';
 
 // =================================================================
 //
-// Check comment user location in production
+// Check comment user location in production (if successful, clean up the comments form //code comments)
 // Split all models into smaller models
 // Add separate tbl_comments for fly satellites
 // Renew tbl_chan_categ by adding english language

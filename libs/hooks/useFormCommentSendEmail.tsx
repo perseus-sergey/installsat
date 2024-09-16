@@ -1,7 +1,7 @@
 import { useRef, useEffect } from 'react';
 import { EDBTableTitles, ELanguage } from '@/models/ui.model';
 import { IFormState } from '@/controllers/toast.controller';
-import { COMMENTS_MODEL } from '@/models/comments.model';
+import { EMAIL_DATA } from '@/models/comments.model';
 // import { IUserLocation } from '@/models/userLocation.model';
 
 export const useFormCommentSendEmail = (
@@ -82,7 +82,7 @@ export const useFormCommentSendEmail = (
 
           await sendMail({
             to: mail,
-            subject: `${COMMENTS_MODEL.email.subjectPreTitle[lang]} ${articleName}`,
+            subject: `${EMAIL_DATA.subjectPreTitle[lang]} ${articleName}`,
             body: userEmailBody,
           });
         }

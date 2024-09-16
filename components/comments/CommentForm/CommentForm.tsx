@@ -9,7 +9,7 @@ import { useFormReset } from '@/libs/hooks/useFormReset';
 import { EDBTableTitles, ELanguage } from '@/models/ui.model';
 import { useFormCommentSendEmail } from '@/libs/hooks/useFormCommentSendEmail';
 import { EMPTY_FORM_STATE } from '@/controllers/toast.controller';
-import { IUserLocation } from '@/models/userLocation.model';
+// import { IUserLocation } from '@/models/userLocation.model';
 import { addCommentAction } from '@/libs/actions/comments.action';
 import FieldError from '../FieldError/FieldError';
 
@@ -22,7 +22,7 @@ interface ICommentProps {
   dbCommentTableName: EDBTableTitles;
   articleId: string | number;
   articleName: string;
-  userLocation: IUserLocation | null;
+  // userLocation: IUserLocation | null;
   baseUrl: string;
   emailKey: string;
   lang: ELanguage;

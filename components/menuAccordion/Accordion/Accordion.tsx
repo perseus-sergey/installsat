@@ -39,7 +39,7 @@ const Accordion = async ({ lang }: { lang: ELanguage }) => {
 
   const accordContentStyle =
     'max-h-0 overflow-hidden transition-all duration-300 ease-out';
-  const contentListStyle = `flex items-center gap-3 before:w-4 before:h-4 before:content-['*'] before:text-xl before:text-blue-100`;
+  const contentListStyle = `flex items-center gap-3 before:content-['*'] before:text-xl before:text-blue-100`;
   const contentItemStyle =
     'border-b border-stone-300 py-1 px-2 bg-stone-400 hover:bg-slate-500';
 

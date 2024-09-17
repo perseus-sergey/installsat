@@ -41,7 +41,6 @@ const Header = ({ lang }: { lang: ELanguage }) => (
             className="h-12 w-28 sm:h-20 sm:w-48"
             src={siteLogotype}
             alt={siteLogo.alt[lang]}
-            placeholder="blur"
           />
         </SeoLink>
       </nav>

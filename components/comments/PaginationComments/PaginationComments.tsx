@@ -10,6 +10,7 @@ import { COMMENTS_MODEL, ICommentsModel } from '@/models/comments.model';
 import { getFormattedDateStr } from '@/libs/utils/dates';
 import Image from 'next/image';
 import commentTitleImg from 'public/Images/mail_post_to_5295.png';
+import { getPageNumbers } from '@/controllers/pagination.controller';
 
 const { commentList } = COMMENTS_MODEL;
 
@@ -29,22 +30,6 @@ interface IPaginationProps {
   articleId: string | number;
   lang: ELanguage;
 }
-
-const getPageNumbers = (
-  offsetNumber: number,
-  totalPages: number,
-  page: number
-): number[] => {
-  const pageNumbers = [];
-
-  for (let i = page - offsetNumber; i <= page + offsetNumber; i += 1) {
-    if (i >= 1 && i <= totalPages) {
-      pageNumbers.push(i);
-    }
-  }
-
-  return pageNumbers;
-};
 
 const minSizeSmallStyle = 'min-w-7 min-h-7';
 const minSizeBigStyle = 'sm:min-w-9 sm:min-h-9';
@@ -85,7 +70,9 @@ const PaginationComments = ({
       );
 
       setComments(resp instanceof Error ? [] : resp);
-      setNumbersOfPages(getPageNumbers(offsetNumber, totalPages, pageNumber));
+      setNumbersOfPages(
+        getPageNumbers({ offsetNumber, totalPages, currentPage: pageNumber })
+      );
     };
 
     getCommentsChunk();

@@ -29,16 +29,17 @@ export const IMG_PROPERTIES = {
 
 export const BREADCRUMBS_SEPARATOR = '჻';
 
-export const ERRORS = {
-  ERROR_EMPTY_DATA: {
-    [ELanguage.UA]: 'На жаль, запит повернув порожній результат',
-    [ELanguage.EN]: 'Unfortunately, the query returned an empty result',
-  },
-  ERROR_PAGE_TITLE: {
-    [ELanguage.UA]:
-      '⚠ Не вдалося завантажити контент. Будь ласка, спробуйте пізніше.',
-    [ELanguage.EN]: '⚠ Failed to load content. Please try again later.',
-  },
+export const ERROR_EMPTY_DATA = {
+  [ELanguage.UA]: 'На жаль, запит повернув порожній результат',
+  [ELanguage.EN]: 'Unfortunately, the query returned an empty result',
+};
+export const ERROR_PAGE_TITLE = {
+  [ELanguage.UA]:
+    '⚠ Не вдалося завантажити контент. Будь ласка, спробуйте пізніше.',
+  [ELanguage.EN]: '⚠ Failed to load content. Please try again later.',
+};
+
+export const NOT_FOUND_PAGE = {
   NOT_FOUND_TITLE: {
     [ELanguage.UA]: 'Сторінку не знайдено.',
     [ELanguage.EN]: 'Page not found.',
@@ -53,18 +54,10 @@ export const ERRORS = {
     [ELanguage.UA]: 'Перейти на головну сторінку.',
     [ELanguage.EN]: 'Go to the main page.',
   },
-  EMPTY_DATE_NEWS_PAGE: {
-    title: {
-      [ELanguage.UA]: 'Немає новин за вказаний період',
-      [ELanguage.EN]: 'There are no news for the specified period',
-    },
-    img: {
-      src: '/Images/empty_page.png',
-      height: 128,
-      width: 128,
-      alternativeImgStr: { title: '📂', fontSize: '9rem' },
-    },
-  },
+};
+export const EMPTY_DATE_NEWS_PAGE_TITLE = {
+  [ELanguage.UA]: 'Немає новин за вказаний період',
+  [ELanguage.EN]: 'There are no news for the specified period',
 };
 
 export const DEFAULT_META_DATA = {

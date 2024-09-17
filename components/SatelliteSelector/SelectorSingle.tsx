@@ -40,7 +40,7 @@ export const SelectorSingle = ({
 
   useEffect(() => {
     setSelectedOption(
-      itemList.find((opt) => `${opt.value}` === initialSerParam) || itemList[1]
+      itemList.find((opt) => `${opt.value}` === initialSerParam) || null
     );
   }, [itemList, searchParams, initialSerParam]);
 
@@ -56,9 +56,9 @@ export const SelectorSingle = ({
 
       const urlSePar = getUrlSerPar();
 
-      urlSePar.delete(EUrlSearchParam.INTERVAL);
+      urlSePar.delete(searchParamName);
 
-      urlSePar.append(EUrlSearchParam.INTERVAL, `${selected.value}`);
+      urlSePar.append(searchParamName, `${selected.value}`);
 
       replace(`${pathname}?${urlSePar.toString()}`, { scroll: false });
     },

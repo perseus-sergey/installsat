@@ -1,8 +1,4 @@
-import {
-  COPYRIGHT_SECTION,
-  MENU_SEPARATOR,
-  footerMenuList,
-} from '@/models/footer.model';
+import { COPYRIGHT_SECTION, footerMenuList } from '@/models/footer.model';
 import { ELanguage } from '@/models/ui.model';
 import { Fragment } from 'react';
 import SeoLink from '../ui/SeoLink/SeoLink';
@@ -16,15 +12,14 @@ const Footer = ({ lang }: { lang: ELanguage }) => (
       {COPYRIGHT_SECTION.title[lang]}
     </section>
 
-    <nav className="py-4 bg-slate-900">
-      <ul className="flex flex-wrap justify-around items-center text-gray-200">
+    <nav className="py-4 relative bg-slate-900">
+      <ul className="w-11/12 m-auto text-gray-200 grid grid-cols-[repeat(auto-fit,minmax(9rem,1fr))]">
         {footerMenuList.map((item, i) => {
           return (
             <Fragment key={i}>
-              {i ? (
-                <li className="text-red-500 text-2xl">{MENU_SEPARATOR}</li>
-              ) : null}
-              <li className="max-w-28 text-center">
+              <li
+                className={`min-w-36 max-w-28 before:content-['▪'] before:text-red-500 before:text-2xl flex flex-nowrap items-center text-left gap-4`}
+              >
                 <SeoLink
                   href={`/${lang}/${item.href}`}
                   title={

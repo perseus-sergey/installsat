@@ -145,7 +145,7 @@ export interface TSatDigest {
 }
 
 export interface IStateOption {
-  readonly value: number;
+  readonly value: string | number;
   readonly label: string;
 }
 

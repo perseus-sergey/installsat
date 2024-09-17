@@ -122,7 +122,7 @@ export const getSatChannels = cache(
   ${lang === ELanguage.UA ? 'te.title' : 'te.title_en'}  AS tem, 
   ${lang === ELanguage.UA ? 'te.description' : 'te.description_en'}  AS genre_description,
   co.title AS compr,
-  la.title AS lan 
+  la.title AS lan
   FROM ${CHANNELS} AS ch 
   LEFT JOIN ${CHANNEL_THEME} 		  AS te	 ON ch.tema 		  = te.id
   LEFT JOIN ${CHANNEL_ENCRYPTION}	AS en	 ON ch.encryption	= en.id  

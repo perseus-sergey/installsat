@@ -1,5 +1,5 @@
 import { poolExecute } from '@/libs/db/mysqldb';
-import { ISatelliteOption } from '@/models/tblSat.model';
+import { IStateOption } from '@/models/satDigest.model';
 import { DB_ARRAY_SEPARATOR, EDBTableTitles } from '@/models/ui.model';
 import { audioLanguages, wrongAudio } from '@cron/libs/languages.mjs';
 import { cache } from 'react';
@@ -59,7 +59,7 @@ export const getLanguageList = (audioPids: string[]) => {
 export const getChannelsLangList = async ({
   satGrades,
   satSlug,
-}: IGradeSlug): Promise<ISatelliteOption[]> => {
+}: IGradeSlug): Promise<IStateOption[]> => {
   const dbAudioList = await getDBChannelsAudio({
     satGrades,
     satSlug,

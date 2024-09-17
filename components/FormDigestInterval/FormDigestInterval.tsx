@@ -11,7 +11,7 @@ import { ELanguage, ESelectType } from '@/models/ui.model';
 import { IGroupedSatelliteOption } from '@/models/tblSat.model';
 import TooltipSimple from '../ui/tooltips/TooltipSimple/TooltipSimple';
 import BaseButton from '../ui/buttons/BaseButton/BaseButton';
-import { Selector } from '../SatelliteSelector/Selector';
+import { SelectorMulti } from '../SatelliteSelector/SelectorMulti';
 import { SelectorSingle } from '../SatelliteSelector/SelectorSingle';
 
 const {
@@ -43,11 +43,10 @@ const FormDigestInterval = ({
       <div className="flex flex-col justify-center items-center gap-2 pb-4">
         <div className="flex flex-wrap justify-center items-center gap-x-8 gap-y-4 p-2 text-gray-400">
           {groupedSats.length > 0 ? (
-            <Selector
+            <SelectorMulti
               selectName={ESelectType.SELECT_SATS}
               className="z-20"
               closeMenuOnSelect
-              isMulti
               searchParamName={EUrlSearchParam.SAT}
               itemList={groupedSats instanceof Error ? [] : groupedSats}
               caption={satSelect.title[lang]}
@@ -57,7 +56,7 @@ const FormDigestInterval = ({
           {digestIntervalOptions[0] ? (
             <SelectorSingle
               selectName={ESelectType.SELECT_TIME_INTERVAL}
-              className="z-20"
+              className="z-10"
               closeMenuOnSelect
               searchParamName={EUrlSearchParam.INTERVAL}
               itemList={digestIntervalOptions}

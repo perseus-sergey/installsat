@@ -26,20 +26,25 @@ import { getCommentsNumber } from '@/controllers/comments.controller';
 import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
 import BreadCrumbServer from '@/components/BreadCrumbs/BreadCrumbsServer';
 import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
-import {
-  getELangKey,
-  validSearchParam,
-  validSearchParamArray,
-} from '@/libs/utils/validSearchParam';
+import { getELangKey } from '@/libs/utils/validSearchParam';
 import FlyChannelsTable from '@/components/SatChannelsTable/FlyChannelsTable';
 import Fieldset from '@/components/ui/Fieldset/Fieldset';
 import Filter from '@/components/ui/Filter/Filter';
 import ChannelFormatSliders from '@/components/ui/ChannelFormatSliders/ChannelFormatSliders';
-import { Selector } from '@/components/SatelliteSelector/Selector';
 import EmptyPage from '@/components/errors/EmptyPage/EmptyPage';
 import { getFlySatParams } from '@/controllers/satDigest.controller';
 import { makeUrlSearchParams } from '@/libs/utils/utils';
 import { getChannelsLangList } from '@/controllers/languageList.controller';
+import { BREAD_CRUMBS } from '@/models/breadCrumbs.model';
+import { SelectorSingle } from '@/components/SatelliteSelector/SelectorSingle';
+
+// =================================================================
+// empty data image
+// slider flex-shrink-0
+// /novyny-ta-statti/ earth image
+// /kanal/ Broadcast options - ul-li html wrong
+// check empty data image on production
+// =================================================================
 
 const BASE_URL = process.env.BASE_URL || MAIN_URL;
 
@@ -106,15 +111,23 @@ export default async function Page({ searchParams, params }: IPageProps) {
 
   const lang = getELangKey(params[EUrlBaseParam.LANG]);
 
-  const searchQueryChannel = validSearchParam(
-    EUrlSearchParam.CHANNEL,
-    searchParams
-  );
+  let searchQueryChannel = '';
+  let searchQueryLanguages: string[] | undefined = undefined;
 
-  const searchQueryLanguages = validSearchParamArray(
-    EUrlSearchParam.LANGUAGE_URL,
-    searchParams
-  );
+  if (searchParams) {
+    const { validSearchParam, validSearchParamArray } = await import(
+      '@/libs/utils/validSearchParam'
+    );
+
+    searchQueryChannel = validSearchParam(
+      EUrlSearchParam.CHANNEL,
+      searchParams
+    );
+    searchQueryLanguages = validSearchParamArray(
+      EUrlSearchParam.LANGUAGE_URL,
+      searchParams
+    );
+  }
 
   const resFlySatParams = await getFlySatParams(urlSatSlug);
 
@@ -123,9 +136,10 @@ export default async function Page({ searchParams, params }: IPageProps) {
       <EmptyPage
         title={
           lang === ELanguage.UA
-            ? `Супутник (${urlSatSlug}) не знайдено. Спробуйте вибрати інший із списку супутників.`
-            : `Satellite (${urlSatSlug}) not found. Try selecting another one from the satellite list.`
+            ? `Супутник «${urlSatSlug}» не знайдено. Спробуйте вибрати інший із списку супутників.`
+            : `Satellite «${urlSatSlug}» not found. Try selecting another one from the satellite list.`
         }
+        breadCrumbList={[BREAD_CRUMBS.SAT_CHANNEL_LIST]}
         lang={lang}
       />
     );
@@ -184,7 +198,6 @@ export default async function Page({ searchParams, params }: IPageProps) {
             alternativeImgString={h1SatImage.alternativeString}
             alt={`${h1SatImage.alt[lang]} ${title}`}
             isFillParent
-            isBlur
           />
         </Title>
 
@@ -214,7 +227,7 @@ export default async function Page({ searchParams, params }: IPageProps) {
               />
 
               {channelsLangList.length > 0 && (
-                <Selector
+                <SelectorSingle
                   className="z-10"
                   selectName={ESelectType.SELECT_LANG}
                   searchParamName={EUrlSearchParam.LANGUAGE_URL}

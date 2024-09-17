@@ -31,7 +31,7 @@ import Fieldset from '@/components/ui/Fieldset/Fieldset';
 import Filter from '@/components/ui/Filter/Filter';
 import ChannelFormatSliders from '@/components/ui/ChannelFormatSliders/ChannelFormatSliders';
 import FillingImg from '@/components/ui/Images/FillingImage';
-import { Selector } from '@/components/SatelliteSelector/Selector';
+import { SelectorMulti } from '@/components/SatelliteSelector/SelectorMulti';
 import { IFlyChannel } from '@/models/channel.model';
 import { ISatelliteOption } from '@/models/tblSat.model';
 import dynamic from 'next/dynamic';
@@ -55,7 +55,6 @@ interface IPageProps {
   searchParams?: TSearchParams;
 }
 
-// export const dynamic = 'force-dynamic';
 export const revalidate = 3600 * 6; // invalidate cache every 6 hours
 
 export const generateMetadata = async ({
@@ -168,10 +167,9 @@ export default async function Page({ searchParams, params }: IPageProps) {
           <Fieldset legendText={anchors.legendTitle[lang]}>
             <nav>
               <div className="flex flex-wrap justify-center items-center gap-x-8 gap-y-4 p-2 text-gray-400">
-                <Selector
+                <SelectorMulti
                   selectName={ESelectType.SELECT_SATS}
                   className="z-20 min-w-72"
-                  closeMenuOnSelect={false}
                   searchParamName={EUrlSearchParam.SAT}
                   itemList={groupedSats instanceof Error ? [] : groupedSats}
                   caption={
@@ -182,7 +180,7 @@ export default async function Page({ searchParams, params }: IPageProps) {
                 />
 
                 {channelsLangList.length > 0 && (
-                  <Selector
+                  <SelectorMulti
                     className="z-10"
                     selectName={ESelectType.SELECT_LANG}
                     searchParamName={EUrlSearchParam.LANGUAGE_URL}

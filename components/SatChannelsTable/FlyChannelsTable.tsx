@@ -74,7 +74,7 @@ const FrequencySegment = ({
               ? 'bg-yellow-100'
               : !isFta
                 ? 'bg-red-200'
-                : is_radio
+                : is_radio === 1
                   ? 'bg-green-100'
                   : 'bg-green-200'
           }
@@ -114,7 +114,7 @@ const FrequencySegment = ({
           <td
             className={`text-sm p-0.5 min-w-8`}
             style={
-              is_radio
+              is_radio === 1
                 ? borderStyle
                 : {
                     ...borderStyle,
@@ -126,7 +126,7 @@ const FrequencySegment = ({
               hintHtml={
                 <ul className="flex flex-col gap-2 justify-center items-center text-sm">
                   <li className="text-lg flex flex-row gap-2">
-                    -= {is_radio ? 'Radio' : 'TV'} =-
+                    -= {is_radio === 1 ? 'Radio' : 'TV'} =-
                   </li>
                   {t2_stream && (
                     <li className="flex flex-wrap gap-2 items-center">
@@ -179,7 +179,7 @@ const FrequencySegment = ({
                 </ul>
               }
             >
-              {is_radio ? (
+              {is_radio === 1 ? (
                 <ul className="flex flex-row flex-wrap gap-2 justify-center">
                   <li className={`${radioIconBg} sm:inline-block hidden`} />
                   <li className="bg-slate-50 border border-dotted border-gray-600 rounded-sm px-1 text-lg m-1 inline-block sm:hidden">
@@ -281,7 +281,7 @@ const FrequencySegment = ({
 
           <td
             style={borderStyle}
-            className={is_radio ? 'text-left p-0.5' : 'p-0.5'}
+            className={is_radio === 1 ? 'text-left p-0.5' : 'p-0.5'}
           >
             <div className={`flex items-center gap-2 px-2 sm:justify-between`}>
               <SeoLink
@@ -290,11 +290,11 @@ const FrequencySegment = ({
                     ? `Перейти до сторінки з детальним описом каналу "${title}"`
                     : `Go to the detailed page of channel "${title}"`
                 }
-                className={`${is_radio ? 'text-slate-500 text-sm' : 'text-blue-800 font-bold'} text-left flex flex-row items-center gap-2 hover:text-purple-500`}
+                className={`${is_radio === 1 ? 'text-slate-500 text-sm' : 'text-blue-800 font-bold'} text-left flex flex-row items-center gap-2 hover:text-purple-500`}
                 id={slug}
                 href={`/${lang}/${EUrlBaseParam.KANAL}/${slug}`}
               >
-                {is_radio && <div className={radioIconBg} />}
+                {is_radio === 1 && <div className={radioIconBg} />}
                 {/* <RadioIcon is_radio={is_radio} lang={lang} /> */}
                 {title}
               </SeoLink>

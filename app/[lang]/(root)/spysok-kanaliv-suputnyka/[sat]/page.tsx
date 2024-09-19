@@ -39,10 +39,7 @@ import { BREAD_CRUMBS } from '@/models/breadCrumbs.model';
 import { SelectorSingle } from '@/components/SatelliteSelector/SelectorSingle';
 
 // =================================================================
-// delete .remove files
-// - empty data image
 // titles with images - flex-shrink-0
-// check empty data image on production
 // remeve all data-testId
 // =================================================================
 

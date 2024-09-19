@@ -1,19 +1,29 @@
-import { ELanguage, ERRORS } from '@/models/ui.model';
-import FillingValidImage from '../../ui/Images/FillingValidImage';
-import BreadCrumbServer from '@/components/BreadCrumbs/BreadCrumbsServer';
+import { ELanguage } from '@/models/ui.model';
+import BreadCrumbServer, {
+  IBreadCrumbLink,
+} from '@/components/BreadCrumbs/BreadCrumbsServer';
+import Image from 'next/image';
+import emptyPageImg from 'public/Images/empty_page.png';
 
-const EmptyPage = ({ title, lang }: { title: string; lang: ELanguage }) => (
+interface IProps {
+  breadCrumbList?: (string | IBreadCrumbLink)[];
+  title: string;
+  lang: ELanguage;
+}
+
+const EmptyPage = ({ title, lang, breadCrumbList }: IProps) => (
   <>
-    <BreadCrumbServer lang={lang} />
+    <BreadCrumbServer lang={lang} breadCrumbList={breadCrumbList} />
     <article className="article">
       <div className="text-red-500 text-lg flex items-center flex-col gap-20">
-        <p className="p-4">{title}</p>
-        <FillingValidImage
-          image={ERRORS.EMPTY_DATE_NEWS_PAGE.img}
-          alternativeImgString={
-            ERRORS.EMPTY_DATE_NEWS_PAGE.img.alternativeImgStr
+        <p className="p-4 text-center font-bold text-xl">{title}</p>
+        <Image
+          src={emptyPageImg}
+          alt={
+            lang === ELanguage.UA
+              ? 'Зображення космосу для позначення порожнього результату'
+              : 'Image of space for marking an empty result'
           }
-          alt={title}
         />
       </div>
     </article>

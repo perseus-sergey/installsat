@@ -5,9 +5,12 @@ import {
   getT2Channels,
 } from '@/controllers/channelList.controller';
 import {
+  ALL_SAT_CHANNEL_LIST_FILTERS,
   CHANNEL_LIST_ANCHOR_START,
-  META_ALL_SAT_CHANNEL_LIST,
   META_PACKAGE_CHANNEL_LIST,
+  PACKAGE_CHANNEL_LIST_DATA,
+  PACKAGE_CHANNEL_LIST_IMAGES,
+  T2_SLUG,
 } from '@/models/channelList.model';
 import type { Metadata } from 'next';
 import Fieldset from '@/components/ui/Fieldset/Fieldset';
@@ -40,26 +43,22 @@ import SeoLink from '@/components/ui/SeoLink/SeoLink';
 
 const BASE_URL = process.env.BASE_URL || MAIN_URL;
 
+const { getH1, metaKeywords, metaTitle } = META_PACKAGE_CHANNEL_LIST;
+
 const {
-  getH1,
-  metaKeywords,
-  metaTitle,
-  T2_SLUG,
-  images: { h1Image },
+  similarLinks: { title: similarLinksTitle, beforeLinkText },
   fieldsetFilters: {
     legendText,
     anchorLink: { ariaLabel },
   },
-  similarLinks: { title: similarLinksTitle, beforeLinkText },
-} = META_PACKAGE_CHANNEL_LIST;
+} = PACKAGE_CHANNEL_LIST_DATA;
+const { h1Image } = PACKAGE_CHANNEL_LIST_IMAGES;
 
 const { SLUG, LANG, PACKAGE_CHANNEL_LIST, CHANNEL_PARAMS } = EUrlBaseParam;
 
 const {
-  filtering: {
-    filterByChannelName: { placeholder, labelTitle },
-  },
-} = META_ALL_SAT_CHANNEL_LIST;
+  filterByChannelName: { placeholder, labelTitle },
+} = ALL_SAT_CHANNEL_LIST_FILTERS;
 
 const getH1Cached = cache(getH1);
 
@@ -145,7 +144,7 @@ export default async function Page({ params, searchParams }: IPageProps) {
       )
     : 0;
 
-  const packagesResp = await getChannelCatList();
+  const packagesResp = await getChannelCatList(lang);
   const similarLinks =
     packagesResp instanceof Error
       ? []
@@ -186,9 +185,7 @@ export default async function Page({ params, searchParams }: IPageProps) {
                   src: `${h1Image.path}${channels[0][1][0].cat_logo}`,
                 }}
                 defaultImage={h1Image.defaultImage}
-                alternativeImgString={h1Image.alternativeImgStr}
-                alt={h1Image.alt[lang]}
-                isBlur
+                alt={`${h1Image.alt[lang]} "${channels[0][1][0].cat_title}"`}
               />
             </Title>
 
@@ -205,10 +202,10 @@ export default async function Page({ params, searchParams }: IPageProps) {
                         />
                       )}
                       <TooltipSimple
-                        tooltipText={`${ariaLabel[lang]} ${subCatTitle}`}
+                        tooltipText={`${ariaLabel[lang]} "${subCatTitle}"`}
                       >
                         <SeoLink
-                          title={`${ariaLabel[lang]} ${subCatTitle}`}
+                          title={`${ariaLabel[lang]} "${subCatTitle}"`}
                           href={`#${CHANNEL_LIST_ANCHOR_START}${chanList[0].genre_id}`}
                           className="text-indigo-800 text-lg hover:text-red-500"
                         >

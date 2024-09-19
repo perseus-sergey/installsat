@@ -4,9 +4,6 @@ import { EUrlBaseParam } from './url.model';
 export interface IAccordionItemOptions {
   name: string;
   img: {
-    src: string;
-    width: number;
-    height: number;
     alt: ILang;
   };
   title: ILang;
@@ -18,9 +15,6 @@ export const MENU_ACCORDION: { [key: string]: IAccordionItemOptions } = {
   SAT_FINDER: {
     name: 'SAT_FINDER',
     img: {
-      src: '/Images/accordion/compass.png',
-      width: 32,
-      height: 32,
       alt: {
         [ELanguage.UA]: 'Іконка пошуку супутників',
         [ELanguage.EN]: 'Satellite search icon',
@@ -35,9 +29,6 @@ export const MENU_ACCORDION: { [key: string]: IAccordionItemOptions } = {
   MAPS: {
     name: 'MAPS',
     img: {
-      src: '/Images/accordion/point.png',
-      width: 32,
-      height: 32,
       alt: {
         [ELanguage.UA]: 'Іконка для карт покриття телевізійних супутників',
         [ELanguage.EN]: 'Satellite coverage maps icon',
@@ -52,9 +43,6 @@ export const MENU_ACCORDION: { [key: string]: IAccordionItemOptions } = {
   SATELLITES: {
     name: 'SATELLITES',
     img: {
-      src: '/Images/accordion/satellite32.png',
-      width: 34,
-      height: 32,
       alt: {
         [ELanguage.UA]: 'Іконка з зображенням супутника',
         [ELanguage.EN]: 'Satellite icon',
@@ -69,9 +57,6 @@ export const MENU_ACCORDION: { [key: string]: IAccordionItemOptions } = {
   PACKAGES: {
     name: 'PACKAGES',
     img: {
-      src: '/Images/accordion/film24.png',
-      width: 32,
-      height: 24,
       alt: {
         [ELanguage.UA]:
           'Іконка з зображенням фільмової стрічки. Для пакетів каналів',
@@ -87,9 +72,6 @@ export const MENU_ACCORDION: { [key: string]: IAccordionItemOptions } = {
   USEFUL: {
     name: 'USEFUL',
     img: {
-      src: '/Images/accordion/icon_info_key.png',
-      width: 32,
-      height: 32,
       alt: {
         [ELanguage.UA]:
           'Іконка з зображенням листа паперу з ключем. Для корисних статей',
@@ -106,9 +88,6 @@ export const MENU_ACCORDION: { [key: string]: IAccordionItemOptions } = {
   ONLINE_TV: {
     name: 'ONLINE_TV',
     img: {
-      src: '/Images/accordion/trailer-icon_37.png',
-      width: 37,
-      height: 32,
       alt: {
         [ELanguage.UA]:
           'Іконка з зображенням бобини з кіноплівкою. Для онлайн ТБ',
@@ -122,9 +101,6 @@ export const MENU_ACCORDION: { [key: string]: IAccordionItemOptions } = {
   SCHEDULE: {
     name: 'SCHEDULE',
     img: {
-      src: '/Images/accordion/calendar.png',
-      width: 32,
-      height: 32,
       alt: {
         [ELanguage.UA]: 'Іконка з календарем розкладу телевізійних передач',
         [ELanguage.EN]: 'An icon with a schedule of television programs',

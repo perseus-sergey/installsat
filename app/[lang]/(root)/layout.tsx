@@ -1,5 +1,4 @@
 import type { Metadata } from 'next';
-import React from 'react';
 import SideBar from '@/components/SideBar/SideBar';
 import { META_TRANS_NEWS_LIST } from '@/models/satDigest.model';
 import { DEFAULT_LANG, DEFAULT_META_DATA, ELanguage } from '@/models/ui.model';

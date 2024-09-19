@@ -16,7 +16,12 @@ import {
   getDBChannel,
   getSimilarFlyChannels,
 } from '@/controllers/channel.controller';
-import { META_CHANNEL } from '@/models/channel.model';
+import {
+  CHANNEL_IMAGES,
+  CHANNEL_RESPONSIBILITIES,
+  META_CHANNEL,
+  SIMILAR,
+} from '@/models/channel.model';
 import {
   DEFAULT_LANG,
   EDBTableTitles,
@@ -35,25 +40,21 @@ import EditLinkButton from '@/components/admin/EditLinkButton/EditLinkButton';
 import { notFound } from 'next/navigation';
 import { getELangKey } from '@/libs/utils/validSearchParam';
 import SeoLink from '@/components/ui/SeoLink/SeoLink';
+import { INFO_PANEL_TITLES } from '@/models/articles.model';
 
 const BASE_URL = process.env.BASE_URL || MAIN_URL;
 
+const { titleBefore, keywordsBefore, preText } = META_CHANNEL;
+
 const {
-  images: {
-    channelLogo: { big: bigLogo },
-  },
-  infoPanelTitles: {
-    // package: packageTitle,
-    comments: commentsTitle,
-    views: viewsTitle,
-  },
-  titleBefore,
-  keywordsBefore,
-  preText,
-  noteTitle,
-  getResponsibilityText,
-  similar: { channels: simChannelsBefore, articles: simArticlesBefore },
-} = META_CHANNEL;
+  channelLogo: { big: bigLogo },
+} = CHANNEL_IMAGES;
+
+const { comments: commentsTitle, views: viewsTitle } = INFO_PANEL_TITLES;
+
+const { noteTitle, getResponsibilityText } = CHANNEL_RESPONSIBILITIES;
+
+const { channels: simChannelsBefore, articles: simArticlesBefore } = SIMILAR;
 
 export interface IChannelProps {
   params: { [key in EUrlBaseParam]: string };
@@ -173,16 +174,7 @@ export default async function Page({ params }: IChannelProps) {
       <BreadCrumbServer
         lang={lang}
         breadCrumbList={[
-          // BREAD_CRUMBS.PACKAGE_CHANNEL_LIST,
           BREAD_CRUMBS.SAT_CHANNEL_LIST,
-          // {
-          //   href: `${EUrlBaseParam.PACKAGE_CHANNEL_LIST}/${catLink}`,
-          //   title: catTitle,
-          // },
-          // {
-          //   href: `${EUrlBaseParam.SAT_CHANNEL_LIST}/${sat_slug}`,
-          //   title: sat_title,
-          // },
           `${titleBefore[lang]} "${title}"`,
         ]}
       />
@@ -195,39 +187,36 @@ export default async function Page({ params }: IChannelProps) {
               src: `${bigLogo.path}${logo}`,
             }}
             defaultImage={bigLogo.defaultImage}
-            alternativeImgString={bigLogo.alternativeImgStr}
             alt={`${bigLogo.alt[lang]} "${title}"`}
-            isBlur
           />
         </Title>
 
+        {cat_id === 23 && <h2 style={{ color: '#ff0000' }}>{preText[lang]}</h2>}
         <div className="article-text">
-          {cat_id === 23 && (
-            <h2 style={{ color: '#ff0000' }}>{preText[lang]}</h2>
-          )}
           <DangerHtml text={text} />
-
-          <GrooveLine className="py-4" />
-
-          <TvScheduleLink
-            lang={lang}
-            title={title}
-            href={`/${lang}/${EUrlBaseParam.CHANNELS_TV_PROGRAM}/${slug}/${currentDate}`}
-          />
-
-          {tvforsite_net && (
-            <ChannelOnlineLink
-              lang={lang}
-              href={`/${lang}/${EUrlBaseParam.ONLINE_CHANNEL_LIST}/${slug}`}
-              channelName={title}
-            />
-          )}
-          <ChannelParams channelDBParams={sqlResult} lang={lang} />
-
-          <NoteBlock noteTitle={noteTitle[lang]}>
-            {getResponsibilityText(title)[lang]}
-          </NoteBlock>
         </div>
+
+        <GrooveLine className="py-4" />
+
+        <TvScheduleLink
+          lang={lang}
+          title={title}
+          href={`/${lang}/${EUrlBaseParam.CHANNELS_TV_PROGRAM}/${slug}/${currentDate}`}
+        />
+
+        {tvforsite_net && (
+          <ChannelOnlineLink
+            lang={lang}
+            href={`/${lang}/${EUrlBaseParam.ONLINE_CHANNEL_LIST}/${slug}`}
+            channelName={title}
+          />
+        )}
+
+        <ChannelParams channelDBParams={sqlResult} lang={lang} />
+
+        <NoteBlock noteTitle={noteTitle[lang]}>
+          {getResponsibilityText(title)[lang]}
+        </NoteBlock>
 
         <BottomInfoPanel
           items={[

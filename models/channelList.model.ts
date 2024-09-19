@@ -2,6 +2,9 @@ import { ELanguage } from './ui.model';
 import { EUrlBaseParam, EUrlSearchParam } from './url.model';
 
 export const CHANNEL_LIST_ANCHOR_START = 'genre-';
+export const ONLINE_CHANNEL_LIST_DB_ID = '16';
+export const CHANNEL_LIST_DB_ID = '4';
+export const T2_SLUG = 't2-efir';
 
 export const META_SAT_CHANNEL_LIST = {
   h1Start: {
@@ -18,69 +21,67 @@ export const META_SAT_CHANNEL_LIST = {
     [ELanguage.EN]:
       'List of television and radio channels that broadcast from the satellite',
   },
-  images: {
-    h1SatImage: {
-      path: '/Images/satellites/',
-      alternativeString: { title: '🛰', fontSize: '5rem' },
+};
+
+export const SAT_CHANNEL_LIST_IMAGES = {
+  h1SatImage: {
+    path: '/Images/satellites/',
+    height: 99,
+    width: 132,
+    alt: {
+      [ELanguage.UA]: `Логотип супутника`,
+      [ELanguage.EN]: `Logo of the satellite`,
+    },
+    defaultImage: {
+      src: '/Images/satellite_132-99.png',
       height: 99,
       width: 132,
-      alt: {
-        [ELanguage.UA]: `Телевізійні і радіо канали супутника`,
-        [ELanguage.EN]: `Television and radio channels broadcasted from the satellite`,
-      },
-      defaultImage: {
-        src: '/Images/satellite_7144.png',
-        height: 99,
-        width: 132,
-      },
     },
-    h2SatListImage: {
-      path: '/Images/satellites/',
-      alternativeString: { title: '🛰', fontSize: '3rem' },
+  },
+  h2SatListImage: {
+    path: '/Images/satellites/',
+    height: 52.5,
+    width: 70,
+    alt: {
+      [ELanguage.UA]: `Логотип супутника`,
+      [ELanguage.EN]: `Logo of the satellite`,
+    },
+    defaultImage: {
+      src: '/Images/satellite_132-99.png',
       height: 52.5,
       width: 70,
-      alt: {
-        [ELanguage.UA]: `Логотип супутника`,
-        [ELanguage.EN]: `Logo of the satellite`,
-      },
-      defaultImage: {
-        src: '/Images/satellite_7144.png',
-        height: 52.5,
-        width: 70,
-      },
     },
-    genreImage: {
-      path: '/Images/genre/',
-      height: 24,
-      width: 24,
-      altPre: {
-        [ELanguage.UA]: 'Жанр:',
-        [ELanguage.EN]: 'Genre:',
-      },
+  },
+  genreImage: {
+    path: '/Images/genre/',
+    height: 24,
+    width: 24,
+    altPre: {
+      [ELanguage.UA]: 'Іконка для позначення каналів жанру:',
+      [ELanguage.EN]: 'Icon for indicating genre channels:',
     },
-    genreRadioImage: {
-      src: '/Images/genre/radio.png',
-      height: 16,
-      width: 16,
-      alt: {
-        [ELanguage.UA]: 'Radio',
-        [ELanguage.EN]: 'Радіо',
-      },
+  },
+  genreRadioImage: {
+    src: '/Images/genre/radio.png',
+    height: 16,
+    width: 16,
+    alt: {
+      [ELanguage.UA]: 'Radio',
+      [ELanguage.EN]: 'Радіо',
     },
-    t2Image: {
-      src: '/Images/t2_antenna_24.png',
-      height: 24,
-      width: 24,
-      alt: {
-        [ELanguage.UA]: 'Digital terrestrial television',
-        [ELanguage.EN]: 'Цифрове ефірне телебачення',
-      },
+  },
+  t2Image: {
+    src: '/Images/t2_antenna_24.png',
+    height: 24,
+    width: 24,
+    alt: {
+      [ELanguage.UA]: 'Digital terrestrial television',
+      [ELanguage.EN]: 'Цифрове ефірне телебачення',
     },
   },
 };
 
 export const META_ONLINE_CHANNEL_LIST = {
-  ONLINE_CHANNEL_LIST_DB_ID: '16',
   metaH1: {
     [ELanguage.UA]: 'Телеканали онлайн',
     [ELanguage.EN]: 'Online TV channels',
@@ -112,27 +113,30 @@ export const META_ONLINE_CHANNEL_LIST = {
     [ELanguage.EN]:
       'online television, free television, channel streaming, high-quality television, digital television, online channels, TV antennas',
   },
-  images: {
-    h1Image: {
-      src: '/Images/packages/Popcorn-icon.png',
-      alternativeString: { title: '📺', fontSize: '7rem' },
-      height: 128,
-      width: 128,
-      alt: {
-        [ELanguage.UA]: `Дивитися телеканали онлайн`,
-        [ELanguage.EN]: `Watch free TV live.`,
-      },
-    },
-    genreImage: {
-      path: '/Images/genre/',
-      height: 24,
-      width: 24,
-      altPre: {
-        [ELanguage.UA]: 'Жанр:',
-        [ELanguage.EN]: 'Genre:',
-      },
+};
+
+export const ONLINE_CHANNEL_LIST_IMAGES = {
+  h1Image: {
+    src: '/Images/packages/Popcorn-icon.png',
+    height: 128,
+    width: 128,
+    alt: {
+      [ELanguage.UA]: `Дивитися телеканали онлайн`,
+      [ELanguage.EN]: `Watch free TV live.`,
     },
   },
+  genreImage: {
+    path: '/Images/genre/',
+    height: 24,
+    width: 24,
+    altPre: {
+      [ELanguage.UA]: 'Жанр:',
+      [ELanguage.EN]: 'Genre:',
+    },
+  },
+};
+
+export const ONLINE_CHANNEL_LIST_DATA = {
   linkChannel: {
     path: `/${EUrlBaseParam.ONLINE_CHANNEL_LIST}`,
     ariaLabel: {
@@ -155,7 +159,6 @@ export const META_ONLINE_CHANNEL_LIST = {
 };
 
 export const META_PACKAGE_CHANNEL_LIST = {
-  T2_SLUG: 't2-efir',
   getH1(packageName: string, searchQuery: string) {
     return {
       [ELanguage.UA]: `Список каналів телебачення «${packageName}»${searchQuery && ` назва яких містить «${searchQuery}»`}`,
@@ -172,33 +175,36 @@ export const META_PACKAGE_CHANNEL_LIST = {
     [ELanguage.EN]:
       'television, channel streaming, high-quality television, digital, company, provider, package, TV antennas',
   },
-  images: {
-    h1Image: {
-      path: '/Images/packages/',
-      height: 120,
-      width: 132,
-      alternativeImgStr: { title: '💠', fontSize: '7rem' },
-      defaultImage: {
-        src: '/Images/1not_found_chan.png',
-        height: 100,
-        width: 120,
-      },
-      alt: {
-        [ELanguage.UA]: `Логотип компанії`,
-        [ELanguage.EN]: `Company logo`,
-      },
+};
+
+export const PACKAGE_CHANNEL_LIST_IMAGES = {
+  h1Image: {
+    path: '/Images/packages/',
+    height: 128,
+    width: 128,
+    defaultImage: {
+      src: '/Images/packages/package_placeholder.png',
+      height: 128,
+      width: 128,
     },
-    subCatImage: {
-      path: '/Images/packages/',
-      height: 82,
-      width: 82,
-      altPre: {
-        [ELanguage.UA]: 'Пакет:',
-        [ELanguage.EN]: 'Package:',
-      },
-      alternativeImgStr: { title: '🌀', fontSize: '5rem' },
+    alt: {
+      [ELanguage.UA]: `Логотип компанії`,
+      [ELanguage.EN]: `Company logo`,
     },
   },
+  subCatImage: {
+    path: '/Images/packages/',
+    defaultImgSrc: '/Images/packages/sub_package_placeholder_82.png',
+    height: 82,
+    width: 82,
+    altPre: {
+      [ELanguage.UA]: 'Іконка пакету каналів:',
+      [ELanguage.EN]: 'Icon of package channels:',
+    },
+  },
+};
+
+export const PACKAGE_CHANNEL_LIST_DATA = {
   linkChannel: {
     ariaLabel: {
       [ELanguage.UA]: 'Деталі каналу',
@@ -256,6 +262,9 @@ export const META_PACKAGES = {
     [ELanguage.EN]:
       'package channels without subscription, viasat, viasat, xtra tv, t2, ua tv, television',
   },
+};
+
+export const PACKAGES_IMAGES = {
   packageImage: {
     path: '/Images/packages/',
     width: 100,
@@ -274,7 +283,6 @@ export const META_PACKAGES = {
 };
 
 export const META_ALL_SAT_CHANNEL_LIST = {
-  CHANNEL_LIST_DB_ID: '4',
   metaH1: {
     [ELanguage.UA]: 'Підбір каналів за параметрами з доступних супутників',
     [ELanguage.EN]: 'Channel selection by parameters with available satellites',
@@ -292,17 +300,94 @@ export const META_ALL_SAT_CHANNEL_LIST = {
     [ELanguage.UA]: `Список телевізійних і радіо каналів, доступних для вільного перегляду без будь-яких зобов'язань та абонентської плати, а також платних каналів з всіх доступних супутників.`,
     [ELanguage.EN]: `List of television and radio channels available for free viewing without any obligations and subscription fees, as well as paid channels from all available satellites.`,
   },
+};
+
+export const ALL_SAT_CHANNEL_LIST_FILTERS = {
+  satCheckBox: {
+    tooltip: {
+      [ELanguage.UA]: 'Обрати супутник',
+      [ELanguage.EN]: 'Choose a satellite',
+    },
+  },
+  satAnchor: {
+    tooltip: {
+      [ELanguage.UA]: 'Перейти до супутника',
+      [ELanguage.EN]: 'Go to satellite',
+    },
+  },
+  filterByChannelName: {
+    placeholder: {
+      [ELanguage.UA]: 'Назва каналу...',
+      [ELanguage.EN]: 'Channel name...',
+    },
+    labelTitle: {
+      [ELanguage.UA]: 'Фільтр каналів по назві',
+      [ELanguage.EN]: 'Filter channels by name',
+    },
+    cancelBtnAriaLabel: {
+      [ELanguage.UA]: 'Скасувати',
+      [ELanguage.EN]: 'Cancel',
+    },
+    searchIconStr: '⏿',
+  },
+  resetAllFiltersButton: {
+    ariaLabel: {
+      [ELanguage.UA]: 'Скинути всі фільтри',
+      [ELanguage.EN]: 'Reset All Filters',
+    },
+    imgStr: '⏻',
+  },
+  filterByChannelFormat: {
+    formats: [
+      {
+        title: 'T2-MI',
+        searchQueryName: EUrlSearchParam.CHANNEL_FORMAT_T2MI,
+      },
+      {
+        title: 'MPEG-4, DVB-S2, HD, 4K(UHD)',
+        searchQueryName: EUrlSearchParam.CHANNEL_FORMAT_MPG4,
+      },
+    ],
+  },
+  filterByChannelFormatFly: {
+    formats: [
+      {
+        title: {
+          [ELanguage.EN]: 'C-band (frequencies up to 10,700 MHz)',
+          [ELanguage.UA]: 'C-діапазон (частоти до 10,700 МГц)',
+        },
+        searchQueryName: EUrlSearchParam.CHANNEL_C_BAND,
+      },
+      {
+        title: {
+          [ELanguage.EN]: 'Only UNENCRYPTED channels',
+          [ELanguage.UA]: 'Тільки НЕ КОДОВАНІ канали',
+        },
+        searchQueryName: EUrlSearchParam.CHANNEL_NOT_ENCRYPTED,
+      },
+      {
+        title: {
+          [ELanguage.EN]: 'Radio channels',
+          [ELanguage.UA]: 'Радіо канали',
+        },
+        searchQueryName: EUrlSearchParam.CHANNEL_RADIO,
+      },
+      {
+        title: {
+          [ELanguage.UA]: 'DVB-T2',
+          [ELanguage.EN]: 'DVB-T2',
+        },
+        searchQueryName: EUrlSearchParam.CHANNEL_FORMAT_T2MI,
+      },
+    ],
+  },
+};
+
+export const ALL_SAT_CHANNEL_LIST_LINKS = {
   anchors: {
     legendTitle: {
       [ELanguage.UA]: 'Фільтри',
       [ELanguage.EN]: 'Filtering',
-    },
-    goUpLink: {
-      title: {
-        [ELanguage.UA]: 'Повернутися на початок сторінки',
-        [ELanguage.EN]: 'Return to the top of the page',
-      },
-      img: '⇧',
     },
   },
   links: {
@@ -314,108 +399,37 @@ export const META_ALL_SAT_CHANNEL_LIST = {
       linkUrl: `/${EUrlBaseParam.SAT_COVERAGE_MAP}`,
     },
   },
-  filtering: {
-    satCheckBox: {
-      tooltip: {
-        [ELanguage.UA]: 'Обрати супутник',
-        [ELanguage.EN]: 'Choose a satellite',
-      },
-    },
-    satAnchor: {
-      tooltip: {
-        [ELanguage.UA]: 'Перейти до супутника',
-        [ELanguage.EN]: 'Go to satellite',
-      },
-    },
-    filterByChannelName: {
-      placeholder: {
-        [ELanguage.UA]: 'Назва каналу...',
-        [ELanguage.EN]: 'Channel name...',
-      },
-      labelTitle: {
-        [ELanguage.UA]: 'Фільтр каналів по назві',
-        [ELanguage.EN]: 'Filter channels by name',
-      },
-      cancelBtnAriaLabel: {
-        [ELanguage.UA]: 'Скасувати',
-        [ELanguage.EN]: 'Cancel',
-      },
-      searchIconStr: '⏿',
-    },
-    resetAllFiltersButton: {
-      ariaLabel: {
-        [ELanguage.UA]: 'Скинути всі фільтри',
-        [ELanguage.EN]: 'Reset All Filters',
-      },
-      imgStr: '⏻',
-    },
-    filterByChannelFormat: {
-      formats: [
-        {
-          title: 'T2-MI',
-          searchQueryName: EUrlSearchParam.CHANNEL_FORMAT_T2MI,
-        },
-        {
-          title: 'MPEG-4, DVB-S2, HD, 4K(UHD)',
-          searchQueryName: EUrlSearchParam.CHANNEL_FORMAT_MPG4,
-        },
-      ],
-    },
-    filterByChannelFormatFly: {
-      formats: [
-        {
-          title: {
-            [ELanguage.EN]: 'C-band (frequencies up to 10,700 MHz)',
-            [ELanguage.UA]: 'C-діапазон (частоти до 10,700 МГц)',
-          },
-          searchQueryName: EUrlSearchParam.CHANNEL_C_BAND,
-        },
-        {
-          title: {
-            [ELanguage.EN]: 'Only UNENCRYPTED channels',
-            [ELanguage.UA]: 'Тільки НЕ КОДОВАНІ канали',
-          },
-          searchQueryName: EUrlSearchParam.CHANNEL_NOT_ENCRYPTED,
-        },
-        {
-          title: {
-            [ELanguage.EN]: 'Radio channels',
-            [ELanguage.UA]: 'Радіо канали',
-          },
-          searchQueryName: EUrlSearchParam.CHANNEL_RADIO,
-        },
-        {
-          title: {
-            [ELanguage.UA]: 'DVB-T2',
-            [ELanguage.EN]: 'DVB-T2',
-          },
-          searchQueryName: EUrlSearchParam.CHANNEL_FORMAT_T2MI,
-        },
-      ],
+};
+
+export const GO_UP_LINK = {
+  title: {
+    [ELanguage.UA]: 'Повернутися на початок сторінки',
+    [ELanguage.EN]: 'Return to the top of the page',
+  },
+  img: '⇧',
+};
+
+export const ALL_SAT_CHANNEL_LIST_IMAGES = {
+  h1ImageParams: {
+    path: '/Images/packages/money_free.jpg',
+    defaultImage: '/Images/satellite_132-99.png',
+    alternativeSymbol: '🛰',
+    height: 150,
+    width: 239,
+    alt: {
+      [ELanguage.UA]: 'Безкоштовні канали популярних супутників',
+      [ELanguage.EN]: 'Free channels of popular satellites',
     },
   },
-  image: {
-    h1ImageParams: {
-      path: '/Images/packages/money_free.jpg',
-      defaultImage: '/Images/satellite_7144.png',
-      alternativeSymbol: '🛰',
-      height: 150,
-      width: 239,
-      alt: {
-        [ELanguage.UA]: 'Безкоштовні канали популярних супутників',
-        [ELanguage.EN]: 'Free channels of popular satellites',
-      },
-    },
-    h1FlyImageParams: {
-      path: '/Images/packages/database.png',
-      defaultImage: '/Images/satellite_7144.png',
-      alternativeSymbol: '🛰',
-      height: 128,
-      width: 128,
-      alt: {
-        [ELanguage.UA]: 'Вибір списку каналів за налаштуваннями',
-        [ELanguage.EN]: 'Choose list of channels based on settings',
-      },
+  h1FlyImageParams: {
+    path: '/Images/packages/database.png',
+    defaultImage: '/Images/satellite_132-99.png',
+    alternativeSymbol: '🛰',
+    height: 128,
+    width: 128,
+    alt: {
+      [ELanguage.UA]: 'Вибір списку каналів за налаштуваннями',
+      [ELanguage.EN]: 'Choose list of channels based on settings',
     },
   },
 };
@@ -580,19 +594,6 @@ export const getCompressColor = (
   }
 
   return ECompressColors.MPEG_2;
-};
-
-export const isFtaChannel = (codes: string[]) => {
-  if (codes.length === 1 && !codes[0]) return true;
-
-  for (const code of codes) {
-    const lowerCode = code.toLowerCase();
-    if (lowerCode === 'biss' || lowerCode === 'fta') {
-      return true;
-    }
-  }
-
-  return false;
 };
 
 export const CHANNEL_TOOLTIP_TITLES = {

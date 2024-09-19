@@ -7,14 +7,17 @@ import { tooltipSetPosition } from './utilsTooltip';
 interface ITooltipProps extends React.HTMLAttributes<HTMLElement> {
   children: ReactNode;
   hintHtml: ReactNode;
+  wrapperTagName?: keyof JSX.IntrinsicElements;
 }
 
 const Tooltip = ({
   children,
   hintHtml,
   className,
-  ...attributes
+  wrapperTagName = 'div',
+  // ...attributes
 }: ITooltipProps) => {
+  const [TagName] = useState(wrapperTagName as keyof JSX.IntrinsicElements);
   const [elStyles, setElStyles] = useState({});
   const hintRef = useRef<HTMLDivElement>(null);
 
@@ -32,19 +35,19 @@ const Tooltip = ({
   };
 
   return (
-    <div
+    <TagName
       onMouseMove={mouseMove}
       onMouseOut={mouseOut}
       data-testid="Tooltip"
       className={`${styles.Tooltip}${className ? ` ${className}` : ''}`}
-      {...attributes}
+      // {...attributes}
     >
       {children}
 
       <div className={styles.hint} style={elStyles} ref={hintRef}>
         {hintHtml}
       </div>
-    </div>
+    </TagName>
   );
 };
 

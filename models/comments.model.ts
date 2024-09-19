@@ -100,68 +100,65 @@ export const COMMENTS_MODEL = {
       [ELanguage.EN]: 'Comments',
     },
     image: {
-      width: 60,
-      height: 60,
       alt: {
-        [ELanguage.UA]: 'Секція коментарів',
-        [ELanguage.EN]: 'Comments section',
+        [ELanguage.UA]: 'Зображення поштової розсилки коментарів',
+        [ELanguage.EN]: 'Postcard image for comments',
       },
       src: '/Images/mail_post_to_5295.png',
     },
   },
+};
 
-  email: {
-    subjectPreTitle: {
-      [ELanguage.UA]: 'Новий коментар до сторінки:',
-      [ELanguage.EN]: 'New comment on the page:',
+export const EMAIL_DATA = {
+  subjectPreTitle: {
+    [ELanguage.UA]: 'Новий коментар до сторінки:',
+    [ELanguage.EN]: 'New comment on the page:',
+  },
+};
+
+export const DELETE_SUBSCRIPTION_PAGE = {
+  meta: {
+    title: 'Delete Comment Subscription',
+    description: 'Remove Subscription for certain user',
+    keywords: 'installsat tv resource news remove subscription',
+  },
+  h1: {
+    [ELanguage.UA]: 'Видалення підписки для користувача',
+    [ELanguage.EN]: 'Delete Subscription for user',
+  },
+  askText: {
+    [ELanguage.UA]: 'Ви впевнені, що хочете видалити підписку до сторінки',
+    [ELanguage.EN]:
+      'Are you sure you want to delete the subscription to the page',
+  },
+  answerText: {
+    [ELanguage.UA]:
+      'Вашу E-Mail адресу було вдало видалено із розсилки оновлень коментарів до сторінки',
+    [ELanguage.EN]:
+      'Your E-Mail address has been successfully deleted from the newsletter updates to the page',
+  },
+  confirmButton: {
+    ariaLabel: {
+      [ELanguage.UA]: 'Видалити поштову адресу зі списку розсилки',
+      [ELanguage.EN]: 'Delete E-Mail address from the newsletter list',
+    },
+    pendingText: {
+      [ELanguage.UA]: 'Видалення...',
+      [ELanguage.EN]: 'Deleting...',
+    },
+    title: {
+      [ELanguage.UA]: 'Так',
+      [ELanguage.EN]: 'Yes',
     },
   },
-
-  deleteSubscriptionPage: {
-    meta: {
-      title: 'Delete Comment Subscription',
-      description: 'Remove Subscription for certain user',
-      keywords: 'installsat tv resource news remove subscription',
+  cancelButton: {
+    ariaLabel: {
+      [ELanguage.UA]: 'Не видаляти мою поштову адресу зі списку розсилки',
+      [ELanguage.EN]: "Don't delete my E-Mail address from the newsletter list",
     },
-    h1: {
-      [ELanguage.UA]: 'Видалення підписки для користувача',
-      [ELanguage.EN]: 'Delete Subscription for user',
-    },
-    askText: {
-      [ELanguage.UA]: 'Ви впевнені, що хочете видалити підписку до сторінки',
-      [ELanguage.EN]:
-        'Are you sure you want to delete the subscription to the page',
-    },
-    answerText: {
-      [ELanguage.UA]:
-        'Вашу E-Mail адресу було вдало видалено із розсилки оновлень коментарів до сторінки',
-      [ELanguage.EN]:
-        'Your E-Mail address has been successfully deleted from the newsletter updates to the page',
-    },
-    confirmButton: {
-      ariaLabel: {
-        [ELanguage.UA]: 'Видалити поштову адресу зі списку розсилки',
-        [ELanguage.EN]: 'Delete E-Mail address from the newsletter list',
-      },
-      pendingText: {
-        [ELanguage.UA]: 'Видалення...',
-        [ELanguage.EN]: 'Deleting...',
-      },
-      title: {
-        [ELanguage.UA]: 'Так',
-        [ELanguage.EN]: 'Yes',
-      },
-    },
-    cancelButton: {
-      ariaLabel: {
-        [ELanguage.UA]: 'Не видаляти мою поштову адресу зі списку розсилки',
-        [ELanguage.EN]:
-          "Don't delete my E-Mail address from the newsletter list",
-      },
-      title: {
-        [ELanguage.UA]: 'Ні',
-        [ELanguage.EN]: 'No',
-      },
+    title: {
+      [ELanguage.UA]: 'Ні',
+      [ELanguage.EN]: 'No',
     },
   },
 };

@@ -19,7 +19,7 @@ import {
   Group,
   MySelect,
   formatGroupSatLabel,
-  createControlComponentSat,
+  createIsMultiControlComponent,
 } from '../../ui/ReactSelect/ReactSelect';
 import { MultiValue, components } from 'react-select';
 import { Loader } from '../../ui/loaders/Loader';
@@ -28,6 +28,7 @@ import { makeSelectedOptions } from '@/controllers/satFinder.controller';
 import StyledInputField from '../../ui/StyledInputField/StyledInputField';
 import { ELanguage, ESelectType } from '@/models/ui.model';
 import BaseButton from '../../ui/buttons/BaseButton/BaseButton';
+import { TRANS_NEWS_LIST_FILTERS } from '@/models/satDigest.model';
 
 interface ISatFinderProps {
   apiKey: string;
@@ -41,6 +42,10 @@ const {
   googleMap: { initialCamera },
   searchForm: { inputField, submitButton, fieldsetTitle },
 } = SAT_FINDER_META_DATA;
+
+const {
+  select: { satSelect },
+} = TRANS_NEWS_LIST_FILTERS;
 
 const SatFinder = ({
   apiKey,
@@ -112,22 +117,25 @@ const SatFinder = ({
     replace(`${pathname}?${urlSePar.toString()}`, { scroll: false });
   };
 
-  const handleSelect = (selected: MultiValue<ISatelliteOption>) => {
-    setSelectedOptions(selected);
-    const urlSePar = getUrlSerPar();
+  const handleSelect = useCallback(
+    (selected: MultiValue<ISatelliteOption>) => {
+      setSelectedOptions(selected);
+      const urlSePar = getUrlSerPar();
 
-    urlSePar.delete(EUrlSearchParam.SAT);
-    let gradeList: string[] = [];
-    setSatGradeList([]);
+      urlSePar.delete(EUrlSearchParam.SAT);
+      let gradeList: string[] = [];
+      setSatGradeList([]);
 
-    selected.forEach((option) => {
-      urlSePar.append(EUrlSearchParam.SAT, `${option.value}`);
-      gradeList = [...gradeList, `${option.value}`];
-    });
-    setSatGradeList(gradeList);
+      selected.forEach((option) => {
+        urlSePar.append(EUrlSearchParam.SAT, `${option.value}`);
+        gradeList = [...gradeList, `${option.value}`];
+      });
+      setSatGradeList(gradeList);
 
-    replace(`${pathname}?${urlSePar.toString()}`, { scroll: false });
-  };
+      replace(`${pathname}?${urlSePar.toString()}`, { scroll: false });
+    },
+    [getUrlSerPar, pathname, replace]
+  );
 
   const formAction = async (formData: FormData) => {
     const addressValue = formData.get('addressInput') as string;
@@ -163,7 +171,10 @@ const SatFinder = ({
 
   return (
     <>
-      <Fieldset legendText={fieldsetTitle[lang]} className="p-4 my-4 mx-auto">
+      <Fieldset
+        legendText={fieldsetTitle[lang]}
+        className="p-4 my-4 mx-auto w-full"
+      >
         <form
           action={formAction}
           name="formDigestInterval"
@@ -202,7 +213,7 @@ const SatFinder = ({
             options={groupedSats}
             components={{
               Group,
-              Control: createControlComponentSat(lang),
+              Control: createIsMultiControlComponent(satSelect.title[lang]),
               Input: (props) => (
                 <components.Input
                   {...props}

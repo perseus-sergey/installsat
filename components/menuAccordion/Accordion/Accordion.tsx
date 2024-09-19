@@ -2,24 +2,34 @@ import styles from './Accordion.module.scss';
 import {
   getChannelCatList,
   getFlyChannelSatList,
+  getSatMapsSideBar,
   getUsefulArticleList,
 } from '@/controllers/sidebar.controller';
 import { AccordionMenuItem } from '../AccordionMenuItem/AccordionMenuItem';
 import { MENU_ACCORDION } from '@/models/menuAccordion.model';
-import { getSatMapList } from '@/controllers/articles.controller';
 import { ELanguage } from '@/models/ui.model';
 import SeoLink from '@/components/ui/SeoLink/SeoLink';
+
+import sitFinderIcon from 'public/Images/accordion/compass.png';
+import mapCoverIcon from 'public/Images/accordion/point.png';
+import satelliteIcon from 'public/Images/accordion/satellite32.png';
+import chanPackagesIcon from 'public/Images/accordion/film24.png';
+import usefulArticlesIcon from 'public/Images/accordion/icon_info_key.png';
+import onlineTvIcon from 'public/Images/accordion/trailer-icon_37.png';
+import scheduleIcon from 'public/Images/accordion/calendar.png';
 
 const { SATELLITES, SAT_FINDER, MAPS, PACKAGES, USEFUL, ONLINE_TV, SCHEDULE } =
   MENU_ACCORDION;
 
+const textShadow = {
+  textShadow: '1px 1px 0 black',
+};
+
 const Accordion = async ({ lang }: { lang: ELanguage }) => {
-  const channelCatListResp = await getChannelCatList();
+  const channelCatListResp = await getChannelCatList(lang);
   const flyChannelSatList = await getFlyChannelSatList();
   const usefulArticleListResp = await getUsefulArticleList();
-  const mapsResp = await getSatMapList();
-
-  const maps = mapsResp instanceof Error ? [] : mapsResp;
+  const maps = await getSatMapsSideBar();
 
   const channelCatList =
     channelCatListResp instanceof Error ? [] : channelCatListResp;
@@ -27,14 +37,31 @@ const Accordion = async ({ lang }: { lang: ELanguage }) => {
   const usefulArticleList =
     usefulArticleListResp instanceof Error ? [] : usefulArticleListResp;
 
+  const accordContentStyle =
+    'max-h-0 overflow-hidden transition-all duration-300 ease-out';
+  const contentListStyle = `flex items-center gap-3 before:content-['*'] before:text-xl before:text-blue-100`;
+  const contentItemStyle =
+    'border-b border-stone-300 py-1 px-2 bg-stone-400 hover:bg-slate-500';
+
   return (
-    <nav className={styles.Accordion} data-testid="Accordion">
+    <nav className="mx-auto py-4 text-white" data-testid="Accordion">
       <ul>
-        <AccordionMenuItem lang={lang} options={SAT_FINDER} />
-        <AccordionMenuItem lang={lang} options={SATELLITES}>
-          <ul className={styles.accordionContent}>
+        <AccordionMenuItem
+          lang={lang}
+          options={SAT_FINDER}
+          menuIconSrc={sitFinderIcon}
+        />
+        <AccordionMenuItem
+          lang={lang}
+          options={SATELLITES}
+          menuIconSrc={satelliteIcon}
+        >
+          <ul
+            className={`${styles.accordionContent} ${accordContentStyle}`}
+            style={textShadow}
+          >
             {flyChannelSatList.map((item) => (
-              <li key={item.id} className={styles.contentItem}>
+              <li key={item.cpu} className={contentItemStyle}>
                 <SeoLink
                   title={
                     lang === ELanguage.UA
@@ -42,7 +69,7 @@ const Accordion = async ({ lang }: { lang: ELanguage }) => {
                       : `Go to view the list of channels broadcast from the "${item.title} / ${item.position}" satellite`
                   }
                   href={`/${lang}${SATELLITES.baseHrefOfList}/${item.cpu}/`}
-                  className={styles.contentItemLink}
+                  className={contentListStyle}
                 >
                   <span className="text-lime-200">{item.title}</span>{' '}
                   {item.position}
@@ -51,10 +78,17 @@ const Accordion = async ({ lang }: { lang: ELanguage }) => {
             ))}
           </ul>
         </AccordionMenuItem>
-        <AccordionMenuItem lang={lang} options={MAPS}>
-          <ul className={styles.accordionContent}>
+        <AccordionMenuItem
+          lang={lang}
+          options={MAPS}
+          menuIconSrc={mapCoverIcon}
+        >
+          <ul
+            className={`${styles.accordionContent} ${accordContentStyle}`}
+            style={textShadow}
+          >
             {maps.map((item) => (
-              <li key={item.beam_id} className={styles.contentItem}>
+              <li key={item.cpu} className={contentItemStyle}>
                 <SeoLink
                   title={
                     lang === ELanguage.UA
@@ -62,18 +96,26 @@ const Accordion = async ({ lang }: { lang: ELanguage }) => {
                       : `Go to view the map coverage of the "${item.title} / ${item.position}" satellite`
                   }
                   href={`/${lang}${MAPS.baseHrefOfList}/${item.cpu}`}
-                  className={styles.contentItemLink}
+                  className={contentListStyle}
                 >
-                  {item.title} {item.position}
+                  <span className="text-lime-200">{item.title}</span>{' '}
+                  {item.position}
                 </SeoLink>
               </li>
             ))}
           </ul>
         </AccordionMenuItem>
-        <AccordionMenuItem lang={lang} options={PACKAGES}>
-          <ul className={styles.accordionContent}>
+        <AccordionMenuItem
+          lang={lang}
+          options={PACKAGES}
+          menuIconSrc={chanPackagesIcon}
+        >
+          <ul
+            className={`${styles.accordionContent} ${accordContentStyle}`}
+            style={textShadow}
+          >
             {channelCatList.map((item) => (
-              <li key={item.id} className={styles.contentItem}>
+              <li key={item.id} className={contentItemStyle}>
                 <SeoLink
                   title={
                     lang === ELanguage.UA
@@ -81,7 +123,7 @@ const Accordion = async ({ lang }: { lang: ELanguage }) => {
                       : `Go to view the list of channels in the "${item.title}" package`
                   }
                   href={`/${lang}${PACKAGES.baseHrefOfList}/${item.cpu}/`}
-                  className={styles.contentItemLink}
+                  className={contentListStyle}
                 >
                   {item.title}
                 </SeoLink>
@@ -89,10 +131,17 @@ const Accordion = async ({ lang }: { lang: ELanguage }) => {
             ))}
           </ul>
         </AccordionMenuItem>
-        <AccordionMenuItem lang={lang} options={USEFUL}>
-          <ul className={styles.accordionContent}>
+        <AccordionMenuItem
+          lang={lang}
+          options={USEFUL}
+          menuIconSrc={usefulArticlesIcon}
+        >
+          <ul
+            className={`${styles.accordionContent} ${accordContentStyle}`}
+            style={textShadow}
+          >
             {usefulArticleList.map((item) => (
-              <li key={item.id} className={styles.contentItem}>
+              <li key={item.id} className={contentItemStyle}>
                 <SeoLink
                   title={
                     lang === ELanguage.UA
@@ -100,7 +149,7 @@ const Accordion = async ({ lang }: { lang: ELanguage }) => {
                       : `Click to read the "${item.title_en || item.title}" article`
                   }
                   href={`/${lang}${USEFUL.baseHrefOfList}/${item.cpu}/`}
-                  className={styles.contentItemLink}
+                  className={contentListStyle}
                 >
                   {lang === ELanguage.UA
                     ? item.title
@@ -110,10 +159,19 @@ const Accordion = async ({ lang }: { lang: ELanguage }) => {
             ))}
           </ul>
         </AccordionMenuItem>
-        <AccordionMenuItem lang={lang} options={ONLINE_TV} />
-        <AccordionMenuItem lang={lang} options={SCHEDULE} />
+        <AccordionMenuItem
+          lang={lang}
+          options={ONLINE_TV}
+          menuIconSrc={onlineTvIcon}
+        />
+        <AccordionMenuItem
+          lang={lang}
+          options={SCHEDULE}
+          menuIconSrc={scheduleIcon}
+        />
       </ul>
       <input
+        className="hidden"
         type="radio"
         name="accordion-radio-button"
         id="accordion-closing-button"

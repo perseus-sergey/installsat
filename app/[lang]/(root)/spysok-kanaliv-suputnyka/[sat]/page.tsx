@@ -2,11 +2,12 @@ import { Title } from '@/components/ui/Titles/Title';
 import {
   getFlySatChannels,
   getFlyGroupedChannelsAllSat,
-  getChannelsLangList,
 } from '@/controllers/channelList.controller';
 import {
-  META_ALL_SAT_CHANNEL_LIST,
+  ALL_SAT_CHANNEL_LIST_FILTERS,
+  ALL_SAT_CHANNEL_LIST_LINKS,
   META_SAT_CHANNEL_LIST,
+  SAT_CHANNEL_LIST_IMAGES,
 } from '@/models/channelList.model';
 import type { Metadata } from 'next';
 import StartArticleSection from '@/components/article/StartArticleSection/StartArticleSection';
@@ -25,46 +26,46 @@ import { getCommentsNumber } from '@/controllers/comments.controller';
 import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
 import BreadCrumbServer from '@/components/BreadCrumbs/BreadCrumbsServer';
 import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
-import {
-  getELangKey,
-  validSearchParam,
-  validSearchParamArray,
-} from '@/libs/utils/validSearchParam';
+import { getELangKey } from '@/libs/utils/validSearchParam';
 import FlyChannelsTable from '@/components/SatChannelsTable/FlyChannelsTable';
 import Fieldset from '@/components/ui/Fieldset/Fieldset';
 import Filter from '@/components/ui/Filter/Filter';
 import ChannelFormatSliders from '@/components/ui/ChannelFormatSliders/ChannelFormatSliders';
-import { Selector } from '@/components/SatelliteSelector/Selector';
 import EmptyPage from '@/components/errors/EmptyPage/EmptyPage';
 import { getFlySatParams } from '@/controllers/satDigest.controller';
 import { makeUrlSearchParams } from '@/libs/utils/utils';
+import { getChannelsLangList } from '@/controllers/languageList.controller';
+import { BREAD_CRUMBS } from '@/models/breadCrumbs.model';
+import { SelectorSingle } from '@/components/SatelliteSelector/SelectorSingle';
+
+// =================================================================
+// delete .remove files
+// - empty data image
+// titles with images - flex-shrink-0
+// check empty data image on production
+// remeve all data-testId
+// =================================================================
 
 const BASE_URL = process.env.BASE_URL || MAIN_URL;
 
 const { SATELLITE, LANG, SAT_CHANNEL_LIST } = EUrlBaseParam;
 
-const {
-  h1Start,
-  metaDescription,
-  metaTitle,
-  images: { h1SatImage },
-} = META_SAT_CHANNEL_LIST;
+const { h1Start, metaDescription, metaTitle } = META_SAT_CHANNEL_LIST;
+
+const { h1SatImage } = SAT_CHANNEL_LIST_IMAGES;
 
 const {
-  anchors,
-  filtering: {
-    filterByChannelName: { placeholder, labelTitle },
-    filterByChannelFormatFly: { formats },
-    resetAllFiltersButton,
-  },
-} = META_ALL_SAT_CHANNEL_LIST;
+  filterByChannelName: { placeholder, labelTitle },
+  filterByChannelFormatFly: { formats },
+  resetAllFiltersButton,
+} = ALL_SAT_CHANNEL_LIST_FILTERS;
+const { anchors } = ALL_SAT_CHANNEL_LIST_LINKS;
 
 interface IPageProps {
   params: { [key in EUrlBaseParam]: string };
   searchParams?: TSearchParams;
 }
 
-// export const dynamic = 'force-dynamic';
 export const revalidate = 3600 * 12; // invalidate cache every 12 hours
 
 export const generateMetadata = async ({
@@ -110,15 +111,23 @@ export default async function Page({ searchParams, params }: IPageProps) {
 
   const lang = getELangKey(params[EUrlBaseParam.LANG]);
 
-  const searchQueryChannel = validSearchParam(
-    EUrlSearchParam.CHANNEL,
-    searchParams
-  );
+  let searchQueryChannel = '';
+  let searchQueryLanguages: string[] | undefined = undefined;
 
-  const searchQueryLanguages = validSearchParamArray(
-    EUrlSearchParam.LANGUAGE_URL,
-    searchParams
-  );
+  if (searchParams) {
+    const { validSearchParam, validSearchParamArray } = await import(
+      '@/libs/utils/validSearchParam'
+    );
+
+    searchQueryChannel = validSearchParam(
+      EUrlSearchParam.CHANNEL,
+      searchParams
+    );
+    searchQueryLanguages = validSearchParamArray(
+      EUrlSearchParam.LANGUAGE_URL,
+      searchParams
+    );
+  }
 
   const resFlySatParams = await getFlySatParams(urlSatSlug);
 
@@ -127,9 +136,10 @@ export default async function Page({ searchParams, params }: IPageProps) {
       <EmptyPage
         title={
           lang === ELanguage.UA
-            ? `Супутник (${urlSatSlug}) не знайдено. Спробуйте вибрати інший із списку супутників.`
-            : `Satellite (${urlSatSlug}) not found. Try selecting another one from the satellite list.`
+            ? `Супутник «${urlSatSlug}» не знайдено. Спробуйте вибрати інший із списку супутників.`
+            : `Satellite «${urlSatSlug}» not found. Try selecting another one from the satellite list.`
         }
+        breadCrumbList={[BREAD_CRUMBS.SAT_CHANNEL_LIST]}
         lang={lang}
       />
     );
@@ -185,9 +195,7 @@ export default async function Page({ searchParams, params }: IPageProps) {
               src: `${h1SatImage.path}${logo}`,
             }}
             defaultImage={h1SatImage.defaultImage}
-            alternativeImgString={h1SatImage.alternativeString}
             alt={`${h1SatImage.alt[lang]} ${title}`}
-            isBlur
           />
         </Title>
 
@@ -217,15 +225,15 @@ export default async function Page({ searchParams, params }: IPageProps) {
               />
 
               {channelsLangList.length > 0 && (
-                <Selector
+                <SelectorSingle
                   className="z-10"
                   selectName={ESelectType.SELECT_LANG}
                   searchParamName={EUrlSearchParam.LANGUAGE_URL}
                   itemList={channelsLangList}
                   caption={
                     lang === ELanguage.UA
-                      ? 'Виберіть мову'
-                      : 'Choose a language'
+                      ? 'Виберіть мову каналу'
+                      : 'Choose a channel language'
                   }
                 />
               )}
@@ -239,11 +247,14 @@ export default async function Page({ searchParams, params }: IPageProps) {
             {satChannels.length}
           </p>
         </StartArticleSection>
-        <FlyChannelsTable
-          lang={lang}
-          isSingleSat
-          satChannels={getFlyGroupedChannelsAllSat([satChannels])}
-        />
+
+        <Suspense>
+          <FlyChannelsTable
+            lang={lang}
+            isSingleSat
+            satChannels={getFlyGroupedChannelsAllSat([satChannels])}
+          />
+        </Suspense>
       </article>
 
       <CommentBlock

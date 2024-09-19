@@ -9,7 +9,11 @@ import {
 } from '@/controllers/channel.controller';
 import { getCommentsNumber } from '@/controllers/comments.controller';
 import { cutText } from '@/libs/utils/utils';
-import { META_CHANNEL } from '@/models/channel.model';
+import {
+  CHANNEL_IMAGES,
+  CHANNEL_RESPONSIBILITIES,
+  SIMILAR,
+} from '@/models/channel.model';
 import {
   EDBTableTitles,
   DEFAULT_META_DATA,
@@ -33,24 +37,23 @@ import ChannelOnlineLink from '@/components/ui/buttons/ChannelOnlineLink/Channel
 import { decode } from 'html-entities';
 import { getELangKey } from '@/libs/utils/validSearchParam';
 import { getEnvVariable } from '@/libs/utils/envHandler';
-import { ARTICLES } from '@/models/articles.model';
+import { INFO_PANEL_TITLES } from '@/models/articles.model';
 
 const BASE_URL = getEnvVariable('BASE_URL', MAIN_URL);
 
 const {
-  images: {
-    channelLogo: { big: bigLogo },
-  },
-  similar: { channels: simChannelsBefore },
-  noteTitle,
-  getResponsibilityText,
-} = META_CHANNEL;
+  channelLogo: { big: bigLogo },
+} = CHANNEL_IMAGES;
+
+const { channels: simChannelsBefore } = SIMILAR;
+
+const { noteTitle, getResponsibilityText } = CHANNEL_RESPONSIBILITIES;
 
 const {
   date: dateTitle,
   views: viewsTitle,
   comments: commentsTitle,
-} = ARTICLES.infoPanelTitles;
+} = INFO_PANEL_TITLES;
 
 const { getKeywords, getTitle, h1Start, descriptionStart } = SCHEDULE_META;
 
@@ -160,7 +163,6 @@ export default async function Page({ params }: IPageProps) {
               src: `${bigLogo.path}${logo}`,
             }}
             defaultImage={bigLogo.defaultImage}
-            alternativeImgString={bigLogo.alternativeImgStr}
             alt={`${bigLogo.alt[lang]} "${title}"`}
             isBlur
           />

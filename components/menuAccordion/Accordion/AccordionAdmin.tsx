@@ -7,38 +7,31 @@ import { ELanguage } from '@/models/ui.model';
 const { EN } = ELanguage;
 
 const AccordionAdmin = async () => {
-  // const channelCatListResp = await getChannelCatList();
-  // const channelSatListResp = await getChannelSatList();
-  // const usefulArticleListResp = await getUsefulArticleList();
-  // const mapsResp = await getSatMapList();
-
-  // const maps = mapsResp instanceof Error ? [] : mapsResp;
-
-  // const channelCatList =
-  //   channelCatListResp instanceof Error ? [] : channelCatListResp;
-
-  // const channelSatList =
-  //   channelSatListResp instanceof Error ? [] : channelSatListResp;
-
-  // const usefulArticleList =
-  //   usefulArticleListResp instanceof Error ? [] : usefulArticleListResp;
-
-  // =================================================================
-  // server env add: TINY_MCE_API_KEY
-  // =================================================================
+  const accordContentStyle =
+    'max-h-0 overflow-hidden transition-all duration-300 ease-out';
+  const contentListStyle = `flex items-center gap-3 before:w-4 before:h-4 before:content-['*'] before:text-xl before:text-blue-100`;
+  const contentItemStyle =
+    'border-b border-stone-300 py-1 px-2 bg-stone-400 hover:bg-slate-500';
 
   return (
-    <nav className={styles.Accordion} data-testid="Accordion">
+    <nav className="mx-auto py-4 text-white" data-testid="Accordion">
       <ul>
         {Object.values(MENU_ACCORDION_ADMIN).map((menuType, index) => {
           return menuType.links ? (
-            <AccordionMenuItem lang={EN} options={menuType} key={index}>
-              <ul className={styles.accordionContent}>
+            <AccordionMenuItem
+              lang={EN}
+              options={menuType}
+              key={index}
+              menuIconSrc={menuType.img.src}
+            >
+              <ul
+                className={`${styles.accordionContent} ${accordContentStyle}`}
+              >
                 {menuType.links.map((item) => (
-                  <li key={item.title} className={styles.contentItem}>
+                  <li key={item.title} className={contentItemStyle}>
                     <Link
                       href={`/${EN}${item.href}`}
-                      className={styles.contentItemLink}
+                      className={contentListStyle}
                     >
                       {item.title}
                     </Link>
@@ -47,99 +40,17 @@ const AccordionAdmin = async () => {
               </ul>
             </AccordionMenuItem>
           ) : (
-            <AccordionMenuItem lang={EN} options={menuType} key={index} />
+            <AccordionMenuItem
+              lang={EN}
+              options={menuType}
+              key={index}
+              menuIconSrc={menuType.img.src}
+            />
           );
         })}
-        {/* <AccordionMenuItem options={SATELLITE_TV} />
-        <AccordionMenuItem options={SAT_FINDER} /> */}
-        {/* <AccordionMenuItem options={INSTALLATIONS}>
-          <ul className={styles.accordionContent}>
-            {installationsList.map((item) => (
-              <li key={item.id} className={styles.contentItem}>
-                <Link
-                  href={`${INSTALLATIONS.baseHrefOfList}/${item.cpu}/`}
-                  className={styles.contentItemLink}
-                >
-                  {item.title}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </AccordionMenuItem> */}
-        {/* <AccordionMenuItem options={SATELLITES}>
-          <ul className={styles.accordionContent}>
-            {channelSatList.map((item) => (
-              <li key={item.id} className={styles.contentItem}>
-                <Link
-                  href={`${SATELLITES.baseHrefOfList}/${item.cpu}/`}
-                  className={styles.contentItemLink}
-                >
-                  {item.title} {item.position}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </AccordionMenuItem>
-        <AccordionMenuItem options={MAPS}>
-          <ul className={styles.accordionContent}>
-            {maps.map((item) => (
-              <li key={item.beam_id} className={styles.contentItem}>
-                <Link
-                  href={`${MAPS.baseHrefOfList}/${item.cpu}`}
-                  className={styles.contentItemLink}
-                >
-                  {item.title} {item.position}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </AccordionMenuItem>
-        <AccordionMenuItem options={PACKAGES}>
-          <ul className={styles.accordionContent}>
-            {channelCatList.map((item) => (
-              <li key={item.id} className={styles.contentItem}>
-                <Link
-                  href={`${PACKAGES.baseHrefOfList}/${item.cpu}/`}
-                  className={styles.contentItemLink}
-                >
-                  {item.title}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </AccordionMenuItem> */}
-
-        {/* EQUIPMENT */}
-        {/* {menu_selcat.map((menu_arrcat) => (
-            <li key={menu_arrcat.id}>
-                <Image
-                  width="32"
-                  height="32"
-                  src="/Images/accordion/hardwarepng_1855.png"
-                  alt="Обладнання для супутникового та ефірного тб"
-                />
-                Обладнання
-              <ul>
-                {menu_arrcat.map((item) => (
-                  <li key={item.id} className={styles.contentItem}>
-                    <Link href={`/kategorija-tovara/${item.cpu}/`} className={styles.contentItemLink}>
-                      <Image
-                        height="16"
-                        width="16"
-                        src="/Images/accordion/bulb2.png"
-                        alt={item.title}
-                      />
-                      {item.title}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </li>
-          ))} */}
-        {/* <AccordionMenuItem options={ONLINE_TV} />
-        <AccordionMenuItem options={SCHEDULE} /> */}
       </ul>
       <input
+        className="hidden"
         type="radio"
         name="accordion-radio-button"
         id="accordion-closing-button"

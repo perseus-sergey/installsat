@@ -14,7 +14,12 @@ import {
   getDBOnlineChannel,
   getSimilarFlyChannels,
 } from '@/controllers/channel.controller';
-import { META_CHANNEL, META_CHANNEL_ONLINE } from '@/models/channel.model';
+import {
+  CHANNEL_IMAGES,
+  CHANNEL_RESPONSIBILITIES,
+  META_CHANNEL_ONLINE,
+  SIMILAR,
+} from '@/models/channel.model';
 import {
   EDBTableTitles,
   DEFAULT_META_DATA,
@@ -40,20 +45,21 @@ import {
 } from '@/libs/utils/dates';
 import { getELangKey } from '@/libs/utils/validSearchParam';
 import SeoLink from '@/components/ui/SeoLink/SeoLink';
+import { INFO_PANEL_TITLES } from '@/models/articles.model';
 
 const BASE_URL = process.env.BASE_URL || MAIN_URL;
 const { LANG, SLUG, CHANNELS_TV_PROGRAM, ONLINE_CHANNEL_LIST, ARTICLE } =
   EUrlBaseParam;
 
+const { channels: simChannelsBefore, articles: simArticlesBefore } = SIMILAR;
+
+const { noteTitle, getResponsibilityText } = CHANNEL_RESPONSIBILITIES;
+
+const { comments: commentsTitle, views: viewsTitle } = INFO_PANEL_TITLES;
+
 const {
-  images: {
-    channelLogo: { big: bigLogo },
-  },
-  infoPanelTitles: { comments: commentsTitle, views: viewsTitle },
-  noteTitle,
-  getResponsibilityText,
-  similar: { channels: simChannelsBefore, articles: simArticlesBefore },
-} = META_CHANNEL;
+  channelLogo: { big: bigLogo },
+} = CHANNEL_IMAGES;
 
 const { getDescription, getH1, getKeywords, getTitle } = META_CHANNEL_ONLINE;
 
@@ -150,9 +156,7 @@ export default async function Page({ params }: IChannelProps) {
               src: `${bigLogo.path}${logo}`,
             }}
             defaultImage={bigLogo.defaultImage}
-            alternativeImgString={bigLogo.alternativeImgStr}
             alt={`${bigLogo.alt[lang]} "${title}"`}
-            isBlur
           />
         </Title>
         <OnlinePlayerTabs

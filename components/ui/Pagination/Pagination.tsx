@@ -1,10 +1,10 @@
-import styles from './Pagination.module.scss';
 import { EUrlSearchParam } from '@/models/url.model';
-import { ARTICLES } from '@/models/articles.model';
 import { ELanguage, TSearchParams } from '@/models/ui.model';
 import { makeUrlSearchParams } from '@/libs/utils/utils';
 import TooltipSimple from '../tooltips/TooltipSimple/TooltipSimple';
 import SeoLink from '../SeoLink/SeoLink';
+import { ARTICLE_PAGINATION_PARAMS } from '@/models/articles.model';
+import { getPageNumbers } from '@/controllers/pagination.controller';
 
 const {
   nextPageTitle,
@@ -12,7 +12,7 @@ const {
   firstPageTitle,
   lastPageTitle,
   linkTitle,
-} = ARTICLES.articleList.pagination;
+} = ARTICLE_PAGINATION_PARAMS;
 
 interface IPaginationProps {
   page: number;
@@ -22,21 +22,11 @@ interface IPaginationProps {
   lang: ELanguage;
 }
 
-const getPageNumbers = (
-  page: number,
-  offsetNumber: number,
-  totalPages: number
-): number[] => {
-  const pageNumbers = [];
-
-  for (let i = page - offsetNumber; i <= page + offsetNumber; i += 1) {
-    if (i >= 1 && i <= totalPages) {
-      pageNumbers.push(i);
-    }
-  }
-
-  return pageNumbers;
-};
+const minSizeSmallStyle = 'min-w-7 min-h-7';
+const minSizeBigStyle = 'sm:min-w-9 sm:min-h-9';
+const listItemBaseStyle = `${minSizeSmallStyle} ${minSizeBigStyle} flex flex-wrap justify-center items-center font-normal no-underline border border-solid border-black/25 border-l-0`;
+const listItemStyle = `${listItemBaseStyle} text-white/85 hover:bg-white/20 active:border-l-[1px] active:shadow shadow-[inset_0px_1px_0px_0px_rgba(255,255,255,0.35)]`;
+const currentPageNStyle = `${listItemBaseStyle} pt-0.5 sm:pt-1 text-white bg-white/35 cursor-default pointer-events-none shadow-[inset_0px_2px_1px_0px_rgba(0,0,0,0.25)]`;
 
 const Pagination = ({
   page,
@@ -55,12 +45,18 @@ const Pagination = ({
     return `?${urlSearchParams.toString()}`;
   };
 
-  const pageNumbers = getPageNumbers(page, offsetNumber, totalPages);
+  const pageNumbers = getPageNumbers({
+    currentPage: page,
+    offsetNumber,
+    totalPages,
+  });
 
   return (
     totalPages > 1 && (
-      <nav className={styles.Pagination} data-testid="Pagination">
-        <ul className={styles.paginationList}>
+      <nav className="flex justify-center py-4" data-testid="Pagination">
+        <ul
+          className={`shadow-[0px_3px_5px_rgba(0,0,0,0.25)] w-fit p-0 sm:p-2 bg-white/60 flex justify-center items-center border`}
+        >
           <Controls
             isDisabled={page === 1}
             controls={[
@@ -88,7 +84,7 @@ const Pagination = ({
               href={setUrlPage(pageNumber)}
               innerText={pageNumber}
               className={
-                page === pageNumber ? styles.currentPageNumber : styles.listItem
+                page === pageNumber ? currentPageNStyle : listItemStyle
               }
             />
           ))}
@@ -121,10 +117,10 @@ interface IPrps extends React.HTMLAttributes<HTMLElement> {
 }
 
 const ControlButton = ({ ariaLabel, href, innerText, className }: IPrps) => (
-  <li>
+  <li className="bg-cyan-600">
     <TooltipSimple tooltipText={ariaLabel}>
       <SeoLink
-        className={className || styles.listItem}
+        className={className || listItemStyle}
         href={href}
         title={ariaLabel}
       >
@@ -137,7 +133,7 @@ const ControlButton = ({ ariaLabel, href, innerText, className }: IPrps) => (
 const ControlDisabled = ({ innerText }: { innerText: string | number }) => (
   <li>
     <div
-      className={`${styles.listItem} ${styles.disabled}`}
+      className={`${listItemStyle} bg-stone-500/70 text-stone-200 cursor-default pointer-events-none`}
       aria-disabled="true"
     >
       {innerText}

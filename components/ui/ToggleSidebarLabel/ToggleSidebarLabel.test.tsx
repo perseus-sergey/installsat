@@ -5,7 +5,11 @@ import test, { describe } from 'node:test';
 
 describe('<ToggleSidebarLabel />', () => {
   test('it should mount', () => {
-    render(<ToggleSidebarLabel>ToggleSidebarLabel</ToggleSidebarLabel>);
+    render(
+      <ToggleSidebarLabel ariaLabel="ToggleSidebarLabel">
+        ToggleSidebarLabel
+      </ToggleSidebarLabel>
+    );
 
     const toggleSidebarLabel = screen.getByTestId('ToggleSidebarLabel');
 

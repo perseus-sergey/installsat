@@ -1,5 +1,3 @@
-import styles from './Fieldset.module.scss';
-
 interface IFieldsetProps
   extends React.FieldsetHTMLAttributes<HTMLFieldSetElement> {
   children: React.ReactNode;
@@ -13,11 +11,12 @@ const Fieldset = ({
   ...attributes
 }: IFieldsetProps) => (
   <fieldset
-    className={className ? `${styles.fieldset} ${className}` : styles.fieldset}
+    style={{ border: 'var(--groove-border)' }}
+    className={`rounded-md${className ? ` ${className}` : ''}`}
     data-testid="Fieldset"
     {...attributes}
   >
-    <legend className={styles.legend}>{legendText}</legend>
+    <legend className={'px-2 ml-4 text-stone-500'}>{legendText}</legend>
 
     {children}
   </fieldset>

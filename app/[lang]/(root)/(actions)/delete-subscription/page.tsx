@@ -3,7 +3,7 @@ import { Title } from '@/components/ui/Titles/Title';
 import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
 import { decrypt } from '@/libs/utils/decrypt';
 import { getELangKey, validSearchParam } from '@/libs/utils/validSearchParam';
-import { COMMENTS_MODEL } from '@/models/comments.model';
+import { DELETE_SUBSCRIPTION_PAGE } from '@/models/comments.model';
 import {
   DEFAULT_META_DATA,
   EDBTableTitles,
@@ -16,11 +16,9 @@ const emailKey = process.env.MAIL_ENCRYPT_KEY || '';
 const BASE_URL = process.env.BASE_URL || MAIN_URL;
 
 const {
-  deleteSubscriptionPage: {
-    meta: { title, description, keywords },
-    h1,
-  },
-} = COMMENTS_MODEL;
+  meta: { title, description, keywords },
+  h1,
+} = DELETE_SUBSCRIPTION_PAGE;
 export interface IPageParams {
   params: { [key in EUrlBaseParam]: string };
   searchParams?: TSearchParams;

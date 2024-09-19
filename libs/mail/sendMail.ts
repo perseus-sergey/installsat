@@ -1,7 +1,5 @@
 'use server';
 
-import nodemailer from 'nodemailer';
-
 interface IProps {
   to?: string;
   subject: string;
@@ -14,6 +12,8 @@ export async function sendMail({ to, subject, body }: IProps) {
   const MAIL_SMTP_PASS = process.env.MAIL_SMTP_PASS;
   const SMTP_HOST = 'smtp.hostinger.com';
   const SMTP_PORT = 465;
+
+  const nodemailer = await import('nodemailer');
 
   const transport = nodemailer.createTransport({
     host: SMTP_HOST,

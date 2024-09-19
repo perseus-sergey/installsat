@@ -1,16 +1,5 @@
 .title {
-  min-height: 50px;
   border-bottom: 3px double white;
-  padding-bottom: 7px;
-  font-size: 1.2em;
-  font-weight: bold;
-}
-
-.titleLink {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  color: white;
 }
 
 .titleLink::before {
@@ -21,7 +10,6 @@
 
 .listItem {
   border-bottom: 1px ridge #cccccc;
-  padding: 5px 0;
 
   &::before {
     content: '▪ ';

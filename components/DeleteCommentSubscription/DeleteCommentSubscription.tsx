@@ -6,15 +6,14 @@ import { useToastMessage } from '@/libs/hooks/useToastMessage';
 import { EMPTY_FORM_STATE } from '@/controllers/toast.controller';
 import { delSubscriptionAction } from '@/libs/actions/comments.action';
 import { EDBTableTitles, ELanguage } from '@/models/ui.model';
-import { COMMENTS_MODEL } from '@/models/comments.model';
+import { DELETE_SUBSCRIPTION_PAGE } from '@/models/comments.model';
 import {
   CancelLinkButton,
   ConfirmSubmitButton,
 } from '../ConfirmCancelButtons/ConfirmCancelButtons';
 
-const {
-  deleteSubscriptionPage: { askText, answerText, confirmButton, cancelButton },
-} = COMMENTS_MODEL;
+const { askText, answerText, confirmButton, cancelButton } =
+  DELETE_SUBSCRIPTION_PAGE;
 
 interface IDeleteCommentSubscriptionProps {
   articleTitle: string;

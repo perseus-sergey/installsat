@@ -1,3 +1,4 @@
+import { getSatMapsSideBar } from '@/controllers/sidebar.controller';
 import {
   getArticleCatListSiteMap,
   getChannelsSiteMap,
@@ -5,7 +6,6 @@ import {
   getNewsForSiteMap,
   getOnlineChanSiteMap,
   getPackagesSiteMap,
-  getSatMapList,
   getSatellitesSiteMap,
   getSchedulesSiteMap,
   getTransNewsSiteMap,
@@ -96,7 +96,7 @@ const getSiteMapItemList = ({
   });
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const satMapList = await getSatMapList();
+  const satMapList = await getSatMapsSideBar();
   const articleCatList = await getArticleCatListSiteMap();
   const articleList = await getNewsForSiteMap();
   const channelList = await getChannelsSiteMap();

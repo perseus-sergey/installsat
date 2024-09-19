@@ -1,4 +1,3 @@
-import { ARTICLES } from '@/models/articles.model';
 import ArticleCard from '../ArticleCard/ArticleCard';
 import FillingValidImage from '../../ui/Images/FillingValidImage';
 import { EUrlBaseParam } from '@/models/url.model';
@@ -6,14 +5,15 @@ import { cutText } from '@/libs/utils/utils';
 import DangerHtml from '../../ui/DangerHtml/DangerHtml';
 import {
   IChannelPackagesModel,
-  META_PACKAGES,
+  PACKAGES_IMAGES,
 } from '@/models/channelList.model';
 import EmptyData from '@/components/errors/EmptyData/EmptyData';
 import { ELanguage } from '@/models/ui.model';
+import { INFO_PANEL_TITLES } from '@/models/articles.model';
 
-const { packageImage } = META_PACKAGES;
+const { packageImage } = PACKAGES_IMAGES;
 
-const { views: viewsTitle, comments: commentsTitle } = ARTICLES.infoPanelTitles;
+const { views: viewsTitle, comments: commentsTitle } = INFO_PANEL_TITLES;
 
 interface IProps {
   packageList: IChannelPackagesModel[];
@@ -43,9 +43,7 @@ const PackageList = ({ packageList, lang }: IProps) =>
                       src: `${packageImage.path}${logo}`,
                     }}
                     defaultImage={packageImage.defaultImg}
-                    alternativeImgString={packageImage.alternativeStr}
-                    alt={`${packageImage.altPre[lang]} ${title}`}
-                    isBlur
+                    alt={`${packageImage.altPre[lang]} "${title}"`}
                   />
                 }
                 articleDescription={

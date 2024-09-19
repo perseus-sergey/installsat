@@ -19,6 +19,7 @@ const FillingImg = ({
   height,
   src,
   alt = '',
+  className,
   quality = 75,
   isFillParent = false,
   isBigImage = false,
@@ -43,19 +44,20 @@ const FillingImg = ({
         fill
         style={{
           objectFit: 'contain',
-          // maxWidth: '100%',
         }}
         placeholder={isBlur ? 'blur' : 'empty'}
         blurDataURL={blurImgPath}
         priority={isPriority}
         quality={quality}
+        className={`${isBigImage ? '' : 'flex-shrink-0'} ${className ? className : ''}`}
       />
     </div>
   ) : (
     <Image
       width={width}
       height={height}
-      style={{ minWidth: width, height: 'auto' }}
+      className={`${isBigImage ? '' : 'flex-shrink-0'} ${className ? className : ''}`}
+      style={{ minWidth: width, minHeight: height }}
       placeholder={isBlur ? 'blur' : 'empty'}
       blurDataURL={blurImgPath}
       src={src}

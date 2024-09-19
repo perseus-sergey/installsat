@@ -8,7 +8,7 @@ import {
   EUrlBaseParam,
   EUrlSearchParam,
 } from '@/models/url.model';
-import { IUserLocation } from '@/models/userLocation.model';
+// import { IUserLocation } from '@/models/userLocation.model';
 import {
   Heading,
   Body,
@@ -23,7 +23,6 @@ import {
   Section,
   Text,
 } from '@react-email/components';
-import * as React from 'react';
 
 const {
   COMMENT_DEL_ARTICLE_ID,
@@ -43,7 +42,7 @@ interface IEmailTemplateProps {
   emailKey: string;
   tblCommentName: EDBTableTitles;
   subscribers?: ISubscribersEmails[];
-  userLocation?: IUserLocation | null;
+  // userLocation?: IUserLocation | null;
   lang: ELanguage;
 }
 
@@ -56,7 +55,7 @@ export const CommentToAdminEmail = async ({
   articleId,
   tblCommentName,
   subscribers,
-  userLocation,
+  // userLocation,
   baseUrl,
   emailKey,
 }: IEmailTemplateProps) => {
@@ -92,7 +91,7 @@ export const CommentToAdminEmail = async ({
         <span style={coloredText}> {authorEmail}</span>
       </Text>
 
-      <Text style={heading}>
+      {/* <Text style={heading}>
         IP:
         <span style={coloredText}>
           {' '}
@@ -110,7 +109,7 @@ export const CommentToAdminEmail = async ({
             ? `${userLocation.country} / ${userLocation.city}`
             : 'Not defined'}
         </span>
-      </Text>
+      </Text> */}
 
       <Hr style={hr} />
 

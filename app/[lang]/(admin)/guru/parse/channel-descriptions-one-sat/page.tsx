@@ -7,16 +7,19 @@ import {
 } from '@/models/ui.model';
 import { validSearchParam } from '@/libs/utils/validSearchParam';
 import { EUrlAdminParam, EUrlSearchParam } from '@/models/url.model';
-import React from 'react';
 import { addDescriptionForChannels } from '@/cron/libs/generateChanAboutForOneSat.controller.mjs';
 import { sendMail } from '@/libs/mail/sendMail';
-import { renderAsync } from '@react-email/render';
-import { ParseTransNews } from '@/components/EmailTemplates/parseTransNews.template';
 
 export const dynamic = 'force-dynamic';
 
 // =================================================================
 //
+// Check comment user location in production (if successful, clean up the comments form //code comments)
+// Split all models into smaller models
+// Add separate tbl_comments for fly satellites
+// Renew tbl_chan_categ by adding english language
+// Mobile Accordion Lazy loading
+// Maximum Tailwind
 // Set indexes in DB
 // Find approximate grades from search params for spysok-kanaliv-suputnyka
 // Change all Link to SeoLink
@@ -41,6 +44,11 @@ export const dynamic = 'force-dynamic';
 const BASE_URL = process.env.BASE_URL;
 
 const sendReportMail = async (errorMessages: string[], satTitle: string) => {
+  const { renderAsync } = await import('@react-email/render');
+  const { ParseTransNews } = await import(
+    '@/components/EmailTemplates/parseTransNews.template'
+  );
+
   await sendMail({
     subject: `Generate AI description for Satellite "${satTitle}"`,
     body: await renderAsync(

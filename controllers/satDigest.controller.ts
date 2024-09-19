@@ -7,7 +7,7 @@ import {
 } from '@/models/tblSat.model';
 import {
   LAST_NEWS_INTERVAL,
-  META_TRANS_NEWS_LIST,
+  TRANS_NEWS_LIST_FILTERS,
   TSatDigest,
 } from '@/models/satDigest.model';
 import { DEFAULT_LANG, EDBTableTitles, ELanguage } from '@/models/ui.model';
@@ -79,7 +79,7 @@ const getGroupedSatelliteOptions = (
   isChannelCount = false
 ): IGroupedSatelliteOption[] => {
   const { westDirectionLabel, eastDirectionLabel, defaultLabel } =
-    META_TRANS_NEWS_LIST.select.satSelect;
+    TRANS_NEWS_LIST_FILTERS.select.satSelect;
 
   const mapToOption = (sats: ISatModel[]): ISatelliteOption[] =>
     sats.map((sat) => ({

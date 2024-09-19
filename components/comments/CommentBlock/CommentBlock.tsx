@@ -3,7 +3,7 @@ import CommentForm from '../CommentForm/CommentForm';
 import { EDBTableTitles, ELanguage } from '@/models/ui.model';
 import { COMMENTS_MODEL } from '@/models/comments.model';
 import { EUrlSearchParam, MAIN_URL } from '@/models/url.model';
-import { fetchUserLocation } from '@/libs/utils/getUserIP';
+// import { fetchUserLocation } from '@/libs/utils/getUserIP';
 import PaginationComments from '@/components/comments/PaginationComments/PaginationComments';
 
 const {
@@ -28,22 +28,34 @@ const CommentBlock = async ({
   numberOfComments,
   lang,
 }: IProps) => {
-  const userLocation = await fetchUserLocation();
+  // const userLocation = await fetchUserLocation();
 
   return (
-    <section className={styles.CommentBlock} id={EUrlSearchParam.COMMENT_ID}>
-      <h2 className={styles.commentBlockTitle}>{commentForm.title[lang]}</h2>
+    <section
+      className={`${styles.CommentBlock} w-full text-white my-1 mx-auto p-2 bg-blue-800`}
+      id={EUrlSearchParam.COMMENT_ID}
+      style={{
+        background:
+          'linear-gradient(to bottom, rgb(10, 46, 84) 0%, rgb(32, 124, 202) 45%, rgb(125, 185, 232) 100%)',
+      }}
+    >
+      <h2
+        className="text-white font-verdana italic text-2xl font-bold p-1 text-center"
+        style={{ textShadow: '1px 1px 0px black' }}
+      >
+        {commentForm.title[lang]}
+      </h2>
       <CommentForm
         lang={lang}
         revalidateUrl={revalidateUrl}
         dbCommentTableName={dbCommentTableName}
         articleId={articleId}
         articleName={articleName}
-        userLocation={userLocation}
+        // userLocation={userLocation}
         baseUrl={process.env.BASE_URL || MAIN_URL}
         emailKey={process.env.MAIL_ENCRYPT_KEY || ''}
       />
-      <div className={styles.bansBlock}>
+      <div className="p-2" style={{ textShadow: '1px 1px 0px black' }}>
         <BansBlock lang={lang} />
       </div>
       <PaginationComments

@@ -12,15 +12,29 @@ import { decode } from 'html-entities';
 import { cache } from 'react';
 
 export const WRONG_CAT_IDS = '(2,0,11,12,13)';
-const { ARTICLE: TBL_ARTICLE } = EDBTableTitles;
+const { ARTICLE: TBL_ARTICLE, ARTICLE_CATEGORIES } = EDBTableTitles;
 
-export const getArticleCatList = cache(async () => {
-  const sql = `SELECT id, title, cpu, description, text, title_en, description_en, text_en FROM tbl_categories WHERE id NOT IN ${WRONG_CAT_IDS}`;
+export const getArticleCatList = async () => {
+  const sql = `SELECT id, title, cpu, description, text, title_en, description_en, text_en FROM ${ARTICLE_CATEGORIES} WHERE id NOT IN ${WRONG_CAT_IDS}`;
 
   const res = await poolExecute<ISingleCatArticlesModel[]>(sql);
 
   return res instanceof Error ? [] : res;
-});
+};
+
+export const getArtCatListSideBar = async (lang: ELanguage) => {
+  const sql = `
+  SELECT
+    ${lang === ELanguage.UA ? 'title' : 'title_en'} AS title,
+    cpu
+  FROM ${ARTICLE_CATEGORIES} 
+  WHERE id NOT IN ${WRONG_CAT_IDS}
+  `;
+
+  const res = await poolExecute<{ title: string; cpu: string }[]>(sql);
+
+  return res instanceof Error ? [] : res;
+};
 
 export const getCurrentCatParams = cache(
   async (catCpu: string): Promise<ISingleCatArticlesModel> => {
@@ -93,7 +107,7 @@ export const getChunkOfNews = async ({
   C2.cpu AS category_cpu
 FROM ${TBL_ARTICLE} U
 LEFT JOIN (SELECT post, COUNT(id) AS comment_count FROM tbl_comments GROUP BY post) C ON U.id = C.post
-LEFT JOIN tbl_categories C2 ON U.cat = C2.id
+LEFT JOIN ${ARTICLE_CATEGORIES} C2 ON U.cat = C2.id
 CROSS JOIN
   (SELECT COUNT(id) AS total_count FROM ${TBL_ARTICLE} WHERE cat ${catValue} ${getSearchText('')}) T
 WHERE 
@@ -119,32 +133,25 @@ LIMIT ?, ?
 
 export const satMapListSql = `
   SELECT 
-      MAX(b.id) AS beam_id,
-      s.id,
-      s.title,
-      s.description,
-      s.cpu,
-      s.logo,
-      s.view,
-      s.position,
-      MAX(C.comment_count) AS comment_count
-  FROM (
-      SELECT * 
-      FROM tbl_chan_beam
-      WHERE map_img != ''
-  ) AS b
+    MAX(b.id) AS beam_id,
+    s.id,
+    s.title,
+    s.description,
+    s.cpu,
+    s.logo,
+    s.view,
+    s.position,
+    MAX(C.comment_count) AS comment_count
+  FROM tbl_chan_beam AS b
   LEFT JOIN tbl_chan_sat AS s ON b.sat = s.id
   LEFT JOIN (
       SELECT post, COUNT(id) AS comment_count 
       FROM tbl_comments_maps 
       GROUP BY post
-  ) C ON s.id = C.post
-  GROUP BY s.id, s.title, s.description, s.cpu, s.logo, s.view, s.position
-  ORDER BY (
-      SELECT grade 
-      FROM tbl_chan_sat
-      WHERE id = s.id
-  );
+  ) AS C ON s.id = C.post
+  WHERE b.map_img != ''
+  GROUP BY s.id, s.title, s.description, s.cpu, s.logo, s.view, s.position, s.grade
+  ORDER BY s.grade;
 `;
 
 export const getSatMapList = cache(async () => {
@@ -208,7 +215,7 @@ export const getArticle = cache(
 FROM
   ${TBL_ARTICLE} U
 LEFT JOIN
-  tbl_categories C ON U.cat = C.id
+  ${ARTICLE_CATEGORIES} C ON U.cat = C.id
 WHERE U.cpu = ?
 LIMIT 1
 `;

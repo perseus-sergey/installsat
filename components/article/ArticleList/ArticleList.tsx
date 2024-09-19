@@ -1,38 +1,35 @@
-import { ARTICLES, IAllNewsModel } from '@/models/articles.model';
-import styles from './ArticleList.module.scss';
+import {
+  ARTICLE_CARD,
+  IAllNewsModel,
+  INFO_PANEL_TITLES,
+} from '@/models/articles.model';
 import ArticleCard from '../ArticleCard/ArticleCard';
-import FillingImg from '../../ui/Images/FillingImage';
 import FillingValidImage from '../../ui/Images/FillingValidImage';
-import Link from 'next/link';
-import { ELanguage, IImgParams } from '@/models/ui.model';
+import { ELanguage } from '@/models/ui.model';
 import { EUrlBaseParam } from '@/models/url.model';
 import { cutText } from '@/libs/utils/utils';
 import DangerHtml from '../../ui/DangerHtml/DangerHtml';
 import EmptyData from '@/components/errors/EmptyData/EmptyData';
 import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
+import SeoLink from '@/components/ui/SeoLink/SeoLink';
 
-const { h1Image } = ARTICLES.article.images;
+const { h1Image } = ARTICLE_CARD.images;
 
 const {
   date: dateTitle,
   theme: themeTitle,
   views: viewsTitle,
   comments: commentsTitle,
-} = ARTICLES.infoPanelTitles;
+} = INFO_PANEL_TITLES;
 
 interface IArticleListProps {
   lang: ELanguage;
   articleList: IAllNewsModel[];
-  articleTitleImg: string | IImgParams;
 }
 
-const ArticleList = ({
-  articleList,
-  articleTitleImg,
-  lang,
-}: IArticleListProps) =>
+const ArticleList = ({ articleList, lang }: IArticleListProps) =>
   articleList.length > 0 ? (
-    <ul className={styles.ArticleList} data-testid="ArticleList">
+    <ul>
       {articleList.map(
         ({
           id,
@@ -69,13 +66,7 @@ const ArticleList = ({
                 }
                 articleTitle={
                   <>
-                    {typeof articleTitleImg !== 'string' ? (
-                      <FillingImg {...articleTitleImg} />
-                    ) : (
-                      <span style={{ fontSize: '2rem' }}>
-                        {articleTitleImg}
-                      </span>
-                    )}
+                    <div className="bg-[url('/Images/package_network_4729.png')] w-8 h-8 flex-shrink-0" />
                     {titleLang}
                   </>
                 }
@@ -86,9 +77,7 @@ const ArticleList = ({
                       src: `${h1Image.path}${logo}`,
                     }}
                     defaultImage={h1Image.defaultImg}
-                    alternativeImgString={h1Image.alternativeStr}
                     alt={`${h1Image.altStart[lang]} ${titleLang}`}
-                    isBlur
                     isFillParent
                   />
                 }
@@ -103,11 +92,17 @@ const ArticleList = ({
                   {
                     name: themeTitle[lang],
                     value: (
-                      <Link
+                      <SeoLink
+                        className="border-b border-stone-300 hover:border-white"
+                        title={`${
+                          lang === ELanguage.UA
+                            ? 'Перейти до перегляду списку статей категорії'
+                            : 'Go to view the list of articles in the category'
+                        } "${catTitleLang}"`}
                         href={`/${lang}/${EUrlBaseParam.NEWS_AND_ARTICLES}/${category_cpu}`}
                       >
                         {catTitleLang}
-                      </Link>
+                      </SeoLink>
                     ),
                   },
                   { name: viewsTitle[lang], value: view },

@@ -1,7 +1,5 @@
 'use client';
 
-import styles from './ReactSelect.module.scss';
-
 import type {} from 'react-select/base';
 import Select, {
   ControlProps,
@@ -14,10 +12,7 @@ import {
   IGroupedSatelliteOption,
   ISatelliteOption,
 } from '@/models/tblSat.model';
-import { META_TRANS_NEWS_LIST } from '@/models/satDigest.model';
-import { ELanguage, ESelectType } from '@/models/ui.model';
-
-const { satSelect, timeIntervalSelect } = META_TRANS_NEWS_LIST.select;
+import { ESelectType } from '@/models/ui.model';
 
 interface IReactSelectProps {
   selectName: ESelectType;
@@ -25,37 +20,26 @@ interface IReactSelectProps {
 
 export const createIsMultiControlComponent = (title: string) => {
   return (props: ControlProps<ISatelliteOption, true>) => (
-    <div className={`${styles.selectHeader} ${styles.satSelectHeader}`}>
+    <div className="h-fit p-1 border border-solid border-gray-600 bg-sky-700 text-white text-center rounded-md min-w-48">
       <p>{title}</p>
       <components.Control {...props} />
     </div>
   );
 };
 
-export const createControlComponentSat = (lang: ELanguage) => {
-  return (props: ControlProps<ISatelliteOption, true>) => (
-    <div className={`${styles.selectHeader} ${styles.satSelectHeader}`}>
-      <p>{satSelect.title[lang]}</p>
+export const createSingleControlComponent = (title: string) => {
+  return (props: ControlProps<ISatelliteOption, false>) => (
+    <div className="h-fit p-1 border border-solid border-gray-600 bg-sky-700 text-white text-center rounded-md min-w-48">
+      <p>{title}</p>
       <components.Control {...props} />
     </div>
   );
 };
 
-export const createControlComponentInterval = (lang: ELanguage) => {
-  return (props: ControlProps<ISatelliteOption, false>) => {
-    return (
-      <div className={`${styles.selectHeader} ${styles.satSelectHeader}`}>
-        <p>{timeIntervalSelect.title[lang]}</p>
-        <components.Control {...props} />
-      </div>
-    );
-  };
-};
-
 export const Group = (
   props: GroupProps<ISatelliteOption, true, IGroupedSatelliteOption>
 ) => (
-  <div className={styles.groupStyles}>
+  <div className="border-2 border-dotted border-sky-500 rounded-md bg-sky-50">
     <components.Group {...props} aria-activedescendant={undefined} />
   </div>
 );
@@ -70,7 +54,6 @@ export const MySelect = <
 }: Props<Option, IsMulti, Group> & IReactSelectProps) => {
   return (
     <Select
-      className={styles.ReactSelect}
       instanceId={`inst-${selectName}`}
       id={selectName}
       name={selectName}
@@ -80,8 +63,10 @@ export const MySelect = <
 };
 
 export const formatGroupSatLabel = (group: IGroupedSatelliteOption) => (
-  <div className={styles.groupHeading}>
+  <div className="flex items-center justify-around text-white rounded py-1 text-center w-full bg-sky-700">
     <span>{group.label}</span>
-    <span className={styles.groupBadgeStyles}>{group.options.length}</span>
+    <span className="bg-gray-100 rounded-3xl text-blue-950 inline-block text-xs min-w-0.5 min-h-0.5 py-1 px-2 text-center">
+      {group.options.length}
+    </span>
   </div>
 );

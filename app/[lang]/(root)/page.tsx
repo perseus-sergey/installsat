@@ -17,7 +17,7 @@ interface IProps {
 }
 
 // export const dynamic = 'force-dynamic';
-export const revalidate = 3600 * 12; // invalidate cache every 12 hours
+export const revalidate = 3600 * 6; // invalidate cache every 6 hours
 
 export default async function Page({ searchParams, params }: IProps) {
   const lang = getELangKey(params[EUrlBaseParam.LANG]);

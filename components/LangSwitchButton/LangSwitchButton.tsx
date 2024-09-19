@@ -60,37 +60,3 @@ const LangSwitchButton = () => {
 };
 
 export default LangSwitchButton;
-
-// const LangSwitchButton = () => {
-//   const pathname = usePathname();
-//   const { replace } = useRouter();
-
-//   const currentLang = pathname.split('/')[1];
-//   const newLang = currentLang === 'en' ? 'ua' : 'en';
-
-//   const handleLangToggle = () => {
-//     replace(pathname.replace(`/${currentLang}`, `/${newLang}`));
-//   };
-
-//   return (
-//     <BaseButton
-//       onClick={handleLangToggle}
-//       ariaLabel={
-//         newLang === 'en' ? 'Switch to English' : 'Перемкнути на Українську'
-//       }
-//       className="flex items-center flex-wrap gap-x-2 text-gray-400 hover:text-gray-300 px-[3vw]"
-//     >
-//       {newLang === 'en' ? 'EN' : 'UA'}
-//       <FillingImg
-//         width={24}
-//         height={24}
-//         alt={newLang === 'en' ? 'English' : 'Українська'}
-//         src={
-//           newLang === 'en'
-//             ? '/Images/english_flag_24.png'
-//             : '/Images/ukraine_flag_24.png'
-//         }
-//       />
-//     </BaseButton>
-//   );
-// };

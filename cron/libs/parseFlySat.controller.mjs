@@ -350,6 +350,10 @@ const insertTblChannels = async (currentSatSlug, parsedNewChannels) => {
 
   insertCount = res instanceof Error ? 0 : res.affectedRows;
 
+  // ----------------------------------------------------------------
+  // Find all newly inserted channels (with empty descriptions)
+  // .. and create the new objects from group of same channels by sql query
+  // ----------------------------------------------------------------
   const dbChannelsRes = await getAboutOfChannelsFromDB(channelTitles);
   if (typeof dbChannelsRes === 'string')
     return {

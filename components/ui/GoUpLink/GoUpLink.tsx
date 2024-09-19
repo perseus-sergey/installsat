@@ -1,21 +1,16 @@
-import styles from './GoUpLink.module.scss';
-import { META_ALL_SAT_CHANNEL_LIST } from '@/models/channelList.model';
+import { GO_UP_LINK } from '@/models/channelList.model';
 import TooltipSimple from '../tooltips/TooltipSimple/TooltipSimple';
 import { ELanguage } from '@/models/ui.model';
 import SeoLink from '../SeoLink/SeoLink';
 
-const {
-  anchors: { goUpLink },
-} = META_ALL_SAT_CHANNEL_LIST;
-
 const GoUpLink = ({ lang }: { lang: ELanguage }) => (
-  <TooltipSimple tooltipText={goUpLink.title[lang]}>
+  <TooltipSimple tooltipText={GO_UP_LINK.title[lang]}>
     <SeoLink
       href={`#top`}
-      title={goUpLink.title[lang]}
-      className={styles.goUpLink}
+      title={GO_UP_LINK.title[lang]}
+      className="text-3xl rounded-full text-blue-200 bg-stone-400 p-2 hover:text-white hover:bg-red-300"
     >
-      {goUpLink.img}
+      {GO_UP_LINK.img}
     </SeoLink>
   </TooltipSimple>
 );

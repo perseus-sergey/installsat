@@ -19,22 +19,23 @@ export interface IImgParams {
 }
 
 export const IMG_PROPERTIES = {
-  defaultImgBlur: '/Images/1blur.gif',
+  defaultImgBlur:
+    'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNctu1mPQAG9QK2i+zUtgAAAABJRU5ErkJggg==',
 };
 
 export const BREADCRUMBS_SEPARATOR = '჻';
-export const SIDE_BAR_CLOSE_BTN = '⚔';
 
-export const ERRORS = {
-  ERROR_EMPTY_DATA: {
-    [ELanguage.UA]: 'На жаль, запит повернув порожній результат',
-    [ELanguage.EN]: 'Unfortunately, the query returned an empty result',
-  },
-  ERROR_PAGE_TITLE: {
-    [ELanguage.UA]:
-      '⚠ Не вдалося завантажити контент. Будь ласка, спробуйте пізніше.',
-    [ELanguage.EN]: '⚠ Failed to load content. Please try again later.',
-  },
+export const ERROR_EMPTY_DATA = {
+  [ELanguage.UA]: 'На жаль, запит повернув порожній результат',
+  [ELanguage.EN]: 'Unfortunately, the query returned an empty result',
+};
+export const ERROR_PAGE_TITLE = {
+  [ELanguage.UA]:
+    '⚠ Не вдалося завантажити контент. Будь ласка, спробуйте пізніше.',
+  [ELanguage.EN]: '⚠ Failed to load content. Please try again later.',
+};
+
+export const NOT_FOUND_PAGE = {
   NOT_FOUND_TITLE: {
     [ELanguage.UA]: 'Сторінку не знайдено.',
     [ELanguage.EN]: 'Page not found.',
@@ -49,18 +50,10 @@ export const ERRORS = {
     [ELanguage.UA]: 'Перейти на головну сторінку.',
     [ELanguage.EN]: 'Go to the main page.',
   },
-  EMPTY_DATE_NEWS_PAGE: {
-    title: {
-      [ELanguage.UA]: 'Немає новин за вказаний період',
-      [ELanguage.EN]: 'There are no news for the specified period',
-    },
-    img: {
-      src: '/Images/empty_page.png',
-      height: 128,
-      width: 128,
-      alternativeImgStr: { title: '📂', fontSize: '9rem' },
-    },
-  },
+};
+export const EMPTY_DATE_NEWS_PAGE_TITLE = {
+  [ELanguage.UA]: 'Немає новин за вказаний період',
+  [ELanguage.EN]: 'There are no news for the specified period',
 };
 
 export const DEFAULT_META_DATA = {
@@ -94,6 +87,7 @@ export const SIMILAR_ARTICLES = {
 
 export enum EDBTableTitles {
   ARTICLE = 'tbl_useful',
+  ARTICLE_CATEGORIES = 'tbl_categories',
   TRANS_NEWS = 'tbl_digest',
   CHANNELS = 'tbl_channals',
   CHANNEL_SAT = 'tbl_chan_sat',

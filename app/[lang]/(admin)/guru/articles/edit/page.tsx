@@ -6,7 +6,7 @@ import { Title } from '@/components/ui/Titles/Title';
 import { getAdminChunkOfNews } from '@/controllers/admin.controller';
 import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
 import { getELangKey, validSearchParam } from '@/libs/utils/validSearchParam';
-import { ARTICLES } from '@/models/articles.model';
+import { ARTICLE_LIST_MODEL } from '@/models/articles.model';
 import { EDBTableTitles, TSearchParams } from '@/models/ui.model';
 import {
   EUrlAdminParam,
@@ -21,8 +21,8 @@ const { BASE_PATH, ARTICLES_EDIT } = EUrlAdminParam;
 
 const {
   search: { placeholder, labelTitle },
-  articleList: { articlesCountCaption },
-} = ARTICLES;
+  articlesCountCaption,
+} = ARTICLE_LIST_MODEL;
 
 const PAGINATION = {
   perPage: 30,

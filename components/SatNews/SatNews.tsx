@@ -1,7 +1,14 @@
 import { TSatDigest } from '@/models/satDigest.model';
-import SatNewsList from '../SatNewsList/SatNewsList';
-import DateNewsList from '../DateNewsList/DateNewsList';
 import { ELanguage, TSearchParams } from '@/models/ui.model';
+import dynamic from 'next/dynamic';
+
+const SatNewsList = dynamic(() => import('../SatNewsList/SatNewsList'), {
+  loading: () => <p>Loading...</p>,
+});
+
+const DateNewsList = dynamic(() => import('../DateNewsList/DateNewsList'), {
+  loading: () => <p>Loading...</p>,
+});
 
 export type TGroupedNews = [string, Map<string, TSatDigest[]>][];
 

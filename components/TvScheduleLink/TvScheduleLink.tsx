@@ -1,8 +1,8 @@
-import styles from './TvScheduleLink.module.scss';
-import { META_CHANNEL } from '@/models/channel.model';
-import FillingValidImage from '../ui/Images/FillingValidImage';
+import { SCHEDULE_LINK } from '@/models/channel.model';
 import { ELanguage } from '@/models/ui.model';
 import SeoLink from '../ui/SeoLink/SeoLink';
+import scheduleImg from 'public/Images/schedule-icon96.png';
+import Image from 'next/image';
 
 interface ITvScheduleLinkProps {
   title: React.ReactNode;
@@ -12,9 +12,9 @@ interface ITvScheduleLinkProps {
 }
 
 const {
-  images: { scheduleImg },
   scheduleLinkText: { channel, onlineChannel },
-} = META_CHANNEL;
+  scheduleImgAlt,
+} = SCHEDULE_LINK;
 
 const TvScheduleLink = ({
   title,
@@ -22,14 +22,19 @@ const TvScheduleLink = ({
   lang,
   isOnlinePage = false,
 }: ITvScheduleLinkProps) => (
-  <div className={styles.TvScheduleLink} data-testid="TvScheduleLink">
-    <FillingValidImage
-      image={scheduleImg}
-      alt={scheduleImg.alt[lang]}
-      alternativeImgString={scheduleImg.alternativeImgStr}
+  <div
+    className="flex items-center justify-center gap-2 my-4 mx-auto"
+    data-testid="TvScheduleLink"
+  >
+    <Image
+      src={scheduleImg}
+      alt={scheduleImgAlt[lang]}
+      className="flex-shrink-0"
     />
+
     <SeoLink
-      className={styles.linkBtn}
+      className="py-2 px-3 font-bold text-white text-center text-xl sm:text-2xl border border-solid border-blue-300 cursor-pointer rounded-md bg-gradient-to-b from-sky-400 to-blue-500 hover:to-blue-600 shadow"
+      style={{ textShadow: '0 -1px 1px rgba(0, 0, 0, 0.25)' }}
       href={href}
       title={
         lang === ELanguage.UA

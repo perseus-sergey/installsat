@@ -1,9 +1,8 @@
 'use client';
 
 import { usePathname, useRouter } from 'next/navigation';
-import styles from './Filter.module.scss';
 import { EUrlSearchParam } from '@/models/url.model';
-import { META_ALL_SAT_CHANNEL_LIST } from '@/models/channelList.model';
+import { ALL_SAT_CHANNEL_LIST_FILTERS } from '@/models/channelList.model';
 import BaseButton from '../buttons/BaseButton/BaseButton';
 import TooltipSimple from '../tooltips/TooltipSimple/TooltipSimple';
 import useSearch from '@/libs/hooks/useSearch';
@@ -11,7 +10,7 @@ import StyledInputField from '../StyledInputField/StyledInputField';
 import { ELanguage } from '@/models/ui.model';
 
 const { cancelBtnAriaLabel, searchIconStr } =
-  META_ALL_SAT_CHANNEL_LIST.filtering.filterByChannelName;
+  ALL_SAT_CHANNEL_LIST_FILTERS.filterByChannelName;
 
 interface IFilterProps {
   lang: ELanguage;
@@ -44,7 +43,7 @@ export default function Filter({
   };
 
   return (
-    <div className={styles.filterInputBlock}>
+    <div className="flex p-4 items-center flex-wrap gap-4 justify-center sm:justify-between">
       <StyledInputField
         idName={idName}
         handleOnChange={handleSearchDebounced}
@@ -59,7 +58,12 @@ export default function Filter({
       {resetButton && (
         <TooltipSimple tooltipText={resetButton.ariaLabel}>
           <BaseButton
-            className={styles.ResetAllButton}
+            style={{
+              textShadow: '0 1px 0px #ffffffa6',
+              boxShadow:
+                'inset 0px 1px 1px white, 0px 1px 3px rgba(0, 0, 0, 0.5)',
+            }}
+            className={`bg-gradient-to-b from-yellow-50 to-gray-400 text-4xl text-green-600 w-10 h-10 rounded-full hover:text-red-700`}
             data-testid="ResetFiltersButton"
             ariaLabel={resetButton.ariaLabel}
             onClick={resetAll}

@@ -1,7 +1,11 @@
 import EmptyData from '@/components/errors/EmptyData/EmptyData';
 import { Title } from '@/components/ui/Titles/Title';
 import FillingValidImage from '@/components/ui/Images/FillingValidImage';
-import { ARTICLES, DEFAULT_ARTICLE_LOGO_NAME } from '@/models/articles.model';
+import {
+  ARTICLE_CARD,
+  DEFAULT_ARTICLE_LOGO_NAME,
+  INFO_PANEL_TITLES,
+} from '@/models/articles.model';
 import {
   getArticle,
   getSimilarArticles,
@@ -30,7 +34,7 @@ import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
 import TextUnderH1 from '@/components/TextUnderH1/TextUnderH1';
 import SeoLink from '@/components/ui/SeoLink/SeoLink';
 
-const { h1Image } = ARTICLES.article.images;
+const { h1Image } = ARTICLE_CARD.images;
 
 const BASE_URL = process.env.BASE_URL || MAIN_URL;
 const { ARTICLE_PARAM, ARTICLE, LANG, NEWS_AND_ARTICLES } = EUrlBaseParam;
@@ -38,7 +42,7 @@ const {
   date: dateTitle,
   theme: themeTitle,
   views: viewsTitle,
-} = ARTICLES.infoPanelTitles;
+} = INFO_PANEL_TITLES;
 
 interface IArticleParams {
   params: { [key in EUrlBaseParam]: string };
@@ -166,9 +170,7 @@ export default async function Page({ params }: IArticleParams) {
               src: `${h1Image.path}${logo}`,
             }}
             defaultImage={h1Image.defaultImg}
-            alternativeImgString={h1Image.alternativeStr}
             alt={`${h1Image.altStart[lang]} ${titleLang}`}
-            isBlur
           />
         </Title>
 
@@ -184,6 +186,7 @@ export default async function Page({ params }: IArticleParams) {
               value: (
                 <SeoLink
                   href={`/${lang}/${EUrlBaseParam.NEWS_AND_ARTICLES}/${cat_slug}`}
+                  className="border-b border-stone-300 hover:border-white"
                   title={
                     lang === ELanguage.UA
                       ? `Перейти до списку статей категорії "${catLang}"`

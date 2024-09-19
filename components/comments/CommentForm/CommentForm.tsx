@@ -1,17 +1,17 @@
 'use client';
 
-import styles from './CommentForm.module.scss';
 import { SubmitPendingButton } from '@/components/ui/buttons/SubmitPendingBtn';
 import { useFormState } from 'react-dom';
 import { COMMENTS_MODEL, ECommentFormNames } from '@/models/comments.model';
-import FieldError from '../FieldError/FieldError';
+// import FieldError from '../FieldError/FieldError';
 import { useToastMessage } from '@/libs/hooks/useToastMessage';
 import { useFormReset } from '@/libs/hooks/useFormReset';
 import { EDBTableTitles, ELanguage } from '@/models/ui.model';
 import { useFormCommentSendEmail } from '@/libs/hooks/useFormCommentSendEmail';
 import { EMPTY_FORM_STATE } from '@/controllers/toast.controller';
-import { IUserLocation } from '@/models/userLocation.model';
+// import { IUserLocation } from '@/models/userLocation.model';
 import { addCommentAction } from '@/libs/actions/comments.action';
+import FieldError from '../FieldError/FieldError';
 
 const { AUTHOR, EMAIL, TEXT } = ECommentFormNames;
 const { authorEmail, authorName, commentText, submit } =
@@ -22,7 +22,7 @@ interface ICommentProps {
   dbCommentTableName: EDBTableTitles;
   articleId: string | number;
   articleName: string;
-  userLocation: IUserLocation | null;
+  // userLocation: IUserLocation | null;
   baseUrl: string;
   emailKey: string;
   lang: ELanguage;
@@ -33,7 +33,7 @@ const CommentForm = ({
   dbCommentTableName,
   articleId,
   articleName,
-  userLocation,
+  // userLocation,
   baseUrl,
   emailKey,
   lang,
@@ -42,10 +42,10 @@ const CommentForm = ({
     null,
     lang,
     articleId,
-    userLocation && userLocation.status === 'success' ? userLocation.query : '',
-    userLocation && userLocation.status === 'success'
-      ? userLocation.countryCode
-      : '',
+    // userLocation && userLocation.status === 'success' ? userLocation.query : '',
+    // userLocation && userLocation.status === 'success'
+    //   ? userLocation.countryCode
+    //   : '',
     revalidateUrl,
     dbCommentTableName
   );
@@ -63,28 +63,34 @@ const CommentForm = ({
     revalidateUrl,
     dbCommentTableName,
     articleId,
-    userLocation,
+    // userLocation,
     baseUrl,
     emailKey,
     lang
   );
   const formRef = useFormReset(formState);
 
+  const inputFieldStyle =
+    'max-w-64 sm:max-w-full mt-1 p-1 text-gray-700 border-lightgray border-2 cursor-auto bg-[linear-gradient(to_bottom,rgba(255,255,255,1)_0%,rgba(243,243,243,1)_50%,rgba(237,237,237,1)_51%,rgba(255,255,255,1)_100%)] border-inset';
+
+  const requiredStyle =
+    "after:text-lime-200 after:text-xl after:content-['_*']";
+
   return (
     <form
       id="comment-form"
       ref={formRef}
-      className={styles.CommentForm}
+      className="flex flex-col items-start gap-1 p-4"
       action={formAction}
     >
       <div className="pb-4 pt-1 flex flex-col">
-        <label htmlFor={AUTHOR} className={styles.required}>
+        <label htmlFor={AUTHOR} className={requiredStyle}>
           {authorName.labelText[lang]}
         </label>
         <input
           id={AUTHOR}
           name={AUTHOR}
-          className={styles.inputField}
+          className={inputFieldStyle}
           maxLength={authorName.maxSize.value}
           size={20}
           required
@@ -102,7 +108,7 @@ const CommentForm = ({
           id={EMAIL}
           name={EMAIL}
           maxLength={40}
-          className={styles.inputField}
+          className={inputFieldStyle}
           size={30}
           placeholder={authorEmail.placeholder}
           aria-label={authorEmail.ariaLabel[lang]}
@@ -112,13 +118,13 @@ const CommentForm = ({
       </div>
 
       <div className="pb-4 pt-1 flex flex-col">
-        <label htmlFor={TEXT} className={styles.required}>
+        <label htmlFor={TEXT} className={requiredStyle}>
           {commentText.labelText[lang]}
         </label>
         <textarea
           id={TEXT}
           name={TEXT}
-          className={styles.inputField}
+          className={inputFieldStyle}
           placeholder={commentText.placeholder[lang]}
           aria-label={commentText.ariaLabel[lang]}
           rows={4}

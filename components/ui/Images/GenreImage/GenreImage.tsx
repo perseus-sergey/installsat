@@ -1,12 +1,13 @@
-import { MChanTheme, META_SAT_CHANNEL_LIST } from '@/models/channelList.model';
+import {
+  MChanTheme,
+  SAT_CHANNEL_LIST_IMAGES,
+} from '@/models/channelList.model';
 import TooltipSimple from '../../tooltips/TooltipSimple/TooltipSimple';
 import FillingImg from '../FillingImage';
 import React from 'react';
 import { ELanguage } from '@/models/ui.model';
 
-const {
-  images: { genreImage },
-} = META_SAT_CHANNEL_LIST;
+const { genreImage } = SAT_CHANNEL_LIST_IMAGES;
 
 interface IGenreImageProps extends React.HtmlHTMLAttributes<HTMLElement> {
   genreMapPosition: number;

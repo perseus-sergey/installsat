@@ -171,7 +171,7 @@ const extractParsedData = ($: cheerio.CheerioAPI, channel: IVseTvParsModel) => {
   let addedDays = 0;
   let errors: string[] = [];
 
-  chTimes.each((i: number, chTime: cheerio.Element) => {
+  chTimes.each((i: number, chTime) => {
     let dateUpd = getFullDate(
       currentYear,
       monthNumber,

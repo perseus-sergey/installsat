@@ -59,9 +59,6 @@ export const SAT_FINDER_META_DATA = {
   images: {
     h1Image: {
       src: '/Images/starthere_6100.png',
-      height: 128,
-      width: 128,
-      alternativeStr: { title: '🧭', fontSize: '8rem' },
       alt: {
         [ELanguage.UA]:
           'Компас на карті Google, який вказує напрям антени на супутник',

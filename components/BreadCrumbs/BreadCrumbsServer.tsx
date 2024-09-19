@@ -1,5 +1,4 @@
 import React, { ReactNode } from 'react';
-import styles from './BreadCrumbs.module.scss';
 import {
   BREAD_CRUMBS,
   BREAD_SEPARATOR,
@@ -40,14 +39,12 @@ const BreadCrumbServer = ({
   return (
     <nav
       aria-label="Breadcrumb"
-      className={
-        className ? `${styles.BreadCrumb} ${className}` : styles.BreadCrumb
-      }
+      className={`border border-gray-400 rounded-md mt-0.5 mb-0 mx-0 bg-indigo-950${className ? ` ${className}` : ''}`}
       data-testid="BreadCrumb"
     >
-      <ol className={styles.container}>
+      <ol className="flex flex-wrap gap-3 items-center py-2 px-5 text-cyan-100">
         {hasHomeLink && (
-          <li className={`${styles.item} ${styles.firstItem}`}>
+          <li className={`list-none text-white`}>
             <SeoLink
               href={`/${lang}${BREAD_CRUMBS.BASE_PATH.href}`}
               style={{ fontSize: FIRST_ELEMENT_SIZE }}
@@ -64,7 +61,7 @@ const BreadCrumbServer = ({
         )}
         {breadCrumbList && breadCrumbList.length > 0 && (
           <>
-            {hasHomeLink && <li className={styles.separator}> {separator} </li>}
+            {hasHomeLink && <li className="text-gray-300"> {separator} </li>}
             {breadCrumbList.map((item, index) => {
               if (!item) return;
 
@@ -80,8 +77,8 @@ const BreadCrumbServer = ({
                   ? { color: activeLinkColor }
                   : undefined;
               const itemClassName = isCurrentUrl
-                ? `${styles.item} ${styles.activeItem}`
-                : styles.item;
+                ? `list-none text-slate-200`
+                : 'list-none';
 
               const truncatedLinkText = cutMiddleOfText(
                 linkText,
@@ -109,7 +106,7 @@ const BreadCrumbServer = ({
                       <div>{linkText}</div>
                     )}
                   </li>
-                  <li className={styles.separator}> {separator} </li>
+                  <li className="text-gray-300"> {separator} </li>
                 </React.Fragment>
               ) : (
                 <React.Fragment key={index}>

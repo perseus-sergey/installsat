@@ -1,7 +1,6 @@
-// import styles from './EmptyData.module.scss';
-
-import FillingValidImage from '@/components/ui/Images/FillingValidImage';
-import { ELanguage, ERRORS } from '@/models/ui.model';
+import { ELanguage, ERROR_EMPTY_DATA } from '@/models/ui.model';
+import Image from 'next/image';
+import emptyPageImg from 'public/Images/empty_page.png';
 
 interface IEmptyDataProps {
   lang: ELanguage;
@@ -9,19 +8,20 @@ interface IEmptyDataProps {
 }
 
 const EmptyData = ({ description, lang }: IEmptyDataProps) => (
-  <h3
+  <section
     className="p-5 font-bold text-purple-600 flex flex-col items-center gap-12"
     data-testid="EmptyData"
   >
-    <FillingValidImage
-      image={ERRORS.EMPTY_DATE_NEWS_PAGE.img}
-      alternativeImgString={ERRORS.EMPTY_DATE_NEWS_PAGE.img.alternativeImgStr}
-      alt="Empty Data Image"
+    <Image
+      src={emptyPageImg}
+      alt={
+        lang === ELanguage.UA
+          ? 'Зображення космосу для позначення порожнього результату'
+          : 'Image of space for marking an empty result'
+      }
     />
-    {/* {ERRORS.ERROR_EMPTY_DATA[lang]} */}
-    {description || ERRORS.ERROR_EMPTY_DATA[lang]}
-    {/* {description && !IS_PRODUCTION ? <span>: {description}</span> : null} */}
-  </h3>
+    <p>{description || ERROR_EMPTY_DATA[lang]}</p>
+  </section>
 );
 
 export default EmptyData;

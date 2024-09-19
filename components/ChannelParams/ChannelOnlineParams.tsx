@@ -1,4 +1,4 @@
-import { IChannel, META_CHANNEL } from '@/models/channel.model';
+import { CHANNEL_PARAMS_BLOCK, IChannel } from '@/models/channel.model';
 import { TitleH2 } from '../ui/Titles/TitleH2';
 import { ELanguage } from '@/models/ui.model';
 
@@ -7,8 +7,7 @@ interface IChannelParamsProps {
   lang: ELanguage;
 }
 
-const { getParamsTitle, paramsLanguage, getParamsSite } =
-  META_CHANNEL.chanParamsBlock;
+const { getParamsTitle, paramsLanguage, getParamsSite } = CHANNEL_PARAMS_BLOCK;
 
 const ChannelOnlineParams = ({
   channelDBParams: { title, url, chan_lang },

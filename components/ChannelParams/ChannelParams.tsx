@@ -100,7 +100,7 @@ export const FlyChannelParams = ({
   lang,
 }: IFlyChannelParamsProps) => {
   const rowStyle =
-    'flex items-center gap-2 sm:gap-4 bg-slate-100 shadow-md rounded py-2 sm:px-4 px-1 mb-2';
+    'flex items-center gap-2 sm:gap-4 bg-slate-100 shadow-md rounded py-2 sm:px-4 px-1 mb-2 bg-gradient-to-b from-blue-100/70 via-blue-300/30 to-blue-200/90 from-50% via-45% to-100% ';
 
   const aPidList = !a_pid ? [] : a_pid.split(DB_ARRAY_SEPARATOR);
   const encryptions = !encryption ? [] : encryption.split(DB_ARRAY_SEPARATOR);
@@ -111,7 +111,7 @@ export const FlyChannelParams = ({
   const isCBand = frequency < 10700;
 
   return (
-    <section className="py-4">
+    <section className="py-4 max-w-3xl mx-auto">
       <h2
         className="font-bold block text-base sm:text-xl text-blue-900 text-center py-2"
         style={{

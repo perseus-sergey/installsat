@@ -25,7 +25,7 @@ const { title, siteLogo } = LOGO.link;
 const Header = ({ lang }: { lang: ELanguage }) => (
   <header
     id="top"
-    className="w-full p-2 bg-gradient-to-b from-blue-800 to-white/0"
+    className="w-full p-2 bg-gradient-to-b from-blue-800"
     data-testid="Header"
   >
     <div className="flex items-center justify-between">

@@ -181,7 +181,6 @@ const SatFinder = ({
           id="formDigestInterval"
           data-testid="SatFinder"
         >
-          №№№№№№№№№№№№№№
           <div className="flex flex-wrap items-center gap-4 pb-4 justify-center sm:justify-normal">
             <StyledInputField
               idName="addressInput"

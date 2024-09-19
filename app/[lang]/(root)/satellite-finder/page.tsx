@@ -1,5 +1,4 @@
 import DangerHtml from '@/components/ui/DangerHtml/DangerHtml';
-import FillingValidImage from '@/components/ui/Images/FillingValidImage';
 import SatFinder from '@/components/mapComponents/SatFinder/SatFinder';
 import { Title } from '@/components/ui/Titles/Title';
 import {
@@ -23,7 +22,9 @@ import { getCommentsNumber } from '@/controllers/comments.controller';
 import BreadCrumbServer from '@/components/BreadCrumbs/BreadCrumbsServer';
 import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
 import { getELangKey } from '@/libs/utils/validSearchParam';
-import { META_CHANNEL } from '@/models/channel.model';
+import h1Img from 'public/Images/starthere_6100.png';
+import Image from 'next/image';
+import { INFO_PANEL_TITLES } from '@/models/articles.model';
 
 const BASE_URL = process.env.BASE_URL || MAIN_URL;
 
@@ -31,9 +32,7 @@ export interface IPageProps {
   params: { [key in EUrlBaseParam]: string };
 }
 
-const {
-  infoPanelTitles: { views: viewsTitle },
-} = META_CHANNEL;
+const { views: viewsTitle } = INFO_PANEL_TITLES;
 
 const {
   // keywords,
@@ -118,25 +117,27 @@ export default async function Page({ params }: IPageProps) {
       <article className="article">
         <Title>
           {titleLang}
-          <FillingValidImage
-            image={h1Image}
-            alternativeImgString={h1Image.alternativeStr}
+          <Image
+            src={h1Img}
             alt={h1Image.alt[lang]}
+            className="flex-shrink-0"
           />
         </Title>
 
-        <div className="article-text">
-          <Suspense>
-            <SatFinder
-              lang={lang}
-              searchQueryName={EUrlSearchParam.SAT}
-              apiKey={process.env.GOOGLE_MAP_API_KEY || ''}
-              mapId={process.env.GOOGLE_MAP_ID || ''}
-              groupedSats={groupedSats instanceof Error ? [] : groupedSats}
-            />
-          </Suspense>
-          <DangerHtml text={lang === ELanguage.UA ? text : text_en} />
-        </div>
+        <Suspense>
+          <SatFinder
+            lang={lang}
+            searchQueryName={EUrlSearchParam.SAT}
+            apiKey={process.env.GOOGLE_MAP_API_KEY || ''}
+            mapId={process.env.GOOGLE_MAP_ID || ''}
+            groupedSats={groupedSats instanceof Error ? [] : groupedSats}
+          />
+        </Suspense>
+
+        <DangerHtml
+          text={lang === ELanguage.UA ? text : text_en}
+          className="article-text"
+        />
 
         <BottomInfoPanel
           items={[{ name: viewsTitle[lang], value: view + 1 }]}

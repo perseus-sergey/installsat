@@ -38,7 +38,7 @@ const ChannelFormatSliders = ({
         style={{
           boxShadow: 'inset 0px 1px 1px white, 0px 1px 3px rgba(0, 0, 0, 0.5)',
         }}
-        className="bg-gradient-to-b from-yellow-50 to-gray-300 rounded-full h-6 w-14"
+        className="shrink-0 bg-gradient-to-b from-yellow-50 to-gray-300 rounded-full h-6 w-14"
       >
         <div
           className="bg-gradient-to-b from-blue-950 to-blue-400 h-5 m-0.5 relative rounded-full text-white text-[8px] leading-5 font-bold font-verdana before:content-['OFF'] before:absolute before:left-1 after:content-['ON'] after:text-green-300 after:absolute after:right-1 z-0"

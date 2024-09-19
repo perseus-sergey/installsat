@@ -39,11 +39,11 @@ import { BREAD_CRUMBS } from '@/models/breadCrumbs.model';
 import { SelectorSingle } from '@/components/SatelliteSelector/SelectorSingle';
 
 // =================================================================
-// empty data image
-// slider flex-shrink-0
-// /novyny-ta-statti/ earth image
-// /kanal/ Broadcast options - ul-li html wrong
+// delete .remove files
+// - empty data image
+// titles with images - flex-shrink-0
 // check empty data image on production
+// remeve all data-testId
 // =================================================================
 
 const BASE_URL = process.env.BASE_URL || MAIN_URL;
@@ -195,9 +195,7 @@ export default async function Page({ searchParams, params }: IPageProps) {
               src: `${h1SatImage.path}${logo}`,
             }}
             defaultImage={h1SatImage.defaultImage}
-            alternativeImgString={h1SatImage.alternativeString}
             alt={`${h1SatImage.alt[lang]} ${title}`}
-            isFillParent
           />
         </Title>
 

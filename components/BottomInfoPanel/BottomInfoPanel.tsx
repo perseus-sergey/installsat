@@ -1,5 +1,4 @@
 import { ReactNode } from 'react';
-import styles from './BottomInfoPanel.module.scss';
 
 export interface IBottomInfoPanelItem {
   name: string;
@@ -15,15 +14,22 @@ const BottomInfoPanel = ({ items }: IBottomInfoPanel) => {
   const lastId = filteredItems.length - 1;
 
   return (
-    <ul className={styles.BottomInfoPanel} data-testid="BottomInfoPanel">
+    <ul
+      style={{
+        background:
+          'linear-gradient(to bottom,rgb(30, 87, 153) 20%,rgb(2, 118, 214) 50%,rgb(30, 87, 153) 80%)',
+      }}
+      className="text-stone-300 font-verdana text-xs py-1 px-4 flex gap-2"
+      data-testid="BottomInfoPanel"
+    >
       {filteredItems.map(({ name, value }, i) => (
         <li key={name}>
           <figure
-            className={`${styles.infoPanelItem}${i !== lastId ? ` ${styles.bordered}` : ''}`}
+            className={`text-center${i !== lastId ? ` border-r border-solid border-stone-300 pr-2` : ''}`}
             key={name}
           >
-            <span className={styles.itemName}>{name}: </span>
-            <figcaption className={styles.itemValue}>
+            <span>{name}: </span>
+            <figcaption className="inline-block text-white">
               {typeof value === 'number'
                 ? value.toLocaleString('en-US')
                 : value}

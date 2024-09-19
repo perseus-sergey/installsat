@@ -5,18 +5,13 @@ import {
   META_SINGLE_SAT_MAP,
   SINGLE_SAT_MAP_DATA,
 } from '@/models/articles.model';
-import styles from './ArticleList.module.scss';
 import ArticleCard from '../ArticleCard/ArticleCard';
-import FillingImg from '../../ui/Images/FillingImage';
 import FillingValidImage from '../../ui/Images/FillingValidImage';
 import { ELanguage } from '@/models/ui.model';
 import { EUrlBaseParam } from '@/models/url.model';
 import EmptyData from '@/components/errors/EmptyData/EmptyData';
 
-const {
-  makePostDescription,
-  images: { allMaps: allMapsImg },
-} = META_ALL_SAT_MAPS_MODEL;
+const { makePostDescription } = META_ALL_SAT_MAPS_MODEL;
 
 const { metaTitle } = META_SINGLE_SAT_MAP;
 
@@ -30,7 +25,7 @@ interface IArticleListProps {
 }
 const MapList = ({ articleList, lang }: IArticleListProps) =>
   articleList.length > 0 ? (
-    <ul className={styles.ArticleList} data-testid="ArticleList">
+    <ul data-testid="ArticleList">
       {articleList.map(
         ({ id, title, description, view, comment_count, logo, cpu }) => (
           <li key={id}>
@@ -43,13 +38,7 @@ const MapList = ({ articleList, lang }: IArticleListProps) =>
               }
               articleTitle={
                 <>
-                  {typeof allMapsImg.titleImg !== 'string' ? (
-                    <FillingImg {...allMapsImg.titleImg} />
-                  ) : (
-                    <span style={{ fontSize: '2rem' }}>
-                      {allMapsImg.titleImg}
-                    </span>
-                  )}
+                  <div className="bg-[url('/Images/package_network_4729.png')] w-8 h-8 flex-shrink-0" />
                   {title}
                 </>
               }
@@ -60,9 +49,8 @@ const MapList = ({ articleList, lang }: IArticleListProps) =>
                     src: `${h1Image.path}${logo}`,
                   }}
                   defaultImage={h1Image.defaultImg}
-                  alternativeImgString={h1Image.alternativeStr}
                   alt={`${h1Image.altStart[lang]} ${metaTitle[lang]} ${title}`}
-                  isBlur
+                  isFillParent
                 />
               }
               articleDescription={

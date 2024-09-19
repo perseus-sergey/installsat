@@ -3,12 +3,13 @@ import type { Metadata } from 'next';
 import { getSatMapList } from '@/controllers/articles.controller';
 import { EUrlBaseParam, MAIN_URL } from '@/models/url.model';
 import { DEFAULT_META_DATA, DEFAULT_LANG, ELanguage } from '@/models/ui.model';
-import FillingImg from '@/components/ui/Images/FillingImage';
 import MapList from '@/components/article/ArticleList/MapList';
 import BreadCrumbServer from '@/components/BreadCrumbs/BreadCrumbsServer';
 import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
 import { getELangKey } from '@/libs/utils/validSearchParam';
 import { META_ALL_SAT_MAPS_MODEL } from '@/models/articles.model';
+import Image from 'next/image';
+import h1Img from 'public/Images/articles/signal-satellite.png';
 
 const BASE_URL = process.env.BASE_URL || MAIN_URL;
 
@@ -16,7 +17,7 @@ const {
   metaDescription,
   metaKeywords,
   metaTitle,
-  images: { allMaps: allMapsImg },
+  images: { h1ImageAlt },
 } = META_ALL_SAT_MAPS_MODEL;
 
 interface IProps {
@@ -62,13 +63,7 @@ export default async function Page({ params }: IProps) {
         <Title>
           {metaDescription[lang]}
 
-          <FillingImg
-            width={allMapsImg.h1Image.width}
-            height={allMapsImg.h1Image.height}
-            src={allMapsImg.h1Image.src}
-            alt={allMapsImg.h1Image.alt[lang]}
-            isBlur
-          />
+          <Image src={h1Img} alt={h1ImageAlt[lang]} className="flex-shrink-0" />
         </Title>
 
         <MapList lang={lang} articleList={allMaps} />

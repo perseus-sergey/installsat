@@ -136,9 +136,7 @@ export default async function Page({ params }: IArticleParams) {
               src: `${singleMapImg.h1Image.path}${logo}`,
             }}
             defaultImage={singleMapImg.h1Image.defaultImg}
-            alternativeImgString={singleMapImg.h1Image.alternativeStr}
             alt={`${singleMapImg.h1Image.altStart[lang]} ${h1Title}`}
-            isBlur
             isFillParent
           />
         </Title>

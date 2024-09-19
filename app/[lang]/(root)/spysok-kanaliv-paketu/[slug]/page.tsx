@@ -185,9 +185,7 @@ export default async function Page({ params, searchParams }: IPageProps) {
                   src: `${h1Image.path}${channels[0][1][0].cat_logo}`,
                 }}
                 defaultImage={h1Image.defaultImage}
-                alternativeImgString={h1Image.alternativeImgStr}
-                alt={h1Image.alt[lang]}
-                isBlur
+                alt={`${h1Image.alt[lang]} "${channels[0][1][0].cat_title}"`}
               />
             </Title>
 
@@ -204,10 +202,10 @@ export default async function Page({ params, searchParams }: IPageProps) {
                         />
                       )}
                       <TooltipSimple
-                        tooltipText={`${ariaLabel[lang]} ${subCatTitle}`}
+                        tooltipText={`${ariaLabel[lang]} "${subCatTitle}"`}
                       >
                         <SeoLink
-                          title={`${ariaLabel[lang]} ${subCatTitle}`}
+                          title={`${ariaLabel[lang]} "${subCatTitle}"`}
                           href={`#${CHANNEL_LIST_ANCHOR_START}${chanList[0].genre_id}`}
                           className="text-indigo-800 text-lg hover:text-red-500"
                         >

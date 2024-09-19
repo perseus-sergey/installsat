@@ -2,6 +2,7 @@ interface ITooltipSimpleProps extends React.HTMLAttributes<HTMLElement> {
   children: React.ReactNode;
   tooltipText: React.ReactNode;
   isTooltipBottomOfPage?: boolean;
+  wrapperTagName?: keyof JSX.IntrinsicElements;
 }
 
 const TooltipSimple = ({
@@ -9,16 +10,18 @@ const TooltipSimple = ({
   tooltipText,
   className,
   isTooltipBottomOfPage = false,
-  ...attributes
+  wrapperTagName = 'div',
+  // ...attributes
 }: ITooltipSimpleProps) => {
+  const TagName = wrapperTagName as keyof JSX.IntrinsicElements;
   const commonStyles =
-    'max-w-xs text-white text-base leading-tight font-normal text-center p-2.5 rounded-md z-[101]';
+    'max-w-xs text-white text-base font-georgia leading-tight font-normal text-center p-2.5 rounded-md z-[101]';
 
   return (
-    <div
+    <TagName
       className={`group cursor-context-menu${isTooltipBottomOfPage ? '' : ' relative'}${className ? ` ${className}` : ''}`}
       data-testid="TooltipSimple"
-      {...attributes}
+      // {...attributes}
     >
       {children}
       <span
@@ -34,7 +37,7 @@ const TooltipSimple = ({
 
         {tooltipText}
       </span>
-    </div>
+    </TagName>
   );
 };
 

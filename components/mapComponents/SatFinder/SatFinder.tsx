@@ -171,13 +171,17 @@ const SatFinder = ({
 
   return (
     <>
-      <Fieldset legendText={fieldsetTitle[lang]} className="p-4 my-4 mx-auto">
+      <Fieldset
+        legendText={fieldsetTitle[lang]}
+        className="p-4 my-4 mx-auto w-full"
+      >
         <form
           action={formAction}
           name="formDigestInterval"
           id="formDigestInterval"
           data-testid="SatFinder"
         >
+          №№№№№№№№№№№№№№
           <div className="flex flex-wrap items-center gap-4 pb-4 justify-center sm:justify-normal">
             <StyledInputField
               idName="addressInput"

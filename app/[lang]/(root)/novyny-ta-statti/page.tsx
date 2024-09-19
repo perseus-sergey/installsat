@@ -1,7 +1,6 @@
 import { Title } from '@/components/ui/Titles/Title';
 import type { Metadata } from 'next';
 import { getChunkOfNews } from '@/controllers/articles.controller';
-import FillingValidImage from '@/components/ui/Images/FillingValidImage';
 import ArticleList from '@/components/article/ArticleList/ArticleList';
 import Pagination from '@/components/ui/Pagination/Pagination';
 import { notFound } from 'next/navigation';
@@ -12,7 +11,6 @@ import {
   DEFAULT_META_DATA,
   ELanguage,
 } from '@/models/ui.model';
-import { imagePathValidate } from '@/libs/utils/imagePathValidate';
 import { getELangKey, validSearchParam } from '@/libs/utils/validSearchParam';
 import BreadCrumbServer from '@/components/BreadCrumbs/BreadCrumbsServer';
 import Filter from '@/components/ui/Filter/Filter';
@@ -23,6 +21,8 @@ import {
   ARTICLE_PAGINATION_PARAMS,
   META_ALL_ARTICLES,
 } from '@/models/articles.model';
+import Image from 'next/image';
+import h1Img from 'public/Images/articles/all_news_64.png';
 
 const BASE_URL = process.env.BASE_URL || MAIN_URL;
 
@@ -34,12 +34,6 @@ const {
 
 const { description, h1Start, title } = META_ALL_ARTICLES;
 
-const articleTitleImg = imagePathValidate(
-  images.titleImg,
-  images.titleImg.alternativeStr.title
-);
-
-// export const dynamic = 'force-dynamic';
 export const revalidate = 3600 * 12; // invalidate cache every 12 hours
 
 interface IProps {
@@ -104,11 +98,10 @@ export default async function Page({ searchParams, params }: IProps) {
       <article className="article">
         <Title>
           {h1Start[lang]} {currDate}
-          <FillingValidImage
-            image={images.h1Image}
-            alternativeImgString={images.h1Image.alternativeStr}
+          <Image
+            src={h1Img}
             alt={images.h1Image.alt[lang]}
-            isBlur
+            className="flex-shrink-0"
           />
         </Title>
 
@@ -131,11 +124,7 @@ export default async function Page({ searchParams, params }: IProps) {
           searchParams={searchParams}
         />
 
-        <ArticleList
-          articleList={allNews}
-          articleTitleImg={articleTitleImg}
-          lang={lang}
-        />
+        <ArticleList articleList={allNews} lang={lang} />
 
         <Pagination
           lang={lang}

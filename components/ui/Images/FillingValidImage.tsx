@@ -2,14 +2,9 @@ import { IImgParams, IMG_PROPERTIES } from '@/models/ui.model';
 import FillingImg from './FillingImage';
 import { imagePathValidate } from '@/libs/utils/imagePathValidate';
 
-export interface IAlternativeImgProps {
-  title: string;
-  fontSize: string;
-}
-interface IFillingImgProps {
+interface IFillingImgProps extends React.ImgHTMLAttributes<HTMLImageElement> {
   image: IImgParams;
-  defaultImage?: IImgParams;
-  alternativeImgString: IAlternativeImgProps;
+  defaultImage: IImgParams;
   alt?: string;
   isBlur?: boolean;
   blurImgPath?: string;
@@ -20,30 +15,24 @@ interface IFillingImgProps {
 const FillingValidImage = ({
   image,
   defaultImage,
-  alternativeImgString,
   alt = '',
   isBlur = false,
   blurImgPath = IMG_PROPERTIES.defaultImgBlur,
   isChangeToGif = false,
   isFillParent = false,
+  className,
 }: IFillingImgProps) => {
-  const validImg = imagePathValidate(
-    image,
-    alternativeImgString.title,
-    defaultImage,
-    isChangeToGif
-  );
+  const validImg = imagePathValidate(image, defaultImage, isChangeToGif);
 
-  return typeof validImg !== 'string' ? (
+  return (
     <FillingImg
       {...validImg}
       alt={alt}
       isBlur={isBlur}
       blurImgPath={blurImgPath}
       isFillParent={isFillParent}
+      className={className}
     />
-  ) : (
-    <span style={{ fontSize: alternativeImgString.fontSize }}>{validImg}</span>
   );
 };
 

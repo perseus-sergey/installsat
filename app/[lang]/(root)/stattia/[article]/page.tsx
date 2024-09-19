@@ -170,9 +170,7 @@ export default async function Page({ params }: IArticleParams) {
               src: `${h1Image.path}${logo}`,
             }}
             defaultImage={h1Image.defaultImg}
-            alternativeImgString={h1Image.alternativeStr}
             alt={`${h1Image.altStart[lang]} ${titleLang}`}
-            isBlur
           />
         </Title>
 
@@ -188,6 +186,7 @@ export default async function Page({ params }: IArticleParams) {
               value: (
                 <SeoLink
                   href={`/${lang}/${EUrlBaseParam.NEWS_AND_ARTICLES}/${cat_slug}`}
+                  className="border-b border-stone-300 hover:border-white"
                   title={
                     lang === ELanguage.UA
                       ? `Перейти до списку статей категорії "${catLang}"`

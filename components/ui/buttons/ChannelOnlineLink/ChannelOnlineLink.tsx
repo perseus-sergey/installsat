@@ -1,13 +1,11 @@
 import styles from './ChannelOnlineLink.module.scss';
-import FillingValidImage from '../../Images/FillingValidImage';
-import { META_CHANNEL } from '@/models/channel.model';
+import { ONLINE_CHANNEL_LINK } from '@/models/channel.model';
 import { ELanguage } from '@/models/ui.model';
 import SeoLink from '../../SeoLink/SeoLink';
+import onlineImg from 'public/Images/network-wireless_32.png';
+import Image from 'next/image';
 
-const {
-  images: { onlineLinkImg },
-  getOnlineLinkText,
-} = META_CHANNEL;
+const { imageAlt, getOnlineLinkText } = ONLINE_CHANNEL_LINK;
 
 interface IChannelOnlineLinkProps {
   channelName: string;
@@ -20,9 +18,11 @@ const ChannelOnlineLink = ({
   href,
   lang,
 }: IChannelOnlineLinkProps) => (
-  <div className={styles.ChannelOnlineLink} data-testid="ChannelOnlineLink">
+  <div className="flex justify-center m-1 font-verdana font-bold">
     <SeoLink
-      className={styles.link}
+      className={`${styles.link} border-2 border-indigo-300 rounded-full py-2 px-3 flex items-center justify-center gap-4`}
+      style={{ textShadow: '1px 1px 0 #f9f9f9' }}
+      data-testid="ChannelOnlineLink"
       href={href}
       title={
         lang === ELanguage.UA
@@ -30,11 +30,7 @@ const ChannelOnlineLink = ({
           : `Go to the online broadcasting page of "${channelName}" channel`
       }
     >
-      <FillingValidImage
-        image={onlineLinkImg}
-        alternativeImgString={onlineLinkImg.alternativeImgStr}
-        alt={onlineLinkImg.alt[lang]}
-      />
+      <Image src={onlineImg} alt={imageAlt[lang]} className="flex-shrink-0" />
       {getOnlineLinkText(channelName)[lang]}
     </SeoLink>
   </div>

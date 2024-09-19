@@ -13,7 +13,12 @@ import {
   getDBFlyChannel,
   getSimilarFlyChannels,
 } from '@/controllers/channel.controller';
-import { META_CHANNEL } from '@/models/channel.model';
+import {
+  CHANNEL_IMAGES,
+  CHANNEL_RESPONSIBILITIES,
+  META_CHANNEL,
+  SIMILAR,
+} from '@/models/channel.model';
 import {
   EDBTableTitles,
   DEFAULT_META_DATA,
@@ -33,24 +38,20 @@ import {
   SAT_CHANNEL_LIST_IMAGES,
 } from '@/models/channelList.model';
 import FillingImg from '@/components/ui/Images/FillingImage';
+import { INFO_PANEL_TITLES } from '@/models/articles.model';
 
 const BASE_URL = process.env.BASE_URL || MAIN_URL;
 
 export const revalidate = 3600 * 12; // invalidate cache every 12 hours
 
-const {
-  images: {
-    channelLogo: { big: bigLogo },
-  },
-  infoPanelTitles: { views: viewsTitle },
-  titleBefore,
-  preText,
-  noteTitle,
-  getResponsibilityText,
-  similar: { channels: simChannelsBefore },
-} = META_CHANNEL;
-
+const { titleBefore, preText } = META_CHANNEL;
+const { views: viewsTitle } = INFO_PANEL_TITLES;
 const { genreImage } = SAT_CHANNEL_LIST_IMAGES;
+const { noteTitle, getResponsibilityText } = CHANNEL_RESPONSIBILITIES;
+const { channels: simChannelsBefore } = SIMILAR;
+const {
+  channelLogo: { big: bigLogo },
+} = CHANNEL_IMAGES;
 
 export interface IChannelProps {
   params: { [key in EUrlBaseParam]: string };
@@ -165,7 +166,6 @@ export default async function Page({ params }: IChannelProps) {
       <article className="article">
         <Title>
           {`${titleBefore[lang]} ≪${title}≫`}
-          {/* {`${titleBefore[lang]} "${title}"`} */}
           {logo && (
             <FillingValidImage
               image={{
@@ -173,9 +173,7 @@ export default async function Page({ params }: IChannelProps) {
                 src: `${bigLogo.path}${logo}`,
               }}
               defaultImage={bigLogo.defaultImage}
-              alternativeImgString={bigLogo.alternativeImgStr}
               alt={`${bigLogo.alt[lang]} "${title}"`}
-              isBlur
             />
           )}
         </Title>
@@ -186,7 +184,7 @@ export default async function Page({ params }: IChannelProps) {
               <FillingImg
                 width={genreImage.width}
                 height={genreImage.height}
-                alt={`${genreImage.altPre} ${theme}`}
+                alt={`${genreImage.altPre} "${theme}"`}
                 src={`${genreImage.path}${genreImgSrc}`}
               />
               <b>{theme}:</b> {genre_description}
@@ -221,6 +219,7 @@ export default async function Page({ params }: IChannelProps) {
             channelName={title}
           />
         )}
+
         <FlyChannelParams channelDBParams={flyChannels} lang={lang} />
 
         <NoteBlock noteTitle={noteTitle[lang]}>

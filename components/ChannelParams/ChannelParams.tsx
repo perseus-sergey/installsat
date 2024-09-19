@@ -1,4 +1,8 @@
-import { IChannel, IFlyChannel, META_CHANNEL } from '@/models/channel.model';
+import {
+  CHANNEL_PARAMS_BLOCK,
+  IChannel,
+  IFlyChannel,
+} from '@/models/channel.model';
 import { EUrlBaseParam } from '@/models/url.model';
 import { DB_ARRAY_SEPARATOR, ELanguage } from '@/models/ui.model';
 import { TitleH2 } from '../ui/Titles/TitleH2';
@@ -17,12 +21,13 @@ const {
   getParamsTitle,
   paramsLanguage,
   paramsFormat,
+  paramsStandard,
   paramsSatellite,
   paramsFrequency,
   paramsFEC,
   paramsEncryption,
   getParamsSite,
-} = META_CHANNEL.chanParamsBlock;
+} = CHANNEL_PARAMS_BLOCK;
 
 const getPolarDescription = (polarization: string, lang: ELanguage) => {
   switch (polarization.toLowerCase()) {
@@ -40,29 +45,11 @@ const getPolarDescription = (polarization: string, lang: ELanguage) => {
 };
 
 const ChannelParams = ({
-  channelDBParams: {
-    title,
-    // compression,
-    // sat_title,
-    // freq,
-    // fec,
-    // polar,
-    // sr,
-    url,
-    chan_lang,
-    // encryption,
-    // sat_slug,
-    // chan_slug,
-  },
+  channelDBParams: { title, url, chan_lang },
   lang,
 }: IChannelParamsProps) => {
-  // const bissLink =
-  //   encryption.toLowerCase() === 'biss'
-  //     ? `/${lang}/${EUrlBaseParam.SAT_CHANNEL_LIST}/${sat_slug}#${chan_slug}`
-  //     : '';
-
   return (
-    <section>
+    <section className="article-text">
       <TitleH2>{getParamsTitle(title)[lang]}</TitleH2>
       <ul>
         {chan_lang && (
@@ -71,53 +58,6 @@ const ChannelParams = ({
             <strong>{chan_lang}</strong>
           </li>
         )}
-        {/* {compression && (
-          <li>
-            {paramsFormat[lang]}
-            <strong>{compression}</strong>
-          </li>
-        )}
-        {sat_title && (
-          <li>
-            {paramsSatellite[lang]}
-            <Link
-              href={`/${lang}/${EUrlBaseParam.SAT_COVERAGE_MAP}/${sat_slug}`}
-            >
-              <strong>{sat_title}</strong>
-            </Link>
-          </li>
-        )}
-        {freq && (
-          <li>
-            {paramsFrequency[lang]}
-            <strong>
-              {freq} {polar} {sr}
-            </strong>
-          </li>
-        )}
-        {fec && (
-          <li>
-            {paramsFEC[lang]}
-            <strong>{fec}</strong>
-          </li>
-        )}
-        {encryption && (
-          <li>
-            {bissLink ? (
-              <>
-                {paramsEncryption[lang]}
-                <Link href={bissLink}>
-                  <strong>{encryption}</strong>
-                </Link>
-              </>
-            ) : (
-              <>
-                {paramsEncryption[lang]}
-                <strong>{encryption}</strong>
-              </>
-            )}
-          </li>
-        )} */}
         {url && (
           <li>
             {getParamsSite(title)[lang]} - <strong>{url}</strong>
@@ -159,6 +99,9 @@ export const FlyChannelParams = ({
   },
   lang,
 }: IFlyChannelParamsProps) => {
+  const rowStyle =
+    'flex items-center gap-2 sm:gap-4 bg-slate-100 shadow-md rounded py-2 sm:px-4 px-1 mb-2';
+
   const aPidList = !a_pid ? [] : a_pid.split(DB_ARRAY_SEPARATOR);
   const encryptions = !encryption ? [] : encryption.split(DB_ARRAY_SEPARATOR);
   if (biss && is_biss) encryptions.push(biss);
@@ -178,225 +121,252 @@ export const FlyChannelParams = ({
       >
         {getParamsTitle(title)[lang]}
       </h2>
-      <ul
-        style={{
-          listStyleImage: 'url(/Images/galka_blue.png)',
-          marginLeft: '1.5rem',
-        }}
-        className="text-xl flex flex-col gap-2"
-      >
-        <Item
-          param={is_radio ? 'Radio' : 'TV'}
-          title={lang === ELanguage.UA ? 'Тип : ' : 'Type : '}
-        />
+
+      <ul className="font-georgia" role="list">
+        <li className={rowStyle}>
+          <Item
+            param={is_radio ? 'Radio' : 'TV'}
+            title={lang === ELanguage.UA ? 'Тип' : 'Type'}
+          />
+        </li>
 
         {languages.length > 0 && (
-          <li className="text-xl">
-            <span>{lang === UA ? 'Мова : ' : 'Languages : '}</span>
-            {languages.length > 1 ? (
-              <ul
-                style={{ listStyleImage: 'none', maxWidth: '500px' }}
-                className="text-center flex flex-wrap gap-2 ml-2 text-base"
-              >
-                {languages.map((item, i) => (
-                  <li
-                    key={`${i}${item.value}`}
-                    className="bg-white/50 px-2 py-1 text-gray-500 font-bold"
-                  >
-                    {item.label}
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <span className="bg-white/50 px-2 py-1 text-gray-500 font-bold">
-                {' '}
-                {languages[0].label}
-              </span>
-            )}
+          <li className={rowStyle}>
+            <Item
+              param={languages.map((item) => item.label)}
+              title={lang === UA ? 'Мова' : 'Languages'}
+            />
           </li>
         )}
 
-        <TooltipSimple
-          className="w-fit"
-          tooltipText={
-            lang === ELanguage.UA
-              ? 'Потік для цифрового ефірного телебачення'
-              : 'For second Generation Terrestrial'
-          }
-        >
-          <Item
-            param={t2_stream}
-            title={
+        {t2_stream && (
+          <TooltipSimple
+            wrapperTagName="li"
+            className={rowStyle}
+            tooltipText={
               lang === ELanguage.UA
-                ? 'Потік для DVB-T2 : '
-                : 'Stream for DVB-T2 : '
+                ? 'Потік для цифрового ефірного телебачення'
+                : 'For second Generation Terrestrial'
             }
-          />
-        </TooltipSimple>
+          >
+            <Item
+              param={t2_stream}
+              title={
+                lang === ELanguage.UA ? 'Потік для DVB-T2' : 'Stream for DVB-T2'
+              }
+              hasTip
+            />
+          </TooltipSimple>
+        )}
 
-        <ListItem itemList={encryptions} title={paramsEncryption[lang]} />
+        {encryptions.length > 0 && (
+          <li className={rowStyle}>
+            <Item param={encryptions} title={paramsEncryption[lang]} />
+          </li>
+        )}
 
         {compress && (
-          <li>
-            {paramsFormat[lang]}
-            <strong>{compress} </strong>
-            {modeList.length === 1 ? (
-              `(${modeList[0]})`
-            ) : (
-              <ul style={{ listStyleImage: 'none', margin: 0 }}>
-                <ListItem title="" itemList={modeList} />
-              </ul>
-            )}
+          <li className={rowStyle}>
+            <Item param={compress} title={paramsFormat[lang]} />
+          </li>
+        )}
+
+        {modeList.length > 1 ? (
+          <li className={rowStyle}>
+            <Item title={paramsStandard[lang]} param={modeList} />
+          </li>
+        ) : (
+          <li className={rowStyle}>
+            <Item param={modeList[0]} title={paramsStandard[lang]} />
           </li>
         )}
 
         {sat_title && (
-          <li>
-            {paramsSatellite[lang]}
-            <SeoLink
-              className="text-blue-800 hover:text-red-600"
-              href={`/${lang}/${EUrlBaseParam.SAT_CHANNEL_LIST}/${sat_slug}`}
-              title={
-                lang === ELanguage.UA
-                  ? `Перейти до перегляду списку каналів, що транслюються з супутника "${sat_title} / ${sat_position}"`
-                  : `Go to view the list of channels broadcast from the "${sat_title} / ${sat_position}" satellite`
+          <li className={rowStyle}>
+            <Item
+              param={
+                <>
+                  <SeoLink
+                    className="text-blue-800 hover:text-red-600"
+                    href={`/${lang}/${EUrlBaseParam.SAT_CHANNEL_LIST}/${sat_slug}`}
+                    title={
+                      lang === ELanguage.UA
+                        ? `Перейти до перегляду списку каналів, що транслюються з супутника "${sat_title} / ${sat_position}"`
+                        : `Go to view the list of channels broadcast from the "${sat_title} / ${sat_position}" satellite`
+                    }
+                  >
+                    <strong>
+                      {sat_title} / {sat_position}
+                    </strong>
+                  </SeoLink>{' '}
+                  ({beam})
+                </>
               }
-            >
-              <strong>
-                {sat_title} / {sat_position}
-              </strong>
-            </SeoLink>{' '}
-            ({beam})
+              title={paramsSatellite[lang]}
+            />
           </li>
         )}
 
-        <Item
-          param={isCBand ? 'C' : 'Ku'}
-          title={lang === ELanguage.UA ? 'Діапазон : ' : 'Band : '}
-        />
-
-        <Item
-          param={frequency.toLocaleString('en-US')}
-          title={paramsFrequency[lang]}
-          description={lang === ELanguage.UA ? 'ГГц' : 'GHz'}
-        />
-
-        <Item
-          param={polarization}
-          title={lang === UA ? 'Поляризація : ' : 'Polarization : '}
-          description={getPolarDescription(polarization, lang)}
-        />
-
-        <TooltipSimple
-          className="w-fit"
-          tooltipText={lang === UA ? 'Символьна швидкість' : 'Symbol Rate'}
-        >
+        <li className={rowStyle}>
           <Item
-            param={sr}
-            title="SR : "
-            description={lang === UA ? 'с/сек' : 's/sec'}
+            param={isCBand ? 'C' : 'Ku'}
+            title={lang === ELanguage.UA ? 'Діапазон' : 'Band'}
           />
-        </TooltipSimple>
+        </li>
 
-        <TooltipSimple
-          className="w-fit"
-          tooltipText={
-            lang === UA
-              ? 'Коефіцієнт корекції помилок'
-              : 'Forward Error Correction'
-          }
-        >
-          <Item param={fec} title={paramsFEC[lang]} />
-        </TooltipSimple>
+        {frequency && (
+          <li className={rowStyle}>
+            <Item
+              param={frequency.toLocaleString('en-US')}
+              title={paramsFrequency[lang]}
+              description={lang === ELanguage.UA ? 'ГГц' : 'GHz'}
+            />
+          </li>
+        )}
 
-        <TooltipSimple className="w-fit" tooltipText="Service ID">
-          <Item param={sid} title="SID : " />
-        </TooltipSimple>
+        {polarization && (
+          <li className={rowStyle}>
+            <Item
+              param={polarization}
+              title={lang === UA ? 'Поляризація' : 'Polarization'}
+              description={getPolarDescription(polarization, lang)}
+            />
+          </li>
+        )}
 
-        <TooltipSimple
-          className="w-fit"
-          tooltipText={
-            lang === UA
-              ? 'Унікальний ідентифікатор потоку відео'
-              : 'Video Packet Identifier'
-          }
-        >
-          <Item param={v_pid} title="Video PId : " />
-        </TooltipSimple>
+        {sr && (
+          <TooltipSimple
+            className={rowStyle}
+            tooltipText={lang === UA ? 'Символьна швидкість' : 'Symbol Rate'}
+            wrapperTagName="li"
+          >
+            <Item
+              param={sr}
+              title="SR"
+              description={lang === UA ? 'с/сек' : 's/sec'}
+              hasTip
+            />
+          </TooltipSimple>
+        )}
 
-        <TooltipSimple
-          tooltipText={
-            lang === UA
-              ? 'Унікальний ідентифікатор потоку аудіо'
-              : 'Audio Packet Identifier'
-          }
-        >
-          <ListItem itemList={aPidList} title="Audio PId:" />
-        </TooltipSimple>
+        {fec && (
+          <TooltipSimple
+            wrapperTagName="li"
+            className={rowStyle}
+            tooltipText={
+              lang === UA
+                ? 'Коефіцієнт корекції помилок'
+                : 'Forward Error Correction'
+            }
+          >
+            <Item param={fec} title={paramsFEC[lang]} hasTip />
+          </TooltipSimple>
+        )}
 
-        <Item
-          param={official_broadcast_url}
-          title={
-            <>
-              {getParamsSite(title)[lang]} -<b> {official_broadcast_url}</b>
-            </>
-          }
-        />
+        {sid && (
+          <TooltipSimple
+            className={rowStyle}
+            tooltipText="Service ID"
+            wrapperTagName="li"
+          >
+            <Item param={sid} title="SID" hasTip />
+          </TooltipSimple>
+        )}
 
-        <Item param={official_site_url} title={getParamsSite(title)[lang]} />
+        {v_pid && (
+          <TooltipSimple
+            wrapperTagName="li"
+            className={rowStyle}
+            tooltipText={
+              lang === UA
+                ? 'Унікальний ідентифікатор потоку відео'
+                : 'Video Packet Identifier'
+            }
+          >
+            <Item param={v_pid} title="Video PId" hasTip />
+          </TooltipSimple>
+        )}
+
+        {aPidList.length > 0 && (
+          <TooltipSimple
+            wrapperTagName="li"
+            className={rowStyle}
+            tooltipText={
+              lang === UA
+                ? 'Унікальний ідентифікатор потоку аудіо'
+                : 'Audio Packet Identifier'
+            }
+          >
+            <Item param={aPidList} title="Audio PId" hasTip />
+          </TooltipSimple>
+        )}
+
+        {official_broadcast_url && (
+          <li className={rowStyle}>
+            <Item
+              param={official_broadcast_url}
+              title={
+                <>
+                  {getParamsSite(title)[lang]} -<b> {official_broadcast_url}</b>
+                </>
+              }
+            />
+          </li>
+        )}
+
+        {official_site_url && (
+          <li className={rowStyle}>
+            <Item
+              param={official_site_url}
+              title={getParamsSite(title)[lang]}
+            />
+          </li>
+        )}
       </ul>
     </section>
   );
 };
 
-const ListItem = ({
-  itemList,
-  title,
-}: {
-  itemList: string[];
-  title: string;
-}) =>
-  itemList && itemList.length > 0 ? (
-    <li className="text-xl">
-      <span>{title}</span>
-      {itemList.length > 1 ? (
+interface IItem {
+  param?: string[] | string | number | null | React.ReactNode;
+  title: string | React.ReactNode;
+  description?: string;
+  hasTip?: boolean;
+}
+
+const Item = ({ param, title, description, hasTip = false }: IItem) => {
+  const isItemArray = Array.isArray(param);
+
+  return param ? (
+    <>
+      <span className="shrink-0 w-1/3 sm:w-1/4 sm:pr-4 pr-2 text-right border-r border-slate-300">
+        {title}
+      </span>
+      {isItemArray && param.length > 1 ? (
         <ul
           style={{ listStyleImage: 'none', maxWidth: '500px' }}
-          className="text-center flex flex-wrap gap-2 ml-2 text-base"
+          className="text-center flex flex-wrap gap-2 text-base"
         >
-          {itemList.map((item, i) => (
+          {param.map((item, i) => (
             <li
               key={`${i}${item}`}
-              className="bg-white/50 px-2 py-1 text-gray-500 font-bold"
+              className="bg-indigo-100 px-2 py-1 text-gray-500 font-bold"
             >
               <strong>{item}</strong>
             </li>
           ))}
         </ul>
       ) : (
-        <strong className="bg-white/50 px-2 py-1 text-gray-500 font-bold">
-          {' '}
-          {itemList[0]}
-        </strong>
+        <div className="font-bold">
+          {isItemArray ? param[0] : param}{' '}
+          {description && <span className="text-base">({description})</span>}
+          {hasTip && (
+            <span className="bg-[url('/Images/external-link_12.png')] w-4 h-4 inline-block bg-no-repeat bg-right" />
+          )}
+        </div>
       )}
-    </li>
+    </>
   ) : null;
-
-const Item = ({
-  param,
-  title,
-  description,
-}: {
-  param?: string | number | null | React.ReactNode;
-  title: string | React.ReactNode;
-  description?: string;
-}) =>
-  param ? (
-    <li>
-      {title}
-      <strong>{param} </strong>
-      {description && <span className="text-base">({description})</span>}
-    </li>
-  ) : null;
+};
 
 export default ChannelParams;

@@ -43,9 +43,7 @@ const PackageList = ({ packageList, lang }: IProps) =>
                       src: `${packageImage.path}${logo}`,
                     }}
                     defaultImage={packageImage.defaultImg}
-                    alternativeImgString={packageImage.alternativeStr}
-                    alt={`${packageImage.altPre[lang]} ${title}`}
-                    isBlur
+                    alt={`${packageImage.altPre[lang]} "${title}"`}
                   />
                 }
                 articleDescription={

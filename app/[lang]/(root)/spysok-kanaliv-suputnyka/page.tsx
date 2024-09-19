@@ -18,11 +18,6 @@ import {
   TSearchParams,
 } from '@/models/ui.model';
 import { EUrlBaseParam, EUrlSearchParam, MAIN_URL } from '@/models/url.model';
-
-const CommentBlock = dynamic(
-  () => import('@/components/comments/CommentBlock/CommentBlock')
-);
-
 import BreadCrumbServer from '@/components/BreadCrumbs/BreadCrumbsServer';
 import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
 import { getELangKey } from '@/libs/utils/validSearchParam';
@@ -36,6 +31,10 @@ import { IFlyChannel } from '@/models/channel.model';
 import { ISatelliteOption } from '@/models/tblSat.model';
 import dynamic from 'next/dynamic';
 import { TRANS_NEWS_LIST_FILTERS } from '@/models/satDigest.model';
+
+const CommentBlock = dynamic(
+  () => import('@/components/comments/CommentBlock/CommentBlock')
+);
 
 const BASE_URL = process.env.BASE_URL || MAIN_URL;
 

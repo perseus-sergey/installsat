@@ -103,10 +103,9 @@ export const TRANS_NEWS_LIST_IMAGES = {
       height: 64,
       width: 64,
     },
-    alternativeStr: { title: '🌏', fontSize: '4rem' },
     alt: {
-      [ELanguage.UA]: `Логотип супутника `,
-      [ELanguage.EN]: `Satellite logo `,
+      [ELanguage.UA]: `Логотип компанії супутника: `,
+      [ELanguage.EN]: `Company logo of satellite: `,
     },
   },
 };

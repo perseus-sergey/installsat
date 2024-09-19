@@ -26,7 +26,6 @@ export const META_SAT_CHANNEL_LIST = {
 export const SAT_CHANNEL_LIST_IMAGES = {
   h1SatImage: {
     path: '/Images/satellites/',
-    alternativeString: { title: '🛰', fontSize: '5rem' },
     height: 99,
     width: 132,
     alt: {
@@ -34,14 +33,13 @@ export const SAT_CHANNEL_LIST_IMAGES = {
       [ELanguage.EN]: `Logo of the satellite`,
     },
     defaultImage: {
-      src: '/Images/satellite_7144.png',
+      src: '/Images/satellite_132-99.png',
       height: 99,
       width: 132,
     },
   },
   h2SatListImage: {
     path: '/Images/satellites/',
-    alternativeString: { title: '🛰', fontSize: '3rem' },
     height: 52.5,
     width: 70,
     alt: {
@@ -49,7 +47,7 @@ export const SAT_CHANNEL_LIST_IMAGES = {
       [ELanguage.EN]: `Logo of the satellite`,
     },
     defaultImage: {
-      src: '/Images/satellite_7144.png',
+      src: '/Images/satellite_132-99.png',
       height: 52.5,
       width: 70,
     },
@@ -59,8 +57,8 @@ export const SAT_CHANNEL_LIST_IMAGES = {
     height: 24,
     width: 24,
     altPre: {
-      [ELanguage.UA]: 'Жанр:',
-      [ELanguage.EN]: 'Genre:',
+      [ELanguage.UA]: 'Іконка для позначення каналів жанру:',
+      [ELanguage.EN]: 'Icon for indicating genre channels:',
     },
   },
   genreRadioImage: {
@@ -120,7 +118,6 @@ export const META_ONLINE_CHANNEL_LIST = {
 export const ONLINE_CHANNEL_LIST_IMAGES = {
   h1Image: {
     src: '/Images/packages/Popcorn-icon.png',
-    alternativeString: { title: '📺', fontSize: '7rem' },
     height: 128,
     width: 128,
     alt: {
@@ -183,13 +180,12 @@ export const META_PACKAGE_CHANNEL_LIST = {
 export const PACKAGE_CHANNEL_LIST_IMAGES = {
   h1Image: {
     path: '/Images/packages/',
-    height: 120,
-    width: 132,
-    alternativeImgStr: { title: '💠', fontSize: '7rem' },
+    height: 128,
+    width: 128,
     defaultImage: {
-      src: '/Images/1not_found_chan.png',
-      height: 100,
-      width: 120,
+      src: '/Images/packages/package_placeholder.png',
+      height: 128,
+      width: 128,
     },
     alt: {
       [ELanguage.UA]: `Логотип компанії`,
@@ -198,13 +194,13 @@ export const PACKAGE_CHANNEL_LIST_IMAGES = {
   },
   subCatImage: {
     path: '/Images/packages/',
+    defaultImgSrc: '/Images/packages/sub_package_placeholder_82.png',
     height: 82,
     width: 82,
     altPre: {
-      [ELanguage.UA]: 'Пакет:',
-      [ELanguage.EN]: 'Package:',
+      [ELanguage.UA]: 'Іконка пакету каналів:',
+      [ELanguage.EN]: 'Icon of package channels:',
     },
-    alternativeImgStr: { title: '🌀', fontSize: '5rem' },
   },
 };
 
@@ -393,13 +389,6 @@ export const ALL_SAT_CHANNEL_LIST_LINKS = {
       [ELanguage.UA]: 'Фільтри',
       [ELanguage.EN]: 'Filtering',
     },
-    goUpLink: {
-      title: {
-        [ELanguage.UA]: 'Повернутися на початок сторінки',
-        [ELanguage.EN]: 'Return to the top of the page',
-      },
-      img: '⇧',
-    },
   },
   links: {
     satTitleLink: {
@@ -412,10 +401,18 @@ export const ALL_SAT_CHANNEL_LIST_LINKS = {
   },
 };
 
+export const GO_UP_LINK = {
+  title: {
+    [ELanguage.UA]: 'Повернутися на початок сторінки',
+    [ELanguage.EN]: 'Return to the top of the page',
+  },
+  img: '⇧',
+};
+
 export const ALL_SAT_CHANNEL_LIST_IMAGES = {
   h1ImageParams: {
     path: '/Images/packages/money_free.jpg',
-    defaultImage: '/Images/satellite_7144.png',
+    defaultImage: '/Images/satellite_132-99.png',
     alternativeSymbol: '🛰',
     height: 150,
     width: 239,
@@ -426,7 +423,7 @@ export const ALL_SAT_CHANNEL_LIST_IMAGES = {
   },
   h1FlyImageParams: {
     path: '/Images/packages/database.png',
-    defaultImage: '/Images/satellite_7144.png',
+    defaultImage: '/Images/satellite_132-99.png',
     alternativeSymbol: '🛰',
     height: 128,
     width: 128,
@@ -597,19 +594,6 @@ export const getCompressColor = (
   }
 
   return ECompressColors.MPEG_2;
-};
-
-export const isFtaChannel = (codes: string[]) => {
-  if (codes.length === 1 && !codes[0]) return true;
-
-  for (const code of codes) {
-    const lowerCode = code.toLowerCase();
-    if (lowerCode === 'biss' || lowerCode === 'fta') {
-      return true;
-    }
-  }
-
-  return false;
 };
 
 export const CHANNEL_TOOLTIP_TITLES = {

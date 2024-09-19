@@ -6,10 +6,9 @@ import {
   PACKAGE_CHANNEL_LIST_DATA,
   PACKAGE_CHANNEL_LIST_IMAGES,
 } from '@/models/channelList.model';
-import styles from './channelList.module.scss';
 import { TitleH2List } from '../ui/Titles/TitleH2List';
 import GoUpLink from '../ui/GoUpLink/GoUpLink';
-import { META_CHANNEL } from '@/models/channel.model';
+import { CHANNEL_IMAGES } from '@/models/channel.model';
 import ChannelCardTooltip from '../ChannelCardTooltip/ChannelCardTooltip';
 import { ELanguage } from '@/models/ui.model';
 import { cutText } from '@/libs/utils/utils';
@@ -17,7 +16,6 @@ import FillingValidImage from '../ui/Images/FillingValidImage';
 import GenreImage from '../ui/Images/GenreImage/GenreImage';
 import EmptyData from '../errors/EmptyData/EmptyData';
 import { EUrlBaseParam } from '@/models/url.model';
-import { decode } from 'html-entities';
 import SeoLink from '../ui/SeoLink/SeoLink';
 
 const {
@@ -28,9 +26,11 @@ const {
 } = ONLINE_CHANNEL_TOOLTIP_TITLES;
 
 const { getPriceString } = PACKAGE_CHANNEL_LIST_DATA;
-const { subCatImage } = PACKAGE_CHANNEL_LIST_IMAGES;
+const {
+  subCatImage: { width, height, path, defaultImgSrc, altPre },
+} = PACKAGE_CHANNEL_LIST_IMAGES;
 
-const { channelLogo } = META_CHANNEL.images;
+const { channelLogo } = CHANNEL_IMAGES;
 
 interface IProps {
   channels: [string, (IPackageChannelListModel | IOnlineChannelListModel)[]][];
@@ -56,22 +56,23 @@ const PackageChannelList = ({
           <GoUpLink lang={lang} />
 
           {genreTitle}
+
           {'genre_logo' in chanList[0] ? (
             <FillingValidImage
               image={{
-                width: subCatImage.width,
-                height: subCatImage.height,
-                src: `${subCatImage.path}${chanList[0].genre_logo}`,
+                width,
+                height,
+                src: `${path}${chanList[0].genre_logo}`,
               }}
-              alt={`${subCatImage.altPre[lang]} ${genreTitle}`}
-              alternativeImgString={subCatImage.alternativeImgStr}
+              defaultImage={{ src: defaultImgSrc, width, height }}
+              alt={`${altPre[lang]} ${genreTitle}`}
             />
           ) : (
             <GenreImage
               lang={lang}
               tooltipText={chanList[0].genre_description}
               genreMapPosition={chanList[0].genre_id}
-              className={styles.genreImage}
+              className="p-4 leading-none border border-stone-400 rounded-full bg-blue-50"
             />
           )}
         </TitleH2List>
@@ -80,12 +81,21 @@ const PackageChannelList = ({
             {getPriceString(chanList[0].price)[lang]}
           </p>
         )}
-        <ul className={styles.channelList}>
+        <ul
+          className="flex flex-wrap justify-center gap-4 md:p-8 p-4"
+          style={{
+            borderTop: '2px #cccccc groove',
+            borderBottom: '2px #cccccc groove',
+          }}
+        >
           {chanList.map((channel) => {
-            const chanTitle = decode(channel.chan_title);
+            const chanTitle = channel.chan_title;
 
             return (
-              <li key={channel.chan_id} className={styles.listItem}>
+              <li
+                key={channel.chan_id}
+                className="w-min flex flex-col items-center justify-center border border-solid border-white bg-white overflow-hidden shadow-md"
+              >
                 <SeoLink
                   href={`/${lang}/${pathToChannelDetails}/${channel.chan_cpu}${todayStr ? `/${todayStr}` : ''}`}
                   title={
@@ -100,7 +110,6 @@ const PackageChannelList = ({
                       src: `${channelLogo.big.path}${channel.chan_logo}`,
                     }}
                     mainDefaultImage={channelLogo.big.defaultImage}
-                    mainAlternativeImgString={channelLogo.big.alternativeImgStr}
                     tooltipTextList={[
                       {
                         title: tName[lang],

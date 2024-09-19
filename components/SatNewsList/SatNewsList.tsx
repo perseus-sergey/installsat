@@ -52,7 +52,6 @@ const SatNewsList = async ({ searchParams, lang }: ISatNewsListProps) => {
               src: `${satLogo.path}${news[1].get([...news[1].keys()][0])?.[0].satLogo}`,
             }}
             defaultImage={satLogo.defaultImg}
-            alternativeImgString={satLogo.alternativeStr}
             alt={`${satLogo.alt[lang]}${news[0]}`}
           />
           <div className="flex flex-wrap gap-2">

@@ -15,7 +15,6 @@ export const ARTICLE_CARD = {
         height: 100,
         width: 100,
       },
-      alternativeStr: { title: '🎞', fontSize: '6rem' },
       altStart: {
         [ELanguage.UA]: `Логотип до статті:`,
         [ELanguage.EN]: `Logo for article:`,
@@ -57,7 +56,6 @@ export const ARTICLE_LIST_MODEL = {
       src: '/Images/articles/all_news_64.png',
       height: 64,
       width: 64,
-      alternativeStr: { title: '📰', fontSize: '6rem' },
       alt: {
         [ELanguage.UA]: 'Новини та статті про цифрове телебачення',
         [ELanguage.EN]: 'News and articles about digital television',
@@ -67,7 +65,6 @@ export const ARTICLE_LIST_MODEL = {
       src: '/Images/articles/package_network_4729.png',
       height: 32,
       width: 32,
-      alternativeStr: { title: '🌎', fontSize: '2rem' },
     },
   },
   articlesCountCaption: {
@@ -117,7 +114,6 @@ export const SINGLE_CAT_ARTICLE_LIST_IMAGES = {
       src: '/Images/articles/all_news_64.png',
       height: 64,
       width: 64,
-      alternativeStr: { title: '📰', fontSize: '6rem' },
       alt: {
         [ELanguage.UA]: 'Новини та статті про цифрове телебачення',
         [ELanguage.EN]: 'News and articles about digital television',
@@ -127,12 +123,12 @@ export const SINGLE_CAT_ARTICLE_LIST_IMAGES = {
       src: '/Images/articles/package_network_4729.png',
       height: 32,
       width: 32,
-      alternativeStr: { title: '🌎', fontSize: '2rem' },
     },
   },
 };
 
 export const INFO_PANEL_TITLES = {
+  package: { [ELanguage.UA]: 'Пакет', [ELanguage.EN]: 'Package' },
   theme: { [ELanguage.UA]: 'Тема', [ELanguage.EN]: 'Theme' },
   views: { [ELanguage.UA]: 'Переглядів', [ELanguage.EN]: 'Views' },
   date: { [ELanguage.UA]: 'Дата', [ELanguage.EN]: 'Date' },
@@ -163,23 +159,11 @@ export const META_ALL_SAT_MAPS_MODEL = {
     };
   },
   images: {
-    allMaps: {
-      h1Image: {
-        src: '/Images/articles/signal-satellite.png',
-        height: 128,
-        width: 128,
-        alternativeStr: { title: '🗺', fontSize: '8rem' },
-        alt: {
-          [ELanguage.UA]: 'Карти покриття телевізійних супутників',
-          [ELanguage.EN]: 'Satellite coverage maps',
-        },
-      },
-      titleImg: {
-        src: '/Images/articles/package_network_4729.png',
-        height: 32,
-        width: 32,
-        alternativeStr: { title: '🌎', fontSize: '2rem' },
-      },
+    h1ImageAlt: {
+      [ELanguage.UA]:
+        'Зображення телевізійного супутника, транслюючого сигнал на Землю',
+      [ELanguage.EN]:
+        'An image of a television satellite broadcasting a signal to Earth',
     },
   },
 };
@@ -223,7 +207,6 @@ export const SINGLE_SAT_MAP_DATA = {
         height: 100,
         width: 100,
       },
-      alternativeStr: { title: '🎞', fontSize: '6rem' },
       altStart: {
         [ELanguage.UA]: `Логотип до статті:`,
         [ELanguage.EN]: `Logo for article:`,
@@ -239,7 +222,6 @@ export const SINGLE_SAT_MAP_DATA = {
           [ELanguage.EN]: `Coverage map of the ${satTitle} television satellite. Beam ${beamTitle}`,
         };
       },
-      alternativeStr: { title: '🗺', fontSize: '20rem' },
     },
     bigMapParams: {
       path: '/Images/News/setting_eqp/maps/big_',

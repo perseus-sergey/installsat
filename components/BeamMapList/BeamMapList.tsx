@@ -4,7 +4,7 @@ import {
   SINGLE_SAT_MAP_DATA,
 } from '@/models/articles.model';
 import { TitleH2 } from '../ui/Titles/TitleH2';
-import { IMG_PROPERTIES, ELanguage } from '@/models/ui.model';
+import { ELanguage } from '@/models/ui.model';
 import FillingImg from '../ui/Images/FillingImage';
 import React, { Fragment } from 'react';
 import TooltipClient from '../ui/tooltips/TooltipClient/TooltipClient';
@@ -50,7 +50,6 @@ const BeamMapList = ({ beamList, lang }: IBeamMapListProps) => {
             height={singleMapImg.mapParams.height}
             src={`${singleMapImg.mapParams.path}${item.map_img}`}
             alt={altText}
-            blurImgPath={IMG_PROPERTIES.defaultImgBlur}
             isBlur
             isFillParent
             isBigImage

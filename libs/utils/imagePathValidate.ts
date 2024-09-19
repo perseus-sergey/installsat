@@ -25,16 +25,28 @@ const changeExtToGif = (path: string) => {
 export const imagePathValidate = cache(
   (
     img: IImgParams,
-    alternativeString: string,
-    alternativeImg?: IImgParams,
+    alternativeImg: IImgParams,
     isChangeToGif = false
-  ): IImgParams | string => {
+  ): IImgParams => {
     const path = isChangeToGif ? changeExtToGif(img.src) : img.src;
 
-    return isFileExists(path)
-      ? { ...img, src: path }
-      : alternativeImg && isFileExists(alternativeImg.src)
-        ? alternativeImg
-        : alternativeString;
+    return isFileExists(path) ? { ...img, src: path } : alternativeImg;
   }
 );
+
+// export const imagePathValidate = cache(
+//   (
+//     img: IImgParams,
+//     alternativeString: string,
+//     alternativeImg?: IImgParams,
+//     isChangeToGif = false
+//   ): IImgParams | string => {
+//     const path = isChangeToGif ? changeExtToGif(img.src) : img.src;
+
+//     return isFileExists(path)
+//       ? { ...img, src: path }
+//       : alternativeImg && isFileExists(alternativeImg.src)
+//         ? alternativeImg
+//         : alternativeString;
+//   }
+// );

@@ -1,5 +1,3 @@
-// import styles from './EmptyData.module.scss';
-
 import { ELanguage, ERROR_EMPTY_DATA } from '@/models/ui.model';
 import Image from 'next/image';
 import emptyPageImg from 'public/Images/empty_page.png';

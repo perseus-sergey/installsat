@@ -35,7 +35,6 @@ const TransNewsSingle = ({ newsArray, title, lang }: ITransNewsSingleProps) => (
                     src: `${satLogo.path}${satNews[1][0].satLogo}`,
                   }}
                   defaultImage={satLogo.defaultImg}
-                  alternativeImgString={satLogo.alternativeStr}
                   alt={`${satLogo.alt[lang]}${satNews[0]}`}
                 />
                 <SatLink

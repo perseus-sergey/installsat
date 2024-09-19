@@ -1,6 +1,5 @@
 import { Title } from '@/components/ui/Titles/Title';
 import type { Metadata } from 'next';
-import FillingValidImage from '@/components/ui/Images/FillingValidImage';
 import {
   getArticleCatList,
   getChunkOfNews,
@@ -17,7 +16,6 @@ import {
   ELanguage,
 } from '@/models/ui.model';
 import { EUrlBaseParam, EUrlSearchParam, MAIN_URL } from '@/models/url.model';
-import { imagePathValidate } from '@/libs/utils/imagePathValidate';
 import { getELangKey, validSearchParam } from '@/libs/utils/validSearchParam';
 import BreadCrumbServer from '@/components/BreadCrumbs/BreadCrumbsServer';
 import { BREAD_CRUMBS } from '@/models/breadCrumbs.model';
@@ -28,6 +26,8 @@ import {
   ARTICLE_LIST_MODEL,
   ARTICLE_PAGINATION_PARAMS,
 } from '@/models/articles.model';
+import Image from 'next/image';
+import h1Img from 'public/Images/articles/all_news_64.png';
 
 const BASE_URL = process.env.BASE_URL || MAIN_URL;
 
@@ -36,11 +36,6 @@ const {
   articlesCountCaption,
   search: { placeholder, labelTitle },
 } = ARTICLE_LIST_MODEL;
-
-const articleTitleImg = imagePathValidate(
-  images.titleImg,
-  images.titleImg.alternativeStr.title
-);
 
 export const revalidate = 3600 * 12; // invalidate cache every 12 hours
 
@@ -139,12 +134,10 @@ export default async function Page({ params, searchParams }: IPageParams) {
       <article className="article">
         <Title>
           {descriptionLang}
-
-          <FillingValidImage
-            image={images.h1Image}
-            alternativeImgString={images.h1Image.alternativeStr}
+          <Image
+            src={h1Img}
             alt={images.h1Image.alt[lang]}
-            isBlur
+            className="flex-shrink-0"
           />
         </Title>
 
@@ -170,11 +163,7 @@ export default async function Page({ params, searchParams }: IPageParams) {
           searchParams={searchParams}
         />
 
-        <ArticleList
-          lang={lang}
-          articleList={allNews}
-          articleTitleImg={articleTitleImg}
-        />
+        <ArticleList lang={lang} articleList={allNews} />
 
         <Pagination
           lang={lang}

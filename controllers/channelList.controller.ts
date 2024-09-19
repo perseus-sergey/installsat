@@ -582,3 +582,16 @@ export const getFlyGroupedChannelsAllSat = (
 
   return sortedGroups;
 };
+
+export const isFtaChannel = cache((codes: string[]) => {
+  if (codes.length === 1 && !codes[0]) return true;
+
+  for (const code of codes) {
+    const lowerCode = code.toLowerCase();
+    if (lowerCode === 'biss' || lowerCode === 'fta') {
+      return true;
+    }
+  }
+
+  return false;
+});

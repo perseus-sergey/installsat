@@ -16,7 +16,6 @@ interface IProps {
   params: { [key in EUrlBaseParam]: string };
 }
 
-// export const dynamic = 'force-dynamic';
 export const revalidate = 3600 * 6; // invalidate cache every 6 hours
 
 export default async function Page({ searchParams, params }: IProps) {

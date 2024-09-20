@@ -9,7 +9,7 @@ interface IEmptyDataProps {
 
 const EmptyData = ({ description, lang }: IEmptyDataProps) => (
   <section
-    className="p-5 font-bold text-purple-600 flex flex-col items-center gap-12"
+    className="p-5 font-bold text-center text-purple-600 flex flex-col items-center gap-12"
     data-testid="EmptyData"
   >
     <Image

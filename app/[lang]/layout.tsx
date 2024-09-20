@@ -1,5 +1,5 @@
 import '../globals.scss';
-import Footer from '@/components/Footer/Footer';
+// import Footer from '@/components/Footer/Footer';
 // import AdBlockingRecovery from '@/components/GoogleAdsense/AdBlockingRecovery';
 // import GoogleAdsense from '@/components/GoogleAdsense/GoogleAdsense';
 import Header from '@/components/Header/Header';
@@ -7,6 +7,9 @@ import ToastProvider from '@/libs/ToastProvider/ToastProvider';
 import { getELangKey } from '@/libs/utils/validSearchParam';
 import { ELanguage } from '@/models/ui.model';
 import { EUrlBaseParam } from '@/models/url.model';
+import dynamic from 'next/dynamic';
+
+const Footer = dynamic(() => import('@/components/Footer/Footer'));
 // import { GoogleTagManager } from '@next/third-parties/google';
 
 // const GOOGLE_GTM_ID = process.env.GOOGLE_GTM || '';
@@ -30,9 +33,12 @@ export default function RootLayout({
   const lang = getELangKey(params[EUrlBaseParam.LANG]);
 
   return (
-    <html lang={lang === ELanguage.UA ? 'uk' : 'en'}>
+    <html lang={lang === ELanguage.UA ? 'uk' : 'en'} className="!scroll-smooth">
       {/* {isProductionMode && <GoogleTagManager gtmId={GOOGLE_GTM_ID} />} */}
-      <body suppressHydrationWarning={true}>
+      <body
+        suppressHydrationWarning={true}
+        className="font-serif text-stone-800 bg-black overflow-x-hidden bg-[url('/Images/black00001.gif')]"
+      >
         <input type="checkbox" id="toggle-sidebar" hidden />
         <Header lang={lang} />
         {/* {children} */}

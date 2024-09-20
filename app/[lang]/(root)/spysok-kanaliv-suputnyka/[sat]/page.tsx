@@ -14,7 +14,6 @@ import StartArticleSection from '@/components/article/StartArticleSection/StartA
 import FillingValidImage from '@/components/ui/Images/FillingValidImage';
 import { Suspense } from 'react';
 import {
-  DEFAULT_LANG,
   DEFAULT_META_DATA,
   EDBTableTitles,
   ELanguage,
@@ -94,7 +93,7 @@ export const generateMetadata = async ({
       publishedTime: getFormattedDateStrYearFirst(),
     },
     alternates: {
-      canonical: `/${DEFAULT_LANG}/${slugPath}`,
+      canonical: `/${lang}/${slugPath}`,
       languages: {
         en: `/${ELanguage.EN}/${slugPath}`,
         uk: `/${ELanguage.UA}/${slugPath}`,

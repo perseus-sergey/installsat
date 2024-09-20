@@ -5,12 +5,7 @@ import ArticleList from '@/components/article/ArticleList/ArticleList';
 import Pagination from '@/components/ui/Pagination/Pagination';
 import { notFound } from 'next/navigation';
 import { EUrlBaseParam, EUrlSearchParam, MAIN_URL } from '@/models/url.model';
-import {
-  DEFAULT_LANG,
-  TSearchParams,
-  DEFAULT_META_DATA,
-  ELanguage,
-} from '@/models/ui.model';
+import { TSearchParams, DEFAULT_META_DATA, ELanguage } from '@/models/ui.model';
 import { getELangKey, validSearchParam } from '@/libs/utils/validSearchParam';
 import BreadCrumbServer from '@/components/BreadCrumbs/BreadCrumbsServer';
 import Filter from '@/components/ui/Filter/Filter';
@@ -57,7 +52,7 @@ export const generateMetadata = ({ params }: IProps): Metadata => {
       publishedTime: getFormattedDateStrYearFirst(),
     },
     alternates: {
-      canonical: `/${DEFAULT_LANG}/${EUrlBaseParam.NEWS_AND_ARTICLES}`,
+      canonical: `/${lang}/${EUrlBaseParam.NEWS_AND_ARTICLES}`,
       languages: {
         en: `/${ELanguage.EN}/${EUrlBaseParam.NEWS_AND_ARTICLES}`,
         uk: `/${ELanguage.UA}/${EUrlBaseParam.NEWS_AND_ARTICLES}`,

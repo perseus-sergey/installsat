@@ -95,7 +95,7 @@ export const generateMetadata = async ({
     description: chanDescription,
     keywords: keywords || chanDescription,
     alternates: {
-      // canonical: `/${DEFAULT_LANG}/${EUrlBaseParam.KANAL}/${addCanonical}`,
+      canonical: `/${lang}/${EUrlBaseParam.KANAL}/${chan_slug}`,
       languages: {
         en: `/${ELanguage.EN}/${EUrlBaseParam.KANAL}/${chan_slug}`,
         uk: `/${ELanguage.UA}/${EUrlBaseParam.KANAL}/${chan_slug}`,

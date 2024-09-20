@@ -9,12 +9,7 @@ import TextUnderH1 from '@/components/TextUnderH1/TextUnderH1';
 import ArticleList from '@/components/article/ArticleList/ArticleList';
 import { notFound } from 'next/navigation';
 import Pagination from '@/components/ui/Pagination/Pagination';
-import {
-  DEFAULT_LANG,
-  TSearchParams,
-  DEFAULT_META_DATA,
-  ELanguage,
-} from '@/models/ui.model';
+import { TSearchParams, DEFAULT_META_DATA, ELanguage } from '@/models/ui.model';
 import { EUrlBaseParam, EUrlSearchParam, MAIN_URL } from '@/models/url.model';
 import { getELangKey, validSearchParam } from '@/libs/utils/validSearchParam';
 import BreadCrumbServer from '@/components/BreadCrumbs/BreadCrumbsServer';
@@ -70,7 +65,7 @@ export const generateMetadata = async ({
       publishedTime: getFormattedDateStrYearFirst(),
     },
     alternates: {
-      canonical: `/${DEFAULT_LANG}/${slugPath}`,
+      canonical: `/${lang}/${slugPath}`,
       languages: {
         en: `/${ELanguage.EN}/${slugPath}`,
         uk: `/${ELanguage.UA}/${slugPath}`,

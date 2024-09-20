@@ -10,12 +10,7 @@ import {
 import type { Metadata } from 'next';
 import FillingImg from '@/components/ui/Images/FillingImage';
 import Fieldset from '@/components/ui/Fieldset/Fieldset';
-import {
-  TSearchParams,
-  DEFAULT_META_DATA,
-  DEFAULT_LANG,
-  ELanguage,
-} from '@/models/ui.model';
+import { TSearchParams, DEFAULT_META_DATA, ELanguage } from '@/models/ui.model';
 import { EUrlBaseParam, EUrlSearchParam, MAIN_URL } from '@/models/url.model';
 import Filter from '@/components/ui/Filter/Filter';
 import { Suspense } from 'react';
@@ -75,7 +70,7 @@ export const generateMetadata = async ({
       publishedTime: getFormattedDateStrYearFirst(),
     },
     alternates: {
-      canonical: `/${DEFAULT_LANG}/${CHANNELS_TV_PROGRAM}`,
+      canonical: `/${lang}/${CHANNELS_TV_PROGRAM}`,
       languages: {
         en: `/${ELanguage.EN}/${CHANNELS_TV_PROGRAM}`,
         uk: `/${ELanguage.UA}/${CHANNELS_TV_PROGRAM}`,

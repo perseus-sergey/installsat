@@ -15,7 +15,6 @@ import {
   TSearchParams,
   DEFAULT_META_DATA,
   EDBTableTitles,
-  DEFAULT_LANG,
   ELanguage,
 } from '@/models/ui.model';
 import { EUrlBaseParam, EUrlSearchParam, MAIN_URL } from '@/models/url.model';
@@ -73,7 +72,7 @@ export const generateMetadata = ({ params }: IPageProps): Metadata => {
       publishedTime: getFormattedDateStrYearFirst(),
     },
     alternates: {
-      canonical: `/${DEFAULT_LANG}/${ONLINE_CHANNEL_LIST}`,
+      canonical: `/${lang}/${ONLINE_CHANNEL_LIST}`,
       languages: {
         en: `/${ELanguage.EN}/${ONLINE_CHANNEL_LIST}`,
         uk: `/${ELanguage.UA}/${ONLINE_CHANNEL_LIST}`,

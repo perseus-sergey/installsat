@@ -1,7 +1,7 @@
 import { Title } from '@/components/ui/Titles/Title';
 import type { Metadata } from 'next';
 import { EUrlBaseParam, MAIN_URL } from '@/models/url.model';
-import { DEFAULT_LANG, DEFAULT_META_DATA, ELanguage } from '@/models/ui.model';
+import { DEFAULT_META_DATA, ELanguage } from '@/models/ui.model';
 import { getChannelPackages } from '@/controllers/channelList.controller';
 import PackageList from '@/components/article/ArticleList/PackageList';
 import { META_PACKAGES } from '@/models/channelList.model';
@@ -35,7 +35,7 @@ export const generateMetadata = ({ params }: IPageProps): Metadata => {
       publishedTime: getFormattedDateStrYearFirst(),
     },
     alternates: {
-      canonical: `/${DEFAULT_LANG}/${EUrlBaseParam.PACKAGE_CHANNEL_LIST}`,
+      canonical: `/${lang}/${EUrlBaseParam.PACKAGE_CHANNEL_LIST}`,
       languages: {
         en: `/${ELanguage.EN}/${EUrlBaseParam.PACKAGE_CHANNEL_LIST}`,
         uk: `/${ELanguage.UA}/${EUrlBaseParam.PACKAGE_CHANNEL_LIST}`,

@@ -10,7 +10,6 @@ import type { Metadata } from 'next';
 import StartArticleSection from '@/components/article/StartArticleSection/StartArticleSection';
 import { Suspense } from 'react';
 import {
-  DEFAULT_LANG,
   DEFAULT_META_DATA,
   EDBTableTitles,
   ELanguage,
@@ -75,7 +74,7 @@ export const generateMetadata = async ({
       publishedTime: getFormattedDateStrYearFirst(),
     },
     alternates: {
-      canonical: `/${DEFAULT_LANG}/${EUrlBaseParam.SAT_CHANNEL_LIST}`,
+      canonical: `/${lang}/${EUrlBaseParam.SAT_CHANNEL_LIST}`,
       languages: {
         en: `/${ELanguage.EN}/${EUrlBaseParam.SAT_CHANNEL_LIST}`,
         uk: `/${ELanguage.UA}/${EUrlBaseParam.SAT_CHANNEL_LIST}`,

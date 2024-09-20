@@ -23,7 +23,6 @@ import {
 import {
   EDBTableTitles,
   DEFAULT_META_DATA,
-  DEFAULT_LANG,
   ELanguage,
 } from '@/models/ui.model';
 import { EUrlBaseParam, MAIN_URL } from '@/models/url.model';
@@ -99,7 +98,7 @@ export const generateMetadata = async ({
       publishedTime: getFormattedDateStrYearFirst(),
     },
     alternates: {
-      canonical: `/${DEFAULT_LANG}/${slugPath}`,
+      canonical: `/${lang}/${slugPath}`,
       languages: {
         en: `/${ELanguage.EN}/${slugPath}`,
         uk: `/${ELanguage.UA}/${slugPath}`,

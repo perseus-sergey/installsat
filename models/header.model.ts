@@ -19,8 +19,8 @@ export const LOGO = {
 export const OPEN_SIDE_BAR_BTN = {
   sideBarIcon: {
     alt: {
-      [ELanguage.UA]: 'Іконка прихованого меню',
-      [ELanguage.EN]: 'Icon for the hidden menu',
+      [ELanguage.UA]: 'Іконка кнопки відкриття / закриття прихованого меню',
+      [ELanguage.EN]: 'Open / close hidden menu button icon',
     },
     ariaLabel: {
       [ELanguage.UA]: 'Відкрити / сховати бокове меню',

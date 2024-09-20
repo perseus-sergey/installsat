@@ -1,12 +1,12 @@
-.accordionRadio:checked + .accordionItem .accordionLabel ~ .accordionContent {
+.accordionRadio:checked + .accordionLabel ~ .accordionContent {
   max-height: 700px;
   overflow-y: auto;
 }
 
-.accordionRadio:checked + .accordionItem .accordionLabel::after {
+.accordionRadio:checked + .accordionLabel::after {
   transform: rotate(90deg);
 }
 
-.accordionRadio:checked + .accordionItem .closing {
+.accordionRadio:checked ~ .closing {
   display: block;
 }

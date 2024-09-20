@@ -410,27 +410,11 @@ export const GO_UP_LINK = {
 };
 
 export const ALL_SAT_CHANNEL_LIST_IMAGES = {
-  h1ImageParams: {
-    path: '/Images/packages/money_free.jpg',
-    defaultImage: '/Images/satellite_132-99.png',
-    alternativeSymbol: '🛰',
-    height: 150,
-    width: 239,
-    alt: {
-      [ELanguage.UA]: 'Безкоштовні канали популярних супутників',
-      [ELanguage.EN]: 'Free channels of popular satellites',
-    },
-  },
-  h1FlyImageParams: {
-    path: '/Images/packages/database.png',
-    defaultImage: '/Images/satellite_132-99.png',
-    alternativeSymbol: '🛰',
-    height: 128,
-    width: 128,
-    alt: {
-      [ELanguage.UA]: 'Вибір списку каналів за налаштуваннями',
-      [ELanguage.EN]: 'Choose list of channels based on settings',
-    },
+  h1FlyImageAlt: {
+    [ELanguage.UA]:
+      'Зображення сортувального пристрою для вибору списку каналів за налаштуваннями',
+    [ELanguage.EN]:
+      'Image of sorting device for selecting channel list based on settings',
   },
 };
 

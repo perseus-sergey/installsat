@@ -18,19 +18,31 @@ interface IReactSelectProps {
   selectName: ESelectType;
 }
 
-export const createIsMultiControlComponent = (title: string) => {
+const PRE_ID = 'inst-';
+
+export const createIsMultiControlComponent = (
+  title: string,
+  selectId: ESelectType
+) => {
+  const id = `react-select-${PRE_ID}${selectId}-input`;
+
   return (props: ControlProps<ISatelliteOption, true>) => (
     <div className="h-fit p-1 border border-solid border-gray-600 bg-sky-700 text-white text-center rounded-md min-w-48">
-      <p>{title}</p>
+      <label htmlFor={id}>{title}</label>
       <components.Control {...props} />
     </div>
   );
 };
 
-export const createSingleControlComponent = (title: string) => {
+export const createSingleControlComponent = (
+  title: string,
+  selectId: ESelectType
+) => {
+  const id = `react-select-${PRE_ID}${selectId}-input`;
+
   return (props: ControlProps<ISatelliteOption, false>) => (
     <div className="h-fit p-1 border border-solid border-gray-600 bg-sky-700 text-white text-center rounded-md min-w-48">
-      <p>{title}</p>
+      <label htmlFor={id}>{title}</label>
       <components.Control {...props} />
     </div>
   );
@@ -53,12 +65,15 @@ export const MySelect = <
   ...rest
 }: Props<Option, IsMulti, Group> & IReactSelectProps) => {
   return (
-    <Select
-      instanceId={`inst-${selectName}`}
-      id={selectName}
-      name={selectName}
-      {...rest}
-    />
+    <>
+      <label htmlFor={selectName} />
+      <Select
+        instanceId={`${PRE_ID}${selectName}`}
+        id={selectName}
+        name={selectName}
+        {...rest}
+      />
+    </>
   );
 };
 

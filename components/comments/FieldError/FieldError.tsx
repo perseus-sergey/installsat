@@ -24,7 +24,7 @@ const FieldError = ({
   return formState.fieldErrors[name] ? (
     <div
       data-testid="FieldError"
-      role="status"
+      role="alert"
       id={errorFieldId}
       aria-live="polite"
       aria-atomic="true"

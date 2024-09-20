@@ -26,18 +26,18 @@ export const AccordionMenuItem = ({
 
   return children ? (
     <>
-      <input
-        type="radio"
-        id={name}
-        name="accordion-radio-button"
-        className={`${styles.accordionRadio} hidden`}
-      />
-      <li className={`${styles.accordionItem} relative`}>
+      <li className="relative" role="menuitem">
+        <input
+          type="radio"
+          id={name}
+          name="accordion-radio-button"
+          className={`${styles.accordionRadio} hidden`}
+        />
         <label
           htmlFor={name}
           className={`${styles.accordionLabel} ${labelStyle} ${gradientStyle} justify-between pr-2 after:content-['⏵']`}
         >
-          <div className={`${styles.titleWrapper} ${labelStyle} p-2`}>
+          <div className={`${labelStyle} p-2`}>
             {menuIconSrc && (
               <Image src={menuIconSrc} alt={img.alt[lang] || ''} />
             )}
@@ -52,14 +52,14 @@ export const AccordionMenuItem = ({
       </li>
     </>
   ) : (
-    <li className={`${styles.accordionItem} ${gradientStyle}`}>
+    <li className={`${gradientStyle}`} role="menuitem">
       <SeoLink
         title={
           lang === ELanguage.UA
             ? `Перейти до сторінки "${title[lang]}"`
             : `Go to the view of the "${title[lang]}" page`
         }
-        className={`${styles.titleWrapper} ${labelStyle} p-2`}
+        className={`${labelStyle} p-2`}
         href={`/${lang}${titleHref}` || '#'}
       >
         {menuIconSrc && <Image src={menuIconSrc} alt={img.alt[lang] || ''} />}

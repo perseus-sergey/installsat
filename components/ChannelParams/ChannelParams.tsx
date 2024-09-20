@@ -241,7 +241,7 @@ export const FlyChannelParams = ({
             wrapperTagName="li"
           >
             <Item
-              param={sr}
+              param={sr.toLocaleString('de-DE')}
               title="SR"
               description={lang === UA ? 'с/сек' : 's/sec'}
               hasTip
@@ -360,10 +360,10 @@ const Item = ({ param, title, description, hasTip = false }: IItem) => {
         <div className="font-bold">
           {isItemArray ? param[0] : param}{' '}
           {description && <span className="text-base">({description})</span>}
-          {hasTip && (
-            <span className="bg-[url('/Images/external-link_12.png')] w-4 h-4 inline-block bg-no-repeat bg-right" />
-          )}
         </div>
+      )}
+      {hasTip && (
+        <div className="bg-[url('/Images/external-link_12.png')] w-4 h-4 inline-block shrink-0 bg-no-repeat bg-right" />
       )}
     </>
   ) : null;

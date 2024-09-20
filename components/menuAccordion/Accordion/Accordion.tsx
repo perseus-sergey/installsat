@@ -45,7 +45,7 @@ const Accordion = async ({ lang }: { lang: ELanguage }) => {
 
   return (
     <nav className="mx-auto py-4 text-white" data-testid="Accordion">
-      <ul>
+      <ul role="menu">
         <AccordionMenuItem
           lang={lang}
           options={SAT_FINDER}
@@ -57,11 +57,12 @@ const Accordion = async ({ lang }: { lang: ELanguage }) => {
           menuIconSrc={satelliteIcon}
         >
           <ul
+            role="menu"
             className={`${styles.accordionContent} ${accordContentStyle}`}
             style={textShadow}
           >
             {flyChannelSatList.map((item) => (
-              <li key={item.cpu} className={contentItemStyle}>
+              <li role="menuitem" key={item.cpu} className={contentItemStyle}>
                 <SeoLink
                   title={
                     lang === ELanguage.UA
@@ -84,11 +85,12 @@ const Accordion = async ({ lang }: { lang: ELanguage }) => {
           menuIconSrc={mapCoverIcon}
         >
           <ul
+            role="menu"
             className={`${styles.accordionContent} ${accordContentStyle}`}
             style={textShadow}
           >
             {maps.map((item) => (
-              <li key={item.cpu} className={contentItemStyle}>
+              <li role="menuitem" key={item.cpu} className={contentItemStyle}>
                 <SeoLink
                   title={
                     lang === ELanguage.UA
@@ -111,11 +113,12 @@ const Accordion = async ({ lang }: { lang: ELanguage }) => {
           menuIconSrc={chanPackagesIcon}
         >
           <ul
+            role="menu"
             className={`${styles.accordionContent} ${accordContentStyle}`}
             style={textShadow}
           >
             {channelCatList.map((item) => (
-              <li key={item.id} className={contentItemStyle}>
+              <li role="menuitem" key={item.id} className={contentItemStyle}>
                 <SeoLink
                   title={
                     lang === ELanguage.UA
@@ -137,11 +140,12 @@ const Accordion = async ({ lang }: { lang: ELanguage }) => {
           menuIconSrc={usefulArticlesIcon}
         >
           <ul
+            role="menu"
             className={`${styles.accordionContent} ${accordContentStyle}`}
             style={textShadow}
           >
             {usefulArticleList.map((item) => (
-              <li key={item.id} className={contentItemStyle}>
+              <li role="menuitem" key={item.id} className={contentItemStyle}>
                 <SeoLink
                   title={
                     lang === ELanguage.UA

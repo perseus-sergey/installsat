@@ -34,7 +34,13 @@ const Header = ({ lang }: { lang: ELanguage }) => (
           ariaLabel={sideBarIcon.ariaLabel[lang]}
           className="cursor-pointer px-4"
         >
-          <Image src={sideBarIconImg} alt={sideBarIcon.alt[lang]} />
+          <Image
+            src={sideBarIconImg}
+            alt={sideBarIcon.alt[lang]}
+            className="shrink-0"
+            tabIndex={0}
+            role="button"
+          />
         </ToggleSidebarLabel>
         <SeoLink href={`/${lang}`} title={title[lang]} className="sm:px-5">
           <Image

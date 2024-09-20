@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import SideBar from '@/components/SideBar/SideBar';
 import { META_TRANS_NEWS_LIST } from '@/models/satDigest.model';
-import { DEFAULT_LANG, DEFAULT_META_DATA, ELanguage } from '@/models/ui.model';
+import { DEFAULT_META_DATA, ELanguage } from '@/models/ui.model';
 import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
 import { EUrlBaseParam, MAIN_URL } from '@/models/url.model';
 import { getELangKey } from '@/libs/utils/validSearchParam';
@@ -31,7 +31,7 @@ export const generateMetadata = ({ params }: IProps): Metadata => {
       publishedTime: getFormattedDateStrYearFirst(),
     },
     alternates: {
-      canonical: `/${DEFAULT_LANG}`,
+      canonical: `/${lang}`,
       languages: {
         en: `/${ELanguage.EN}`,
         uk: `/${ELanguage.UA}`,

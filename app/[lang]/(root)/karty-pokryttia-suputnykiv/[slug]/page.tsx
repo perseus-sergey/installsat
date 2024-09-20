@@ -4,7 +4,6 @@ import { EUrlBaseParam, MAIN_URL } from '@/models/url.model';
 import {
   EDBTableTitles,
   DEFAULT_META_DATA,
-  DEFAULT_LANG,
   ELanguage,
 } from '@/models/ui.model';
 import { getSatMap, updateViewCount } from '@/controllers/articles.controller';
@@ -76,7 +75,7 @@ export const generateMetadata = async ({
       publishedTime: getFormattedDateStrYearFirst(),
     },
     alternates: {
-      canonical: `/${DEFAULT_LANG}/${slugPath}`,
+      canonical: `/${lang}/${slugPath}`,
       languages: {
         en: `/${ELanguage.EN}/${slugPath}`,
         uk: `/${ELanguage.UA}/${slugPath}`,

@@ -15,7 +15,6 @@ import {
 import type { Metadata } from 'next';
 import Fieldset from '@/components/ui/Fieldset/Fieldset';
 import {
-  DEFAULT_LANG,
   TSearchParams,
   DEFAULT_META_DATA,
   EDBTableTitles,
@@ -100,7 +99,7 @@ export const generateMetadata = async ({
       publishedTime: getFormattedDateStrYearFirst(),
     },
     alternates: {
-      canonical: `/${DEFAULT_LANG}/${slugPath}`,
+      canonical: `/${lang}/${slugPath}`,
       languages: {
         en: `/${ELanguage.EN}/${slugPath}`,
         uk: `/${ELanguage.UA}/${slugPath}`,

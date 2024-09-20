@@ -15,7 +15,6 @@ import DangerHtml from '@/components/ui/DangerHtml/DangerHtml';
 import { EUrlAdminParam, EUrlBaseParam, MAIN_URL } from '@/models/url.model';
 import BottomInfoPanel from '@/components/BottomInfoPanel/BottomInfoPanel';
 import {
-  DEFAULT_LANG,
   DEFAULT_META_DATA,
   EDBTableTitles,
   ELanguage,
@@ -91,7 +90,7 @@ export const generateMetadata = async ({
       publishedTime: getFormattedDateStrYearFirst(date),
     },
     alternates: {
-      canonical: `/${DEFAULT_LANG}/${slugPath}`,
+      canonical: `/${lang}/${slugPath}`,
       languages: {
         en: `/${ELanguage.EN}/${slugPath}`,
         uk: `/${ELanguage.UA}/${slugPath}`,

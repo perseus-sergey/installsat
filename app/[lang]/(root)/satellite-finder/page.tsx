@@ -11,7 +11,6 @@ import {
   EDBTableTitles,
   DEFAULT_META_DATA,
   ELanguage,
-  DEFAULT_LANG,
 } from '@/models/ui.model';
 import { EUrlBaseParam, EUrlSearchParam, MAIN_URL } from '@/models/url.model';
 import { Metadata } from 'next';
@@ -88,7 +87,7 @@ export const generateMetadata = ({ params }: IPageProps): Metadata => {
       publishedTime: getFormattedDateStrYearFirst(),
     },
     alternates: {
-      canonical: `/${DEFAULT_LANG}/${EUrlBaseParam.SAT_FINDER}`,
+      canonical: `/${lang}/${EUrlBaseParam.SAT_FINDER}`,
       languages: {
         en: `/${ELanguage.EN}/${EUrlBaseParam.SAT_FINDER}`,
         uk: `/${ELanguage.UA}/${EUrlBaseParam.SAT_FINDER}`,

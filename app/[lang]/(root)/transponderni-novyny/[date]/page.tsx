@@ -4,7 +4,7 @@ import { getTransNewsForSingleDay } from '@/controllers/satDigest.controller';
 import { getDateInISO, getFormattedDateStrYearFirst } from '@/libs/utils/dates';
 import { getELangKey } from '@/libs/utils/validSearchParam';
 import { META_TRANS_NEWS_SINGLE } from '@/models/satDigest.model';
-import { DEFAULT_META_DATA, DEFAULT_LANG, ELanguage } from '@/models/ui.model';
+import { DEFAULT_META_DATA, ELanguage } from '@/models/ui.model';
 import { EUrlBaseParam, MAIN_URL } from '@/models/url.model';
 import { notFound } from 'next/navigation';
 import { cache } from 'react';
@@ -44,7 +44,7 @@ export const generateMetadata = async ({ params }: IPageParams) => {
       publishedTime: date,
     },
     alternates: {
-      canonical: `/${DEFAULT_LANG}/${EUrlBaseParam.TRANSPONDER_NEWS}/${date}`,
+      canonical: `/${lang}/${EUrlBaseParam.TRANSPONDER_NEWS}/${date}`,
       languages: {
         en: `/${ELanguage.EN}/${EUrlBaseParam.TRANSPONDER_NEWS}/${date}`,
         uk: `/${ELanguage.UA}/${EUrlBaseParam.TRANSPONDER_NEWS}/${date}`,

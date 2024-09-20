@@ -2,7 +2,7 @@ import { Title } from '@/components/ui/Titles/Title';
 import type { Metadata } from 'next';
 import { getSatMapList } from '@/controllers/articles.controller';
 import { EUrlBaseParam, MAIN_URL } from '@/models/url.model';
-import { DEFAULT_META_DATA, DEFAULT_LANG, ELanguage } from '@/models/ui.model';
+import { DEFAULT_META_DATA, ELanguage } from '@/models/ui.model';
 import MapList from '@/components/article/ArticleList/MapList';
 import BreadCrumbServer from '@/components/BreadCrumbs/BreadCrumbsServer';
 import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
@@ -42,7 +42,7 @@ export const generateMetadata = ({ params }: IProps): Metadata => {
       publishedTime: getFormattedDateStrYearFirst(),
     },
     alternates: {
-      canonical: `/${DEFAULT_LANG}/${EUrlBaseParam.SAT_COVERAGE_MAP}`,
+      canonical: `/${lang}/${EUrlBaseParam.SAT_COVERAGE_MAP}`,
       languages: {
         en: `/${ELanguage.EN}/${EUrlBaseParam.SAT_COVERAGE_MAP}`,
         uk: `/${ELanguage.UA}/${EUrlBaseParam.SAT_COVERAGE_MAP}`,

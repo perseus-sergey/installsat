@@ -13,9 +13,9 @@ export default async function layout({ children }: IParams) {
   if (!(await isAdminAuth())) return redirect(EUrlBaseParam.BASE_PATH);
 
   return (
-    <main className="main">
+    <main className="mx-auto bg-blue-950 flex justify-between items-start min-h-screen sm:w-[95%]">
       <SideBar lang={ELanguage.EN} isAdmin />
-      <section className="articleWrapper">
+      <section className="flex flex-col flex-[3] overflow-x-hidden">
         <article className="article">{children}</article>
       </section>
     </main>

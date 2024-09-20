@@ -1,4 +1,3 @@
-import styles from './NotFoundPage.module.scss';
 import { Title } from '../../ui/Titles/Title';
 import { DEFAULT_LANG, NOT_FOUND_PAGE } from '@/models/ui.model';
 import SeoLink from '@/components/ui/SeoLink/SeoLink';
@@ -7,7 +6,11 @@ import emptyPageImg from 'public/Images/empty_page.png';
 import mainLogoImg from 'public/Images/InstallsatOrig_400.png';
 
 const NotFoundPage = () => (
-  <div className={styles.NotFoundPage} data-testid="NotFoundPage">
+  <div
+    className="bg-violet-100 border-2 rounded-lg border-stone-300 flex flex-col justify-center items-center min-h-[75vh] gap-[5vh] p-3"
+    data-testid="NotFoundPage"
+  >
+    {/* <div className={styles.NotFoundPage} data-testid="NotFoundPage"> */}
     <Title className="text-center text-shadow-lg">
       {NOT_FOUND_PAGE.NOT_FOUND_TITLE[DEFAULT_LANG]}
     </Title>
@@ -21,7 +24,7 @@ const NotFoundPage = () => (
     </p>
     <SeoLink
       href={`/${DEFAULT_LANG}`}
-      className={styles.linkWrapper}
+      className="flex flex-col items-center gap-8"
       title="Go to the Home Page"
     >
       <Image src={mainLogoImg} alt="Installsat TV Logo" priority />

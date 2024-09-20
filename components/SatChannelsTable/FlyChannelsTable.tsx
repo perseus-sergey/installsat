@@ -60,6 +60,7 @@ const FrequencySegment = ({
       const genreImgSrc = theme_id ? MChanTheme.get(theme_id) : theme_id;
       const isFta = isFtaChannel(encryptionList);
       const compressColor = getCompressColor(compress, modeList, t2_stream);
+      const aPidLength = aPidList.length;
 
       // const languages = [...new Set(aPidList.map((aP) => aP.split(' ')[1]))];
 
@@ -90,7 +91,7 @@ const FrequencySegment = ({
                   {`${frequencyChannels[0].frequency} ${frequencyChannels[0].polarization}`}
                 </li>
                 <li>
-                  {`${frequencyChannels[0].sr}, ${frequencyChannels[0].fec}`}
+                  {`${frequencyChannels[0].sr.toLocaleString('de-DE')}, ${frequencyChannels[0].fec}`}
                 </li>
                 <li className="text-gray-500 text-sm">
                   {frequencyChannels[0].beam}{' '}
@@ -232,7 +233,7 @@ const FrequencySegment = ({
             style={borderStyle}
             className="text-sm p-0.5 text-left hidden sm:table-cell"
           >
-            {aPidList.length > 2 ? (
+            {aPidLength > 2 ? (
               <Tooltip
                 wrapperTagName="ul"
                 hintHtml={<HintItemList itemList={aPidList} title="Audio" />}
@@ -245,9 +246,14 @@ const FrequencySegment = ({
                     {aPid}
                   </li>
                 ))}
-                <li>...</li>
+                <li>
+                  ...
+                  {lang === ELanguage.UA
+                    ? ` ще ${aPidLength - 2}`
+                    : ` ${aPidLength - 2} more`}
+                </li>
               </Tooltip>
-            ) : aPidList.length > 1 ? (
+            ) : aPidLength > 1 ? (
               <ul>
                 {aPidList.map((aPid, i) => (
                   <li

@@ -12,7 +12,6 @@ const ToggleSidebarLabel = ({
 }: IToggleSidebarLabelProps) => (
   <label
     htmlFor="toggle-sidebar"
-    role="button"
     aria-label={ariaLabel}
     title={ariaLabel}
     className={`lg:hidden inline-block ${className ? ` ${className}` : ''}`}

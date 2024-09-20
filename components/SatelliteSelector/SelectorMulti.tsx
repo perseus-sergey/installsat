@@ -92,7 +92,7 @@ export const SelectorMulti = ({
       options={itemList}
       components={{
         Group,
-        Control: createIsMultiControlComponent(caption),
+        Control: createIsMultiControlComponent(caption, selectName),
         Input: (props) => (
           <components.Input {...props} aria-activedescendant={undefined} />
         ),

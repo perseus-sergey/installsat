@@ -25,12 +25,13 @@ import FlyChannelsTable from '@/components/SatChannelsTable/FlyChannelsTable';
 import Fieldset from '@/components/ui/Fieldset/Fieldset';
 import Filter from '@/components/ui/Filter/Filter';
 import ChannelFormatSliders from '@/components/ui/ChannelFormatSliders/ChannelFormatSliders';
-import FillingImg from '@/components/ui/Images/FillingImage';
 import { SelectorMulti } from '@/components/SatelliteSelector/SelectorMulti';
 import { IFlyChannel } from '@/models/channel.model';
 import { ISatelliteOption } from '@/models/tblSat.model';
 import dynamic from 'next/dynamic';
 import { TRANS_NEWS_LIST_FILTERS } from '@/models/satDigest.model';
+import titleImg from 'public/Images/packages/database.png';
+import Image from 'next/image';
 
 const CommentBlock = dynamic(
   () => import('@/components/comments/CommentBlock/CommentBlock')
@@ -47,7 +48,7 @@ const {
   resetAllFiltersButton,
 } = ALL_SAT_CHANNEL_LIST_FILTERS;
 const { anchors } = ALL_SAT_CHANNEL_LIST_LINKS;
-const { h1FlyImageParams } = ALL_SAT_CHANNEL_LIST_IMAGES;
+const { h1FlyImageAlt } = ALL_SAT_CHANNEL_LIST_IMAGES;
 
 interface IPageProps {
   params: { [key in EUrlBaseParam]: string };
@@ -154,11 +155,11 @@ export default async function Page({ searchParams, params }: IPageProps) {
       <article className="article">
         <Title>
           {metaH1[lang]}
-          <FillingImg
-            src={h1FlyImageParams.path}
-            alt={h1FlyImageParams.alt[lang]}
-            width={h1FlyImageParams.width}
-            height={h1FlyImageParams.height}
+          <Image
+            src={titleImg}
+            alt={h1FlyImageAlt[lang]}
+            className="shrink-0"
+            priority
           />
         </Title>
 

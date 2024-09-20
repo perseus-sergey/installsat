@@ -213,7 +213,10 @@ const SatFinder = ({
             options={groupedSats}
             components={{
               Group,
-              Control: createIsMultiControlComponent(satSelect.title[lang]),
+              Control: createIsMultiControlComponent(
+                satSelect.title[lang],
+                ESelectType.SELECT_SATS
+              ),
               Input: (props) => (
                 <components.Input
                   {...props}

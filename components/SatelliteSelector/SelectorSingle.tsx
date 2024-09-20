@@ -74,7 +74,7 @@ export const SelectorSingle = ({
       onChange={(selected) => handleSelect(selected)}
       options={itemList}
       components={{
-        Control: createSingleControlComponent(caption),
+        Control: createSingleControlComponent(caption, selectName),
         Input: (props) => (
           <components.Input {...props} aria-activedescendant={undefined} />
         ),

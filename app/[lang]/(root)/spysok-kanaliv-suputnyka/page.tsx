@@ -3,7 +3,7 @@ import {
   ALL_SAT_CHANNEL_LIST_FILTERS,
   ALL_SAT_CHANNEL_LIST_IMAGES,
   ALL_SAT_CHANNEL_LIST_LINKS,
-  CHANNEL_LIST_DB_ID,
+  // CHANNEL_LIST_DB_ID,
   META_ALL_SAT_CHANNEL_LIST,
 } from '@/models/channelList.model';
 import type { Metadata } from 'next';
@@ -11,7 +11,7 @@ import StartArticleSection from '@/components/article/StartArticleSection/StartA
 import { Suspense } from 'react';
 import {
   DEFAULT_META_DATA,
-  EDBTableTitles,
+  // EDBTableTitles,
   ELanguage,
   ESelectType,
   TSearchParams,
@@ -27,14 +27,16 @@ import ChannelFormatSliders from '@/components/ui/ChannelFormatSliders/ChannelFo
 import { SelectorMulti } from '@/components/SatelliteSelector/SelectorMulti';
 import { IFlyChannel } from '@/models/channel.model';
 import { ISatelliteOption } from '@/models/tblSat.model';
-import dynamic from 'next/dynamic';
+// import dynamic from 'next/dynamic';
 import { TRANS_NEWS_LIST_FILTERS } from '@/models/satDigest.model';
 import titleImg from 'public/Images/packages/database.png';
 import Image from 'next/image';
+// import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
+// import { getCommentsNumber } from '@/controllers/comments.controller';
 
-const CommentBlock = dynamic(
-  () => import('@/components/comments/CommentBlock/CommentBlock')
-);
+// const CommentBlock = dynamic(
+//   () => import('@/components/comments/CommentBlock/CommentBlock')
+// );
 
 const BASE_URL = process.env.BASE_URL || MAIN_URL;
 
@@ -94,7 +96,6 @@ export default async function Page({ searchParams, params }: IPageProps) {
     const { validSearchParam, validSearchParamArray } = await import(
       '@/libs/utils/validSearchParam'
     );
-
     const searchQueryChannel = validSearchParam(
       EUrlSearchParam.CHANNEL,
       searchParams
@@ -107,15 +108,12 @@ export default async function Page({ searchParams, params }: IPageProps) {
       EUrlSearchParam.SAT,
       searchParams
     );
-
     const { getFlySatChannels, getFlyGroupedChannelsAllSat } = await import(
       '@/controllers/channelList.controller'
     );
-
     const { getChannelsLangList } = await import(
       '@/controllers/languageList.controller'
     );
-
     satChannels = await getFlySatChannels(
       lang,
       searchQueryChannel,
@@ -127,9 +125,7 @@ export default async function Page({ searchParams, params }: IPageProps) {
       !!searchParams?.[EUrlSearchParam.CHANNEL_FORMAT_T2MI],
       searchQueryLanguages
     );
-
     groupChannels = getFlyGroupedChannelsAllSat([satChannels]);
-
     channelsLangList = await getChannelsLangList({
       satGrades: searchQuerySatellites,
     });
@@ -139,14 +135,14 @@ export default async function Page({ searchParams, params }: IPageProps) {
 
   const groupedSats = await getSatsForForm(false, lang, true);
 
-  const { getCommentsNumber } = await import(
-    '@/controllers/comments.controller'
-  );
+  // const { getCommentsNumber } = await import(
+  //   '@/controllers/comments.controller'
+  // );
 
-  const numberOfComments = await getCommentsNumber(
-    EDBTableTitles.COMMENTS_PACKAGES,
-    CHANNEL_LIST_DB_ID
-  );
+  // const numberOfComments = await getCommentsNumber(
+  //   EDBTableTitles.COMMENTS_PACKAGES,
+  //   CHANNEL_LIST_DB_ID
+  // );
 
   return (
     <>
@@ -229,15 +225,15 @@ export default async function Page({ searchParams, params }: IPageProps) {
           <FlyChannelsTable lang={lang} satChannels={groupChannels} />
         </Suspense>
       </article>
-
-      <CommentBlock
-        lang={lang}
-        numberOfComments={numberOfComments}
-        revalidateUrl={`/${lang}/${EUrlBaseParam.SAT_CHANNEL_LIST}`}
-        dbCommentTableName={EDBTableTitles.COMMENTS_PACKAGES}
-        articleId={CHANNEL_LIST_DB_ID}
-        articleName={metaTitle[lang]}
-      />
     </>
   );
 }
+
+// <CommentBlock
+//   lang={lang}
+//   numberOfComments={numberOfComments}
+//   revalidateUrl={`/${lang}/${EUrlBaseParam.SAT_CHANNEL_LIST}`}
+//   dbCommentTableName={EDBTableTitles.COMMENTS_PACKAGES}
+//   articleId={CHANNEL_LIST_DB_ID}
+//   articleName={metaTitle[lang]}
+// />

@@ -5,7 +5,7 @@ import {
   CHANNEL_LIST_ANCHOR_START,
   META_ONLINE_CHANNEL_LIST,
   ONLINE_CHANNEL_LIST_DATA,
-  ONLINE_CHANNEL_LIST_DB_ID,
+  // ONLINE_CHANNEL_LIST_DB_ID,
   ONLINE_CHANNEL_LIST_IMAGES,
 } from '@/models/channelList.model';
 import type { Metadata } from 'next';
@@ -14,15 +14,15 @@ import Fieldset from '@/components/ui/Fieldset/Fieldset';
 import {
   TSearchParams,
   DEFAULT_META_DATA,
-  EDBTableTitles,
+  // EDBTableTitles,
   ELanguage,
 } from '@/models/ui.model';
 import { EUrlBaseParam, EUrlSearchParam, MAIN_URL } from '@/models/url.model';
 import Filter from '@/components/ui/Filter/Filter';
 import { Suspense } from 'react';
 import { getELangKey, validSearchParam } from '@/libs/utils/validSearchParam';
-import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
-import { getCommentsNumber } from '@/controllers/comments.controller';
+// import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
+// import { getCommentsNumber } from '@/controllers/comments.controller';
 import TooltipSimple from '@/components/ui/tooltips/TooltipSimple/TooltipSimple';
 import GenreImage from '@/components/ui/Images/GenreImage/GenreImage';
 import OnlineChannelListAfterText from '@/components/online/OnlineChannelListAfterText/OnlineChannelListAfterText';
@@ -91,10 +91,10 @@ export default async function Page({ params, searchParams }: IPageProps) {
 
   const onlineChannels = await getOnlineChannels(lang, searchQueryChannel);
 
-  const numberOfComments = await getCommentsNumber(
-    EDBTableTitles.COMMENTS_GENRE,
-    ONLINE_CHANNEL_LIST_DB_ID
-  );
+  // const numberOfComments = await getCommentsNumber(
+  //   EDBTableTitles.COMMENTS_GENRE,
+  //   ONLINE_CHANNEL_LIST_DB_ID
+  // );
 
   return (
     <>
@@ -152,15 +152,15 @@ export default async function Page({ params, searchParams }: IPageProps) {
 
         <OnlineChannelListAfterText lang={lang} />
       </article>
-
-      <CommentBlock
-        lang={lang}
-        numberOfComments={numberOfComments}
-        revalidateUrl={`/${lang}/${ONLINE_CHANNEL_LIST}`}
-        dbCommentTableName={EDBTableTitles.COMMENTS_GENRE}
-        articleId={ONLINE_CHANNEL_LIST_DB_ID}
-        articleName={metaTitle[lang]}
-      />
     </>
   );
 }
+
+// <CommentBlock
+//   lang={lang}
+//   numberOfComments={numberOfComments}
+//   revalidateUrl={`/${lang}/${ONLINE_CHANNEL_LIST}`}
+//   dbCommentTableName={EDBTableTitles.COMMENTS_GENRE}
+//   articleId={ONLINE_CHANNEL_LIST_DB_ID}
+//   articleName={metaTitle[lang]}
+// />

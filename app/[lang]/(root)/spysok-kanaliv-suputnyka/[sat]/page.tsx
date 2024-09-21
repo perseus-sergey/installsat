@@ -15,14 +15,14 @@ import FillingValidImage from '@/components/ui/Images/FillingValidImage';
 import { Suspense } from 'react';
 import {
   DEFAULT_META_DATA,
-  EDBTableTitles,
+  // EDBTableTitles,
   ELanguage,
   ESelectType,
   TSearchParams,
 } from '@/models/ui.model';
 import { EUrlBaseParam, EUrlSearchParam, MAIN_URL } from '@/models/url.model';
-import { getCommentsNumber } from '@/controllers/comments.controller';
-import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
+// import { getCommentsNumber } from '@/controllers/comments.controller';
+// import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
 import BreadCrumbServer from '@/components/BreadCrumbs/BreadCrumbsServer';
 import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
 import { getELangKey } from '@/libs/utils/validSearchParam';
@@ -140,7 +140,8 @@ export default async function Page({ searchParams, params }: IPageProps) {
       />
     );
 
-  const { id, slug, title, logo, position, grade } = resFlySatParams;
+  const { slug, title, logo, position, grade } = resFlySatParams;
+  // const { id, slug, title, logo, position, grade } = resFlySatParams;
 
   const satChannels = await getFlySatChannels(
     lang,
@@ -158,10 +159,10 @@ export default async function Page({ searchParams, params }: IPageProps) {
     ? await getChannelsLangList({ satSlug: urlSatSlug })
     : [];
 
-  const numberOfComments = await getCommentsNumber(
-    EDBTableTitles.COMMENTS_SATELLITE,
-    id
-  );
+  // const numberOfComments = await getCommentsNumber(
+  //   EDBTableTitles.COMMENTS_SATELLITE,
+  //   id
+  // );
 
   const lastUpdatedSatsUrlSearchPar = makeUrlSearchParams({
     [EUrlSearchParam.SAT]: grade,
@@ -252,15 +253,15 @@ export default async function Page({ searchParams, params }: IPageProps) {
           />
         </Suspense>
       </article>
-
-      <CommentBlock
-        lang={lang}
-        numberOfComments={numberOfComments}
-        revalidateUrl={`/${lang}/${SAT_CHANNEL_LIST}/${slug}`}
-        dbCommentTableName={EDBTableTitles.COMMENTS_SATELLITE}
-        articleId={id}
-        articleName={`${metaTitle[lang]} ${title} - ${position}`}
-      />
     </>
   );
 }
+
+// <CommentBlock
+//   lang={lang}
+//   numberOfComments={numberOfComments}
+//   revalidateUrl={`/${lang}/${SAT_CHANNEL_LIST}/${slug}`}
+//   dbCommentTableName={EDBTableTitles.COMMENTS_SATELLITE}
+//   articleId={id}
+//   articleName={`${metaTitle[lang]} ${title} - ${position}`}
+// />

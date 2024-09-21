@@ -24,8 +24,8 @@ import { EUrlBaseParam, EUrlSearchParam, MAIN_URL } from '@/models/url.model';
 import Filter from '@/components/ui/Filter/Filter';
 import { Suspense, cache } from 'react';
 import { getELangKey, validSearchParam } from '@/libs/utils/validSearchParam';
-import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
-import { getCommentsNumber } from '@/controllers/comments.controller';
+// import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
+// import { getCommentsNumber } from '@/controllers/comments.controller';
 import TooltipSimple from '@/components/ui/tooltips/TooltipSimple/TooltipSimple';
 import PackageChannelList from '@/components/channelList/PackageChannelList';
 import FillingValidImage from '@/components/ui/Images/FillingValidImage';
@@ -136,12 +136,12 @@ export default async function Page({ params, searchParams }: IPageProps) {
       ? await getT2Channels(lang, searchQueryChannel)
       : await getPackageChannels(slug, searchQueryChannel);
 
-  const numberOfComments = channels
-    ? await getCommentsNumber(
-        EDBTableTitles.COMMENTS_PACKAGES,
-        `${channels[0][1][0].cat_id}`
-      )
-    : 0;
+  // const numberOfComments = channels
+  //   ? await getCommentsNumber(
+  //       EDBTableTitles.COMMENTS_PACKAGES,
+  //       `${channels[0][1][0].cat_id}`
+  //     )
+  //   : 0;
 
   const packagesResp = await getChannelCatList(lang);
   const similarLinks =
@@ -258,19 +258,19 @@ export default async function Page({ params, searchParams }: IPageProps) {
           ))}
         />
       ) : null}
-
-      {channels ? (
-        <CommentBlock
-          lang={lang}
-          numberOfComments={numberOfComments}
-          revalidateUrl={`/${lang}/${PACKAGE_CHANNEL_LIST}/${channels[0][1][0].cat_slug}`}
-          dbCommentTableName={EDBTableTitles.COMMENTS_PACKAGES}
-          articleId={`${channels[0][1][0].cat_id}`}
-          articleName={`${channels[0][1][0].cat_title}. ${metaTitle[lang]}`}
-        />
-      ) : (
-        <EmptyData lang={lang} />
-      )}
     </>
   );
 }
+
+// {channels ? (
+//   <CommentBlock
+//     lang={lang}
+//     numberOfComments={numberOfComments}
+//     revalidateUrl={`/${lang}/${PACKAGE_CHANNEL_LIST}/${channels[0][1][0].cat_slug}`}
+//     dbCommentTableName={EDBTableTitles.COMMENTS_PACKAGES}
+//     articleId={`${channels[0][1][0].cat_id}`}
+//     articleName={`${channels[0][1][0].cat_title}. ${metaTitle[lang]}`}
+//   />
+// ) : (
+//   <EmptyData lang={lang} />
+// )}

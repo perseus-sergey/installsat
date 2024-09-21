@@ -7,11 +7,11 @@ import { COMMENTS_MODEL, ECommentFormNames } from '@/models/comments.model';
 import { useToastMessage } from '@/libs/hooks/useToastMessage';
 import { useFormReset } from '@/libs/hooks/useFormReset';
 import { EDBTableTitles, ELanguage } from '@/models/ui.model';
-import { useFormCommentSendEmail } from '@/libs/hooks/useFormCommentSendEmail';
 import { EMPTY_FORM_STATE } from '@/controllers/toast.controller';
 // import { IUserLocation } from '@/models/userLocation.model';
 import { addCommentAction } from '@/libs/actions/comments.action';
 import FieldError from '../FieldError/FieldError';
+// import { useCommentSendEmail } from '@/libs/hooks/useCommentSendEmail';
 
 const { AUTHOR, EMAIL, TEXT } = ECommentFormNames;
 const { authorEmail, authorName, commentText, submit } =
@@ -32,10 +32,10 @@ const CommentForm = ({
   revalidateUrl,
   dbCommentTableName,
   articleId,
-  articleName,
+  // articleName,
   // userLocation,
-  baseUrl,
-  emailKey,
+  // baseUrl,
+  // emailKey,
   lang,
 }: ICommentProps) => {
   const sendCommentHandler = addCommentAction.bind(
@@ -57,17 +57,18 @@ const CommentForm = ({
 
   const noScriptFallback = useToastMessage(formState);
 
-  useFormCommentSendEmail(
-    formState,
-    articleName,
-    revalidateUrl,
-    dbCommentTableName,
-    articleId,
-    // userLocation,
-    baseUrl,
-    emailKey,
-    lang
-  );
+  // useCommentSendEmail(
+  //   formState,
+  //   articleName,
+  //   revalidateUrl,
+  //   dbCommentTableName,
+  //   articleId,
+  //   // userLocation,
+  //   baseUrl,
+  //   emailKey,
+  //   lang
+  // );
+
   const formRef = useFormReset(formState);
 
   const inputFieldStyle =

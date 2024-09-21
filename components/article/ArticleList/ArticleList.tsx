@@ -19,7 +19,7 @@ const {
   date: dateTitle,
   theme: themeTitle,
   views: viewsTitle,
-  comments: commentsTitle,
+  // comments: commentsTitle,
 } = INFO_PANEL_TITLES;
 
 interface IArticleListProps {
@@ -41,7 +41,7 @@ const ArticleList = ({ articleList, lang }: IArticleListProps) =>
           category_title_en,
           view,
           date,
-          comment_count,
+          // comment_count,
           category_cpu,
           logo,
           cpu,
@@ -110,7 +110,7 @@ const ArticleList = ({ articleList, lang }: IArticleListProps) =>
                     name: dateTitle[lang],
                     value: <time dateTime={currDate}>{currDate}</time>,
                   },
-                  { name: commentsTitle[lang], value: comment_count },
+                  // { name: commentsTitle[lang], value: comment_count },
                 ]}
               />
             </li>

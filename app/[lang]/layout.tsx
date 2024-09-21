@@ -1,7 +1,7 @@
 import '../globals.scss';
 // import Footer from '@/components/Footer/Footer';
-// import AdBlockingRecovery from '@/components/GoogleAdsense/AdBlockingRecovery';
-// import GoogleAdsense from '@/components/GoogleAdsense/GoogleAdsense';
+import AdBlockingRecovery from '@/components/GoogleAdsense/AdBlockingRecovery';
+import GoogleAdsense from '@/components/GoogleAdsense/GoogleAdsense';
 import Header from '@/components/Header/Header';
 // import ToastProvider from '@/libs/ToastProvider/ToastProvider';
 import { getELangKey } from '@/libs/utils/validSearchParam';
@@ -10,12 +10,12 @@ import { EUrlBaseParam } from '@/models/url.model';
 import dynamic from 'next/dynamic';
 
 const Footer = dynamic(() => import('@/components/Footer/Footer'));
-// import { GoogleTagManager } from '@next/third-parties/google';
+import { GoogleTagManager } from '@next/third-parties/google';
 
-// const GOOGLE_GTM_ID = process.env.GOOGLE_GTM || '';
+const GOOGLE_GTM_ID = process.env.GOOGLE_GTM || '';
 // const gaId = process.env.GA_ID || '';
-// const adsenseId = process.env.G_ADSENSE_ID || '';
-// const isProductionMode = process.env.NODE_ENV === 'production';
+const adsenseId = process.env.G_ADSENSE_ID || '';
+const isProductionMode = process.env.NODE_ENV === 'production';
 
 export async function generateStaticParams() {
   return Object.values(ELanguage).map((l) => ({ [EUrlBaseParam.LANG]: l }));
@@ -34,7 +34,7 @@ export default function RootLayout({
 
   return (
     <html lang={lang === ELanguage.UA ? 'uk' : 'en'} className="!scroll-smooth">
-      {/* {isProductionMode && <GoogleTagManager gtmId={GOOGLE_GTM_ID} />} */}
+      {isProductionMode && <GoogleTagManager gtmId={GOOGLE_GTM_ID} />}
       <body
         suppressHydrationWarning={true}
         className="font-serif text-stone-800 bg-black overflow-x-hidden sm:bg-[url('/Images/black00001.gif')]"
@@ -45,6 +45,8 @@ export default function RootLayout({
         {/* <ToastProvider>{children}</ToastProvider> */}
         <Footer lang={lang} />
       </body>
+      <GoogleAdsense pId={adsenseId} />
+      <AdBlockingRecovery pId={adsenseId} />
     </html>
   );
 }

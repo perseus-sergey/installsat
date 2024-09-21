@@ -10,6 +10,7 @@ interface IFillingImgProps extends React.ImgHTMLAttributes<HTMLImageElement> {
   blurImgPath?: string;
   isChangeToGif?: boolean;
   isFillParent?: boolean;
+  isPriority?: boolean;
 }
 
 const FillingValidImage = ({
@@ -20,6 +21,7 @@ const FillingValidImage = ({
   blurImgPath = IMG_PROPERTIES.defaultImgBlur,
   isChangeToGif = false,
   isFillParent = false,
+  isPriority,
   className,
 }: IFillingImgProps) => {
   const validImg = imagePathValidate(image, defaultImage, isChangeToGif);
@@ -32,6 +34,7 @@ const FillingValidImage = ({
       blurImgPath={blurImgPath}
       isFillParent={isFillParent}
       className={className}
+      isPriority={isPriority}
     />
   );
 };

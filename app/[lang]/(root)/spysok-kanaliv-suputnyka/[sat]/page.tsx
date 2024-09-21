@@ -193,6 +193,7 @@ export default async function Page({ searchParams, params }: IPageProps) {
             }}
             defaultImage={h1SatImage.defaultImage}
             alt={`${h1SatImage.alt[lang]} ${title}`}
+            isPriority
           />
         </Title>
 

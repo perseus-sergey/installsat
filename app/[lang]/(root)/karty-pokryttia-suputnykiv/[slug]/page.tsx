@@ -8,8 +8,8 @@ import {
 } from '@/models/ui.model';
 import { getSatMap, updateViewCount } from '@/controllers/articles.controller';
 import SimilarArticles from '@/components/SimilarArticles/SimilarArticles';
-import { getCommentsNumber } from '@/controllers/comments.controller';
-import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
+// import { getCommentsNumber } from '@/controllers/comments.controller';
+// import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
 import BreadCrumbServer from '@/components/BreadCrumbs/BreadCrumbsServer';
 import { BREAD_CRUMBS } from '@/models/breadCrumbs.model';
 import { Title } from '@/components/ui/Titles/Title';
@@ -44,7 +44,8 @@ const { images: singleMapImg } = SINGLE_SAT_MAP_DATA;
 
 const { metaKeywords, metaTitle, getDescription, getH1 } = META_SINGLE_SAT_MAP;
 
-const { views: viewsTitle, comments: commentsTitle } = INFO_PANEL_TITLES;
+const { views: viewsTitle } = INFO_PANEL_TITLES;
+// const { views: viewsTitle, comments: commentsTitle } = INFO_PANEL_TITLES;
 
 export const generateMetadata = async ({
   params,
@@ -106,10 +107,10 @@ export default async function Page({ params }: IArticleParams) {
 
   const { sat_id, view, sat_title, position, logo, grade } = sqlResult[0];
 
-  const numberOfComments = await getCommentsNumber(
-    EDBTableTitles.COMMENTS_MAPS,
-    `${sat_id}`
-  );
+  // const numberOfComments = await getCommentsNumber(
+  //   EDBTableTitles.COMMENTS_MAPS,
+  //   `${sat_id}`
+  // );
 
   const h1Title = getH1(`${sat_title}, ${position}`)[lang];
 
@@ -147,7 +148,7 @@ export default async function Page({ params }: IArticleParams) {
         <BottomInfoPanel
           items={[
             { name: viewsTitle[lang], value: view + 1 },
-            { name: commentsTitle[lang], value: numberOfComments },
+            // { name: commentsTitle[lang], value: numberOfComments },
           ]}
         />
       </article>
@@ -165,15 +166,15 @@ export default async function Page({ params }: IArticleParams) {
           </li>,
         ]}
       />
-
-      <CommentBlock
-        lang={lang}
-        numberOfComments={numberOfComments}
-        revalidateUrl={`/${lang}/${EUrlBaseParam.SAT_COVERAGE_MAP}/${slug}`}
-        dbCommentTableName={EDBTableTitles.COMMENTS_MAPS}
-        articleId={`${sat_id}`}
-        articleName={`${metaTitle[lang]} ${sat_title} ${position}`}
-      />
     </>
   );
 }
+
+// <CommentBlock
+//   lang={lang}
+//   numberOfComments={numberOfComments}
+//   revalidateUrl={`/${lang}/${EUrlBaseParam.SAT_COVERAGE_MAP}/${slug}`}
+//   dbCommentTableName={EDBTableTitles.COMMENTS_MAPS}
+//   articleId={`${sat_id}`}
+//   articleName={`${metaTitle[lang]} ${sat_title} ${position}`}
+// />

@@ -24,12 +24,12 @@ import { notFound } from 'next/navigation';
 import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
 import { Metadata } from 'next';
 import { getELangKey } from '@/libs/utils/validSearchParam';
-import { getCommentsNumber } from '@/controllers/comments.controller';
+// import { getCommentsNumber } from '@/controllers/comments.controller';
 import EditLinkButton from '@/components/admin/EditLinkButton/EditLinkButton';
 import BreadCrumbServer from '@/components/BreadCrumbs/BreadCrumbsServer';
 import { BREAD_CRUMBS } from '@/models/breadCrumbs.model';
 import SimilarArticles from '@/components/SimilarArticles/SimilarArticles';
-import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
+// import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
 import TextUnderH1 from '@/components/TextUnderH1/TextUnderH1';
 import SeoLink from '@/components/ui/SeoLink/SeoLink';
 
@@ -121,7 +121,7 @@ export default async function Page({ params }: IArticleParams) {
     view,
     title,
     title_en,
-    slug,
+    // slug,
     cat_slug,
     cat_name,
     cat_name_en,
@@ -137,10 +137,10 @@ export default async function Page({ params }: IArticleParams) {
 
   const similarArticles = await getSimilarArticles(logo, id);
 
-  const numberOfComments = await getCommentsNumber(
-    EDBTableTitles.COMMENTS_ARTICLE,
-    `${id}`
-  );
+  // const numberOfComments = await getCommentsNumber(
+  //   EDBTableTitles.COMMENTS_ARTICLE,
+  //   `${id}`
+  // );
 
   updateViewCount(EDBTableTitles.ARTICLE, `${id}`, view);
 
@@ -225,15 +225,15 @@ export default async function Page({ params }: IArticleParams) {
           ))}
         />
       ) : null}
-
-      <CommentBlock
-        lang={lang}
-        numberOfComments={numberOfComments}
-        revalidateUrl={`/${lang}/${ARTICLE}/${slug}`}
-        dbCommentTableName={EDBTableTitles.COMMENTS_ARTICLE}
-        articleId={`${id}`}
-        articleName={titleLang}
-      />
     </>
   );
 }
+
+// <CommentBlock
+//   lang={lang}
+//   numberOfComments={numberOfComments}
+//   revalidateUrl={`/${lang}/${ARTICLE}/${slug}`}
+//   dbCommentTableName={EDBTableTitles.COMMENTS_ARTICLE}
+//   articleId={`${id}`}
+//   articleName={titleLang}
+// />

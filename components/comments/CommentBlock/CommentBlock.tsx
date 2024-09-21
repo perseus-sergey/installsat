@@ -73,7 +73,7 @@ const CommentBlock = async ({
 const BansBlock = ({ lang }: { lang: ELanguage }) => (
   <>
     <h3>{lang === ELanguage.UA ? 'Заборонено:' : 'Prohibited:'}</h3>
-    <ol type="1" style={{ listStyle: 'auto', paddingLeft: '2rem' }}>
+    <ol type="1" className="list-decimal pl-8">
       <li>
         {lang === ELanguage.UA
           ? 'Рекламувати інші ресурси'

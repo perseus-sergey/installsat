@@ -28,8 +28,8 @@ import {
 import { EUrlBaseParam, MAIN_URL } from '@/models/url.model';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
-import { getCommentsNumber } from '@/controllers/comments.controller';
+// import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
+// import { getCommentsNumber } from '@/controllers/comments.controller';
 import ChannelOnlineParams from '@/components/ChannelParams/ChannelOnlineParams';
 import OnlinePlayerTabs from '@/components/tabs/OnlinePlayerTabs';
 import GrooveLine from '@/components/ui/GrooveLine';
@@ -54,7 +54,10 @@ const { channels: simChannelsBefore, articles: simArticlesBefore } = SIMILAR;
 
 const { noteTitle, getResponsibilityText } = CHANNEL_RESPONSIBILITIES;
 
-const { comments: commentsTitle, views: viewsTitle } = INFO_PANEL_TITLES;
+const {
+  // comments: commentsTitle,
+  views: viewsTitle,
+} = INFO_PANEL_TITLES;
 
 const {
   channelLogo: { big: bigLogo },
@@ -117,16 +120,17 @@ export default async function Page({ params }: IChannelProps) {
 
   if (!sqlResult) notFound();
 
-  const { id, title, logo, text, view, chan_slug } = sqlResult;
+  const { id, title, logo, text, view } = sqlResult;
+  // const { id, title, logo, text, view, chan_slug } = sqlResult;
 
   const similarChannels = await getSimilarFlyChannels(title);
 
   const similarArticles = await getSimilarArticles(logo);
 
-  const numberOfComments = await getCommentsNumber(
-    EDBTableTitles.COMMENTS_CHANNEL,
-    `${id}`
-  );
+  // const numberOfComments = await getCommentsNumber(
+  //   EDBTableTitles.COMMENTS_CHANNEL,
+  //   `${id}`
+  // );
 
   const userLocation = await fetchUserLocation();
 
@@ -193,7 +197,7 @@ export default async function Page({ params }: IChannelProps) {
               name: viewsTitle[lang],
               value: view + 1,
             },
-            { name: commentsTitle[lang], value: numberOfComments },
+            // { name: commentsTitle[lang], value: numberOfComments },
           ]}
         />
       </article>
@@ -233,15 +237,15 @@ export default async function Page({ params }: IChannelProps) {
           ))}
         />
       ) : null}
-
-      <CommentBlock
-        lang={lang}
-        numberOfComments={numberOfComments}
-        revalidateUrl={`/${lang}/${ONLINE_CHANNEL_LIST}/${chan_slug}`}
-        dbCommentTableName={EDBTableTitles.COMMENTS_CHANNEL}
-        articleId={`${id}`}
-        articleName={title}
-      />
     </>
   );
 }
+
+// <CommentBlock
+//   lang={lang}
+//   numberOfComments={numberOfComments}
+//   revalidateUrl={`/${lang}/${ONLINE_CHANNEL_LIST}/${chan_slug}`}
+//   dbCommentTableName={EDBTableTitles.COMMENTS_CHANNEL}
+//   articleId={`${id}`}
+//   articleName={title}
+// />

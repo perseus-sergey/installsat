@@ -13,7 +13,10 @@ import { INFO_PANEL_TITLES } from '@/models/articles.model';
 
 const { packageImage } = PACKAGES_IMAGES;
 
-const { views: viewsTitle, comments: commentsTitle } = INFO_PANEL_TITLES;
+const {
+  views: viewsTitle,
+  // comments: commentsTitle
+} = INFO_PANEL_TITLES;
 
 interface IProps {
   packageList: IChannelPackagesModel[];
@@ -25,7 +28,15 @@ const PackageList = ({ packageList, lang }: IProps) =>
     <>
       <ul>
         {packageList.map(
-          ({ id, title, description, view, comment_count, logo, cpu }) => (
+          ({
+            id,
+            title,
+            description,
+            view,
+            // comment_count,
+            logo,
+            cpu,
+          }) => (
             <li key={id}>
               <ArticleCard
                 seoCardLinkTitle={
@@ -55,7 +66,7 @@ const PackageList = ({ packageList, lang }: IProps) =>
                 href={`/${lang}/${EUrlBaseParam.PACKAGE_CHANNEL_LIST}/${cpu}`}
                 infoPanelItems={[
                   { name: viewsTitle[lang], value: view },
-                  { name: commentsTitle[lang], value: comment_count },
+                  // { name: commentsTitle[lang], value: comment_count },
                 ]}
               />
             </li>

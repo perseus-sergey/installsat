@@ -30,8 +30,8 @@ import {
 } from '@/models/ui.model';
 import { EUrlAdminParam, EUrlBaseParam, MAIN_URL } from '@/models/url.model';
 import { Metadata } from 'next';
-import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
-import { getCommentsNumber } from '@/controllers/comments.controller';
+// import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
+// import { getCommentsNumber } from '@/controllers/comments.controller';
 import GrooveLine from '@/components/ui/GrooveLine';
 import BreadCrumbServer from '@/components/BreadCrumbs/BreadCrumbsServer';
 import { BREAD_CRUMBS } from '@/models/breadCrumbs.model';
@@ -50,7 +50,8 @@ const {
   channelLogo: { big: bigLogo },
 } = CHANNEL_IMAGES;
 
-const { comments: commentsTitle, views: viewsTitle } = INFO_PANEL_TITLES;
+const { views: viewsTitle } = INFO_PANEL_TITLES;
+// const { comments: commentsTitle, views: viewsTitle } = INFO_PANEL_TITLES;
 
 const { noteTitle, getResponsibilityText } = CHANNEL_RESPONSIBILITIES;
 
@@ -133,7 +134,7 @@ export default async function Page({ params }: IChannelProps) {
     logo,
     text,
     view,
-    chan_slug,
+    // chan_slug,
     cat_id,
     // cat_title,
     // cat_parent_title,
@@ -157,10 +158,10 @@ export default async function Page({ params }: IChannelProps) {
 
   const similarArticles = await getSimilarArticles(logo);
 
-  const numberOfComments = await getCommentsNumber(
-    EDBTableTitles.COMMENTS_CHANNEL,
-    `${id}`
-  );
+  // const numberOfComments = await getCommentsNumber(
+  //   EDBTableTitles.COMMENTS_CHANNEL,
+  //   `${id}`
+  // );
 
   const currentDate = getFormattedDateStrYearFirst();
 
@@ -234,7 +235,7 @@ export default async function Page({ params }: IChannelProps) {
               name: viewsTitle[lang],
               value: (view + 1).toLocaleString('en-US'),
             },
-            { name: commentsTitle[lang], value: numberOfComments },
+            // { name: commentsTitle[lang], value: numberOfComments },
           ]}
         />
       </article>
@@ -279,15 +280,15 @@ export default async function Page({ params }: IChannelProps) {
           })}
         />
       ) : null}
-
-      <CommentBlock
-        lang={lang}
-        numberOfComments={numberOfComments}
-        revalidateUrl={`/${lang}/${EUrlBaseParam.CHANNEL_PARAMS}/${chan_slug}`}
-        dbCommentTableName={EDBTableTitles.COMMENTS_CHANNEL}
-        articleId={`${id}`}
-        articleName={title}
-      />
     </>
   );
 }
+
+// <CommentBlock
+//   lang={lang}
+//   numberOfComments={numberOfComments}
+//   revalidateUrl={`/${lang}/${EUrlBaseParam.CHANNEL_PARAMS}/${chan_slug}`}
+//   dbCommentTableName={EDBTableTitles.COMMENTS_CHANNEL}
+//   articleId={`${id}`}
+//   articleName={title}
+// />

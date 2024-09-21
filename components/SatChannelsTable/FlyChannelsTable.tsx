@@ -351,6 +351,7 @@ const FlyChannelsTable = ({
                 defaultImage={h2SatListImage.defaultImage}
                 // alternativeImgString={h2SatListImage.alternativeString}
                 alt={`${h2SatListImage.alt[lang]} ${sat[0][0].sat_title}`}
+                isFillParent
               />
             </h2>
           )}

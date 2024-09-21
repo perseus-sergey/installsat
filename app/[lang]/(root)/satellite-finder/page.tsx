@@ -15,9 +15,9 @@ import {
 import { EUrlBaseParam, EUrlSearchParam, MAIN_URL } from '@/models/url.model';
 import { Metadata } from 'next';
 import { Suspense } from 'react';
-import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
+// import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
 import BottomInfoPanel from '@/components/BottomInfoPanel/BottomInfoPanel';
-import { getCommentsNumber } from '@/controllers/comments.controller';
+// import { getCommentsNumber } from '@/controllers/comments.controller';
 import BreadCrumbServer from '@/components/BreadCrumbs/BreadCrumbsServer';
 import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
 import { getELangKey } from '@/libs/utils/validSearchParam';
@@ -103,10 +103,10 @@ export default async function Page({ params }: IPageProps) {
 
   const groupedSats = await getSatsForForm(false, lang);
 
-  const numberOfComments = await getCommentsNumber(
-    EDBTableTitles.COMMENTS_ARTICLE,
-    dbArticleId
-  );
+  // const numberOfComments = await getCommentsNumber(
+  //   EDBTableTitles.COMMENTS_ARTICLE,
+  //   dbArticleId
+  // );
 
   updateViewCount(EDBTableTitles.ARTICLE, dbArticleId, view);
 
@@ -142,15 +142,15 @@ export default async function Page({ params }: IPageProps) {
           items={[{ name: viewsTitle[lang], value: view + 1 }]}
         />
       </article>
-
-      <CommentBlock
-        lang={lang}
-        numberOfComments={numberOfComments}
-        revalidateUrl={`/${lang}/${EUrlBaseParam.SAT_FINDER}`}
-        dbCommentTableName={EDBTableTitles.COMMENTS_ARTICLE}
-        articleId={dbArticleId}
-        articleName={titleLang}
-      />
     </>
   );
 }
+
+// <CommentBlock
+//   lang={lang}
+//   numberOfComments={numberOfComments}
+//   revalidateUrl={`/${lang}/${EUrlBaseParam.SAT_FINDER}`}
+//   dbCommentTableName={EDBTableTitles.COMMENTS_ARTICLE}
+//   articleId={dbArticleId}
+//   articleName={titleLang}
+// />

@@ -7,7 +7,7 @@ import {
   getDBOnlineChannel,
   getSimilarFlyChannels,
 } from '@/controllers/channel.controller';
-import { getCommentsNumber } from '@/controllers/comments.controller';
+// import { getCommentsNumber } from '@/controllers/comments.controller';
 import { cutText } from '@/libs/utils/utils';
 import {
   CHANNEL_IMAGES,
@@ -25,7 +25,7 @@ import BreadCrumbServer from '@/components/BreadCrumbs/BreadCrumbsServer';
 import { SCHEDULE_META } from '@/models/scheduleTV.model';
 import { getChanOneDaySchedule } from '@/controllers/schedule.controller';
 import { notFound } from 'next/navigation';
-import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
+// import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
 import SchedulePage from '@/components/SchedulePage/SchedulePage';
 import { getFormattedDateStrYearFirst, getValidDate } from '@/libs/utils/dates';
 import WeekScheduleTabs from '@/components/tabs/WeekScheduleTabs';
@@ -51,7 +51,7 @@ const { noteTitle, getResponsibilityText } = CHANNEL_RESPONSIBILITIES;
 const {
   date: dateTitle,
   views: viewsTitle,
-  comments: commentsTitle,
+  // comments: commentsTitle,
 } = INFO_PANEL_TITLES;
 
 const { getKeywords, getTitle, h1Start, descriptionStart } = SCHEDULE_META;
@@ -111,7 +111,7 @@ export default async function Page({ params }: IPageProps) {
   if (!sqlResult || !getValidDate(url_date)) notFound();
 
   const {
-    id,
+    // id,
     title: chanTitle,
     logo,
     view,
@@ -136,10 +136,10 @@ export default async function Page({ params }: IPageProps) {
 
   const similarChannels = await getSimilarFlyChannels(title);
 
-  const numberOfComments = await getCommentsNumber(
-    EDBTableTitles.COMMENTS_CHANNEL,
-    `${id}`
-  );
+  // const numberOfComments = await getCommentsNumber(
+  //   EDBTableTitles.COMMENTS_CHANNEL,
+  //   `${id}`
+  // );
 
   return (
     <>
@@ -196,7 +196,7 @@ export default async function Page({ params }: IPageProps) {
         <BottomInfoPanel
           items={[
             { name: viewsTitle[lang], value: view + 1 },
-            { name: commentsTitle[lang], value: numberOfComments },
+            // { name: commentsTitle[lang], value: numberOfComments },
             {
               name: dateTitle[lang],
               value: <time dateTime={url_date}>{url_date}</time>,
@@ -219,15 +219,15 @@ export default async function Page({ params }: IPageProps) {
           ))}
         />
       ) : null}
-
-      <CommentBlock
-        lang={lang}
-        numberOfComments={numberOfComments}
-        revalidateUrl={`/${lang}/${EUrlBaseParam.CHANNELS_TV_PROGRAM}/${slug}/${url_date}`}
-        dbCommentTableName={EDBTableTitles.COMMENTS_CHANNEL}
-        articleId={`${id}`}
-        articleName={`${h1Start[lang]} "${title}"`}
-      />
     </>
   );
 }
+
+// <CommentBlock
+//   lang={lang}
+//   numberOfComments={numberOfComments}
+//   revalidateUrl={`/${lang}/${EUrlBaseParam.CHANNELS_TV_PROGRAM}/${slug}/${url_date}`}
+//   dbCommentTableName={EDBTableTitles.COMMENTS_CHANNEL}
+//   articleId={`${id}`}
+//   articleName={`${h1Start[lang]} "${title}"`}
+// />

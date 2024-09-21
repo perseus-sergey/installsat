@@ -3,7 +3,7 @@ import '../globals.scss';
 // import AdBlockingRecovery from '@/components/GoogleAdsense/AdBlockingRecovery';
 // import GoogleAdsense from '@/components/GoogleAdsense/GoogleAdsense';
 import Header from '@/components/Header/Header';
-import ToastProvider from '@/libs/ToastProvider/ToastProvider';
+// import ToastProvider from '@/libs/ToastProvider/ToastProvider';
 import { getELangKey } from '@/libs/utils/validSearchParam';
 import { ELanguage } from '@/models/ui.model';
 import { EUrlBaseParam } from '@/models/url.model';
@@ -41,8 +41,8 @@ export default function RootLayout({
       >
         <input type="checkbox" id="toggle-sidebar" hidden />
         <Header lang={lang} />
-        {/* {children} */}
-        <ToastProvider>{children}</ToastProvider>
+        {children}
+        {/* <ToastProvider>{children}</ToastProvider> */}
         <Footer lang={lang} />
       </body>
     </html>

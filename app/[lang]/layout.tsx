@@ -37,7 +37,7 @@ export default function RootLayout({
       {/* {isProductionMode && <GoogleTagManager gtmId={GOOGLE_GTM_ID} />} */}
       <body
         suppressHydrationWarning={true}
-        className="font-serif text-stone-800 bg-black overflow-x-hidden bg-[url('/Images/black00001.gif')]"
+        className="font-serif text-stone-800 bg-black overflow-x-hidden sm:bg-[url('/Images/black00001.gif')]"
       >
         <input type="checkbox" id="toggle-sidebar" hidden />
         <Header lang={lang} />

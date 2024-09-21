@@ -131,6 +131,7 @@ export default async function Page({ params }: IArticleParams) {
         <Title>
           {h1Title}
           <FillingValidImage
+            className="hidden: sm:block"
             image={{
               ...singleMapImg.h1Image,
               src: `${singleMapImg.h1Image.path}${logo}`,

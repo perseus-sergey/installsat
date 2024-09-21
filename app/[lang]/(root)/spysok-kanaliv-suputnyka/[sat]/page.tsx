@@ -187,13 +187,13 @@ export default async function Page({ searchParams, params }: IPageProps) {
         <Title>
           {h1Start[lang]} «{title} - {position}»
           <FillingValidImage
+            className="hidden sm:block"
             image={{
               ...h1SatImage,
               src: `${h1SatImage.path}${logo}`,
             }}
             defaultImage={h1SatImage.defaultImage}
             alt={`${h1SatImage.alt[lang]} ${title}`}
-            isPriority
           />
         </Title>
 

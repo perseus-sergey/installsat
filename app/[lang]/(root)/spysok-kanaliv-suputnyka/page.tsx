@@ -153,7 +153,7 @@ export default async function Page({ searchParams, params }: IPageProps) {
           <Image
             src={titleImg}
             alt={h1FlyImageAlt[lang]}
-            className="shrink-0"
+            className="shrink-0 hidden sm:block"
             priority
           />
         </Title>

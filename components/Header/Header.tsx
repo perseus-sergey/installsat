@@ -1,14 +1,10 @@
 import { Suspense } from 'react';
-import ToggleSidebarLabel from '../ui/ToggleSidebarLabel/ToggleSidebarLabel';
-import { LOGO, OPEN_SIDE_BAR_BTN } from '@/models/header.model';
+import { LOGO } from '@/models/header.model';
 import { ELanguage } from '@/models/ui.model';
 import LangSwitchButton from '../LangSwitchButton/LangSwitchButton';
 import SeoLink from '../ui/SeoLink/SeoLink';
 import siteLogotype from 'public/Images/InstallsatOrigBlue_200.png';
 import Image from 'next/image';
-import sideBarIconImg from 'public/Images/accordion/sidebar_icon.png';
-
-const { sideBarIcon } = OPEN_SIDE_BAR_BTN;
 
 // import AdsterraAd from '../AdsterraAd/AdsterraAd';
 // import dynamic from 'next/dynamic';
@@ -28,29 +24,15 @@ const Header = ({ lang }: { lang: ELanguage }) => (
     className="w-full p-2 bg-gradient-to-b from-blue-800"
     data-testid="Header"
   >
-    <div className="flex items-center justify-between">
-      <nav className="flex items-center gap-2">
-        <ToggleSidebarLabel
-          ariaLabel={sideBarIcon.ariaLabel[lang]}
-          className="cursor-pointer px-4"
-        >
-          <Image
-            src={sideBarIconImg}
-            alt={sideBarIcon.alt[lang]}
-            className="shrink-0"
-            tabIndex={0}
-            role="button"
-          />
-        </ToggleSidebarLabel>
-        <SeoLink href={`/${lang}`} title={title[lang]} className="sm:px-5">
-          <Image
-            className="h-12 w-28 sm:h-20 sm:w-48"
-            src={siteLogotype}
-            alt={siteLogo.alt[lang]}
-            priority
-          />
-        </SeoLink>
-      </nav>
+    <div className="max-w-4xl mx-auto flex items-center justify-between">
+      <SeoLink href={`/${lang}`} title={title[lang]} className="sm:px-5">
+        <Image
+          className="h-12 w-28 sm:h-20 sm:w-48 ml-12"
+          src={siteLogotype}
+          alt={siteLogo.alt[lang]}
+          priority
+        />
+      </SeoLink>
       <Suspense>
         <LangSwitchButton />
       </Suspense>

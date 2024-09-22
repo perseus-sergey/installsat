@@ -14,7 +14,8 @@ const ToggleSidebarLabel = ({
     htmlFor="toggle-sidebar"
     aria-label={ariaLabel}
     title={ariaLabel}
-    className={`lg:hidden inline-block ${className ? ` ${className}` : ''}`}
+    className={`inline-block transition-all ease-linear duration-300 ${className ? ` ${className}` : ''}`}
+    // className={`lg:hidden inline-block ${className ? ` ${className}` : ''}`}
     data-testid="ToggleSidebarLabel"
     {...attributes}
   >

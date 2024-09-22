@@ -6,6 +6,7 @@ interface IProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 export default ({ ariaLabel, children, className, ...attributes }: IProps) => (
   <button
     aria-label={ariaLabel}
+    title={ariaLabel}
     className={className}
     type="button"
     role="button"

@@ -14,7 +14,7 @@ const AccordionAdmin = async () => {
     'border-b border-stone-300 py-1 px-2 bg-stone-400 hover:bg-slate-500';
 
   return (
-    <nav className="mx-auto py-4 text-white" data-testid="Accordion">
+    <nav className="mt-12 mx-auto py-4 text-white" data-testid="Accordion">
       <ul>
         {Object.values(MENU_ACCORDION_ADMIN).map((menuType, index) => {
           return menuType.links ? (

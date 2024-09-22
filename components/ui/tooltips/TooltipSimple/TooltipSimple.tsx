@@ -15,7 +15,7 @@ const TooltipSimple = ({
 }: ITooltipSimpleProps) => {
   const TagName = wrapperTagName as keyof JSX.IntrinsicElements;
   const commonStyles =
-    'max-w-xs text-white text-base font-georgia leading-tight font-normal text-center p-2.5 rounded-md z-[101]';
+    'max-w-xs text-white text-base font-georgia leading-tight font-normal text-center p-2.5 rounded-md z-30';
 
   return (
     <TagName

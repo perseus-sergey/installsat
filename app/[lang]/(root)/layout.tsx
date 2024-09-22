@@ -5,6 +5,7 @@ import { DEFAULT_META_DATA, ELanguage } from '@/models/ui.model';
 import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
 import { EUrlBaseParam, MAIN_URL } from '@/models/url.model';
 import { getELangKey } from '@/libs/utils/validSearchParam';
+import SideBarServer from '@/components/SideBar/SideBarServer';
 
 const BASE_URL = process.env.BASE_URL || MAIN_URL;
 
@@ -44,8 +45,11 @@ export default function Layout({ children, params }: IProps) {
   const lang = getELangKey(params[EUrlBaseParam.LANG]);
 
   return (
-    <main className="mx-auto bg-slate-900 flex justify-between items-start min-h-screen sm:w-[95%] sm:rounded-lg sm:border sm:border-stone-400">
-      <SideBar lang={lang} />
+    <main className="mx-auto max-w-4xl bg-slate-900 flex justify-between items-start min-h-screen sm:rounded-lg sm:border sm:border-stone-400">
+      {/* <main className="mx-auto bg-slate-900 flex justify-between items-start min-h-screen sm:w-[95%] sm:rounded-lg sm:border sm:border-stone-400"> */}
+      <SideBar lang={lang}>
+        <SideBarServer lang={lang} />
+      </SideBar>
       <section className="flex flex-col flex-[3] overflow-x-hidden">
         {children}
       </section>

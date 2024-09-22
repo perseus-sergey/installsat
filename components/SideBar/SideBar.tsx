@@ -1,45 +1,53 @@
+'use client';
+
 import { ELanguage } from '@/models/ui.model';
-import ToggleSidebarLabel from '../ui/ToggleSidebarLabel/ToggleSidebarLabel';
-import WidgetArticleCategories from '../WidgetArticleCategories/WidgetArticleCategories';
-import WidgetLastNews from '../WidgetLastNews/WidgetLastNews';
-import UserWelcome from '../UserWelcome/UserWelcome';
-import dynamic from 'next/dynamic';
 import { OPEN_SIDE_BAR_BTN } from '@/models/header.model';
-import sideBarCloseImg from 'public/Images/accordion/sidebar_hide_icon.png';
-import Image from 'next/image';
+import BaseButton from '../ui/buttons/BaseButton/BaseButton';
+import { useState } from 'react';
 
-const { sideBarCloseIcon } = OPEN_SIDE_BAR_BTN;
+const { sideBarCloseIcon, sideBarIcon } = OPEN_SIDE_BAR_BTN;
 
-const SideBar = async ({
-  isAdmin = false,
+const SideBar = ({
   lang,
+  children,
 }: {
-  isAdmin?: boolean;
   lang: ELanguage;
+  children: React.ReactNode;
 }) => {
-  const Accordion = dynamic(
-    () => import('../menuAccordion/Accordion/Accordion')
-  );
-  const AccordionAdmin = dynamic(
-    () => import('../menuAccordion/Accordion/AccordionAdmin')
-  );
+  const [isOpen, setIsOpen] = useState(false);
+
+  const toggleAccordion = () => {
+    setIsOpen(!isOpen);
+  };
+
+  // throw new Error('Error');
 
   return (
-    <aside
-      className="sidebar bg-slate-900 lg:bg-transparent flex-1 p-2 transition-all ease-linear duration-300 lg:static fixed -left-full top-0 h-full w-5/6 max-w-lg min-w-72 lg:z-0 z-[101]"
-      data-testid="SideBar"
-    >
-      <ToggleSidebarLabel
+    <>
+      <BaseButton
+        onClick={() => setIsOpen(false)}
         ariaLabel={sideBarCloseIcon.ariaLabel[lang]}
-        className="inline-block p-4 cursor-pointer"
+        className={`fixed top-0 left-0 z-40 ${isOpen ? 'w-full h-full' : ''}`}
+      />
+      <BaseButton
+        ariaLabel={
+          isOpen
+            ? sideBarCloseIcon.ariaLabel[lang]
+            : sideBarIcon.ariaLabel[lang]
+        }
+        className={`${isOpen ? `bg-[url('/Images/accordion/sidebar_hide_icon.png')] bg-slate-900 fixed` : `bg-[url('/Images/accordion/sidebar_icon.png')] absolute`} bg-no-repeat w-8 h-8 top-1 left-1 p-4 cursor-pointer z-50 duration-300`}
+        onClick={toggleAccordion}
+      ></BaseButton>
+      <aside
+        className={`
+          ${isOpen ? 'left-0' : '-left-full'} overflow-y-auto fixed top-0 h-full w-64 sm:w-80 z-40
+          pt-16 p-2 bg-slate-900 shadow-lg
+          transition-all ease-linear duration-300
+          `}
       >
-        <Image src={sideBarCloseImg} alt={sideBarCloseIcon.alt[lang]} />
-      </ToggleSidebarLabel>
-      {!isAdmin && <WidgetLastNews lang={lang} />}
-      {isAdmin ? <AccordionAdmin /> : <Accordion lang={lang} />}
-      {!isAdmin && <WidgetArticleCategories lang={lang} />}
-      <UserWelcome />
-    </aside>
+        {children}
+      </aside>
+    </>
   );
 };
 

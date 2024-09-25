@@ -47,8 +47,6 @@ export default function Layout({ children, params }: IProps) {
 
   return (
     <main className="mx-auto max-w-4xl bg-slate-900 flex justify-between items-start min-h-screen sm:rounded-lg sm:border sm:border-stone-400">
-      {/* <main className="mx-auto bg-slate-900 flex justify-between items-start min-h-screen sm:w-[95%] sm:rounded-lg sm:border sm:border-stone-400"> */}
-
       <Suspense>
         <SideBar lang={lang}>
           <SideBarServer lang={lang} />

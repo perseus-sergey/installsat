@@ -11,6 +11,7 @@ import dynamic from 'next/dynamic';
 
 const Footer = dynamic(() => import('@/components/Footer/Footer'));
 import { GoogleTagManager } from '@next/third-parties/google';
+import { Suspense } from 'react';
 
 const GOOGLE_GTM_ID = process.env.GOOGLE_GTM || '';
 // const gaId = process.env.GA_ID || '';
@@ -20,6 +21,10 @@ const isProductionMode = process.env.NODE_ENV === 'production';
 export async function generateStaticParams() {
   return Object.values(ELanguage).map((l) => ({ [EUrlBaseParam.LANG]: l }));
 }
+
+const AdBanner = dynamic(() => import('@/components/GoogleAdsense/AdsBanner'), {
+  ssr: false,
+});
 
 export const dynamicParams = false;
 
@@ -40,6 +45,23 @@ export default function RootLayout({
         className="font-serif text-stone-800 bg-black overflow-x-hidden sm:bg-[url('/Images/black00001.gif')]"
       >
         <Header lang={lang} />
+
+        <div
+          className="h-60 bg-[url('/Images/google.png')] bg-no-repeat bg-center"
+          role="complementary"
+          aria-label={lang === ELanguage.UA ? 'Реклама' : 'Advertising'}
+        >
+          <Suspense>
+            <AdBanner
+              data-ad-client={`ca-pub-${adsenseId}`}
+              data-ad-slot="1581071444"
+              data-full-width-responsive="true"
+              // data-ad-layout="in-article"
+              data-ad-format="auto"
+            />
+          </Suspense>
+        </div>
+
         {children}
         {/* <ToastProvider>{children}</ToastProvider> */}
         <Footer lang={lang} />

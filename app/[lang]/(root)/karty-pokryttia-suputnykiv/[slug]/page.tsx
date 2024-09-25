@@ -141,6 +141,7 @@ export default async function Page({ params }: IArticleParams) {
             isFillParent
           />
         </Title>
+
         {sqlResult.length > 0 ? (
           <BeamMapList lang={lang} beamList={sqlResult} />
         ) : (

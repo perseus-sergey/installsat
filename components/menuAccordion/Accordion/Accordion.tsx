@@ -26,18 +26,10 @@ const textShadow = {
 };
 
 const Accordion = async ({ lang }: { lang: ELanguage }) => {
-  const channelCatListPromise = getChannelCatList(lang);
-  const usefulArticleListPromise = getUsefulArticleList();
-  const flyChannelSatListPromise = getFlyChannelSatList();
-  const mapsPromise = getSatMapsSideBar();
-
-  const [channelCatListResp, flyChannelSatList, usefulArticleListResp, maps] =
-    await Promise.all([
-      channelCatListPromise,
-      flyChannelSatListPromise,
-      usefulArticleListPromise,
-      mapsPromise,
-    ]);
+  const channelCatListResp = await getChannelCatList(lang);
+  const flyChannelSatList = await getFlyChannelSatList();
+  const usefulArticleListResp = await getUsefulArticleList();
+  const maps = await getSatMapsSideBar();
 
   const channelCatList =
     channelCatListResp instanceof Error ? [] : channelCatListResp;

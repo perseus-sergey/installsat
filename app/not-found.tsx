@@ -6,7 +6,7 @@ import { ELanguage } from '@/models/ui.model';
 export default function NotFound() {
   return (
     <html lang={ELanguage.EN}>
-      <body suppressHydrationWarning={true}>
+      <body suppressHydrationWarning={true} className="bg-slate-950">
         <Header lang={ELanguage.EN} />
         <main className="article">
           <NotFoundPage />

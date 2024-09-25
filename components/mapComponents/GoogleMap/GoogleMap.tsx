@@ -11,8 +11,6 @@ import {
 import { Polyline } from '@/components/mapComponents/Polyline';
 import FillingImg from '../../ui/Images/FillingImage';
 import { SAT_FINDER_META_DATA } from '@/models/satFinder.model';
-import { MultiValue } from 'react-select';
-import { ISatelliteOption } from '@/models/tblSat.model';
 import { Dispatch, SetStateAction } from 'react';
 import { ELanguage } from '@/models/ui.model';
 
@@ -23,7 +21,6 @@ interface IGoogleMapProps {
   markerPosition: google.maps.LatLngLiteral;
   zoom: number;
   satGradeList: string[];
-  selectedOptions: MultiValue<ISatelliteOption> | null;
   cameraProps: MapCameraProps;
   isMapInfoWindowOpened: boolean;
   mapClickHandler: (e: MapMouseEvent) => void;
@@ -45,7 +42,6 @@ const GoogleMap = ({
   cameraProps,
   isMapInfoWindowOpened,
   satGradeList,
-  selectedOptions,
   mapClickHandler,
   handleCameraChange,
   setIsMapInfoWindowOpened,
@@ -83,10 +79,12 @@ const GoogleMap = ({
           onCloseClick={() => setIsMapInfoWindowOpened(false)}
         >
           <FillingImg {...markerImage} alt={markerImage.alt[lang]} />
-          {selectedOptions && selectedOptions.length ? (
+          {satGradeList && satGradeList.length ? (
             <ul>
-              {selectedOptions.map(({ label }) => (
-                <li key={label}>{label}</li>
+              {satGradeList.map((grade) => (
+                <li key={grade}>
+                  {Math.abs(Number(grade))}°{Number(grade) > 0 ? `E` : `W`}
+                </li>
               ))}
             </ul>
           ) : null}

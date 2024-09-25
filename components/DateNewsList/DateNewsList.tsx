@@ -1,6 +1,6 @@
 import styles from '../SatNewsList/SatNewsList.module.scss';
 import React from 'react';
-import DangerHtmlUl from '../ui/DangerHtml/DangerHtml';
+import DangerHtml from '../ui/DangerHtml/DangerHtml';
 import {
   getDailyNews,
   setGroupedNewsByDateMap,
@@ -52,8 +52,8 @@ const DateNewsList = async ({ lang }: { lang: ELanguage }) => {
                   satSlug={satNews[1][0].sat_slug}
                 />
               </TitleH3Digest>
-              <div className={styles.newsList}>
-                <DangerHtmlUl
+              <div className={`${styles.newsList} sm:text-xl`}>
+                <DangerHtml
                   text={getDailyNews(satNews[1])}
                   wrapperTagName="ul"
                 />

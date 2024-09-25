@@ -5,22 +5,16 @@ import DangerHtml from '@/components/ui/DangerHtml/DangerHtml';
 import FillingValidImage from '@/components/ui/Images/FillingValidImage';
 import NoteBlock from '@/components/ui/NoteBlock/NoteBlock';
 import SimilarArticles from '@/components/SimilarArticles/SimilarArticles';
-import { SimilarFlyChannel } from '@/components/SimilarChannel/SimilarChannel';
 import { Title } from '@/components/ui/Titles/Title';
 import TvScheduleLink from '@/components/TvScheduleLink/TvScheduleLink';
-import {
-  getSimilarArticles,
-  updateViewCount,
-} from '@/controllers/articles.controller';
-import {
-  getDBChannel,
-  getSimilarFlyChannels,
-} from '@/controllers/channel.controller';
+import { updateViewCount } from '@/controllers/articles.controller';
+import { getDBChannel } from '@/controllers/channel.controller';
 import {
   CHANNEL_IMAGES,
   CHANNEL_RESPONSIBILITIES,
   META_CHANNEL,
-  SIMILAR,
+  SIMILAR_ARTICLE_TITLE,
+  SIMILAR_CHANNELS_TITLE,
 } from '@/models/channel.model';
 import {
   DEFAULT_LANG,
@@ -34,13 +28,13 @@ import { Metadata } from 'next';
 // import { getCommentsNumber } from '@/controllers/comments.controller';
 import GrooveLine from '@/components/ui/GrooveLine';
 import BreadCrumbServer from '@/components/BreadCrumbs/BreadCrumbsServer';
-import { BREAD_CRUMBS } from '@/models/breadCrumbs.model';
 import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
 import EditLinkButton from '@/components/admin/EditLinkButton/EditLinkButton';
 import { notFound } from 'next/navigation';
 import { getELangKey } from '@/libs/utils/validSearchParam';
-import SeoLink from '@/components/ui/SeoLink/SeoLink';
 import { INFO_PANEL_TITLES } from '@/models/articles.model';
+import { Suspense } from 'react';
+import SimilarChannels from '@/components/SimilarArticles/SimilarChannels';
 
 const BASE_URL = process.env.BASE_URL || MAIN_URL;
 
@@ -51,17 +45,14 @@ const {
 } = CHANNEL_IMAGES;
 
 const { views: viewsTitle } = INFO_PANEL_TITLES;
-// const { comments: commentsTitle, views: viewsTitle } = INFO_PANEL_TITLES;
 
 const { noteTitle, getResponsibilityText } = CHANNEL_RESPONSIBILITIES;
-
-const { channels: simChannelsBefore, articles: simArticlesBefore } = SIMILAR;
 
 export interface IChannelProps {
   params: { [key in EUrlBaseParam]: string };
 }
 
-export const revalidate = 3600 * 24; // invalidate cache every 24 hours
+export const revalidate = 3600 * 24;
 
 export const generateMetadata = async ({
   params,
@@ -154,10 +145,6 @@ export default async function Page({ params }: IChannelProps) {
   // const catTitle =
   //   cat_parent_id > 0 ? `${cat_parent_title} - ${cat_title}` : cat_title;
 
-  const similarChannels = await getSimilarFlyChannels(title);
-
-  const similarArticles = await getSimilarArticles(logo);
-
   // const numberOfComments = await getCommentsNumber(
   //   EDBTableTitles.COMMENTS_CHANNEL,
   //   `${id}`
@@ -169,16 +156,26 @@ export default async function Page({ params }: IChannelProps) {
 
   return (
     <>
-      <EditLinkButton
-        href={`/${lang}/${EUrlAdminParam.BASE_PATH}/${EUrlAdminParam.CHANNELS_EDIT}/edit/${id}`}
-      />
+      <Suspense>
+        <EditLinkButton
+          href={`/${lang}/${EUrlAdminParam.BASE_PATH}/${EUrlAdminParam.CHANNELS_EDIT}/edit/${id}`}
+        />
+      </Suspense>
+
       <BreadCrumbServer
         lang={lang}
         breadCrumbList={[
-          BREAD_CRUMBS.SAT_CHANNEL_LIST,
+          {
+            href: EUrlBaseParam.SAT_CHANNEL_LIST,
+            title: {
+              [ELanguage.UA]: 'Список каналів супутників',
+              [ELanguage.EN]: 'List of satellite channels',
+            },
+          },
           `${titleBefore[lang]} "${title}"`,
         ]}
       />
+
       <article className="article">
         <Title>
           {`${titleBefore[lang]} "${title}"`}
@@ -240,46 +237,21 @@ export default async function Page({ params }: IChannelProps) {
         />
       </article>
 
-      {similarChannels.length ? (
-        <SimilarArticles
-          similarTitle={`${simChannelsBefore.title[lang]} "${title}"`}
-          similarArticlesMapped={similarChannels.map((chan) => (
-            <li key={chan.slug}>
-              <SimilarFlyChannel
-                lang={lang}
-                chanParams={chan}
-                chanName={title}
-              />
-            </li>
-          ))}
+      <Suspense>
+        <SimilarChannels
+          lang={lang}
+          chanelTitle={title}
+          sectionCaption={`${SIMILAR_CHANNELS_TITLE[lang]} "${title}"`}
         />
-      ) : null}
+      </Suspense>
 
-      {similarArticles.length ? (
+      <Suspense>
         <SimilarArticles
-          similarTitle={simArticlesBefore.title[lang]}
-          similarArticlesMapped={similarArticles.map((art) => {
-            const artTitle =
-              lang === ELanguage.UA ? art.title : art.title_en || art.title;
-
-            return (
-              <li key={art.cpu}>
-                <SeoLink
-                  href={`/${lang}/${EUrlBaseParam.ARTICLE}/${art.cpu}`}
-                  title={
-                    lang === ELanguage.UA
-                      ? `Читати статтю ${artTitle}, яка пов'язана з каналом "${title}"`
-                      : `Read article ${artTitle}, related to channel "${title}"`
-                  }
-                >
-                  {artTitle}
-                </SeoLink>
-                <span>{` (${getFormattedDateStrYearFirst(art.date)})`}</span>
-              </li>
-            );
-          })}
+          similarTitle={SIMILAR_ARTICLE_TITLE[lang]}
+          logoSrc={logo}
+          lang={lang}
         />
-      ) : null}
+      </Suspense>
     </>
   );
 }

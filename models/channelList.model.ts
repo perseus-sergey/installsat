@@ -117,12 +117,9 @@ export const META_ONLINE_CHANNEL_LIST = {
 
 export const ONLINE_CHANNEL_LIST_IMAGES = {
   h1Image: {
-    src: '/Images/packages/Popcorn-icon.png',
-    height: 128,
-    width: 128,
     alt: {
-      [ELanguage.UA]: `Дивитися телеканали онлайн`,
-      [ELanguage.EN]: `Watch free TV live.`,
+      [ELanguage.UA]: `Зображення пакунка з попкорном`,
+      [ELanguage.EN]: `Package with popcorn`,
     },
   },
   genreImage: {

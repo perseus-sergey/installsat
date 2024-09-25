@@ -423,6 +423,34 @@ export const getChannelsWithSchedule = async (
       ]);
 };
 
+interface IPackageParams {
+  cat_logo: string;
+  cat_title: string;
+  cat_id: number;
+  cat_view: number;
+}
+
+export const getPackageParams = cache(async (packageSlug?: string) => {
+  const where = packageSlug ? 'cpu = ?' : 'id = ?';
+  const param = packageSlug || 22;
+
+  const sql = `
+    SELECT
+      id AS cat_id,
+      view AS cat_view,
+      title AS cat_title,
+      logo AS cat_logo
+    FROM
+      ${CHANNEL_CATEGORY}
+    WHERE ${where}
+    LIMIT 1
+  `;
+
+  const resp = await poolExecute<IPackageParams[]>(sql, [param]);
+
+  return resp instanceof Error ? null : resp[0];
+});
+
 export const getT2Channels = cache(
   async (lang: ELanguage, searchQuery = '') => {
     const searchPart = searchQuery ? `AND C.title LIKE "%${searchQuery}%"` : '';
@@ -462,7 +490,7 @@ export const getT2Channels = cache(
       );
 
     return resp instanceof Error || !resp.length
-      ? null
+      ? []
       : groupeChannelsBy<IPackageChannelListModel>(resp, 'genre_title', [
           'chan_title',
           'chan_description',
@@ -517,7 +545,7 @@ export const getPackageChannels = cache(
     ]);
 
     return resp instanceof Error || !resp.length
-      ? null
+      ? []
       : groupeChannelsBy<IPackageChannelListModel>(
           resp,
           'genre_title',

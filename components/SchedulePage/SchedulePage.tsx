@@ -1,4 +1,4 @@
-import { IScheduleTVModel, SCHEDULE_META } from '@/models/scheduleTV.model';
+import { SCHEDULE_META } from '@/models/scheduleTV.model';
 import ScheduleItem from '../ScheduleItem/ScheduleItem';
 import './SchedulePage.scss';
 import { DateTime } from 'luxon';
@@ -6,7 +6,12 @@ import { Fragment } from 'react';
 import EmptyData from '../errors/EmptyData/EmptyData';
 import { TitleH2 } from '../ui/Titles/TitleH2';
 import { getDayOfMonthStr } from '@/libs/utils/dates';
-import { DEFAULT_TIME_ZONE, ELanguage } from '@/models/ui.model';
+import {
+  DEFAULT_TIME_ZONE,
+  EDBTableTitles,
+  ELanguage,
+} from '@/models/ui.model';
+import { getChanOneDaySchedule } from '@/controllers/schedule.controller';
 
 const {
   h2TitleForDate,
@@ -15,20 +20,28 @@ const {
 } = SCHEDULE_META;
 
 interface ISchedulePageProps {
-  scheduleList: IScheduleTVModel[][] | null;
   urlDate: string;
   channelTitle: string;
   lang: ELanguage;
+  filteredSchedules: {
+    tblName: EDBTableTitles;
+    scheduleId: number;
+  }[];
+  url_date: string;
 }
 
-const SchedulePage = ({
-  scheduleList,
+const SchedulePage = async ({
   urlDate,
   channelTitle,
   lang,
+  filteredSchedules,
+  url_date,
 }: ISchedulePageProps) => {
   const now = DateTime.local().setZone(DEFAULT_TIME_ZONE);
   const dayStr = getDayOfMonthStr(urlDate, lang);
+
+  const scheduleList = await getChanOneDaySchedule(filteredSchedules, url_date);
+
   const availableSchedulesLength = !scheduleList
     ? 0
     : scheduleList?.filter((scheduleList) => scheduleList.length).length;
@@ -44,10 +57,10 @@ const SchedulePage = ({
           tbl.length > 0 && (
             <ul
               id={`content-${i}`}
-              className={`max-w-[95%] ${availableSchedulesLength > 1 ? 'hidden' : ''}`}
+              className={`max-w-[95%] list-none ${availableSchedulesLength > 1 ? 'hidden' : ''}`}
             >
               {tbl.map((item) => (
-                <li key={item.id} style={{ listStyle: 'none' }}>
+                <li key={item.id}>
                   <ScheduleItem schedule={item} addHour={0} now={now} />
                 </li>
               ))}
@@ -55,6 +68,7 @@ const SchedulePage = ({
           )
         );
       })}
+
       {availableSchedulesLength > 1 && (
         <nav className="tab-nav flex order-[-1] mb-4 gap-8">
           {scheduleList.map((tbl, index) => {

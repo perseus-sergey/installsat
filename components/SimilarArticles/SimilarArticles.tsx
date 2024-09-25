@@ -1,37 +1,49 @@
-import styles from './SimilarArticles.module.scss';
-import { ReactNode } from 'react';
+import { getSimilarArticles } from '@/controllers/articles.controller';
+import SeoLink from '../ui/SeoLink/SeoLink';
+import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
+import { EUrlBaseParam } from '@/models/url.model';
+import { ELanguage } from '@/models/ui.model';
+import SimilarBlock from './SimilarBlock';
 
 interface ISimilarArticlesProps {
-  similarArticlesMapped: ReactNode[];
   similarTitle: string;
+  logoSrc: string;
+  lang: ELanguage;
+  articleId?: number;
 }
 
-const SimilarArticles = ({
-  similarArticlesMapped,
+const { ARTICLE } = EUrlBaseParam;
+
+const SimilarArticles = async ({
   similarTitle,
-}: ISimilarArticlesProps) => (
-  <nav
-    className="my-1 mx-auto w-full rounded-lg"
-    style={{
-      border: 'thick inset #cccccc',
-      background:
-        'linear-gradient(to bottom, #fceabb 0%, #fccd4d 35%, #f8b500 36%, #fbdf93 100%)',
-    }}
-    data-testid="SimilarArticles"
-  >
-    <h2
-      className="text-3xl font-bold font-verdana py-2 text-indigo-900 text-center"
-      style={{ textShadow: '1px 1px 0px white' }}
-    >
-      {similarTitle}
-    </h2>
-    <ul
-      className={`${styles.list} p-4 pl-12 font-georgia text-xl`}
-      style={{ listStyleImage: 'url(/Images/galka_blue.png)' }}
-    >
-      {similarArticlesMapped}
-    </ul>
-  </nav>
-);
+  logoSrc,
+  lang,
+  articleId,
+}: ISimilarArticlesProps) => {
+  const similarArticles = await getSimilarArticles(logoSrc, articleId);
+
+  if (similarArticles.length === 0) return null;
+
+  return (
+    <SimilarBlock blockTitle={similarTitle}>
+      {similarArticles.map((art) => (
+        <li key={art.cpu}>
+          <SeoLink
+            className="text-indigo-700 hover:text-red-500"
+            href={`/${lang}/${ARTICLE}/${art.cpu}`}
+            title={
+              lang === ELanguage.UA
+                ? `Перейти до перегляду статті "${art.title}"`
+                : `Go to the view of the article "${art.title_en || art.title}"`
+            }
+          >
+            {lang === ELanguage.UA ? art.title : art.title_en || art.title}
+          </SeoLink>
+          <span>{` (${getFormattedDateStrYearFirst(art.date)})`}</span>
+        </li>
+      ))}
+    </SimilarBlock>
+  );
+};
 
 export default SimilarArticles;

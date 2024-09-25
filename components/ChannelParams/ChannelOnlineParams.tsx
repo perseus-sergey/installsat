@@ -16,16 +16,18 @@ const ChannelOnlineParams = ({
   return (
     <section>
       <TitleH2>{getParamsTitle(title)[lang]}</TitleH2>
-      <ul>
+      <ul
+        className="p-4 pl-12 font-georgia text-xl"
+        style={{ listStyleImage: 'url(/Images/galka_blue.png)' }}
+      >
         {chan_lang && (
           <li>
-            {paramsLanguage[lang]}
-            <strong>{chan_lang}</strong>
+            {paramsLanguage[lang]} - <strong>{chan_lang}</strong>
           </li>
         )}
         {url && (
           <li>
-            {getParamsSite(title)[lang]} - <strong>{url}</strong>
+            {getParamsSite(title)[lang]} - <b>{url}</b>
           </li>
         )}
       </ul>

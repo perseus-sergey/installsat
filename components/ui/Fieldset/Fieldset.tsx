@@ -16,7 +16,7 @@ const Fieldset = ({
     data-testid="Fieldset"
     {...attributes}
   >
-    <legend className={'px-2 ml-4 text-stone-500'}>{legendText}</legend>
+    <legend className={'px-2 ml-4 text-stone-600'}>{legendText}</legend>
 
     {children}
   </fieldset>

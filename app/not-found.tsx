@@ -7,7 +7,6 @@ export default function NotFound() {
   return (
     <html lang={ELanguage.EN}>
       <body suppressHydrationWarning={true}>
-        <input type="checkbox" id="toggle-sidebar" hidden />
         <Header lang={ELanguage.EN} />
         <main className="article">
           <NotFoundPage />

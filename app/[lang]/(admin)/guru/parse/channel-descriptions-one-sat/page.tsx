@@ -13,19 +13,23 @@ import { sendMail } from '@/libs/mail/sendMail';
 export const dynamic = 'force-dynamic';
 
 // =================================================================
+// programa-telekanaliv/[slug]/[url_date]/page.tsx - show more in genre section
+// remove decode function from controllers
+// add links to footer
+// remove tooltip hover for mobiles
+// fix back/forward
+// fix comments
+// fix parse channel exists description ai generating
+// sat finder - not internet error handling
+// Set indexes in DB
 //
 // Check comment user location in production (if successful, clean up the comments form //code comments)
 // Split all models into smaller models
 // Add separate tbl_comments for fly satellites
 // Renew tbl_chan_categ by adding english language
 // Mobile Accordion Lazy loading
-// Maximum Tailwind
-// Set indexes in DB
-// Find approximate grades from search params for spysok-kanaliv-suputnyka
-// Change all Link to SeoLink
-// change all reactSelects
-// Check SEO by removing elements from the page step by step
 // Parse biss from lugasat (Or satsat.info) by sat grade & frequency & title
+// Find approximate grades from search params for spysok-kanaliv-suputnyka
 // add color description to channel filters
 // improve similar channels & similar articles blocks
 // add comment block to fly channels with separate db tbl (fly_comments_channel))

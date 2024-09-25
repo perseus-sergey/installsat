@@ -3,22 +3,16 @@ import DangerHtml from '@/components/ui/DangerHtml/DangerHtml';
 import FillingValidImage from '@/components/ui/Images/FillingValidImage';
 import NoteBlock from '@/components/ui/NoteBlock/NoteBlock';
 import SimilarArticles from '@/components/SimilarArticles/SimilarArticles';
-import { SimilarFlyChannel } from '@/components/SimilarChannel/SimilarChannel';
 import { Title } from '@/components/ui/Titles/Title';
 import TvScheduleLink from '@/components/TvScheduleLink/TvScheduleLink';
-import {
-  getSimilarArticles,
-  updateViewCount,
-} from '@/controllers/articles.controller';
-import {
-  getDBOnlineChannel,
-  getSimilarFlyChannels,
-} from '@/controllers/channel.controller';
+import { updateViewCount } from '@/controllers/articles.controller';
+import { getDBOnlineChannel } from '@/controllers/channel.controller';
 import {
   CHANNEL_IMAGES,
   CHANNEL_RESPONSIBILITIES,
   META_CHANNEL_ONLINE,
-  SIMILAR,
+  SIMILAR_ARTICLE_TITLE,
+  SIMILAR_CHANNELS_TITLE,
 } from '@/models/channel.model';
 import {
   EDBTableTitles,
@@ -33,24 +27,15 @@ import { notFound } from 'next/navigation';
 import ChannelOnlineParams from '@/components/ChannelParams/ChannelOnlineParams';
 import OnlinePlayerTabs from '@/components/tabs/OnlinePlayerTabs';
 import GrooveLine from '@/components/ui/GrooveLine';
-import ScheduleShort from '@/components/Schedule/ScheduleShort';
-import { fetchUserLocation } from '@/libs/utils/getUserIP';
 import BreadCrumbServer from '@/components/BreadCrumbs/BreadCrumbsServer';
-import { BREAD_CRUMBS } from '@/models/breadCrumbs.model';
-import { cache } from 'react';
-import {
-  getFormattedDateStr,
-  getFormattedDateStrYearFirst,
-} from '@/libs/utils/dates';
+import { cache, Suspense } from 'react';
+import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
 import { getELangKey } from '@/libs/utils/validSearchParam';
-import SeoLink from '@/components/ui/SeoLink/SeoLink';
 import { INFO_PANEL_TITLES } from '@/models/articles.model';
+import SimilarChannels from '@/components/SimilarArticles/SimilarChannels';
 
 const BASE_URL = process.env.BASE_URL || MAIN_URL;
-const { LANG, SLUG, CHANNELS_TV_PROGRAM, ONLINE_CHANNEL_LIST, ARTICLE } =
-  EUrlBaseParam;
-
-const { channels: simChannelsBefore, articles: simArticlesBefore } = SIMILAR;
+const { LANG, SLUG, CHANNELS_TV_PROGRAM, ONLINE_CHANNEL_LIST } = EUrlBaseParam;
 
 const { noteTitle, getResponsibilityText } = CHANNEL_RESPONSIBILITIES;
 
@@ -71,7 +56,7 @@ export interface IChannelProps {
   params: { [key in EUrlBaseParam]: string };
 }
 
-export const revalidate = 3600 * 48; // invalidate cache every 2 days
+export const revalidate = 3600 * 48;
 
 export const generateMetadata = async ({
   params,
@@ -123,21 +108,10 @@ export default async function Page({ params }: IChannelProps) {
   const { id, title, logo, text, view } = sqlResult;
   // const { id, title, logo, text, view, chan_slug } = sqlResult;
 
-  const similarChannels = await getSimilarFlyChannels(title);
-
-  const similarArticles = await getSimilarArticles(logo);
-
   // const numberOfComments = await getCommentsNumber(
   //   EDBTableTitles.COMMENTS_CHANNEL,
   //   `${id}`
   // );
-
-  const userLocation = await fetchUserLocation();
-
-  const userCountryCode =
-    userLocation && userLocation.status === 'success'
-      ? userLocation.countryCode
-      : '';
 
   updateViewCount(EDBTableTitles.CHANNELS, `${id}`, view);
 
@@ -146,7 +120,13 @@ export default async function Page({ params }: IChannelProps) {
       <BreadCrumbServer
         lang={lang}
         breadCrumbList={[
-          BREAD_CRUMBS.ONLINE_CHANNEL_LIST,
+          {
+            href: EUrlBaseParam.ONLINE_CHANNEL_LIST,
+            title: {
+              [ELanguage.UA]: 'Список онлайн каналів',
+              [ELanguage.EN]: 'Online channel list',
+            },
+          },
           getH1Cached(title)[lang],
         ]}
       />
@@ -160,36 +140,33 @@ export default async function Page({ params }: IChannelProps) {
             }}
             defaultImage={bigLogo.defaultImage}
             alt={`${bigLogo.alt[lang]} "${title}"`}
+            isPriority
           />
         </Title>
-        <OnlinePlayerTabs
-          lang={lang}
-          channelData={sqlResult}
-          userCountryCode={userCountryCode}
-        />
+        <OnlinePlayerTabs lang={lang} channelData={sqlResult} />
 
         <GrooveLine />
 
-        <ScheduleShort lang={lang} channelData={sqlResult} />
+        {/* <ScheduleShort lang={lang} channelData={sqlResult} /> */}
 
         <div className="article-text">
           <DangerHtml text={text} />
-
-          <GrooveLine />
-
-          <TvScheduleLink
-            isOnlinePage
-            lang={lang}
-            title={title}
-            href={`/${lang}/${CHANNELS_TV_PROGRAM}/${slug}/${getFormattedDateStrYearFirst()}`}
-          />
-
-          <ChannelOnlineParams lang={lang} channelDBParams={sqlResult} />
-
-          <NoteBlock noteTitle={noteTitle[lang]}>
-            {getResponsibilityText(title)[lang]}
-          </NoteBlock>
         </div>
+
+        <GrooveLine />
+
+        <TvScheduleLink
+          isOnlinePage
+          lang={lang}
+          title={title}
+          href={`/${lang}/${CHANNELS_TV_PROGRAM}/${slug}/${getFormattedDateStrYearFirst()}`}
+        />
+
+        <ChannelOnlineParams lang={lang} channelDBParams={sqlResult} />
+
+        <NoteBlock noteTitle={noteTitle[lang]}>
+          {getResponsibilityText(title)[lang]}
+        </NoteBlock>
 
         <BottomInfoPanel
           items={[
@@ -202,41 +179,21 @@ export default async function Page({ params }: IChannelProps) {
         />
       </article>
 
-      {similarChannels.length ? (
-        <SimilarArticles
-          similarTitle={`${simChannelsBefore.title[lang]} "${title}"`}
-          similarArticlesMapped={similarChannels.map((chan) => (
-            <li key={chan.slug}>
-              <SimilarFlyChannel
-                lang={lang}
-                chanParams={chan}
-                chanName={title}
-              />
-            </li>
-          ))}
+      <Suspense>
+        <SimilarChannels
+          lang={lang}
+          chanelTitle={title}
+          sectionCaption={`${SIMILAR_CHANNELS_TITLE[lang]} "${title}"`}
         />
-      ) : null}
+      </Suspense>
 
-      {similarArticles.length ? (
+      <Suspense>
         <SimilarArticles
-          similarTitle={simArticlesBefore.title[lang]}
-          similarArticlesMapped={similarArticles.map((art) => (
-            <li key={art.cpu}>
-              <SeoLink
-                href={`/${lang}/${ARTICLE}/${art.cpu}`}
-                title={
-                  lang === ELanguage.UA
-                    ? `Перейти до перегляду статті "${art.title}"`
-                    : `Go to the view of the article "${art.title_en || art.title}"`
-                }
-              >
-                {lang === ELanguage.UA ? art.title : art.title_en || art.title}
-              </SeoLink>
-              <span>{` (${getFormattedDateStr(art.date)})`}</span>
-            </li>
-          ))}
+          similarTitle={SIMILAR_ARTICLE_TITLE[lang]}
+          logoSrc={logo}
+          lang={lang}
         />
-      ) : null}
+      </Suspense>
     </>
   );
 }

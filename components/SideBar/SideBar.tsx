@@ -36,7 +36,7 @@ const SideBar = ({
     <>
       <BaseButton
         ariaLabel={sideBarIcon.ariaLabel[lang]}
-        className="bg-[url('/Images/accordion/sidebar_icon.png')] absolute bg-no-repeat w-8 h-8 top-4 left-4 p-4 cursor-pointer"
+        className="bg-[url('/Images/accordion/sidebar_icon.png')] absolute bg-no-repeat w-8 h-8 sm:top-8 top-4 left-4 p-4 cursor-pointer"
         onClick={openMenu}
       />
 
@@ -62,7 +62,7 @@ const SideBar = ({
                   ? sideBarCloseIcon.ariaLabel[lang]
                   : sideBarIcon.ariaLabel[lang]
               }
-              className="bg-[url('/Images/accordion/sidebar_hide_icon.png')] bg-slate-900 fixed bg-no-repeat w-8 h-8 top-1 left-1 p-4 cursor-pointer"
+              className="bg-[url('/Images/accordion/sidebar_hide_icon.png')] bg-slate-900 fixed bg-no-repeat w-8 h-8 top-8 left-4 p-4 cursor-pointer"
               onClick={closeMenu}
             />
             {children}

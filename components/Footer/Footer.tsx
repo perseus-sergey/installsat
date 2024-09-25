@@ -1,6 +1,12 @@
-import { COPYRIGHT_SECTION, footerMenuList } from '@/models/footer.model';
+import {
+  COPYRIGHT_SECTION,
+  EFooterColumns,
+  footerColumnTitles,
+  footerMenuList,
+  IFooterMenuItem,
+} from '@/models/footer.model';
 import { ELanguage } from '@/models/ui.model';
-import { Fragment } from 'react';
+import React, { Fragment } from 'react';
 import SeoLink from '../ui/SeoLink/SeoLink';
 
 const Footer = ({ lang }: { lang: ELanguage }) => (
@@ -12,30 +18,45 @@ const Footer = ({ lang }: { lang: ELanguage }) => (
       {COPYRIGHT_SECTION.title[lang]}
     </section>
 
-    <nav className="py-4 relative bg-slate-900">
-      <ul className="w-11/12 m-auto text-gray-200 grid grid-cols-[repeat(auto-fit,minmax(9rem,1fr))]">
-        {footerMenuList.map((item, i) => {
-          return (
-            <Fragment key={i}>
-              <li
-                className={`min-w-36 max-w-28 before:content-['▪'] before:text-red-500 before:text-2xl flex flex-nowrap items-center text-left gap-4`}
-              >
-                <SeoLink
-                  href={`/${lang}/${item.href}`}
-                  title={
-                    lang === ELanguage.UA
-                      ? `Натисніть, щоб перейти до перегляду сторінки "${item.title[lang]}"`
-                      : `Click to go to the view of the "${item.title[lang]}" page`
-                  }
-                >
-                  {item.title[lang]}
-                </SeoLink>
-              </li>
-            </Fragment>
-          );
-        })}
-      </ul>
+    <nav className="flex flex-wrap justify-between lg:justify-around gap-8 p-4 bg-slate-900">
+      {Object.entries(
+        footerMenuList as Record<EFooterColumns, IFooterMenuItem[]>
+      ).map(([columnType, columnItems]) => (
+        <section key={columnType} className="w-44 sm:w-auto">
+          <h2 className="text-xl flex items-center gap-2">
+            <div className="text-violet-200 transform hover:rotate-180 duration-300">
+              {footerColumnTitles[columnType as EFooterColumns].image}
+            </div>
+            {footerColumnTitles[columnType as EFooterColumns].title[lang]}
+          </h2>
+          <ul className="text-gray-200 flex flex-col gap-1">
+            {columnItems.map((item, i) => {
+              return (
+                <Fragment key={i}>
+                  <li
+                    className={`before:content-['▪'] before:text-red-500 before:text-2xl flex flex-nowrap items-center text-left gap-4`}
+                  >
+                    <SeoLink
+                      href={`/${lang}/${item.href}`}
+                      title={
+                        lang === ELanguage.UA
+                          ? `Натисніть, щоб перейти до перегляду сторінки "${item.title[lang]}"`
+                          : `Click to go to the view of the "${item.title[lang]}" page`
+                      }
+                    >
+                      {item.title[lang]}
+                    </SeoLink>
+                  </li>
+                </Fragment>
+              );
+            })}
+          </ul>
+        </section>
+      ))}
     </nav>
+    <div className="w-full">
+      <div className="w-full flex"></div>
+    </div>
   </footer>
 );
 

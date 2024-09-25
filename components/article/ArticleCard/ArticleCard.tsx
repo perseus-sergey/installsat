@@ -1,4 +1,3 @@
-import styles from './ArticleCard.module.scss';
 import BottomInfoPanel, {
   IBottomInfoPanelItem,
 } from '../../BottomInfoPanel/BottomInfoPanel';
@@ -23,11 +22,14 @@ const ArticleCard = ({
   seoCardLinkTitle,
   isTitleCentered = false,
 }: IArticleCardProps) => (
-  <section className={styles.ArticleCard} data-testid="ArticleCard">
+  <section
+    className="mb-4 shadow-[2px_2px_5px_#999999] hover:shadow-[2px_2px_5px_#5a5a5a] transition-transform hover:translate-y-px duration-100"
+    data-testid="ArticleCard"
+  >
     <SeoLink href={href} title={seoCardLinkTitle}>
       <h2
-        style={isTitleCentered ? { justifyContent: 'center' } : {}}
-        className={styles.h2Title}
+        style={{ textShadow: '0 1px 0 #ffffff, 1px 3px 3px #999999' }}
+        className={`${isTitleCentered ? 'justify-center' : ''} flex items-start gap-4 font-verdana text-indigo-800 text-xl font-bold py-4 px-2`}
       >
         {articleTitle}
       </h2>

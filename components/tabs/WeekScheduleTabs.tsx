@@ -2,7 +2,6 @@ import {
   getFormattedDateStrYearFirst,
   getStartOfWeekDate,
 } from '@/libs/utils/dates';
-import styles from './OnlinePlayerTabs.module.scss';
 import { createArray } from '@/libs/utils/utils';
 import { SCHEDULE_META } from '@/models/scheduleTV.model';
 import { ELanguage } from '@/models/ui.model';
@@ -37,12 +36,13 @@ const WeekScheduleTabs = ({
                 : `Watch channel schedule for "${channelName}" on ${date.toLocaleDateString('en-CA')}`
             }
             href={dateString}
-            className={`${styles.tabButton}${dateString === now ? ` ${styles.currentTab}` : ''}`}
+            className={`rounded-[2px_15px_0_0] max-w-32 w-fit flex items-center py-1 px-4 text-stone-600 cursor-pointer bg-stone-50 border border-solid border-stone-400 hover:border-orange-200 hover:bg-yellow-100 hover:text-orange-600 transition-transform transform hover:translate-y-px
+            ${dateString === now ? ` text-white !bg-indigo-900 border-b-rose-500` : ''}`}
           >
             {tabsTitles[lang][i]}, {date.getDate()}
           </SeoLink>
         ) : (
-          <span className={styles.currentDayTab}>
+          <span className="flex py-1 px-4 text-indigo-800 font-bold">
             {tabsTitles[lang][i]}, {date.getDate()}
           </span>
         )}

@@ -1,33 +1,33 @@
 'use client';
 
-import styles from './OnlinePlayerTabs.module.scss';
 // import Video from 'next-video';
 import FakePlayer from '../online/FakePlayer/FakePlayer';
 import BaseButton from '../ui/buttons/BaseButton/BaseButton';
 import React, { useState } from 'react';
 import {
   IOnlineChannel,
-  META_CHANNEL_ONLINE,
+  ONLINE_TABS,
+  YOUTUBE_PLAYER,
 } from '../../models/channel.model';
 import { ELanguage } from '@/models/ui.model';
-// import dynamic from 'next/dynamic';
 
 const {
-  tabs: {
-    button: { getAriaLabel, getTitle },
-  },
-  youtubePlayer: { width: yWidth, height: yHeight, embedPath: yEmbedPath },
-} = META_CHANNEL_ONLINE;
+  width: yWidth,
+  height: yHeight,
+  embedPath: yEmbedPath,
+} = YOUTUBE_PLAYER;
+
+const {
+  button: { getAriaLabel, getTitle },
+} = ONLINE_TABS;
 
 interface IOnlinePlayerTabsProps {
   channelData: IOnlineChannel;
-  userCountryCode: string;
   lang: ELanguage;
 }
 
 const OnlinePlayerTabs = ({
-  channelData: { potok, tvforsite_net, country, url, title },
-  userCountryCode,
+  channelData: { potok, tvforsite_net, url, title },
   lang,
 }: IOnlinePlayerTabsProps) => {
   const [playerN, setPlayerN] = useState(0);
@@ -54,38 +54,35 @@ const OnlinePlayerTabs = ({
   return (
     <div className="py-4 px-0">
       {numberOfTabs > 0 ? (
-        !country || country === userCountryCode ? (
-          <>
-            {numberOfTabs > 1 ? (
-              <>
-                <ul className={styles.tabButtonList}>
-                  {streams.map(
-                    ({ stream }, i) =>
-                      stream && (
-                        <li key={i}>
-                          <BaseButton
-                            ariaLabel={getAriaLabel(i + 1)[lang]}
-                            className={`${styles.tabButton}${playerN === i ? ` ${styles.currentTab}` : ''}`}
-                            onClick={() => setPlayerN(i)}
-                          >
-                            {getTitle(i + 1)[lang]}
-                          </BaseButton>
-                        </li>
-                      )
-                  )}
-                </ul>
-                <div>{streams[playerN].player}</div>
-              </>
-            ) : (
-              streams.map(
-                ({ stream, player }, i) =>
-                  stream && <React.Fragment key={i}>{player}</React.Fragment>
-              )
-            )}
-          </>
-        ) : (
-          <FakePlayer lang={lang} chanTitle={title} url={url} />
-        )
+        <>
+          {numberOfTabs > 1 ? (
+            <>
+              <ul className="flex">
+                {streams.map(
+                  ({ stream }, i) =>
+                    stream && (
+                      <li key={i}>
+                        <BaseButton
+                          ariaLabel={getAriaLabel(i + 1)[lang]}
+                          className={`rounded-[2px_15px_0_0] max-w-32 w-fit flex items-center py-1 px-4 text-stone-600 cursor-pointer bg-stone-50 border border-solid border-stone-400 hover:border-orange-200 hover:bg-yellow-100 hover:text-orange-600 
+                              ${playerN === i ? `pointer-events-none text-white !bg-indigo-900 border-b-rose-500` : ''}`}
+                          onClick={() => setPlayerN(i)}
+                        >
+                          {getTitle(i + 1)[lang]}
+                        </BaseButton>
+                      </li>
+                    )
+                )}
+              </ul>
+              <div>{streams[playerN].player}</div>
+            </>
+          ) : (
+            streams.map(
+              ({ stream, player }, i) =>
+                stream && <React.Fragment key={i}>{player}</React.Fragment>
+            )
+          )}
+        </>
       ) : (
         <FakePlayer lang={lang} chanTitle={title} url={url} />
       )}

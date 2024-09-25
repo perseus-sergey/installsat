@@ -4,6 +4,7 @@ import { EUrlBaseParam } from '@/models/url.model';
 import SideBar from '@/components/SideBar/SideBar';
 import { isAdminAuth } from '@/controllers/login.controller';
 import { ELanguage } from '@/models/ui.model';
+import SideBarServer from '@/components/SideBar/SideBarServer';
 
 export interface IParams {
   children: React.ReactNode;
@@ -14,7 +15,9 @@ export default async function layout({ children }: IParams) {
 
   return (
     <main className="mx-auto bg-blue-950 flex justify-between items-start min-h-screen sm:w-[95%]">
-      <SideBar lang={ELanguage.EN} isAdmin />
+      <SideBar lang={ELanguage.EN}>
+        <SideBarServer lang={ELanguage.EN} isAdmin />
+      </SideBar>
       <section className="flex flex-col flex-[3] overflow-x-hidden">
         <article className="article">{children}</article>
       </section>

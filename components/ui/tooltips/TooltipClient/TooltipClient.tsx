@@ -74,15 +74,13 @@ const TooltipClient = ({
             onClick={removePopUp}
           >
             <figure
-              className={`${styles.hint}${!isStyleDisabled ? ` ${styles.showHint}` : ''}`}
+              className={`flex flex-col justify-between text-center w-full max-h-full xl:w-[80vw] bg-stone-100 p-2 fixed z-10 rounded-xl text-stone-600 shadow-md transition-all duration-500 scale-0 left-0 top-0 opacity-0 transform translate-x-0 translate-y-0 ${!isStyleDisabled ? ` ${styles.showHint} left-1/2 top-1/2 scale-100 opacity-100` : ''}`}
             >
               {hintContent}
               <figcaption className="p-2 flex justify-between gap-8 items-center">
                 {hintDescription}
-                <span className={styles.crossMarkWrapper}>
-                  <span className={styles.crossMark}>
-                    {CAPTIONS.closeButtonMark}
-                  </span>
+                <span className="w-8 h-8 shrink-0 flex items-center justify-center rounded-full border border-stone-400 bg-red-400">
+                  <span className="text-white">{CAPTIONS.closeButtonMark}</span>
                 </span>
               </figcaption>
             </figure>

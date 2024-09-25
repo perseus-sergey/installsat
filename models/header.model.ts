@@ -19,12 +19,12 @@ export const LOGO = {
 export const OPEN_SIDE_BAR_BTN = {
   sideBarIcon: {
     alt: {
-      [ELanguage.UA]: 'Іконка кнопки відкриття / закриття прихованого меню',
-      [ELanguage.EN]: 'Open / close hidden menu button icon',
+      [ELanguage.UA]: 'Іконка кнопки відкриття прихованого меню',
+      [ELanguage.EN]: 'Open hidden menu button icon',
     },
     ariaLabel: {
-      [ELanguage.UA]: 'Відкрити / сховати бокове меню',
-      [ELanguage.EN]: 'Open / close side menu',
+      [ELanguage.UA]: 'Відкрити бокове меню',
+      [ELanguage.EN]: 'Open side menu',
     },
   },
   sideBarCloseIcon: {

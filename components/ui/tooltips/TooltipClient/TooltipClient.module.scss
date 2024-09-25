@@ -1,26 +1,3 @@
-$AnimationDuration: 0.5s;
-
-.hint {
-  text-align: center;
-  width: 90vw;
-  background-color: #f0f0f0;
-  padding: 10px;
-  position: fixed;
-  z-index: 5;
-  border-radius: 12px;
-  color: #575757;
-  font-weight: normal;
-  line-height: 1.5;
-  box-shadow: 0 1px 8px rgba(0, 0, 0, 0.5);
-  transition: all $AnimationDuration;
-  scale: 0;
-  left: 0%;
-  top: 0%;
-  scale: 0;
-  opacity: 0;
-  transform: translate(0, 0);
-}
-
 @keyframes fadeIn {
   from {
     left: 0%;
@@ -39,29 +16,6 @@ $AnimationDuration: 0.5s;
 }
 
 .showHint {
-  left: 50%;
-  top: 50%;
   transform: translate(-50%, -50%);
-  scale: 1;
-  opacity: 1;
-  animation: fadeIn $AnimationDuration ease-in-out;
-}
-
-.crossMarkWrapper {
-  width: 2rem;
-  min-width: 2rem;
-  height: 2rem;
-  min-height: 2rem;
-  display: flex;
-  border-radius: 2rem;
-  border: 1px solid #999999;
-  background-color: #d56666;
-  align-items: center;
-  justify-content: center;
-
-  .crossMark {
-    font-size: 1rem;
-    line-height: 0;
-    color: #ffffff;
-  }
+  animation: fadeIn 0.5s ease-in-out;
 }

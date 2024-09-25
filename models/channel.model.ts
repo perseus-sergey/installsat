@@ -353,41 +353,47 @@ export const CHANNEL_RESPONSIBILITIES = {
   },
 };
 
-export const SIMILAR = {
-  channels: {
-    title: {
-      [ELanguage.UA]: 'Де дивитись',
-      [ELanguage.EN]: 'Where to watch',
-    },
-    getOnlineChannelTitle(channelTitle: string) {
-      return {
-        [ELanguage.UA]: `Дивитись канал "${channelTitle}" у прямому ефірі онлайн`,
-        [ELanguage.EN]: `Watch the channel "${channelTitle}" live online`,
-      };
-    },
-    getSatChannelTitle(satTitle: string, satPosition: string | number) {
-      return {
-        [ELanguage.UA]: `Супутник: ${satTitle} ${satPosition}`,
-        [ELanguage.EN]: `Satellite: ${satTitle} ${satPosition}`,
-      };
-    },
-    getFrequencyTitle(frequency: number) {
-      return {
-        [ELanguage.UA]: `| Частота: ${frequency}`,
-        [ELanguage.EN]: `| Frequency: ${frequency}`,
-      };
-    },
-    packageTitle: {
-      [ELanguage.UA]: 'Пакет:',
-      [ELanguage.EN]: 'Package:',
-    },
+export const SIMILAR_ARTICLE_TITLE = {
+  [ELanguage.UA]: 'Новини каналу:',
+  [ELanguage.EN]: 'Channel news:',
+};
+
+export const SIMILAR_CHANNELS = {
+  getSatChannelTitle(satTitle: string, satPosition: string | number) {
+    return {
+      [ELanguage.UA]: `Супутник: ${satTitle} ${satPosition}`,
+      [ELanguage.EN]: `Satellite: ${satTitle} ${satPosition}`,
+    };
   },
-  articles: {
-    title: {
-      [ELanguage.UA]: 'Новини каналу:',
-      [ELanguage.EN]: 'Channel news:',
-    },
+  getFrequencyTitle(frequency: number) {
+    return {
+      [ELanguage.UA]: `| Частота: ${frequency}`,
+      [ELanguage.EN]: `| Frequency: ${frequency}`,
+    };
   },
+  packageTitle: {
+    [ELanguage.UA]: 'Пакет:',
+    [ELanguage.EN]: 'Package:',
+  },
+};
+
+export const SIMILAR_PACKAGE_CHANNELS_TITLE = {
+  [ELanguage.UA]: 'Пакет:',
+  [ELanguage.EN]: 'Package:',
+};
+
+export const SIMILAR_ONLINE_CHANNELS_TITLE = {
+  getOnlineChannelTitle(channelTitle: string) {
+    return {
+      [ELanguage.UA]: `Дивитись канал "${channelTitle}" у прямому ефірі онлайн`,
+      [ELanguage.EN]: `Watch the channel "${channelTitle}" live online`,
+    };
+  },
+};
+
+export const SIMILAR_CHANNELS_TITLE = {
+  [ELanguage.UA]: 'Де дивитись',
+  [ELanguage.EN]: 'Where to watch',
 };
 
 export const META_CHANNEL_ONLINE = {
@@ -415,47 +421,50 @@ export const META_CHANNEL_ONLINE = {
       [ELanguage.EN]: `${channelTitle} watch, online, free, live, tv, channel, satellite, internet tv`,
     };
   },
-  fakePlayer: {
-    button: {
-      ariaLabel: {
-        [ELanguage.UA]: 'Перейти до перегляду',
-        [ELanguage.EN]: 'Go to playback',
-      },
-      titleStart: {
-        [ELanguage.UA]: 'Дивитись онлайн',
-        [ELanguage.EN]: 'Watch online',
-      },
+};
+
+export const FAKE_PLAYER = {
+  button: {
+    ariaLabel: {
+      [ELanguage.UA]: 'Перейти до перегляду',
+      [ELanguage.EN]: 'Go to playback',
     },
-    getCopyrightText(chanTitle: string) {
-      return {
-        [ELanguage.UA]: `Онлайн трансляція телеканалу ${chanTitle} призупинена за вимогою власника
+    titleStart: {
+      [ELanguage.UA]: 'Дивитись онлайн',
+      [ELanguage.EN]: 'Watch online',
+    },
+  },
+  getCopyrightText(chanTitle: string) {
+    return {
+      [ELanguage.UA]: `Онлайн трансляція телеканалу ${chanTitle} призупинена за вимогою власника
         авторських прав.`,
-        [ELanguage.EN]: `The online broadcast of the ${chanTitle} channel has been suspended due to the owner's
+      [ELanguage.EN]: `The online broadcast of the ${chanTitle} channel has been suspended due to the owner's
         copyrights.`,
+    };
+  },
+  openNewWindowFeatures:
+    'left=0,top=0,width=665,height=550,status=no,toolbar=yes,menubar=no,scrollbars=yes',
+};
+
+export const YOUTUBE_PLAYER = {
+  width: 700,
+  height: 395,
+  embedPath: 'https://www.youtube.com/embed/',
+};
+
+export const ONLINE_TABS = {
+  button: {
+    getAriaLabel(streamNumber: number) {
+      return {
+        [ELanguage.UA]: `Дивитись із ${streamNumber}-го Джерела`,
+        [ELanguage.EN]: `Watch from ${streamNumber} source`,
       };
     },
-    openNewWindowFeatures:
-      'left=0,top=0,width=665,height=550,status=no,toolbar=yes,menubar=no,scrollbars=yes',
-  },
-  youtubePlayer: {
-    width: 700,
-    height: 395,
-    embedPath: 'https://www.youtube.com/embed/',
-  },
-  tabs: {
-    button: {
-      getAriaLabel(streamNumber: number) {
-        return {
-          [ELanguage.UA]: `Дивитись із ${streamNumber}-го Джерела`,
-          [ELanguage.EN]: `Watch from ${streamNumber} source`,
-        };
-      },
-      getTitle(streamNumber: number) {
-        return {
-          [ELanguage.UA]: `${streamNumber} Канал`,
-          [ELanguage.EN]: `Channel ${streamNumber}`,
-        };
-      },
+    getTitle(streamNumber: number) {
+      return {
+        [ELanguage.UA]: `${streamNumber} Канал`,
+        [ELanguage.EN]: `Channel ${streamNumber}`,
+      };
     },
   },
 };

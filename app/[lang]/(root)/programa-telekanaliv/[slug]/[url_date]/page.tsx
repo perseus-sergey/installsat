@@ -1,18 +1,15 @@
 import BottomInfoPanel from '@/components/BottomInfoPanel/BottomInfoPanel';
 import FillingValidImage from '@/components/ui/Images/FillingValidImage';
 import SimilarArticles from '@/components/SimilarArticles/SimilarArticles';
-import { SimilarFlyChannel } from '@/components/SimilarChannel/SimilarChannel';
 import { Title } from '@/components/ui/Titles/Title';
-import {
-  getDBOnlineChannel,
-  getSimilarFlyChannels,
-} from '@/controllers/channel.controller';
+import { getDBOnlineChannel } from '@/controllers/channel.controller';
 // import { getCommentsNumber } from '@/controllers/comments.controller';
 import { cutText } from '@/libs/utils/utils';
 import {
   CHANNEL_IMAGES,
   CHANNEL_RESPONSIBILITIES,
-  SIMILAR,
+  SIMILAR_ARTICLE_TITLE,
+  SIMILAR_CHANNELS_TITLE,
 } from '@/models/channel.model';
 import {
   EDBTableTitles,
@@ -23,7 +20,6 @@ import { EUrlBaseParam, MAIN_URL } from '@/models/url.model';
 import { Metadata } from 'next';
 import BreadCrumbServer from '@/components/BreadCrumbs/BreadCrumbsServer';
 import { SCHEDULE_META } from '@/models/scheduleTV.model';
-import { getChanOneDaySchedule } from '@/controllers/schedule.controller';
 import { notFound } from 'next/navigation';
 // import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
 import SchedulePage from '@/components/SchedulePage/SchedulePage';
@@ -31,20 +27,18 @@ import { getFormattedDateStrYearFirst, getValidDate } from '@/libs/utils/dates';
 import WeekScheduleTabs from '@/components/tabs/WeekScheduleTabs';
 import NoteBlock from '@/components/ui/NoteBlock/NoteBlock';
 import GrooveLine from '@/components/ui/GrooveLine';
-import { BREAD_CRUMBS } from '@/models/breadCrumbs.model';
 import ChannelOnlineLink from '@/components/ui/buttons/ChannelOnlineLink/ChannelOnlineLink';
-import { decode } from 'html-entities';
 import { getELangKey } from '@/libs/utils/validSearchParam';
 import { getEnvVariable } from '@/libs/utils/envHandler';
 import { INFO_PANEL_TITLES } from '@/models/articles.model';
+import { Suspense } from 'react';
+import SimilarChannels from '@/components/SimilarArticles/SimilarChannels';
 
 const BASE_URL = getEnvVariable('BASE_URL', MAIN_URL);
 
 const {
   channelLogo: { big: bigLogo },
 } = CHANNEL_IMAGES;
-
-const { channels: simChannelsBefore } = SIMILAR;
 
 const { noteTitle, getResponsibilityText } = CHANNEL_RESPONSIBILITIES;
 
@@ -60,8 +54,7 @@ export interface IPageProps {
   params: { [key in EUrlBaseParam]: string };
 }
 
-// export const dynamic = 'force-dynamic';
-export const revalidate = 3600 * 12; // invalidate cache every 12 hours
+export const revalidate = 3600 * 12;
 
 export const generateMetadata = async ({
   params,
@@ -112,14 +105,13 @@ export default async function Page({ params }: IPageProps) {
 
   const {
     // id,
-    title: chanTitle,
+    title,
     logo,
     view,
     vipiko,
     vsetv,
     tvforsite_net,
   } = sqlResult;
-  const title = decode(chanTitle);
 
   const dbScheduleDataArr = [
     {
@@ -131,10 +123,8 @@ export default async function Page({ params }: IPageProps) {
       scheduleId: vsetv,
     },
   ];
-  const filteredSchedules = dbScheduleDataArr.filter((t) => t.scheduleId);
-  const schedules = await getChanOneDaySchedule(filteredSchedules, url_date);
 
-  const similarChannels = await getSimilarFlyChannels(title);
+  const filteredSchedules = dbScheduleDataArr.filter((t) => t.scheduleId);
 
   // const numberOfComments = await getCommentsNumber(
   //   EDBTableTitles.COMMENTS_CHANNEL,
@@ -146,10 +136,17 @@ export default async function Page({ params }: IPageProps) {
       <BreadCrumbServer
         lang={lang}
         breadCrumbList={[
-          BREAD_CRUMBS.CHANNELS_TV_PROGRAM,
+          {
+            href: EUrlBaseParam.CHANNELS_TV_PROGRAM,
+            title: {
+              [ELanguage.UA]: 'Програма каналів',
+              [ELanguage.EN]: 'Channel program',
+            },
+          },
           `${h1Start[lang]} "${title}"`,
         ]}
       />
+
       <article className="article">
         <Title>
           <span className="inline-block">
@@ -163,7 +160,7 @@ export default async function Page({ params }: IPageProps) {
             }}
             defaultImage={bigLogo.defaultImage}
             alt={`${bigLogo.alt[lang]} "${title}"`}
-            isBlur
+            isPriority
           />
         </Title>
 
@@ -172,12 +169,18 @@ export default async function Page({ params }: IPageProps) {
           lang={lang}
           channelName={title}
         />
-        <SchedulePage
-          lang={lang}
-          scheduleList={schedules}
-          urlDate={url_date}
-          channelTitle={title}
-        />
+
+        <section className="min-h-[50vh]">
+          <Suspense>
+            <SchedulePage
+              lang={lang}
+              urlDate={url_date}
+              channelTitle={title}
+              filteredSchedules={filteredSchedules}
+              url_date={url_date}
+            />
+          </Suspense>
+        </section>
 
         {tvforsite_net && (
           <ChannelOnlineLink
@@ -205,20 +208,21 @@ export default async function Page({ params }: IPageProps) {
         />
       </article>
 
-      {similarChannels.length ? (
-        <SimilarArticles
-          similarTitle={`${simChannelsBefore.title[lang]}"${title}"`}
-          similarArticlesMapped={similarChannels.map((chan) => (
-            <li key={chan.slug}>
-              <SimilarFlyChannel
-                lang={lang}
-                chanParams={chan}
-                chanName={title}
-              />
-            </li>
-          ))}
+      <Suspense>
+        <SimilarChannels
+          lang={lang}
+          chanelTitle={title}
+          sectionCaption={`${SIMILAR_CHANNELS_TITLE[lang]} "${title}"`}
         />
-      ) : null}
+      </Suspense>
+
+      <Suspense>
+        <SimilarArticles
+          similarTitle={SIMILAR_ARTICLE_TITLE[lang]}
+          logoSrc={logo}
+          lang={lang}
+        />
+      </Suspense>
     </>
   );
 }

@@ -1,4 +1,4 @@
-import { IFlyChannel, SIMILAR } from '@/models/channel.model';
+import { IFlyChannel, SIMILAR_CHANNELS } from '@/models/channel.model';
 // import Link from 'next/link';
 import { EUrlBaseParam } from '@/models/url.model';
 import { ELanguage } from '@/models/ui.model';
@@ -40,7 +40,7 @@ interface ISimilarFlyChannelProps {
 //     getFrequencyTitle,
 //     getSatChannelTitle,
 //     packageTitle,
-//   } = SIMILAR.channels;
+//   } = SIMILAR_CHANNELS;
 
 //   const parentCatTitle = cat_parent_id > 0 ? `${cat_parent_title} | ` : '';
 
@@ -102,7 +102,7 @@ export const SimilarFlyChannel = ({
   chanName,
 }: ISimilarFlyChannelProps) => {
   const { getFrequencyTitle, getSatChannelTitle, packageTitle } =
-    SIMILAR.channels;
+    SIMILAR_CHANNELS;
 
   // if (official_broadcast_url)
   //   return (
@@ -118,6 +118,7 @@ export const SimilarFlyChannel = ({
       <>
         {packageTitle[lang]}{' '}
         <SeoLink
+          className="text-indigo-700 hover:text-red-500"
           href={`/${lang}/${EUrlBaseParam.PACKAGE_CHANNEL_LIST}/${package_slug}`}
           title={
             lang === ELanguage.UA
@@ -133,6 +134,7 @@ export const SimilarFlyChannel = ({
   return (
     <>
       <SeoLink
+        className="text-indigo-700 hover:text-red-500"
         href={`/${lang}/${EUrlBaseParam.SAT_CHANNEL_LIST}/${sat_slug}`}
         title={
           lang === ELanguage.UA

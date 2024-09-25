@@ -1,19 +1,16 @@
-import EmptyData from '@/components/errors/EmptyData/EmptyData';
 import { Title } from '@/components/ui/Titles/Title';
 import {
   getPackageChannels,
+  getPackageParams,
   getT2Channels,
 } from '@/controllers/channelList.controller';
 import {
-  ALL_SAT_CHANNEL_LIST_FILTERS,
-  CHANNEL_LIST_ANCHOR_START,
   META_PACKAGE_CHANNEL_LIST,
   PACKAGE_CHANNEL_LIST_DATA,
   PACKAGE_CHANNEL_LIST_IMAGES,
   T2_SLUG,
 } from '@/models/channelList.model';
 import type { Metadata } from 'next';
-import Fieldset from '@/components/ui/Fieldset/Fieldset';
 import {
   TSearchParams,
   DEFAULT_META_DATA,
@@ -21,24 +18,22 @@ import {
   ELanguage,
 } from '@/models/ui.model';
 import { EUrlBaseParam, EUrlSearchParam, MAIN_URL } from '@/models/url.model';
-import Filter from '@/components/ui/Filter/Filter';
 import { Suspense, cache } from 'react';
 import { getELangKey, validSearchParam } from '@/libs/utils/validSearchParam';
 // import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
 // import { getCommentsNumber } from '@/controllers/comments.controller';
-import TooltipSimple from '@/components/ui/tooltips/TooltipSimple/TooltipSimple';
 import PackageChannelList from '@/components/channelList/PackageChannelList';
 import FillingValidImage from '@/components/ui/Images/FillingValidImage';
-import GenreImage from '@/components/ui/Images/GenreImage/GenreImage';
-import SimilarArticles from '@/components/SimilarArticles/SimilarArticles';
 import { getChannelCatList } from '@/controllers/sidebar.controller';
 import { updateViewCount } from '@/controllers/articles.controller';
 import BreadCrumbServer, {
   IBreadCrumbLink,
 } from '@/components/BreadCrumbs/BreadCrumbsServer';
-import { BREAD_CRUMBS } from '@/models/breadCrumbs.model';
 import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
 import SeoLink from '@/components/ui/SeoLink/SeoLink';
+import SimilarBlock from '@/components/SimilarArticles/SimilarBlock';
+import { BREAD_PACKAGE_CHANNEL_LIST } from '@/models/breadCrumbs.model';
+import EmptyPage from '@/components/errors/EmptyPage/EmptyPage';
 
 const BASE_URL = process.env.BASE_URL || MAIN_URL;
 
@@ -46,18 +41,10 @@ const { getH1, metaKeywords, metaTitle } = META_PACKAGE_CHANNEL_LIST;
 
 const {
   similarLinks: { title: similarLinksTitle, beforeLinkText },
-  fieldsetFilters: {
-    legendText,
-    anchorLink: { ariaLabel },
-  },
 } = PACKAGE_CHANNEL_LIST_DATA;
 const { h1Image } = PACKAGE_CHANNEL_LIST_IMAGES;
 
 const { SLUG, LANG, PACKAGE_CHANNEL_LIST, CHANNEL_PARAMS } = EUrlBaseParam;
-
-const {
-  filterByChannelName: { placeholder, labelTitle },
-} = ALL_SAT_CHANNEL_LIST_FILTERS;
 
 const getH1Cached = cache(getH1);
 
@@ -66,8 +53,7 @@ interface IPageProps {
   searchParams?: TSearchParams;
 }
 
-// export const dynamic = 'force-dynamic';
-export const revalidate = 3600 * 48; // invalidate cache every 48 hours
+export const revalidate = 3600 * 48;
 
 export const generateMetadata = async ({
   params,
@@ -131,10 +117,10 @@ export default async function Page({ params, searchParams }: IPageProps) {
     searchParams
   );
 
-  const channels =
+  const getChannelsFn =
     slug === T2_SLUG
-      ? await getT2Channels(lang, searchQueryChannel)
-      : await getPackageChannels(slug, searchQueryChannel);
+      ? () => getT2Channels(lang, searchQueryChannel)
+      : () => getPackageChannels(slug, searchQueryChannel);
 
   // const numberOfComments = channels
   //   ? await getCommentsNumber(
@@ -143,108 +129,68 @@ export default async function Page({ params, searchParams }: IPageProps) {
   //     )
   //   : 0;
 
+  const packageParamsResp = await getPackageParams(
+    slug === T2_SLUG ? undefined : slug
+  );
+
+  if (!packageParamsResp) return EmptyPage;
+
   const packagesResp = await getChannelCatList(lang);
   const similarLinks =
     packagesResp instanceof Error
       ? []
       : packagesResp.filter((pack) => pack.cpu !== slug);
 
-  channels &&
+  !searchQueryChannel &&
     updateViewCount(
       EDBTableTitles.CHANNEL_CATEGORY,
-      `${channels[0][1][0].cat_id}`,
-      channels[0][1][0].cat_view
+      `${packageParamsResp.cat_id}`,
+      packageParamsResp.cat_view
     );
 
   const breadCrumbList: (IBreadCrumbLink | string)[] = [
-    BREAD_CRUMBS.PACKAGE_CHANNEL_LIST,
+    BREAD_PACKAGE_CHANNEL_LIST,
   ];
-  channels &&
-    breadCrumbList.push(
-      getH1Cached(channels[0][1][0].cat_title, searchQueryChannel)[lang]
-    );
+  breadCrumbList.push(
+    getH1Cached(packageParamsResp.cat_title, searchQueryChannel)[lang]
+  );
 
   return (
     <>
       <BreadCrumbServer breadCrumbList={breadCrumbList} lang={lang} />
 
       <article className="article">
-        {channels ? (
-          <>
-            <Title>
-              {
-                getH1Cached(channels[0][1][0].cat_title, searchQueryChannel)[
-                  lang
-                ]
-              }
-              <FillingValidImage
-                image={{
-                  width: h1Image.width,
-                  height: h1Image.height,
-                  src: `${h1Image.path}${channels[0][1][0].cat_logo}`,
-                }}
-                defaultImage={h1Image.defaultImage}
-                alt={`${h1Image.alt[lang]} "${channels[0][1][0].cat_title}"`}
-              />
-            </Title>
+        <>
+          <Title>
+            {getH1Cached(packageParamsResp.cat_title, searchQueryChannel)[lang]}
+            <FillingValidImage
+              image={{
+                width: h1Image.width,
+                height: h1Image.height,
+                src: `${h1Image.path}${packageParamsResp.cat_logo}`,
+              }}
+              defaultImage={h1Image.defaultImage}
+              alt={`${h1Image.alt[lang]} "${packageParamsResp.cat_title}"`}
+            />
+          </Title>
 
-            <Fieldset legendText={legendText[lang]}>
-              <nav className="p-2 md:p-4">
-                <ul>
-                  {channels.map(([subCatTitle, chanList]) => (
-                    <li key={subCatTitle} className="flex items-center gap-4">
-                      {slug === 't2-efir' && (
-                        <GenreImage
-                          lang={lang}
-                          tooltipText={chanList[0].genre_description}
-                          genreMapPosition={chanList[0].genre_id}
-                        />
-                      )}
-                      <TooltipSimple
-                        tooltipText={`${ariaLabel[lang]} "${subCatTitle}"`}
-                      >
-                        <SeoLink
-                          title={`${ariaLabel[lang]} "${subCatTitle}"`}
-                          href={`#${CHANNEL_LIST_ANCHOR_START}${chanList[0].genre_id}`}
-                          className="text-indigo-800 text-lg hover:text-red-500"
-                        >
-                          {subCatTitle}
-                        </SeoLink>
-                      </TooltipSimple>
-                    </li>
-                  ))}
-                </ul>
-                <Suspense>
-                  <Filter
-                    lang={lang}
-                    idName="channel-search-input"
-                    placeholder={placeholder[lang]}
-                    labelTitle={labelTitle[lang]}
-                    searchQueryTitle={EUrlSearchParam.CHANNEL}
-                  />
-                </Suspense>
-              </nav>
-            </Fieldset>
-
-            <Suspense key={searchQueryChannel}>
-              <PackageChannelList
-                lang={lang}
-                channels={channels}
-                pathToChannelDetails={CHANNEL_PARAMS}
-              />
-            </Suspense>
-          </>
-        ) : (
-          <EmptyData lang={lang} />
-        )}
+          <Suspense>
+            <PackageChannelList
+              lang={lang}
+              isGenre={slug === 't2-efir'}
+              getChannelsFn={getChannelsFn}
+              pathToChannelDetails={CHANNEL_PARAMS}
+            />
+          </Suspense>
+        </>
       </article>
 
       {similarLinks.length ? (
-        <SimilarArticles
-          similarTitle={similarLinksTitle[lang]}
-          similarArticlesMapped={similarLinks.map((link) => (
+        <SimilarBlock blockTitle={similarLinksTitle[lang]}>
+          {similarLinks.map((link) => (
             <li key={link.cpu}>
               <SeoLink
+                className="text-indigo-700 hover:text-red-500"
                 href={`/${lang}/${PACKAGE_CHANNEL_LIST}/${link.cpu}`}
                 title={
                   lang === ELanguage.UA
@@ -256,7 +202,7 @@ export default async function Page({ params, searchParams }: IPageProps) {
               </SeoLink>
             </li>
           ))}
-        />
+        </SimilarBlock>
       ) : null}
     </>
   );

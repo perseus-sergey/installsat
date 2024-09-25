@@ -75,7 +75,7 @@ const SatNewsList = async ({ searchParams, lang }: ISatNewsListProps) => {
                 />{' '}
                 ....
               </TitleH3Digest>
-              <div className={styles.newsList}>
+              <div className={`${styles.newsList} sm:text-xl`}>
                 <DangerHtml
                   text={getDailyNews(satNews[1])}
                   wrapperTagName="ul"

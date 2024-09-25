@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react';
 import {
-  BREAD_CRUMBS,
+  BREAD_BASE_PATH,
   BREAD_SEPARATOR,
   CUT_LAST_ELEMENT,
   FIRST_ELEMENT_SIZE,
@@ -46,7 +46,7 @@ const BreadCrumbServer = ({
         {hasHomeLink && (
           <li className={`list-none text-white`}>
             <SeoLink
-              href={`/${lang}${BREAD_CRUMBS.BASE_PATH.href}`}
+              href={`/${lang}${BREAD_BASE_PATH.href}`}
               style={{ fontSize: FIRST_ELEMENT_SIZE }}
               className="hover:underline"
               title={
@@ -55,7 +55,7 @@ const BreadCrumbServer = ({
                   : `Go to the home page`
               }
             >
-              {homeTitle || BREAD_CRUMBS.BASE_PATH.title[lang]}
+              {homeTitle || BREAD_BASE_PATH.title[lang]}
             </SeoLink>
           </li>
         )}

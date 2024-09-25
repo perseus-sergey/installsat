@@ -21,8 +21,8 @@ const ChannelCardTooltip = ({
   mainImage,
   mainDefaultImage,
   tooltipTextList,
-  tooltipImage = mainImage,
-  tooltipDefaultImage = mainDefaultImage,
+  tooltipImage,
+  tooltipDefaultImage,
   mainIsChangeToGif = false,
   children,
 }: IChannelCardTooltipProps) => (
@@ -33,11 +33,14 @@ const ChannelCardTooltip = ({
       className="inline-block border-b border-dotted border-gray-600 leading-none"
       hintHtml={
         <>
-          <FillingValidImage
-            image={tooltipImage}
-            defaultImage={tooltipDefaultImage}
-            className="bg-white"
-          />
+          {tooltipImage && tooltipDefaultImage ? (
+            <FillingValidImage
+              image={tooltipImage}
+              defaultImage={tooltipDefaultImage}
+              className="bg-white"
+            />
+          ) : null}
+
           <ul className="py-2.5 px-5">
             {tooltipTextList.map(({ title, description }, i) =>
               title && description ? (
@@ -46,7 +49,7 @@ const ChannelCardTooltip = ({
                     <h3>-= {title} =-</h3>
                     <ul
                       key={`${title}${i}`}
-                      className="text-sm border border-gray-300 border-groove p-2 rounded-md grid grid-cols-[repeat(auto-fit,minmax(40px,1fr))] gap-2"
+                      className="text-sm border border-gray-300 p-2 rounded-md grid grid-cols-[repeat(auto-fit,minmax(40px,1fr))] gap-2"
                     >
                       {description.map((desc, i) => (
                         <li key={`${title}${i}`} className="bg-indigo-900">
@@ -56,8 +59,9 @@ const ChannelCardTooltip = ({
                     </ul>
                   </li>
                 ) : (
-                  <li key={`${title}${i}`}>
-                    {title}: <strong>{description}</strong>
+                  <li key={`${title}${i}`} className="leading-tight">
+                    <span className="bg-fuchsia-800">{title}:</span>{' '}
+                    {description}
                   </li>
                 )
               ) : null

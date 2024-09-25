@@ -4,6 +4,11 @@ import WidgetLastNews from '../WidgetLastNews/WidgetLastNews';
 import UserWelcome from '../UserWelcome/UserWelcome';
 import dynamic from 'next/dynamic';
 
+const Accordion = dynamic(() => import('../menuAccordion/Accordion/Accordion'));
+const AccordionAdmin = dynamic(
+  () => import('../menuAccordion/Accordion/AccordionAdmin')
+);
+
 const SideBarServer = ({
   isAdmin = false,
   lang,
@@ -11,13 +16,6 @@ const SideBarServer = ({
   isAdmin?: boolean;
   lang: ELanguage;
 }) => {
-  const Accordion = dynamic(
-    () => import('../menuAccordion/Accordion/Accordion')
-  );
-  const AccordionAdmin = dynamic(
-    () => import('../menuAccordion/Accordion/AccordionAdmin')
-  );
-
   return (
     <>
       {!isAdmin && <WidgetLastNews lang={lang} />}

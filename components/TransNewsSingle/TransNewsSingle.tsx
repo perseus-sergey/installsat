@@ -1,5 +1,5 @@
 import { Title } from '../ui/Titles/Title';
-import satNewsStyles from '../SatNewsList/SatNewsList.module.scss';
+import styles from '../SatNewsList/SatNewsList.module.scss';
 import { ReactNode } from 'react';
 import DangerHtmlUl from '../ui/DangerHtml/DangerHtml';
 import { TRANS_NEWS_LIST_IMAGES, TSatDigest } from '@/models/satDigest.model';
@@ -44,7 +44,7 @@ const TransNewsSingle = ({ newsArray, title, lang }: ITransNewsSingleProps) => (
                   satSlug={satNews[1][0].sat_slug}
                 />
               </TitleH2Digest>
-              <div className={satNewsStyles.newsList}>
+              <div className={`${styles.newsList} sm:text-xl`}>
                 <DangerHtmlUl
                   text={getDailyNews(satNews[1])}
                   wrapperTagName="ul"

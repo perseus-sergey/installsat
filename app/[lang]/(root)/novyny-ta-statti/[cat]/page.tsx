@@ -13,7 +13,6 @@ import { TSearchParams, DEFAULT_META_DATA, ELanguage } from '@/models/ui.model';
 import { EUrlBaseParam, EUrlSearchParam, MAIN_URL } from '@/models/url.model';
 import { getELangKey, validSearchParam } from '@/libs/utils/validSearchParam';
 import BreadCrumbServer from '@/components/BreadCrumbs/BreadCrumbsServer';
-import { BREAD_CRUMBS } from '@/models/breadCrumbs.model';
 import Filter from '@/components/ui/Filter/Filter';
 import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
 import { Suspense } from 'react';
@@ -23,6 +22,7 @@ import {
 } from '@/models/articles.model';
 import Image from 'next/image';
 import h1Img from 'public/Images/articles/all_news_64.png';
+import { BREAD_NEWS_AND_ARTICLES } from '@/models/breadCrumbs.model';
 
 const BASE_URL = process.env.BASE_URL || MAIN_URL;
 
@@ -123,7 +123,7 @@ export default async function Page({ params, searchParams }: IPageParams) {
   return (
     <>
       <BreadCrumbServer
-        breadCrumbList={[BREAD_CRUMBS.NEWS_AND_ARTICLES, descriptionLang]}
+        breadCrumbList={[BREAD_NEWS_AND_ARTICLES, descriptionLang]}
         lang={lang}
       />
       <article className="article">

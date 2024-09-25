@@ -1,8 +1,5 @@
 import { Title } from '@/components/ui/Titles/Title';
-import {
-  getFlySatChannels,
-  getFlyGroupedChannelsAllSat,
-} from '@/controllers/channelList.controller';
+import { getFlySatChannels } from '@/controllers/channelList.controller';
 import {
   ALL_SAT_CHANNEL_LIST_FILTERS,
   ALL_SAT_CHANNEL_LIST_LINKS,
@@ -13,13 +10,7 @@ import type { Metadata } from 'next';
 import StartArticleSection from '@/components/article/StartArticleSection/StartArticleSection';
 import FillingValidImage from '@/components/ui/Images/FillingValidImage';
 import { Suspense } from 'react';
-import {
-  DEFAULT_META_DATA,
-  // EDBTableTitles,
-  ELanguage,
-  ESelectType,
-  TSearchParams,
-} from '@/models/ui.model';
+import { DEFAULT_META_DATA, ELanguage, TSearchParams } from '@/models/ui.model';
 import { EUrlBaseParam, EUrlSearchParam, MAIN_URL } from '@/models/url.model';
 // import { getCommentsNumber } from '@/controllers/comments.controller';
 // import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
@@ -33,14 +24,10 @@ import ChannelFormatSliders from '@/components/ui/ChannelFormatSliders/ChannelFo
 import EmptyPage from '@/components/errors/EmptyPage/EmptyPage';
 import { getFlySatParams } from '@/controllers/satDigest.controller';
 import { makeUrlSearchParams } from '@/libs/utils/utils';
+import { BREAD_SAT_CHANNEL_LIST } from '@/models/breadCrumbs.model';
+import NumberOfItems from '@/components/NumberOfItems/NumberOfItems';
 import { getChannelsLangList } from '@/controllers/languageList.controller';
-import { BREAD_CRUMBS } from '@/models/breadCrumbs.model';
-import { SelectorSingle } from '@/components/SatelliteSelector/SelectorSingle';
-
-// =================================================================
-// titles with images - flex-shrink-0
-// remeve all data-testId
-// =================================================================
+import LanguageSelector from '@/components/CustomSelectors/LanguageSelector';
 
 const BASE_URL = process.env.BASE_URL || MAIN_URL;
 
@@ -135,7 +122,7 @@ export default async function Page({ searchParams, params }: IPageProps) {
             ? `Супутник «${urlSatSlug}» не знайдено. Спробуйте вибрати інший із списку супутників.`
             : `Satellite «${urlSatSlug}» not found. Try selecting another one from the satellite list.`
         }
-        breadCrumbList={[BREAD_CRUMBS.SAT_CHANNEL_LIST]}
+        breadCrumbList={[BREAD_SAT_CHANNEL_LIST]}
         lang={lang}
       />
     );
@@ -143,26 +130,20 @@ export default async function Page({ searchParams, params }: IPageProps) {
   const { slug, title, logo, position, grade } = resFlySatParams;
   // const { id, slug, title, logo, position, grade } = resFlySatParams;
 
-  const satChannels = await getFlySatChannels(
-    lang,
-    searchQueryChannel,
-    slug,
-    undefined,
-    !searchParams?.[EUrlSearchParam.CHANNEL_NOT_ENCRYPTED],
-    !!searchParams?.[EUrlSearchParam.CHANNEL_RADIO],
-    !!searchParams?.[EUrlSearchParam.CHANNEL_C_BAND],
-    !!searchParams?.[EUrlSearchParam.CHANNEL_FORMAT_T2MI],
-    searchQueryLanguages
-  );
+  const getFlySatChannelsFn = () =>
+    getFlySatChannels(
+      lang,
+      searchQueryChannel,
+      slug,
+      undefined,
+      !searchParams?.[EUrlSearchParam.CHANNEL_NOT_ENCRYPTED],
+      !!searchParams?.[EUrlSearchParam.CHANNEL_RADIO],
+      !!searchParams?.[EUrlSearchParam.CHANNEL_C_BAND],
+      !!searchParams?.[EUrlSearchParam.CHANNEL_FORMAT_T2MI],
+      searchQueryLanguages
+    );
 
-  const channelsLangList = satChannels.length
-    ? await getChannelsLangList({ satSlug: urlSatSlug })
-    : [];
-
-  // const numberOfComments = await getCommentsNumber(
-  //   EDBTableTitles.COMMENTS_SATELLITE,
-  //   id
-  // );
+  const langRequestFn = () => getChannelsLangList({ satSlug: urlSatSlug });
 
   const lastUpdatedSatsUrlSearchPar = makeUrlSearchParams({
     [EUrlSearchParam.SAT]: grade,
@@ -209,6 +190,7 @@ export default async function Page({ searchParams, params }: IPageProps) {
                 </li>
               ))}
             </ul>
+
             <Suspense>
               <Filter
                 lang={lang}
@@ -221,20 +203,10 @@ export default async function Page({ searchParams, params }: IPageProps) {
                   content: resetAllFiltersButton.imgStr,
                 }}
               />
+            </Suspense>
 
-              {channelsLangList.length > 0 && (
-                <SelectorSingle
-                  className="z-10"
-                  selectName={ESelectType.SELECT_LANG}
-                  searchParamName={EUrlSearchParam.LANGUAGE_URL}
-                  itemList={channelsLangList}
-                  caption={
-                    lang === ELanguage.UA
-                      ? 'Виберіть мову каналу'
-                      : 'Choose a channel language'
-                  }
-                />
-              )}
+            <Suspense>
+              <LanguageSelector lang={lang} requestFn={langRequestFn} />
             </Suspense>
           </nav>
         </Fieldset>
@@ -242,7 +214,9 @@ export default async function Page({ searchParams, params }: IPageProps) {
         <StartArticleSection>
           <p className="text-center">
             {lang === ELanguage.UA ? 'Всього каналів: ' : 'Total channels: '}
-            {satChannels.length}
+            <Suspense>
+              <NumberOfItems requestFn={getFlySatChannelsFn} />
+            </Suspense>
           </p>
         </StartArticleSection>
 
@@ -250,7 +224,7 @@ export default async function Page({ searchParams, params }: IPageProps) {
           <FlyChannelsTable
             lang={lang}
             isSingleSat
-            satChannels={getFlyGroupedChannelsAllSat([satChannels])}
+            requestFn={getFlySatChannelsFn}
           />
         </Suspense>
       </article>

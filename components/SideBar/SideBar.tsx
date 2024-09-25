@@ -15,38 +15,60 @@ const SideBar = ({
   children: React.ReactNode;
 }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [menuVisible, setMenuVisible] = useState(false);
 
-  const toggleAccordion = () => {
-    setIsOpen(!isOpen);
+  const openMenu = () => {
+    setMenuVisible(true);
+    setTimeout(() => {
+      setIsOpen(true);
+    }, 0);
   };
 
-  // throw new Error('Error');
+  const closeMenu = () => {
+    setIsOpen(false);
+
+    setTimeout(() => {
+      setMenuVisible(false);
+    }, 300);
+  };
 
   return (
     <>
       <BaseButton
-        onClick={() => setIsOpen(false)}
-        ariaLabel={sideBarCloseIcon.ariaLabel[lang]}
-        className={`fixed top-0 left-0 z-40 ${isOpen ? 'w-full h-full' : ''}`}
+        ariaLabel={sideBarIcon.ariaLabel[lang]}
+        className="bg-[url('/Images/accordion/sidebar_icon.png')] absolute bg-no-repeat w-8 h-8 top-1 left-1 p-4 cursor-pointer"
+        onClick={openMenu}
       />
-      <BaseButton
-        ariaLabel={
-          isOpen
-            ? sideBarCloseIcon.ariaLabel[lang]
-            : sideBarIcon.ariaLabel[lang]
-        }
-        className={`${isOpen ? `bg-[url('/Images/accordion/sidebar_hide_icon.png')] bg-slate-900 fixed` : `bg-[url('/Images/accordion/sidebar_icon.png')] absolute`} bg-no-repeat w-8 h-8 top-1 left-1 p-4 cursor-pointer z-50 duration-300`}
-        onClick={toggleAccordion}
-      ></BaseButton>
-      <aside
-        className={`
-          ${isOpen ? 'left-0' : '-left-full'} overflow-y-auto fixed top-0 h-full w-64 sm:w-80 z-40
-          pt-16 p-2 bg-slate-900 shadow-lg
-          transition-all ease-linear duration-300
-          `}
-      >
-        {children}
-      </aside>
+
+      {menuVisible && (
+        <>
+          <BaseButton
+            onClick={closeMenu}
+            ariaLabel={sideBarCloseIcon.ariaLabel[lang]}
+            className="fixed top-0 left-0 z-40 w-full h-full bg-gray-600/10"
+          />
+          <aside
+            className={`
+              overflow-y-auto fixed left-0 top-0 h-full w-64 sm:w-80 z-50
+              pt-16 p-2 bg-slate-900 shadow-lg
+              transition-transform duration-300 transform ${
+                isOpen ? 'translate-x-0' : '-translate-x-full'
+              }
+              `}
+          >
+            <BaseButton
+              ariaLabel={
+                isOpen
+                  ? sideBarCloseIcon.ariaLabel[lang]
+                  : sideBarIcon.ariaLabel[lang]
+              }
+              className="bg-[url('/Images/accordion/sidebar_hide_icon.png')] bg-slate-900 fixed bg-no-repeat w-8 h-8 top-1 left-1 p-4 cursor-pointer"
+              onClick={closeMenu}
+            />
+            {children}
+          </aside>
+        </>
+      )}
     </>
   );
 };

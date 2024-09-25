@@ -39,7 +39,6 @@ export default function RootLayout({
         suppressHydrationWarning={true}
         className="font-serif text-stone-800 bg-black overflow-x-hidden sm:bg-[url('/Images/black00001.gif')]"
       >
-        <input type="checkbox" id="toggle-sidebar" hidden />
         <Header lang={lang} />
         {children}
         {/* <ToastProvider>{children}</ToastProvider> */}

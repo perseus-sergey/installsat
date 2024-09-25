@@ -6,11 +6,7 @@ import {
   DEFAULT_ARTICLE_LOGO_NAME,
   INFO_PANEL_TITLES,
 } from '@/models/articles.model';
-import {
-  getArticle,
-  getSimilarArticles,
-  updateViewCount,
-} from '@/controllers/articles.controller';
+import { getArticle, updateViewCount } from '@/controllers/articles.controller';
 import DangerHtml from '@/components/ui/DangerHtml/DangerHtml';
 import { EUrlAdminParam, EUrlBaseParam, MAIN_URL } from '@/models/url.model';
 import BottomInfoPanel from '@/components/BottomInfoPanel/BottomInfoPanel';
@@ -27,11 +23,11 @@ import { getELangKey } from '@/libs/utils/validSearchParam';
 // import { getCommentsNumber } from '@/controllers/comments.controller';
 import EditLinkButton from '@/components/admin/EditLinkButton/EditLinkButton';
 import BreadCrumbServer from '@/components/BreadCrumbs/BreadCrumbsServer';
-import { BREAD_CRUMBS } from '@/models/breadCrumbs.model';
 import SimilarArticles from '@/components/SimilarArticles/SimilarArticles';
 // import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
 import TextUnderH1 from '@/components/TextUnderH1/TextUnderH1';
 import SeoLink from '@/components/ui/SeoLink/SeoLink';
+import { Suspense } from 'react';
 
 const { h1Image } = ARTICLE_CARD.images;
 
@@ -135,8 +131,6 @@ export default async function Page({ params }: IArticleParams) {
   const descriptionLang = lang === ELanguage.UA ? description : description_en;
   const catLang = lang === ELanguage.UA ? cat_name : cat_name_en || cat_name;
 
-  const similarArticles = await getSimilarArticles(logo, id);
-
   // const numberOfComments = await getCommentsNumber(
   //   EDBTableTitles.COMMENTS_ARTICLE,
   //   `${id}`
@@ -146,13 +140,22 @@ export default async function Page({ params }: IArticleParams) {
 
   return (
     <>
-      <EditLinkButton
-        href={`/${lang}/${EUrlAdminParam.BASE_PATH}/${EUrlAdminParam.ARTICLES_EDIT}/edit/${id}`}
-      />
+      <Suspense>
+        <EditLinkButton
+          href={`/${lang}/${EUrlAdminParam.BASE_PATH}/${EUrlAdminParam.ARTICLES_EDIT}/edit/${id}`}
+        />
+      </Suspense>
+
       <BreadCrumbServer
         lang={lang}
         breadCrumbList={[
-          BREAD_CRUMBS.NEWS_AND_ARTICLES,
+          {
+            href: EUrlBaseParam.NEWS_AND_ARTICLES,
+            title: {
+              [ELanguage.UA]: 'Новини та статті',
+              [ELanguage.EN]: 'News and articles',
+            },
+          },
           {
             title: catLang,
             href: `${NEWS_AND_ARTICLES}/${cat_slug}`,
@@ -160,6 +163,7 @@ export default async function Page({ params }: IArticleParams) {
           titleLang,
         ]}
       />
+
       <article className="article">
         <Title>
           {titleLang}
@@ -205,26 +209,14 @@ export default async function Page({ params }: IArticleParams) {
         />
       </article>
 
-      {similarArticles.length ? (
+      <Suspense>
         <SimilarArticles
           similarTitle={SIMILAR_ARTICLES.title[lang]}
-          similarArticlesMapped={similarArticles.map((art) => (
-            <li key={art.cpu}>
-              <SeoLink
-                href={`/${lang}/${ARTICLE}/${art.cpu}`}
-                title={
-                  lang === ELanguage.UA
-                    ? `Перейти до перегляду статті "${art.title}"`
-                    : `Go to the view of the article "${art.title_en || art.title}"`
-                }
-              >
-                {lang === ELanguage.UA ? art.title : art.title_en || art.title}
-              </SeoLink>
-              <span>{` (${getFormattedDateStrYearFirst(art.date)})`}</span>
-            </li>
-          ))}
+          lang={lang}
+          logoSrc={logo}
+          articleId={id}
         />
-      ) : null}
+      </Suspense>
     </>
   );
 }

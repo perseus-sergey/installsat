@@ -4,20 +4,15 @@ import { FlyChannelParams } from '@/components/ChannelParams/ChannelParams';
 import DangerHtml from '@/components/ui/DangerHtml/DangerHtml';
 import FillingValidImage from '@/components/ui/Images/FillingValidImage';
 import NoteBlock from '@/components/ui/NoteBlock/NoteBlock';
-import SimilarArticles from '@/components/SimilarArticles/SimilarArticles';
-import { SimilarFlyChannel } from '@/components/SimilarChannel/SimilarChannel';
 import { Title } from '@/components/ui/Titles/Title';
 import TvScheduleLink from '@/components/TvScheduleLink/TvScheduleLink';
 import { updateViewCount } from '@/controllers/articles.controller';
-import {
-  getDBFlyChannel,
-  getSimilarFlyChannels,
-} from '@/controllers/channel.controller';
+import { getDBFlyChannel } from '@/controllers/channel.controller';
 import {
   CHANNEL_IMAGES,
   CHANNEL_RESPONSIBILITIES,
   META_CHANNEL,
-  SIMILAR,
+  SIMILAR_CHANNELS_TITLE,
 } from '@/models/channel.model';
 import {
   EDBTableTitles,
@@ -39,6 +34,8 @@ import {
 } from '@/models/channelList.model';
 import FillingImg from '@/components/ui/Images/FillingImage';
 import { INFO_PANEL_TITLES } from '@/models/articles.model';
+import { Suspense } from 'react';
+import SimilarChannels from '@/components/SimilarArticles/SimilarChannels';
 
 const BASE_URL = process.env.BASE_URL || MAIN_URL;
 
@@ -48,7 +45,6 @@ const { titleBefore, preText } = META_CHANNEL;
 const { views: viewsTitle } = INFO_PANEL_TITLES;
 const { genreImage } = SAT_CHANNEL_LIST_IMAGES;
 const { noteTitle, getResponsibilityText } = CHANNEL_RESPONSIBILITIES;
-const { channels: simChannelsBefore } = SIMILAR;
 const {
   channelLogo: { big: bigLogo },
 } = CHANNEL_IMAGES;
@@ -138,8 +134,6 @@ export default async function Page({ params }: IChannelProps) {
 
   const genreImgSrc = theme_id ? MChanTheme.get(theme_id) : theme_id;
 
-  const similarChannels = await getSimilarFlyChannels(title);
-
   // const similarArticles = await getSimilarArticles(
   //   chan_slug.split('-').slice(1).join('-')
   // );
@@ -150,9 +144,12 @@ export default async function Page({ params }: IChannelProps) {
 
   return (
     <>
-      <EditLinkButton
-        href={`/${lang}/${EUrlAdminParam.BASE_PATH}/${EUrlAdminParam.CHANNELS_EDIT}/edit/${id}`}
-      />
+      <Suspense>
+        <EditLinkButton
+          href={`/${lang}/${EUrlAdminParam.BASE_PATH}/${EUrlAdminParam.CHANNELS_EDIT}/edit/${id}`}
+        />
+      </Suspense>
+
       <BreadCrumbServer
         lang={lang}
         breadCrumbList={[
@@ -236,20 +233,13 @@ export default async function Page({ params }: IChannelProps) {
         />
       </article>
 
-      {similarChannels.length ? (
-        <SimilarArticles
-          similarTitle={`${simChannelsBefore.title[lang]} "${title}"`}
-          similarArticlesMapped={similarChannels.map((chan) => (
-            <li key={chan.slug}>
-              <SimilarFlyChannel
-                lang={lang}
-                chanParams={chan}
-                chanName={title}
-              />
-            </li>
-          ))}
+      <Suspense>
+        <SimilarChannels
+          lang={lang}
+          chanelTitle={title}
+          sectionCaption={`${SIMILAR_CHANNELS_TITLE[lang]} "${title}"`}
         />
-      ) : null}
+      </Suspense>
     </>
   );
 }

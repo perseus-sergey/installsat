@@ -1,28 +1,21 @@
 import { Title } from '@/components/ui/Titles/Title';
 import { getChannelsWithSchedule } from '@/controllers/channelList.controller';
 import {
-  ALL_SAT_CHANNEL_LIST_FILTERS,
-  CHANNEL_LIST_ANCHOR_START,
   META_ONLINE_CHANNEL_LIST,
   ONLINE_CHANNEL_LIST_DATA,
   ONLINE_CHANNEL_LIST_IMAGES,
 } from '@/models/channelList.model';
 import type { Metadata } from 'next';
-import FillingImg from '@/components/ui/Images/FillingImage';
-import Fieldset from '@/components/ui/Fieldset/Fieldset';
 import { TSearchParams, DEFAULT_META_DATA, ELanguage } from '@/models/ui.model';
 import { EUrlBaseParam, EUrlSearchParam, MAIN_URL } from '@/models/url.model';
-import Filter from '@/components/ui/Filter/Filter';
 import { Suspense } from 'react';
-import { getELangKey, validSearchParam } from '@/libs/utils/validSearchParam';
-import TooltipSimple from '@/components/ui/tooltips/TooltipSimple/TooltipSimple';
-import GenreImage from '@/components/ui/Images/GenreImage/GenreImage';
+import { getELangKey } from '@/libs/utils/validSearchParam';
 import PackageChannelList from '@/components/channelList/PackageChannelList';
 import BreadCrumbServer from '@/components/BreadCrumbs/BreadCrumbsServer';
 import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
 import { SCHEDULE_META } from '@/models/scheduleTV.model';
-import { BREAD_CRUMBS } from '@/models/breadCrumbs.model';
-import SeoLink from '@/components/ui/SeoLink/SeoLink';
+import Image from 'next/image';
+import h1Img from 'public/Images/packages/Popcorn-icon.png';
 
 const BASE_URL = process.env.BASE_URL || MAIN_URL;
 
@@ -32,15 +25,8 @@ const { getH1After } = META_ONLINE_CHANNEL_LIST;
 
 const { h1Image } = ONLINE_CHANNEL_LIST_IMAGES;
 const {
-  fieldsetFilters: {
-    legendText,
-    anchorLink: { ariaLabel },
-  },
+  fieldsetFilters: {},
 } = ONLINE_CHANNEL_LIST_DATA;
-
-const {
-  filterByChannelName: { placeholder, labelTitle },
-} = ALL_SAT_CHANNEL_LIST_FILTERS;
 
 const { CHANNELS_TV_PROGRAM } = EUrlBaseParam;
 
@@ -49,7 +35,6 @@ interface IPageProps {
   searchParams?: TSearchParams;
 }
 
-// export const dynamic = 'force-dynamic';
 export const revalidate = 3600 * 12; // invalidate cache every 12 hours
 
 export const generateMetadata = async ({
@@ -82,71 +67,50 @@ export const generateMetadata = async ({
 export default async function Page({ searchParams, params }: IPageProps) {
   const lang = getELangKey(params[EUrlBaseParam.LANG]);
 
-  const searchQueryChannel = validSearchParam(
-    EUrlSearchParam.CHANNEL,
-    searchParams
-  );
+  let searchQueryChannel = '';
 
-  const onlineChannels = await getChannelsWithSchedule(
-    lang,
-    searchQueryChannel
-  );
+  if (searchParams) {
+    const { validSearchParam } = await import('@/libs/utils/validSearchParam');
+
+    searchQueryChannel = validSearchParam(
+      EUrlSearchParam.CHANNEL,
+      searchParams
+    );
+  }
+
+  const getChannelsFn = () => getChannelsWithSchedule(lang, searchQueryChannel);
+
   const todayStr = getFormattedDateStrYearFirst();
 
   return (
     <>
       <BreadCrumbServer
         lang={lang}
-        breadCrumbList={[BREAD_CRUMBS.ONLINE_CHANNEL_LIST, metaH1[lang]]}
+        breadCrumbList={[
+          {
+            href: EUrlBaseParam.ONLINE_CHANNEL_LIST,
+            title: {
+              [ELanguage.UA]: 'Список онлайн каналів',
+              [ELanguage.EN]: 'Online channel list',
+            },
+          },
+          metaH1[lang],
+        ]}
       />
+
       <article className="article">
         <Title>
           {metaH1[lang]}
           {getH1After(searchQueryChannel)[lang]}
-          <FillingImg {...h1Image} alt={h1Image.alt[lang]} />
+          <Image src={h1Img} alt={h1Image.alt[lang]} priority />
         </Title>
-
-        <Fieldset legendText={legendText[lang]}>
-          <nav className="p-2 md:p-4">
-            <ul>
-              {onlineChannels.map(([genreTitle, chanList]) => (
-                <li key={genreTitle} className="flex items-center gap-4">
-                  <GenreImage
-                    lang={lang}
-                    tooltipText={chanList[0].genre_description}
-                    genreMapPosition={chanList[0].genre_id}
-                  />
-                  <TooltipSimple
-                    tooltipText={`${ariaLabel[lang]} ${genreTitle}`}
-                  >
-                    <SeoLink
-                      title={`${ariaLabel[lang]} ${genreTitle}`}
-                      href={`#${CHANNEL_LIST_ANCHOR_START}${chanList[0].genre_id}`}
-                      className="text-indigo-800 text-lg hover:text-red-500"
-                    >
-                      {genreTitle}
-                    </SeoLink>
-                  </TooltipSimple>
-                </li>
-              ))}
-            </ul>
-            <Suspense>
-              <Filter
-                lang={lang}
-                idName="channel-search-input"
-                placeholder={placeholder[lang]}
-                labelTitle={labelTitle[lang]}
-                searchQueryTitle={EUrlSearchParam.CHANNEL}
-              />
-            </Suspense>
-          </nav>
-        </Fieldset>
 
         <Suspense key={searchQueryChannel}>
           <PackageChannelList
             lang={lang}
+            isGenre
             pathToChannelDetails={CHANNELS_TV_PROGRAM}
-            channels={onlineChannels}
+            getChannelsFn={getChannelsFn}
             todayStr={todayStr}
           />
         </Suspense>

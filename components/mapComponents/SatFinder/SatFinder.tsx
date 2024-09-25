@@ -1,41 +1,27 @@
 'use client';
 
 import { SAT_FINDER_META_DATA } from '@/models/satFinder.model';
-import styles from './SatFinder.module.scss';
 import {
-  MapCameraProps,
   MapCameraChangedEvent,
   MapMouseEvent,
 } from '@vis.gl/react-google-maps';
-import { useCallback, useEffect, useState } from 'react';
+import { Suspense, useCallback, useEffect, useState } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { EUrlSearchParam } from '@/models/url.model';
-import {
-  IGroupedSatelliteOption,
-  ISatelliteOption,
-} from '@/models/tblSat.model';
 import Fieldset from '../../ui/Fieldset/Fieldset';
-import {
-  Group,
-  MySelect,
-  formatGroupSatLabel,
-  createIsMultiControlComponent,
-} from '../../ui/ReactSelect/ReactSelect';
-import { MultiValue, components } from 'react-select';
-import { Loader } from '../../ui/loaders/Loader';
 import GoogleMap from '../GoogleMap/GoogleMap';
-import { makeSelectedOptions } from '@/controllers/satFinder.controller';
 import StyledInputField from '../../ui/StyledInputField/StyledInputField';
-import { ELanguage, ESelectType } from '@/models/ui.model';
+import { ELanguage } from '@/models/ui.model';
 import BaseButton from '../../ui/buttons/BaseButton/BaseButton';
-import { TRANS_NEWS_LIST_FILTERS } from '@/models/satDigest.model';
+import Image from 'next/image';
+import searchBtnImg from 'public/Images/global-search.png';
 
 interface ISatFinderProps {
   apiKey: string;
   mapId: string;
   searchQueryName: EUrlSearchParam;
-  groupedSats: IGroupedSatelliteOption[];
   lang: ELanguage;
+  satelliteSelector: React.ReactNode;
 }
 
 const {
@@ -43,43 +29,25 @@ const {
   searchForm: { inputField, submitButton, fieldsetTitle },
 } = SAT_FINDER_META_DATA;
 
-const {
-  select: { satSelect },
-} = TRANS_NEWS_LIST_FILTERS;
-
 const SatFinder = ({
   apiKey,
   mapId,
   searchQueryName,
-  groupedSats,
   lang,
+  satelliteSelector,
 }: ISatFinderProps) => {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const { replace } = useRouter();
 
-  const [selectedOptions, setSelectedOptions] =
-    useState<MultiValue<ISatelliteOption> | null>(null);
   const [addressInputValue, setAddressInputValue] = useState('');
   const [isMapInfoWindowOpened, setIsMapInfoWindowOpened] = useState(false);
   const [markerPosition, setMarkerPosition] = useState(initialCamera.center);
-  const [satGradeList, setSatGradeList] = useState<string[]>(
-    searchParams.getAll(searchQueryName)
-  );
-  const [zoom, setZoom] = useState<number>(initialCamera.zoom);
-
-  const [cameraProps, setCameraProps] = useState<MapCameraProps>(initialCamera);
+  const [satGradeList, setSatGradeList] = useState<string[]>([]);
+  const [zoom, setZoom] = useState(initialCamera.zoom);
+  const [cameraProps, setCameraProps] = useState(initialCamera);
 
   useEffect(() => {
-    // const setUserLocation = async () => {
-    //   const location = await fetchUserLocation();
-    //   if (!location) return;
-    //   const { lat, lon: lng } = location;
-    //   setMarkerPosition({ lat, lng });
-    //   setCameraProps({ center: { lat, lng }, zoom: zoom });
-    // };
-
-    setSelectedOptions(makeSelectedOptions(satGradeList, groupedSats));
     const urlLat = searchParams.get(EUrlSearchParam.LATITUDE);
     const urlLng = searchParams.get(EUrlSearchParam.LONGITUDE);
     if (urlLat && urlLng) {
@@ -95,47 +63,37 @@ const SatFinder = ({
     [searchParams]
   );
 
-  const handleCameraChange = (ev: MapCameraChangedEvent) => {
+  const handleCameraChange = useCallback((ev: MapCameraChangedEvent) => {
     setCameraProps(ev.detail);
     setZoom(ev.detail.zoom);
-  };
+  }, []);
 
-  const mapClickHandler = (e: MapMouseEvent) => {
-    setIsMapInfoWindowOpened(false);
-    const { latLng } = e.detail;
-    if (!latLng) return;
-    setMarkerPosition(latLng);
-    changeMarkerPosition(latLng.lat, latLng.lng);
-  };
+  const mapClickHandler = useCallback(
+    (e: MapMouseEvent) => {
+      setIsMapInfoWindowOpened(false);
+      const { latLng } = e.detail;
+      if (!latLng) return;
+      setMarkerPosition(latLng);
+      changeMarkerPosition(latLng.lat, latLng.lng);
+    },
+    [getUrlSerPar, replace, pathname]
+  );
 
-  const changeMarkerPosition = (lat: number, lng: number) => {
-    const urlSePar = getUrlSerPar();
-    urlSePar.delete(EUrlSearchParam.LATITUDE);
-    urlSePar.delete(EUrlSearchParam.LONGITUDE);
-    urlSePar.append(EUrlSearchParam.LATITUDE, `${lat}`);
-    urlSePar.append(EUrlSearchParam.LONGITUDE, `${lng}`);
-    replace(`${pathname}?${urlSePar.toString()}`, { scroll: false });
-  };
-
-  const handleSelect = useCallback(
-    (selected: MultiValue<ISatelliteOption>) => {
-      setSelectedOptions(selected);
+  const changeMarkerPosition = useCallback(
+    (lat: number, lng: number) => {
       const urlSePar = getUrlSerPar();
-
-      urlSePar.delete(EUrlSearchParam.SAT);
-      let gradeList: string[] = [];
-      setSatGradeList([]);
-
-      selected.forEach((option) => {
-        urlSePar.append(EUrlSearchParam.SAT, `${option.value}`);
-        gradeList = [...gradeList, `${option.value}`];
-      });
-      setSatGradeList(gradeList);
-
+      urlSePar.delete(EUrlSearchParam.LATITUDE);
+      urlSePar.delete(EUrlSearchParam.LONGITUDE);
+      urlSePar.append(EUrlSearchParam.LATITUDE, `${lat}`);
+      urlSePar.append(EUrlSearchParam.LONGITUDE, `${lng}`);
       replace(`${pathname}?${urlSePar.toString()}`, { scroll: false });
     },
-    [getUrlSerPar, pathname, replace]
+    [getUrlSerPar, replace, pathname]
   );
+
+  useEffect(() => {
+    setSatGradeList(searchParams.getAll(searchQueryName));
+  }, [searchParams, searchQueryName]);
 
   const formAction = async (formData: FormData) => {
     const addressValue = formData.get('addressInput') as string;
@@ -151,23 +109,24 @@ const SatFinder = ({
         setCameraProps({ center: { lat, lng }, zoom: zoom });
         changeMarkerPosition(lat, lng);
       } else {
-        console.log(
-          `Geocode was not successful for the following reason: ${status}`
-        );
+        console.log(`Geocode failed: ${status}`);
       }
     });
   };
 
-  const markerMoved = (e: google.maps.MapMouseEvent) => {
-    const latLng = e.latLng;
-    if (!latLng) return;
+  const markerMoved = useCallback(
+    (e: google.maps.MapMouseEvent) => {
+      const latLng = e.latLng;
+      if (!latLng) return;
 
-    const lat = latLng.lat();
-    const lng = latLng.lng();
+      const lat = latLng.lat();
+      const lng = latLng.lng();
 
-    setMarkerPosition({ lat, lng });
-    changeMarkerPosition(lat, lng);
-  };
+      setMarkerPosition({ lat, lng });
+      changeMarkerPosition(lat, lng);
+    },
+    [changeMarkerPosition]
+  );
 
   return (
     <>
@@ -194,43 +153,25 @@ const SatFinder = ({
               widthPx={280}
             />
             <BaseButton
-              className={styles.submitButton}
+              className="w-11 h-11 flex items-center justify-center rounded-lg
+              bg-gradient-to-b from-stone-100 via-gray-200 via-40% to-neutral-400 hover:to-lime-400 shadow-[inset_0px_1px_1px_white,_0px_1px_3px_rgba(0,_0,_0,_0.5)]"
               ariaLabel={submitButton.ariaLabel[lang]}
               type="submit"
               id="submitBtn"
             >
-              {submitButton.title[lang]}
+              <Image
+                src={searchBtnImg}
+                alt={
+                  lang === ELanguage.UA
+                    ? 'Схематичне зображення збільшуваного скла поруч із глобусом'
+                    : 'Schematic illustration of a magnifying glass next to a globe'
+                }
+              />
             </BaseButton>
           </div>
         </form>
-        {groupedSats.length > 0 ? (
-          <MySelect
-            selectName={ESelectType.SELECT_SATS}
-            isMulti
-            closeMenuOnSelect
-            value={selectedOptions}
-            onChange={(selected) => handleSelect(selected)}
-            options={groupedSats}
-            components={{
-              Group,
-              Control: createIsMultiControlComponent(
-                satSelect.title[lang],
-                ESelectType.SELECT_SATS
-              ),
-              Input: (props) => (
-                <components.Input
-                  {...props}
-                  aria-activedescendant={undefined}
-                />
-              ),
-            }}
-            formatGroupLabel={formatGroupSatLabel}
-          />
-        ) : (
-          <h2>
-            <Loader /> Loading...
-          </h2>
-        )}
+
+        <Suspense>{satelliteSelector}</Suspense>
       </Fieldset>
       <GoogleMap
         lang={lang}
@@ -242,7 +183,6 @@ const SatFinder = ({
         cameraProps={cameraProps}
         isMapInfoWindowOpened={isMapInfoWindowOpened}
         satGradeList={satGradeList}
-        selectedOptions={selectedOptions}
         handleCameraChange={handleCameraChange}
         setIsMapInfoWindowOpened={setIsMapInfoWindowOpened}
         markerMoved={markerMoved}

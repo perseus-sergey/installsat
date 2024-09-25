@@ -7,11 +7,9 @@ import {
   ELanguage,
 } from '@/models/ui.model';
 import { getSatMap, updateViewCount } from '@/controllers/articles.controller';
-import SimilarArticles from '@/components/SimilarArticles/SimilarArticles';
 // import { getCommentsNumber } from '@/controllers/comments.controller';
 // import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
 import BreadCrumbServer from '@/components/BreadCrumbs/BreadCrumbsServer';
-import { BREAD_CRUMBS } from '@/models/breadCrumbs.model';
 import { Title } from '@/components/ui/Titles/Title';
 import FillingValidImage from '@/components/ui/Images/FillingValidImage';
 import BottomInfoPanel from '@/components/BottomInfoPanel/BottomInfoPanel';
@@ -27,6 +25,8 @@ import {
   META_SINGLE_SAT_MAP,
   SINGLE_SAT_MAP_DATA,
 } from '@/models/articles.model';
+import SimilarBlock from '@/components/SimilarArticles/SimilarBlock';
+import { BREAD_SAT_COVERAGE_MAP } from '@/models/breadCrumbs.model';
 
 interface IArticleParams {
   params: { [key in EUrlBaseParam]: string };
@@ -123,7 +123,7 @@ export default async function Page({ params }: IArticleParams) {
       <BreadCrumbServer
         lang={lang}
         breadCrumbList={[
-          BREAD_CRUMBS.SAT_COVERAGE_MAP,
+          BREAD_SAT_COVERAGE_MAP,
           `${metaTitle[lang]} ${sat_title} ${position}`,
         ]}
       />
@@ -154,19 +154,17 @@ export default async function Page({ params }: IArticleParams) {
         />
       </article>
 
-      <SimilarArticles
-        similarTitle={similarTitle[lang]}
-        similarArticlesMapped={[
-          <li key={0}>
-            <SeoLink
-              title={`${lang === ELanguage.UA ? 'Перейти до списку каналів з супутника' : 'Go to related channel list from satellite'} "${sat_title} ${position}"`}
-              href={relatedSatHref}
-            >
-              {similarStart[lang]} {sat_title} {position}
-            </SeoLink>
-          </li>,
-        ]}
-      />
+      <SimilarBlock blockTitle={similarTitle[lang]}>
+        <li key={0}>
+          <SeoLink
+            className="text-indigo-700 hover:text-red-500"
+            title={`${lang === ELanguage.UA ? 'Перейти до списку каналів з супутника' : 'Go to related channel list from satellite'} "${sat_title} ${position}"`}
+            href={relatedSatHref}
+          >
+            {similarStart[lang]} {sat_title} {position}
+          </SeoLink>
+        </li>
+      </SimilarBlock>
     </>
   );
 }

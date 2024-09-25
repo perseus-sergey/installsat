@@ -1,7 +1,6 @@
 import FormDigestInterval from '@/components/FormDigestInterval/FormDigestInterval';
 import SatNews from '@/components/SatNews/SatNews';
 import { Title } from '@/components/ui/Titles/Title';
-import { getSatsForForm } from '@/controllers/satDigest.controller';
 import { getELangKey } from '@/libs/utils/validSearchParam';
 import {
   LAST_NEWS_INTERVAL,
@@ -21,8 +20,6 @@ export const revalidate = 3600 * 6; // invalidate cache every 6 hours
 export default async function Page({ searchParams, params }: IProps) {
   const lang = getELangKey(params[EUrlBaseParam.LANG]);
 
-  const groupedSats = await getSatsForForm(false, lang);
-
   const searchInterval = searchParams[EUrlSearchParam.INTERVAL];
   const intervalDays =
     typeof searchInterval === 'string' && searchInterval
@@ -36,12 +33,10 @@ export default async function Page({ searchParams, params }: IProps) {
 
         <nav>
           <Suspense>
-            <FormDigestInterval
-              groupedSats={groupedSats instanceof Error ? [] : groupedSats}
-              lang={lang}
-            />
+            <FormDigestInterval lang={lang} />
           </Suspense>
         </nav>
+
         <Suspense>
           <SatNews searchParams={searchParams} lang={lang} />
         </Suspense>

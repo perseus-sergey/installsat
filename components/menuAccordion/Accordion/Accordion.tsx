@@ -26,10 +26,18 @@ const textShadow = {
 };
 
 const Accordion = async ({ lang }: { lang: ELanguage }) => {
-  const channelCatListResp = await getChannelCatList(lang);
-  const flyChannelSatList = await getFlyChannelSatList();
-  const usefulArticleListResp = await getUsefulArticleList();
-  const maps = await getSatMapsSideBar();
+  const channelCatListPromise = getChannelCatList(lang);
+  const usefulArticleListPromise = getUsefulArticleList();
+  const flyChannelSatListPromise = getFlyChannelSatList();
+  const mapsPromise = getSatMapsSideBar();
+
+  const [channelCatListResp, flyChannelSatList, usefulArticleListResp, maps] =
+    await Promise.all([
+      channelCatListPromise,
+      flyChannelSatListPromise,
+      usefulArticleListPromise,
+      mapsPromise,
+    ]);
 
   const channelCatList =
     channelCatListResp instanceof Error ? [] : channelCatListResp;
@@ -41,7 +49,7 @@ const Accordion = async ({ lang }: { lang: ELanguage }) => {
     'max-h-0 overflow-hidden transition-all duration-300 ease-out';
   const contentListStyle = `flex items-center gap-3 before:content-['*'] before:text-xl before:text-blue-100`;
   const contentItemStyle =
-    'border-b border-stone-300 py-1 px-2 bg-stone-400 hover:bg-slate-500';
+    'border-b border-stone-300 py-1 px-2 bg-stone-500 hover:bg-slate-500';
 
   return (
     <nav className="mx-auto py-4 text-white" data-testid="Accordion">

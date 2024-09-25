@@ -14,7 +14,6 @@ import {
 } from '@/models/ui.model';
 import { EUrlBaseParam, EUrlSearchParam, MAIN_URL } from '@/models/url.model';
 import { Metadata } from 'next';
-import { Suspense } from 'react';
 // import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
 import BottomInfoPanel from '@/components/BottomInfoPanel/BottomInfoPanel';
 // import { getCommentsNumber } from '@/controllers/comments.controller';
@@ -24,6 +23,7 @@ import { getELangKey } from '@/libs/utils/validSearchParam';
 import h1Img from 'public/Images/starthere_6100.png';
 import Image from 'next/image';
 import { INFO_PANEL_TITLES } from '@/models/articles.model';
+import SatelliteSelector from '@/components/CustomSelectors/SatelliteSelector';
 
 const BASE_URL = process.env.BASE_URL || MAIN_URL;
 
@@ -101,7 +101,7 @@ export default async function Page({ params }: IPageProps) {
 
   const titleLang = lang === ELanguage.UA ? title : title_en || title;
 
-  const groupedSats = await getSatsForForm(false, lang);
+  const satsForFormFn = () => getSatsForForm(false, lang);
 
   // const numberOfComments = await getCommentsNumber(
   //   EDBTableTitles.COMMENTS_ARTICLE,
@@ -114,7 +114,7 @@ export default async function Page({ params }: IPageProps) {
     <>
       <BreadCrumbServer breadCrumbList={[titleLang]} lang={lang} />
       <article className="article">
-        <Title>
+        <Title style={{ padding: '4rem 1rem' }}>
           {titleLang}
           <Image
             src={h1Img}
@@ -123,15 +123,15 @@ export default async function Page({ params }: IPageProps) {
           />
         </Title>
 
-        <Suspense>
-          <SatFinder
-            lang={lang}
-            searchQueryName={EUrlSearchParam.SAT}
-            apiKey={process.env.GOOGLE_MAP_API_KEY || ''}
-            mapId={process.env.GOOGLE_MAP_ID || ''}
-            groupedSats={groupedSats instanceof Error ? [] : groupedSats}
-          />
-        </Suspense>
+        <SatFinder
+          lang={lang}
+          searchQueryName={EUrlSearchParam.SAT}
+          apiKey={process.env.GOOGLE_MAP_API_KEY || ''}
+          mapId={process.env.GOOGLE_MAP_ID || ''}
+          satelliteSelector={
+            <SatelliteSelector lang={lang} requestFn={satsForFormFn} />
+          }
+        />
 
         <DangerHtml
           text={lang === ELanguage.UA ? text : text_en}

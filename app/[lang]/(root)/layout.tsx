@@ -6,6 +6,7 @@ import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
 import { EUrlBaseParam, MAIN_URL } from '@/models/url.model';
 import { getELangKey } from '@/libs/utils/validSearchParam';
 import SideBarServer from '@/components/SideBar/SideBarServer';
+import { Suspense } from 'react';
 
 const BASE_URL = process.env.BASE_URL || MAIN_URL;
 
@@ -47,9 +48,13 @@ export default function Layout({ children, params }: IProps) {
   return (
     <main className="mx-auto max-w-4xl bg-slate-900 flex justify-between items-start min-h-screen sm:rounded-lg sm:border sm:border-stone-400">
       {/* <main className="mx-auto bg-slate-900 flex justify-between items-start min-h-screen sm:w-[95%] sm:rounded-lg sm:border sm:border-stone-400"> */}
-      <SideBar lang={lang}>
-        <SideBarServer lang={lang} />
-      </SideBar>
+
+      <Suspense>
+        <SideBar lang={lang}>
+          <SideBarServer lang={lang} />
+        </SideBar>
+      </Suspense>
+
       <section className="flex flex-col flex-[3] overflow-x-hidden">
         {children}
       </section>

@@ -61,14 +61,7 @@ export default function RootLayout({
         >
           {/* <AdBanner adsId={adsenseId} /> */}
           {/* <Suspense> */}
-          <AdBannerSimple>
-            <ins
-              data-ad-client={`ca-pub-${adsenseId}`}
-              data-ad-slot="1581071444"
-              data-full-width-responsive="true"
-              data-ad-format="auto"
-            />
-          </AdBannerSimple>
+          <AdBannerSimple adsenseId={adsenseId} />
           {/* <AdsHeadMediaBanner
             data-ad-client={`ca-pub-${adsenseId}`}
             data-ad-slot="4614458113"

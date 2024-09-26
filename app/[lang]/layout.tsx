@@ -55,23 +55,22 @@ export default function RootLayout({
 
         <div
           className="h-40 flex justify-center items-center"
-          // className="h-40 flex justify-center items-center bg-[url('/Images/google.png')] bg-no-repeat bg-center"
           role="complementary"
           aria-label={lang === ELanguage.UA ? 'Реклама' : 'Advertising'}
         >
           {/* <AdBanner adsId={adsenseId} /> */}
           {/* <Suspense> */}
-          {/* <AdsHeadMediaBanner
+          <AdsHeadMediaBanner
             data-ad-client={`ca-pub-${adsenseId}`}
             data-ad-slot="1581071444"
             data-full-width-responsive="true"
             // data-ad-layout="in-article"
             data-ad-format="auto"
-          /> */}
-          <AdsHeadMediaBanner
+          />
+          {/* <AdsHeadMediaBanner
             data-ad-client={`ca-pub-${adsenseId}`}
             data-ad-slot="4614458113"
-          />
+          /> */}
           {/* </Suspense> */}
         </div>
 

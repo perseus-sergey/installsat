@@ -33,7 +33,7 @@ const AdsHeadMediaBanner = (props: IAdsBannerProps) => {
 
     // Завантажуємо рекламу, якщо вона ще не завантажена
     if (!adsLoaded.current) {
-      loadAd();
+      setTimeout(loadAd, 0);
     }
   }, [pathname, searchParams]);
 

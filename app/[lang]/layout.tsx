@@ -23,15 +23,15 @@ export async function generateStaticParams() {
   return Object.values(ELanguage).map((l) => ({ [EUrlBaseParam.LANG]: l }));
 }
 
-const AdBanner = dynamic(() => import('@/components/GoogleAdsense/AdBanner'), {
-  ssr: false,
-});
-// const AdsHeadMediaBanner = dynamic(
-//   () => import('@/components/GoogleAdsense/AdsHeadMediaBanner'),
-//   {
-//     ssr: false,
-//   }
-// );
+// const AdBanner = dynamic(() => import('@/components/GoogleAdsense/AdBanner'), {
+//   ssr: false,
+// });
+const AdsHeadMediaBanner = dynamic(
+  () => import('@/components/GoogleAdsense/AdsHeadMediaBanner'),
+  {
+    ssr: false,
+  }
+);
 
 export const dynamicParams = false;
 
@@ -59,27 +59,26 @@ export default function RootLayout({
           role="complementary"
           aria-label={lang === ELanguage.UA ? 'Реклама' : 'Advertising'}
         >
-          <AdBanner adsId={adsenseId} />
-          {/* <Suspense>
-            <AdsHeadMediaBanner
-              data-ad-client={`ca-pub-${adsenseId}`}
-              data-ad-slot="1581071444"
-              data-full-width-responsive="true"
-              // data-ad-layout="in-article"
-              data-ad-format="auto"
-            />
-          </Suspense> */}
+          {/* <AdBanner adsId={adsenseId} /> */}
+          {/* <Suspense> */}
+          {/* <AdsHeadMediaBanner
+            data-ad-client={`ca-pub-${adsenseId}`}
+            data-ad-slot="1581071444"
+            data-full-width-responsive="true"
+            // data-ad-layout="in-article"
+            data-ad-format="auto"
+          /> */}
+          <AdsHeadMediaBanner
+            data-ad-client={`ca-pub-${adsenseId}`}
+            data-ad-slot="4614458113"
+          />
+          {/* </Suspense> */}
         </div>
 
         {children}
         {/* <ToastProvider>{children}</ToastProvider> */}
         <Footer lang={lang} />
       </body>
-      {/* <script
-        async
-        src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-${adsenseId}`}
-        crossOrigin="anonymous"
-      ></script> */}
       <GoogleAdsense pId={adsenseId} />
       <AdBlockingRecovery pId={adsenseId} />
     </html>

@@ -12,8 +12,8 @@ declare global {
 interface IAdsBannerProps {
   'data-ad-client': string;
   'data-ad-slot': string;
-  'data-ad-format': string;
-  'data-full-width-responsive': string;
+  'data-ad-format'?: string;
+  'data-full-width-responsive'?: string;
   'data-ad-layout'?: string;
 }
 
@@ -51,7 +51,8 @@ const AdsHeadMediaBanner = (props: IAdsBannerProps) => {
 
   return (
     <ins
-      className="adsbygoogle block overflow-hidden"
+      // className="adsbygoogle block overflow-hidden"
+      className="adsbygoogle block w-[728px] h-[90px]"
       ref={adRef} // Прив'язуємо ref до ins елемента
       {...props}
     />

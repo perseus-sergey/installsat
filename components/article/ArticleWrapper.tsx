@@ -1,17 +1,18 @@
 import { ELanguage } from '@/models/ui.model';
-import AdBanner from '../GoogleAdsense/AdBanner';
+// import AdBanner from '../GoogleAdsense/AdBanner';
 
-const adsenseId = process.env.G_ADSENSE_ID || '';
+// const adsenseId = process.env.G_ADSENSE_ID || '';
 
 interface IProps extends React.HTMLAttributes<HTMLElement> {
   children: React.ReactNode;
   lang: ELanguage;
 }
 
-const ArticleWrapper = ({ children, lang, className }: IProps) => (
+const ArticleWrapper = ({ children, className }: IProps) => (
+  // const ArticleWrapper = ({ children, lang, className }: IProps) => (
   <article className={`article ${className ? className : ''}`}>
     {/* <AdBannerArticleTop lang={lang} /> */}
-    <div
+    {/* <div
       className="min-h-64 w-full flex justify-center items-center"
       role="complementary"
       aria-label={lang === ELanguage.UA ? 'Реклама' : 'Advertising'}
@@ -25,7 +26,7 @@ const ArticleWrapper = ({ children, lang, className }: IProps) => (
           data-ad-format="auto"
         />
       </AdBanner>
-    </div>
+    </div> */}
     {children}
   </article>
 );

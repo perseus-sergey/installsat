@@ -1,6 +1,6 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
+import { usePathname, useSearchParams } from 'next/navigation';
 import { useEffect, useRef } from 'react';
 
 declare global {
@@ -18,9 +18,10 @@ interface IAdsBannerProps {
 }
 
 const AdsHeadMediaBanner = (props: IAdsBannerProps) => {
-  const router = useRouter();
-  const adRef = useRef<HTMLModElement>(null); // ref для ins елемента
+  const adRef = useRef<HTMLModElement>(null);
   const adsLoaded = useRef(false); // Слідкуємо за станом завантаження оголошення
+  const pathname = usePathname(); // Отримуємо поточний шлях
+  const searchParams = useSearchParams(); // Отримуємо поточні параметри запиту
 
   useEffect(() => {
     const loadAd = () => {
@@ -31,33 +32,27 @@ const AdsHeadMediaBanner = (props: IAdsBannerProps) => {
       ) {
         adRef.current.innerHTML = ''; // Очищуємо попередній вміст для уникнення конфліктів
         window.adsbygoogle.push({});
-        adsLoaded.current = true; // Відмічаємо, що оголошення завантажено
+        adsLoaded.current = true;
       }
     };
-
-    // const handleRouteChange = () => {
-    //   adsLoaded.current = false; // Скидаємо статус оголошення при зміні маршруту
-    //   loadAd(); // Завантажуємо нове оголошення після зміни маршруту
-    // };
 
     if (!adsLoaded.current) {
       loadAd(); // Завантажуємо оголошення на початку
     }
 
-    // Підписуємося на зміни маршруту
-    // router.events.on('routeChangeComplete', handleRouteChange);
-
-    // Очищуємо підпис при демонтажі компонента
-    return () => {
-      // router.events.off('routeChangeComplete', handleRouteChange);
+    // Оновлюємо оголошення при зміні маршруту чи параметрів
+    const handleRouteChange = () => {
+      adsLoaded.current = false; // Скидаємо статус оголошення при зміні маршруту
+      loadAd(); // Завантажуємо нове оголошення
     };
-  }, [router]);
+
+    handleRouteChange(); // Викликаємо завантаження при першому завантаженні або зміні URL
+  }, [pathname, searchParams]);
 
   return (
     <ins
       className="adsbygoogle block overflow-hidden"
       ref={adRef} // Прив'язуємо ref до ins елемента
-      // key={router.asPath} // Додаємо ключ для примусового рендерингу при зміні маршруту
       {...props}
     />
   );

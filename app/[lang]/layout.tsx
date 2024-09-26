@@ -11,7 +11,7 @@ import dynamic from 'next/dynamic';
 
 const Footer = dynamic(() => import('@/components/Footer/Footer'));
 import { GoogleTagManager } from '@next/third-parties/google';
-// import { Suspense } from 'react';
+import { Suspense } from 'react';
 
 const GOOGLE_GTM_ID = process.env.GOOGLE_GTM || '';
 // const gaId = process.env.GA_ID || '';
@@ -22,12 +22,12 @@ export async function generateStaticParams() {
   return Object.values(ELanguage).map((l) => ({ [EUrlBaseParam.LANG]: l }));
 }
 
-// const AdsHeadMediaBanner = dynamic(
-//   () => import('@/components/GoogleAdsense/AdsHeadMediaBanner'),
-//   {
-//     ssr: false,
-//   }
-// );
+const AdsHeadMediaBanner = dynamic(
+  () => import('@/components/GoogleAdsense/AdsHeadMediaBanner'),
+  {
+    ssr: false,
+  }
+);
 
 export const dynamicParams = false;
 
@@ -55,7 +55,7 @@ export default function RootLayout({
           role="complementary"
           aria-label={lang === ELanguage.UA ? 'Реклама' : 'Advertising'}
         >
-          {/* <Suspense>
+          <Suspense>
             <AdsHeadMediaBanner
               data-ad-client={`ca-pub-${adsenseId}`}
               data-ad-slot="1581071444"
@@ -63,7 +63,7 @@ export default function RootLayout({
               // data-ad-layout="in-article"
               data-ad-format="auto"
             />
-          </Suspense> */}
+          </Suspense>
         </div>
 
         {children}

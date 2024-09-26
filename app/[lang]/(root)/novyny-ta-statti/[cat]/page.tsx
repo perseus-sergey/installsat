@@ -32,7 +32,7 @@ const {
   search: { placeholder, labelTitle },
 } = ARTICLE_LIST_MODEL;
 
-export const revalidate = 3600 * 12; // invalidate cache every 12 hours
+export const revalidate = 43200; // 3600 * 12 invalidate cache every 12 hours
 
 export interface IPageParams {
   params: { [key in EUrlBaseParam]: string };

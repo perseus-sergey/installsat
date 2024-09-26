@@ -39,7 +39,7 @@ import SimilarChannels from '@/components/SimilarArticles/SimilarChannels';
 
 const BASE_URL = process.env.BASE_URL || MAIN_URL;
 
-export const revalidate = 3600 * 12; // invalidate cache every 12 hours
+export const revalidate = 43200; // 3600 * 12 invalidate cache every 12 hours
 
 const { titleBefore, preText } = META_CHANNEL;
 const { views: viewsTitle } = INFO_PANEL_TITLES;

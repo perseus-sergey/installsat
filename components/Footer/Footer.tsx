@@ -22,9 +22,9 @@ const Footer = ({ lang }: { lang: ELanguage }) => (
       {Object.entries(
         footerMenuList as Record<EFooterColumns, IFooterMenuItem[]>
       ).map(([columnType, columnItems]) => (
-        <section key={columnType} className="w-44 sm:w-auto">
+        <section key={columnType} className="group w-44 sm:w-auto">
           <h2 className="text-xl flex items-center gap-2">
-            <div className="text-violet-200 transform hover:rotate-180 duration-300">
+            <div className="text-violet-200 transform group-hover:rotate-[360deg] duration-300">
               {footerColumnTitles[columnType as EFooterColumns].image}
             </div>
             {footerColumnTitles[columnType as EFooterColumns].title[lang]}

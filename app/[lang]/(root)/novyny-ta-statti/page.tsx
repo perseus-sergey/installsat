@@ -29,7 +29,7 @@ const {
 
 const { description, h1Start, title } = META_ALL_ARTICLES;
 
-export const revalidate = 3600 * 12; // invalidate cache every 12 hours
+export const revalidate = 43200; // 3600 * 12 invalidate cache every 12 hours
 
 interface IProps {
   params: { [key in EUrlBaseParam]: string };

@@ -24,7 +24,7 @@ interface IProps {
   params: { [key in EUrlBaseParam]: string };
 }
 
-export const revalidate = 3600 * 24 * 7; // invalidate cache every 7 days
+export const revalidate = 604800; // 3600 * 24 * 7 invalidate cache every 7 days
 
 export const generateMetadata = ({ params }: IProps): Metadata => {
   const lang = getELangKey(params[EUrlBaseParam.LANG]);

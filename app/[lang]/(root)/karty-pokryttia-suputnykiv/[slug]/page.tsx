@@ -34,7 +34,7 @@ interface IArticleParams {
 
 const BASE_URL = process.env.BASE_URL || MAIN_URL;
 
-export const revalidate = 3600 * 24 * 7; // invalidate cache every 7 days
+export const revalidate = 604800; // 3600 * 24 * 7 invalidate cache every 7 days
 
 const {
   similar: { similarStart, similarTitle },

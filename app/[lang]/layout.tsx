@@ -12,7 +12,7 @@ import dynamic from 'next/dynamic';
 const Footer = dynamic(() => import('@/components/Footer/Footer'));
 import { GoogleTagManager } from '@next/third-parties/google';
 // import { Suspense } from 'react';
-import AdBanner from '@/components/GoogleAdsense/AdBanner';
+// import AdBanner from '@/components/GoogleAdsense/AdBanner';
 
 const GOOGLE_GTM_ID = process.env.GOOGLE_GTM || '';
 // const gaId = process.env.GA_ID || '';
@@ -23,6 +23,9 @@ export async function generateStaticParams() {
   return Object.values(ELanguage).map((l) => ({ [EUrlBaseParam.LANG]: l }));
 }
 
+const AdBanner = dynamic(() => import('@/components/GoogleAdsense/AdBanner'), {
+  ssr: false,
+});
 // const AdsHeadMediaBanner = dynamic(
 //   () => import('@/components/GoogleAdsense/AdsHeadMediaBanner'),
 //   {
@@ -56,7 +59,7 @@ export default function RootLayout({
           role="complementary"
           aria-label={lang === ELanguage.UA ? 'Реклама' : 'Advertising'}
         >
-          <AdBanner />
+          <AdBanner adsId={adsenseId} />
           {/* <Suspense>
             <AdsHeadMediaBanner
               data-ad-client={`ca-pub-${adsenseId}`}
@@ -74,7 +77,7 @@ export default function RootLayout({
       </body>
       <script
         async
-        src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8343784915002692"
+        src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-${adsenseId}`}
         crossOrigin="anonymous"
       ></script>
       {/* <GoogleAdsense pId={adsenseId} /> */}

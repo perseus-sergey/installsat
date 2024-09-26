@@ -43,7 +43,7 @@ interface IArticleParams {
   params: { [key in EUrlBaseParam]: string };
 }
 
-export const revalidate = 3600 * 48; // invalidate cache every 2 days
+export const revalidate = 172800; // 3600 * 48 invalidate cache every 2 days
 
 export const generateMetadata = async ({
   params,

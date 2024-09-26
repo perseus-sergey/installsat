@@ -54,7 +54,7 @@ export interface IPageProps {
   params: { [key in EUrlBaseParam]: string };
 }
 
-export const revalidate = 3600 * 12;
+export const revalidate = 43200; // 3600 * 12 invalidate cache every 12 hours
 
 export const generateMetadata = async ({
   params,

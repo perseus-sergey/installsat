@@ -35,7 +35,7 @@ const {
 } = ONLINE_CHANNEL_LIST_DATA;
 const { h1Image } = ONLINE_CHANNEL_LIST_IMAGES;
 
-export const revalidate = 3600 * 48;
+export const revalidate = 172800; // 3600 * 48 invalidate cache every 2 days
 
 export const generateMetadata = ({ params }: IPageProps): Metadata => {
   const lang = getELangKey(params[LANG]);

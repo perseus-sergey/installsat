@@ -50,7 +50,7 @@ interface IPageProps {
   searchParams?: TSearchParams;
 }
 
-export const revalidate = 3600 * 6; // invalidate cache every 6 hours
+export const revalidate = 21600; // 3600 * 6 invalidate cache every 6 hours
 
 export const generateMetadata = async ({
   params,

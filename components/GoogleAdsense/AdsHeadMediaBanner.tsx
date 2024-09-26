@@ -18,42 +18,35 @@ interface IAdsBannerProps {
 }
 
 const AdsHeadMediaBanner = (props: IAdsBannerProps) => {
-  const adRef = useRef<HTMLModElement>(null);
   const adsLoaded = useRef(false); // Слідкуємо за станом завантаження оголошення
   const pathname = usePathname(); // Отримуємо поточний шлях
   const searchParams = useSearchParams(); // Отримуємо поточні параметри запиту
 
   useEffect(() => {
     const loadAd = () => {
-      if (
-        typeof window !== 'undefined' &&
-        window.adsbygoogle &&
-        adRef.current
-      ) {
-        adRef.current.innerHTML = ''; // Очищуємо попередній вміст для уникнення конфліктів
+      if (typeof window !== 'undefined' && window.adsbygoogle) {
+        // Переконайтесь, що оголошення завантажується правильно
         window.adsbygoogle.push({});
         adsLoaded.current = true;
       }
     };
 
+    // Завантажуємо оголошення при первинному рендері
     if (!adsLoaded.current) {
-      loadAd(); // Завантажуємо оголошення на початку
+      loadAd();
     }
 
-    // Оновлюємо оголошення при зміні маршруту чи параметрів
-    const handleRouteChange = () => {
-      adsLoaded.current = false; // Скидаємо статус оголошення при зміні маршруту
+    // Завантажуємо нове оголошення при зміні маршруту
+    if (adsLoaded.current) {
+      adsLoaded.current = false; // Скидаємо статус для наступного завантаження
       loadAd(); // Завантажуємо нове оголошення
-    };
-
-    handleRouteChange(); // Викликаємо завантаження при першому завантаженні або зміні URL
+    }
   }, [pathname, searchParams]);
 
   return (
     <ins
       // className="adsbygoogle block overflow-hidden"
       className="adsbygoogle block w-[728px] h-[90px]"
-      ref={adRef} // Прив'язуємо ref до ins елемента
       {...props}
     />
   );

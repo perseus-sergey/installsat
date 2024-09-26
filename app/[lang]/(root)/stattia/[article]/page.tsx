@@ -28,6 +28,7 @@ import SimilarArticles from '@/components/SimilarArticles/SimilarArticles';
 import TextUnderH1 from '@/components/TextUnderH1/TextUnderH1';
 import SeoLink from '@/components/ui/SeoLink/SeoLink';
 import { Suspense } from 'react';
+import ArticleWrapper from '@/components/article/ArticleWrapper';
 
 const { h1Image } = ARTICLE_CARD.images;
 
@@ -164,7 +165,7 @@ export default async function Page({ params }: IArticleParams) {
         ]}
       />
 
-      <article className="article">
+      <ArticleWrapper lang={lang}>
         <Title>
           {titleLang}
           <FillingValidImage
@@ -207,7 +208,7 @@ export default async function Page({ params }: IArticleParams) {
             },
           ]}
         />
-      </article>
+      </ArticleWrapper>
 
       <Suspense>
         <SimilarArticles

@@ -29,6 +29,7 @@ import SatelliteSelector from '@/components/CustomSelectors/SatelliteSelector';
 import { getSatsForForm } from '@/controllers/satDigest.controller';
 import { getFlySatChannels } from '@/controllers/channelList.controller';
 import { getChannelsLangList } from '@/controllers/languageList.controller';
+import ArticleWrapper from '@/components/article/ArticleWrapper';
 // import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
 // import { getCommentsNumber } from '@/controllers/comments.controller';
 
@@ -119,7 +120,7 @@ export default async function Page({ searchParams, params }: IPageProps) {
     <>
       <BreadCrumbServer lang={lang} />
 
-      <article className="article">
+      <ArticleWrapper lang={lang}>
         <Title>
           {metaH1[lang]}
           <Image
@@ -181,7 +182,7 @@ export default async function Page({ searchParams, params }: IPageProps) {
         <Suspense>
           <FlyChannelsTable lang={lang} requestFn={getFlySatChannelsFn} />
         </Suspense>
-      </article>
+      </ArticleWrapper>
     </>
   );
 }

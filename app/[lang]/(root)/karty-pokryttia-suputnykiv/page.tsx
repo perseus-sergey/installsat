@@ -10,6 +10,7 @@ import { getELangKey } from '@/libs/utils/validSearchParam';
 import { META_ALL_SAT_MAPS_MODEL } from '@/models/articles.model';
 import Image from 'next/image';
 import h1Img from 'public/Images/articles/signal-satellite.png';
+import ArticleWrapper from '@/components/article/ArticleWrapper';
 
 const BASE_URL = process.env.BASE_URL || MAIN_URL;
 
@@ -59,7 +60,7 @@ export default async function Page({ params }: IProps) {
   return (
     <>
       <BreadCrumbServer breadCrumbList={[metaDescription[lang]]} lang={lang} />
-      <article className="article">
+      <ArticleWrapper lang={lang}>
         <Title>
           {metaDescription[lang]}
 
@@ -67,7 +68,7 @@ export default async function Page({ params }: IProps) {
         </Title>
 
         <MapList lang={lang} articleList={allMaps} />
-      </article>
+      </ArticleWrapper>
     </>
   );
 }

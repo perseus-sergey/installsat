@@ -23,6 +23,7 @@ import {
 import Image from 'next/image';
 import h1Img from 'public/Images/articles/all_news_64.png';
 import { BREAD_NEWS_AND_ARTICLES } from '@/models/breadCrumbs.model';
+import ArticleWrapper from '@/components/article/ArticleWrapper';
 
 const BASE_URL = process.env.BASE_URL || MAIN_URL;
 
@@ -126,7 +127,7 @@ export default async function Page({ params, searchParams }: IPageParams) {
         breadCrumbList={[BREAD_NEWS_AND_ARTICLES, descriptionLang]}
         lang={lang}
       />
-      <article className="article">
+      <ArticleWrapper lang={lang}>
         <Title>
           {descriptionLang}
           <Image
@@ -167,7 +168,7 @@ export default async function Page({ params, searchParams }: IPageParams) {
           totalPages={totalPages}
           searchParams={searchParams}
         />
-      </article>
+      </ArticleWrapper>
     </>
   );
 }

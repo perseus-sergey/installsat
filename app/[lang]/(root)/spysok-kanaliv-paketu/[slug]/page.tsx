@@ -34,6 +34,7 @@ import SeoLink from '@/components/ui/SeoLink/SeoLink';
 import SimilarBlock from '@/components/SimilarArticles/SimilarBlock';
 import { BREAD_PACKAGE_CHANNEL_LIST } from '@/models/breadCrumbs.model';
 import EmptyPage from '@/components/errors/EmptyPage/EmptyPage';
+import ArticleWrapper from '@/components/article/ArticleWrapper';
 
 const BASE_URL = process.env.BASE_URL || MAIN_URL;
 
@@ -159,7 +160,7 @@ export default async function Page({ params, searchParams }: IPageProps) {
     <>
       <BreadCrumbServer breadCrumbList={breadCrumbList} lang={lang} />
 
-      <article className="article">
+      <ArticleWrapper lang={lang}>
         <>
           <Title>
             {getH1Cached(packageParamsResp.cat_title, searchQueryChannel)[lang]}
@@ -183,7 +184,7 @@ export default async function Page({ params, searchParams }: IPageProps) {
             />
           </Suspense>
         </>
-      </article>
+      </ArticleWrapper>
 
       {similarLinks.length ? (
         <SimilarBlock blockTitle={similarLinksTitle[lang]}>

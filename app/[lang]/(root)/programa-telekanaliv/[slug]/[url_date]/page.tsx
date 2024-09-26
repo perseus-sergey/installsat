@@ -33,6 +33,7 @@ import { getEnvVariable } from '@/libs/utils/envHandler';
 import { INFO_PANEL_TITLES } from '@/models/articles.model';
 import { Suspense } from 'react';
 import SimilarChannels from '@/components/SimilarArticles/SimilarChannels';
+import ArticleWrapper from '@/components/article/ArticleWrapper';
 
 const BASE_URL = getEnvVariable('BASE_URL', MAIN_URL);
 
@@ -147,7 +148,7 @@ export default async function Page({ params }: IPageProps) {
         ]}
       />
 
-      <article className="article">
+      <ArticleWrapper lang={lang}>
         <Title>
           <span className="inline-block">
             {`${h1Start[lang]} "${title}" ${lang === ELanguage.UA ? 'за ' : 'for '}`}
@@ -206,7 +207,7 @@ export default async function Page({ params }: IPageProps) {
             },
           ]}
         />
-      </article>
+      </ArticleWrapper>
 
       <Suspense>
         <SimilarChannels

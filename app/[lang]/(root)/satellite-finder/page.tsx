@@ -24,6 +24,7 @@ import h1Img from 'public/Images/starthere_6100.png';
 import Image from 'next/image';
 import { INFO_PANEL_TITLES } from '@/models/articles.model';
 import SatelliteSelector from '@/components/CustomSelectors/SatelliteSelector';
+import ArticleWrapper from '@/components/article/ArticleWrapper';
 
 const BASE_URL = process.env.BASE_URL || MAIN_URL;
 
@@ -113,7 +114,7 @@ export default async function Page({ params }: IPageProps) {
   return (
     <>
       <BreadCrumbServer breadCrumbList={[titleLang]} lang={lang} />
-      <article className="article">
+      <ArticleWrapper lang={lang}>
         <Title style={{ padding: '4rem 1rem' }}>
           {titleLang}
           <Image
@@ -141,7 +142,7 @@ export default async function Page({ params }: IPageProps) {
         <BottomInfoPanel
           items={[{ name: viewsTitle[lang], value: view + 1 }]}
         />
-      </article>
+      </ArticleWrapper>
     </>
   );
 }

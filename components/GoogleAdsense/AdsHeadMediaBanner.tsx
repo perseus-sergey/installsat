@@ -25,21 +25,15 @@ const AdsHeadMediaBanner = (props: IAdsBannerProps) => {
   useEffect(() => {
     const loadAd = () => {
       if (typeof window !== 'undefined' && window.adsbygoogle) {
-        // Переконайтесь, що оголошення завантажується правильно
+        window.adsbygoogle = window.adsbygoogle || [];
         window.adsbygoogle.push({});
-        adsLoaded.current = true;
+        adsLoaded.current = true; // Встановлюємо статус, що реклама завантажена
       }
     };
 
-    // Завантажуємо оголошення при первинному рендері
+    // Завантажуємо рекламу, якщо вона ще не завантажена
     if (!adsLoaded.current) {
       loadAd();
-    }
-
-    // Завантажуємо нове оголошення при зміні маршруту
-    if (adsLoaded.current) {
-      adsLoaded.current = false; // Скидаємо статус для наступного завантаження
-      loadAd(); // Завантажуємо нове оголошення
     }
   }, [pathname, searchParams]);
 

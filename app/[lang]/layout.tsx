@@ -47,7 +47,8 @@ export default function RootLayout({
         <Header lang={lang} />
 
         <div
-          className="h-60 bg-[url('/Images/google.png')] bg-no-repeat bg-center"
+          className="h-40 flex justify-center items-center"
+          // className="h-40 flex justify-center items-center bg-[url('/Images/google.png')] bg-no-repeat bg-center"
           role="complementary"
           aria-label={lang === ELanguage.UA ? 'Реклама' : 'Advertising'}
         >

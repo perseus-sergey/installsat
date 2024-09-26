@@ -38,7 +38,7 @@ export default async function Page({ searchParams, params }: IProps) {
     <>
       <article className="article">
         <div
-          className="h-40 w-full flex justify-center items-center"
+          className="h-28 w-full flex justify-center items-center"
           role="complementary"
           aria-label={lang === ELanguage.UA ? 'Реклама' : 'Advertising'}
         >

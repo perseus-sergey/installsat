@@ -18,6 +18,7 @@ interface IAdsBannerProps {
 }
 
 const AdsHeadMediaBanner = (props: IAdsBannerProps) => {
+  // const adsLoaded = useRef(false); // Слідкуємо за станом завантаження оголошення
   const pathname = usePathname(); // Отримуємо поточний шлях
   const searchParams = useSearchParams(); // Отримуємо поточні параметри запиту
 
@@ -36,6 +37,18 @@ const AdsHeadMediaBanner = (props: IAdsBannerProps) => {
     }, 100);
 
     return () => clearInterval(intervalId);
+    // const loadAd = () => {
+    //   if (typeof window !== 'undefined' && window.adsbygoogle) {
+    //     window.adsbygoogle = window.adsbygoogle || [];
+    //     window.adsbygoogle.push({});
+    //     adsLoaded.current = true; // Встановлюємо статус, що реклама завантажена
+    //   }
+    // };
+
+    // // Завантажуємо рекламу, якщо вона ще не завантажена
+    // if (!adsLoaded.current) {
+    //   setTimeout(loadAd, 0);
+    // }
   }, [pathname, searchParams]);
 
   return (

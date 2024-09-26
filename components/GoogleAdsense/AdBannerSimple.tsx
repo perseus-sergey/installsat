@@ -2,7 +2,7 @@
 
 import React, { useEffect } from 'react';
 
-const AdBannerSimple = ({ children }: { children: React.ReactNode }) => {
+const AdBannerSimple = ({ adsenseId }: { adsenseId: string }) => {
   useEffect(() => {
     try {
       (window.adsbygoogle = window.adsbygoogle || []).push({});
@@ -11,7 +11,14 @@ const AdBannerSimple = ({ children }: { children: React.ReactNode }) => {
     }
   }, []);
 
-  return children;
+  return (
+    <ins
+      data-ad-client={`ca-pub-${adsenseId}`}
+      data-ad-slot="1581071444"
+      data-full-width-responsive="true"
+      data-ad-format="auto"
+    />
+  );
 };
 
 export default AdBannerSimple;

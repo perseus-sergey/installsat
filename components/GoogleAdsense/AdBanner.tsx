@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react';
 
-const AdBanner = () => {
+const AdBanner = ({ adsId }: { adsId: string }) => {
   useEffect(() => {
     try {
       (window.adsbygoogle = window.adsbygoogle || []).push({});
@@ -15,7 +15,7 @@ const AdBanner = () => {
     <ins
       className="adsbygoogle block w-[728px] h-[90px]"
       // style="display:inline-block;width:728px;height:90px"
-      data-ad-client="ca-pub-8343784915002692"
+      data-ad-client={`ca-pub-${adsId}`}
       data-ad-slot="4614458113"
     />
   );

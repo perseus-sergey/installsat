@@ -1,6 +1,7 @@
 import FormDigestInterval from '@/components/FormDigestInterval/FormDigestInterval';
 import SatNews from '@/components/SatNews/SatNews';
 import { Title } from '@/components/ui/Titles/Title';
+import { ELanguage } from '@/cron/libs/commons.mjs';
 import { getELangKey } from '@/libs/utils/validSearchParam';
 import {
   LAST_NEWS_INTERVAL,
@@ -8,12 +9,19 @@ import {
 } from '@/models/satDigest.model';
 import { TSearchParams } from '@/models/ui.model';
 import { EUrlBaseParam, EUrlSearchParam } from '@/models/url.model';
+import dynamic from 'next/dynamic';
 import { Suspense } from 'react';
+
+const AdBanner = dynamic(() => import('@/components/GoogleAdsense/AdBanner'), {
+  ssr: false,
+});
 
 interface IProps {
   searchParams: TSearchParams;
   params: { [key in EUrlBaseParam]: string };
 }
+
+const adsenseId = process.env.G_ADSENSE_ID || '';
 
 export const revalidate = 21600; // 3600 * 6 invalidate cache every 6 hours
 
@@ -29,6 +37,15 @@ export default async function Page({ searchParams, params }: IProps) {
   return (
     <>
       <article className="article">
+        <div
+          className="h-40 w-full flex justify-center items-center"
+          role="complementary"
+          aria-label={lang === ELanguage.UA ? 'Реклама' : 'Advertising'}
+        >
+          <Suspense>
+            <AdBanner adsId={adsenseId} />
+          </Suspense>
+        </div>
         <Title>{META_TRANS_NEWS_LIST.getH1(intervalDays)[lang]}</Title>
 
         <nav>

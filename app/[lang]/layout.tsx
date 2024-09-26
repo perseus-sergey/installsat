@@ -22,9 +22,12 @@ export async function generateStaticParams() {
   return Object.values(ELanguage).map((l) => ({ [EUrlBaseParam.LANG]: l }));
 }
 
-const AdBanner = dynamic(() => import('@/components/GoogleAdsense/AdsBanner'), {
-  ssr: false,
-});
+const AdsHeadMediaBanner = dynamic(
+  () => import('@/components/GoogleAdsense/AdsHeadMediaBanner'),
+  {
+    ssr: false,
+  }
+);
 
 export const dynamicParams = false;
 
@@ -53,7 +56,7 @@ export default function RootLayout({
           aria-label={lang === ELanguage.UA ? 'Реклама' : 'Advertising'}
         >
           <Suspense>
-            <AdBanner
+            <AdsHeadMediaBanner
               data-ad-client={`ca-pub-${adsenseId}`}
               data-ad-slot="1581071444"
               data-full-width-responsive="true"
@@ -72,6 +75,7 @@ export default function RootLayout({
     </html>
   );
 }
+
 // </body>
 // <GoogleAdsense pId={adsenseId} />
 // <AdBlockingRecovery pId={adsenseId} />

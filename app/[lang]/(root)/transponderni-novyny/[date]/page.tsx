@@ -1,3 +1,4 @@
+import ArticleWrapper from '@/components/article/ArticleWrapper';
 import BreadCrumbServer from '@/components/BreadCrumbs/BreadCrumbsServer';
 import TransNewsSingle from '@/components/TransNewsSingle/TransNewsSingle';
 import { getTransNewsForSingleDay } from '@/controllers/satDigest.controller';
@@ -67,7 +68,7 @@ export default async function Page({ params }: IPageParams) {
         lang={lang}
         breadCrumbList={[`${metaH1start[lang]} ${formattedDate}`]}
       />
-      <article className="article">
+      <ArticleWrapper lang={lang}>
         <TransNewsSingle
           lang={lang}
           title={
@@ -78,7 +79,7 @@ export default async function Page({ params }: IPageParams) {
           }
           newsArray={newsArray}
         />
-      </article>
+      </ArticleWrapper>
     </>
   );
 }

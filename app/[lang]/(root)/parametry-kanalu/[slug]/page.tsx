@@ -35,6 +35,7 @@ import { getELangKey } from '@/libs/utils/validSearchParam';
 import { INFO_PANEL_TITLES } from '@/models/articles.model';
 import { Suspense } from 'react';
 import SimilarChannels from '@/components/SimilarArticles/SimilarChannels';
+import ArticleWrapper from '@/components/article/ArticleWrapper';
 
 const BASE_URL = process.env.BASE_URL || MAIN_URL;
 
@@ -176,7 +177,7 @@ export default async function Page({ params }: IChannelProps) {
         ]}
       />
 
-      <article className="article">
+      <ArticleWrapper lang={lang}>
         <Title>
           {`${titleBefore[lang]} "${title}"`}
           <FillingValidImage
@@ -235,7 +236,7 @@ export default async function Page({ params }: IChannelProps) {
             // { name: commentsTitle[lang], value: numberOfComments },
           ]}
         />
-      </article>
+      </ArticleWrapper>
 
       <Suspense>
         <SimilarChannels

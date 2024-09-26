@@ -18,6 +18,7 @@ import {
 } from '@/models/articles.model';
 import Image from 'next/image';
 import h1Img from 'public/Images/articles/all_news_64.png';
+import ArticleWrapper from '@/components/article/ArticleWrapper';
 
 const BASE_URL = process.env.BASE_URL || MAIN_URL;
 
@@ -90,7 +91,7 @@ export default async function Page({ searchParams, params }: IProps) {
         breadCrumbList={[`${h1Start[lang]} ${currDate}`]}
         lang={lang}
       />
-      <article className="article">
+      <ArticleWrapper lang={lang}>
         <Title>
           {h1Start[lang]} {currDate}
           <Image
@@ -128,7 +129,7 @@ export default async function Page({ searchParams, params }: IProps) {
           totalPages={totalPages}
           searchParams={searchParams}
         />
-      </article>
+      </ArticleWrapper>
     </>
   );
 }

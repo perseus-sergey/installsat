@@ -16,6 +16,7 @@ import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
 import { SCHEDULE_META } from '@/models/scheduleTV.model';
 import Image from 'next/image';
 import h1Img from 'public/Images/packages/Popcorn-icon.png';
+import ArticleWrapper from '@/components/article/ArticleWrapper';
 
 const BASE_URL = process.env.BASE_URL || MAIN_URL;
 
@@ -98,7 +99,7 @@ export default async function Page({ searchParams, params }: IPageProps) {
         ]}
       />
 
-      <article className="article">
+      <ArticleWrapper lang={lang}>
         <Title>
           {metaH1[lang]}
           {getH1After(searchQueryChannel)[lang]}
@@ -114,7 +115,7 @@ export default async function Page({ searchParams, params }: IPageProps) {
             todayStr={todayStr}
           />
         </Suspense>
-      </article>
+      </ArticleWrapper>
     </>
   );
 }

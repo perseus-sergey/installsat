@@ -4,6 +4,7 @@ import BreadCrumbServer, {
 } from '@/components/BreadCrumbs/BreadCrumbsServer';
 import Image from 'next/image';
 import emptyPageImg from 'public/Images/empty_page.png';
+import ArticleWrapper from '@/components/article/ArticleWrapper';
 
 interface IProps {
   breadCrumbList?: (string | IBreadCrumbLink)[];
@@ -14,7 +15,7 @@ interface IProps {
 const EmptyPage = ({ title, lang, breadCrumbList }: IProps) => (
   <>
     <BreadCrumbServer lang={lang} breadCrumbList={breadCrumbList} />
-    <article className="article">
+    <ArticleWrapper lang={lang}>
       <div className="text-red-500 text-lg flex items-center flex-col gap-20">
         <p className="p-4 text-center font-bold text-xl">{title}</p>
         <Image
@@ -26,7 +27,7 @@ const EmptyPage = ({ title, lang, breadCrumbList }: IProps) => (
           }
         />
       </div>
-    </article>
+    </ArticleWrapper>
   </>
 );
 

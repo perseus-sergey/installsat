@@ -1,8 +1,8 @@
 'use client';
 
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 
-const AdBanner = ({ adsId }: { adsId: string }) => {
+const AdBanner = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     try {
       (window.adsbygoogle = window.adsbygoogle || []).push({});
@@ -11,14 +11,7 @@ const AdBanner = ({ adsId }: { adsId: string }) => {
     }
   }, []);
 
-  return (
-    <ins
-      className="adsbygoogle block w-[728px] h-[90px]"
-      // style="display:inline-block;width:728px;height:90px"
-      data-ad-client={`ca-pub-${adsId}`}
-      data-ad-slot="4614458113"
-    />
-  );
+  return children;
 };
 
 export default AdBanner;

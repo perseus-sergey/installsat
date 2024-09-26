@@ -8,6 +8,7 @@ import { META_PACKAGES } from '@/models/channelList.model';
 import BreadCrumbServer from '@/components/BreadCrumbs/BreadCrumbsServer';
 import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
 import { getELangKey } from '@/libs/utils/validSearchParam';
+import ArticleWrapper from '@/components/article/ArticleWrapper';
 
 const BASE_URL = process.env.BASE_URL || MAIN_URL;
 
@@ -50,11 +51,11 @@ export default async function Page({ params }: IPageProps) {
   return (
     <>
       <BreadCrumbServer breadCrumbList={[metaH1[lang]]} lang={lang} />
-      <article className="article">
+      <ArticleWrapper lang={lang}>
         <Title>{metaH1[lang]}</Title>
 
         <PackageList lang={lang} packageList={packages} />
-      </article>
+      </ArticleWrapper>
     </>
   );
 }

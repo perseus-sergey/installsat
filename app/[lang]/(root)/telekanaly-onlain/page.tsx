@@ -18,6 +18,7 @@ import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
 import Image from 'next/image';
 import h1Img from 'public/Images/packages/Popcorn-icon.png';
 import { Suspense } from 'react';
+import ArticleWrapper from '@/components/article/ArticleWrapper';
 
 interface IPageProps {
   params: { [key in EUrlBaseParam]: string };
@@ -81,7 +82,7 @@ export default async function Page({ params, searchParams }: IPageProps) {
     <>
       <BreadCrumbServer breadCrumbList={[metaH1[lang]]} lang={lang} />
 
-      <article className="article">
+      <ArticleWrapper lang={lang}>
         <Title>
           {metaH1[lang]}
           {getH1After(searchQueryChannel)[lang]}
@@ -100,7 +101,7 @@ export default async function Page({ params, searchParams }: IPageProps) {
         </section>
 
         <OnlineChannelListAfterText lang={lang} />
-      </article>
+      </ArticleWrapper>
     </>
   );
 }

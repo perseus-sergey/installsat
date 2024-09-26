@@ -27,6 +27,7 @@ import {
 } from '@/models/articles.model';
 import SimilarBlock from '@/components/SimilarArticles/SimilarBlock';
 import { BREAD_SAT_COVERAGE_MAP } from '@/models/breadCrumbs.model';
+import ArticleWrapper from '@/components/article/ArticleWrapper';
 
 interface IArticleParams {
   params: { [key in EUrlBaseParam]: string };
@@ -127,7 +128,7 @@ export default async function Page({ params }: IArticleParams) {
           `${metaTitle[lang]} ${sat_title} ${position}`,
         ]}
       />
-      <article className="article">
+      <ArticleWrapper lang={lang}>
         <Title>
           {h1Title}
           <FillingValidImage
@@ -153,7 +154,7 @@ export default async function Page({ params }: IArticleParams) {
             // { name: commentsTitle[lang], value: numberOfComments },
           ]}
         />
-      </article>
+      </ArticleWrapper>
 
       <SimilarBlock blockTitle={similarTitle[lang]}>
         <li key={0}>

@@ -28,6 +28,7 @@ import { BREAD_SAT_CHANNEL_LIST } from '@/models/breadCrumbs.model';
 import NumberOfItems from '@/components/NumberOfItems/NumberOfItems';
 import { getChannelsLangList } from '@/controllers/languageList.controller';
 import LanguageSelector from '@/components/CustomSelectors/LanguageSelector';
+import ArticleWrapper from '@/components/article/ArticleWrapper';
 
 const BASE_URL = process.env.BASE_URL || MAIN_URL;
 
@@ -164,7 +165,7 @@ export default async function Page({ searchParams, params }: IPageProps) {
           `${title} - ${position}`,
         ]}
       />
-      <article className="article">
+      <ArticleWrapper lang={lang}>
         <Title>
           {h1Start[lang]} «{title} - {position}»
           <FillingValidImage
@@ -227,7 +228,7 @@ export default async function Page({ searchParams, params }: IPageProps) {
             requestFn={getFlySatChannelsFn}
           />
         </Suspense>
-      </article>
+      </ArticleWrapper>
     </>
   );
 }

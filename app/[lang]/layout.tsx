@@ -1,4 +1,5 @@
 import '../globals.scss';
+// import Footer from '@/components/Footer/Footer';
 import AdBlockingRecovery from '@/components/GoogleAdsense/AdBlockingRecovery';
 import GoogleAdsense from '@/components/GoogleAdsense/GoogleAdsense';
 import Header from '@/components/Header/Header';
@@ -11,14 +12,26 @@ import dynamic from 'next/dynamic';
 const Footer = dynamic(() => import('@/components/Footer/Footer'));
 import { GoogleTagManager } from '@next/third-parties/google';
 // import { Suspense } from 'react';
+// import AdBanner from '@/components/GoogleAdsense/AdBanner';
 
 const GOOGLE_GTM_ID = process.env.GOOGLE_GTM || '';
+// const gaId = process.env.GA_ID || '';
 const adsenseId = process.env.G_ADSENSE_ID || '';
 const isProductionMode = process.env.NODE_ENV === 'production';
 
 export async function generateStaticParams() {
   return Object.values(ELanguage).map((l) => ({ [EUrlBaseParam.LANG]: l }));
 }
+
+// const AdBanner = dynamic(() => import('@/components/GoogleAdsense/AdBanner'), {
+//   ssr: false,
+// });
+const AdsHeadMediaBanner = dynamic(
+  () => import('@/components/GoogleAdsense/AdsHeadMediaBanner'),
+  {
+    ssr: false,
+  }
+);
 
 export const dynamicParams = false;
 
@@ -40,7 +53,29 @@ export default function RootLayout({
       >
         <Header lang={lang} />
 
+        <div
+          className="h-60 flex justify-center items-center"
+          role="complementary"
+          aria-label={lang === ELanguage.UA ? 'Реклама' : 'Advertising'}
+        >
+          {/* <AdBanner adsId={adsenseId} /> */}
+          {/* <Suspense> */}
+          <AdsHeadMediaBanner
+            data-ad-client={`ca-pub-${adsenseId}`}
+            data-ad-slot="1581071444"
+            data-full-width-responsive="true"
+            // data-ad-layout="in-article"
+            data-ad-format="auto"
+          />
+          {/* <AdsHeadMediaBanner
+            data-ad-client={`ca-pub-${adsenseId}`}
+            data-ad-slot="4614458113"
+          /> */}
+          {/* </Suspense> */}
+        </div>
+
         {children}
+        {/* <ToastProvider>{children}</ToastProvider> */}
         <Footer lang={lang} />
       </body>
       <GoogleAdsense pId={adsenseId} />
@@ -48,10 +83,6 @@ export default function RootLayout({
     </html>
   );
 }
-
-// {children}
-// <ToastProvider>{children}</ToastProvider>
-// <Footer lang={lang} />
 
 // </body>
 // <GoogleAdsense pId={adsenseId} />

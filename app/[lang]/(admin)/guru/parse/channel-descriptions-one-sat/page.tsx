@@ -13,6 +13,7 @@ import { sendMail } from '@/libs/mail/sendMail';
 export const dynamic = 'force-dynamic';
 
 // =================================================================
+// check production trans news revalidation
 // programa-telekanaliv/[slug]/[url_date]/page.tsx - show more in genre section
 // remove decode function from controllers
 // add links to footer

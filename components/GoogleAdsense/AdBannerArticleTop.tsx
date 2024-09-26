@@ -10,6 +10,7 @@ const AdBannerArticleTop = ({ lang }: { lang: ELanguage }) => {
       className="min-h-64 w-full flex justify-center items-center"
     >
       <ins
+        className="adsbygoogle block"
         data-ad-client={`ca-pub-${adsenseId}`}
         data-ad-slot="1581071444"
         data-full-width-responsive="true"

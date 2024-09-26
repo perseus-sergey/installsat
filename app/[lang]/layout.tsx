@@ -1,7 +1,7 @@
 import '../globals.scss';
 // import Footer from '@/components/Footer/Footer';
 import AdBlockingRecovery from '@/components/GoogleAdsense/AdBlockingRecovery';
-// import GoogleAdsense from '@/components/GoogleAdsense/GoogleAdsense';
+import GoogleAdsense from '@/components/GoogleAdsense/GoogleAdsense';
 import Header from '@/components/Header/Header';
 // import ToastProvider from '@/libs/ToastProvider/ToastProvider';
 import { getELangKey } from '@/libs/utils/validSearchParam';
@@ -75,12 +75,12 @@ export default function RootLayout({
         {/* <ToastProvider>{children}</ToastProvider> */}
         <Footer lang={lang} />
       </body>
-      <script
+      {/* <script
         async
         src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-${adsenseId}`}
         crossOrigin="anonymous"
-      ></script>
-      {/* <GoogleAdsense pId={adsenseId} /> */}
+      ></script> */}
+      <GoogleAdsense pId={adsenseId} />
       <AdBlockingRecovery pId={adsenseId} />
     </html>
   );

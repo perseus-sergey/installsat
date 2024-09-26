@@ -1,6 +1,6 @@
 'use client';
 
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import { useEffect, useRef } from 'react';
 
 declare global {
@@ -35,21 +35,21 @@ const AdsHeadMediaBanner = (props: IAdsBannerProps) => {
       }
     };
 
-    const handleRouteChange = () => {
-      adsLoaded.current = false; // Скидаємо статус оголошення при зміні маршруту
-      loadAd(); // Завантажуємо нове оголошення після зміни маршруту
-    };
+    // const handleRouteChange = () => {
+    //   adsLoaded.current = false; // Скидаємо статус оголошення при зміні маршруту
+    //   loadAd(); // Завантажуємо нове оголошення після зміни маршруту
+    // };
 
     if (!adsLoaded.current) {
       loadAd(); // Завантажуємо оголошення на початку
     }
 
     // Підписуємося на зміни маршруту
-    router.events.on('routeChangeComplete', handleRouteChange);
+    // router.events.on('routeChangeComplete', handleRouteChange);
 
     // Очищуємо підпис при демонтажі компонента
     return () => {
-      router.events.off('routeChangeComplete', handleRouteChange);
+      // router.events.off('routeChangeComplete', handleRouteChange);
     };
   }, [router]);
 
@@ -57,7 +57,7 @@ const AdsHeadMediaBanner = (props: IAdsBannerProps) => {
     <ins
       className="adsbygoogle block overflow-hidden"
       ref={adRef} // Прив'язуємо ref до ins елемента
-      key={router.asPath} // Додаємо ключ для примусового рендерингу при зміні маршруту
+      // key={router.asPath} // Додаємо ключ для примусового рендерингу при зміні маршруту
       {...props}
     />
   );

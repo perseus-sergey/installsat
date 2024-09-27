@@ -19,7 +19,7 @@ const AdBanner = ({ children }: { children: React.ReactNode }) => {
         console.log('Error pushing ads: ', err);
         clearInterval(intervalId); // Ensure we clear interval on errors too
       }
-    }, 100);
+    }, 200);
 
     return () => clearInterval(intervalId);
   }, [pathname, searchParams]);

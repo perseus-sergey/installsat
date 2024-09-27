@@ -1,9 +1,9 @@
 'use client';
 
 import { usePathname, useSearchParams } from 'next/navigation';
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 
-const AdBanner = ({ children }: { children: React.ReactNode }) => {
+const AdBannerArticleAbove = ({ adsenseId }: { adsenseId: string }) => {
   const pathname = usePathname(); // Отримуємо поточний шлях
   const searchParams = useSearchParams(); // Отримуємо поточні параметри запиту
 
@@ -46,19 +46,17 @@ const AdBanner = ({ children }: { children: React.ReactNode }) => {
   //     };
   //   }, [pathname, searchParams]);
 
-  return children;
+  return (
+    <div id="ad-container" key={pathname}>
+      <ins
+        className="adsbygoogle block w-full"
+        data-ad-client={`ca-pub-${adsenseId}`}
+        data-ad-slot="1581071444"
+        data-full-width-responsive="true"
+        data-ad-format="auto"
+      />
+    </div>
+  );
 };
 
-// const AdBanner = ({ children }: { children: React.ReactNode }) => {
-//   useEffect(() => {
-//     try {
-//       (window.adsbygoogle = window.adsbygoogle || []).push({});
-//     } catch (err) {
-//       console.log(err);
-//     }
-//   }, []);
-
-//   return children;
-// };
-
-export default AdBanner;
+export default AdBannerArticleAbove;

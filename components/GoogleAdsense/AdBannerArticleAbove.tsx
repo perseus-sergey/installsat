@@ -1,19 +1,30 @@
 'use client';
 
 import { usePathname, useSearchParams } from 'next/navigation';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 const AdBannerArticleAbove = ({ adsenseId }: { adsenseId: string }) => {
-  const pathname = usePathname(); // Отримуємо поточний шлях
-  const searchParams = useSearchParams(); // Отримуємо поточні параметри запиту
-  const adContainerRef = useRef<HTMLDivElement>(null); // Реф для контейнера оголошення
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const adContainerRef = useRef<HTMLDivElement>(null);
+  const [adHeight, setAdHeight] = useState(280);
+
+  useEffect(() => {
+    const updateAdHeight = () =>
+      setAdHeight(window.innerWidth < 768 ? 320 : 280);
+
+    updateAdHeight();
+
+    window.addEventListener('resize', updateAdHeight);
+
+    return () => window.removeEventListener('resize', updateAdHeight);
+  }, []);
 
   useEffect(() => {
     const adContainer = adContainerRef.current;
 
-    // Встановлення стилів з !important для контейнера
     if (adContainer) {
-      adContainer.style.setProperty('min-height', '250px', 'important');
+      adContainer.style.setProperty('min-height', `${adHeight}px`, 'important');
     }
 
     // Завантаження рекламного блоку через Google Ads
@@ -25,12 +36,12 @@ const AdBannerArticleAbove = ({ adsenseId }: { adsenseId: string }) => {
         }
       } catch (err) {
         console.log('Error pushing ads: ', err);
-        clearInterval(intervalId); // При помилці також очищаємо інтервал
+        clearInterval(intervalId);
       }
     }, 200);
 
-    return () => clearInterval(intervalId); // Очищаємо інтервал при розмонтуванні
-  }, [pathname, searchParams]);
+    return () => clearInterval(intervalId);
+  }, [pathname, searchParams, adHeight]);
 
   return (
     <div

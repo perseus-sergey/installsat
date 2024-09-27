@@ -1,52 +1,40 @@
 'use client';
 
 import { usePathname, useSearchParams } from 'next/navigation';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 
 const AdBannerArticleAbove = ({ adsenseId }: { adsenseId: string }) => {
   const pathname = usePathname(); // Отримуємо поточний шлях
   const searchParams = useSearchParams(); // Отримуємо поточні параметри запиту
+  const adContainerRef = useRef<HTMLDivElement>(null); // Реф для контейнера оголошення
 
   useEffect(() => {
+    const adContainer = adContainerRef.current;
+
+    // Встановлення стилів з !important для контейнера
+    if (adContainer) {
+      adContainer.style.setProperty('min-height', '250px', 'important');
+    }
+
+    // Завантаження рекламного блоку через Google Ads
     const intervalId = setInterval(() => {
       try {
-        // Check if the 'ins' element already has an ad in it
         if (typeof window !== 'undefined' && window.adsbygoogle) {
           window.adsbygoogle.push({});
           clearInterval(intervalId);
         }
       } catch (err) {
         console.log('Error pushing ads: ', err);
-        clearInterval(intervalId); // Ensure we clear interval on errors too
+        clearInterval(intervalId); // При помилці також очищаємо інтервал
       }
-    }, 100);
+    }, 200);
 
-    return () => clearInterval(intervalId);
+    return () => clearInterval(intervalId); // Очищаємо інтервал при розмонтуванні
   }, [pathname, searchParams]);
-
-  // useEffect(() => {
-  //   const loadAd = () => {
-  //     setTimeout(() => {
-  //       if (typeof window !== 'undefined' && window.adsbygoogle) {
-  //         const adElement = document.querySelector('.adsbygoogle');
-
-  //         if (adElement) {
-  //           adElement.innerHTML = ''; // Очищаємо старе оголошення
-  //           window.adsbygoogle.push({});
-  //         }
-  //       }
-  //     }, 200); // Затримка на півсекунди
-  //   };
-
-  //   loadAd(); // Завантажуємо оголошення на початку
-
-  //   return () => {
-  //     loadAd(); // Перезавантажуємо оголошення при зміні маршруту
-  //   };
-  // }, [pathname, searchParams]);
 
   return (
     <div
+      ref={adContainerRef}
       id="ad-container"
       key={pathname}
       className="w-full h-full flex justify-center items-center"

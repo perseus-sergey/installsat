@@ -47,7 +47,7 @@ const AdBannerArticleAbove = ({ adsenseId }: { adsenseId: string }) => {
   //   }, [pathname, searchParams]);
 
   return (
-    <div id="ad-container" key={pathname}>
+    <div id="ad-container" key={pathname} className="w-full h-full">
       <ins
         className="adsbygoogle block w-full"
         data-ad-client={`ca-pub-${adsenseId}`}

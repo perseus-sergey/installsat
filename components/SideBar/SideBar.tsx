@@ -50,7 +50,7 @@ const SideBar = ({
           <aside
             className={`
               overflow-y-auto fixed left-0 top-0 h-full w-64 sm:w-80 z-50
-              pt-16 p-2 bg-slate-900 shadow-lg
+              pt-16 p-2 bg-slate-900 shadow-[10px_0_15px_-8px_#333333de]
               transition-transform duration-300 transform ${
                 isOpen ? 'translate-x-0' : '-translate-x-full'
               }

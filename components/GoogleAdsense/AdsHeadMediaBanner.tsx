@@ -54,7 +54,7 @@ const AdsHeadMediaBanner = (props: IAdsBannerProps) => {
   return (
     <ins
       // className="adsbygoogle block overflow-hidden"
-      className="adsbygoogle block w-[780px]"
+      className="adsbygoogle block"
       {...props}
     />
   );

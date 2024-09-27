@@ -13,7 +13,7 @@ interface IProps extends React.HTMLAttributes<HTMLElement> {
 
 const AdBannerWrapper = ({ children, lang, className }: IProps) => {
   return (
-    <div
+    <section
       className={className}
       role="complementary"
       aria-label={lang === ELanguage.UA ? 'Реклама' : 'Advertising'}
@@ -21,7 +21,7 @@ const AdBannerWrapper = ({ children, lang, className }: IProps) => {
       <Suspense>
         <AdBanner>{children}</AdBanner>
       </Suspense>
-    </div>
+    </section>
   );
 };
 

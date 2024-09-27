@@ -52,7 +52,7 @@ const AdBannerArticleAbove = ({ adsenseId }: { adsenseId: string }) => {
       className="w-full h-full flex justify-center items-center"
     >
       <ins
-        className="adsbygoogle block"
+        className="adsbygoogle block w-full m-auto"
         data-ad-client={`ca-pub-${adsenseId}`}
         data-ad-slot="1581071444"
         data-full-width-responsive="true"

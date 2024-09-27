@@ -7,6 +7,11 @@ import { EUrlBaseParam, MAIN_URL } from '@/models/url.model';
 import { getELangKey } from '@/libs/utils/validSearchParam';
 import SideBarServer from '@/components/SideBar/SideBarServer';
 import { Suspense } from 'react';
+import dynamic from 'next/dynamic';
+
+const WidgetLastNews = dynamic(
+  () => import('@/components/WidgetLastNews/WidgetLastNews')
+);
 
 const BASE_URL = process.env.BASE_URL || MAIN_URL;
 
@@ -46,16 +51,22 @@ export default function Layout({ children, params }: IProps) {
   const lang = getELangKey(params[EUrlBaseParam.LANG]);
 
   return (
-    <main className="mx-auto max-w-[800px] bg-slate-900 flex justify-between items-start min-h-screen sm:rounded-lg sm:border sm:border-stone-400">
+    <main className="mx-auto bg-slate-900 flex w-fit min-h-screen sm:rounded-lg sm:border sm:border-stone-400">
       <Suspense>
         <SideBar lang={lang}>
           <SideBarServer lang={lang} />
         </SideBar>
       </Suspense>
 
-      <section className="flex flex-col flex-[3] overflow-x-hidden">
+      <section className="flex flex-col max-w-4xl lg:max-w-3xl overflow-x-hidden">
         {children}
       </section>
+
+      <aside className="hidden lg:flex w-64">
+        <Suspense>
+          <WidgetLastNews lang={lang} />
+        </Suspense>
+      </aside>
     </main>
   );
 }

@@ -4,7 +4,7 @@ import { ELanguage } from '@/models/ui.model';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { useEffect } from 'react';
 
-const AdBannerArticleAbove = ({
+const AdBannerUnderHeader = ({
   adsenseId,
   lang,
 }: {
@@ -49,4 +49,4 @@ const AdBannerArticleAbove = ({
   );
 };
 
-export default AdBannerArticleAbove;
+export default AdBannerUnderHeader;

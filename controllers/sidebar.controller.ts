@@ -44,8 +44,9 @@ export const getFlyChannelSatList = async (isFilling = false) => {
   return res instanceof Error || res.length === 0 ? [] : res;
 };
 
-export const getLastNewsWidgetList = async () =>
-  await poolExecute<IAllNewsModel[]>(`
+export const getLastNewsWidgetList = cache(
+  async () =>
+    await poolExecute<IAllNewsModel[]>(`
     SELECT 
       id, 
       title, 
@@ -55,7 +56,8 @@ export const getLastNewsWidgetList = async () =>
     WHERE cat NOT IN ${WRONG_CAT_IDS} 
     ORDER BY date DESC, id DESC 
     LIMIT ${NUMBER_OF_LAST_NEWS_WIDGET}
-    `);
+    `)
+);
 
 export const getUsefulArticleList = async () =>
   await poolExecute<IAllNewsModel[]>(`

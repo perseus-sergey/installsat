@@ -1,5 +1,5 @@
 import { ELanguage } from '@/models/ui.model';
-import AdBannerArticleTop from '../GoogleAdsense/AdBannerArticleTop';
+// import AdBannerArticleTop from '../GoogleAdsense/AdBannerArticleTop';
 // import dynamic from 'next/dynamic';
 // import { Suspense } from 'react';
 
@@ -17,9 +17,11 @@ interface IProps extends React.HTMLAttributes<HTMLElement> {
   lang: ELanguage;
 }
 
-const ArticleWrapper = ({ children, lang, className }: IProps) => (
+const ArticleWrapper = ({ children, className }: IProps) => (
+  // const ArticleWrapper = ({ children, lang, className }: IProps) => (
   <article className={`article ${className ? className : ''}`}>
-    <AdBannerArticleTop lang={lang} />
+    {/* <AdBannerArticleTop lang={lang} /> */}
+
     {/* <section
       className="h-60 w-full flex justify-center items-center"
       role="complementary"

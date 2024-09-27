@@ -51,14 +51,14 @@ export default function Layout({ children, params }: IProps) {
   const lang = getELangKey(params[EUrlBaseParam.LANG]);
 
   return (
-    <main className="mx-auto bg-slate-900 flex w-fit min-h-screen sm:rounded-lg sm:border sm:border-stone-400">
+    <main className="mx-auto bg-slate-900 w-full max-w-5xl flex min-h-screen sm:rounded-lg sm:border sm:border-stone-400">
       <Suspense>
         <SideBar lang={lang}>
           <SideBarServer lang={lang} />
         </SideBar>
       </Suspense>
 
-      <section className="flex flex-col max-w-4xl lg:max-w-3xl overflow-x-hidden">
+      <section className="flex flex-col w-full lg:max-w-3xl overflow-x-hidden">
         {children}
       </section>
 

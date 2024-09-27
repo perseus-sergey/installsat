@@ -26,12 +26,12 @@ export async function generateStaticParams() {
 // const AdBanner = dynamic(() => import('@/components/GoogleAdsense/AdBanner'), {
 //   ssr: false,
 // });
-const AdsHeadMediaBanner = dynamic(
-  () => import('@/components/GoogleAdsense/AdsHeadMediaBanner'),
-  {
-    ssr: false,
-  }
-);
+// const AdsHeadMediaBanner = dynamic(
+//   () => import('@/components/GoogleAdsense/AdsHeadMediaBanner'),
+//   {
+//     ssr: false,
+//   }
+// );
 
 export const dynamicParams = false;
 
@@ -52,27 +52,6 @@ export default function RootLayout({
         className="font-serif text-stone-800 bg-black overflow-x-hidden sm:bg-[url('/Images/black00001.gif')]"
       >
         <Header lang={lang} />
-
-        <div
-          className="h-60 flex justify-center items-center"
-          role="complementary"
-          aria-label={lang === ELanguage.UA ? 'Реклама' : 'Advertising'}
-        >
-          {/* <AdBanner adsId={adsenseId} /> */}
-          {/* <Suspense> */}
-          <AdsHeadMediaBanner
-            data-ad-client={`ca-pub-${adsenseId}`}
-            data-ad-slot="1581071444"
-            data-full-width-responsive="true"
-            // data-ad-layout="in-article"
-            data-ad-format="auto"
-          />
-          {/* <AdsHeadMediaBanner
-            data-ad-client={`ca-pub-${adsenseId}`}
-            data-ad-slot="4614458113"
-          /> */}
-          {/* </Suspense> */}
-        </div>
 
         {children}
         {/* <ToastProvider>{children}</ToastProvider> */}

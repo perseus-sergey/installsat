@@ -41,7 +41,7 @@ export default function RootLayout({
         <Header lang={lang} />
 
         <section
-          className="min-h-64 w-full flex justify-center items-center"
+          className="min-h-80 sm:min-h-72 w-full"
           role="complementary"
           aria-label={lang === ELanguage.UA ? 'Реклама' : 'Advertising'}
         >

@@ -9,6 +9,8 @@ import dynamic from 'next/dynamic';
 
 const Footer = dynamic(() => import('@/components/Footer/Footer'));
 import { GoogleTagManager } from '@next/third-parties/google';
+import { Suspense } from 'react';
+import AdBannerArticleAbove from '@/components/GoogleAdsense/AdBannerArticleAbove';
 
 const GOOGLE_GTM_ID = process.env.GOOGLE_GTM || '';
 const adsenseId = process.env.G_ADSENSE_ID || '';
@@ -37,6 +39,16 @@ export default function RootLayout({
         className="font-serif text-stone-800 bg-black overflow-x-hidden sm:bg-[url('/Images/black00001.gif')]"
       >
         <Header lang={lang} />
+
+        <section
+          className="min-h-64 w-full flex justify-center items-center"
+          role="complementary"
+          aria-label={lang === ELanguage.UA ? 'Реклама' : 'Advertising'}
+        >
+          <Suspense>
+            <AdBannerArticleAbove adsenseId={adsenseId} />
+          </Suspense>
+        </section>
 
         {children}
         <Footer lang={lang} />

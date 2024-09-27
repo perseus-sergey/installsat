@@ -1,12 +1,19 @@
 'use client';
 
+import { ELanguage } from '@/models/ui.model';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 
-const AdBannerArticleAbove = ({ adsenseId }: { adsenseId: string }) => {
+const AdBannerArticleAbove = ({
+  adsenseId,
+  lang,
+}: {
+  adsenseId: string;
+  lang: string;
+}) => {
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const adContainerRef = useRef<HTMLDivElement>(null);
+  const adContainerRef = useRef<HTMLElement>(null);
   const [adHeight, setAdHeight] = useState(280);
 
   useEffect(() => {
@@ -44,11 +51,13 @@ const AdBannerArticleAbove = ({ adsenseId }: { adsenseId: string }) => {
   }, [pathname, searchParams, adHeight]);
 
   return (
-    <div
+    <section
       ref={adContainerRef}
       id="ad-container"
       key={pathname}
-      className="w-full h-full flex justify-center items-center"
+      className="w-full flex justify-center items-center"
+      role="complementary"
+      aria-label={lang === ELanguage.UA ? 'Реклама' : 'Advertising'}
     >
       <ins
         className="adsbygoogle block w-full text-center"
@@ -57,7 +66,7 @@ const AdBannerArticleAbove = ({ adsenseId }: { adsenseId: string }) => {
         data-full-width-responsive="true"
         data-ad-format="auto"
       />
-    </div>
+    </section>
   );
 };
 

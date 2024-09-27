@@ -9,7 +9,6 @@ import dynamic from 'next/dynamic';
 
 const Footer = dynamic(() => import('@/components/Footer/Footer'));
 import { GoogleTagManager } from '@next/third-parties/google';
-import { Suspense } from 'react';
 import AdBannerArticleAbove from '@/components/GoogleAdsense/AdBannerArticleAbove';
 
 const GOOGLE_GTM_ID = process.env.GOOGLE_GTM || '';
@@ -40,15 +39,7 @@ export default function RootLayout({
       >
         <Header lang={lang} />
 
-        <section
-          className="min-h-80 sm:min-h-72 w-full"
-          role="complementary"
-          aria-label={lang === ELanguage.UA ? 'Реклама' : 'Advertising'}
-        >
-          <Suspense>
-            <AdBannerArticleAbove adsenseId={adsenseId} />
-          </Suspense>
-        </section>
+        <AdBannerArticleAbove adsenseId={adsenseId} lang={lang} />
 
         {children}
         <Footer lang={lang} />

@@ -32,6 +32,7 @@ const BeamMapList = ({ beamList, lang }: IBeamMapListProps) => {
         </TitleH2>
         {item.beam_description && <p>{item.beam_description}</p>}
         <TooltipClient
+          className="w-full"
           lang={lang}
           hintDescription={altText}
           hintContent={

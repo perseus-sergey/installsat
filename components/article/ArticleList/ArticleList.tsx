@@ -1,5 +1,5 @@
 import {
-  ARTICLE_CARD,
+  ARTICLE_CARD_IMAGES,
   IAllNewsModel,
   INFO_PANEL_TITLES,
 } from '@/models/articles.model';
@@ -13,7 +13,7 @@ import EmptyData from '@/components/errors/EmptyData/EmptyData';
 import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
 import SeoLink from '@/components/ui/SeoLink/SeoLink';
 
-const { h1Image } = ARTICLE_CARD.images;
+const { h1Image } = ARTICLE_CARD_IMAGES;
 
 const {
   date: dateTitle,
@@ -73,8 +73,8 @@ const ArticleList = ({ articleList, lang }: IArticleListProps) =>
                 image={
                   <FillingValidImage
                     image={{
-                      ...h1Image,
-                      src: `${h1Image.path}${logo}`,
+                      ...h1Image.currentImg,
+                      src: `${h1Image.currentImg.path}${logo}`,
                     }}
                     defaultImage={h1Image.defaultImg}
                     alt={`${h1Image.altStart[lang]} ${titleLang}`}

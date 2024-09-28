@@ -56,8 +56,8 @@ const MapList = ({ articleList, lang }: IArticleListProps) =>
               image={
                 <FillingValidImage
                   image={{
-                    ...h1Image,
-                    src: `${h1Image.path}${logo}`,
+                    ...h1Image.currentImg,
+                    src: `${h1Image.currentImg.path}${logo}`,
                   }}
                   defaultImage={h1Image.defaultImg}
                   alt={`${h1Image.altStart[lang]} ${metaTitle[lang]} ${title}`}

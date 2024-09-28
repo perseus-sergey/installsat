@@ -122,13 +122,15 @@ LIMIT ?, ?
     `${quantity}`,
   ]);
 
-  return res instanceof Error
-    ? []
-    : res.map((r) => ({
-        ...r,
-        title: decode(r.title),
-        title_en: decode(r.title_en),
-      }));
+  return res instanceof Error ? [] : res;
+
+  // return res instanceof Error
+  //   ? []
+  //   : res.map((r) => ({
+  //       ...r,
+  //       title: decode(r.title),
+  //       title_en: decode(r.title_en),
+  //     }));
 };
 
 export const satMapListSql = `
@@ -178,15 +180,17 @@ export const getSatMap = cache(async (slug: string) => {
 `;
   const res = await poolExecute<IMapModel[]>(sql, [slug]);
 
-  return res instanceof Error
-    ? []
-    : res.map((r) => ({
-        ...r,
-        sat_title: decode(r.sat_title),
-        position: decode(r.position),
-        beam_title: decode(r.beam_title),
-        beam_description: decode(r.beam_description),
-      }));
+  return res instanceof Error ? [] : res;
+
+  // return res instanceof Error
+  //   ? []
+  //   : res.map((r) => ({
+  //       ...r,
+  //       sat_title: decode(r.sat_title),
+  //       position: decode(r.position),
+  //       beam_title: decode(r.beam_title),
+  //       beam_description: decode(r.beam_description),
+  //     }));
 });
 
 export const getArticle = cache(
@@ -221,15 +225,17 @@ LIMIT 1
 `;
     const res = await poolExecute<IArticleModel[]>(sql, [slug]);
 
-    return res instanceof Error || res.length === 0
-      ? null
-      : {
-          ...res[0],
-          title: decode(res[0].title),
-          title_en: decode(res[0].title_en),
-          description: decode(res[0].description),
-          description_en: decode(res[0].description_en),
-        };
+    return res instanceof Error || res.length === 0 ? null : res[0];
+
+    // return res instanceof Error || res.length === 0
+    //   ? null
+    //   : {
+    //       ...res[0],
+    //       title: decode(res[0].title),
+    //       title_en: decode(res[0].title_en),
+    //       description: decode(res[0].description),
+    //       description_en: decode(res[0].description_en),
+    //     };
   }
 );
 
@@ -270,13 +276,15 @@ export const getSimilarArticles = async (logo: string, id = -1) => {
 
   const res = await poolExecute<ISimilarArticleModel[]>(sql, [logo]);
 
-  return res instanceof Error
-    ? []
-    : res.map((r) => ({
-        ...r,
-        title: decode(r.title),
-        title_en: decode(r.title_en),
-      }));
+  return res instanceof Error ? [] : res;
+
+  // return res instanceof Error
+  //   ? []
+  //   : res.map((r) => ({
+  //       ...r,
+  //       title: decode(r.title),
+  //       title_en: decode(r.title_en),
+  //     }));
 };
 
 // export const getArticleSlugList = cache(async () => {

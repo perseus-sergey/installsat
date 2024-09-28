@@ -13,7 +13,7 @@ interface IChannelCardTooltipProps {
   tooltipTextList: ITooltipTextList[];
   tooltipImage?: IImgParams;
   tooltipDefaultImage?: IImgParams;
-  mainIsChangeToGif?: boolean;
+  // mainIsChangeToGif?: boolean;
   children?: React.ReactNode;
 }
 
@@ -23,7 +23,7 @@ const ChannelCardTooltip = ({
   tooltipTextList,
   tooltipImage,
   tooltipDefaultImage,
-  mainIsChangeToGif = false,
+  // mainIsChangeToGif = false,
   children,
 }: IChannelCardTooltipProps) => (
   <div
@@ -74,7 +74,7 @@ const ChannelCardTooltip = ({
         <FillingValidImage
           image={mainImage}
           defaultImage={mainDefaultImage}
-          isChangeToGif={mainIsChangeToGif}
+          // isChangeToGif={mainIsChangeToGif}
         />
       </div>
     </Tooltip>

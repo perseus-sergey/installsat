@@ -13,10 +13,9 @@ import { sendMail } from '@/libs/mail/sendMail';
 export const dynamic = 'force-dynamic';
 
 // =================================================================
-// Go Up links to trans news page
+// section article - set overflow visible
 // add similar trans news links for fly channel page
 // check production trans news revalidation
-// programa-telekanaliv/[slug]/[url_date]/page.tsx - show more in genre section
 // remove decode function from controllers
 // add links to footer
 // remove tooltip hover for mobiles

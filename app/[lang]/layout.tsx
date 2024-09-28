@@ -1,5 +1,4 @@
 import '../globals.scss';
-import AdBlockingRecovery from '@/components/GoogleAdsense/AdBlockingRecovery';
 import GoogleAdsense from '@/components/GoogleAdsense/GoogleAdsense';
 import Header from '@/components/Header/Header';
 import { getELangKey } from '@/libs/utils/validSearchParam';
@@ -7,8 +6,21 @@ import { ELanguage } from '@/models/ui.model';
 import { EUrlBaseParam } from '@/models/url.model';
 import dynamic from 'next/dynamic';
 
+import { Suspense } from 'react';
+
+const AdBlockingRecovery = dynamic(
+  () => import('@/components/GoogleAdsense/AdBlockingRecovery')
+);
+
+const GoogleTagManager = dynamic(
+  () =>
+    import('@next/third-parties/google').then((mod) => mod.GoogleTagManager),
+  {
+    ssr: false, // Оскільки GTM має виконуватись тільки на клієнті
+  }
+);
+
 const Footer = dynamic(() => import('@/components/Footer/Footer'));
-import { GoogleTagManager } from '@next/third-parties/google';
 
 const GOOGLE_GTM_ID = process.env.GOOGLE_GTM || '';
 const adsenseId = process.env.G_ADSENSE_ID || '';
@@ -31,7 +43,6 @@ export default function RootLayout({
 
   return (
     <html lang={lang === ELanguage.UA ? 'uk' : 'en'} className="!scroll-smooth">
-      {isProductionMode && <GoogleTagManager gtmId={GOOGLE_GTM_ID} />}
       <body
         suppressHydrationWarning={true}
         className="font-serif text-stone-800 bg-black overflow-x-hidden sm:bg-[url('/Images/black00001.gif')]"
@@ -41,8 +52,17 @@ export default function RootLayout({
         {children}
         <Footer lang={lang} />
       </body>
-      <GoogleAdsense pId={adsenseId} />
-      <AdBlockingRecovery pId={adsenseId} />
+      {isProductionMode && (
+        <Suspense>
+          <GoogleTagManager gtmId={GOOGLE_GTM_ID} />
+        </Suspense>
+      )}
+      <Suspense>
+        <GoogleAdsense pId={adsenseId} />
+      </Suspense>
+      <Suspense>
+        <AdBlockingRecovery pId={adsenseId} />
+      </Suspense>
     </html>
   );
 }

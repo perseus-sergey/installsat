@@ -13,6 +13,7 @@ import { sendMail } from '@/libs/mail/sendMail';
 export const dynamic = 'force-dynamic';
 
 // =================================================================
+// Go Up links to trans news page
 // add similar trans news links for fly channel page
 // check production trans news revalidation
 // programa-telekanaliv/[slug]/[url_date]/page.tsx - show more in genre section

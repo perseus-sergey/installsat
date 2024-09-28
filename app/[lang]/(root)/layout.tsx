@@ -7,11 +7,7 @@ import { EUrlBaseParam, MAIN_URL } from '@/models/url.model';
 import { getELangKey } from '@/libs/utils/validSearchParam';
 import SideBarServer from '@/components/SideBar/SideBarServer';
 import { Suspense } from 'react';
-import dynamic from 'next/dynamic';
-
-const WidgetLastNews = dynamic(
-  () => import('@/components/WidgetLastNews/WidgetLastNews')
-);
+import RightAside from '@/components/SideBar/RightAside';
 
 const BASE_URL = process.env.BASE_URL || MAIN_URL;
 
@@ -62,11 +58,7 @@ export default function Layout({ children, params }: IProps) {
         {children}
       </section>
 
-      <aside className="hidden lg:flex w-64">
-        <Suspense>
-          <WidgetLastNews lang={lang} />
-        </Suspense>
-      </aside>
+      <RightAside lang={lang} />
     </main>
   );
 }

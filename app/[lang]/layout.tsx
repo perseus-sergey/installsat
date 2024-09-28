@@ -1,24 +1,41 @@
+// import GoogleAdsense from '@/components/GoogleAdsense/GoogleAdsense';
 import '../globals.scss';
-import GoogleAdsense from '@/components/GoogleAdsense/GoogleAdsense';
 import Header from '@/components/Header/Header';
 import { getELangKey } from '@/libs/utils/validSearchParam';
 import { ELanguage } from '@/models/ui.model';
 import { EUrlBaseParam } from '@/models/url.model';
 import dynamic from 'next/dynamic';
+// import AdBlockingRecovery from '@/components/GoogleAdsense/AdBlockingRecovery';
+// import { Suspense } from 'react';
+import GoogleComponents from '@/components/GoogleAdsense/GoogleComponents';
+// import { Suspense } from 'react';
+// import { GoogleTagManager } from '@next/third-parties/google';
+// import GoogleAdsense from '@/components/GoogleAdsense/GoogleAdsense';
+// import AdBlockingRecovery from '@/components/GoogleAdsense/AdBlockingRecovery';
 
-import { Suspense } from 'react';
+// const AdBlockingRecovery = dynamic(
+//   () => import('@/components/GoogleAdsense/AdBlockingRecovery'),
+//   {
+//     ssr: false,
+//   }
+// );
 
-const AdBlockingRecovery = dynamic(
-  () => import('@/components/GoogleAdsense/AdBlockingRecovery')
-);
+// const GoogleTagManager = dynamic(
+//   () =>
+//     import('@next/third-parties/google').then((mod) => mod.GoogleTagManager),
+//   {
+//     ssr: false,
+//   }
+// );
+// const GoogleTagManager = (await import('@next/third-parties/google'))
+//   .GoogleTagManager;
 
-const GoogleTagManager = dynamic(
-  () =>
-    import('@next/third-parties/google').then((mod) => mod.GoogleTagManager),
-  {
-    ssr: false, // Оскільки GTM має виконуватись тільки на клієнті
-  }
-);
+// const GoogleAdsense = dynamic(
+//   () => import('@/components/GoogleAdsense/GoogleAdsense'),
+//   {
+//     ssr: false,
+//   }
+// );
 
 const Footer = dynamic(() => import('@/components/Footer/Footer'));
 
@@ -52,17 +69,14 @@ export default function RootLayout({
         {children}
         <Footer lang={lang} />
       </body>
+      {/* {isProductionMode && ( */}
+      {/* <GoogleTagManager gtmId={GOOGLE_GTM_ID} />
+      <GoogleAdsense pId={adsenseId} />
+      <AdBlockingRecovery pId={adsenseId} /> */}
+      {/* )} */}
       {isProductionMode && (
-        <Suspense>
-          <GoogleTagManager gtmId={GOOGLE_GTM_ID} />
-        </Suspense>
+        <GoogleComponents GOOGLE_GTM_ID={GOOGLE_GTM_ID} adsenseId={adsenseId} />
       )}
-      <Suspense>
-        <GoogleAdsense pId={adsenseId} />
-      </Suspense>
-      <Suspense>
-        <AdBlockingRecovery pId={adsenseId} />
-      </Suspense>
     </html>
   );
 }

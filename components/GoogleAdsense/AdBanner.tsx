@@ -3,7 +3,19 @@
 import { usePathname, useSearchParams } from 'next/navigation';
 import React, { useEffect } from 'react';
 
-const AdBanner = ({ children }: { children: React.ReactNode }) => {
+interface IDataAttributes {
+  'data-ad-slot': string;
+  'data-full-width-responsive': string;
+  'data-ad-format': string;
+  'data-ad-layout'?: string;
+}
+
+interface IAdsBannerProps extends React.HTMLAttributes<HTMLElement> {
+  dataAttrs: IDataAttributes;
+  adsenseId: string;
+}
+
+const AdBanner = ({ dataAttrs, adsenseId, className }: IAdsBannerProps) => {
   const pathname = usePathname(); // Отримуємо поточний шлях
   const searchParams = useSearchParams(); // Отримуємо поточні параметри запиту
 
@@ -24,41 +36,14 @@ const AdBanner = ({ children }: { children: React.ReactNode }) => {
     return () => clearInterval(intervalId);
   }, [pathname, searchParams]);
 
-  //   useEffect(() => {
-  //     const loadAd = () => {
-  //       setTimeout(() => {
-  //         if (typeof window !== 'undefined' && window.adsbygoogle) {
-  //           const adElement = document.querySelector('.adsbygoogle');
-
-  //           if (adElement) {
-  //             adElement.innerHTML = ''; // Очищаємо старе оголошення
-  //             window.adsbygoogle.push({});
-  //           }
-  //         }
-  //       }, 500); // Затримка на півсекунди
-  //     };
-
-  //     loadAd(); // Завантажуємо оголошення на початку
-
-  //     return () => {
-  //       console.log('Route change detected. Clearing previous ads...');
-  //       loadAd(); // Перезавантажуємо оголошення при зміні маршруту
-  //     };
-  //   }, [pathname, searchParams]);
-
-  return children;
+  return (
+    <ins
+      className={`adsbygoogle block ${className || ''}`}
+      key={`${pathname}-${searchParams.toString()}`}
+      data-ad-client={`ca-pub-${adsenseId}`}
+      {...dataAttrs}
+    />
+  );
 };
-
-// const AdBanner = ({ children }: { children: React.ReactNode }) => {
-//   useEffect(() => {
-//     try {
-//       (window.adsbygoogle = window.adsbygoogle || []).push({});
-//     } catch (err) {
-//       console.log(err);
-//     }
-//   }, []);
-
-//   return children;
-// };
 
 export default AdBanner;

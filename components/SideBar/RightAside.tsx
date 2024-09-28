@@ -21,7 +21,7 @@ const RightAside = ({ lang }: { lang: ELanguage }) => {
 
       <AdBannerWrapper
         lang={lang}
-        className="w-full flex justify-center items-center"
+        className="w-full p-px flex justify-center items-center border border-stone-400"
       >
         <AdBanner
           adsenseId={adsenseId}

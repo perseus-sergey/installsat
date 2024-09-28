@@ -20,6 +20,7 @@ import { EUrlSearchParam } from '@/models/url.model';
 import { TitleH2Digest } from '../ui/Titles/TitleH2Digest';
 import { TitleH3Digest } from '../ui/Titles/TitleH3Digest';
 import { DateLink, SatLink } from '../DateNewsList/DateNewsList';
+import GoUpLink from '../ui/GoUpLink/GoUpLink';
 
 interface ISatNewsListProps {
   searchParams: TSearchParams;
@@ -45,7 +46,7 @@ const SatNewsList = async ({ searchParams, lang }: ISatNewsListProps) => {
 
     return (
       <div key={news[0]}>
-        <TitleH2Digest className="!justify-start">
+        <TitleH2Digest className="!justify-between">
           <FillingValidImage
             image={{
               ...satLogo,
@@ -54,6 +55,7 @@ const SatNewsList = async ({ searchParams, lang }: ISatNewsListProps) => {
             defaultImage={satLogo.defaultImg}
             alt={`${satLogo.alt[lang]}${news[0]}`}
           />
+
           <div className="flex flex-wrap gap-2">
             {META_TRANS_NEWS_LIST.h2start[lang]}
             <SatLink
@@ -63,6 +65,8 @@ const SatNewsList = async ({ searchParams, lang }: ISatNewsListProps) => {
               satSlug={satSlug}
             />
           </div>
+
+          <GoUpLink lang={lang} />
         </TitleH2Digest>
         {[...news[1]].map((satNews) => {
           return (

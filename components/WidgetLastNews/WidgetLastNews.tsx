@@ -11,7 +11,7 @@ const WidgetLastNews = async ({ lang }: { lang: ELanguage }) => {
 
   return (
     <nav
-      className="text-stone-300 p-4 rounded border border-solid border-stone-400 h-fit mb-4 mx-auto overflow-hidden bg-gradient-to-b from-black to-blue-900"
+      className="text-stone-300 p-4 rounded border border-stone-400 h-fit mx-auto overflow-hidden bg-gradient-to-b from-black to-blue-900"
       data-testid="WidgetLastNews"
     >
       <h3 className="flex items-center gap-4 min-h-12 pb-2 font-bold text-xl border-b-4 border-slate-300 border-double">

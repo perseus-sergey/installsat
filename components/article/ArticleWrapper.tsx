@@ -1,15 +1,10 @@
 import { ELanguage } from '@/models/ui.model';
 import AdBannerWrapper from '../GoogleAdsense/AdBannerWrapper';
-// import AdBannerArticleTop from '../GoogleAdsense/AdBannerArticleTop';
 import dynamic from 'next/dynamic';
-// import { Suspense } from 'react';
 
-const AdBannerUnderHeader = dynamic(
-  () => import('@/components/GoogleAdsense/AdBannerUnderHeader'),
-  {
-    ssr: false,
-  }
-);
+const AdBanner = dynamic(() => import('@/components/GoogleAdsense/AdBanner'), {
+  ssr: false,
+});
 
 const adsenseId = process.env.G_ADSENSE_ID || '';
 
@@ -25,26 +20,23 @@ const ArticleWrapper = ({ children, lang, className }: IProps) => (
       lang={lang}
       className="absolute left-0 top-0 w-full flex justify-center items-center"
     >
-      <AdBannerUnderHeader adsenseId={adsenseId} />
+      <AdBanner
+        adsenseId={adsenseId}
+        className="w-full text-center h-80 md:h-72"
+        dataAttrs={{
+          'data-ad-slot': '1581071444',
+          'data-full-width-responsive': 'true',
+          'data-ad-format': 'auto',
+        }}
+      />
     </AdBannerWrapper>
-    {/* <AdBannerArticleTop lang={lang} /> */}
 
-    {/* <section
-      className="h-60 w-full flex justify-center items-center"
-      role="complementary"
-      aria-label={lang === ELanguage.UA ? 'Реклама' : 'Advertising'}
+    <section
+      className="pt-80 md:pt-72"
+      aria-label={lang === ELanguage.UA ? 'Основний контент' : 'Basic content'}
     >
-      <Suspense>
-        <AdsHeadMediaBanner
-          data-ad-client={`ca-pub-${adsenseId}`}
-          data-ad-slot="1581071444"
-          data-full-width-responsive="true"
-          data-ad-format="auto"
-        />
-      </Suspense>
-    </section> */}
-
-    <section className="pt-80 md:pt-72">{children}</section>
+      {children}
+    </section>
   </article>
 );
 

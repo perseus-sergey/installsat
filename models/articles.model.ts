@@ -4,21 +4,21 @@ import { z } from 'zod';
 export const DEFAULT_ARTICLE_LOGO_NAME = 'zastavka.jpg';
 export const DEFAULT_ARTICLE_LOGO_PATH = `/Images/channelsOptimized/${DEFAULT_ARTICLE_LOGO_NAME}`;
 
-export const ARTICLE_CARD = {
-  images: {
-    h1Image: {
+export const ARTICLE_CARD_IMAGES = {
+  h1Image: {
+    currentImg: {
       path: '/Images/channelsOptimized/',
       height: 100,
       width: 120,
-      defaultImg: {
-        src: DEFAULT_ARTICLE_LOGO_PATH,
-        height: 100,
-        width: 100,
-      },
-      altStart: {
-        [ELanguage.UA]: `Логотип до статті:`,
-        [ELanguage.EN]: `Logo for article:`,
-      },
+    },
+    defaultImg: {
+      src: DEFAULT_ARTICLE_LOGO_PATH,
+      height: 100,
+      width: 100,
+    },
+    altStart: {
+      [ELanguage.UA]: `Логотип до статті:`,
+      [ELanguage.EN]: `Logo for article:`,
     },
   },
 };
@@ -199,9 +199,11 @@ export const META_SINGLE_SAT_MAP = {
 export const SINGLE_SAT_MAP_DATA = {
   images: {
     h1Image: {
-      path: '/Images/satellites/',
-      height: 100,
-      width: 140,
+      currentImg: {
+        path: '/Images/satellites/',
+        height: 100,
+        width: 140,
+      },
       defaultImg: {
         src: DEFAULT_ARTICLE_LOGO_PATH,
         height: 100,
@@ -212,6 +214,7 @@ export const SINGLE_SAT_MAP_DATA = {
         [ELanguage.EN]: `Logo for article:`,
       },
     },
+
     mapParams: {
       path: '/Images/News/setting_eqp/maps/',
       height: 350,
@@ -223,6 +226,7 @@ export const SINGLE_SAT_MAP_DATA = {
         };
       },
     },
+
     bigMapParams: {
       path: '/Images/News/setting_eqp/maps/big_',
       height: 630,

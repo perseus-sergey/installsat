@@ -13,7 +13,6 @@ interface IProps extends React.HTMLAttributes<HTMLElement> {
   lang: ELanguage;
 }
 
-// const ArticleWrapper = ({ children, className }: IProps) => (
 const ArticleWrapper = ({ children, lang, className }: IProps) => (
   <article className={`article relative ${className ? className : ''}`}>
     <AdBannerWrapper

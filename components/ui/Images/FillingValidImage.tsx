@@ -19,12 +19,13 @@ const FillingValidImage = ({
   alt = '',
   isBlur = false,
   blurImgPath = IMG_PROPERTIES.defaultImgBlur,
-  isChangeToGif = false,
+  // isChangeToGif = false,
   isFillParent = false,
   isPriority,
   className,
 }: IFillingImgProps) => {
-  const validImg = imagePathValidate(image, defaultImage, isChangeToGif);
+  const validImg = imagePathValidate(image, defaultImage);
+  // const validImg = imagePathValidate(image, defaultImage, isChangeToGif);
 
   return (
     <FillingImg

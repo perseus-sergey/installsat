@@ -2,7 +2,7 @@ import EmptyData from '@/components/errors/EmptyData/EmptyData';
 import { Title } from '@/components/ui/Titles/Title';
 import FillingValidImage from '@/components/ui/Images/FillingValidImage';
 import {
-  ARTICLE_CARD,
+  ARTICLE_CARD_IMAGES,
   DEFAULT_ARTICLE_LOGO_NAME,
   INFO_PANEL_TITLES,
 } from '@/models/articles.model';
@@ -30,7 +30,7 @@ import SeoLink from '@/components/ui/SeoLink/SeoLink';
 import { Suspense } from 'react';
 import ArticleWrapper from '@/components/article/ArticleWrapper';
 
-const { h1Image } = ARTICLE_CARD.images;
+const { currentImg, defaultImg, altStart } = ARTICLE_CARD_IMAGES.h1Image;
 
 const BASE_URL = process.env.BASE_URL || MAIN_URL;
 const { ARTICLE_PARAM, ARTICLE, LANG, NEWS_AND_ARTICLES } = EUrlBaseParam;
@@ -170,11 +170,12 @@ export default async function Page({ params }: IArticleParams) {
           {titleLang}
           <FillingValidImage
             image={{
-              ...h1Image,
-              src: `${h1Image.path}${logo}`,
+              ...currentImg,
+              src: `${currentImg.path}${logo}`,
             }}
-            defaultImage={h1Image.defaultImg}
-            alt={`${h1Image.altStart[lang]} ${titleLang}`}
+            defaultImage={defaultImg}
+            alt={`${altStart[lang]} ${titleLang}`}
+            isFillParent
           />
         </Title>
 

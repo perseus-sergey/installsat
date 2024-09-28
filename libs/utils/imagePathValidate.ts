@@ -15,24 +15,30 @@ export const isFileExists = cache((filePath: string): boolean => {
   }
 });
 
-const changeExtToGif = (path: string) => {
-  const splitted = path.split('.').reverse();
-  const [, ...startPath] = splitted;
+// const changeExtToGif = (path: string) => {
+//   const splitted = path.split('.').reverse();
+//   const [, ...startPath] = splitted;
 
-  return [...startPath, 'gif'].join('.');
-};
+//   return [...startPath, 'gif'].join('.');
+// };
 
 export const imagePathValidate = cache(
-  (
-    img: IImgParams,
-    alternativeImg: IImgParams,
-    isChangeToGif = false
-  ): IImgParams => {
-    const path = isChangeToGif ? changeExtToGif(img.src) : img.src;
-
-    return isFileExists(path) ? { ...img, src: path } : alternativeImg;
+  (img: IImgParams, alternativeImg: IImgParams): IImgParams => {
+    return isFileExists(img.src) ? img : alternativeImg;
   }
 );
+
+// export const imagePathValidate = cache(
+//   (
+//     img: IImgParams,
+//     alternativeImg: IImgParams,
+//     isChangeToGif = false
+//   ): IImgParams => {
+//     const path = isChangeToGif ? changeExtToGif(img.src) : img.src;
+
+//     return isFileExists(path) ? { ...img, src: path } : alternativeImg;
+//   }
+// );
 
 // export const imagePathValidate = cache(
 //   (

@@ -20,6 +20,7 @@ import { TitleH2Digest } from '../ui/Titles/TitleH2Digest';
 import { TitleH3Digest } from '../ui/Titles/TitleH3Digest';
 import { createURLWithParams } from '@/libs/utils/utils';
 import SeoLink from '../ui/SeoLink/SeoLink';
+import GoUpLink from '../ui/GoUpLink/GoUpLink';
 
 const BASE_URL = process.env.BASE_URL || MAIN_URL;
 
@@ -32,7 +33,10 @@ const DateNewsList = async ({ lang }: { lang: ELanguage }) => {
     return (
       <div key={news[0]}>
         <TitleH2Digest className="text-center justify-center">
+          <GoUpLink lang={lang} />
+
           {META_TRANS_NEWS_SINGLE.metaH1start[lang]}
+
           <DateLink
             lang={lang}
             dateStr={news[0]}

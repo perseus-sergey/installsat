@@ -3,6 +3,7 @@
 // import { GoogleTagManager } from '@next/third-parties/google';
 
 import dynamic from 'next/dynamic';
+import { useEffect, useState } from 'react';
 
 const AdBlockingRecovery = dynamic(
   () => import('@/components/GoogleAdsense/AdBlockingRecovery'),
@@ -35,16 +36,24 @@ const GoogleComponents = ({
   GOOGLE_GTM_ID: string;
   adsenseId: string;
 }) => {
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
   if (process.env.NODE_ENV !== 'production') {
     return null;
   }
 
   return (
-    <>
-      <GoogleTagManager gtmId={GOOGLE_GTM_ID} />
-      <GoogleAdsense pId={adsenseId} />
-      <AdBlockingRecovery pId={adsenseId} />
-    </>
+    isClient && (
+      <>
+        <GoogleTagManager gtmId={GOOGLE_GTM_ID} />
+        <GoogleAdsense pId={adsenseId} />
+        <AdBlockingRecovery pId={adsenseId} />
+      </>
+    )
   );
 };
 

@@ -40,8 +40,7 @@ const AdBannerUnderHeader = ({
     // >
     <ins
       key={`${pathname}-${searchParams.toString()}`}
-      className="adsbygoogle block text-center"
-      style={{ width: '100%', height: '280px' }}
+      className="adsbygoogle block w-full text-center h-80 md:h-72"
       data-ad-client={`ca-pub-${adsenseId}`}
       data-ad-slot="1581071444"
       data-full-width-responsive="true"

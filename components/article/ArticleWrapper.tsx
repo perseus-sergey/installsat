@@ -20,10 +20,10 @@ interface IProps extends React.HTMLAttributes<HTMLElement> {
 
 // const ArticleWrapper = ({ children, className }: IProps) => (
 const ArticleWrapper = ({ children, lang, className }: IProps) => (
-  <article className={`article ${className ? className : ''}`}>
+  <article className={`article relative ${className ? className : ''}`}>
     <AdBannerWrapper
       lang={lang}
-      className="w-full flex justify-center items-center"
+      className="absolute left-0 top-0 w-full flex justify-center items-center"
     >
       <AdBannerUnderHeader adsenseId={adsenseId} />
     </AdBannerWrapper>
@@ -44,7 +44,7 @@ const ArticleWrapper = ({ children, lang, className }: IProps) => (
       </Suspense>
     </section> */}
 
-    {children}
+    <section className="pt-80 md:pt-72">{children}</section>
   </article>
 );
 

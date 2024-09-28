@@ -25,7 +25,7 @@ const RightAside = ({ lang }: { lang: ELanguage }) => {
       >
         <AdBanner
           adsenseId={adsenseId}
-          className="w-full h-full text-center"
+          className="hidden lg:block w-full h-full text-center"
           dataAttrs={{
             'data-ad-slot': '2599017354',
             'data-full-width-responsive': 'true',

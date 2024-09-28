@@ -38,7 +38,7 @@ const AdBanner = ({ dataAttrs, adsenseId, className }: IAdsBannerProps) => {
 
   return (
     <ins
-      className={`adsbygoogle block ${className || ''}`}
+      className={`adsbygoogle ${className || ''}`}
       key={`${pathname}-${searchParams.toString()}`}
       data-ad-client={`ca-pub-${adsenseId}`}
       {...dataAttrs}

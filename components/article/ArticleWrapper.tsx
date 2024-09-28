@@ -22,7 +22,7 @@ const ArticleWrapper = ({ children, lang, className }: IProps) => (
     >
       <AdBanner
         adsenseId={adsenseId}
-        className="w-full text-center h-80 md:h-72"
+        className="block w-full text-center h-80 md:h-72"
         dataAttrs={{
           'data-ad-slot': '1581071444',
           'data-full-width-responsive': 'true',

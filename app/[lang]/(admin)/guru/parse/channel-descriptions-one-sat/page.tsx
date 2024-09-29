@@ -13,11 +13,11 @@ import { sendMail } from '@/libs/mail/sendMail';
 export const dynamic = 'force-dynamic';
 
 // =================================================================
-// section article - set overflow visible
+// remove decode function from controllers
+// Split all models into smaller models
+// make script to translate all articles
 // add similar trans news links for fly channel page
 // check production trans news revalidation
-// remove decode function from controllers
-// add links to footer
 // remove tooltip hover for mobiles
 // fix back/forward
 // fix comments
@@ -26,7 +26,6 @@ export const dynamic = 'force-dynamic';
 // Set indexes in DB
 //
 // Check comment user location in production (if successful, clean up the comments form //code comments)
-// Split all models into smaller models
 // Add separate tbl_comments for fly satellites
 // Renew tbl_chan_categ by adding english language
 // Mobile Accordion Lazy loading

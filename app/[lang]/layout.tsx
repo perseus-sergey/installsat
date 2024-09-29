@@ -1,15 +1,13 @@
-// import GoogleAdsense from '@/components/GoogleAdsense/GoogleAdsense';
 import '../globals.scss';
 import Header from '@/components/Header/Header';
 import { getELangKey } from '@/libs/utils/validSearchParam';
 import { ELanguage } from '@/models/ui.model';
 import { EUrlBaseParam } from '@/models/url.model';
 import dynamic from 'next/dynamic';
-// import AdBlockingRecovery from '@/components/GoogleAdsense/AdBlockingRecovery';
-// import { Suspense } from 'react';
-import GoogleComponents from '@/components/GoogleAdsense/GoogleComponents';
-// import { GoogleTagManager } from '@next/third-parties/google';
-// import GoogleAdsense from '@/components/GoogleAdsense/GoogleAdsense';
+// import GoogleComponents from '@/components/GoogleAdsense/GoogleComponents';
+import AdBlockingRecovery from '@/components/GoogleAdsense/AdBlockingRecovery';
+import { GoogleTagManager } from '@next/third-parties/google';
+import GoogleAdsense from '@/components/GoogleAdsense/GoogleAdsense';
 
 const Footer = dynamic(() => import('@/components/Footer/Footer'));
 
@@ -44,18 +42,18 @@ export default function RootLayout({
         <Footer lang={lang} />
       </body>
       {isProductionMode && (
-        <GoogleComponents GOOGLE_GTM_ID={GOOGLE_GTM_ID} adsenseId={adsenseId} />
+        <>
+          <GoogleTagManager gtmId={GOOGLE_GTM_ID} />
+          <GoogleAdsense pId={adsenseId} />
+          <AdBlockingRecovery pId={adsenseId} />
+        </>
       )}
     </html>
   );
 }
 
 // {isProductionMode && (
-//   <>
-//     <GoogleTagManager gtmId={GOOGLE_GTM_ID} />
-//     <GoogleAdsense pId={adsenseId} />
-//     <AdBlockingRecovery pId={adsenseId} />
-//   </>
+// <GoogleComponents GOOGLE_GTM_ID={GOOGLE_GTM_ID} adsenseId={adsenseId} />
 // )}
 
 // {children}

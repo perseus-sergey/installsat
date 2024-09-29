@@ -9,10 +9,6 @@ import Image from 'next/image';
 // import AdsterraAd from '../AdsterraAd/AdsterraAd';
 // import dynamic from 'next/dynamic';
 
-// const AdBanner = dynamic(() => import('../GoogleAdsense/AdsBanner'), {
-//   ssr: false,
-// });
-
 const { title, siteLogo } = LOGO.link;
 // const adsterraDesktopKey = process.env.ADSTERRA_728_KEY || '';
 // const adsterraMobileKey = process.env.ADSTERRA_320_KEY || '';
@@ -41,16 +37,6 @@ const Header = ({ lang }: { lang: ELanguage }) => (
 );
 
 export default Header;
-
-{
-  /* <AdBanner
-      data-ad-client={adsenseId}
-      data-ad-slot="1581071444"
-      data-full-width-responsive="true"
-      data-ad-layout="in-article"
-      data-ad-format="fluid"
-    /> */
-}
 
 // {process.env.NODE_ENV === 'production' && (
 //   <div className="block mx-auto my-2">

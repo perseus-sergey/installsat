@@ -7,38 +7,9 @@ import { EUrlBaseParam } from '@/models/url.model';
 import dynamic from 'next/dynamic';
 // import AdBlockingRecovery from '@/components/GoogleAdsense/AdBlockingRecovery';
 // import { Suspense } from 'react';
-// import GoogleComponents from '@/components/GoogleAdsense/GoogleComponents';
-import { GoogleTagManager } from '@next/third-parties/google';
-import GoogleAdsense from '@/components/GoogleAdsense/GoogleAdsense';
-import AdBlockingRecovery from '@/components/GoogleAdsense/AdBlockingRecovery';
-// import { Suspense } from 'react';
+import GoogleComponents from '@/components/GoogleAdsense/GoogleComponents';
 // import { GoogleTagManager } from '@next/third-parties/google';
 // import GoogleAdsense from '@/components/GoogleAdsense/GoogleAdsense';
-// import AdBlockingRecovery from '@/components/GoogleAdsense/AdBlockingRecovery';
-
-// const AdBlockingRecovery = dynamic(
-//   () => import('@/components/GoogleAdsense/AdBlockingRecovery'),
-//   {
-//     ssr: false,
-//   }
-// );
-
-// const GoogleTagManager = dynamic(
-//   () =>
-//     import('@next/third-parties/google').then((mod) => mod.GoogleTagManager),
-//   {
-//     ssr: false,
-//   }
-// );
-// const GoogleTagManager = (await import('@next/third-parties/google'))
-//   .GoogleTagManager;
-
-// const GoogleAdsense = dynamic(
-//   () => import('@/components/GoogleAdsense/GoogleAdsense'),
-//   {
-//     ssr: false,
-//   }
-// );
 
 const Footer = dynamic(() => import('@/components/Footer/Footer'));
 
@@ -73,18 +44,18 @@ export default function RootLayout({
         <Footer lang={lang} />
       </body>
       {isProductionMode && (
-        <>
-          <GoogleTagManager gtmId={GOOGLE_GTM_ID} />
-          <GoogleAdsense pId={adsenseId} />
-          <AdBlockingRecovery pId={adsenseId} />
-        </>
+        <GoogleComponents GOOGLE_GTM_ID={GOOGLE_GTM_ID} adsenseId={adsenseId} />
       )}
     </html>
   );
 }
 
 // {isProductionMode && (
-//   <GoogleComponents GOOGLE_GTM_ID={GOOGLE_GTM_ID} adsenseId={adsenseId} />
+//   <>
+//     <GoogleTagManager gtmId={GOOGLE_GTM_ID} />
+//     <GoogleAdsense pId={adsenseId} />
+//     <AdBlockingRecovery pId={adsenseId} />
+//   </>
 // )}
 
 // {children}

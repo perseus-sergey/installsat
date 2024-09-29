@@ -15,7 +15,7 @@ interface IProps extends React.HTMLAttributes<HTMLElement> {
 
 const ArticleWrapper = ({ children, lang, className }: IProps) => (
   <article className="flex">
-    <div aria-label="hidden" className="w-0 min-h-[85vh]" />
+    <div className="w-0 min-h-[85vh]" />
 
     <div className={`article ${className ? className : ''}`}>
       <AdBannerWrapper

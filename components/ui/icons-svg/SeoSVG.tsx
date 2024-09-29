@@ -13,7 +13,8 @@ export default function SeoSVG({
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      role="img"
+      aria-hidden="true"
+      focusable="false"
       fill="none"
       viewBox={viewBox}
       strokeWidth={strokeWidth}

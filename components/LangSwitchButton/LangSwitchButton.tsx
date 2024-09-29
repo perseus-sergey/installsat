@@ -54,6 +54,7 @@ const LangSwitchButton = () => {
         height={24}
         alt={LANG[currentLang].alt}
         src={LANG[currentLang].imgSrc}
+        isPriority
       />
     </BaseButton>
   );

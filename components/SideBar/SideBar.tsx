@@ -3,7 +3,8 @@
 import { ELanguage } from '@/models/ui.model';
 import { OPEN_SIDE_BAR_BTN } from '@/models/header.model';
 import BaseButton from '../ui/buttons/BaseButton/BaseButton';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { usePathname } from 'next/navigation';
 
 const { sideBarCloseIcon, sideBarIcon } = OPEN_SIDE_BAR_BTN;
 
@@ -14,8 +15,13 @@ const SideBar = ({
   lang: ELanguage;
   children: React.ReactNode;
 }) => {
+  const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
   const [menuVisible, setMenuVisible] = useState(false);
+
+  useEffect(() => {
+    closeMenu();
+  }, [pathname]);
 
   const openMenu = () => {
     setMenuVisible(true);

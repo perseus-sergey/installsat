@@ -21,7 +21,7 @@ interface IScheduleShortProps {
 }
 
 const ScheduleShort = async ({
-  channelData: { vsetv, vipiko, telegid_id, genre_id, title },
+  channelData: { vsetv, vipiko, genre_id, title },
   lang,
 }: IScheduleShortProps) => {
   const now = DateTime.local();
@@ -44,7 +44,7 @@ const ScheduleShort = async ({
     limitShed
   );
 
-  if (scheduleList instanceof Error || !scheduleList.length) {
+  if (!scheduleList) {
     scheduleList = await getDBChannelScheduleShort(
       EDBTableTitles.TV_SCHEDULE_VSE_TV,
       vsetv,
@@ -54,16 +54,7 @@ const ScheduleShort = async ({
     // addHour = 0;
   }
 
-  if (scheduleList instanceof Error || !scheduleList.length) {
-    scheduleList = await getDBChannelScheduleShort(
-      EDBTableTitles.TV_SCHEDULE,
-      telegid_id,
-      timeBefore,
-      limitShed
-    );
-  }
-
-  if (scheduleList instanceof Error || !scheduleList.length) return null;
+  if (!scheduleList) return null;
 
   return (
     <div>

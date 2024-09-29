@@ -2,19 +2,17 @@ import { poolExecute, poolQuery } from '@/libs/db/mysqldb';
 import { IDbIdAmountModel } from '@/models/admin.model';
 import { IScheduleTVModel, IVseTvParsModel } from '@/models/scheduleTV.model';
 import { EDBTableTitles } from '@/models/ui.model';
-import { decode } from 'html-entities';
 import { cache } from 'react';
 
 const { TV_SCHEDULE_VSE_TV } = EDBTableTitles;
 
-export const getDBChannelScheduleShort = cache(
-  async (
-    dbTableName: EDBTableTitles,
-    chanelId: number,
-    hourInterval: number,
-    rowsLimit: number
-  ): Promise<IScheduleTVModel[] | Error> => {
-    const sql = `
+export const getDBChannelScheduleShort = async (
+  dbTableName: EDBTableTitles,
+  chanelId: number,
+  hourInterval: number,
+  rowsLimit: number
+): Promise<IScheduleTVModel[] | null> => {
+  const sql = `
     SELECT *
     FROM ${dbTableName}
     WHERE chan_id = ?
@@ -23,21 +21,14 @@ export const getDBChannelScheduleShort = cache(
     LIMIT ?
 `;
 
-    const res = await poolExecute<IScheduleTVModel[]>(sql, [
-      `${chanelId}`,
-      `${hourInterval}`,
-      `${rowsLimit}`,
-    ]);
+  const res = await poolExecute<IScheduleTVModel[]>(sql, [
+    `${chanelId}`,
+    `${hourInterval}`,
+    `${rowsLimit}`,
+  ]);
 
-    return res instanceof Error
-      ? res
-      : res.map((r) => ({
-          ...r,
-          title: decode(r.title),
-          prog_desc: decode(r.prog_desc),
-        }));
-  }
-);
+  return res instanceof Error || !res.length ? null : res;
+};
 
 export const getChanOneDaySchedule = cache(
   async (
@@ -63,15 +54,7 @@ export const getChanOneDaySchedule = cache(
 
     return res instanceof Error || !Array.isArray(res) || !res.length
       ? null
-      : res.map((sched) =>
-          Array.isArray(sched)
-            ? sched.map((r) => ({
-                ...r,
-                title: decode(r.title),
-                prog_desc: decode(r.prog_desc),
-              }))
-            : []
-        );
+      : res;
   }
 );
 

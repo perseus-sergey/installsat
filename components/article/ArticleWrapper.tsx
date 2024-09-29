@@ -22,6 +22,7 @@ const ArticleWrapper = ({ children, lang, className }: IProps) => (
         lang={lang}
         className="w-full flex justify-center items-center"
       >
+        <div className="w-0 h-80 md:h-72" />
         <AdBanner
           adsenseId={adsenseId}
           className="block w-full text-center h-80 md:h-72"

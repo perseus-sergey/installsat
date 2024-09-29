@@ -34,6 +34,7 @@ import { getELangKey } from '@/libs/utils/validSearchParam';
 import { INFO_PANEL_TITLES } from '@/models/articles.model';
 import SimilarChannels from '@/components/SimilarArticles/SimilarChannels';
 import ArticleWrapper from '@/components/article/ArticleWrapper';
+import ScheduleShort from '@/components/Schedule/ScheduleShort';
 
 const BASE_URL = process.env.BASE_URL || MAIN_URL;
 const { LANG, SLUG, CHANNELS_TV_PROGRAM, ONLINE_CHANNEL_LIST } = EUrlBaseParam;
@@ -148,7 +149,9 @@ export default async function Page({ params }: IChannelProps) {
 
         <GrooveLine />
 
-        {/* <ScheduleShort lang={lang} channelData={sqlResult} /> */}
+        <Suspense>
+          <ScheduleShort lang={lang} channelData={sqlResult} />
+        </Suspense>
 
         <div className="article-text">
           <DangerHtml text={text} />

@@ -1,10 +1,6 @@
 import Script from 'next/script';
 
 const AdBlockingRecovery = ({ pId }: { pId: string }) => {
-  if (process.env.NODE_ENV !== 'production') {
-    return null;
-  }
-
   return (
     <>
       <Script

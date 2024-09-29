@@ -6,7 +6,6 @@ import {
   ISimilarChannel,
 } from '@/models/channel.model';
 import { EDBTableTitles, ELanguage } from '@/models/ui.model';
-import { decode } from 'html-entities';
 import { cache } from 'react';
 
 const {
@@ -27,125 +26,112 @@ const {
 export const getDBFlyChannel = cache(
   async (slug: string, lang: ELanguage): Promise<IFlyChannel | null> => {
     const sql = `
-  SELECT 
-  CH.id, 
-  CH.title, 
-  CH.slug, 
-  CH.logo,
-  ${lang === ELanguage.UA ? 'CH.description_ua' : 'CH.description_en'} AS description, 
-  ${lang === ELanguage.UA ? 'CH.text_ua' : 'CH.text_en'} AS text, 
-  ${lang === ELanguage.UA ? 'CH.keywords_ua' : 'CH.keywords_en'} AS keywords, 
-  CH.official_site_url, 
-  CH.view, 
-  CH.canonical, 
-  CH.vsetv, 
-  CH.vipiko, 
-  CH.frequency,
-  CH.sr,
-  CH.fec,
-  CH.beam,
-  CH.polarization,
-  CH.encryption,
-  CH.biss,
-  CH.is_biss,
-  CH.mode,
-  CH.compress,
-  CH.is_radio,
-  CH.sid,
-  CH.v_pid,
-  CH.a_pid,
-  CH.t2_stream,
-  CH.sat_slug,
-  CH.is_removed,
-  CH.languages,
-  CH.theme_id,
-  S.title AS sat_title,
-  S.position AS sat_position,
-  S.grade AS sat_grade,
-  ${lang === ELanguage.UA ? 'T.title' : 'T.title_en'} AS theme, 
-  ${lang === ELanguage.UA ? 'T.description' : 'T.description_en'} AS genre_description 
-FROM ${FLY_CHANNELS} AS CH 
-LEFT JOIN ${CHANNEL_THEME} AS T ON CH.theme_id = T.id 
-LEFT JOIN ${FLY_SATELLITES} AS S ON CH.sat_slug = S.slug 
-WHERE CH.slug = ?
-LIMIT 1
-`;
+      SELECT 
+        CH.id, 
+        CH.title, 
+        CH.slug, 
+        CH.logo,
+        ${lang === ELanguage.UA ? 'CH.description_ua' : 'CH.description_en'} AS description, 
+        ${lang === ELanguage.UA ? 'CH.text_ua' : 'CH.text_en'} AS text, 
+        ${lang === ELanguage.UA ? 'CH.keywords_ua' : 'CH.keywords_en'} AS keywords, 
+        CH.official_site_url, 
+        CH.view, 
+        CH.canonical, 
+        CH.vsetv, 
+        CH.vipiko, 
+        CH.frequency,
+        CH.sr,
+        CH.fec,
+        CH.beam,
+        CH.polarization,
+        CH.encryption,
+        CH.biss,
+        CH.is_biss,
+        CH.mode,
+        CH.compress,
+        CH.is_radio,
+        CH.sid,
+        CH.v_pid,
+        CH.a_pid,
+        CH.t2_stream,
+        CH.sat_slug,
+        CH.is_removed,
+        CH.languages,
+        CH.theme_id,
+        S.title AS sat_title,
+        S.position AS sat_position,
+        S.grade AS sat_grade,
+        ${lang === ELanguage.UA ? 'T.title' : 'T.title_en'} AS theme, 
+        ${lang === ELanguage.UA ? 'T.description' : 'T.description_en'} AS genre_description 
+      FROM ${FLY_CHANNELS} AS CH 
+      LEFT JOIN ${CHANNEL_THEME} AS T ON CH.theme_id = T.id 
+      LEFT JOIN ${FLY_SATELLITES} AS S ON CH.sat_slug = S.slug 
+      WHERE CH.slug = ?
+      LIMIT 1
+    `;
     const res = await poolExecute<IFlyChannel[]>(sql, [slug]);
-    if (res instanceof Error) return null;
-    if (!res.length) return null;
 
-    return {
-      ...res[0],
-      title: decode(res[0].title),
-      description: decode(res[0].description),
-      sat_title: decode(res[0].sat_title),
-    };
+    return res instanceof Error || !res.length ? null : res[0];
   }
 );
 
 export const getDBChannel = cache(async (slug: string, lang: ELanguage) => {
   const sql = `
   SELECT 
-  CH.id, 
-  CH.title, 
-  CH.cpu AS chan_slug, 
-  CH.logo, 
-  CH.description, 
-  CH.text, 
-  CH.cat AS cat_id, 
-  CH.url, 
-  CH.view, 
-  CH.canonical, 
-  CH.vsetv, 
-  CH.vipiko, 
-  CH.tvforsite_net,
-  F.freq,
-  F.sr,
-  F.fec,
-  B.polar,
-  S.title AS sat_title,
-  S.cpu AS sat_slug,
-  E.title AS encryption,
-  ${lang === ELanguage.UA ? 'T.title' : 'T.title_en'}  AS genre, 
-  CO.title AS compression,
-  C.title AS cat_title,
-  C.parent AS cat_parent_id,
-  C.cpu AS cat_slug,
-  (SELECT title FROM ${CHANNEL_CATEGORY} WHERE id = C.parent LIMIT 1) AS cat_parent_title,
-  (SELECT cpu FROM ${CHANNEL_CATEGORY} WHERE id = C.parent LIMIT 1) AS cat_parent_cpu,
-  L.title AS chan_lang
-FROM 
-  ${CHANNELS} AS CH 
-LEFT JOIN 
-  ${CHANNEL_THEME} AS T ON CH.tema = T.id 
-LEFT JOIN 
-  ${CHANNEL_ENCRYPTION} AS E ON CH.encryption = E.id  
-LEFT JOIN 
-  ${CHANNEL_BEAM} AS B ON CH.beam = B.id 
-LEFT JOIN 
-  ${CHANNEL_SAT} AS S ON CH.sat = S.id 
-LEFT JOIN 
-  ${CHANNEL_FREQUENCY} AS F ON CH.frequency = F.id 
-LEFT JOIN 
-  ${CHANNEL_CATEGORY} AS C ON CH.cat = C.id 
-LEFT JOIN 
-  ${CHANNEL_COMPRESSION} AS CO ON CH.compress = CO.id 
-LEFT JOIN 
-  ${TBL_LANGUAGE} AS L ON CH.lang = L.id 
-WHERE 
-  CH.cpu = ?
-LIMIT 1
-`;
-  const res = await poolExecute<IChannel[]>(sql, [slug]);
-  if (res instanceof Error) return null;
-  if (!res.length) return null;
+    CH.id, 
+    CH.title, 
+    CH.cpu AS chan_slug, 
+    CH.logo, 
+    CH.description, 
+    CH.text, 
+    CH.cat AS cat_id, 
+    CH.url, 
+    CH.view, 
+    CH.canonical, 
+    CH.vsetv, 
+    CH.vipiko, 
+    CH.tvforsite_net,
+    F.freq,
+    F.sr,
+    F.fec,
+    B.polar,
+    S.title AS sat_title,
+    S.cpu AS sat_slug,
+    E.title AS encryption,
+    ${lang === ELanguage.UA ? 'T.title' : 'T.title_en'}  AS genre, 
+    CO.title AS compression,
+    C.title AS cat_title,
+    C.parent AS cat_parent_id,
+    C.cpu AS cat_slug,
+    (SELECT title FROM ${CHANNEL_CATEGORY} WHERE id = C.parent LIMIT 1) AS cat_parent_title,
+    (SELECT cpu FROM ${CHANNEL_CATEGORY} WHERE id = C.parent LIMIT 1) AS cat_parent_cpu,
+    L.title AS chan_lang
+  FROM 
+    ${CHANNELS} AS CH 
+  LEFT JOIN 
+    ${CHANNEL_THEME} AS T ON CH.tema = T.id 
+  LEFT JOIN 
+    ${CHANNEL_ENCRYPTION} AS E ON CH.encryption = E.id  
+  LEFT JOIN 
+    ${CHANNEL_BEAM} AS B ON CH.beam = B.id 
+  LEFT JOIN 
+    ${CHANNEL_SAT} AS S ON CH.sat = S.id 
+  LEFT JOIN 
+    ${CHANNEL_FREQUENCY} AS F ON CH.frequency = F.id 
+  LEFT JOIN 
+    ${CHANNEL_CATEGORY} AS C ON CH.cat = C.id 
+  LEFT JOIN 
+    ${CHANNEL_COMPRESSION} AS CO ON CH.compress = CO.id 
+  LEFT JOIN 
+    ${TBL_LANGUAGE} AS L ON CH.lang = L.id 
+  WHERE 
+    CH.cpu = ?
+  LIMIT 1
+  `;
 
-  return {
-    ...res[0],
-    title: decode(res[0].title),
-    description: decode(res[0].description),
-    sat_title: decode(res[0].sat_title),
-  };
+  const res = await poolExecute<IChannel[]>(sql, [slug]);
+
+  return res instanceof Error || !res.length ? null : res[0];
 });
 
 export const getDBOnlineChannel = cache(
@@ -183,14 +169,7 @@ export const getDBOnlineChannel = cache(
 `;
     const res = await poolExecute<IOnlineChannel[]>(sql, [slug]);
 
-    return res instanceof Error || !res.length
-      ? null
-      : {
-          ...res[0],
-          title: decode(res[0].title),
-          description: decode(res[0].description),
-          other_stream: decode(res[0].other_stream),
-        };
+    return res instanceof Error || !res.length ? null : res[0];
   }
 );
 

@@ -17,7 +17,7 @@ const ArticleWrapper = ({ children, lang, className }: IProps) => (
   <article className="flex">
     <div className="w-0 min-h-[85vh]" />
 
-    <div className={`article ${className ? className : ''}`}>
+    <div className={`article w-full ${className ? className : ''}`}>
       <AdBannerWrapper
         lang={lang}
         className="w-full flex justify-center items-center"

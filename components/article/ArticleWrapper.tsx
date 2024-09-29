@@ -14,28 +14,26 @@ interface IProps extends React.HTMLAttributes<HTMLElement> {
 }
 
 const ArticleWrapper = ({ children, lang, className }: IProps) => (
-  <article className={`article relative ${className ? className : ''}`}>
-    <AdBannerWrapper
-      lang={lang}
-      className="absolute left-0 top-0 w-full flex justify-center items-center"
-    >
-      <AdBanner
-        adsenseId={adsenseId}
-        className="block w-full text-center h-80 md:h-72"
-        dataAttrs={{
-          'data-ad-slot': '1581071444',
-          'data-full-width-responsive': 'true',
-          'data-ad-format': 'auto',
-        }}
-      />
-    </AdBannerWrapper>
+  <article className="flex">
+    <div aria-label="hidden" className="w-0 min-h-[85vh]" />
 
-    <section
-      className="pt-80 md:pt-72"
-      aria-label={lang === ELanguage.UA ? 'Основний контент' : 'Basic content'}
-    >
+    <div className={`article ${className ? className : ''}`}>
+      <AdBannerWrapper
+        lang={lang}
+        className="w-full flex justify-center items-center"
+      >
+        <AdBanner
+          adsenseId={adsenseId}
+          className="block w-full text-center h-80 md:h-72"
+          dataAttrs={{
+            'data-ad-slot': '1581071444',
+            'data-full-width-responsive': 'true',
+            'data-ad-format': 'auto',
+          }}
+        />
+      </AdBannerWrapper>
       {children}
-    </section>
+    </div>
   </article>
 );
 

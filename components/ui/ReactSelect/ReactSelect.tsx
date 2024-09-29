@@ -66,7 +66,6 @@ export const MySelect = <
 }: Props<Option, IsMulti, Group> & IReactSelectProps) => {
   return (
     <>
-      <label htmlFor={selectName} />
       <Select
         instanceId={`${PRE_ID}${selectName}`}
         id={selectName}

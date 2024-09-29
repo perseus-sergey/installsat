@@ -55,7 +55,7 @@ export default function Layout({ children, params }: IProps) {
       </Suspense>
 
       <main className="mx-auto bg-slate-900 w-full max-w-5xl flex min-h-screen sm:rounded-lg sm:border sm:border-stone-400">
-        <div aria-label="hidden" className="w-0 min-h-screen"></div>
+        <div className="w-0 min-h-screen"></div>
 
         <section className="flex flex-col w-full lg:max-w-3xl overflow-x-hidden">
           {children}

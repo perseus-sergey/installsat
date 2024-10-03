@@ -79,6 +79,7 @@ const generateAiText = async ({ channelTitle, language, ifRadio }) => {
 
     const model = genAI.getGenerativeModel({
       model: 'gemini-1.5-flash',
+      generationConfig,
       safetySettings,
       systemInstruction: `
   What do you know about this ${tvRadio} channel?
@@ -161,7 +162,7 @@ const generateAiText = async ({ channelTitle, language, ifRadio }) => {
      `,
     });
 
-    const result = await model.generateContent(prompt, generationConfig);
+    const result = await model.generateContent(prompt);
 
     const { response } = result;
     const cleanResult = response.text().replace(/```json|```/g, '');

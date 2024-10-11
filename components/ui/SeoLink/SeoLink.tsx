@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-interface ISeoLinkProps extends React.HTMLAttributes<HTMLElement> {
+interface ISeoLinkProps extends React.HTMLAttributes<HTMLAnchorElement> {
   children?: React.ReactNode;
   href: string;
   title: string;

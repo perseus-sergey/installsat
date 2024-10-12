@@ -64,7 +64,7 @@ export const generateMetadata = async ({
   const url_date = params[EUrlBaseParam.URL_DATE];
   const lang = getELangKey(params[EUrlBaseParam.LANG]);
 
-  const sqlResult = await getDBOnlineChannel(slug);
+  const sqlResult = await getDBOnlineChannel(slug, lang);
   if (!sqlResult) return DEFAULT_META_DATA[lang];
 
   const { title, description } = sqlResult;
@@ -101,7 +101,7 @@ export default async function Page({ params }: IPageProps) {
   const url_date = params[EUrlBaseParam.URL_DATE];
   const lang = getELangKey(params[EUrlBaseParam.LANG]);
 
-  const sqlResult = await getDBOnlineChannel(slug);
+  const sqlResult = await getDBOnlineChannel(slug, lang);
   if (!sqlResult || !getValidDate(url_date)) notFound();
 
   const {

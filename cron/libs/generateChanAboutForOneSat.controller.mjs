@@ -110,7 +110,8 @@ const getAiChannelAbout = async (dbChannelData) => {
     shouldUpdateData: generatedDataRes.aiDescription,
     shouldUpdateMessage:
       generatedDataRes.error ||
-      `SUCCESS: Generated channel descriptions for "${dbChannelData.title}" channel`,
+      `SUCCESS: Generated channel descriptions for "${JSON.stringify(dbChannelData, null, 2)}" channel`,
+    // `SUCCESS: Generated channel descriptions for "${dbChannelData.title}" channel`,
     langString,
   };
 };

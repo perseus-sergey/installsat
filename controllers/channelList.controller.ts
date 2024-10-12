@@ -108,7 +108,7 @@ export const getSatChannels = cache(
    ch.programma,
    ch.encryption,
    ch.biss,
-   ch.description,
+   ${lang === ELanguage.UA ? 'ch.description' : 'ch.description_en'}  AS description, 
   sat.title AS sat_title,
   sat.position AS sat_position,
   sat.logo AS sat_logo,
@@ -302,7 +302,7 @@ export const getOnlineChannels = cache(
     C.cpu AS chan_cpu,
     C.logo AS chan_logo,
     C.encryption,
-    C.description AS chan_description,
+    ${lang === ELanguage.UA ? 'C.description' : 'C.description_en'}  AS chan_description,
     C.view,
     C.tema AS genre_id,
     C.compress,
@@ -387,7 +387,7 @@ export const getChannelsWithSchedule = async (
       C.title AS chan_title,
       MAX(C.cpu) AS chan_cpu,
       MAX(C.logo) AS chan_logo,
-      MAX(C.description) AS chan_description,
+      MAX(${lang === ELanguage.UA ? 'C.description' : 'C.description_en'}) AS chan_description,
       MAX(C.view) AS view,
       C.tema AS genre_id,
       MAX(L.title) AS lan,
@@ -461,7 +461,7 @@ export const getT2Channels = cache(
      C.cpu AS chan_cpu,
      C.logo AS chan_logo,
      C.encryption,
-     C.description AS chan_description,
+     ${lang === ELanguage.UA ? 'C.description' : 'C.description_en'}  AS chan_description,
      C.tema AS genre_id,
      C.cat AS cat_id,
 
@@ -499,19 +499,28 @@ export const getT2Channels = cache(
 );
 
 export const getPackageChannels = cache(
-  async (packageSlug: string, searchQuery = '') => {
+  async ({
+    packageSlug,
+    searchQuery = '',
+    lang,
+  }: {
+    packageSlug: string;
+    searchQuery?: string;
+    lang: ELanguage;
+  }) => {
     const searchPart = searchQuery ? `AND C.title LIKE "%${searchQuery}%"` : '';
 
     const sql = `
   SELECT 
     cat.id AS cat_id,
     cat.title AS cat_title,
+    ${lang === ELanguage.UA ? 'cat.title' : 'cat.title_en'}  AS cat_title,
     cat.cpu AS cat_slug,
     cat.logo AS cat_logo, 
     cat.description AS cat_description,
     cat.view AS cat_view,
     subcat.cpu AS genre_slug,
-    subcat.title AS genre_title,
+    ${lang === ELanguage.UA ? 'subcat.title' : 'subcat.title_en'}  AS genre_title,
     subcat.h1 AS genre_h1,
     subcat.logo AS genre_logo,
     subcat.description AS genre_description,
@@ -522,7 +531,7 @@ export const getPackageChannels = cache(
     C.title AS chan_title,
     C.cpu AS chan_cpu,
     C.logo AS chan_logo,
-    C.description AS chan_description,
+    ${lang === ELanguage.UA ? 'C.description' : 'C.description_en'} AS chan_description,
     la.title AS lan
   FROM 
     ${CHANNEL_CATEGORY} AS cat

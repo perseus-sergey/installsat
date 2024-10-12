@@ -1,5 +1,4 @@
 import { redirect } from 'next/navigation';
-import './styles.scss';
 import { EUrlBaseParam } from '@/models/url.model';
 import SideBar from '@/components/SideBar/SideBar';
 import { isAdminAuth } from '@/controllers/login.controller';

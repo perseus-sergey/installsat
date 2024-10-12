@@ -17,7 +17,6 @@ export const dynamic = 'force-dynamic';
 // Split all models into smaller models
 // make script to translate all articles
 // add similar trans news links for fly channel page
-// check production trans news revalidation
 // remove tooltip hover for mobiles
 // fix back/forward
 // fix comments

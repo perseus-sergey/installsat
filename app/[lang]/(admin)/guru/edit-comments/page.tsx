@@ -54,14 +54,20 @@ export default async function Page({ searchParams, params }: IPageParams) {
   return (
     <>
       <Title>Edit comments for page</Title>
-      <table className="base-table">
+      <table>
         <tbody>
           {comments.map((comment) => (
             <tr key={comment.id}>
-              <td>{comment.author}</td>
-              <td>{comment.ip}</td>
-              <td>{comment.text}</td>
-              <td className="text-center">
+              <td className="border border-slate-400 py-px px-2">
+                {comment.author}
+              </td>
+              <td className="border border-slate-400 py-px px-2">
+                {comment.ip}
+              </td>
+              <td className="border border-slate-400 py-px px-2">
+                {comment.text}
+              </td>
+              <td className="text-center border border-slate-400 py-px px-2">
                 <TooltipSimple tooltipText="Edit comment">
                   <Link
                     href={`/${lang}/${BASE_PATH}/${EDIT_COMMENT}/${comment.id}?${makeUrlSearchParams(searchParams).toString()}`}
@@ -71,7 +77,7 @@ export default async function Page({ searchParams, params }: IPageParams) {
                   </Link>
                 </TooltipSimple>
               </td>
-              <td className="text-center">
+              <td className="text-center border border-slate-400 py-px px-2">
                 <DeleteItemButton
                   itemID={`${comment.id}`}
                   dbTableName={commentDbTable}

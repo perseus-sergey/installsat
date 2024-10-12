@@ -45,14 +45,14 @@ export default async function Page({
       </Suspense>
 
       {dbResult.length ? (
-        <table className="base-table">
+        <table>
           <tbody>
             {dbResult.map((channel, i) => (
               <tr
                 key={channel.id}
                 className={i % 2 ? 'bg-indigo-100' : undefined}
               >
-                <td>
+                <td className="border border-slate-400 py-px px-2">
                   <Link
                     className="text-blue-800 block"
                     href={`/${lang}/${BASE_PATH}/${CHANNELS_EDIT}/edit/${channel.id}`}
@@ -61,13 +61,21 @@ export default async function Page({
                     {channel.title}
                   </Link>
                 </td>
-                <td>
+                <td className="border border-slate-400 py-px px-2">
                   {channel.sat_title} {channel.sat_position}
                 </td>
-                <td>{channel.category}</td>
-                <td>{channel.cat_parent_title}</td>
-                <td>{channel.compr}</td>
-                <td>{channel.frequency}</td>
+                <td className="border border-slate-400 py-px px-2">
+                  {channel.category}
+                </td>
+                <td className="border border-slate-400 py-px px-2">
+                  {channel.cat_parent_title}
+                </td>
+                <td className="border border-slate-400 py-px px-2">
+                  {channel.compr}
+                </td>
+                <td className="border border-slate-400 py-px px-2">
+                  {channel.frequency}
+                </td>
               </tr>
             ))}
           </tbody>

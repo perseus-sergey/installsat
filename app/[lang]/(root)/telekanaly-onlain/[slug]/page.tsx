@@ -66,7 +66,7 @@ export const generateMetadata = async ({
   const slug = params[SLUG];
   const lang = getELangKey(params[LANG]);
 
-  const sqlResult = await getDBOnlineChannel(slug);
+  const sqlResult = await getDBOnlineChannel(slug, lang);
   if (!sqlResult) return DEFAULT_META_DATA[lang];
 
   const { title: chTitle, description: descr, chan_slug } = sqlResult;
@@ -103,7 +103,7 @@ export default async function Page({ params }: IChannelProps) {
 
   const lang = getELangKey(params[LANG]);
 
-  const sqlResult = await getDBOnlineChannel(slug);
+  const sqlResult = await getDBOnlineChannel(slug, lang);
 
   if (!sqlResult) notFound();
 

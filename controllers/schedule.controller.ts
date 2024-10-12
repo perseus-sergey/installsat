@@ -4,7 +4,7 @@ import { IScheduleTVModel, IVseTvParsModel } from '@/models/scheduleTV.model';
 import { EDBTableTitles } from '@/models/ui.model';
 import { cache } from 'react';
 
-const { TV_SCHEDULE_VSE_TV } = EDBTableTitles;
+const { TV_SCHEDULE_VSE_TV, CHANNELS } = EDBTableTitles;
 
 export const getDBChannelScheduleShort = async (
   dbTableName: EDBTableTitles,
@@ -64,7 +64,7 @@ export const getDBVseTvChannels = async (IDs?: string[]) => {
 
   const sql = `
   SELECT MAX(id) AS id, vsetv, MAX(title) AS title, MAX(cpu) AS cpu
-  FROM tbl_channals
+  FROM ${CHANNELS}
   WHERE vsetv IS NOT NULL
   AND vsetv != 0 
   ${channels}

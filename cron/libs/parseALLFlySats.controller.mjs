@@ -94,14 +94,15 @@ const insertNewSatsToDB = async (newSatellites) => {
   }
 };
 
+const getPathToSat = (url) => url.split('/').slice(-3).join('/');
+
 const findDbOverSats = (dbSats, parsedSats) =>
   dbSats.filter(
     (dbSat) =>
       !parsedSats.some(
         (parsedSat) =>
           parsedSat.title === dbSat.title &&
-          new URL(parsedSat.url_link).pathname ===
-            new URL(dbSat.url_link).pathname &&
+          getPathToSat(parsedSat.url_link) === getPathToSat(dbSat.url_link) &&
           parsedSat.slug === dbSat.slug &&
           parsedSat.position === dbSat.position &&
           parsedSat.cluster === dbSat.cluster

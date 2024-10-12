@@ -12,9 +12,11 @@ const SeoLink = ({
   title,
   ...attributes
 }: ISeoLinkProps) => (
-  <Link {...attributes} aria-label={title} title={title} className={className}>
+  <Link {...attributes} aria-label={title} className={className}>
     {children}
   </Link>
 );
 
 export default SeoLink;
+
+// <Link {...attributes} aria-label={title} title={title} className={className}>

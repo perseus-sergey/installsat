@@ -115,6 +115,7 @@ export const editArticleAction = async (
 export const editChannelAction = async (
   channelID: string,
   channelText: string,
+  channelTextEn: string,
   catId: string,
   satBeamFreq: string,
   revalidateUrl: string[],
@@ -124,9 +125,13 @@ export const editChannelAction = async (
   const {
     title,
     text,
+    text_en,
     logo,
     chan_slug,
     description,
+    description_en,
+    keywords,
+    keywords_en,
     canonical,
     sat_id,
     cat_id,
@@ -157,10 +162,14 @@ export const editChannelAction = async (
   try {
     const validFormData = editChannelSchema.parse({
       [text]: channelText,
+      [text_en]: channelTextEn,
       [logo]: formData.get(logo),
       [title]: formData.get(title),
       [chan_slug]: formData.get(chan_slug),
       [description]: formData.get(description),
+      [description_en]: formData.get(description_en),
+      [keywords]: formData.get(keywords),
+      [keywords_en]: formData.get(keywords_en),
       [cat_id]: catId,
       [canonical]: formData.get(canonical),
       [sat_id]: +sat,

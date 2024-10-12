@@ -65,7 +65,7 @@ export const generateMetadata = async ({
   const res =
     slug === T2_SLUG
       ? await getT2Channels(lang)
-      : await getPackageChannels(slug);
+      : await getPackageChannels({ packageSlug: slug, lang: lang });
 
   if (!res || !res.length) return DEFAULT_META_DATA[lang];
 
@@ -121,7 +121,12 @@ export default async function Page({ params, searchParams }: IPageProps) {
   const getChannelsFn =
     slug === T2_SLUG
       ? () => getT2Channels(lang, searchQueryChannel)
-      : () => getPackageChannels(slug, searchQueryChannel);
+      : () =>
+          getPackageChannels({
+            packageSlug: slug,
+            searchQuery: searchQueryChannel,
+            lang: lang,
+          });
 
   // const numberOfComments = channels
   //   ? await getCommentsNumber(

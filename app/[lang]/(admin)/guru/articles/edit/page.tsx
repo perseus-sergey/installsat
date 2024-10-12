@@ -74,14 +74,18 @@ export default async function Page({ searchParams, params }: IPageParams) {
         searchParams={searchParams}
       />
 
-      <table className="base-table">
+      <table>
         <tbody>
           {allNews.length ? (
             allNews.map((article) => (
               <tr key={article.id}>
-                <td>{article.category_title}</td>
-                <td>{getFormattedDateStrYearFirst(article.date_upd)}</td>
-                <td>
+                <td className="border border-slate-400 py-px px-2">
+                  {article.category_title}
+                </td>
+                <td className="border border-slate-400 py-px px-2">
+                  {getFormattedDateStrYearFirst(article.date_upd)}
+                </td>
+                <td className="border border-slate-400 py-px px-2">
                   <Link
                     href={`/${lang}/${BASE_PATH}/${ARTICLES_EDIT}/edit/${article.id}`}
                     className="flex items-center gap-2"
@@ -89,7 +93,7 @@ export default async function Page({ searchParams, params }: IPageParams) {
                     ✐ <span className="text-blue-800">{article.title}</span>
                   </Link>
                 </td>
-                <td className="text-center">
+                <td className="border border-slate-400 py-px px-2 text-center">
                   {article.category_title === 'deleted' && (
                     <DeleteItemButton
                       itemID={`${article.id}`}

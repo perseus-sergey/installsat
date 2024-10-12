@@ -9,6 +9,7 @@ export interface IChannel {
   logo: string;
   description: string;
   text: string;
+  keywords: string;
   cat_id: number;
   url: string;
   view: number;

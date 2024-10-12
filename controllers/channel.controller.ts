@@ -82,8 +82,9 @@ export const getDBChannel = cache(async (slug: string, lang: ELanguage) => {
     CH.title, 
     CH.cpu AS chan_slug, 
     CH.logo, 
-    CH.description, 
-    CH.text, 
+    ${lang === ELanguage.UA ? 'CH.description' : 'CH.description_en'}  AS description,
+    ${lang === ELanguage.UA ? 'CH.text' : 'CH.text_en'}  AS text,
+    ${lang === ELanguage.UA ? 'CH.keywords' : 'CH.keywords_en'}  AS keywords,
     CH.cat AS cat_id, 
     CH.url, 
     CH.view, 
@@ -100,10 +101,10 @@ export const getDBChannel = cache(async (slug: string, lang: ELanguage) => {
     E.title AS encryption,
     ${lang === ELanguage.UA ? 'T.title' : 'T.title_en'}  AS genre, 
     CO.title AS compression,
-    C.title AS cat_title,
+    ${lang === ELanguage.UA ? 'C.title' : 'C.title_en'}  AS cat_title,
     C.parent AS cat_parent_id,
     C.cpu AS cat_slug,
-    (SELECT title FROM ${CHANNEL_CATEGORY} WHERE id = C.parent LIMIT 1) AS cat_parent_title,
+    (SELECT ${lang === ELanguage.UA ? 'title' : 'title_en'} FROM ${CHANNEL_CATEGORY} WHERE id = C.parent LIMIT 1) AS cat_parent_title,
     (SELECT cpu FROM ${CHANNEL_CATEGORY} WHERE id = C.parent LIMIT 1) AS cat_parent_cpu,
     L.title AS chan_lang
   FROM 
@@ -135,15 +136,16 @@ export const getDBChannel = cache(async (slug: string, lang: ELanguage) => {
 });
 
 export const getDBOnlineChannel = cache(
-  async (slug: string): Promise<IOnlineChannel | null> => {
+  async (slug: string, lang: ELanguage): Promise<IOnlineChannel | null> => {
     const sql = `
   SELECT 
     C.id, 
     C.title, 
     C.cpu AS chan_slug, 
     C.logo, 
-    C.description, 
-    C.text, 
+    ${lang === ELanguage.UA ? 'C.description' : 'C.description_en'}  AS description,
+    ${lang === ELanguage.UA ? 'C.text' : 'C.text_en'}  AS text,
+    ${lang === ELanguage.UA ? 'C.keywords' : 'C.keywords_en'}  AS keywords,
     C.url, 
     C.view, 
     C.canonical, 
@@ -173,21 +175,21 @@ export const getDBOnlineChannel = cache(
   }
 );
 
-export const getSimilarChannels = async (logo: string) => {
+export const getSimilarChannels = async (logo: string, lang: ELanguage) => {
   const sql = `
   SELECT  
     C.id, 
     C.compress, 
     C.cpu,
     C.cat       AS cat_id,
-    CA.title    AS cat_title,
+    ${lang === ELanguage.UA ? 'CA.title' : 'CA.title_en'} AS cat_title,
     CA.cpu      AS cat_slug,
     CA.parent   AS cat_parent_id,
     S.title     AS sat_title,
     S.cpu       AS sat_cpu,
     S.position  AS sat_position,
     F.freq      AS freq,
-    (SELECT title FROM ${CHANNEL_CATEGORY} WHERE id = CA.parent LIMIT 1) AS cat_parent_title,
+    (SELECT ${lang === ELanguage.UA ? 'title' : 'title_en'} FROM ${CHANNEL_CATEGORY} WHERE id = CA.parent LIMIT 1) AS cat_parent_title,
     (SELECT cpu FROM ${CHANNEL_CATEGORY} WHERE id = CA.parent LIMIT 1) AS cat_parent_cpu
   FROM 
     ${CHANNELS} AS C 

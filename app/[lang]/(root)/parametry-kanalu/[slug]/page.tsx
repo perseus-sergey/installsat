@@ -67,6 +67,7 @@ export const generateMetadata = async ({
   const {
     title,
     description,
+    keywords,
     chan_slug,
     cat_parent_id,
     cat_parent_title,
@@ -94,7 +95,7 @@ export const generateMetadata = async ({
     metadataBase: new URL(BASE_URL),
     title: metaTitle,
     description: description || metaTitle,
-    keywords: keywordsBefore[lang] + description,
+    keywords: keywordsBefore[lang] + keywords,
     alternates: {
       canonical: `/${DEFAULT_LANG}/${EUrlBaseParam.CHANNEL_PARAMS}/${addCanonical}`,
       languages: {

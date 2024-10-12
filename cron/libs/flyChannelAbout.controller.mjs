@@ -92,38 +92,17 @@ const generateAiText = async ({ channelTitle, language, ifRadio }) => {
   
   RYRI - Rating of your reliable information about this channel (Number from 0 to 10).
   
-  Use this JSON schema:
+  Format the response as JSON in the following format:
   {
-    "type": "object",
-    "properties": {
-      "reliable-rate": {
-        "type": "number"
-      },
-      "category-number": {
-        "type": "number"
-      },
-      "description-en": {
-        "type": "string"
-      },
-      "description-ua": {
-        "type": "string"
-      },
-      "keywords-en": {
-        "type": "string"
-      },
-      "keywords-ua": {
-        "type": "string"
-      },
-      "text-en": {
-        "type": "string"
-      },
-      "text-ua": {
-        "type": "string"
-      },
-      "site-url": {
-        "type": "string"
-      }
-    }
+    "reliable-rate": [number],
+    "category-number": [number],
+    "text-ua": [string],
+    "text-en": [string],
+    "description-en": [string],
+    "description-ua": [string],
+    "keywords-ua": [string],
+    "keywords-en": [string]
+    "site-url": [string]
   }
   
   where:
@@ -165,11 +144,13 @@ const generateAiText = async ({ channelTitle, language, ifRadio }) => {
     const result = await model.generateContent(prompt);
 
     const { response } = result;
-    const cleanResult = response.text().replace(/```json|```/g, '');
 
-    const jsonParsed = JSON.parse(cleanResult);
+    const startIndex = response.text().indexOf('{');
+    const endIndex = response.text().lastIndexOf('}') + 1;
 
-    return jsonParsed;
+    const cleanResult = response.text().slice(startIndex, endIndex);
+
+    return JSON.parse(cleanResult);
   } catch (error) {
     return error instanceof Error
       ? error

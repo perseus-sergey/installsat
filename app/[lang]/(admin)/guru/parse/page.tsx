@@ -103,6 +103,14 @@ export default async function Page({ params }: IParams) {
         fieldSetTitle="Satellite News"
         labelHtml="Parse Satellite News"
       />
+
+      <ClientInputWithSubmit
+        buttonTitle="Translate"
+        inputBaseHref={`${BASE_PARSE_HREF}/old-channel-translate`}
+        fieldSetTitle="Translate old channels"
+        labelHtml="Translate old channels"
+      />
+
       <ClientInputWithSubmit
         inputId="vse-tv"
         buttonTitle="Schedule VseTv"

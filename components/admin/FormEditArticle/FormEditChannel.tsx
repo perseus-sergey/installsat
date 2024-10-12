@@ -35,6 +35,10 @@ const {
   description,
   cat_id,
   text,
+  text_en,
+  description_en,
+  keywords,
+  keywords_en,
   canonical,
   parent_cat_id,
   sat_id,
@@ -102,6 +106,10 @@ const FormEditChannel = ({
     chan_slug: initArticleData[0].chan_slug,
     description: initArticleData[0].description.replace(/"/g, ''),
     text: initArticleData[0].text,
+    text_en: initArticleData[0].text_en,
+    description_en: initArticleData[0].description_en,
+    keywords: initArticleData[0].keywords,
+    keywords_en: initArticleData[0].keywords_en,
     canonical: initArticleData[0].canonical,
     compress_id: initArticleData[0].compress_id,
     encryption_id: initArticleData[0].encryption_id,
@@ -134,6 +142,7 @@ const FormEditChannel = ({
   );
 
   const editorRef = useRef<CoreEditor | null>(null);
+  const editorEnRef = useRef<CoreEditor | null>(null);
 
   const handleChange = ({
     name,
@@ -160,10 +169,10 @@ const FormEditChannel = ({
     }));
   };
 
-  const handleEditorChange = (content: string) => {
+  const handleEditorChange = (content: string, name: EChannelEditFields) => {
     setFormData((prevData) => ({
       ...prevData,
-      [text]: content,
+      [name]: content,
     }));
   };
 
@@ -177,6 +186,7 @@ const FormEditChannel = ({
     null,
     channelId,
     formData[text] as string,
+    formData[text_en] as string,
     catFinal,
     formData[frequency_id] as string,
     revalidateUrl
@@ -199,6 +209,7 @@ const FormEditChannel = ({
         formState={formState}
         required
       />
+
       <FormTextareaItem
         itemName={chan_slug}
         labelTitle="Slug:"
@@ -210,6 +221,7 @@ const FormEditChannel = ({
         isCopyClipboard
         required
       />
+
       <FormTextareaItem
         itemName={canonical}
         labelTitle="Canonical URL:"
@@ -240,23 +252,64 @@ const FormEditChannel = ({
         required
       />
 
-      <FormTextareaItem
-        itemName={description}
-        labelTitle="Short Description:"
-        description="(Enter text only without tags, replace double quotes
+      <Fieldset legendText="Description" className="p-4">
+        <FormTextareaItem
+          itemName={description}
+          labelTitle="Short Ukrainian Description:"
+          description="(Enter text only without tags, replace double quotes
           with «», it will be written in meta_description)"
-        value={formData[description] as string}
-        handleChange={handleChange}
-        formState={formState}
-        isCopyClipboard
-        required
-      />
-      <section className="w-full inline-block">
+          value={formData[description] as string}
+          handleChange={handleChange}
+          formState={formState}
+          isCopyClipboard
+          required
+        />
+
+        <FormTextareaItem
+          itemName={description_en}
+          labelTitle="Short English Description:"
+          description="(Enter text only without tags, replace double quotes
+          with «», it will be written in meta_description)"
+          value={formData[description_en] as string}
+          handleChange={handleChange}
+          formState={formState}
+          isCopyClipboard
+          required
+        />
+      </Fieldset>
+
+      <Fieldset legendText="Keywords" className="p-4">
+        <FormTextareaItem
+          itemName={keywords}
+          labelTitle="Short Ukrainian Keywords:"
+          description="(Enter text only without tags, replace double quotes
+          with «», it will be written in meta_keywords)"
+          value={formData[keywords] as string}
+          handleChange={handleChange}
+          formState={formState}
+          isCopyClipboard
+          required
+        />
+
+        <FormTextareaItem
+          itemName={keywords_en}
+          labelTitle="Short English Keywords:"
+          description="(Enter text only without tags, replace double quotes
+          with «», it will be written in meta_keywords)"
+          value={formData[keywords_en] as string}
+          handleChange={handleChange}
+          formState={formState}
+          isCopyClipboard
+          required
+        />
+      </Fieldset>
+
+      <Fieldset legendText="Main TEXT" className="w-full inline-block p-4">
         <h2 className="text-center text-xl">
-          <b>Main Text</b>
+          <b>Main Text Ukrainian</b>
         </h2>
         <TinyEditor
-          onEditorChange={handleEditorChange}
+          onEditorChange={(content) => handleEditorChange(content, text)}
           id={text}
           editorApiKey={editorApiKey}
           initialValue={initArticleData[0].text}
@@ -267,7 +320,23 @@ const FormEditChannel = ({
           name={text}
           className="text-red-700"
         />
-      </section>
+
+        <h2 className="text-center text-xl">
+          <b>Main Text English</b>
+        </h2>
+        <TinyEditor
+          onEditorChange={(content) => handleEditorChange(content, text_en)}
+          id={text_en}
+          editorApiKey={editorApiKey}
+          initialValue={initArticleData[0].text_en}
+          editorRef={editorEnRef}
+        />
+        <FieldError
+          formState={formState}
+          name={text_en}
+          className="text-red-700"
+        />
+      </Fieldset>
 
       <DependentSelects
         selectId={cat_id}

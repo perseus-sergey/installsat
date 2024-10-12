@@ -162,6 +162,7 @@ const generateAiText = async (
   
   Ensure all generated text is presented in a neutral, descriptive tone suitable for an encyclopedia or informative website entry.
   Always use in the text and description the original channel's name without translation, without declination and enclose it in Unicode curly quotes (« »).
+  When generating the JSON output, please escape any double quotes within the text with a double backslash (\\). For instance, a phrase like 'He said, "Hello."' should be formatted as 'He said, \\"Hello.\\".'
   The content should be written in the third person, without direct appeals to the reader. 
   Avoid promotional language or calls to action, and focus on providing factual and descriptive content about the channel, its programs, and its significance. The tone should be entirely neutral and informative.
   
@@ -207,8 +208,10 @@ const generateAiText = async (
 
     const startIndex = response.text().indexOf('{');
     const endIndex = response.text().lastIndexOf('}') + 1;
+    console.log('🚀 ~ response.text():', response.text());
 
     const cleanResult = response.text().slice(startIndex, endIndex);
+    console.log('🚀 ~ cleanResult:', cleanResult);
 
     return JSON.parse(cleanResult) as IGeneratedJson;
   } catch (error) {
@@ -219,8 +222,8 @@ const generateAiText = async (
 };
 
 const extractDataFromAiJson = (aiObject: IGeneratedJson) => {
-  const getErrorStr = (errName: string) =>
-    `ERROR: cannot extract channel ${errName} from AI generated descriptions`;
+  const getErrorStr = (errName: string, value = '') =>
+    `ERROR: cannot extract channel ${errName}${value ? `: (${value})` : ''} from AI generated descriptions`;
 
   const reliable_rate = aiObject['reliable_rate'];
 
@@ -239,14 +242,14 @@ const extractDataFromAiJson = (aiObject: IGeneratedJson) => {
   )
     return {
       aiDescription: emptyChannelDescription,
-      error: getErrorStr('EN_DESCRIPTION'),
+      error: getErrorStr('EN_DESCRIPTION', description_en),
     };
 
   const keywords_en = aiObject['keywords_en'].trim();
   if (!keywords_en || keywords_en.length < 30 || keywords_en.length > 230)
     return {
       aiDescription: emptyChannelDescription,
-      error: getErrorStr('EN_KEYWORDS'),
+      error: getErrorStr('EN_KEYWORDS', keywords_en),
     };
 
   const description_ua = aiObject['description_ua'].trim();
@@ -257,14 +260,14 @@ const extractDataFromAiJson = (aiObject: IGeneratedJson) => {
   )
     return {
       aiDescription: emptyChannelDescription,
-      error: getErrorStr('UA_DESCRIPTION'),
+      error: getErrorStr('UA_DESCRIPTION', description_ua),
     };
 
   const keywords_ua = aiObject['keywords_ua'].trim();
   if (!keywords_ua || keywords_ua.length < 30 || keywords_ua.length > 230)
     return {
       aiDescription: emptyChannelDescription,
-      error: getErrorStr('UA_KEYWORDS'),
+      error: getErrorStr('UA_KEYWORDS', keywords_ua),
     };
 
   const text_en = aiObject['text_en'].trim();

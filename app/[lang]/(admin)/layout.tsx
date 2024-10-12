@@ -4,6 +4,7 @@ import SideBar from '@/components/SideBar/SideBar';
 import { isAdminAuth } from '@/controllers/login.controller';
 import { ELanguage } from '@/models/ui.model';
 import SideBarServer from '@/components/SideBar/SideBarServer';
+import ToastProvider from '@/libs/ToastProvider/ToastProvider';
 
 export interface IParams {
   children: React.ReactNode;
@@ -18,7 +19,9 @@ export default async function layout({ children }: IParams) {
         <SideBarServer lang={ELanguage.EN} isAdmin />
       </SideBar>
       <section className="flex flex-col flex-[3] overflow-x-hidden">
-        <article className="article">{children}</article>
+        <article className="article">
+          <ToastProvider>{children}</ToastProvider>
+        </article>
       </section>
     </main>
   );

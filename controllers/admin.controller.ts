@@ -198,6 +198,10 @@ export const getEditDbChannel = async (
         CH.logo, 
         CH.description, 
         CH.text, 
+        CH.text_en, 
+        CH.description_en, 
+        CH.keywords, 
+        CH.keywords_en, 
         CH.sat AS sat_id, 
         CH.frequency AS frequency_id, 
         CH.beam AS beam_id, 
@@ -265,6 +269,58 @@ export const getEditDbChannel = async (
 
   return [frequencies, ...rest];
 };
+
+// export const editChannelDB = async (
+//   channelID: string,
+//   channelData: TChannelEditModel
+// ) =>
+//   await poolExecute<ResultSetHeader>(
+//     `
+//     UPDATE tbl_channals SET
+//       title = ?,
+//       description = ?,
+//       description_en = ?,
+//       text = ?,
+//       text_en = ?,
+//       keywords = ?,
+//       keywords_en = ?,
+//       tema = ?,
+//       logo = ?,
+//       url = ?,
+//       lang = ?,
+//       tvforsite_net = ?,
+//       vsetv = ?,
+//       vipiko = ?,
+//       potok = ?,
+//       pars_uppod = ?,
+//       other_stream = ?,
+//       mark = ?,
+//       pattern = ?
+//     WHERE logo = ?
+//     `,
+//     [
+//       channelData[EChannelEditFields.title],
+//       channelData[EChannelEditFields.description],
+//       channelData[EChannelEditFields.description_en],
+//       channelData[EChannelEditFields.text],
+//       channelData[EChannelEditFields.text_en],
+//       channelData[EChannelEditFields.keywords],
+//       channelData[EChannelEditFields.keywords_en],
+//       `${channelData[EChannelEditFields.genre_id]}`,
+//       channelData[EChannelEditFields.logo] || '',
+//       channelData[EChannelEditFields.url] || '',
+//       `${channelData[EChannelEditFields.lang_id]}`,
+//       channelData[EChannelEditFields.tvforsite_net] || '',
+//       `${channelData[EChannelEditFields.vsetv]}`,
+//       `${channelData[EChannelEditFields.vipiko]}`,
+//       channelData[EChannelEditFields.potok] || '',
+//       channelData[EChannelEditFields.pars_uppod] || '',
+//       channelData[EChannelEditFields.other_stream] || '',
+//       channelData[EChannelEditFields.mark] || '',
+//       channelData[EChannelEditFields.pattern] || '',
+//       channelData[EChannelEditFields.logo] || '',
+//     ]
+//   );
 
 export const editChannelDB = async (
   channelID: string,

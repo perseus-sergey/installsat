@@ -8,7 +8,7 @@ import {
 import { EUrlAdminParam, EUrlSearchParam } from '@/models/url.model';
 import { sendMail } from '@/libs/mail/sendMail';
 import { poolExecute } from '@/libs/db/mysqldb';
-import { sleep } from '@/libs/utils/utils';
+import { cutText, sleep } from '@/libs/utils/utils';
 import { ResultSetHeader } from 'mysql2';
 import {
   GoogleGenerativeAI,
@@ -220,6 +220,9 @@ const generateAiText = async (articleTitle: string, currentText: string) => {
   }
 };
 
+const cutBigText = (text: string) =>
+  text.length < 231 ? text : cutText(text, 230);
+
 const extractDataFromAiJson = (aiObject: IGeneratedJson) => {
   const getErrorStr = (errName: string, value = '') =>
     `ERROR: cannot extract article ${errName}${value ? `: (${value})` : ''} from AI generated descriptions`;
@@ -238,37 +241,29 @@ const extractDataFromAiJson = (aiObject: IGeneratedJson) => {
       error: getErrorStr('TITLE_UA'),
     };
 
-  const description_en = aiObject['description_en'].trim();
-  if (
-    !description_en ||
-    description_en.length < 30 ||
-    description_en.length > 230
-  )
+  const description_en = cutBigText(aiObject['description_en'].trim());
+  if (!description_en || description_en.length < 30)
     return {
       aiDescription: emptyArticleDescription,
       error: getErrorStr('EN_DESCRIPTION', description_en),
     };
 
-  const keywords_en = aiObject['keywords_en'].trim();
-  if (!keywords_en || keywords_en.length < 30 || keywords_en.length > 230)
+  const keywords_en = cutBigText(aiObject['keywords_en'].trim());
+  if (!keywords_en || keywords_en.length < 30)
     return {
       aiDescription: emptyArticleDescription,
       error: getErrorStr('EN_KEYWORDS', keywords_en),
     };
 
-  const description_ua = aiObject['description_ua'].trim();
-  if (
-    !description_ua ||
-    description_ua.length < 30 ||
-    description_ua.length > 230
-  )
+  const description_ua = cutBigText(aiObject['description_ua'].trim());
+  if (!description_ua || description_ua.length < 30)
     return {
       aiDescription: emptyArticleDescription,
       error: getErrorStr('UA_DESCRIPTION', description_ua),
     };
 
-  const keywords_ua = aiObject['keywords_ua'].trim();
-  if (!keywords_ua || keywords_ua.length < 30 || keywords_ua.length > 230)
+  const keywords_ua = cutBigText(aiObject['keywords_ua'].trim());
+  if (!keywords_ua || keywords_ua.length < 30)
     return {
       aiDescription: emptyArticleDescription,
       error: getErrorStr('UA_KEYWORDS', keywords_ua),

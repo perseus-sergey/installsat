@@ -112,6 +112,13 @@ export default async function Page({ params }: IParams) {
       />
 
       <ClientInputWithSubmit
+        buttonTitle="Translate"
+        inputBaseHref={`${BASE_PARSE_HREF}/old-articles-translate`}
+        fieldSetTitle="Translate old articles"
+        labelHtml="Translate old articles"
+      />
+
+      <ClientInputWithSubmit
         inputId="vse-tv"
         buttonTitle="Schedule VseTv"
         inputDefaultValue={VSE_TV_DEFAULT_ID}

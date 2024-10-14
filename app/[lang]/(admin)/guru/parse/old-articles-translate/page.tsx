@@ -1,6 +1,11 @@
 import { Title } from '@/components/ui/Titles/Title';
-import { EDBTableTitles, ELanguage, getDbTableLink } from '@/models/ui.model';
-import { EUrlAdminParam } from '@/models/url.model';
+import {
+  EDBTableTitles,
+  ELanguage,
+  getDbTableLink,
+  TSearchParams,
+} from '@/models/ui.model';
+import { EUrlAdminParam, EUrlSearchParam } from '@/models/url.model';
 import { sendMail } from '@/libs/mail/sendMail';
 import { poolExecute } from '@/libs/db/mysqldb';
 import { sleep } from '@/libs/utils/utils';
@@ -11,6 +16,7 @@ import {
   HarmCategory,
 } from '@google/generative-ai';
 import { WRONG_CAT_IDS } from '@/controllers/articles.controller';
+import { validSearchParam } from '@/libs/utils/validSearchParam';
 
 export const dynamic = 'force-dynamic';
 
@@ -18,7 +24,7 @@ const BASE_URL = process.env.BASE_URL;
 
 const { ARTICLE } = EDBTableTitles;
 
-const SIMULTANEOUS_GENERATE_LIMIT = 1;
+// const SIMULTANEOUS_GENERATE_LIMIT = 1;
 
 interface IDbArticleDataAbout {
   title_en: string | null;
@@ -60,13 +66,13 @@ const emptyArticleDescription: IDbArticleDataAbout = {
   keywords_en: null,
 };
 
-const getSatArticlesFromDB = async () => {
+const getSatArticlesFromDB = async (quantity: string) => {
   const sql = `
   SELECT id, title, text, cpu
   FROM ${ARTICLE}
   WHERE text_en = ''
   AND cat NOT IN ${WRONG_CAT_IDS}
-  LIMIT ${SIMULTANEOUS_GENERATE_LIMIT};
+  LIMIT ${quantity};
   `;
   const res = await poolExecute<IDbCurrentArticle[]>(sql);
 
@@ -351,10 +357,10 @@ const extractAndUpdateData = async (dbArticleData: IDbCurrentArticle) => {
   return { extractAndUpdateMessages: messages };
 };
 
-const addDescriptionForArticles = async () => {
+const addDescriptionForArticles = async (quantity: string) => {
   const messages = [];
 
-  const dbArticlesRes = await getSatArticlesFromDB();
+  const dbArticlesRes = await getSatArticlesFromDB(quantity);
   if (typeof dbArticlesRes === 'string') return [dbArticlesRes];
 
   for (const article of dbArticlesRes) {
@@ -369,17 +375,17 @@ const addDescriptionForArticles = async () => {
   return messages;
 };
 
-const sendReportMail = async (errorMessages: string[]) => {
+const sendReportMail = async (errorMessages: string[], quantity: string) => {
   const { renderAsync } = await import('@react-email/render');
   const { ParseTransNews } = await import(
     '@/components/EmailTemplates/parseTransNews.template'
   );
 
   await sendMail({
-    subject: `Generate AI description for "${SIMULTANEOUS_GENERATE_LIMIT}" articles`,
+    subject: `Generate AI description for "${quantity}" articles`,
     body: await renderAsync(
       <ParseTransNews
-        title={`Generate AI description for "${SIMULTANEOUS_GENERATE_LIMIT}" articles`}
+        title={`Generate AI description for "${quantity}" articles`}
         pathToMainParsePage={`${BASE_URL}/${ELanguage.EN}/${EUrlAdminParam.BASE_PATH}/${EUrlAdminParam.PARSE}`}
         errorMessages={errorMessages}
         dbTableHref={getDbTableLink(EDBTableTitles.ARTICLE)}
@@ -389,15 +395,21 @@ const sendReportMail = async (errorMessages: string[]) => {
   });
 };
 
-export default async function Page() {
-  const messages = await addDescriptionForArticles();
+export default async function Page({
+  searchParams,
+}: {
+  searchParams?: TSearchParams;
+}) {
+  const quantity = validSearchParam(EUrlSearchParam.INTERVAL, searchParams);
 
-  await sendReportMail(messages);
+  const messages = await addDescriptionForArticles(quantity);
+
+  await sendReportMail(messages, quantity);
 
   return (
     <>
       <Title>
-        {`Generate description article data for ${SIMULTANEOUS_GENERATE_LIMIT} articles`}
+        {`Generate description article data for ${quantity} articles`}
       </Title>
 
       <h2 className="font-bold text-blue-700 text-xl">Messages:</h2>

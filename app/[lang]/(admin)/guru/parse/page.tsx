@@ -116,6 +116,10 @@ export default async function Page({ params }: IParams) {
         inputBaseHref={`${BASE_PARSE_HREF}/old-articles-translate`}
         fieldSetTitle="Translate old articles"
         labelHtml="Translate old articles"
+        inputId="add-slug-grade"
+        inputDefaultValue={20}
+        inputType="number"
+        searchParamName={EUrlSearchParam.INTERVAL}
       />
 
       <ClientInputWithSubmit

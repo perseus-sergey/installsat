@@ -10,19 +10,19 @@ import {
   HarmBlockThreshold,
   HarmCategory,
 } from '@google/generative-ai';
+import { WRONG_CAT_IDS } from '@/controllers/articles.controller';
 
 export const dynamic = 'force-dynamic';
 
 const BASE_URL = process.env.BASE_URL;
 
-const { CHANNELS, TBL_LANGUAGE } = EDBTableTitles;
+const { ARTICLE } = EDBTableTitles;
 
-const SIMULTANEOUS_GENERATE_LIMIT = 30;
+const SIMULTANEOUS_GENERATE_LIMIT = 1;
 
-const RELIABLE_THRESHOLD = 9;
-
-interface IDbChannelDataAbout {
-  title: string | null;
+interface IDbArticleDataAbout {
+  title_en: string | null;
+  title_ua: string | null;
   text_ua: string | null;
   text_en: string | null;
   description_en: string | null;
@@ -32,8 +32,8 @@ interface IDbChannelDataAbout {
 }
 
 interface IGeneratedJson {
-  reliable_rate: number;
-  title: string;
+  title_en: string;
+  title_ua: string;
   text_ua: string;
   text_en: string;
   description_en: string;
@@ -42,14 +42,16 @@ interface IGeneratedJson {
   keywords_en: string;
 }
 
-interface IDbCurrentChannel {
+interface IDbCurrentArticle {
+  cpu: string;
   title: string;
-  lang: string;
+  id: string;
   text: string;
 }
 
-const emptyChannelDescription: IDbChannelDataAbout = {
-  title: null,
+const emptyArticleDescription: IDbArticleDataAbout = {
+  title_en: null,
+  title_ua: null,
   text_ua: null,
   text_en: null,
   description_en: null,
@@ -58,39 +60,40 @@ const emptyChannelDescription: IDbChannelDataAbout = {
   keywords_en: null,
 };
 
-const getSatChannelsFromDB = async () => {
+const getSatArticlesFromDB = async () => {
   const sql = `
-  SELECT C.title, MAX(C.text) as text, MAX(L.title) as lang
-  FROM ${CHANNELS} AS C
-  LEFT JOIN ${TBL_LANGUAGE} AS L ON C.lang = L.id
-  WHERE text_en IS NULL
-  GROUP BY C.title
+  SELECT id, title, text, cpu
+  FROM ${ARTICLE}
+  WHERE text_en = ''
+  AND cat NOT IN ${WRONG_CAT_IDS}
   LIMIT ${SIMULTANEOUS_GENERATE_LIMIT};
   `;
-  const res = await poolExecute<IDbCurrentChannel[]>(sql);
+  const res = await poolExecute<IDbCurrentArticle[]>(sql);
 
   return res instanceof Error
-    ? `ERROR: SELECT channel titles from satellite: "${CHANNELS}". Error message: ${res.message}`
+    ? `ERROR: SELECT articles from table: "${ARTICLE}". Error message: ${res.message}`
     : res;
 };
 
 const updateGeneratedDataDB = async (
   {
-    title,
+    title_en,
+    title_ua,
     text_ua,
     text_en,
     description_en,
     description_ua,
     keywords_ua,
     keywords_en,
-  }: IDbChannelDataAbout,
-  channelName: string
+  }: IDbArticleDataAbout,
+  articleId: string
 ) => {
-  if (!title) return new Error('ERROR: Cannot UPDATE DB. Title is NULL');
+  if (!title_ua) return new Error('ERROR: Cannot UPDATE DB. title_ua is NULL');
 
   const sql = `
-      UPDATE ${CHANNELS}
+      UPDATE ${ARTICLE}
       SET
+        title_en = ?, 
         title = ?, 
         text = ?, 
         text_en = ?, 
@@ -98,32 +101,29 @@ const updateGeneratedDataDB = async (
         description = ?, 
         keywords = ?, 
         keywords_en = ?
-      WHERE title = ? 
+      WHERE id = ? 
     `;
   const res = await poolExecute<ResultSetHeader>(sql, [
-    title,
+    title_en,
+    title_ua,
     text_ua,
     text_en,
     description_en,
     description_ua,
     keywords_ua,
     keywords_en,
-    channelName,
+    articleId,
   ]);
 
   return res instanceof Error ? res : res.affectedRows;
 };
 
-const generateAiText = async (
-  channelTitle: string,
-  lang: string,
-  currentText: string
-) => {
+const generateAiText = async (articleTitle: string, currentText: string) => {
   const generationConfig = {
     temperature: 0.5,
     topP: 0.95,
     topK: 64,
-    maxOutputTokens: 4000,
+    maxOutputTokens: 8192,
     stopSequences: ['something for everyone'],
     responseMimeType: 'text/plain',
   };
@@ -147,9 +147,8 @@ const generateAiText = async (
     },
   ];
 
-  // Channel name: "Gamma Cinema 5", Probable broadcast language: العربية (Arabic)
+  const prompt = `Article title: '${articleTitle}';\n Article content:'${currentText}'`;
 
-  const prompt = `Channel name: "${channelTitle}"${lang ? `, Probable broadcast or translate language: ${lang}` : ''}, SPECIAL HINT: "${currentText}"`;
   try {
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
 
@@ -158,48 +157,45 @@ const generateAiText = async (
       generationConfig,
       safetySettings,
       systemInstruction: `
-  What do you know about this channel?
-  
-  Ensure all generated text is presented in a neutral, descriptive tone suitable for an encyclopedia or informative website entry.
-  Always use in the text and description the original channel's name without translation, without declination and enclose it in Unicode curly quotes (« »).
-  When generating the JSON output, please escape any double quotes within the text with a double backslash (\\). For instance, a phrase like 'He said, "Hello."' should be formatted as 'He said, \\"Hello.\\".'
-  The content should be written in the third person, without direct appeals to the reader. 
-  Avoid promotional language or calls to action, and focus on providing factual and descriptive content about the channel, its programs, and its significance. The tone should be entirely neutral and informative.
-  
-  RYRI - Rating of your reliable information about this channel (Number from 0 to 10).
-  
-  Format the response as JSON in the following format:
-  {
-    "reliable_rate": [number],
-    "title": [string],
-    "text_ua": [string],
-    "text_en": [string],
-    "description_en": [string],
-    "description_ua": [string],
-    "keywords_ua": [string],
-    "keywords_en": [string]
-  }
-  
-  where:
-  
-  - 'reliable_rate' - RYRI.
+         Translate the article to Ukrainian and English.
+    - Wrap important relevant to article title words in the article in a tag <strong>, but not more than 5% (for each language) from the content of the article.
+    - Make short description of the article about 150 - 200 characters length for the <meta name=description>.
+    - Select relevant search keywords that will be used on the page in the <meta name=keywords>.
 
-  - Only if the RYRI < ${RELIABLE_THRESHOLD}, use a SPECIAL HINT.
+    - Articles must be written in Ukrainian and English.
 
-  - 'title' - Channel name. (${lang === 'Украинский' ? 'If the name of the channel is written in Russian, translate it into Ukrainian' : `Leave "${channelTitle}"`}). Do not use Unicode curly quotes (« ») here.
-  
-  - 'description_en', 'description_ua' - Provide a concise description (in English and Ukrainian) for this channel, suitable for a meta description tag for SEO, from 50 to 200 characters in each language.
-  
-  - 'keywords_en', 'keywords_ua' - List relevant keywords (in English and Ukrainian) for this channel, separated by commas, suitable for a meta keywords tag for SEO, from 50 to 200 characters in each language.
-  
-  - 'text_en', 'text_ua' - write up to 10 paragraphs (<p>) for each languages (English and Ukrainian) that provide a descriptive overview of the channel. 
-    - e.g., '<p>[Paragraph 1]</p><p>[Paragraph 2]</p><p>[Paragraph N]</p>'
-   - Do not add newline character (\n).
-    - Wrap relevant and important keywords or phrases in <strong> tags to optimize for SEO, ensuring it enhances the readability and value of the content without appearing excessive or spammy.
-    - The text must be unique and not plagiarized.
-    - Do not insert any links into the content.
-    - If the channel is Russian or Belarusian news, write about it in a skeptical style.
-     `,
+    - Also translate the text of the alt attribute
+
+    - Use html format with relevant attributes (aria-, alt, title, etc.), but it is allowed to use only tags: <p>, <span>, <e>, <strong>, <b>, <a>, <ul>, <li>, <ol>, <img>, <figure>, <figcaption>, <h2>-<h4>. 
+    - Remove all <br> tags. Do not add newline character (\n) into the text. 
+    - If there are images next to descriptive text on the page, use the following format: for example (instead of:
+    '<a style="float: right; margin: 0 15px 10px 10px;" href="pic_trulli_big.jpg"> <img src="pic_trulli.jpg" alt="Trulli" width="350" height="256"> </a>
+    <p><br><br>Trulli, Puglia, Italy.</p>'
+     use:
+    '<figure style="display: flex; flex-direction: row; gap: 1rem; justify-content: center; align-items: center; flex-wrap : wrap;">
+    <a href="pic_trulli_big.jpg">
+     <img src="pic_trulli.jpg" alt="Trulli" style="width: 350px; height: 256px">
+     </a>
+     <figcaption>Trulli, Puglia, Italy.</figcaption>
+    </figure>'
+    )
+    - if there are links with the [target="_blank"] attribute in the text, be sure to also add the [rel="noopener noreferrer"] attribute
+
+    - Format the response as JSON in the following format:
+      {
+        "title_en": [Title in English without html tags],
+        "title_ua": [Title in Ukrainian without html tags],
+        "text_ua": [Text in Ukrainian. Do not add newline character (\n)],
+        "text_en": [Text in English. Do not add newline character (\n)],
+        "description_en": [Description in English (150 - 200 characters maximum)],
+        "description_ua": [Description in Ukrainian (150 - 200 characters maximum)],
+        "keywords_ua": [Keywords in Ukrainian (150 - 200 characters maximum)],
+        "keywords_en": [Keywords in English (150 - 200 characters maximum)]
+      }
+
+    - Do not add newline character (\n) into the text.
+    - Do not wrap the text in \`\`\`json \`\`\`
+         `,
     });
 
     const result = await model.generateContent(prompt);
@@ -208,7 +204,6 @@ const generateAiText = async (
 
     const startIndex = response.text().indexOf('{');
     const endIndex = response.text().lastIndexOf('}') + 1;
-
     const cleanResult = response.text().slice(startIndex, endIndex);
 
     return JSON.parse(cleanResult) as IGeneratedJson;
@@ -221,15 +216,20 @@ const generateAiText = async (
 
 const extractDataFromAiJson = (aiObject: IGeneratedJson) => {
   const getErrorStr = (errName: string, value = '') =>
-    `ERROR: cannot extract channel ${errName}${value ? `: (${value})` : ''} from AI generated descriptions`;
+    `ERROR: cannot extract article ${errName}${value ? `: (${value})` : ''} from AI generated descriptions`;
 
-  const reliable_rate = aiObject['reliable_rate'];
-
-  const title = aiObject['title'].trim();
-  if (!title)
+  const title_en = aiObject['title_en'].trim();
+  if (!title_en)
     return {
-      aiDescription: emptyChannelDescription,
-      error: getErrorStr('TITLE'),
+      aiDescription: emptyArticleDescription,
+      error: getErrorStr('TITLE_EN'),
+    };
+
+  const title_ua = aiObject['title_ua'].trim();
+  if (!title_ua)
+    return {
+      aiDescription: emptyArticleDescription,
+      error: getErrorStr('TITLE_UA'),
     };
 
   const description_en = aiObject['description_en'].trim();
@@ -239,14 +239,14 @@ const extractDataFromAiJson = (aiObject: IGeneratedJson) => {
     description_en.length > 230
   )
     return {
-      aiDescription: emptyChannelDescription,
+      aiDescription: emptyArticleDescription,
       error: getErrorStr('EN_DESCRIPTION', description_en),
     };
 
   const keywords_en = aiObject['keywords_en'].trim();
   if (!keywords_en || keywords_en.length < 30 || keywords_en.length > 230)
     return {
-      aiDescription: emptyChannelDescription,
+      aiDescription: emptyArticleDescription,
       error: getErrorStr('EN_KEYWORDS', keywords_en),
     };
 
@@ -257,35 +257,35 @@ const extractDataFromAiJson = (aiObject: IGeneratedJson) => {
     description_ua.length > 230
   )
     return {
-      aiDescription: emptyChannelDescription,
+      aiDescription: emptyArticleDescription,
       error: getErrorStr('UA_DESCRIPTION', description_ua),
     };
 
   const keywords_ua = aiObject['keywords_ua'].trim();
   if (!keywords_ua || keywords_ua.length < 30 || keywords_ua.length > 230)
     return {
-      aiDescription: emptyChannelDescription,
+      aiDescription: emptyArticleDescription,
       error: getErrorStr('UA_KEYWORDS', keywords_ua),
     };
 
   const text_en = aiObject['text_en'].trim();
   if (!text_en || text_en.length < 100)
     return {
-      aiDescription: emptyChannelDescription,
+      aiDescription: emptyArticleDescription,
       error: getErrorStr('EN_CONTENT'),
     };
 
   const text_ua = aiObject['text_ua'].trim();
   if (!text_ua || text_ua.length < 100)
     return {
-      aiDescription: emptyChannelDescription,
+      aiDescription: emptyArticleDescription,
       error: getErrorStr('UA_CONTENT'),
     };
 
   return {
     aiDescription: {
-      reliable_rate,
-      title,
+      title_en,
+      title_ua,
       text_ua,
       text_en,
       description_en,
@@ -297,17 +297,16 @@ const extractDataFromAiJson = (aiObject: IGeneratedJson) => {
   };
 };
 
-const generateChannelAbout = async (
-  channelTitle: string,
-  lang: string,
+const generateArticleAbout = async (
+  articleTitle: string,
   currentText: string
 ) => {
-  const aiText = await generateAiText(channelTitle, lang, currentText);
+  const aiText = await generateAiText(articleTitle, currentText);
 
   if (aiText instanceof Error) {
     return {
-      aiDescription: emptyChannelDescription,
-      error: `ERROR: AI cannot generate content. Channel: ${channelTitle}. Error message: ${aiText.message}`,
+      aiDescription: emptyArticleDescription,
+      error: `ERROR: AI cannot generate content. Article: ${articleTitle}. Error message: ${aiText.message}`,
     };
   }
 
@@ -316,52 +315,51 @@ const generateChannelAbout = async (
   return extractedAiData;
 };
 
-const getAiChannelAbout = async (dbChannelData: IDbCurrentChannel) => {
-  const generatedDataRes = await generateChannelAbout(
-    dbChannelData.title,
-    dbChannelData.lang,
-    dbChannelData.text
+const getAiArticleAbout = async (dbArticleData: IDbCurrentArticle) => {
+  const generatedDataRes = await generateArticleAbout(
+    dbArticleData.title,
+    dbArticleData.text
   );
 
   return {
     shouldUpdateData: generatedDataRes.aiDescription,
     shouldUpdateMessage:
       generatedDataRes.error ||
-      `SUCCESS: Generated channel descriptions for "${dbChannelData.title}" channel`,
+      `SUCCESS: Generated article descriptions for "${dbArticleData.title}" article`,
   };
 };
 
-const extractAndUpdateData = async (dbChannelData: IDbCurrentChannel) => {
+const extractAndUpdateData = async (dbArticleData: IDbCurrentArticle) => {
   const messages = [];
 
   const { shouldUpdateData, shouldUpdateMessage } =
-    await getAiChannelAbout(dbChannelData);
+    await getAiArticleAbout(dbArticleData);
 
   if (shouldUpdateMessage) messages.push(shouldUpdateMessage);
 
   const updateAllChanWithSameTitleRes = await updateGeneratedDataDB(
     shouldUpdateData,
-    dbChannelData.title
+    dbArticleData.id
   );
 
   messages.push(
     updateAllChanWithSameTitleRes instanceof Error
-      ? `ERROR: DB UPDATE data for channels with title "${dbChannelData.title}". Error message: ${updateAllChanWithSameTitleRes.message}`
-      : `SUCCESS: Add ${updateAllChanWithSameTitleRes} channel descriptions for "${dbChannelData.title}" channel(s)`
+      ? `ERROR: DB UPDATE data for articles with title "${dbArticleData.title}". Error message: ${updateAllChanWithSameTitleRes.message}`
+      : `SUCCESS: Add ${updateAllChanWithSameTitleRes} article descriptions for "${dbArticleData.title}" article(s)`
   );
 
   return { extractAndUpdateMessages: messages };
 };
 
-const addDescriptionForChannels = async () => {
+const addDescriptionForArticles = async () => {
   const messages = [];
 
-  const dbChannelsRes = await getSatChannelsFromDB();
-  if (typeof dbChannelsRes === 'string') return [dbChannelsRes];
+  const dbArticlesRes = await getSatArticlesFromDB();
+  if (typeof dbArticlesRes === 'string') return [dbArticlesRes];
 
-  for (const channel of dbChannelsRes) {
-    messages.push(`┌──────────────── "${channel.title}" ────────────────┐`);
-    const { extractAndUpdateMessages } = await extractAndUpdateData(channel);
+  for (const article of dbArticlesRes) {
+    messages.push(`┌──────────────── "${article.cpu}" ────────────────┐`);
+    const { extractAndUpdateMessages } = await extractAndUpdateData(article);
     messages.push(...extractAndUpdateMessages);
     messages.push(`└──────────────────────────┘`);
 
@@ -378,13 +376,13 @@ const sendReportMail = async (errorMessages: string[]) => {
   );
 
   await sendMail({
-    subject: `Generate AI description for "${SIMULTANEOUS_GENERATE_LIMIT}" channels`,
+    subject: `Generate AI description for "${SIMULTANEOUS_GENERATE_LIMIT}" articles`,
     body: await renderAsync(
       <ParseTransNews
-        title={`Generate AI description for "${SIMULTANEOUS_GENERATE_LIMIT}" channels`}
+        title={`Generate AI description for "${SIMULTANEOUS_GENERATE_LIMIT}" articles`}
         pathToMainParsePage={`${BASE_URL}/${ELanguage.EN}/${EUrlAdminParam.BASE_PATH}/${EUrlAdminParam.PARSE}`}
         errorMessages={errorMessages}
-        dbTableHref={getDbTableLink(EDBTableTitles.CHANNELS)}
+        dbTableHref={getDbTableLink(EDBTableTitles.ARTICLE)}
         hrefSources=""
       />
     ),
@@ -392,14 +390,14 @@ const sendReportMail = async (errorMessages: string[]) => {
 };
 
 export default async function Page() {
-  const messages = await addDescriptionForChannels();
+  const messages = await addDescriptionForArticles();
 
   await sendReportMail(messages);
 
   return (
     <>
       <Title>
-        {`Generate description channel data for ${SIMULTANEOUS_GENERATE_LIMIT} channels`}
+        {`Generate description article data for ${SIMULTANEOUS_GENERATE_LIMIT} articles`}
       </Title>
 
       <h2 className="font-bold text-blue-700 text-xl">Messages:</h2>
@@ -424,3 +422,6 @@ export default async function Page() {
 //         theme_id = null
 //       WHERE title = 'Prime One'
 //       WHERE title IN ('title1', 'title2', 'title3')
+
+// Article title: 'Установка спутниковой антенны'
+// Article content: '<p><strong>Установка антенны</strong> для приема каналов со спутников состоит из нескольких этапов:</p>

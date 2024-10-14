@@ -29,6 +29,7 @@ import TextUnderH1 from '@/components/TextUnderH1/TextUnderH1';
 import SeoLink from '@/components/ui/SeoLink/SeoLink';
 import { Suspense } from 'react';
 import ArticleWrapper from '@/components/article/ArticleWrapper';
+import { getNewsForSiteMap } from '@/controllers/siteMap.controller';
 
 const { currentImg, defaultImg, altStart } = ARTICLE_CARD_IMAGES.h1Image;
 
@@ -95,6 +96,14 @@ export const generateMetadata = async ({
     },
   };
 };
+
+export const dynamicParams = false;
+
+export async function generateStaticParams() {
+  const articleSlugs = await getNewsForSiteMap();
+
+  return articleSlugs.map((art) => ({ article: art.cpu }));
+}
 
 export default async function Page({ params }: IArticleParams) {
   const article = params[ARTICLE_PARAM];

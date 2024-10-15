@@ -1,22 +1,53 @@
 import { poolExecute } from '@/libs/db/mysqldb';
-import { TChannelCatsModel } from '@/models/tblChannelCateg.model';
 import { ISatModel } from '@/models/tblSat.model';
-import { NUMBER_OF_LAST_NEWS_WIDGET } from '@/models/widget.model';
+import { NUMBER_OF_LAST_NEWS_WIDGET } from '@/models/ui/widget.model';
 import { cache } from 'react';
-import { WRONG_CAT_IDS } from './articles.controller';
-import { IAllNewsModel } from '@/models/articles.model';
-import { DEFAULT_LANG, EDBTableTitles, ELanguage } from '@/models/ui.model';
+import { EDBTableTitles } from '@/models/dbTblNames.model';
+import { DEFAULT_LANG, ELanguage } from '@/models/language.model';
+import {
+  IAllNewsModel,
+  WRONG_CAT_IDS,
+} from '@/models/articles/articleList.model';
+
+interface IChannelCatsModel {
+  id: number;
+  location: number;
+  parent: number;
+  view: number;
+  title: string;
+  cpu: string;
+  text: string;
+  logo: string;
+  h1: string;
+  description: string;
+  price: number;
+}
 
 const {
   ARTICLE: TBL_ARTICLE,
   FLY_SATELLITES,
   CHANNEL_CATEGORY,
+  ARTICLE_CATEGORIES,
 } = EDBTableTitles;
+
+export const getArtCatListSideBar = async (lang: ELanguage) => {
+  const sql = `
+  SELECT
+    ${lang === ELanguage.UA ? 'title' : 'title_en'} AS title,
+    cpu
+  FROM ${ARTICLE_CATEGORIES} 
+  WHERE id NOT IN ${WRONG_CAT_IDS}
+  `;
+
+  const res = await poolExecute<{ title: string; cpu: string }[]>(sql);
+
+  return res instanceof Error ? [] : res;
+};
 
 export const getChannelCatList = cache(async (lang = DEFAULT_LANG) => {
   const titleField = lang === ELanguage.UA ? 'title' : 'title_en AS title';
 
-  return await poolExecute<TChannelCatsModel[]>(
+  return await poolExecute<IChannelCatsModel[]>(
     `
       SELECT 
         ${titleField}, 

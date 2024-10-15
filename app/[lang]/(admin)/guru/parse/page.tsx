@@ -4,13 +4,11 @@ import ClientInputWithSubmit, {
 } from '@/components/ClientInputWithSubmit/ClientInputWithSubmit';
 import { Title } from '@/components/ui/Titles/Title';
 import { poolExecute } from '@/libs/db/mysqldb';
-import { getELangKey } from '@/libs/utils/validSearchParam';
-import { EDBTableTitles } from '@/models/ui.model';
-import {
-  EUrlAdminParam,
-  EUrlBaseParam,
-  EUrlSearchParam,
-} from '@/models/url.model';
+import { getELangKey } from '@/libs/utils/getLanguage';
+import { EDBTableTitles } from '@/models/dbTblNames.model';
+import { EUrlBaseParam } from '@/models/url/url.model';
+import { EUrlAdminParam } from '@/models/url/urlAdmin.model';
+import { EUrlSearchParam } from '@/models/url/urlSearch.model';
 import Link from 'next/link';
 
 const { FLY_SATELLITES } = EDBTableTitles;

@@ -1,10 +1,11 @@
-import { EDBTableTitles, ELanguage } from '@/models/ui.model';
+import { EDBTableTitles } from '@/models/dbTblNames.model';
 import { DateTime } from 'luxon';
 import { getDBChannelScheduleShort } from '@/controllers/schedule.controller';
-import { IOnlineChannel } from '@/models/channel.model';
+import { IOnlineChannel } from '@/models/channels/channel.model';
 import { TitleH2 } from '../ui/Titles/TitleH2';
 import { SCHEDULE_META } from '@/models/scheduleTV.model';
 import ScheduleItem from '../ScheduleItem/ScheduleItem';
+import { ELanguage } from '@/models/language.model';
 
 const {
   defaultHoursBeforeNow,

@@ -1,24 +1,20 @@
 import { Title } from '@/components/ui/Titles/Title';
 import puppeteer from 'puppeteer';
 import * as cheerio from 'cheerio';
-import {
-  EDBTableTitles,
-  ELanguage,
-  TSearchParams,
-  getDbTableLink,
-} from '@/models/ui.model';
 import { getContentFromPuppeteerBrowser } from '@/controllers/parse.controller';
 import Link from 'next/link';
 import { poolExecute } from '@/libs/db/mysqldb';
 import { DateTime } from 'luxon';
 import { validSearchParam } from '@/libs/utils/validSearchParam';
-import { EUrlSearchParam } from '@/models/url.model';
 import { ResultSetHeader } from 'mysql2';
 import { EUrlAdminParam, killChromeProcesses } from '@/cron/libs/commons.mjs';
 import { sendMail } from '@/libs/mail/sendMail';
 import { renderAsync } from '@react-email/render';
 import { ParseTransNews } from '@/components/EmailTemplates/parseTransNews.template';
 import { parseFlyChannels } from '@/cron/libs/parseFlySat.controller.mjs';
+import { ELanguage } from '@/models/language.model';
+import { EDBTableTitles, getDbTableLink } from '@/models/dbTblNames.model';
+import { EUrlSearchParam, TSearchParams } from '@/models/url/urlSearch.model';
 
 export const dynamic = 'force-dynamic';
 

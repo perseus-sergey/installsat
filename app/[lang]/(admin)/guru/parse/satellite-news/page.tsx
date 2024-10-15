@@ -1,17 +1,14 @@
 import { Title } from '@/components/ui/Titles/Title';
-import { EUrlAdminParam } from '@/models/url.model';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import * as React from 'react';
 import puppeteer, { Browser } from 'puppeteer';
 import * as cheerio from 'cheerio';
 import { getContentFromPuppeteerBrowser } from '@/controllers/parse.controller';
 import { poolExecute } from '@/libs/db/mysqldb';
-import { EDBTableTitles, getDbTableLink } from '@/models/ui.model';
 import { ResultSetHeader } from 'mysql2';
 import { sendMail } from '@/libs/mail/sendMail';
 import { renderAsync } from '@react-email/render';
 import { ParseTransNews } from '@/components/EmailTemplates/parseTransNews.template';
-import { DEFAULT_ARTICLE_LOGO_NAME } from '@/models/articles.model';
 import {
   SOURCE_ARTICLE_PARAMS,
   extractAiArticleDataFromAiHTML,
@@ -23,6 +20,9 @@ import {
   killChromeProcesses,
 } from '@/cron/libs/commons.mjs';
 import { revalidatePath } from 'next/cache';
+import { DEFAULT_ARTICLE_LOGO_NAME } from '@/models/ui/image.model';
+import { EUrlAdminParam } from '@/models/url/urlAdmin.model';
+import { EDBTableTitles, getDbTableLink } from '@/models/dbTblNames.model';
 
 interface IArticle {
   originalTitle: string;

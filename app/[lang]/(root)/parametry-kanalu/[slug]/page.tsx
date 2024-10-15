@@ -1,4 +1,6 @@
-import BottomInfoPanel from '@/components/BottomInfoPanel/BottomInfoPanel';
+import BottomInfoPanel, {
+  INFO_PANEL_TITLES,
+} from '@/components/BottomInfoPanel/BottomInfoPanel';
 import ChannelOnlineLink from '@/components/ui/buttons/ChannelOnlineLink/ChannelOnlineLink';
 import ChannelParams from '@/components/ChannelParams/ChannelParams';
 import DangerHtml from '@/components/ui/DangerHtml/DangerHtml';
@@ -7,7 +9,7 @@ import NoteBlock from '@/components/ui/NoteBlock/NoteBlock';
 import SimilarArticles from '@/components/SimilarArticles/SimilarArticles';
 import { Title } from '@/components/ui/Titles/Title';
 import TvScheduleLink from '@/components/TvScheduleLink/TvScheduleLink';
-import { updateViewCount } from '@/controllers/articles.controller';
+import { updateViewCount } from '@/controllers/viewUpdate.controller';
 import { getDBChannel } from '@/controllers/channel.controller';
 import {
   CHANNEL_IMAGES,
@@ -15,14 +17,8 @@ import {
   META_CHANNEL,
   SIMILAR_ARTICLE_TITLE,
   SIMILAR_CHANNELS_TITLE,
-} from '@/models/channel.model';
-import {
-  DEFAULT_LANG,
-  EDBTableTitles,
-  DEFAULT_META_DATA,
-  ELanguage,
-} from '@/models/ui.model';
-import { EUrlAdminParam, EUrlBaseParam, MAIN_URL } from '@/models/url.model';
+} from '@/models/channels/channel.model';
+import { EDBTableTitles } from '@/models/dbTblNames.model';
 import { Metadata } from 'next';
 // import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
 // import { getCommentsNumber } from '@/controllers/comments.controller';
@@ -31,11 +27,14 @@ import BreadCrumbServer from '@/components/BreadCrumbs/BreadCrumbsServer';
 import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
 import EditLinkButton from '@/components/admin/EditLinkButton/EditLinkButton';
 import { notFound } from 'next/navigation';
-import { getELangKey } from '@/libs/utils/validSearchParam';
-import { INFO_PANEL_TITLES } from '@/models/articles.model';
+import { getELangKey } from '@/libs/utils/getLanguage';
 import { Suspense } from 'react';
 import SimilarChannels from '@/components/SimilarArticles/SimilarChannels';
 import ArticleWrapper from '@/components/article/ArticleWrapper';
+import { DEFAULT_META_DATA } from '@/models/defaultMeta.model';
+import { DEFAULT_LANG, ELanguage } from '@/models/language.model';
+import { EUrlBaseParam, MAIN_URL } from '@/models/url/url.model';
+import { EUrlAdminParam } from '@/models/url/urlAdmin.model';
 
 const BASE_URL = process.env.BASE_URL || MAIN_URL;
 

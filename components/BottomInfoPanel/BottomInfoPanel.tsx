@@ -1,3 +1,4 @@
+import { ELanguage } from '@/models/language.model';
 import { ReactNode } from 'react';
 
 export interface IBottomInfoPanelItem {
@@ -8,6 +9,14 @@ export interface IBottomInfoPanelItem {
 interface IBottomInfoPanel {
   items: IBottomInfoPanelItem[];
 }
+
+export const INFO_PANEL_TITLES = {
+  package: { [ELanguage.UA]: 'Пакет', [ELanguage.EN]: 'Package' },
+  theme: { [ELanguage.UA]: 'Тема', [ELanguage.EN]: 'Theme' },
+  views: { [ELanguage.UA]: 'Переглядів', [ELanguage.EN]: 'Views' },
+  date: { [ELanguage.UA]: 'Дата', [ELanguage.EN]: 'Date' },
+  comments: { [ELanguage.UA]: 'Коментарів', [ELanguage.EN]: 'Comments' },
+};
 
 const BottomInfoPanel = ({ items }: IBottomInfoPanel) => {
   const filteredItems = items.filter((item) => item.value);

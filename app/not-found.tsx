@@ -1,7 +1,7 @@
 import Footer from '@/components/Footer/Footer';
 import Header from '@/components/Header/Header';
 import NotFoundPage from '@/components/errors/NotFoundPage/NotFoundPage';
-import { ELanguage } from '@/models/ui.model';
+import { ELanguage } from '@/models/language.model';
 
 export default function NotFound() {
   return (

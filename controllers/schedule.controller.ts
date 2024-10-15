@@ -1,7 +1,7 @@
-import { poolExecute, poolQuery } from '@/libs/db/mysqldb';
+import { poolExecute } from '@/libs/db/mysqldb';
 import { IDbIdAmountModel } from '@/models/admin.model';
 import { IScheduleTVModel, IVseTvParsModel } from '@/models/scheduleTV.model';
-import { EDBTableTitles } from '@/models/ui.model';
+import { EDBTableTitles } from '@/models/dbTblNames.model';
 import { cache } from 'react';
 
 const { TV_SCHEDULE_VSE_TV, CHANNELS } = EDBTableTitles;
@@ -50,7 +50,7 @@ export const getChanOneDaySchedule = cache(
       `
       )
       .join(' ');
-    const res = await poolQuery<[IScheduleTVModel[]]>(sql);
+    const res = await poolExecute<[IScheduleTVModel[]]>(sql);
 
     return res instanceof Error || !Array.isArray(res) || !res.length
       ? null

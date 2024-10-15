@@ -1,16 +1,17 @@
 'use client';
 
-import { ARTICLE_PAGINATION_PARAMS } from '@/models/articles.model';
-import { EDBTableTitles, ELanguage } from '@/models/ui.model';
+import { EDBTableTitles } from '@/models/dbTblNames.model';
 import TooltipSimple from '../../ui/tooltips/TooltipSimple/TooltipSimple';
 import { useEffect, useState } from 'react';
 import BaseButton from '../../ui/buttons/BaseButton/BaseButton';
 import { getComments } from '@/controllers/comments.controller';
-import { COMMENTS_MODEL, ICommentsModel } from '@/models/comments.model';
-import { getFormattedDateStr } from '@/libs/utils/dates';
+import { COMMENTS_MODEL, ICommentsModel } from '@/models/ui/comments.model';
+import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
 import Image from 'next/image';
 import commentTitleImg from 'public/Images/mail_post_to_5295.png';
 import { getPageNumbers } from '@/controllers/pagination.controller';
+import { ARTICLE_PAGINATION_PARAMS } from '@/models/articles/articleList.model';
+import { ELanguage } from '@/models/language.model';
 
 const { commentList } = COMMENTS_MODEL;
 
@@ -107,7 +108,7 @@ const PaginationComments = ({
                 className="pb-2 font-verdana"
                 style={{ borderTop: '2px groove #777777' }}
               >
-                <span className="text-stone-300 text-sm">{`(${getFormattedDateStr(comment.date)})  `}</span>
+                <span className="text-stone-300 text-sm">{`(${getFormattedDateStrYearFirst(comment.date)})  `}</span>
                 <span
                   className="text-stone-300 font-georgia"
                   style={commentTextShadow}

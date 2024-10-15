@@ -1,21 +1,21 @@
+import Link from 'next/link';
+import { Suspense } from 'react';
+
 import EmptyData from '@/components/errors/EmptyData/EmptyData';
 import Filter from '@/components/ui/Filter/Filter';
 import { Title } from '@/components/ui/Titles/Title';
 import { getEditDbChannels } from '@/controllers/admin.controller';
-import { getELangKey, validSearchParam } from '@/libs/utils/validSearchParam';
-import { ARTICLE_LIST_MODEL } from '@/models/articles.model';
-import { TSearchParams } from '@/models/ui.model';
-import {
-  EUrlAdminParam,
-  EUrlBaseParam,
-  EUrlSearchParam,
-} from '@/models/url.model';
-import Link from 'next/link';
-import { Suspense } from 'react';
+import { SEARCH_FIELD } from '@/models/ui/searchField.model';
+import { TSearchParams } from '@/models/url/urlSearch.model';
+import { EUrlBaseParam } from '@/models/url/url.model';
+import { EUrlAdminParam } from '@/models/url/urlAdmin.model';
+import { EUrlSearchParam } from '@/models/url/urlSearch.model';
+import { getELangKey } from '@/libs/utils/getLanguage';
+import { validSearchParam } from '@/libs/utils/validSearchParam';
 
 const { BASE_PATH, CHANNELS_EDIT } = EUrlAdminParam;
 
-const { placeholder, labelTitle } = ARTICLE_LIST_MODEL.search;
+const { placeholder, labelTitle } = SEARCH_FIELD;
 
 export default async function Page({
   searchParams,

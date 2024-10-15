@@ -6,21 +6,22 @@ import {
   ONLINE_CHANNEL_TOOLTIP_TITLES,
   PACKAGE_CHANNEL_LIST_DATA,
   PACKAGE_CHANNEL_LIST_IMAGES,
-} from '@/models/channelList.model';
+} from '@/models/channels/channelList.model';
 import { TitleH2List } from '../ui/Titles/TitleH2List';
 import GoUpLink from '../ui/GoUpLink/GoUpLink';
-import { CHANNEL_IMAGES } from '@/models/channel.model';
+import { CHANNEL_IMAGES } from '@/models/channels/channel.model';
 import ChannelCardTooltip from '../ChannelCardTooltip/ChannelCardTooltip';
-import { ELanguage } from '@/models/ui.model';
-import { cutText } from '@/libs/utils/utils';
+import { ELanguage } from '@/models/language.model';
+import { cutText } from '@/libs/utils/cutText';
 import FillingValidImage from '../ui/Images/FillingValidImage';
 import GenreImage from '../ui/Images/GenreImage/GenreImage';
 import EmptyData from '../errors/EmptyData/EmptyData';
-import { EUrlBaseParam, EUrlSearchParam } from '@/models/url.model';
 import SeoLink from '../ui/SeoLink/SeoLink';
 import Fieldset from '../ui/Fieldset/Fieldset';
 import TooltipSimple from '../ui/tooltips/TooltipSimple/TooltipSimple';
 import Filter from '../ui/Filter/Filter';
+import { EUrlBaseParam } from '@/models/url/url.model';
+import { EUrlSearchParam } from '@/models/url/urlSearch.model';
 
 const {
   name: tName,

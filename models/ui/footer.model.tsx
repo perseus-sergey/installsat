@@ -1,7 +1,7 @@
-import { ELanguage, ILang } from './ui.model';
-import { EUrlBaseParam } from './url.model';
+import { EUrlBaseParam } from '../url/url.model';
 import React from 'react';
 import SeoSVG from '@/components/ui/icons-svg/SeoSVG';
+import { ELanguage, ILang } from '../language.model';
 
 export interface IFooterMenuItem {
   title: ILang;

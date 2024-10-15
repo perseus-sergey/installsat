@@ -1,9 +1,9 @@
 import { Title } from '@/components/ui/Titles/Title';
 import * as React from 'react';
 import { poolExecute } from '@/libs/db/mysqldb';
-import { EDBTableTitles } from '@/models/ui.model';
+import { EDBTableTitles } from '@/models/dbTblNames.model';
 import { ResultSetHeader } from 'mysql2';
-import { DEFAULT_ARTICLE_LOGO_NAME } from '@/models/articles.model';
+import { DEFAULT_ARTICLE_LOGO_NAME } from '@/models/ui/image.model';
 
 interface IArticle {
   originalTitle: string;

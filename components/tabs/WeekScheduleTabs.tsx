@@ -1,11 +1,8 @@
-import {
-  getFormattedDateStrYearFirst,
-  getStartOfWeekDate,
-} from '@/libs/utils/dates';
-import { createArray } from '@/libs/utils/utils';
+import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
 import { SCHEDULE_META } from '@/models/scheduleTV.model';
-import { ELanguage } from '@/models/ui.model';
+import { ELanguage } from '@/models/language.model';
 import SeoLink from '../ui/SeoLink/SeoLink';
+import { getStartOfWeekDate } from '@/libs/utils/scheduleDates';
 
 const { tabsTitles } = SCHEDULE_META.tabsWeek;
 
@@ -21,7 +18,7 @@ const WeekScheduleTabs = ({
   const now = getFormattedDateStrYearFirst();
   const startDate = getStartOfWeekDate(new Date(currentDate));
 
-  const tabs = createArray(7).reduce((acc, _, i) => {
+  const tabs = [...Array(7)].reduce((acc, _, i) => {
     const date = new Date(startDate);
     date.setDate(date.getDate() + i);
     const dateString = getFormattedDateStrYearFirst(date);

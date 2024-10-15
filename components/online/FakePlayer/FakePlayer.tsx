@@ -1,9 +1,9 @@
 'use client';
 
-import { FAKE_PLAYER } from '@/models/channel.model';
+import { FAKE_PLAYER } from '@/models/channels/channel.model';
 import BaseButton from '../../ui/buttons/BaseButton/BaseButton';
 import styles from './FakePlayer.module.scss';
-import { ELanguage } from '@/models/ui.model';
+import { ELanguage } from '@/models/language.model';
 
 const {
   button: { ariaLabel, titleStart: btnTitleStart },

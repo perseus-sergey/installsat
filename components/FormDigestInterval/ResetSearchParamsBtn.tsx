@@ -1,7 +1,7 @@
 'use client';
 
 import { usePathname, useRouter } from 'next/navigation';
-import { ELanguage } from '@/models/ui.model';
+import { ELanguage } from '@/models/language.model';
 import { TRANS_NEWS_LIST_FILTERS } from '@/models/satDigest.model';
 import TooltipSimple from '../ui/tooltips/TooltipSimple/TooltipSimple';
 import BaseButton from '../ui/buttons/BaseButton/BaseButton';

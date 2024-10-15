@@ -1,4 +1,4 @@
-import { IImgParams, IMG_PROPERTIES } from '@/models/ui.model';
+import { IImgParams, IMG_PROPERTIES } from '@/models/ui/image.model';
 import FillingImg from './FillingImage';
 import { imagePathValidate } from '@/libs/utils/imagePathValidate';
 

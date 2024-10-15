@@ -7,11 +7,11 @@ import {
 } from '@vis.gl/react-google-maps';
 import { Suspense, useCallback, useEffect, useState } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { EUrlSearchParam } from '@/models/url.model';
+import { EUrlSearchParam } from '@/models/url/urlSearch.model';
 import Fieldset from '../../ui/Fieldset/Fieldset';
 import GoogleMap from '../GoogleMap/GoogleMap';
 import StyledInputField from '../../ui/StyledInputField/StyledInputField';
-import { ELanguage } from '@/models/ui.model';
+import { ELanguage } from '@/models/language.model';
 import BaseButton from '../../ui/buttons/BaseButton/BaseButton';
 import Image from 'next/image';
 import searchBtnImg from 'public/Images/global-search.png';

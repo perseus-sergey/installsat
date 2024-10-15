@@ -1,14 +1,17 @@
 import { IInputData } from '@/components/admin/FormEditArticle/FormEditChannel';
-import { poolExecute, poolQuery } from '@/libs/db/mysqldb';
+import { poolExecute } from '@/libs/db/mysqldb';
 import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
 import {
-  IAllNewsModel,
   IArticleCategory,
   TArticleTableModel,
-} from '@/models/articles.model';
-import { EChannelEditFields, TChannelEditModel } from '@/models/channel.model';
-import { IEditChannelListModel } from '@/models/channelList.model';
-import { EDBTableTitles } from '@/models/ui.model';
+} from '@/models/articles/articleEdit.model';
+import { IAllNewsModel } from '@/models/articles/articleList.model';
+import {
+  EChannelEditFields,
+  TChannelEditModel,
+} from '@/models/channels/channel.model';
+import { IEditChannelListModel } from '@/models/channels/channelList.model';
+import { EDBTableTitles } from '@/models/dbTblNames.model';
 import { ResultSetHeader } from 'mysql2';
 import { cache } from 'react';
 
@@ -52,7 +55,11 @@ export const getAdminChunkOfNews = cache(
 export const getArticleAndCatDb = cache(async (articleId: string | number) => {
   const sql = `SELECT * FROM ${TBL_ARTICLE} WHERE id = ${articleId} LIMIT 1; SELECT title, id FROM tbl_categories`;
 
-  return poolQuery<[TArticleTableModel[], IArticleCategory[]]>(sql);
+  return poolExecute<[TArticleTableModel[], IArticleCategory[]]>(
+    sql,
+    [null],
+    true
+  );
 });
 
 export const editArticleDB = async (
@@ -245,7 +252,7 @@ export const getEditDbChannel = async (
       SELECT title, id FROM tbl_country;
     `;
 
-  const resp = await poolQuery<
+  const resp = await poolExecute<
     [
       (IInputData & { position: string })[],
       TChannelEditModel[],
@@ -257,7 +264,7 @@ export const getEditDbChannel = async (
       IInputData[],
       IInputData[],
     ]
-  >(sql, [id]);
+  >(sql, [id], true);
 
   if (resp instanceof Error) return resp;
 

@@ -22,6 +22,6 @@ export interface ISatelliteOption {
 }
 
 export interface IGroupedSatelliteOption {
-  label: string;
   options: ISatelliteOption[];
+  label?: string;
 }

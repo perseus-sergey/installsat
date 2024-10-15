@@ -8,7 +8,7 @@ import {
 } from '@/libs/actions/login.action';
 import { SubmitPendingButton } from '../ui/buttons/SubmitPendingBtn';
 import Link from 'next/link';
-import { EUrlBaseParam } from '@/models/url.model';
+import { EUrlBaseParam } from '@/models/url/url.model';
 import { AUTH_PROVIDER_LOGOS, ELoginFormNames } from '@/models/login.model';
 import FieldError from '../comments/FieldError/FieldError';
 import { EMPTY_FORM_STATE } from '@/controllers/toast.controller';

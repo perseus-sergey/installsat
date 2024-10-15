@@ -1,10 +1,8 @@
 'use client';
 
+import { URL_SEARCH_PARAM_VALUE_FALSE } from '@/models/url/url.model';
+import { EUrlSearchParam } from '@/models/url/urlSearch.model';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import {
-  EUrlSearchParam,
-  URL_SEARCH_PARAM_VALUE_FALSE,
-} from '@/models/url.model';
 
 interface IChannelFormatSlidersProps {
   title: string;

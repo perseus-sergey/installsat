@@ -4,14 +4,13 @@ import { Title } from '@/components/ui/Titles/Title';
 import TooltipSimple from '@/components/ui/tooltips/TooltipSimple/TooltipSimple';
 import { getComments } from '@/controllers/comments.controller';
 import { decrypt } from '@/libs/utils/decrypt';
-import { makeUrlSearchParams } from '@/libs/utils/utils';
-import { getELangKey, validSearchParam } from '@/libs/utils/validSearchParam';
-import { EDBTableTitles, TSearchParams } from '@/models/ui.model';
-import {
-  EUrlAdminParam,
-  EUrlBaseParam,
-  EUrlSearchParam,
-} from '@/models/url.model';
+import { getELangKey } from '@/libs/utils/getLanguage';
+import { makeUrlSearchParams } from '@/libs/utils/urlMaker';
+import { validSearchParam } from '@/libs/utils/validSearchParam';
+import { EDBTableTitles } from '@/models/dbTblNames.model';
+import { EUrlBaseParam } from '@/models/url/url.model';
+import { EUrlAdminParam } from '@/models/url/urlAdmin.model';
+import { EUrlSearchParam, TSearchParams } from '@/models/url/urlSearch.model';
 import Link from 'next/link';
 
 const { BASE_PATH, EDIT_COMMENT } = EUrlAdminParam;

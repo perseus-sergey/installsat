@@ -9,32 +9,30 @@ import {
   PACKAGE_CHANNEL_LIST_DATA,
   PACKAGE_CHANNEL_LIST_IMAGES,
   T2_SLUG,
-} from '@/models/channelList.model';
+} from '@/models/channels/channelList.model';
 import type { Metadata } from 'next';
-import {
-  TSearchParams,
-  DEFAULT_META_DATA,
-  EDBTableTitles,
-  ELanguage,
-} from '@/models/ui.model';
-import { EUrlBaseParam, EUrlSearchParam, MAIN_URL } from '@/models/url.model';
 import { Suspense, cache } from 'react';
-import { getELangKey, validSearchParam } from '@/libs/utils/validSearchParam';
+import { getELangKey } from '@/libs/utils/getLanguage';
+import { validSearchParam } from '@/libs/utils/validSearchParam';
 // import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
 // import { getCommentsNumber } from '@/controllers/comments.controller';
 import PackageChannelList from '@/components/channelList/PackageChannelList';
 import FillingValidImage from '@/components/ui/Images/FillingValidImage';
 import { getChannelCatList } from '@/controllers/sidebar.controller';
-import { updateViewCount } from '@/controllers/articles.controller';
+import { updateViewCount } from '@/controllers/viewUpdate.controller';
 import BreadCrumbServer, {
   IBreadCrumbLink,
 } from '@/components/BreadCrumbs/BreadCrumbsServer';
 import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
 import SeoLink from '@/components/ui/SeoLink/SeoLink';
 import SimilarBlock from '@/components/SimilarArticles/SimilarBlock';
-import { BREAD_PACKAGE_CHANNEL_LIST } from '@/models/breadCrumbs.model';
 import EmptyPage from '@/components/errors/EmptyPage/EmptyPage';
 import ArticleWrapper from '@/components/article/ArticleWrapper';
+import { DEFAULT_META_DATA } from '@/models/defaultMeta.model';
+import { ELanguage } from '@/models/language.model';
+import { EUrlBaseParam, MAIN_URL } from '@/models/url/url.model';
+import { EDBTableTitles } from '@/models/dbTblNames.model';
+import { EUrlSearchParam, TSearchParams } from '@/models/url/urlSearch.model';
 
 const BASE_URL = process.env.BASE_URL || MAIN_URL;
 
@@ -46,6 +44,14 @@ const {
 const { h1Image } = PACKAGE_CHANNEL_LIST_IMAGES;
 
 const { SLUG, LANG, PACKAGE_CHANNEL_LIST, CHANNEL_PARAMS } = EUrlBaseParam;
+
+const BREAD_PACKAGE_CHANNEL_LIST = {
+  href: EUrlBaseParam.PACKAGE_CHANNEL_LIST,
+  title: {
+    [ELanguage.UA]: 'Список пакетів',
+    [ELanguage.EN]: 'List of packages',
+  },
+};
 
 const getH1Cached = cache(getH1);
 

@@ -1,12 +1,11 @@
-import { Title } from '@/components/ui/Titles/Title';
-// import { EUrlAdminParam } from '@/models/url.model';
-// import { GoogleGenerativeAI } from '@google/generative-ai';
 import * as React from 'react';
-import puppeteer, { Browser } from 'puppeteer';
 import * as cheerio from 'cheerio';
+
+import { Title } from '@/components/ui/Titles/Title';
+import puppeteer, { Browser } from 'puppeteer';
 import { getContentFromPuppeteerBrowser } from '@/controllers/parse.controller';
-import { sleep } from '@/libs/utils/utils';
 import { killChromeProcesses } from '@/cron/libs/commons.mjs';
+import { sleep } from '@/libs/utils/sleep';
 
 interface IArticle {
   originalTitle: string;

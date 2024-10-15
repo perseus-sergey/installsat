@@ -10,10 +10,11 @@ import {
   TRANS_NEWS_LIST_FILTERS,
   TSatDigest,
 } from '@/models/satDigest.model';
-import { DEFAULT_LANG, EDBTableTitles, ELanguage } from '@/models/ui.model';
+import { EDBTableTitles } from '@/models/dbTblNames.model';
 import { decode } from 'html-entities';
 import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
 import { cache } from 'react';
+import { DEFAULT_LANG, ELanguage } from '@/models/language.model';
 
 const { FLY_SATELLITES, TRANS_NEWS } = EDBTableTitles;
 

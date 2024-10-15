@@ -8,8 +8,8 @@ import {
   IOnlineChannel,
   ONLINE_TABS,
   YOUTUBE_PLAYER,
-} from '../../models/channel.model';
-import { ELanguage } from '@/models/ui.model';
+} from '../../models/channels/channel.model';
+import { ELanguage } from '@/models/language.model';
 
 const {
   width: yWidth,

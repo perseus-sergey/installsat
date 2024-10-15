@@ -1,14 +1,15 @@
 import {
   CHANNEL_PARAMS_BLOCK,
+  DB_ARRAY_SEPARATOR,
   IChannel,
   IFlyChannel,
-} from '@/models/channel.model';
-import { EUrlBaseParam } from '@/models/url.model';
-import { DB_ARRAY_SEPARATOR, ELanguage } from '@/models/ui.model';
+} from '@/models/channels/channel.model';
+import { EUrlBaseParam } from '@/models/url/url.model';
 import { TitleH2 } from '../ui/Titles/TitleH2';
 import TooltipSimple from '../ui/tooltips/TooltipSimple/TooltipSimple';
 import SeoLink from '../ui/SeoLink/SeoLink';
 import { getLanguageList } from '@/controllers/languageList.controller';
+import { ELanguage } from '@/models/language.model';
 
 interface IChannelParamsProps {
   channelDBParams: IChannel;

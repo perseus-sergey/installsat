@@ -1,6 +1,6 @@
 import styles from './ChannelOnlineLink.module.scss';
-import { ONLINE_CHANNEL_LINK } from '@/models/channel.model';
-import { ELanguage } from '@/models/ui.model';
+import { ONLINE_CHANNEL_LINK } from '@/models/channels/channel.model';
+import { ELanguage } from '@/models/language.model';
 import SeoLink from '../../SeoLink/SeoLink';
 import onlineImg from 'public/Images/network-wireless_32.png';
 import Image from 'next/image';

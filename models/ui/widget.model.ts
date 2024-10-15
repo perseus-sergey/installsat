@@ -1,5 +1,5 @@
-import { ELanguage } from './ui.model';
-import { EUrlBaseParam } from './url.model';
+import { ELanguage } from '../language.model';
+import { EUrlBaseParam } from '../url/url.model';
 
 export const NUMBER_OF_LAST_NEWS_WIDGET = 5;
 

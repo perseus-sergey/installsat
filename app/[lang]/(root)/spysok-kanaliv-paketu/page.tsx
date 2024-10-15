@@ -1,14 +1,15 @@
 import { Title } from '@/components/ui/Titles/Title';
 import type { Metadata } from 'next';
-import { EUrlBaseParam, MAIN_URL } from '@/models/url.model';
-import { DEFAULT_META_DATA, ELanguage } from '@/models/ui.model';
+import { EUrlBaseParam, MAIN_URL } from '@/models/url/url.model';
 import { getChannelPackages } from '@/controllers/channelList.controller';
 import PackageList from '@/components/article/ArticleList/PackageList';
-import { META_PACKAGES } from '@/models/channelList.model';
+import { META_PACKAGES } from '@/models/channels/channelList.model';
 import BreadCrumbServer from '@/components/BreadCrumbs/BreadCrumbsServer';
 import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
-import { getELangKey } from '@/libs/utils/validSearchParam';
+import { getELangKey } from '@/libs/utils/getLanguage';
 import ArticleWrapper from '@/components/article/ArticleWrapper';
+import { DEFAULT_META_DATA } from '@/models/defaultMeta.model';
+import { ELanguage } from '@/models/language.model';
 
 const BASE_URL = process.env.BASE_URL || MAIN_URL;
 

@@ -5,11 +5,11 @@ import DangerHtmlUl from '../ui/DangerHtml/DangerHtml';
 import { TRANS_NEWS_LIST_IMAGES, TSatDigest } from '@/models/satDigest.model';
 import { getDailyNews } from '@/controllers/satDigest.controller';
 import FillingValidImage from '../ui/Images/FillingValidImage';
-import { ELanguage, EMPTY_DATE_NEWS_PAGE_TITLE } from '@/models/ui.model';
 import { decode } from 'html-entities';
 import { TitleH2Digest } from '../ui/Titles/TitleH2Digest';
 import EmptyData from '../errors/EmptyData/EmptyData';
 import { SatLink } from '../DateNewsList/DateNewsList';
+import { ELanguage } from '@/models/language.model';
 
 interface ITransNewsSingleProps {
   newsArray: [string, TSatDigest[]][] | null;
@@ -55,7 +55,14 @@ const TransNewsSingle = ({ newsArray, title, lang }: ITransNewsSingleProps) => (
         })}
       </div>
     ) : (
-      <EmptyData lang={lang} description={EMPTY_DATE_NEWS_PAGE_TITLE[lang]} />
+      <EmptyData
+        lang={lang}
+        description={
+          lang === ELanguage.UA
+            ? 'Немає новин за вказаний період'
+            : 'There are no news for the specified period'
+        }
+      />
     )}
   </>
 );

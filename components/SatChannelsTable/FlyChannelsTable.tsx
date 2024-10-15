@@ -3,19 +3,22 @@ import {
   getCompressColor,
   ECompressColors,
   SAT_CHANNEL_LIST_IMAGES,
-} from '@/models/channelList.model';
-import { EUrlBaseParam } from '@/models/url.model';
+} from '@/models/channels/channelList.model';
+import { EUrlBaseParam } from '@/models/url/url.model';
 import FillingValidImage from '../ui/Images/FillingValidImage';
-import { IFlyChannel } from '@/models/channel.model';
+import {
+  DB_ARRAY_SEPARATOR,
+  IFlyChannel,
+} from '@/models/channels/channel.model';
 import GoUpLink from '../ui/GoUpLink/GoUpLink';
 import EmptyData from '../errors/EmptyData/EmptyData';
-import { DB_ARRAY_SEPARATOR, ELanguage } from '@/models/ui.model';
 import Tooltip from '../ui/tooltips/TooltipMovingClient/Tooltip';
 import SeoLink from '../ui/SeoLink/SeoLink';
 import {
   getFlyGroupedChannelsAllSat,
   isFtaChannel,
 } from '@/controllers/channelList.controller';
+import { ELanguage } from '@/models/language.model';
 
 const { h2SatListImage, genreImage } = SAT_CHANNEL_LIST_IMAGES;
 

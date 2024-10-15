@@ -1,24 +1,26 @@
+import Image from 'next/image';
+import { Suspense } from 'react';
+
 import { Title } from '@/components/ui/Titles/Title';
 import { getOnlineChannels } from '@/controllers/channelList.controller';
 import {
   META_ONLINE_CHANNEL_LIST,
   ONLINE_CHANNEL_LIST_DATA,
   ONLINE_CHANNEL_LIST_IMAGES,
-} from '@/models/channelList.model';
+} from '@/models/channels/channelList.model';
 import type { Metadata } from 'next';
-import { TSearchParams, DEFAULT_META_DATA, ELanguage } from '@/models/ui.model';
-import { EUrlBaseParam, EUrlSearchParam, MAIN_URL } from '@/models/url.model';
-import { getELangKey, validSearchParam } from '@/libs/utils/validSearchParam';
-// import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
-// import { getCommentsNumber } from '@/controllers/comments.controller';
+import { EUrlSearchParam, TSearchParams } from '@/models/url/urlSearch.model';
+import { getELangKey } from '@/libs/utils/getLanguage';
+import { validSearchParam } from '@/libs/utils/validSearchParam';
 import OnlineChannelListAfterText from '@/components/online/OnlineChannelListAfterText/OnlineChannelListAfterText';
 import PackageChannelList from '@/components/channelList/PackageChannelList';
 import BreadCrumbServer from '@/components/BreadCrumbs/BreadCrumbsServer';
 import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
-import Image from 'next/image';
 import h1Img from 'public/Images/packages/Popcorn-icon.png';
-import { Suspense } from 'react';
 import ArticleWrapper from '@/components/article/ArticleWrapper';
+import { DEFAULT_META_DATA } from '@/models/defaultMeta.model';
+import { ELanguage } from '@/models/language.model';
+import { EUrlBaseParam, MAIN_URL } from '@/models/url/url.model';
 
 interface IPageProps {
   params: { [key in EUrlBaseParam]: string };

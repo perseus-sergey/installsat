@@ -1,4 +1,4 @@
-import { ELanguage } from '@/models/ui.model';
+import { ELanguage } from '@/models/language.model';
 import WidgetArticleCategories from '../WidgetArticleCategories/WidgetArticleCategories';
 import WidgetLastNews from '../WidgetLastNews/WidgetLastNews';
 import UserWelcome from '../UserWelcome/UserWelcome';

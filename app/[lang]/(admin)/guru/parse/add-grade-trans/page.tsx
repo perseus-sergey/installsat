@@ -1,8 +1,8 @@
+import { ResultSetHeader } from 'mysql2';
 import { poolExecute } from '@/libs/db/mysqldb';
 import { validSearchParam } from '@/libs/utils/validSearchParam';
-import { EDBTableTitles, TSearchParams } from '@/models/ui.model';
-import { EUrlSearchParam } from '@/models/url.model';
-import { ResultSetHeader } from 'mysql2';
+import { EDBTableTitles } from '@/models/dbTblNames.model';
+import { EUrlSearchParam, TSearchParams } from '@/models/url/urlSearch.model';
 
 // ****************************************************************
 // For adding sat_grade and sat_slug to sat_digest tables

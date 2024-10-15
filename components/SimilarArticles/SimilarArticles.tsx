@@ -1,9 +1,9 @@
-import { getSimilarArticles } from '@/controllers/articles.controller';
 import SeoLink from '../ui/SeoLink/SeoLink';
 import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
-import { EUrlBaseParam } from '@/models/url.model';
-import { ELanguage } from '@/models/ui.model';
+import { EUrlBaseParam } from '@/models/url/url.model';
+import { ELanguage } from '@/models/language.model';
 import SimilarBlock from './SimilarBlock';
+import { getSimilarArticles } from '@/controllers/similarArticles.controller';
 
 interface ISimilarArticlesProps {
   similarTitle: string;

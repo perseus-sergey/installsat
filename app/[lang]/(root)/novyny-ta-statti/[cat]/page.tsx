@@ -1,37 +1,46 @@
 import { Title } from '@/components/ui/Titles/Title';
 import type { Metadata } from 'next';
-import {
-  getArticleCatList,
-  getChunkOfNews,
-  getCurrentCatParams,
-} from '@/controllers/articles.controller';
 import TextUnderH1 from '@/components/TextUnderH1/TextUnderH1';
 import ArticleList from '@/components/article/ArticleList/ArticleList';
 import { notFound } from 'next/navigation';
 import Pagination from '@/components/ui/Pagination/Pagination';
-import { TSearchParams, DEFAULT_META_DATA, ELanguage } from '@/models/ui.model';
-import { EUrlBaseParam, EUrlSearchParam, MAIN_URL } from '@/models/url.model';
-import { getELangKey, validSearchParam } from '@/libs/utils/validSearchParam';
+import { getELangKey } from '@/libs/utils/getLanguage';
+import { validSearchParam } from '@/libs/utils/validSearchParam';
 import BreadCrumbServer from '@/components/BreadCrumbs/BreadCrumbsServer';
 import Filter from '@/components/ui/Filter/Filter';
 import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
 import { Suspense } from 'react';
+import Image from 'next/image';
+import h1Img from 'public/Images/articles/all_news_64.png';
+import ArticleWrapper from '@/components/article/ArticleWrapper';
 import {
   ARTICLE_LIST_MODEL,
   ARTICLE_PAGINATION_PARAMS,
-} from '@/models/articles.model';
-import Image from 'next/image';
-import h1Img from 'public/Images/articles/all_news_64.png';
-import { BREAD_NEWS_AND_ARTICLES } from '@/models/breadCrumbs.model';
-import ArticleWrapper from '@/components/article/ArticleWrapper';
+} from '@/models/articles/articleList.model';
+import { SEARCH_FIELD } from '@/models/ui/searchField.model';
+import { ELanguage } from '@/models/language.model';
+import { DEFAULT_META_DATA } from '@/models/defaultMeta.model';
+import { EUrlSearchParam, TSearchParams } from '@/models/url/urlSearch.model';
+import { EUrlBaseParam, MAIN_URL } from '@/models/url/url.model';
+import {
+  getArticleCatList,
+  getChunkOfNews,
+  getCurrentCatParams,
+} from '@/controllers/articleList.controller';
 
 const BASE_URL = process.env.BASE_URL || MAIN_URL;
 
-const {
-  images,
-  articlesCountCaption,
-  search: { placeholder, labelTitle },
-} = ARTICLE_LIST_MODEL;
+const { images, articlesCountCaption } = ARTICLE_LIST_MODEL;
+
+const { placeholder, labelTitle } = SEARCH_FIELD;
+
+const BREAD_NEWS_AND_ARTICLES = {
+  href: EUrlBaseParam.NEWS_AND_ARTICLES,
+  title: {
+    [ELanguage.UA]: 'Новини та статті',
+    [ELanguage.EN]: 'News and articles',
+  },
+};
 
 export const revalidate = 43200; // 3600 * 12 invalidate cache every 12 hours
 

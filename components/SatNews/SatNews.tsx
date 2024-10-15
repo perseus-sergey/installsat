@@ -1,5 +1,6 @@
+import { ELanguage } from '@/models/language.model';
 import { TSatDigest } from '@/models/satDigest.model';
-import { ELanguage, TSearchParams } from '@/models/ui.model';
+import { TSearchParams } from '@/models/url/urlSearch.model';
 import dynamic from 'next/dynamic';
 
 const SatNewsList = dynamic(() => import('../SatNewsList/SatNewsList'), {

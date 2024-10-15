@@ -1,17 +1,15 @@
-import { SCHEDULE_META } from '@/models/scheduleTV.model';
-import ScheduleItem from '../ScheduleItem/ScheduleItem';
-import './SchedulePage.scss';
 import { DateTime } from 'luxon';
 import { Fragment } from 'react';
+
+import { DEFAULT_TIME_ZONE, SCHEDULE_META } from '@/models/scheduleTV.model';
+import ScheduleItem from '../ScheduleItem/ScheduleItem';
+import './SchedulePage.scss';
 import EmptyData from '../errors/EmptyData/EmptyData';
 import { TitleH2 } from '../ui/Titles/TitleH2';
-import { getDayOfMonthStr } from '@/libs/utils/dates';
-import {
-  DEFAULT_TIME_ZONE,
-  EDBTableTitles,
-  ELanguage,
-} from '@/models/ui.model';
+import { EDBTableTitles } from '@/models/dbTblNames.model';
 import { getChanOneDaySchedule } from '@/controllers/schedule.controller';
+import { ELanguage } from '@/models/language.model';
+import { getDayOfMonthStr } from '@/libs/utils/scheduleDates';
 
 const {
   h2TitleForDate,

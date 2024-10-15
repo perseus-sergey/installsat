@@ -1,5 +1,3 @@
-import React from 'react';
-
 interface ISimilarArticlesProps {
   blockTitle: string;
   children: React.ReactNode;

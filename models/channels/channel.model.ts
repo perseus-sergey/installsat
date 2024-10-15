@@ -1,5 +1,5 @@
-import { cutText } from '@/libs/utils/utils';
-import { ELanguage } from './ui.model';
+import { cutText } from '@/libs/utils/cutText';
+import { ELanguage } from '../language.model';
 import { z } from 'zod';
 
 export interface IChannel {
@@ -147,6 +147,8 @@ export enum EChannelEditFields {
   other_stream = 'other_stream',
   mark = 'mark',
 }
+
+export const DB_ARRAY_SEPARATOR = ' | ';
 
 const zodEmptyOr2 = z
   .string()

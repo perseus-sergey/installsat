@@ -1,4 +1,4 @@
-import { isAdminAuth } from '@/controllers/login.controller';
+import { isAdminAuth } from '@/libs/utils/loggedUser';
 import Link from 'next/link';
 
 const EditLinkButton = async ({ href }: { href: string }) =>

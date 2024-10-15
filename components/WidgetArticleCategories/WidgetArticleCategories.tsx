@@ -1,7 +1,7 @@
-import { WIDGET_ARTICLE_CATEGORY } from '@/models/widget.model';
-import { ELanguage } from '@/models/ui.model';
-import { getArtCatListSideBar } from '@/controllers/articles.controller';
+import { WIDGET_ARTICLE_CATEGORY } from '@/models/ui/widget.model';
+import { ELanguage } from '@/models/language.model';
 import SeoLink from '../ui/SeoLink/SeoLink';
+import { getArtCatListSideBar } from '@/controllers/sidebar.controller';
 
 const WidgetArticleCategories = async ({ lang }: { lang: ELanguage }) => {
   const articleCatWidgetList = await getArtCatListSideBar(lang);

@@ -4,16 +4,14 @@ import {
   ALL_SAT_CHANNEL_LIST_IMAGES,
   ALL_SAT_CHANNEL_LIST_LINKS,
   META_ALL_SAT_CHANNEL_LIST,
-} from '@/models/channelList.model';
+} from '@/models/channels/channelList.model';
 import type { Metadata } from 'next';
 import StartArticleSection from '@/components/article/StartArticleSection/StartArticleSection';
 import { Suspense } from 'react';
-import { DEFAULT_META_DATA, ELanguage, TSearchParams } from '@/models/ui.model';
-import { EUrlBaseParam, EUrlSearchParam, MAIN_URL } from '@/models/url.model';
+import { EUrlSearchParam, TSearchParams } from '@/models/url/urlSearch.model';
 import BreadCrumbServer from '@/components/BreadCrumbs/BreadCrumbsServer';
 import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
 import {
-  getELangKey,
   validSearchParam,
   validSearchParamArray,
 } from '@/libs/utils/validSearchParam';
@@ -30,6 +28,10 @@ import { getSatsForForm } from '@/controllers/satDigest.controller';
 import { getFlySatChannels } from '@/controllers/channelList.controller';
 import { getChannelsLangList } from '@/controllers/languageList.controller';
 import ArticleWrapper from '@/components/article/ArticleWrapper';
+import { DEFAULT_META_DATA } from '@/models/defaultMeta.model';
+import { ELanguage } from '@/models/language.model';
+import { EUrlBaseParam, MAIN_URL } from '@/models/url/url.model';
+import { getELangKey } from '@/libs/utils/getLanguage';
 // import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
 // import { getCommentsNumber } from '@/controllers/comments.controller';
 

@@ -1,4 +1,4 @@
-import { ELanguage } from '@/models/ui.model';
+import { ELanguage } from '@/models/language.model';
 import { SimilarFlyChannel } from '../SimilarChannel/SimilarChannel';
 import { getSimilarFlyChannels } from '@/controllers/channel.controller';
 import SimilarBlock from './SimilarBlock';

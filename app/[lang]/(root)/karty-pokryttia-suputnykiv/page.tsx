@@ -1,16 +1,17 @@
 import { Title } from '@/components/ui/Titles/Title';
 import type { Metadata } from 'next';
-import { getSatMapList } from '@/controllers/articles.controller';
-import { EUrlBaseParam, MAIN_URL } from '@/models/url.model';
-import { DEFAULT_META_DATA, ELanguage } from '@/models/ui.model';
 import MapList from '@/components/article/ArticleList/MapList';
 import BreadCrumbServer from '@/components/BreadCrumbs/BreadCrumbsServer';
 import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
-import { getELangKey } from '@/libs/utils/validSearchParam';
-import { META_ALL_SAT_MAPS_MODEL } from '@/models/articles.model';
+import { getELangKey } from '@/libs/utils/getLanguage';
 import Image from 'next/image';
 import h1Img from 'public/Images/articles/signal-satellite.png';
 import ArticleWrapper from '@/components/article/ArticleWrapper';
+import { META_ALL_SAT_MAPS_MODEL } from '@/models/mapCoverage.model';
+import { DEFAULT_META_DATA } from '@/models/defaultMeta.model';
+import { ELanguage } from '@/models/language.model';
+import { EUrlBaseParam, MAIN_URL } from '@/models/url/url.model';
+import { getSatMapList } from '@/controllers/mapCoverage.controller';
 
 const BASE_URL = process.env.BASE_URL || MAIN_URL;
 

@@ -2,15 +2,14 @@ import DeleteCommentSubscription from '@/components/DeleteCommentSubscription/De
 import { Title } from '@/components/ui/Titles/Title';
 import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
 import { decrypt } from '@/libs/utils/decrypt';
-import { getELangKey, validSearchParam } from '@/libs/utils/validSearchParam';
-import { DELETE_SUBSCRIPTION_PAGE } from '@/models/comments.model';
-import {
-  DEFAULT_META_DATA,
-  EDBTableTitles,
-  TSearchParams,
-} from '@/models/ui.model';
-import { EUrlBaseParam, EUrlSearchParam, MAIN_URL } from '@/models/url.model';
+import { getELangKey } from '@/libs/utils/getLanguage';
+import { validSearchParam } from '@/libs/utils/validSearchParam';
+import { DELETE_SUBSCRIPTION_PAGE } from '@/models/ui/comments.model';
+import { DEFAULT_META_DATA } from '@/models/defaultMeta.model';
 import { Metadata } from 'next';
+import { EUrlBaseParam, MAIN_URL } from '@/models/url/url.model';
+import { EUrlSearchParam, TSearchParams } from '@/models/url/urlSearch.model';
+import { EDBTableTitles } from '@/models/dbTblNames.model';
 
 const emailKey = process.env.MAIL_ENCRYPT_KEY || '';
 const BASE_URL = process.env.BASE_URL || MAIN_URL;

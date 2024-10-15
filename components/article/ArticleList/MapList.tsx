@@ -1,15 +1,15 @@
+import ArticleCard from '../ArticleCard/ArticleCard';
+import FillingValidImage from '../../ui/Images/FillingValidImage';
+import { ELanguage } from '@/models/language.model';
+import { EUrlBaseParam } from '@/models/url/url.model';
+import EmptyData from '@/components/errors/EmptyData/EmptyData';
+import { INFO_PANEL_TITLES } from '@/components/BottomInfoPanel/BottomInfoPanel';
 import {
   IAllMapsModel,
-  INFO_PANEL_TITLES,
   META_ALL_SAT_MAPS_MODEL,
   META_SINGLE_SAT_MAP,
   SINGLE_SAT_MAP_DATA,
-} from '@/models/articles.model';
-import ArticleCard from '../ArticleCard/ArticleCard';
-import FillingValidImage from '../../ui/Images/FillingValidImage';
-import { ELanguage } from '@/models/ui.model';
-import { EUrlBaseParam } from '@/models/url.model';
-import EmptyData from '@/components/errors/EmptyData/EmptyData';
+} from '@/models/mapCoverage.model';
 
 const { makePostDescription } = META_ALL_SAT_MAPS_MODEL;
 

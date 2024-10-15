@@ -4,8 +4,8 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import FillingImg from '../ui/Images/FillingImage';
 import BaseButton from '../ui/buttons/BaseButton/BaseButton';
 import { useEffect, useState } from 'react';
-import { DEFAULT_LANG, ELanguage } from '@/models/ui.model';
-import { getELangKey } from '@/libs/utils/validSearchParam';
+import { getELangKey } from '@/libs/utils/getLanguage';
+import { DEFAULT_LANG, ELanguage } from '@/models/language.model';
 
 const { UA, EN } = ELanguage;
 

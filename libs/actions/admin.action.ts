@@ -12,9 +12,15 @@ import {
   fromErrorToFormState,
   toFormState,
 } from '@/controllers/toast.controller';
-import { EArticleEditFields, editArticleSchema } from '@/models/articles.model';
-import { EChannelEditFields, editChannelSchema } from '@/models/channel.model';
-import { EDBTableTitles } from '@/models/ui.model';
+import {
+  EArticleEditFields,
+  editArticleSchema,
+} from '@/models/articles/articleEdit.model';
+import {
+  EChannelEditFields,
+  editChannelSchema,
+} from '@/models/channels/channel.model';
+import { EDBTableTitles } from '@/models/dbTblNames.model';
 import { ResultSetHeader } from 'mysql2';
 import { revalidatePath } from 'next/cache';
 // import { redirect } from 'next/navigation';

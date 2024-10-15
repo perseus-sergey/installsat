@@ -1,8 +1,8 @@
-import { ELanguage } from '@/models/ui.model';
+import { ELanguage } from '@/models/language.model';
 import styles from '../Accordion/Accordion.module.scss';
 
 import { ReactNode } from 'react';
-import { IAccordionItemOptions } from '@/models/menuAccordion.model';
+import { IAccordionItemOptions } from '@/models/ui/menuAccordion.model';
 import SeoLink from '@/components/ui/SeoLink/SeoLink';
 import Image, { StaticImageData } from 'next/image';
 

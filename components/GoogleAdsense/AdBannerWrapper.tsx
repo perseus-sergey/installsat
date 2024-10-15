@@ -1,5 +1,5 @@
 import { Suspense } from 'react';
-import { ELanguage } from '@/models/ui.model';
+import { ELanguage } from '@/models/language.model';
 
 interface IProps extends React.HTMLAttributes<HTMLElement> {
   children: React.ReactNode;

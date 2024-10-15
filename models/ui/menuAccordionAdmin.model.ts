@@ -1,10 +1,10 @@
 import { StaticImageData } from 'next/image';
-import { ELanguage, ILang } from './ui.model';
-import { EUrlAdminParam } from './url.model';
 
 import parseIcon from 'public/Images/accordion/html.png';
 import satelliteIcon from 'public/Images/accordion/satellite32.png';
 import usefulArticlesIcon from 'public/Images/accordion/icon_info_key.png';
+import { ELanguage, ILang } from '../language.model';
+import { EUrlAdminParam } from '../url/urlAdmin.model';
 
 interface ILink {
   title: string;

@@ -14,8 +14,11 @@ import {
 import FieldError from '@/components/comments/FieldError/FieldError';
 import TinyEditor from '@/components/TinyEditor/TinyEditor';
 import FormTextareaItem from './FormTextareaItem';
-import { EChannelEditFields, TChannelEditModel } from '@/models/channel.model';
-import { EUrlBaseParam } from '@/models/url.model';
+import {
+  EChannelEditFields,
+  TChannelEditModel,
+} from '@/models/channels/channel.model';
+import { EUrlBaseParam } from '@/models/url/url.model';
 import CopyClipboard from '@/components/CopyClipboard/CopyClipboard';
 import DependentSelects from '@/components/DependentSelects/DependentSelects';
 import SelectControlled from '@/components/admin/FormEditArticle/SelectControlled';

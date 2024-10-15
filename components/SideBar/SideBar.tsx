@@ -1,7 +1,7 @@
 'use client';
 
-import { ELanguage } from '@/models/ui.model';
-import { OPEN_SIDE_BAR_BTN } from '@/models/header.model';
+import { ELanguage } from '@/models/language.model';
+import { OPEN_SIDE_BAR_BTN } from '@/models/ui/header.model';
 import BaseButton from '../ui/buttons/BaseButton/BaseButton';
 import { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';

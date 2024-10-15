@@ -12,7 +12,12 @@ import {
   IGroupedSatelliteOption,
   ISatelliteOption,
 } from '@/models/tblSat.model';
-import { ESelectType } from '@/models/ui.model';
+
+export enum ESelectType {
+  SELECT_SATS = 'selectSats',
+  SELECT_LANG = 'selectLang',
+  SELECT_TIME_INTERVAL = 'timeInterval',
+}
 
 interface IReactSelectProps {
   selectName: ESelectType;

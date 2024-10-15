@@ -3,7 +3,7 @@ import * as React from 'react';
 import puppeteer, { Browser } from 'puppeteer';
 import * as cheerio from 'cheerio';
 import { getContentFromPuppeteerBrowser } from '@/controllers/parse.controller';
-import { sleep } from '@/libs/utils/utils';
+import { sleep } from '@/libs/utils/sleep';
 import { killChromeProcesses } from '@/cron/libs/commons.mjs';
 
 interface IArticle {

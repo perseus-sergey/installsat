@@ -5,12 +5,13 @@ import styles from './DeleteCommentSubscription.module.scss';
 import { useToastMessage } from '@/libs/hooks/useToastMessage';
 import { EMPTY_FORM_STATE } from '@/controllers/toast.controller';
 import { delSubscriptionAction } from '@/libs/actions/comments.action';
-import { EDBTableTitles, ELanguage } from '@/models/ui.model';
-import { DELETE_SUBSCRIPTION_PAGE } from '@/models/comments.model';
+import { EDBTableTitles } from '@/models/dbTblNames.model';
+import { DELETE_SUBSCRIPTION_PAGE } from '@/models/ui/comments.model';
 import {
   CancelLinkButton,
   ConfirmSubmitButton,
 } from '../ConfirmCancelButtons/ConfirmCancelButtons';
+import { ELanguage } from '@/models/language.model';
 
 const { askText, answerText, confirmButton, cancelButton } =
   DELETE_SUBSCRIPTION_PAGE;

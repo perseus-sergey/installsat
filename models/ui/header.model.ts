@@ -1,4 +1,4 @@
-import { ELanguage } from './ui.model';
+import { ELanguage } from '../language.model';
 
 export const LOGO = {
   link: {

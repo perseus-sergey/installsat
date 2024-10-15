@@ -1,5 +1,6 @@
-import { ELanguage } from '@/models/ui.model';
-import { EUrlAdminParam, EUrlBaseParam, MAIN_URL } from '@/models/url.model';
+import { ELanguage } from '@/models/language.model';
+import { EUrlBaseParam, MAIN_URL } from '@/models/url/url.model';
+import { EUrlAdminParam } from '@/models/url/urlAdmin.model';
 import { MetadataRoute } from 'next';
 
 const { BASE_PATH: ADMIN_BASE } = EUrlAdminParam;

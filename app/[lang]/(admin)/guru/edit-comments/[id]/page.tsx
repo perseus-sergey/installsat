@@ -3,14 +3,13 @@ import EmptyData from '@/components/errors/EmptyData/EmptyData';
 import { Title } from '@/components/ui/Titles/Title';
 import { getCommentFromDB } from '@/controllers/comments.controller';
 import { decrypt } from '@/libs/utils/decrypt';
-import { makeUrlSearchParams } from '@/libs/utils/utils';
-import { getELangKey, validSearchParam } from '@/libs/utils/validSearchParam';
-import { EDBTableTitles, TSearchParams } from '@/models/ui.model';
-import {
-  EUrlAdminParam,
-  EUrlBaseParam,
-  EUrlSearchParam,
-} from '@/models/url.model';
+import { getELangKey } from '@/libs/utils/getLanguage';
+import { validSearchParam } from '@/libs/utils/validSearchParam';
+import { EUrlBaseParam } from '@/models/url/url.model';
+import { EUrlAdminParam } from '@/models/url/urlAdmin.model';
+import { EUrlSearchParam, TSearchParams } from '@/models/url/urlSearch.model';
+import { makeUrlSearchParams } from '@/libs/utils/urlMaker';
+import { EDBTableTitles } from '@/models/dbTblNames.model';
 
 const emailKey = process.env.MAIL_ENCRYPT_KEY || '';
 

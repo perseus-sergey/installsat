@@ -1,22 +1,20 @@
 import React, { ReactNode } from 'react';
-import {
-  BREAD_BASE_PATH,
-  BREAD_SEPARATOR,
-  CUT_LAST_ELEMENT,
-  FIRST_ELEMENT_SIZE,
-} from '@/models/breadCrumbs.model';
-import { ELanguage } from '@/models/ui.model';
-import { cutMiddleOfText } from '@/libs/utils/utils';
+import { ELanguage } from '@/models/language.model';
 import TooltipSimple from '../ui/tooltips/TooltipSimple/TooltipSimple';
 import SeoLink from '../ui/SeoLink/SeoLink';
-
-const { lengthThreshold, numberOfEndWords, numberOfStartWords } =
-  CUT_LAST_ELEMENT;
 
 export interface IBreadCrumbLink {
   title: { [ELanguage.UA]: string; [ELanguage.EN]: string } | string;
   href?: string;
 }
+
+const BREAD_SEPARATOR = '჻';
+
+const CUT_LAST_ELEMENT = {
+  lengthThreshold: 50,
+  numberOfStartWords: 2,
+  numberOfEndWords: 2,
+};
 
 interface IProps extends React.HTMLAttributes<HTMLElement> {
   lang: ELanguage;
@@ -46,23 +44,22 @@ const BreadCrumbServer = ({
         {hasHomeLink && (
           <li className={`list-none text-white`}>
             <SeoLink
-              href={`/${lang}${BREAD_BASE_PATH.href}`}
-              style={{ fontSize: FIRST_ELEMENT_SIZE }}
-              className="hover:underline"
+              href={`/${lang}/`}
+              className="hover:underline text-xl"
               title={
                 lang === ELanguage.UA
                   ? `Перейти до початкової сторінки`
                   : `Go to the home page`
               }
             >
-              {homeTitle || BREAD_BASE_PATH.title[lang]}
+              {homeTitle || lang === ELanguage.UA ? 'На головну' : 'Home'}
             </SeoLink>
           </li>
         )}
         {breadCrumbList && breadCrumbList.length > 0 && (
           <>
             {hasHomeLink && <li className="text-gray-300"> {separator} </li>}
-            {breadCrumbList.map((item, index) => {
+            {breadCrumbList.map(async (item, index) => {
               if (!item) return;
 
               const isCurrentUrl = breadCrumbList.length === index + 1;
@@ -80,12 +77,19 @@ const BreadCrumbServer = ({
                 ? `list-none text-slate-200`
                 : 'list-none';
 
-              const truncatedLinkText = cutMiddleOfText(
-                linkText,
-                lengthThreshold,
-                numberOfStartWords,
-                numberOfEndWords
-              );
+              let truncatedLinkText = linkText;
+
+              if (linkText.length > CUT_LAST_ELEMENT.lengthThreshold) {
+                const { cutMiddleOfText } = await import(
+                  '@/libs/utils/cutText'
+                );
+                truncatedLinkText = cutMiddleOfText(
+                  linkText,
+                  CUT_LAST_ELEMENT.lengthThreshold,
+                  CUT_LAST_ELEMENT.numberOfStartWords,
+                  CUT_LAST_ELEMENT.numberOfEndWords
+                );
+              }
 
               return !isCurrentUrl ? (
                 <React.Fragment key={index}>

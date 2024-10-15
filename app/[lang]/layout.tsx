@@ -1,8 +1,8 @@
 import '../globals.scss';
 import Header from '@/components/Header/Header';
-import { getELangKey } from '@/libs/utils/validSearchParam';
-import { ELanguage } from '@/models/ui.model';
-import { EUrlBaseParam } from '@/models/url.model';
+import { getELangKey } from '@/libs/utils/getLanguage';
+import { ELanguage } from '@/models/language.model';
+import { EUrlBaseParam } from '@/models/url/url.model';
 import dynamic from 'next/dynamic';
 // import GoogleComponents from '@/components/GoogleAdsense/GoogleComponents';
 import AdBlockingRecovery from '@/components/GoogleAdsense/AdBlockingRecovery';

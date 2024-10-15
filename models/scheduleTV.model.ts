@@ -1,5 +1,7 @@
-import { getTodayYesterdayStr } from '@/libs/utils/dates';
-import { ELanguage } from './ui.model';
+import { getTodayYesterdayStr } from '@/libs/utils/dateLuxon';
+import { ELanguage } from './language.model';
+
+export const DEFAULT_TIME_ZONE = 'Europe/Kiev';
 
 export const SCHEDULE_META = {
   h1Start: {

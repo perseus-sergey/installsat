@@ -11,8 +11,8 @@ import {
   getTransNewsSiteMap,
 } from '@/controllers/siteMap.controller';
 import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
-import { DEFAULT_LANG, ELanguage } from '@/models/ui.model';
-import { EUrlBaseParam, MAIN_URL } from '@/models/url.model';
+import { DEFAULT_LANG, ELanguage } from '@/models/language.model';
+import { EUrlBaseParam, MAIN_URL } from '@/models/url/url.model';
 import { MetadataRoute } from 'next';
 
 const BASE = process.env.BASE_URL || MAIN_URL;

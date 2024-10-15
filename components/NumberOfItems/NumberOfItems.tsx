@@ -1,4 +1,4 @@
-import { IFlyChannel } from '@/models/channel.model';
+import { IFlyChannel } from '@/models/channels/channel.model';
 
 export default async function NumberOfItems({
   requestFn,

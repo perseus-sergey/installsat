@@ -1,15 +1,16 @@
 import { Title } from '@/components/ui/Titles/Title';
-import { EDBTableTitles, ELanguage, getDbTableLink } from '@/models/ui.model';
-import { EUrlAdminParam } from '@/models/url.model';
 import { sendMail } from '@/libs/mail/sendMail';
 import { poolExecute } from '@/libs/db/mysqldb';
-import { sleep } from '@/libs/utils/utils';
 import { ResultSetHeader } from 'mysql2';
 import {
   GoogleGenerativeAI,
   HarmBlockThreshold,
   HarmCategory,
 } from '@google/generative-ai';
+import { ELanguage } from '@/models/language.model';
+import { EDBTableTitles, getDbTableLink } from '@/models/dbTblNames.model';
+import { sleep } from '@/libs/utils/sleep';
+import { EUrlAdminParam } from '@/models/url/urlAdmin.model';
 
 export const dynamic = 'force-dynamic';
 

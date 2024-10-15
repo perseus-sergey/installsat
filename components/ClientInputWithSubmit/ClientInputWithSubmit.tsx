@@ -1,9 +1,10 @@
 'use client';
 
-import { makeUrlSearchParams } from '@/libs/utils/utils';
-import { EUrlSearchParam } from '@/models/url.model';
 import { HTMLInputTypeAttribute, ReactNode, useState } from 'react';
+
+import { EUrlSearchParam } from '@/models/url/urlSearch.model';
 import Fieldset from '../ui/Fieldset/Fieldset';
+import { makeUrlSearchParams } from '@/libs/utils/urlMaker';
 
 interface IProps {
   inputId?: string;

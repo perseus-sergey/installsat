@@ -2,15 +2,16 @@
 
 import { SubmitPendingButton } from '@/components/ui/buttons/SubmitPendingBtn';
 import { useFormState } from 'react-dom';
-import { COMMENTS_MODEL, ECommentFormNames } from '@/models/comments.model';
+import { COMMENTS_MODEL, ECommentFormNames } from '@/models/ui/comments.model';
 // import FieldError from '../FieldError/FieldError';
 import { useToastMessage } from '@/libs/hooks/useToastMessage';
 import { useFormReset } from '@/libs/hooks/useFormReset';
-import { EDBTableTitles, ELanguage } from '@/models/ui.model';
+import { EDBTableTitles } from '@/models/dbTblNames.model';
 import { EMPTY_FORM_STATE } from '@/controllers/toast.controller';
 // import { IUserLocation } from '@/models/userLocation.model';
 import { addCommentAction } from '@/libs/actions/comments.action';
 import FieldError from '../FieldError/FieldError';
+import { ELanguage } from '@/models/language.model';
 // import { useCommentSendEmail } from '@/libs/hooks/useCommentSendEmail';
 
 const { AUTHOR, EMAIL, TEXT } = ECommentFormNames;

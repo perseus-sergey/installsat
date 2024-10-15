@@ -1,10 +1,12 @@
 import styles from './CommentBlock.module.scss';
 import CommentForm from '../CommentForm/CommentForm';
-import { EDBTableTitles, ELanguage } from '@/models/ui.model';
-import { COMMENTS_MODEL } from '@/models/comments.model';
-import { EUrlSearchParam, MAIN_URL } from '@/models/url.model';
+import { EDBTableTitles } from '@/models/dbTblNames.model';
+import { COMMENTS_MODEL } from '@/models/ui/comments.model';
 // import { fetchUserLocation } from '@/libs/utils/getUserIP';
 import PaginationComments from '@/components/comments/PaginationComments/PaginationComments';
+import { ELanguage } from '@/models/language.model';
+import { EUrlSearchParam } from '@/models/url/urlSearch.model';
+import { MAIN_URL } from '@/models/url/url.model';
 
 const {
   commentForm,

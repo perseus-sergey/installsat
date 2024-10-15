@@ -1,16 +1,15 @@
 'use client';
 
-import { ISatelliteOption } from '@/models/tblSat.model';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
 import {
-  ESelectType,
   MySelect,
   createSingleControlComponent,
 } from '../ui/ReactSelect/ReactSelect';
 import { SingleValue, components } from 'react-select';
 import { EUrlSearchParam } from '@/models/url/urlSearch.model';
 import { IStateOption } from '@/models/satDigest.model';
+import { ESelectType, ISatelliteOption } from '@/models/reactSelect.model';
 
 interface ISimpleProps extends React.HTMLAttributes<HTMLElement> {
   itemList: readonly IStateOption[];

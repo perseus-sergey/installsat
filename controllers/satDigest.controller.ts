@@ -1,10 +1,6 @@
 import { TGroupedNews } from '@/components/SatNews/SatNews';
 import { poolExecute } from '@/libs/db/mysqldb';
-import {
-  IGroupedSatelliteOption,
-  ISatelliteOption,
-  ISatModel,
-} from '@/models/tblSat.model';
+import { ISatModel } from '@/models/tblSat.model';
 import {
   LAST_NEWS_INTERVAL,
   TRANS_NEWS_LIST_FILTERS,
@@ -15,6 +11,10 @@ import { decode } from 'html-entities';
 import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
 import { cache } from 'react';
 import { DEFAULT_LANG, ELanguage } from '@/models/language.model';
+import {
+  IGroupedSatelliteOption,
+  ISatelliteOption,
+} from '@/models/reactSelect.model';
 
 const { FLY_SATELLITES, TRANS_NEWS } = EDBTableTitles;
 

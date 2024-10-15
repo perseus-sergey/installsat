@@ -1,24 +1,25 @@
 'use client';
 
-import {
-  IGroupedSatelliteOption,
-  ISatelliteOption,
-} from '@/models/tblSat.model';
+import { MultiValue, components } from 'react-select';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useCallback, useEffect, useMemo, useState } from 'react';
+
+import {
+  ESelectType,
+  IGroupedSatelliteOption,
+  ISatelliteOption,
+} from '@/models/reactSelect.model';
 import {
   MySelect,
   Group,
   formatGroupSatLabel,
   createIsMultiControlComponent,
-  ESelectType,
 } from '../ui/ReactSelect/ReactSelect';
-import { MultiValue, components } from 'react-select';
 import { EUrlSearchParam } from '@/models/url/urlSearch.model';
 import {
   makeOptions,
   makeSimpleOptions,
-} from '@/controllers/satFinder.controller';
+} from '@/controllers/reactSelect.controller';
 
 interface ISimpleProps extends React.HTMLAttributes<HTMLElement> {
   itemList: IGroupedSatelliteOption[] | ISatelliteOption[];

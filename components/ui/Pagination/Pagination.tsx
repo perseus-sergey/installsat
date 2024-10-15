@@ -1,10 +1,11 @@
-import { EUrlSearchParam } from '@/models/url.model';
-import { ELanguage, TSearchParams } from '@/models/ui.model';
-import { makeUrlSearchParams } from '@/libs/utils/utils';
+import { EUrlSearchParam } from '@/models/url/urlSearch.model';
+import { TSearchParams } from '@/models/url/urlSearch.model';
 import TooltipSimple from '../tooltips/TooltipSimple/TooltipSimple';
 import SeoLink from '../SeoLink/SeoLink';
-import { ARTICLE_PAGINATION_PARAMS } from '@/models/articles.model';
 import { getPageNumbers } from '@/controllers/pagination.controller';
+import { ARTICLE_PAGINATION_PARAMS } from '@/models/articles/articleList.model';
+import { ELanguage } from '@/models/language.model';
+import { makeUrlSearchParams } from '@/libs/utils/urlMaker';
 
 const {
   nextPageTitle,

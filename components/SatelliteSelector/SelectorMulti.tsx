@@ -4,7 +4,6 @@ import {
   IGroupedSatelliteOption,
   ISatelliteOption,
 } from '@/models/tblSat.model';
-import { ESelectType } from '@/models/ui.model';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
@@ -12,9 +11,10 @@ import {
   Group,
   formatGroupSatLabel,
   createIsMultiControlComponent,
+  ESelectType,
 } from '../ui/ReactSelect/ReactSelect';
 import { MultiValue, components } from 'react-select';
-import { EUrlSearchParam } from '@/models/url.model';
+import { EUrlSearchParam } from '@/models/url/urlSearch.model';
 import {
   makeOptions,
   makeSimpleOptions,

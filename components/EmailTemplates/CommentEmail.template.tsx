@@ -1,13 +1,11 @@
 import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
 import { encrypt } from '@/libs/utils/encrypt';
-import { makeUrlSearchParams } from '@/libs/utils/utils';
-import { ISubscribersEmails } from '@/models/comments.model';
-import { EDBTableTitles, ELanguage } from '@/models/ui.model';
-import {
-  EUrlAdminParam,
-  EUrlBaseParam,
-  EUrlSearchParam,
-} from '@/models/url.model';
+import { ISubscribersEmails } from '@/models/ui/comments.model';
+import { ELanguage } from '@/models/language.model';
+import { EDBTableTitles } from '@/models/dbTblNames.model';
+import { EUrlBaseParam } from '@/models/url/url.model';
+import { EUrlAdminParam } from '@/models/url/urlAdmin.model';
+import { EUrlSearchParam } from '@/models/url/urlSearch.model';
 // import { IUserLocation } from '@/models/userLocation.model';
 import {
   Heading,
@@ -23,6 +21,7 @@ import {
   Section,
   Text,
 } from '@react-email/components';
+import { makeUrlSearchParams } from '@/libs/utils/urlMaker';
 
 const {
   COMMENT_DEL_ARTICLE_ID,

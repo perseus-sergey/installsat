@@ -6,7 +6,7 @@ import puppeteer, { Browser } from 'puppeteer';
 import * as cheerio from 'cheerio';
 import { getContentFromPuppeteerBrowser } from '@/controllers/parse.controller';
 import { killChromeProcesses } from '@/cron/libs/commons.mjs';
-// import { sleep } from '@/libs/utils/utils';
+// import { sleep } from '@/libs/utils/sleep';
 
 // interface IArticle {
 //   originalTitle: string;

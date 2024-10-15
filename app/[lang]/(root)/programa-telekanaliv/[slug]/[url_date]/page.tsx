@@ -1,26 +1,25 @@
-import BottomInfoPanel from '@/components/BottomInfoPanel/BottomInfoPanel';
+import { notFound } from 'next/navigation';
+import { Suspense } from 'react';
+
+import BottomInfoPanel, {
+  INFO_PANEL_TITLES,
+} from '@/components/BottomInfoPanel/BottomInfoPanel';
 import FillingValidImage from '@/components/ui/Images/FillingValidImage';
 import SimilarArticles from '@/components/SimilarArticles/SimilarArticles';
 import { Title } from '@/components/ui/Titles/Title';
 import { getDBOnlineChannel } from '@/controllers/channel.controller';
 // import { getCommentsNumber } from '@/controllers/comments.controller';
-import { cutText } from '@/libs/utils/utils';
+import { cutText } from '@/libs/utils/cutText';
 import {
   CHANNEL_IMAGES,
   CHANNEL_RESPONSIBILITIES,
   SIMILAR_ARTICLE_TITLE,
   SIMILAR_CHANNELS_TITLE,
-} from '@/models/channel.model';
-import {
-  EDBTableTitles,
-  DEFAULT_META_DATA,
-  ELanguage,
-} from '@/models/ui.model';
-import { EUrlBaseParam, MAIN_URL } from '@/models/url.model';
+} from '@/models/channels/channel.model';
+import { EDBTableTitles } from '@/models/dbTblNames.model';
 import { Metadata } from 'next';
 import BreadCrumbServer from '@/components/BreadCrumbs/BreadCrumbsServer';
 import { SCHEDULE_META } from '@/models/scheduleTV.model';
-import { notFound } from 'next/navigation';
 // import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
 import SchedulePage from '@/components/SchedulePage/SchedulePage';
 import { getFormattedDateStrYearFirst, getValidDate } from '@/libs/utils/dates';
@@ -28,12 +27,13 @@ import WeekScheduleTabs from '@/components/tabs/WeekScheduleTabs';
 import NoteBlock from '@/components/ui/NoteBlock/NoteBlock';
 import GrooveLine from '@/components/ui/GrooveLine';
 import ChannelOnlineLink from '@/components/ui/buttons/ChannelOnlineLink/ChannelOnlineLink';
-import { getELangKey } from '@/libs/utils/validSearchParam';
+import { getELangKey } from '@/libs/utils/getLanguage';
 import { getEnvVariable } from '@/libs/utils/envHandler';
-import { INFO_PANEL_TITLES } from '@/models/articles.model';
-import { Suspense } from 'react';
 import SimilarChannels from '@/components/SimilarArticles/SimilarChannels';
 import ArticleWrapper from '@/components/article/ArticleWrapper';
+import { DEFAULT_META_DATA } from '@/models/defaultMeta.model';
+import { ELanguage } from '@/models/language.model';
+import { EUrlBaseParam, MAIN_URL } from '@/models/url/url.model';
 
 const BASE_URL = getEnvVariable('BASE_URL', MAIN_URL);
 

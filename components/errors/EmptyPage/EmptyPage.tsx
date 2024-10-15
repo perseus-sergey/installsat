@@ -1,4 +1,4 @@
-import { ELanguage } from '@/models/ui.model';
+import { ELanguage } from '@/models/language.model';
 import BreadCrumbServer, {
   IBreadCrumbLink,
 } from '@/components/BreadCrumbs/BreadCrumbsServer';

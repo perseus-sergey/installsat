@@ -1,10 +1,5 @@
 'use client';
 
-import {
-  EArticleEditFields,
-  IArticleCategory,
-  TArticleTableModel,
-} from '@/models/articles.model';
 import { useRef, useState } from 'react';
 import { Editor as CoreEditor } from 'tinymce';
 import Link from 'next/link';
@@ -17,6 +12,11 @@ import { editArticleAction } from '@/libs/actions/admin.action';
 import FieldError from '@/components/comments/FieldError/FieldError';
 import TinyEditor from '@/components/TinyEditor/TinyEditor';
 import FormTextareaItem from './FormTextareaItem';
+import {
+  EArticleEditFields,
+  IArticleCategory,
+  TArticleTableModel,
+} from '@/models/articles/articleEdit.model';
 
 interface IProps {
   articleId: string;

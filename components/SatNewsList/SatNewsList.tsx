@@ -11,16 +11,17 @@ import {
 } from '@/controllers/satDigest.controller';
 import EmptyData from '../errors/EmptyData/EmptyData';
 import FillingValidImage from '../ui/Images/FillingValidImage';
-import { ELanguage, TSearchParams } from '@/models/ui.model';
+import { TSearchParams } from '@/models/url/urlSearch.model';
 import {
   validSearchParam,
   validSearchParamArray,
 } from '@/libs/utils/validSearchParam';
-import { EUrlSearchParam } from '@/models/url.model';
+import { EUrlSearchParam } from '@/models/url/urlSearch.model';
 import { TitleH2Digest } from '../ui/Titles/TitleH2Digest';
 import { TitleH3Digest } from '../ui/Titles/TitleH3Digest';
 import { DateLink, SatLink } from '../DateNewsList/DateNewsList';
 import GoUpLink from '../ui/GoUpLink/GoUpLink';
+import { ELanguage } from '@/models/language.model';
 
 interface ISatNewsListProps {
   searchParams: TSearchParams;

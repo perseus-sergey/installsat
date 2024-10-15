@@ -1,12 +1,6 @@
 import { Title } from '@/components/ui/Titles/Title';
-import { TSearchParams } from '@/models/ui.model';
+import { EUrlSearchParam, TSearchParams } from '@/models/url/urlSearch.model';
 import { validSearchParam } from '@/libs/utils/validSearchParam';
-import { EUrlSearchParam } from '@/models/url.model';
-import React from 'react';
-// import {
-//   generateChannelAbout,
-//   updateGeneratedDataDB,
-// } from '@/cron/libs/flyChannelAbout.controller';
 import {
   generateChannelAbout,
   updateGeneratedDataDB,

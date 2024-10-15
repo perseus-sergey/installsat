@@ -1,0 +1,16 @@
+export enum EUrlAdminParam {
+  ID = 'id',
+  BASE_PATH = 'guru',
+  EDIT_COMMENT = 'edit-comments',
+  ARTICLES_EDIT = 'articles',
+  CHANNELS_EDIT = 'channels',
+  PARSE = 'parse',
+  PARSE_SCHEDULE_VSETV = 'vsetv',
+  PARSE_SCHEDULE_VIPIKO = 'vipiko',
+  PARSE_FLY_SATELLITES = 'fly-sat',
+  PARSE_FLY_CHANNELS = 'fly-channels',
+  PARSE_FLY_CHANNEL_ABOUT = 'fly-channel-about',
+  CHANNEL_ABOUT_ONE_SAT = 'channel-descriptions-one-sat',
+  PARSE_SAT_DIGEST = 'trans-news',
+  PARSE_SAT_NEWS = 'satellite-news',
+}

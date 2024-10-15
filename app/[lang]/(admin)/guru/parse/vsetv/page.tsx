@@ -1,7 +1,10 @@
-import { Title } from '@/components/ui/Titles/Title';
-import * as cheerio from 'cheerio';
-import { getFormattedDate } from '@/libs/utils/dates';
 import { DateTime } from 'luxon';
+import { cache } from 'react';
+import Link from 'next/link';
+import axios from 'axios';
+import * as cheerio from 'cheerio';
+
+import { Title } from '@/components/ui/Titles/Title';
 import {
   deleteDBVseTvChannel,
   getDBVseTvChannels,
@@ -9,28 +12,24 @@ import {
   insertDBVseTvChannels,
   truncateDBVseTv,
 } from '@/controllers/schedule.controller';
-import { EDBTableTitles, TSearchParams } from '@/models/ui.model';
 import {
-  getELangKey,
   validSearchParam,
   validSearchParamArray,
 } from '@/libs/utils/validSearchParam';
-import {
-  EUrlAdminParam,
-  EUrlBaseParam,
-  EUrlSearchParam,
-} from '@/models/url.model';
+import { EUrlBaseParam } from '@/models/url/url.model';
+import { EUrlAdminParam } from '@/models/url/urlAdmin.model';
+import { EUrlSearchParam, TSearchParams } from '@/models/url/urlSearch.model';
 import { IVseTvErrorChannel, IVseTvParsModel } from '@/models/scheduleTV.model';
-import { cache } from 'react';
-import Link from 'next/link';
-import { createURLWithParams } from '@/libs/utils/utils';
-import axios from 'axios';
 import iconv from 'iconv-lite';
 import { IDbIdAmountModel } from '@/models/admin.model';
 import { sendMail } from '@/libs/mail/sendMail';
 import { renderAsync } from '@react-email/render';
 import { ParseVseTvEmailTemplate } from '@/components/EmailTemplates/parseVseTv.template';
 import { getPool } from '@/libs/db/mysqldb';
+import { getFormattedDate } from '@/libs/utils/dateLuxon';
+import { createURLWithParams } from '@/libs/utils/urlMaker';
+import { EDBTableTitles } from '@/models/dbTblNames.model';
+import { getELangKey } from '@/libs/utils/getLanguage';
 
 interface IShowsData {
   startTime: string;

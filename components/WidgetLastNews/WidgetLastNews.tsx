@@ -1,6 +1,6 @@
 import { getLastNewsWidgetList } from '@/controllers/sidebar.controller';
-import { WIDGET_LAST_NEWS } from '@/models/widget.model';
-import { ELanguage } from '@/models/ui.model';
+import { WIDGET_LAST_NEWS } from '@/models/ui/widget.model';
+import { ELanguage } from '@/models/language.model';
 import SeoLink from '../ui/SeoLink/SeoLink';
 import titleLinkImg from 'public/Images/last_news_55.png';
 import Image from 'next/image';

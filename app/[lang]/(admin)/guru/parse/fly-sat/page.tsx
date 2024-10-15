@@ -1,19 +1,15 @@
 import { Title } from '@/components/ui/Titles/Title';
-import {
-  EDBTableTitles,
-  ELanguage,
-  TSearchParams,
-  getDbTableLink,
-} from '@/models/ui.model';
 import Link from 'next/link';
 import { validSearchParam } from '@/libs/utils/validSearchParam';
-import { EUrlSearchParam } from '@/models/url.model';
 import { EUrlAdminParam, EUrlBaseParam } from '@/cron/libs/commons.mjs';
 import { sendMail } from '@/libs/mail/sendMail';
 import { renderAsync } from '@react-email/render';
 import { ParseTransNews } from '@/components/EmailTemplates/parseTransNews.template';
 import { parseProcess } from '@/cron/libs/parseALLFlySats.controller.mjs';
 import { revalidatePath } from 'next/cache';
+import { ELanguage } from '@/models/language.model';
+import { EDBTableTitles, getDbTableLink } from '@/models/dbTblNames.model';
+import { EUrlSearchParam, TSearchParams } from '@/models/url/urlSearch.model';
 
 export const dynamic = 'force-dynamic';
 

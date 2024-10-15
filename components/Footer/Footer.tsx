@@ -4,8 +4,8 @@ import {
   footerColumnTitles,
   footerMenuList,
   IFooterMenuItem,
-} from '@/models/footer.model';
-import { ELanguage } from '@/models/ui.model';
+} from '@/models/ui/footer.model';
+import { ELanguage } from '@/models/language.model';
 import React, { Fragment } from 'react';
 import SeoLink from '../ui/SeoLink/SeoLink';
 

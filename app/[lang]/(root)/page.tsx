@@ -2,13 +2,13 @@ import ArticleWrapper from '@/components/article/ArticleWrapper';
 import FormDigestInterval from '@/components/FormDigestInterval/FormDigestInterval';
 import SatNews from '@/components/SatNews/SatNews';
 import { Title } from '@/components/ui/Titles/Title';
-import { getELangKey } from '@/libs/utils/validSearchParam';
+import { getELangKey } from '@/libs/utils/getLanguage';
 import {
   LAST_NEWS_INTERVAL,
   META_TRANS_NEWS_LIST,
 } from '@/models/satDigest.model';
-import { TSearchParams } from '@/models/ui.model';
-import { EUrlBaseParam, EUrlSearchParam } from '@/models/url.model';
+import { EUrlBaseParam } from '@/models/url/url.model';
+import { EUrlSearchParam, TSearchParams } from '@/models/url/urlSearch.model';
 import { Suspense } from 'react';
 
 interface IProps {

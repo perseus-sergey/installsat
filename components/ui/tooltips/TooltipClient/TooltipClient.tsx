@@ -3,7 +3,7 @@
 import { ReactNode, Suspense, useEffect, useState } from 'react';
 import styles from './TooltipClient.module.scss';
 import BaseButton from '../../buttons/BaseButton/BaseButton';
-import { ELanguage } from '@/models/ui.model';
+import { ELanguage } from '@/models/language.model';
 
 const CAPTIONS = {
   ariaLabelSmall: {

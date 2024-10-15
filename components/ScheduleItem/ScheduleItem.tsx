@@ -1,6 +1,5 @@
 import { DateTime } from 'luxon';
-import { IScheduleTVModel } from '@/models/scheduleTV.model';
-import { DEFAULT_TIME_ZONE } from '@/models/ui.model';
+import { DEFAULT_TIME_ZONE, IScheduleTVModel } from '@/models/scheduleTV.model';
 
 interface IScheduleItemProps {
   schedule: IScheduleTVModel;

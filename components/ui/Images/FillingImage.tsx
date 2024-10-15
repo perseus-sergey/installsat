@@ -1,5 +1,5 @@
+import { IMG_PROPERTIES } from '@/models/ui/image.model';
 import Image from 'next/image';
-import { IMG_PROPERTIES } from '@/models/ui.model';
 
 interface IFillingImgProps extends React.ImgHTMLAttributes<HTMLImageElement> {
   width: number;

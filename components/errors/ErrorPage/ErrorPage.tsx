@@ -1,10 +1,16 @@
-import { ELanguage, ERROR_PAGE_TITLE } from '@/models/ui.model';
+import { ELanguage } from '@/models/language.model';
 import Image from 'next/image';
 import emptyPageImg from 'public/Images/empty_page.png';
 
 interface IErrorPageProps {
   resetFn: () => void;
 }
+
+const ERROR_PAGE_TITLE = {
+  [ELanguage.UA]:
+    '⚠ Не вдалося завантажити контент. Будь ласка, спробуйте пізніше.',
+  [ELanguage.EN]: '⚠ Failed to load content. Please try again later.',
+};
 
 const ErrorPage = ({ resetFn }: IErrorPageProps) => (
   <section className="flex flex-col justify-center items-center min-h-screen gap-8 p-4 bg-blue-100 border border-stone-400 rounded-md">

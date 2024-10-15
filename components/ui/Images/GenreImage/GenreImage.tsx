@@ -1,11 +1,11 @@
 import {
   MChanTheme,
   SAT_CHANNEL_LIST_IMAGES,
-} from '@/models/channelList.model';
+} from '@/models/channels/channelList.model';
 import TooltipSimple from '../../tooltips/TooltipSimple/TooltipSimple';
 import FillingImg from '../FillingImage';
 import React from 'react';
-import { ELanguage } from '@/models/ui.model';
+import { ELanguage } from '@/models/language.model';
 
 const { genreImage } = SAT_CHANNEL_LIST_IMAGES;
 

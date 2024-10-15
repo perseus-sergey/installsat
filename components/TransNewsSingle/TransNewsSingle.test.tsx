@@ -3,7 +3,7 @@ import '@testing-library/jest-dom/extend-expect';
 import TransNewsSingle from './TransNewsSingle';
 import test, { describe } from 'node:test';
 import { getTransNewsForSingleDay } from '@/controllers/satDigest.controller';
-import { ELanguage } from '@/models/ui.model';
+import { ELanguage } from '@/models/language.model';
 
 describe('<TransNewsSingle />', async () => {
   const newsDate = '2024-02-02';

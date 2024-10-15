@@ -1,5 +1,5 @@
-import { SCHEDULE_LINK } from '@/models/channel.model';
-import { ELanguage } from '@/models/ui.model';
+import { SCHEDULE_LINK } from '@/models/channels/channel.model';
+import { ELanguage } from '@/models/language.model';
 import SeoLink from '../ui/SeoLink/SeoLink';
 import scheduleImg from 'public/Images/schedule-icon96.png';
 import Image from 'next/image';

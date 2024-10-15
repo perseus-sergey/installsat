@@ -4,7 +4,7 @@ interface IDangerHtmlProps {
   wrapperTagName?: keyof JSX.IntrinsicElements;
 }
 
-const DangerHtml: React.FC<IDangerHtmlProps> = ({
+const DangerHtml = ({
   text,
   wrapperTagName = 'div',
   className,

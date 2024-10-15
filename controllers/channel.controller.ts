@@ -4,8 +4,9 @@ import {
   IFlyChannel,
   IOnlineChannel,
   ISimilarChannel,
-} from '@/models/channel.model';
-import { EDBTableTitles, ELanguage } from '@/models/ui.model';
+} from '@/models/channels/channel.model';
+import { ELanguage } from '@/models/language.model';
+import { EDBTableTitles } from '@/models/dbTblNames.model';
 import { cache } from 'react';
 
 const {

@@ -4,12 +4,11 @@ import {
   META_ONLINE_CHANNEL_LIST,
   ONLINE_CHANNEL_LIST_DATA,
   ONLINE_CHANNEL_LIST_IMAGES,
-} from '@/models/channelList.model';
+} from '@/models/channels/channelList.model';
 import type { Metadata } from 'next';
-import { TSearchParams, DEFAULT_META_DATA, ELanguage } from '@/models/ui.model';
-import { EUrlBaseParam, EUrlSearchParam, MAIN_URL } from '@/models/url.model';
+import { EUrlSearchParam, TSearchParams } from '@/models/url/urlSearch.model';
 import { Suspense } from 'react';
-import { getELangKey } from '@/libs/utils/validSearchParam';
+import { getELangKey } from '@/libs/utils/getLanguage';
 import PackageChannelList from '@/components/channelList/PackageChannelList';
 import BreadCrumbServer from '@/components/BreadCrumbs/BreadCrumbsServer';
 import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
@@ -17,6 +16,9 @@ import { SCHEDULE_META } from '@/models/scheduleTV.model';
 import Image from 'next/image';
 import h1Img from 'public/Images/packages/Popcorn-icon.png';
 import ArticleWrapper from '@/components/article/ArticleWrapper';
+import { DEFAULT_META_DATA } from '@/models/defaultMeta.model';
+import { ELanguage } from '@/models/language.model';
+import { EUrlBaseParam, MAIN_URL } from '@/models/url/url.model';
 
 const BASE_URL = process.env.BASE_URL || MAIN_URL;
 

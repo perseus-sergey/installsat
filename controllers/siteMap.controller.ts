@@ -1,7 +1,7 @@
 import { poolExecute } from '@/libs/db/mysqldb';
-import { WRONG_CAT_IDS } from './articles.controller';
 import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
-import { EDBTableTitles } from '@/models/ui.model';
+import { WRONG_CAT_IDS } from '@/models/articles/articleList.model';
+import { EDBTableTitles } from '@/models/dbTblNames.model';
 
 const { ARTICLE: TBL_ARTICLE, FLY_CHANNELS, FLY_SATELLITES } = EDBTableTitles;
 

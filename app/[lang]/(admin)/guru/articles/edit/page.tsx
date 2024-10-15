@@ -1,3 +1,7 @@
+import Link from 'next/link';
+import { notFound } from 'next/navigation';
+import { Suspense } from 'react';
+
 import DeleteItemButton from '@/components/admin/DeleteItemButton/DeleteItemButton';
 import EmptyData from '@/components/errors/EmptyData/EmptyData';
 import Filter from '@/components/ui/Filter/Filter';
@@ -5,24 +9,20 @@ import Pagination from '@/components/ui/Pagination/Pagination';
 import { Title } from '@/components/ui/Titles/Title';
 import { getAdminChunkOfNews } from '@/controllers/admin.controller';
 import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
-import { getELangKey, validSearchParam } from '@/libs/utils/validSearchParam';
-import { ARTICLE_LIST_MODEL } from '@/models/articles.model';
-import { EDBTableTitles, TSearchParams } from '@/models/ui.model';
-import {
-  EUrlAdminParam,
-  EUrlBaseParam,
-  EUrlSearchParam,
-} from '@/models/url.model';
-import Link from 'next/link';
-import { notFound } from 'next/navigation';
-import { Suspense } from 'react';
+import { validSearchParam } from '@/libs/utils/validSearchParam';
+import { ARTICLE_LIST_MODEL } from '@/models/articles/articleList.model';
+import { SEARCH_FIELD } from '@/models/ui/searchField.model';
+import { EUrlAdminParam } from '@/models/url/urlAdmin.model';
+import { EUrlBaseParam } from '@/models/url/url.model';
+import { EUrlSearchParam, TSearchParams } from '@/models/url/urlSearch.model';
+import { getELangKey } from '@/libs/utils/getLanguage';
+import { EDBTableTitles } from '@/models/dbTblNames.model';
 
 const { BASE_PATH, ARTICLES_EDIT } = EUrlAdminParam;
 
-const {
-  search: { placeholder, labelTitle },
-  articlesCountCaption,
-} = ARTICLE_LIST_MODEL;
+const { articlesCountCaption } = ARTICLE_LIST_MODEL;
+
+const { placeholder, labelTitle } = SEARCH_FIELD;
 
 const PAGINATION = {
   perPage: 30,

@@ -1,7 +1,8 @@
-import { ELanguage, ESelectType } from '@/models/ui.model';
-import { EUrlSearchParam } from '@/models/url.model';
+import { EUrlSearchParam } from '@/models/url/urlSearch.model';
 import { SelectorMulti } from '../SatelliteSelector/SelectorMulti';
 import { IGroupedSatelliteOption } from '@/models/tblSat.model';
+import { ESelectType } from '../ui/ReactSelect/ReactSelect';
+import { ELanguage } from '@/models/language.model';
 
 export default async function SatelliteSelector({
   lang,

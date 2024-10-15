@@ -12,7 +12,7 @@ import { Polyline } from '@/components/mapComponents/Polyline';
 import FillingImg from '../../ui/Images/FillingImage';
 import { SAT_FINDER_META_DATA } from '@/models/satFinder.model';
 import { Dispatch, SetStateAction } from 'react';
-import { ELanguage } from '@/models/ui.model';
+import { ELanguage } from '@/models/language.model';
 
 interface IGoogleMapProps {
   lang: ELanguage;

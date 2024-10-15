@@ -1,7 +1,8 @@
 import { useRef, useEffect } from 'react';
-import { EDBTableTitles, ELanguage } from '@/models/ui.model';
+import { EDBTableTitles } from '@/models/dbTblNames.model';
 import { IFormState } from '@/controllers/toast.controller';
-import { EMAIL_DATA } from '@/models/comments.model';
+import { EMAIL_DATA } from '@/models/ui/comments.model';
+import { ELanguage } from '@/models/language.model';
 // import { IUserLocation } from '@/models/userLocation.model';
 
 export const useFormCommentSendEmail = (

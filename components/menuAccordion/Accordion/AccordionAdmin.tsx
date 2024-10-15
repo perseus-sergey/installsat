@@ -1,8 +1,8 @@
 import styles from './Accordion.module.scss';
 import Link from 'next/link';
 import { AccordionMenuItem } from '../AccordionMenuItem/AccordionMenuItem';
-import { MENU_ACCORDION_ADMIN } from '@/models/menuAccordionAdmin.model';
-import { ELanguage } from '@/models/ui.model';
+import { MENU_ACCORDION_ADMIN } from '@/models/ui/menuAccordionAdmin.model';
+import { ELanguage } from '@/models/language.model';
 
 const { EN } = ELanguage;
 

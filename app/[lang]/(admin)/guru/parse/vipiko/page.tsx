@@ -1,15 +1,9 @@
 import { Title } from '@/components/ui/Titles/Title';
-import {
-  EDBTableTitles,
-  TSearchParams,
-  getDbTableLink,
-} from '@/models/ui.model';
-import { getELangKey, validSearchParam } from '@/libs/utils/validSearchParam';
-import {
-  EUrlAdminParam,
-  EUrlBaseParam,
-  EUrlSearchParam,
-} from '@/models/url.model';
+import { getELangKey } from '@/libs/utils/getLanguage';
+import { validSearchParam } from '@/libs/utils/validSearchParam';
+import { EUrlBaseParam } from '@/models/url/url.model';
+import { EUrlAdminParam } from '@/models/url/urlAdmin.model';
+import { EUrlSearchParam, TSearchParams } from '@/models/url/urlSearch.model';
 import axios from 'axios';
 import { sendMail } from '@/libs/mail/sendMail';
 import { renderAsync } from '@react-email/render';
@@ -20,6 +14,7 @@ import { createGunzip } from 'zlib';
 import sax from 'sax';
 import { getDbIdAmount } from '@/controllers/schedule.controller';
 import { clearTable } from '@/controllers/parse.controller';
+import { EDBTableTitles, getDbTableLink } from '@/models/dbTblNames.model';
 
 export const dynamic = 'force-dynamic';
 

@@ -2,8 +2,8 @@
 
 import { poolExecute } from '@/libs/db/mysqldb';
 import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
-import { ICommentsModel, ISubscribersEmails } from '@/models/comments.model';
-import { EDBTableTitles } from '@/models/ui.model';
+import { ICommentsModel, ISubscribersEmails } from '@/models/ui/comments.model';
+import { EDBTableTitles } from '@/models/dbTblNames.model';
 import { ResultSetHeader } from 'mysql2';
 import { cache } from 'react';
 

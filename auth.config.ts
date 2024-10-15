@@ -1,6 +1,7 @@
 import type { NextAuthConfig } from 'next-auth';
-import { EUrlAdminParam, EUrlBaseParam } from './models/url.model';
-import { ELanguage } from './models/ui.model';
+import { EUrlBaseParam } from './models/url/url.model';
+import { ELanguage } from './models/language.model';
+import { EUrlAdminParam } from './models/url/urlAdmin.model';
 
 export const authConfig = {
   pages: {

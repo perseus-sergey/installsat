@@ -1,5 +1,6 @@
-import { ELanguage } from './ui.model';
-import { EUrlBaseParam, EUrlSearchParam } from './url.model';
+import { ELanguage } from '../language.model';
+import { EUrlBaseParam } from '../url/url.model';
+import { EUrlSearchParam } from '../url/urlSearch.model';
 
 export const CHANNEL_LIST_ANCHOR_START = 'genre-';
 export const ONLINE_CHANNEL_LIST_DB_ID = '16';

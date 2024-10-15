@@ -1,4 +1,4 @@
-import { EUrlSearchParam } from '@/models/url.model';
+import { EUrlSearchParam } from '@/models/url/urlSearch.model';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useRef, useState } from 'react';
 import { useDebouncedCallback } from 'use-debounce';

@@ -1,6 +1,7 @@
 import { poolExecute } from '@/libs/db/mysqldb';
+import { DB_ARRAY_SEPARATOR } from '@/models/channels/channel.model';
 import { IStateOption } from '@/models/satDigest.model';
-import { DB_ARRAY_SEPARATOR, EDBTableTitles } from '@/models/ui.model';
+import { EDBTableTitles } from '@/models/dbTblNames.model';
 import { audioLanguages, wrongAudio } from '@cron/libs/languages.mjs';
 import { cache } from 'react';
 

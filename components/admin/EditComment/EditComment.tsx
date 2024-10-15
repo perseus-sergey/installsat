@@ -4,7 +4,7 @@ import { useFormState } from 'react-dom';
 import { useToastMessage } from '@/libs/hooks/useToastMessage';
 import { EMPTY_FORM_STATE } from '@/controllers/toast.controller';
 import { editCommentAction } from '@/libs/actions/comments.action';
-import { EDBTableTitles } from '@/models/ui.model';
+import { EDBTableTitles } from '@/models/dbTblNames.model';
 import {
   CancelLinkButton,
   ConfirmSubmitButton,

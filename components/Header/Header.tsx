@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
-import { LOGO } from '@/models/header.model';
-import { ELanguage } from '@/models/ui.model';
+import { LOGO } from '@/models/ui/header.model';
+import { ELanguage } from '@/models/language.model';
 import LangSwitchButton from '../LangSwitchButton/LangSwitchButton';
 import SeoLink from '../ui/SeoLink/SeoLink';
 import siteLogotype from 'public/Images/InstallsatOrigBlue_200.png';

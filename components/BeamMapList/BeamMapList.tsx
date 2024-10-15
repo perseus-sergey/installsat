@@ -1,13 +1,13 @@
+import { TitleH2 } from '../ui/Titles/TitleH2';
+import { ELanguage } from '@/models/language.model';
+import FillingImg from '../ui/Images/FillingImage';
+import React, { Fragment } from 'react';
+import TooltipClient from '../ui/tooltips/TooltipClient/TooltipClient';
 import {
   IMapModel,
   META_SINGLE_SAT_MAP,
   SINGLE_SAT_MAP_DATA,
-} from '@/models/articles.model';
-import { TitleH2 } from '../ui/Titles/TitleH2';
-import { ELanguage } from '@/models/ui.model';
-import FillingImg from '../ui/Images/FillingImage';
-import React, { Fragment } from 'react';
-import TooltipClient from '../ui/tooltips/TooltipClient/TooltipClient';
+} from '@/models/mapCoverage.model';
 
 const { h2Start } = META_SINGLE_SAT_MAP;
 

@@ -6,7 +6,7 @@ import { SubmitPendingButton } from '@/components/ui/buttons/SubmitPendingBtn';
 import { useToastMessage } from '@/libs/hooks/useToastMessage';
 import { EMPTY_FORM_STATE } from '@/controllers/toast.controller';
 import { deleteCommentAction } from '@/libs/actions/comments.action';
-import { EDBTableTitles } from '@/models/ui.model';
+import { EDBTableTitles } from '@/models/dbTblNames.model';
 
 interface IProps {
   itemID: string;

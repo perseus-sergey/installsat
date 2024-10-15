@@ -1,8 +1,9 @@
 'use server';
 
 import { IFormState } from '@/controllers/toast.controller';
-import { ECommentFormNames } from '@/models/comments.model';
-import { EDBTableTitles, ELanguage } from '@/models/ui.model';
+import { ECommentFormNames } from '@/models/ui/comments.model';
+import { ELanguage } from '@/models/language.model';
+import { EDBTableTitles } from '@/models/dbTblNames.model';
 
 const emptyFieldValues = {
   authorName: '',
@@ -18,7 +19,7 @@ const getCommentSchema = async (lang: ELanguage) => {
     COMMENTS_MODEL: {
       commentForm: { authorName, authorEmail, commentText },
     },
-  } = await import('@/models/comments.model');
+  } = await import('@/models/ui/comments.model');
 
   return z.object({
     [AUTHOR]: z

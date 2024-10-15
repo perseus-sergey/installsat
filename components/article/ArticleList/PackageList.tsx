@@ -1,15 +1,15 @@
 import ArticleCard from '../ArticleCard/ArticleCard';
 import FillingValidImage from '../../ui/Images/FillingValidImage';
-import { EUrlBaseParam } from '@/models/url.model';
-import { cutText } from '@/libs/utils/utils';
+import { EUrlBaseParam } from '@/models/url/url.model';
+import { cutText } from '@/libs/utils/cutText';
 import DangerHtml from '../../ui/DangerHtml/DangerHtml';
 import {
   IChannelPackagesModel,
   PACKAGES_IMAGES,
-} from '@/models/channelList.model';
+} from '@/models/channels/channelList.model';
 import EmptyData from '@/components/errors/EmptyData/EmptyData';
-import { ELanguage } from '@/models/ui.model';
-import { INFO_PANEL_TITLES } from '@/models/articles.model';
+import { ELanguage } from '@/models/language.model';
+import { INFO_PANEL_TITLES } from '@/components/BottomInfoPanel/BottomInfoPanel';
 
 const { packageImage } = PACKAGES_IMAGES;
 

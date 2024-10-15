@@ -1,13 +1,14 @@
 import type { Metadata } from 'next';
 import SideBar from '@/components/SideBar/SideBar';
 import { META_TRANS_NEWS_LIST } from '@/models/satDigest.model';
-import { DEFAULT_META_DATA, ELanguage } from '@/models/ui.model';
 import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
-import { EUrlBaseParam, MAIN_URL } from '@/models/url.model';
-import { getELangKey } from '@/libs/utils/validSearchParam';
+import { getELangKey } from '@/libs/utils/getLanguage';
 import SideBarServer from '@/components/SideBar/SideBarServer';
 import { Suspense } from 'react';
 import RightAside from '@/components/SideBar/RightAside';
+import { DEFAULT_META_DATA } from '@/models/defaultMeta.model';
+import { ELanguage } from '@/models/language.model';
+import { EUrlBaseParam, MAIN_URL } from '@/models/url/url.model';
 
 const BASE_URL = process.env.BASE_URL || MAIN_URL;
 

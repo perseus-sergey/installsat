@@ -1,9 +1,26 @@
+import { DEFAULT_LANG, ELanguage } from '@/models/language.model';
 import { Title } from '../../ui/Titles/Title';
-import { DEFAULT_LANG, NOT_FOUND_PAGE } from '@/models/ui.model';
 import SeoLink from '@/components/ui/SeoLink/SeoLink';
 import Image from 'next/image';
 import emptyPageImg from 'public/Images/empty_page.png';
 import mainLogoImg from 'public/Images/InstallsatOrig_400.png';
+
+export const NOT_FOUND_PAGE = {
+  NOT_FOUND_TITLE: {
+    [ELanguage.UA]: 'Сторінку не знайдено.',
+    [ELanguage.EN]: 'Page not found.',
+  },
+  NOT_FOUND_DESCRIPTION: {
+    [ELanguage.UA]:
+      'На жаль, зазначену сторінку не знайдено. Можливо, вона була видалена або переміщена.',
+    [ELanguage.EN]:
+      'Unfortunately, the specified page was not found. It may have been deleted or moved.',
+  },
+  NOT_FOUND_ACTION: {
+    [ELanguage.UA]: 'Перейти на головну сторінку.',
+    [ELanguage.EN]: 'Go to the main page.',
+  },
+};
 
 const NotFoundPage = () => (
   <div

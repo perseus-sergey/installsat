@@ -1,6 +1,6 @@
 import { Browser } from 'puppeteer';
 import { poolExecute } from '@/libs/db/mysqldb';
-import { EDBTableTitles } from '@/models/ui.model';
+import { EDBTableTitles } from '@/models/dbTblNames.model';
 
 export const getContentFromPuppeteerBrowser = async (
   browser: Browser,

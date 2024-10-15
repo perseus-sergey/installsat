@@ -1,7 +1,7 @@
 import { auth } from '@/auth';
 import SignUpForm from '@/components/SignUpForm/SignUpForm';
 import { Title } from '@/components/ui/Titles/Title';
-import { ELanguage } from '@/models/ui.model';
+import { ELanguage } from '@/models/language.model';
 import { redirect } from 'next/navigation';
 
 const LoginPage = async () => {

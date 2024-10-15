@@ -1,4 +1,4 @@
-import { ELanguage, ERROR_EMPTY_DATA } from '@/models/ui.model';
+import { ELanguage } from '@/models/language.model';
 import Image from 'next/image';
 import emptyPageImg from 'public/Images/empty_page.png';
 
@@ -6,6 +6,11 @@ interface IEmptyDataProps {
   lang: ELanguage;
   description?: string;
 }
+
+const ERROR_EMPTY_DATA = {
+  [ELanguage.UA]: 'На жаль, запит повернув порожній результат',
+  [ELanguage.EN]: 'Unfortunately, the query returned an empty result',
+};
 
 const EmptyData = ({ description, lang }: IEmptyDataProps) => (
   <section

@@ -1,17 +1,16 @@
+import Link from 'next/link';
+import * as React from 'react';
+
 import BreadCrumbServer from '@/components/BreadCrumbs/BreadCrumbsServer';
 import FormEditChannel from '@/components/admin/FormEditArticle/FormEditChannel';
 import EmptyData from '@/components/errors/EmptyData/EmptyData';
 import GrooveLine from '@/components/ui/GrooveLine';
 import { Title } from '@/components/ui/Titles/Title';
 import { getEditDbChannel } from '@/controllers/admin.controller';
-import { getELangKey } from '@/libs/utils/validSearchParam';
-import {
-  EUrlAdminParam,
-  EUrlBaseParam,
-  EUrlSearchParam,
-} from '@/models/url.model';
-import Link from 'next/link';
-import * as React from 'react';
+import { getELangKey } from '@/libs/utils/getLanguage';
+import { EUrlBaseParam } from '@/models/url/url.model';
+import { EUrlAdminParam } from '@/models/url/urlAdmin.model';
+import { EUrlSearchParam } from '@/models/url/urlSearch.model';
 
 interface IParams {
   params: { [key in EUrlAdminParam | EUrlBaseParam]: string };

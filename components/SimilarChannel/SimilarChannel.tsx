@@ -1,7 +1,7 @@
-import { IFlyChannel, SIMILAR_CHANNELS } from '@/models/channel.model';
+import { IFlyChannel, SIMILAR_CHANNELS } from '@/models/channels/channel.model';
 // import Link from 'next/link';
-import { EUrlBaseParam } from '@/models/url.model';
-import { ELanguage } from '@/models/ui.model';
+import { EUrlBaseParam } from '@/models/url/url.model';
+import { ELanguage } from '@/models/language.model';
 // import { CHANNEL_LIST_ANCHOR_START } from '@/models/channelList.model';
 import SeoLink from '../ui/SeoLink/SeoLink';
 

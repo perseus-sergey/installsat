@@ -5,30 +5,30 @@ import {
   ALL_SAT_CHANNEL_LIST_LINKS,
   META_SAT_CHANNEL_LIST,
   SAT_CHANNEL_LIST_IMAGES,
-} from '@/models/channelList.model';
+} from '@/models/channels/channelList.model';
 import type { Metadata } from 'next';
 import StartArticleSection from '@/components/article/StartArticleSection/StartArticleSection';
 import FillingValidImage from '@/components/ui/Images/FillingValidImage';
 import { Suspense } from 'react';
-import { DEFAULT_META_DATA, ELanguage, TSearchParams } from '@/models/ui.model';
-import { EUrlBaseParam, EUrlSearchParam, MAIN_URL } from '@/models/url.model';
-// import { getCommentsNumber } from '@/controllers/comments.controller';
-// import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
 import BreadCrumbServer from '@/components/BreadCrumbs/BreadCrumbsServer';
 import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
-import { getELangKey } from '@/libs/utils/validSearchParam';
+import { getELangKey } from '@/libs/utils/getLanguage';
 import FlyChannelsTable from '@/components/SatChannelsTable/FlyChannelsTable';
 import Fieldset from '@/components/ui/Fieldset/Fieldset';
 import Filter from '@/components/ui/Filter/Filter';
 import ChannelFormatSliders from '@/components/ui/ChannelFormatSliders/ChannelFormatSliders';
 import EmptyPage from '@/components/errors/EmptyPage/EmptyPage';
 import { getFlySatParams } from '@/controllers/satDigest.controller';
-import { makeUrlSearchParams } from '@/libs/utils/utils';
-import { BREAD_SAT_CHANNEL_LIST } from '@/models/breadCrumbs.model';
+import { EUrlSearchParam } from '@/models/url/urlSearch.model';
 import NumberOfItems from '@/components/NumberOfItems/NumberOfItems';
 import { getChannelsLangList } from '@/controllers/languageList.controller';
 import LanguageSelector from '@/components/CustomSelectors/LanguageSelector';
 import ArticleWrapper from '@/components/article/ArticleWrapper';
+import { DEFAULT_META_DATA } from '@/models/defaultMeta.model';
+import { ELanguage } from '@/models/language.model';
+import { EUrlBaseParam, MAIN_URL } from '@/models/url/url.model';
+import { TSearchParams } from '@/models/url/urlSearch.model';
+import { makeUrlSearchParams } from '@/libs/utils/urlMaker';
 
 const BASE_URL = process.env.BASE_URL || MAIN_URL;
 
@@ -44,6 +44,14 @@ const {
   resetAllFiltersButton,
 } = ALL_SAT_CHANNEL_LIST_FILTERS;
 const { anchors } = ALL_SAT_CHANNEL_LIST_LINKS;
+
+const BREAD_SAT_CHANNEL_LIST = {
+  href: EUrlBaseParam.SAT_CHANNEL_LIST,
+  title: {
+    [ELanguage.UA]: 'Список каналів супутників',
+    [ELanguage.EN]: 'List of satellite channels',
+  },
+};
 
 interface IPageProps {
   params: { [key in EUrlBaseParam]: string };

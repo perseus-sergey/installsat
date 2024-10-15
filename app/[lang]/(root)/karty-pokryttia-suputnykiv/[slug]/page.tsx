@@ -1,39 +1,46 @@
 import type { Metadata } from 'next';
 import React from 'react';
-import { EUrlBaseParam, MAIN_URL } from '@/models/url.model';
-import {
-  EDBTableTitles,
-  DEFAULT_META_DATA,
-  ELanguage,
-} from '@/models/ui.model';
-import { getSatMap, updateViewCount } from '@/controllers/articles.controller';
+import { EDBTableTitles } from '@/models/dbTblNames.model';
 // import { getCommentsNumber } from '@/controllers/comments.controller';
 // import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
 import BreadCrumbServer from '@/components/BreadCrumbs/BreadCrumbsServer';
 import { Title } from '@/components/ui/Titles/Title';
 import FillingValidImage from '@/components/ui/Images/FillingValidImage';
-import BottomInfoPanel from '@/components/BottomInfoPanel/BottomInfoPanel';
+import BottomInfoPanel, {
+  INFO_PANEL_TITLES,
+} from '@/components/BottomInfoPanel/BottomInfoPanel';
 import EmptyData from '@/components/errors/EmptyData/EmptyData';
 import BeamMapList from '@/components/BeamMapList/BeamMapList';
 import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
-import { getELangKey } from '@/libs/utils/validSearchParam';
+import { getELangKey } from '@/libs/utils/getLanguage';
 import SeoLink from '@/components/ui/SeoLink/SeoLink';
 import { EUrlSearchParam } from '@/cron/libs/commons.mjs';
 import { getSatMapsSideBar } from '@/controllers/sidebar.controller';
+import SimilarBlock from '@/components/SimilarArticles/SimilarBlock';
+import ArticleWrapper from '@/components/article/ArticleWrapper';
+import { DEFAULT_META_DATA } from '@/models/defaultMeta.model';
+import { ELanguage } from '@/models/language.model';
 import {
-  INFO_PANEL_TITLES,
   META_SINGLE_SAT_MAP,
   SINGLE_SAT_MAP_DATA,
-} from '@/models/articles.model';
-import SimilarBlock from '@/components/SimilarArticles/SimilarBlock';
-import { BREAD_SAT_COVERAGE_MAP } from '@/models/breadCrumbs.model';
-import ArticleWrapper from '@/components/article/ArticleWrapper';
+} from '@/models/mapCoverage.model';
+import { EUrlBaseParam, MAIN_URL } from '@/models/url/url.model';
+import { getSatMap } from '@/controllers/mapCoverage.controller';
+import { updateViewCount } from '@/controllers/viewUpdate.controller';
 
 interface IArticleParams {
   params: { [key in EUrlBaseParam]: string };
 }
 
 const BASE_URL = process.env.BASE_URL || MAIN_URL;
+
+const BREAD_SAT_COVERAGE_MAP = {
+  href: EUrlBaseParam.SAT_COVERAGE_MAP,
+  title: {
+    [ELanguage.UA]: 'Мапи покриття супутників',
+    [ELanguage.EN]: 'Satellite coverage maps',
+  },
+};
 
 export const revalidate = 604800; // 3600 * 24 * 7 invalidate cache every 7 days
 

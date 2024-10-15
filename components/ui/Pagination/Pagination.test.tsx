@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import Pagination from './Pagination';
 import test, { describe } from 'node:test';
-import { ELanguage } from '@/models/ui.model';
+import { ELanguage } from '@/models/language.model';
 
 describe('<Pagination />', () => {
   test('it should mount', () => {

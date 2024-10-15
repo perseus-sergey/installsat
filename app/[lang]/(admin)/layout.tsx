@@ -1,8 +1,8 @@
 import { redirect } from 'next/navigation';
-import { EUrlBaseParam } from '@/models/url.model';
+import { EUrlBaseParam } from '@/models/url/url.model';
 import SideBar from '@/components/SideBar/SideBar';
-import { isAdminAuth } from '@/controllers/login.controller';
-import { ELanguage } from '@/models/ui.model';
+import { isAdminAuth } from '@/libs/utils/loggedUser';
+import { ELanguage } from '@/models/language.model';
 import SideBarServer from '@/components/SideBar/SideBarServer';
 import ToastProvider from '@/libs/ToastProvider/ToastProvider';
 

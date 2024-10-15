@@ -1,5 +1,5 @@
-import { ELanguage, ILang } from './ui.model';
-import { EUrlBaseParam } from './url.model';
+import { ELanguage, ILang } from '../language.model';
+import { EUrlBaseParam } from '../url/url.model';
 
 export interface IAccordionItemOptions {
   name: string;

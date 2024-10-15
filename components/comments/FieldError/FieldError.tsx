@@ -1,7 +1,7 @@
 import { IFormState } from '@/controllers/toast.controller';
-import { EArticleEditFields } from '@/models/articles.model';
-import { EChannelEditFields } from '@/models/channel.model';
-import { ECommentFormNames } from '@/models/comments.model';
+import { EArticleEditFields } from '@/models/articles/articleEdit.model';
+import { EChannelEditFields } from '@/models/channels/channel.model';
+import { ECommentFormNames } from '@/models/ui/comments.model';
 import { ELoginFormNames } from '@/models/login.model';
 
 interface IFieldErrorProps extends React.HTMLAttributes<HTMLElement> {

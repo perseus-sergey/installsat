@@ -3,8 +3,8 @@
 import Link from 'next/link';
 import styles from './AnchorListItem.module.scss';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { EUrlSearchParam } from '@/models/url.model';
 import TooltipSimple from '../ui/tooltips/TooltipSimple/TooltipSimple';
+import { EUrlSearchParam } from '@/models/url/urlSearch.model';
 
 interface IAnchorListItemProps {
   linkParams: {

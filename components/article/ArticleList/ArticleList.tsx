@@ -1,17 +1,15 @@
-import {
-  ARTICLE_CARD_IMAGES,
-  IAllNewsModel,
-  INFO_PANEL_TITLES,
-} from '@/models/articles.model';
 import ArticleCard from '../ArticleCard/ArticleCard';
 import FillingValidImage from '../../ui/Images/FillingValidImage';
-import { ELanguage } from '@/models/ui.model';
-import { EUrlBaseParam } from '@/models/url.model';
-import { cutText } from '@/libs/utils/utils';
+import { EUrlBaseParam } from '@/models/url/url.model';
+import { cutText } from '@/libs/utils/cutText';
 import DangerHtml from '../../ui/DangerHtml/DangerHtml';
 import EmptyData from '@/components/errors/EmptyData/EmptyData';
 import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
 import SeoLink from '@/components/ui/SeoLink/SeoLink';
+import { ELanguage } from '@/models/language.model';
+import { INFO_PANEL_TITLES } from '@/components/BottomInfoPanel/BottomInfoPanel';
+import { ARTICLE_CARD_IMAGES } from '@/models/articles/article.model';
+import { IAllNewsModel } from '@/models/articles/articleList.model';
 
 const { h1Image } = ARTICLE_CARD_IMAGES;
 

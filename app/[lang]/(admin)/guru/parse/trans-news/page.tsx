@@ -2,12 +2,6 @@ import { Title } from '@/components/ui/Titles/Title';
 import puppeteer, { Browser } from 'puppeteer';
 import * as cheerio from 'cheerio';
 import { DateTime } from 'luxon';
-import {
-  EDBTableTitles,
-  ELanguage,
-  TSearchParams,
-  getDbTableLink,
-} from '@/models/ui.model';
 import { IDbIdAmountModel } from '@/models/admin.model';
 import { sendMail } from '@/libs/mail/sendMail';
 import { renderAsync } from '@react-email/render';
@@ -26,6 +20,9 @@ import {
   actionTextHandler,
 } from '@cron/libs/parseTransNews.controller.mjs';
 import { revalidatePath } from 'next/cache';
+import { ELanguage } from '@/models/language.model';
+import { TSearchParams } from '@/models/url/urlSearch.model';
+import { EDBTableTitles, getDbTableLink } from '@/models/dbTblNames.model';
 
 export interface ITblDigestParse {
   date: string;

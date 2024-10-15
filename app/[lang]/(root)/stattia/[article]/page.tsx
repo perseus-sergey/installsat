@@ -1,34 +1,36 @@
+import { Metadata } from 'next';
+import { notFound } from 'next/navigation';
+import { Suspense } from 'react';
+import dynamic from 'next/dynamic';
+
 import EmptyData from '@/components/errors/EmptyData/EmptyData';
 import { Title } from '@/components/ui/Titles/Title';
 import FillingValidImage from '@/components/ui/Images/FillingValidImage';
-import {
-  ARTICLE_CARD_IMAGES,
-  DEFAULT_ARTICLE_LOGO_NAME,
-  INFO_PANEL_TITLES,
-} from '@/models/articles.model';
-import { getArticle, updateViewCount } from '@/controllers/articles.controller';
+import { ARTICLE_CARD_IMAGES } from '@/models/articles/article.model';
 import DangerHtml from '@/components/ui/DangerHtml/DangerHtml';
-import { EUrlAdminParam, EUrlBaseParam, MAIN_URL } from '@/models/url.model';
-import BottomInfoPanel from '@/components/BottomInfoPanel/BottomInfoPanel';
-import {
-  DEFAULT_META_DATA,
-  EDBTableTitles,
-  ELanguage,
-  SIMILAR_ARTICLES,
-} from '@/models/ui.model';
-import { notFound } from 'next/navigation';
+import BottomInfoPanel, {
+  INFO_PANEL_TITLES,
+} from '@/components/BottomInfoPanel/BottomInfoPanel';
+import { EDBTableTitles } from '@/models/dbTblNames.model';
 import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
-import { Metadata } from 'next';
-import { getELangKey } from '@/libs/utils/validSearchParam';
-// import { getCommentsNumber } from '@/controllers/comments.controller';
 import EditLinkButton from '@/components/admin/EditLinkButton/EditLinkButton';
 import BreadCrumbServer from '@/components/BreadCrumbs/BreadCrumbsServer';
 import SimilarArticles from '@/components/SimilarArticles/SimilarArticles';
-// import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
-import TextUnderH1 from '@/components/TextUnderH1/TextUnderH1';
 import SeoLink from '@/components/ui/SeoLink/SeoLink';
-import { Suspense } from 'react';
 import ArticleWrapper from '@/components/article/ArticleWrapper';
+import { ELanguage } from '@/models/language.model';
+import { DEFAULT_META_DATA } from '@/models/defaultMeta.model';
+import { DEFAULT_ARTICLE_LOGO_NAME } from '@/models/ui/image.model';
+import { EUrlBaseParam, MAIN_URL } from '@/models/url/url.model';
+import { EUrlAdminParam } from '@/models/url/urlAdmin.model';
+import { getELangKey } from '@/libs/utils/getLanguage';
+import { getArticle } from '@/controllers/article.controller';
+import { updateViewCount } from '@/controllers/viewUpdate.controller';
+// import { getCommentsNumber } from '@/controllers/comments.controller';
+// import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
+const TextUnderH1 = dynamic(
+  () => import('@/components/TextUnderH1/TextUnderH1')
+);
 
 const { currentImg, defaultImg, altStart } = ARTICLE_CARD_IMAGES.h1Image;
 
@@ -52,37 +54,22 @@ export const generateMetadata = async ({
   const article = params[ARTICLE_PARAM];
   const lang = getELangKey(params[LANG]);
 
-  const sqlResult = await getArticle(article);
-
+  const sqlResult = await getArticle(article, lang);
   if (!sqlResult) return DEFAULT_META_DATA[lang];
 
-  const {
-    title,
-    title_en,
-    description_en,
-    keywords,
-    keywords_en,
-    description,
-    date,
-    slug,
-  } = sqlResult;
+  const { title, keywords, description, date, slug } = sqlResult;
 
   const slugPath = `${ARTICLE}/${slug}`;
-  const t = lang === ELanguage.UA ? title : title_en || title;
-  const d = lang === ELanguage.UA ? description : description_en || description;
 
   return {
     metadataBase: new URL(BASE_URL),
-    title: t,
-    description: d,
-    keywords:
-      lang === ELanguage.UA
-        ? keywords || description
-        : keywords_en || description_en || description,
+    title,
+    description,
+    keywords,
     openGraph: {
       ...DEFAULT_META_DATA.openGraph,
-      title: t,
-      description: d,
+      title,
+      description,
       url: `/${lang}/${slugPath}`,
       publishedTime: getFormattedDateStrYearFirst(date),
     },
@@ -102,7 +89,7 @@ export default async function Page({ params }: IArticleParams) {
 
   const lang = getELangKey(params[LANG]);
 
-  const sqlResult = await getArticle(article);
+  const sqlResult = await getArticle(article, lang);
 
   if (sqlResult instanceof Error) return <EmptyData lang={lang} />;
   if (!sqlResult) notFound();
@@ -110,27 +97,19 @@ export default async function Page({ params }: IArticleParams) {
   const {
     id,
     text,
-    text_en,
     description,
-    description_en,
     date,
     logo: logoDB,
     view,
     title,
-    title_en,
     // slug,
     cat_slug,
     cat_name,
-    cat_name_en,
   } = sqlResult;
 
   const logo = logoDB || DEFAULT_ARTICLE_LOGO_NAME;
 
   const currDate = getFormattedDateStrYearFirst(date);
-
-  const titleLang = lang === ELanguage.UA ? title : title_en || title;
-  const descriptionLang = lang === ELanguage.UA ? description : description_en;
-  const catLang = lang === ELanguage.UA ? cat_name : cat_name_en || cat_name;
 
   // const numberOfComments = await getCommentsNumber(
   //   EDBTableTitles.COMMENTS_ARTICLE,
@@ -158,31 +137,31 @@ export default async function Page({ params }: IArticleParams) {
             },
           },
           {
-            title: catLang,
+            title: cat_name,
             href: `${NEWS_AND_ARTICLES}/${cat_slug}`,
           },
-          titleLang,
+          title,
         ]}
       />
 
       <ArticleWrapper lang={lang}>
         <Title>
-          {titleLang}
+          {title}
           <FillingValidImage
             image={{
               ...currentImg,
               src: `${currentImg.path}${logo}`,
             }}
             defaultImage={defaultImg}
-            alt={`${altStart[lang]} ${titleLang}`}
+            alt={`${altStart[lang]} ${title}`}
             isFillParent
           />
         </Title>
 
-        {description_en && <TextUnderH1>{descriptionLang}</TextUnderH1>}
+        {description && <TextUnderH1>{description}</TextUnderH1>}
 
         <div className="article-text">
-          <DangerHtml text={lang === ELanguage.UA ? text : text_en || text} />
+          <DangerHtml text={text} />
         </div>
         <BottomInfoPanel
           items={[
@@ -194,11 +173,11 @@ export default async function Page({ params }: IArticleParams) {
                   className="border-b border-stone-300 hover:border-white"
                   title={
                     lang === ELanguage.UA
-                      ? `Перейти до списку статей категорії "${catLang}"`
-                      : `Go to the list of articles of the category "${catLang}"`
+                      ? `Перейти до списку статей категорії "${cat_name}"`
+                      : `Go to the list of articles of the category "${cat_name}"`
                   }
                 >
-                  {catLang}
+                  {cat_name}
                 </SeoLink>
               ),
             },
@@ -213,7 +192,9 @@ export default async function Page({ params }: IArticleParams) {
 
       <Suspense>
         <SimilarArticles
-          similarTitle={SIMILAR_ARTICLES.title[lang]}
+          similarTitle={
+            lang === ELanguage.UA ? 'Схожі статті' : 'Similar articles'
+          }
           lang={lang}
           logoSrc={logo}
           articleId={id}
@@ -229,5 +210,5 @@ export default async function Page({ params }: IArticleParams) {
 //   revalidateUrl={`/${lang}/${ARTICLE}/${slug}`}
 //   dbCommentTableName={EDBTableTitles.COMMENTS_ARTICLE}
 //   articleId={`${id}`}
-//   articleName={titleLang}
+//   articleName={title}
 // />

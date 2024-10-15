@@ -6,8 +6,8 @@ import {
   getUsefulArticleList,
 } from '@/controllers/sidebar.controller';
 import { AccordionMenuItem } from '../AccordionMenuItem/AccordionMenuItem';
-import { MENU_ACCORDION } from '@/models/menuAccordion.model';
-import { ELanguage } from '@/models/ui.model';
+import { MENU_ACCORDION } from '@/models/ui/menuAccordion.model';
+import { ELanguage } from '@/models/language.model';
 import SeoLink from '@/components/ui/SeoLink/SeoLink';
 
 import sitFinderIcon from 'public/Images/accordion/compass.png';

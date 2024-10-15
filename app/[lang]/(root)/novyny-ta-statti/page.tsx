@@ -1,34 +1,51 @@
+import { notFound } from 'next/navigation';
+import { Suspense } from 'react';
+import Image from 'next/image';
+
 import { Title } from '@/components/ui/Titles/Title';
 import type { Metadata } from 'next';
-import { getChunkOfNews } from '@/controllers/articles.controller';
 import ArticleList from '@/components/article/ArticleList/ArticleList';
 import Pagination from '@/components/ui/Pagination/Pagination';
-import { notFound } from 'next/navigation';
-import { EUrlBaseParam, EUrlSearchParam, MAIN_URL } from '@/models/url.model';
-import { TSearchParams, DEFAULT_META_DATA, ELanguage } from '@/models/ui.model';
-import { getELangKey, validSearchParam } from '@/libs/utils/validSearchParam';
+import { EUrlSearchParam, TSearchParams } from '@/models/url/urlSearch.model';
+import { getELangKey } from '@/libs/utils/getLanguage';
+import { validSearchParam } from '@/libs/utils/validSearchParam';
 import BreadCrumbServer from '@/components/BreadCrumbs/BreadCrumbsServer';
 import Filter from '@/components/ui/Filter/Filter';
 import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
-import { Suspense } from 'react';
+import h1Img from 'public/Images/articles/all_news_64.png';
+import ArticleWrapper from '@/components/article/ArticleWrapper';
 import {
   ARTICLE_LIST_MODEL,
   ARTICLE_PAGINATION_PARAMS,
-  META_ALL_ARTICLES,
-} from '@/models/articles.model';
-import Image from 'next/image';
-import h1Img from 'public/Images/articles/all_news_64.png';
-import ArticleWrapper from '@/components/article/ArticleWrapper';
+} from '@/models/articles/articleList.model';
+import { SEARCH_FIELD } from '@/models/ui/searchField.model';
+import { ELanguage } from '@/models/language.model';
+import { DEFAULT_META_DATA } from '@/models/defaultMeta.model';
+import { EUrlBaseParam, MAIN_URL } from '@/models/url/url.model';
+import { getChunkOfNews } from '@/controllers/articleList.controller';
 
 const BASE_URL = process.env.BASE_URL || MAIN_URL;
 
-const {
-  search: { placeholder, labelTitle },
-  images,
-  articlesCountCaption,
-} = ARTICLE_LIST_MODEL;
+const { images, articlesCountCaption } = ARTICLE_LIST_MODEL;
 
-const { description, h1Start, title } = META_ALL_ARTICLES;
+const { placeholder, labelTitle } = SEARCH_FIELD;
+
+const META_ALL_ARTICLES = {
+  h1Start: {
+    [ELanguage.UA]: `Останні новини ТБ, статті та огляди на`,
+    [ELanguage.EN]: `Latest TV news, articles and reviews as of`,
+  },
+  title: {
+    [ELanguage.UA]: 'Останні новини та статті про цифрове телебачення',
+    [ELanguage.EN]: 'Latest news and articles about digital television',
+  },
+  description: {
+    [ELanguage.UA]:
+      'Список статей про новини в сфері цифрового телебачення, статей про налаштування обладнання для прийому та перегляду телевізійних та радіо каналів, статей про новини від провайдерів платного телебачення',
+    [ELanguage.EN]:
+      'List of articles about news in the field of digital television, articles about setting up equipment for receiving and viewing tv and radio channels, articles about news from pay TV providers',
+  },
+};
 
 export const revalidate = 43200; // 3600 * 12 invalidate cache every 12 hours
 
@@ -39,6 +56,7 @@ interface IProps {
 
 export const generateMetadata = ({ params }: IProps): Metadata => {
   const lang = getELangKey(params[EUrlBaseParam.LANG]);
+  const { title, description } = META_ALL_ARTICLES;
 
   return {
     metadataBase: new URL(BASE_URL),
@@ -64,6 +82,7 @@ export const generateMetadata = ({ params }: IProps): Metadata => {
 export default async function Page({ searchParams, params }: IProps) {
   const lang = getELangKey(params[EUrlBaseParam.LANG]);
   const { perPage } = ARTICLE_PAGINATION_PARAMS;
+  const { h1Start } = META_ALL_ARTICLES;
 
   const page = validSearchParam(EUrlSearchParam.PAGE, searchParams) || '1';
 

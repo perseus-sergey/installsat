@@ -1,14 +1,11 @@
 import { Title } from '@/components/ui/Titles/Title';
-import {
-  EDBTableTitles,
-  ELanguage,
-  getDbTableLink,
-  TSearchParams,
-} from '@/models/ui.model';
 import { validSearchParam } from '@/libs/utils/validSearchParam';
-import { EUrlAdminParam, EUrlSearchParam } from '@/models/url.model';
 import { addDescriptionForChannels } from '@/cron/libs/generateChanAboutForOneSat.controller.mjs';
 import { sendMail } from '@/libs/mail/sendMail';
+import { ELanguage } from '@/models/language.model';
+import { EDBTableTitles, getDbTableLink } from '@/models/dbTblNames.model';
+import { EUrlSearchParam, TSearchParams } from '@/models/url/urlSearch.model';
+import { EUrlAdminParam } from '@/models/url/urlAdmin.model';
 
 export const dynamic = 'force-dynamic';
 

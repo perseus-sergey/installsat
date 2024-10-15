@@ -1,11 +1,13 @@
-import BottomInfoPanel from '@/components/BottomInfoPanel/BottomInfoPanel';
+import BottomInfoPanel, {
+  INFO_PANEL_TITLES,
+} from '@/components/BottomInfoPanel/BottomInfoPanel';
 import DangerHtml from '@/components/ui/DangerHtml/DangerHtml';
 import FillingValidImage from '@/components/ui/Images/FillingValidImage';
 import NoteBlock from '@/components/ui/NoteBlock/NoteBlock';
 import SimilarArticles from '@/components/SimilarArticles/SimilarArticles';
 import { Title } from '@/components/ui/Titles/Title';
 import TvScheduleLink from '@/components/TvScheduleLink/TvScheduleLink';
-import { updateViewCount } from '@/controllers/articles.controller';
+import { updateViewCount } from '@/controllers/viewUpdate.controller';
 import { getDBOnlineChannel } from '@/controllers/channel.controller';
 import {
   CHANNEL_IMAGES,
@@ -13,13 +15,9 @@ import {
   META_CHANNEL_ONLINE,
   SIMILAR_ARTICLE_TITLE,
   SIMILAR_CHANNELS_TITLE,
-} from '@/models/channel.model';
-import {
-  EDBTableTitles,
-  DEFAULT_META_DATA,
-  ELanguage,
-} from '@/models/ui.model';
-import { EUrlBaseParam, MAIN_URL } from '@/models/url.model';
+} from '@/models/channels/channel.model';
+import { EDBTableTitles } from '@/models/dbTblNames.model';
+import { EUrlBaseParam, MAIN_URL } from '@/models/url/url.model';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 // import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
@@ -30,11 +28,12 @@ import GrooveLine from '@/components/ui/GrooveLine';
 import BreadCrumbServer from '@/components/BreadCrumbs/BreadCrumbsServer';
 import { cache, Suspense } from 'react';
 import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
-import { getELangKey } from '@/libs/utils/validSearchParam';
-import { INFO_PANEL_TITLES } from '@/models/articles.model';
+import { getELangKey } from '@/libs/utils/getLanguage';
 import SimilarChannels from '@/components/SimilarArticles/SimilarChannels';
 import ArticleWrapper from '@/components/article/ArticleWrapper';
 import ScheduleShort from '@/components/Schedule/ScheduleShort';
+import { DEFAULT_META_DATA } from '@/models/defaultMeta.model';
+import { ELanguage } from '@/models/language.model';
 
 const BASE_URL = process.env.BASE_URL || MAIN_URL;
 const { LANG, SLUG, CHANNELS_TV_PROGRAM, ONLINE_CHANNEL_LIST } = EUrlBaseParam;

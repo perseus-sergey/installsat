@@ -1,7 +1,6 @@
 import { poolExecute } from '@/libs/db/mysqldb';
 import { validSearchParam } from '@/libs/utils/validSearchParam';
-import { TSearchParams } from '@/models/ui.model';
-import { EUrlSearchParam } from '@/models/url.model';
+import { EUrlSearchParam, TSearchParams } from '@/models/url/urlSearch.model';
 
 // ****************************************************************
 // For translate and add english news column to old sat_digest tables

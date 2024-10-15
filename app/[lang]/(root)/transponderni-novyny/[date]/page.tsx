@@ -1,14 +1,17 @@
+import { notFound } from 'next/navigation';
+import { cache } from 'react';
+
 import ArticleWrapper from '@/components/article/ArticleWrapper';
 import BreadCrumbServer from '@/components/BreadCrumbs/BreadCrumbsServer';
 import TransNewsSingle from '@/components/TransNewsSingle/TransNewsSingle';
 import { getTransNewsForSingleDay } from '@/controllers/satDigest.controller';
-import { getDateInISO, getFormattedDateStrYearFirst } from '@/libs/utils/dates';
-import { getELangKey } from '@/libs/utils/validSearchParam';
+import { getDateInISO } from '@/libs/utils/dateLuxon';
+import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
+import { getELangKey } from '@/libs/utils/getLanguage';
+import { DEFAULT_META_DATA } from '@/models/defaultMeta.model';
+import { ELanguage } from '@/models/language.model';
 import { META_TRANS_NEWS_SINGLE } from '@/models/satDigest.model';
-import { DEFAULT_META_DATA, ELanguage } from '@/models/ui.model';
-import { EUrlBaseParam, MAIN_URL } from '@/models/url.model';
-import { notFound } from 'next/navigation';
-import { cache } from 'react';
+import { EUrlBaseParam, MAIN_URL } from '@/models/url/url.model';
 
 const BASE_URL = process.env.BASE_URL || MAIN_URL;
 

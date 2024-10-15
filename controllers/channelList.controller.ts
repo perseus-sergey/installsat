@@ -1,12 +1,13 @@
 import { poolExecute } from '@/libs/db/mysqldb';
-import { IFlyChannel } from '@/models/channel.model';
+import { IFlyChannel } from '@/models/channels/channel.model';
 import {
   IChannelPackagesModel,
   IOnlineChannelListModel,
   IPackageChannelListModel,
   ISatChannelListModel,
-} from '@/models/channelList.model';
-import { EDBTableTitles, ELanguage } from '@/models/ui.model';
+} from '@/models/channels/channelList.model';
+import { ELanguage } from '@/models/language.model';
+import { EDBTableTitles } from '@/models/dbTblNames.model';
 // import { decode } from 'html-entities';
 import { cache } from 'react';
 

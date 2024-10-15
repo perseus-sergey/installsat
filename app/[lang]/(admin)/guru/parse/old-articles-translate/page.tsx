@@ -1,22 +1,20 @@
 import { Title } from '@/components/ui/Titles/Title';
-import {
-  EDBTableTitles,
-  ELanguage,
-  getDbTableLink,
-  TSearchParams,
-} from '@/models/ui.model';
-import { EUrlAdminParam, EUrlSearchParam } from '@/models/url.model';
 import { sendMail } from '@/libs/mail/sendMail';
 import { poolExecute } from '@/libs/db/mysqldb';
-import { cutText, sleep } from '@/libs/utils/utils';
 import { ResultSetHeader } from 'mysql2';
 import {
   GoogleGenerativeAI,
   HarmBlockThreshold,
   HarmCategory,
 } from '@google/generative-ai';
-import { WRONG_CAT_IDS } from '@/controllers/articles.controller';
 import { validSearchParam } from '@/libs/utils/validSearchParam';
+import { ELanguage } from '@/cron/libs/commons.mjs';
+import { WRONG_CAT_IDS } from '@/models/articles/articleList.model';
+import { EDBTableTitles, getDbTableLink } from '@/models/dbTblNames.model';
+import { cutText } from '@/libs/utils/cutText';
+import { sleep } from '@/libs/utils/sleep';
+import { EUrlAdminParam } from '@/models/url/urlAdmin.model';
+import { EUrlSearchParam, TSearchParams } from '@/models/url/urlSearch.model';
 
 export const dynamic = 'force-dynamic';
 
@@ -153,7 +151,7 @@ const generateAiText = async (articleTitle: string, currentText: string) => {
     },
   ];
 
-  const prompt = `Article title: '${articleTitle}';\n Article content:'${currentText}'`;
+  const prompt = `- Original article title: '${articleTitle}';\n - Original article content:'${currentText}'`;
 
   try {
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
@@ -163,7 +161,7 @@ const generateAiText = async (articleTitle: string, currentText: string) => {
       generationConfig,
       safetySettings,
       systemInstruction: `
-         Translate the article to Ukrainian and English.
+    - Translate the article to Ukrainian and English.
     - Wrap important relevant to article title words in the article in a tag <strong>, but not more than 5% (for each language) from the content of the article.
     - Make short description of the article about 150 - 200 characters length for the <meta name=description>.
     - Select relevant search keywords that will be used on the page in the <meta name=keywords>.

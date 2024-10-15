@@ -1,4 +1,4 @@
-import { IImgParams } from '@/models/ui.model';
+import { IImgParams } from '@/models/ui/image.model';
 import fs from 'fs';
 import path from 'path';
 import { cache } from 'react';
@@ -15,44 +15,8 @@ export const isFileExists = cache((filePath: string): boolean => {
   }
 });
 
-// const changeExtToGif = (path: string) => {
-//   const splitted = path.split('.').reverse();
-//   const [, ...startPath] = splitted;
-
-//   return [...startPath, 'gif'].join('.');
-// };
-
 export const imagePathValidate = cache(
   (img: IImgParams, alternativeImg: IImgParams): IImgParams => {
     return isFileExists(img.src) ? img : alternativeImg;
   }
 );
-
-// export const imagePathValidate = cache(
-//   (
-//     img: IImgParams,
-//     alternativeImg: IImgParams,
-//     isChangeToGif = false
-//   ): IImgParams => {
-//     const path = isChangeToGif ? changeExtToGif(img.src) : img.src;
-
-//     return isFileExists(path) ? { ...img, src: path } : alternativeImg;
-//   }
-// );
-
-// export const imagePathValidate = cache(
-//   (
-//     img: IImgParams,
-//     alternativeString: string,
-//     alternativeImg?: IImgParams,
-//     isChangeToGif = false
-//   ): IImgParams | string => {
-//     const path = isChangeToGif ? changeExtToGif(img.src) : img.src;
-
-//     return isFileExists(path)
-//       ? { ...img, src: path }
-//       : alternativeImg && isFileExists(alternativeImg.src)
-//         ? alternativeImg
-//         : alternativeString;
-//   }
-// );

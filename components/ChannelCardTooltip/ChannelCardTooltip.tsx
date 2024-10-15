@@ -1,4 +1,4 @@
-import { IImgParams } from '@/models/ui.model';
+import { IImgParams } from '@/models/ui/image.model';
 import FillingValidImage from '../ui/Images/FillingValidImage';
 import Tooltip from '../ui/tooltips/TooltipMovingClient/Tooltip';
 

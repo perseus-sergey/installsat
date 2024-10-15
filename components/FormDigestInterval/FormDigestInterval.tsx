@@ -2,14 +2,15 @@ import {
   TRANS_NEWS_LIST_FILTERS,
   getDigestIntervalOptions,
 } from '@/models/satDigest.model';
-import { EUrlSearchParam } from '@/models/url.model';
+import { EUrlSearchParam } from '@/models/url/urlSearch.model';
 import Fieldset from '../ui/Fieldset/Fieldset';
-import { ELanguage, ESelectType } from '@/models/ui.model';
 import { SelectorSingle } from '../SatelliteSelector/SelectorSingle';
 import ResetSearchParamsBtn from './ResetSearchParamsBtn';
 import { Suspense } from 'react';
 import SatelliteSelector from '../CustomSelectors/SatelliteSelector';
 import { getSatsForForm } from '@/controllers/satDigest.controller';
+import { ESelectType } from '../ui/ReactSelect/ReactSelect';
+import { ELanguage } from '@/models/language.model';
 
 const {
   fieldsetTitle,

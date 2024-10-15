@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import FakePlayer from './FakePlayer';
 import test, { describe } from 'node:test';
-import { ELanguage } from '@/models/ui.model';
+import { ELanguage } from '@/models/language.model';
 
 describe('<FakePlayer />', () => {
   test('it should mount', () => {

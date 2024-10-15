@@ -1,13 +1,13 @@
 import { Title } from '@/components/ui/Titles/Title';
-import { EDBTableTitles, TSearchParams } from '@/models/ui.model';
 import Link from 'next/link';
 import { validSearchParam } from '@/libs/utils/validSearchParam';
-import { EUrlSearchParam } from '@/models/url.model';
 import React from 'react';
 import {
   PARSE_URL_BASE,
   parseFlyChannels,
 } from '@/cron/libs/parseFlySat.controller.mjs';
+import { EDBTableTitles } from '@/models/dbTblNames.model';
+import { EUrlSearchParam, TSearchParams } from '@/models/url/urlSearch.model';
 
 export const dynamic = 'force-dynamic';
 

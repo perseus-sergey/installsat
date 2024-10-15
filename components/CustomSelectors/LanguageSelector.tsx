@@ -1,7 +1,7 @@
 import { EUrlSearchParam } from '@/models/url/urlSearch.model';
 import { SelectorMulti } from '../SatelliteSelector/SelectorMulti';
 import { IStateOption } from '@/models/satDigest.model';
-import { ESelectType } from '../ui/ReactSelect/ReactSelect';
+import { ESelectType } from '@/models/reactSelect.model';
 import { ELanguage } from '@/cron/libs/commons.mjs';
 
 export default async function LanguageSelector({

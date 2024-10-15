@@ -9,8 +9,8 @@ import ResetSearchParamsBtn from './ResetSearchParamsBtn';
 import { Suspense } from 'react';
 import SatelliteSelector from '../CustomSelectors/SatelliteSelector';
 import { getSatsForForm } from '@/controllers/satDigest.controller';
-import { ESelectType } from '../ui/ReactSelect/ReactSelect';
 import { ELanguage } from '@/models/language.model';
+import { ESelectType } from '@/models/reactSelect.model';
 
 const {
   fieldsetTitle,

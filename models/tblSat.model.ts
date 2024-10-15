@@ -13,15 +13,3 @@ export interface ISatModel {
   all_count: number;
   free_count: number;
 }
-
-export interface ISatelliteOption {
-  value: number | string;
-  label: string;
-  isFixed?: boolean;
-  isDisabled?: boolean;
-}
-
-export interface IGroupedSatelliteOption {
-  options: ISatelliteOption[];
-  label?: string;
-}

@@ -9,15 +9,10 @@ import Select, {
   components,
 } from 'react-select';
 import {
+  ESelectType,
   IGroupedSatelliteOption,
   ISatelliteOption,
-} from '@/models/tblSat.model';
-
-export enum ESelectType {
-  SELECT_SATS = 'selectSats',
-  SELECT_LANG = 'selectLang',
-  SELECT_TIME_INTERVAL = 'timeInterval',
-}
+} from '@/models/reactSelect.model';
 
 interface IReactSelectProps {
   selectName: ESelectType;

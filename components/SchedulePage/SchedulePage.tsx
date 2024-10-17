@@ -25,7 +25,6 @@ interface ISchedulePageProps {
     tblName: EDBTableTitles;
     scheduleId: number;
   }[];
-  url_date: string;
 }
 
 const SchedulePage = async ({
@@ -33,12 +32,11 @@ const SchedulePage = async ({
   channelTitle,
   lang,
   filteredSchedules,
-  url_date,
 }: ISchedulePageProps) => {
   const now = DateTime.local().setZone(DEFAULT_TIME_ZONE);
   const dayStr = getDayOfMonthStr(urlDate, lang);
 
-  const scheduleList = await getChanOneDaySchedule(filteredSchedules, url_date);
+  const scheduleList = await getChanOneDaySchedule(filteredSchedules, urlDate);
 
   const availableSchedulesLength = !scheduleList
     ? 0

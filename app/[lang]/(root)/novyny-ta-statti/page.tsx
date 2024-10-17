@@ -79,6 +79,7 @@ export const generateMetadata = ({ params }: IProps): Metadata => {
     },
   };
 };
+
 export default async function Page({ searchParams, params }: IProps) {
   const lang = getELangKey(params[EUrlBaseParam.LANG]);
   const { perPage } = ARTICLE_PAGINATION_PARAMS;

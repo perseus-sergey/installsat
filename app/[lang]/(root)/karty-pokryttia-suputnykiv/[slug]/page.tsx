@@ -1,8 +1,7 @@
-import type { Metadata } from 'next';
 import React from 'react';
+
+import type { Metadata } from 'next';
 import { EDBTableTitles } from '@/models/dbTblNames.model';
-// import { getCommentsNumber } from '@/controllers/comments.controller';
-// import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
 import BreadCrumbServer from '@/components/BreadCrumbs/BreadCrumbsServer';
 import { Title } from '@/components/ui/Titles/Title';
 import FillingValidImage from '@/components/ui/Images/FillingValidImage';

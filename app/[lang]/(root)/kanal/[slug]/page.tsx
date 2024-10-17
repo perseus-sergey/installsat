@@ -37,6 +37,7 @@ import { DEFAULT_META_DATA } from '@/models/defaultMeta.model';
 import { updateViewCount } from '@/controllers/viewUpdate.controller';
 import { EUrlBaseParam, MAIN_URL } from '@/models/url/url.model';
 import { EUrlAdminParam } from '@/models/url/urlAdmin.model';
+import { getFlyChannelsMap } from '@/controllers/siteMap.controller';
 
 const BASE_URL = process.env.BASE_URL || MAIN_URL;
 
@@ -76,14 +77,6 @@ export const generateMetadata = async ({
   } = flyChannels;
 
   const metaTitle = `${titleBefore[lang]} ${title} | ${sat_title} ${frequency} ${polarization}`;
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  // const [clearedCanonical, ..._] = canonical
-  //   .replace(/\/$/, '')
-  //   .split('/')
-  //   .reverse();
-
-  // const addCanonical = canonical ? clearedCanonical : chan_slug;
   const chanDescription = description || `${metaTitle} | ${beam} | ${a_pid}`;
 
   return {
@@ -107,6 +100,14 @@ export const generateMetadata = async ({
     },
   };
 };
+
+export async function generateStaticParams() {
+  const res = await getFlyChannelsMap();
+
+  return res.map((item) => ({ [EUrlBaseParam.SLUG]: item.cpu }));
+}
+
+export const dynamicParams = true;
 
 export default async function Page({ params }: IChannelProps) {
   const slug = params[EUrlBaseParam.SLUG];

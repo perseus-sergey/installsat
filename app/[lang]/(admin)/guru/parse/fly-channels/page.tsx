@@ -1,7 +1,8 @@
-import { Title } from '@/components/ui/Titles/Title';
 import Link from 'next/link';
-import { validSearchParam } from '@/libs/utils/validSearchParam';
 import React from 'react';
+
+import { Title } from '@/components/ui/Titles/Title';
+import { validSearchParam } from '@/libs/utils/validSearchParam';
 import {
   PARSE_URL_BASE,
   parseFlyChannels,

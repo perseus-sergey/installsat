@@ -1,3 +1,6 @@
+import { notFound } from 'next/navigation';
+import { Suspense } from 'react';
+
 import BottomInfoPanel, {
   INFO_PANEL_TITLES,
 } from '@/components/BottomInfoPanel/BottomInfoPanel';
@@ -20,21 +23,18 @@ import {
 } from '@/models/channels/channel.model';
 import { EDBTableTitles } from '@/models/dbTblNames.model';
 import { Metadata } from 'next';
-// import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
-// import { getCommentsNumber } from '@/controllers/comments.controller';
 import GrooveLine from '@/components/ui/GrooveLine';
 import BreadCrumbServer from '@/components/BreadCrumbs/BreadCrumbsServer';
 import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
 import EditLinkButton from '@/components/admin/EditLinkButton/EditLinkButton';
-import { notFound } from 'next/navigation';
 import { getELangKey } from '@/libs/utils/getLanguage';
-import { Suspense } from 'react';
 import SimilarChannels from '@/components/SimilarArticles/SimilarChannels';
 import ArticleWrapper from '@/components/article/ArticleWrapper';
 import { DEFAULT_META_DATA } from '@/models/defaultMeta.model';
 import { DEFAULT_LANG, ELanguage } from '@/models/language.model';
 import { EUrlBaseParam, MAIN_URL } from '@/models/url/url.model';
 import { EUrlAdminParam } from '@/models/url/urlAdmin.model';
+import { getChannelsSiteMap } from '@/controllers/siteMap.controller';
 
 const BASE_URL = process.env.BASE_URL || MAIN_URL;
 
@@ -111,6 +111,14 @@ export const generateMetadata = async ({
     },
   };
 };
+
+export async function generateStaticParams() {
+  const res = await getChannelsSiteMap();
+
+  return res.map((item) => ({ [EUrlBaseParam.SLUG]: item.cpu }));
+}
+
+export const dynamicParams = true;
 
 export default async function Page({ params }: IChannelProps) {
   const slug = params[EUrlBaseParam.SLUG];

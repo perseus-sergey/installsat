@@ -23,10 +23,10 @@ import { DEFAULT_META_DATA } from '@/models/defaultMeta.model';
 import { EUrlSearchParam, TSearchParams } from '@/models/url/urlSearch.model';
 import { EUrlBaseParam, MAIN_URL } from '@/models/url/url.model';
 import {
-  getArticleCatList,
   getChunkOfNews,
   getCurrentCatParams,
 } from '@/controllers/articleList.controller';
+import { getArticleCatListSiteMap } from '@/controllers/siteMap.controller';
 
 const BASE_URL = process.env.BASE_URL || MAIN_URL;
 
@@ -55,22 +55,22 @@ export const generateMetadata = async ({
   const cat = params[EUrlBaseParam.CATEGORY];
   const lang = getELangKey(params[EUrlBaseParam.LANG]);
 
-  const { title, description, title_en, description_en, cpu } =
-    await getCurrentCatParams(cat);
+  const dbCatRes = await getCurrentCatParams(cat, lang);
+  if (!dbCatRes) return DEFAULT_META_DATA[lang];
+
+  const { title, description, cpu } = dbCatRes;
 
   const slugPath = `${EUrlBaseParam.NEWS_AND_ARTICLES}/${cpu}`;
-  const t = lang === ELanguage.UA ? title : title_en || title;
-  const d = lang === ELanguage.UA ? description : description_en || description;
 
   return {
     metadataBase: new URL(BASE_URL),
-    title: t,
-    description: d,
+    title,
+    description,
     keywords: description,
     openGraph: {
       ...DEFAULT_META_DATA.openGraph,
-      title: t,
-      description: d,
+      title,
+      description,
       url: `/${lang}/${slugPath}`,
       publishedTime: getFormattedDateStrYearFirst(),
     },
@@ -84,16 +84,10 @@ export const generateMetadata = async ({
   };
 };
 
-export async function generateStaticParams(): Promise<
-  {
-    [EUrlBaseParam.CATEGORY]: string;
-  }[]
-> {
-  const allCatResponse = await getArticleCatList();
-  if (allCatResponse instanceof Error)
-    return [{ [EUrlBaseParam.CATEGORY]: '' }];
+export async function generateStaticParams() {
+  const dbResp = await getArticleCatListSiteMap();
 
-  return allCatResponse.map((cat) => ({ [EUrlBaseParam.CATEGORY]: cat.cpu }));
+  return dbResp.map((cat) => ({ [EUrlBaseParam.CATEGORY]: cat.cpu }));
 }
 
 export const dynamicParams = false;
@@ -102,12 +96,10 @@ export default async function Page({ params, searchParams }: IPageParams) {
   const cat = params[EUrlBaseParam.CATEGORY];
   const lang = getELangKey(params[EUrlBaseParam.LANG]);
 
-  const { id, description, text, description_en, text_en } =
-    await getCurrentCatParams(cat);
+  const dbCatRes = await getCurrentCatParams(cat, lang);
+  if (!dbCatRes) notFound();
 
-  const descriptionLang =
-    lang === ELanguage.UA ? description : description_en || description;
-  const textLang = lang === ELanguage.UA ? text : text_en || text;
+  const { id, description, text } = dbCatRes;
 
   const { perPage } = ARTICLE_PAGINATION_PARAMS;
 
@@ -133,12 +125,12 @@ export default async function Page({ params, searchParams }: IPageParams) {
   return (
     <>
       <BreadCrumbServer
-        breadCrumbList={[BREAD_NEWS_AND_ARTICLES, descriptionLang]}
+        breadCrumbList={[BREAD_NEWS_AND_ARTICLES, description]}
         lang={lang}
       />
       <ArticleWrapper lang={lang}>
         <Title>
-          {descriptionLang}
+          {description}
           <Image
             src={h1Img}
             alt={images.h1Image.alt[lang]}
@@ -156,7 +148,7 @@ export default async function Page({ params, searchParams }: IPageParams) {
           />
         </Suspense>
 
-        <TextUnderH1>{textLang}</TextUnderH1>
+        <TextUnderH1>{text}</TextUnderH1>
 
         <p className="text-blue-600 font-bold text-center text-lg">{`${articlesCountCaption[lang]}${mapsCount}`}</p>
 

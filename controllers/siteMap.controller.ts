@@ -1,9 +1,17 @@
 import { poolExecute } from '@/libs/db/mysqldb';
 import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
+import { getStartOfWeekDate } from '@/libs/utils/scheduleDates';
 import { WRONG_CAT_IDS } from '@/models/articles/articleList.model';
 import { EDBTableTitles } from '@/models/dbTblNames.model';
 
-const { ARTICLE: TBL_ARTICLE, FLY_CHANNELS, FLY_SATELLITES } = EDBTableTitles;
+const {
+  ARTICLE: TBL_ARTICLE,
+  FLY_CHANNELS,
+  FLY_SATELLITES,
+  ARTICLE_CATEGORIES,
+  CHANNELS,
+  TRANS_NEWS,
+} = EDBTableTitles;
 
 export const getNewsForSiteMap = async () => {
   const sql = `SELECT cpu FROM ${TBL_ARTICLE} WHERE cat NOT IN ${WRONG_CAT_IDS}`;
@@ -13,7 +21,7 @@ export const getNewsForSiteMap = async () => {
 };
 
 export const getArticleCatListSiteMap = async () => {
-  const sql = `SELECT cpu FROM tbl_categories WHERE id NOT IN ${WRONG_CAT_IDS}`;
+  const sql = `SELECT cpu FROM ${ARTICLE_CATEGORIES} WHERE id NOT IN ${WRONG_CAT_IDS}`;
 
   const res = await poolExecute<{ cpu: string }[]>(sql);
 
@@ -21,17 +29,17 @@ export const getArticleCatListSiteMap = async () => {
 };
 
 export const getChannelsSiteMap = async () => {
-  const sql = `SELECT cpu FROM tbl_channals WHERE compress != 5`;
+  const sql = `SELECT cpu FROM ${CHANNELS} WHERE compress != ?`;
 
-  const res = await poolExecute<{ cpu: string }[]>(sql);
+  const res = await poolExecute<{ cpu: string }[]>(sql, [5]);
 
   return res instanceof Error ? [] : res;
 };
 
 export const getFlyChannelsMap = async () => {
-  const sql = `SELECT slug AS cpu FROM ${FLY_CHANNELS} WHERE is_removed != 1`;
+  const sql = `SELECT slug AS cpu FROM ${FLY_CHANNELS} WHERE is_removed != ?`;
 
-  const res = await poolExecute<{ cpu: string }[]>(sql);
+  const res = await poolExecute<{ cpu: string }[]>(sql, [1]);
 
   return res instanceof Error ? [] : res;
 };
@@ -52,9 +60,9 @@ export const getSatellitesSiteMap = async () => {
   return res instanceof Error ? [] : res;
 };
 
-export const getSchedulesSiteMap = async () => {
+export const getChannelsWithSchedule = async () => {
   const sql = `
-  SELECT cpu FROM tbl_channals
+  SELECT cpu FROM ${CHANNELS}
   WHERE tema != 15 
   AND ((vipiko != '' AND vipiko != 0) OR (vsetv != '' AND vsetv != 0))
   `;
@@ -64,9 +72,25 @@ export const getSchedulesSiteMap = async () => {
   return res instanceof Error ? [] : res;
 };
 
+export const getChannelsWithScheduleAndWeekDays = async () => {
+  const res = await getChannelsWithSchedule();
+
+  const startWeekDate = getStartOfWeekDate(new Date());
+
+  return [...Array(7)]
+    .map((_, index) => {
+      const date = new Date(startWeekDate);
+      date.setDate(date.getDate() + index);
+      const dateStr = getFormattedDateStrYearFirst(date);
+
+      return res.map((channel) => ({ cpu: `${channel.cpu}/${dateStr}` }));
+    })
+    .flat();
+};
+
 export const getOnlineChanSiteMap = async () => {
   const sql = `
-  SELECT cpu FROM tbl_channals 
+  SELECT cpu FROM ${CHANNELS} 
   WHERE (compress = 5 AND tema != 15) OR (compress != 5 AND tema != 15 AND tvforsite_net != '' AND cat != 23)
   `;
 
@@ -76,7 +100,7 @@ export const getOnlineChanSiteMap = async () => {
 };
 
 export const getTransNewsSiteMap = async () => {
-  const sql = `SELECT date FROM tbl_digest WHERE date >= CURDATE() - INTERVAL 180 DAY GROUP BY date;`;
+  const sql = `SELECT date FROM ${TRANS_NEWS} WHERE date >= CURDATE() - INTERVAL 180 DAY GROUP BY date;`;
 
   const res = await poolExecute<{ date: string }[]>(sql);
 

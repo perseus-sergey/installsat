@@ -1,3 +1,5 @@
+import { Suspense } from 'react';
+
 import { Title } from '@/components/ui/Titles/Title';
 import { getFlySatChannels } from '@/controllers/channelList.controller';
 import {
@@ -9,7 +11,6 @@ import {
 import type { Metadata } from 'next';
 import StartArticleSection from '@/components/article/StartArticleSection/StartArticleSection';
 import FillingValidImage from '@/components/ui/Images/FillingValidImage';
-import { Suspense } from 'react';
 import BreadCrumbServer from '@/components/BreadCrumbs/BreadCrumbsServer';
 import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
 import { getELangKey } from '@/libs/utils/getLanguage';
@@ -29,6 +30,7 @@ import { ELanguage } from '@/models/language.model';
 import { EUrlBaseParam, MAIN_URL } from '@/models/url/url.model';
 import { TSearchParams } from '@/models/url/urlSearch.model';
 import { makeUrlSearchParams } from '@/libs/utils/urlMaker';
+import { getSatellitesSiteMap } from '@/controllers/siteMap.controller';
 
 const BASE_URL = process.env.BASE_URL || MAIN_URL;
 
@@ -98,7 +100,15 @@ export const generateMetadata = async ({
   };
 };
 
-export default async function Page({ searchParams, params }: IPageProps) {
+export async function generateStaticParams() {
+  const res = await getSatellitesSiteMap();
+
+  return res.map((item) => ({ [EUrlBaseParam.SATELLITE]: item.cpu }));
+}
+
+export const dynamicParams = true;
+
+export default async ({ searchParams, params }: IPageProps) => {
   const urlSatSlug = params[SATELLITE];
 
   const lang = getELangKey(params[EUrlBaseParam.LANG]);
@@ -239,7 +249,7 @@ export default async function Page({ searchParams, params }: IPageProps) {
       </ArticleWrapper>
     </>
   );
-}
+};
 
 // <CommentBlock
 //   lang={lang}

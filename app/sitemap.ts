@@ -7,8 +7,8 @@ import {
   getOnlineChanSiteMap,
   getPackagesSiteMap,
   getSatellitesSiteMap,
-  getSchedulesSiteMap,
   getTransNewsSiteMap,
+  getChannelsWithScheduleAndWeekDays,
 } from '@/controllers/siteMap.controller';
 import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
 import { DEFAULT_LANG, ELanguage } from '@/models/language.model';
@@ -101,7 +101,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const articleList = await getNewsForSiteMap();
   const channelList = await getChannelsSiteMap();
   const flyChannelList = await getFlyChannelsMap();
-  const scheduleList = await getSchedulesSiteMap();
+  const scheduleList = await getChannelsWithScheduleAndWeekDays();
   const packagesList = await getPackagesSiteMap();
   const satellitesList = await getSatellitesSiteMap();
   const onlineChannelList = await getOnlineChanSiteMap();
@@ -136,6 +136,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       itemList: flyChannelList,
       changeFrequency: 'daily',
     }),
+
     getSiteMapItem({
       startPath: CHANNELS_TV_PROGRAM,
       changeFrequency: 'monthly',
@@ -144,8 +145,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       startPath: CHANNELS_TV_PROGRAM,
       itemList: scheduleList,
       changeFrequency: 'daily',
-      addedPath: getFormattedDateStrYearFirst(),
     }),
+
     getSiteMapItem({ startPath: SAT_FINDER, changeFrequency: 'yearly' }),
     getSiteMapItem({
       startPath: PACKAGE_CHANNEL_LIST,

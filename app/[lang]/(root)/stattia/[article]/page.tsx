@@ -25,7 +25,6 @@ import { EUrlAdminParam } from '@/models/url/urlAdmin.model';
 import { getELangKey } from '@/libs/utils/getLanguage';
 import { getArticle } from '@/controllers/article.controller';
 import { updateViewCount } from '@/controllers/viewUpdate.controller';
-import { getNewsForSiteMap } from '@/controllers/siteMap.controller';
 
 const TextUnderH1 = dynamic(
   () => import('@/components/TextUnderH1/TextUnderH1')
@@ -81,14 +80,6 @@ export const generateMetadata = async ({
     },
   };
 };
-
-export async function generateStaticParams() {
-  const res = await getNewsForSiteMap();
-
-  return res.map((item) => ({ [EUrlBaseParam.ARTICLE_PARAM]: item.cpu }));
-}
-
-export const dynamicParams = true;
 
 export default async function Page({ params }: IArticleParams) {
   const article = params[ARTICLE_PARAM];

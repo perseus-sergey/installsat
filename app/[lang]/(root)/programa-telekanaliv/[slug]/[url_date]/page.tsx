@@ -31,7 +31,6 @@ import ArticleWrapper from '@/components/article/ArticleWrapper';
 import { DEFAULT_META_DATA } from '@/models/defaultMeta.model';
 import { ELanguage } from '@/models/language.model';
 import { EUrlBaseParam, MAIN_URL } from '@/models/url/url.model';
-import { getStartOfWeekDate } from '@/libs/utils/scheduleDates';
 
 const BASE_URL = getEnvVariable('BASE_URL', MAIN_URL);
 
@@ -91,19 +90,6 @@ export const generateMetadata = async ({ params }: IPageProps) => {
     },
   };
 };
-
-export async function generateStaticParams() {
-  const startWeekDate = getStartOfWeekDate(new Date());
-
-  return [...Array(7)].map((_, index) => {
-    const date = new Date(startWeekDate);
-    date.setDate(date.getDate() + index);
-
-    return { [EUrlBaseParam.URL_DATE]: getFormattedDateStrYearFirst(date) };
-  });
-}
-
-export const dynamicParams = true;
 
 export default async ({ params }: IPageProps) => {
   const slug = params[EUrlBaseParam.SLUG];

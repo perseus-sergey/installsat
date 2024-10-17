@@ -37,7 +37,6 @@ import { DEFAULT_META_DATA } from '@/models/defaultMeta.model';
 import { updateViewCount } from '@/controllers/viewUpdate.controller';
 import { EUrlBaseParam, MAIN_URL } from '@/models/url/url.model';
 import { EUrlAdminParam } from '@/models/url/urlAdmin.model';
-import { getFlyChannelsMap } from '@/controllers/siteMap.controller';
 
 const BASE_URL = process.env.BASE_URL || MAIN_URL;
 
@@ -100,14 +99,6 @@ export const generateMetadata = async ({
     },
   };
 };
-
-export async function generateStaticParams() {
-  const res = await getFlyChannelsMap();
-
-  return res.map((item) => ({ [EUrlBaseParam.SLUG]: item.cpu }));
-}
-
-export const dynamicParams = true;
 
 export default async function Page({ params }: IChannelProps) {
   const slug = params[EUrlBaseParam.SLUG];

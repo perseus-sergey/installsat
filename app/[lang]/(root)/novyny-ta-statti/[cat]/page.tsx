@@ -26,7 +26,6 @@ import {
   getChunkOfNews,
   getCurrentCatParams,
 } from '@/controllers/articleList.controller';
-import { getArticleCatListSiteMap } from '@/controllers/siteMap.controller';
 
 const BASE_URL = process.env.BASE_URL || MAIN_URL;
 
@@ -83,14 +82,6 @@ export const generateMetadata = async ({
     },
   };
 };
-
-export async function generateStaticParams() {
-  const dbResp = await getArticleCatListSiteMap();
-
-  return dbResp.map((cat) => ({ [EUrlBaseParam.CATEGORY]: cat.cpu }));
-}
-
-export const dynamicParams = false;
 
 export default async function Page({ params, searchParams }: IPageParams) {
   const cat = params[EUrlBaseParam.CATEGORY];

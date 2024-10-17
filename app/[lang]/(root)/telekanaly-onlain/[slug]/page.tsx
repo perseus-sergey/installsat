@@ -33,7 +33,6 @@ import ArticleWrapper from '@/components/article/ArticleWrapper';
 import ScheduleShort from '@/components/Schedule/ScheduleShort';
 import { DEFAULT_META_DATA } from '@/models/defaultMeta.model';
 import { ELanguage } from '@/models/language.model';
-import { getOnlineChanSiteMap } from '@/controllers/siteMap.controller';
 
 const BASE_URL = process.env.BASE_URL || MAIN_URL;
 const { LANG, SLUG, CHANNELS_TV_PROGRAM, ONLINE_CHANNEL_LIST } = EUrlBaseParam;
@@ -95,12 +94,6 @@ export const generateMetadata = async ({
     },
   };
 };
-
-export async function generateStaticParams() {
-  const res = await getOnlineChanSiteMap();
-
-  return res.map((item) => ({ [EUrlBaseParam.SLUG]: item.cpu }));
-}
 
 export default async function Page({ params }: IChannelProps) {
   const slug = params[SLUG];

@@ -12,7 +12,6 @@ import { DEFAULT_META_DATA } from '@/models/defaultMeta.model';
 import { ELanguage } from '@/models/language.model';
 import { META_TRANS_NEWS_SINGLE } from '@/models/satDigest.model';
 import { EUrlBaseParam, MAIN_URL } from '@/models/url/url.model';
-import { getTransNewsSiteMap } from '@/controllers/siteMap.controller';
 
 const BASE_URL = process.env.BASE_URL || MAIN_URL;
 
@@ -57,12 +56,6 @@ export const generateMetadata = async ({ params }: IPageParams) => {
     },
   };
 };
-
-export async function generateStaticParams() {
-  const res = await getTransNewsSiteMap();
-
-  return res.map((item) => ({ [EUrlBaseParam.DATE]: item.cpu }));
-}
 
 export default async function Page({ params }: IPageParams) {
   const lang = getELangKey(params[EUrlBaseParam.LANG]);

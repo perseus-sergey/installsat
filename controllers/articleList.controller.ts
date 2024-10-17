@@ -1,7 +1,6 @@
 import { poolExecute } from '@/libs/db/mysqldb';
 import {
   IAllNewsModel,
-  ISingleCatArticlesModel,
   WRONG_CAT_IDS,
 } from '@/models/articles/articleList.model';
 import { ELanguage } from '@/models/language.model';
@@ -10,34 +9,32 @@ import { cache } from 'react';
 
 const { ARTICLE: TBL_ARTICLE, ARTICLE_CATEGORIES } = EDBTableTitles;
 
-export const getArticleCatList = async () => {
-  const sql = `SELECT id, title, cpu, description, text, title_en, description_en, text_en FROM ${ARTICLE_CATEGORIES} WHERE id NOT IN ${WRONG_CAT_IDS}`;
-
-  const res = await poolExecute<ISingleCatArticlesModel[]>(sql);
-
-  return res instanceof Error ? [] : res;
-};
+interface ISingleCatArticlesModel {
+  id: number;
+  title: string;
+  description: string;
+  cpu: string;
+  text: string;
+}
 
 export const getCurrentCatParams = cache(
-  async (catCpu: string): Promise<ISingleCatArticlesModel> => {
-    const allCatResponse = await getArticleCatList();
-    const catParams =
-      allCatResponse instanceof Error
-        ? ''
-        : allCatResponse.find((cat) => cat.cpu === catCpu);
+  async (catCpu: string, lang: ELanguage) => {
+    const { UA } = ELanguage;
 
-    return (
-      catParams || {
-        title: '',
-        description: '',
-        title_en: '',
-        description_en: '',
-        id: -1,
-        cpu: '',
-        text: '',
-        text_en: '',
-      }
-    );
+    const sql = `
+    SELECT id,
+      ${lang === UA ? 'title' : 'title_en'} AS title,
+      ${lang === UA ? 'description' : 'description_en'} AS description,
+      ${lang === UA ? 'text' : 'text_en'} AS text,
+      cpu
+     FROM ${ARTICLE_CATEGORIES} 
+     WHERE cpu = ?
+     LIMIT 1
+     `;
+
+    const res = await poolExecute<ISingleCatArticlesModel[]>(sql, [catCpu]);
+
+    return res instanceof Error ? null : res[0];
   }
 );
 

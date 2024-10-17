@@ -115,14 +115,3 @@ export interface IAllNewsModel {
   category_title_en: string;
   category_cpu: string;
 }
-
-export interface ISingleCatArticlesModel {
-  id: number;
-  title: string;
-  description: string;
-  title_en: string;
-  description_en: string;
-  cpu: string;
-  text: string;
-  text_en: string;
-}

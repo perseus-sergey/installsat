@@ -38,7 +38,10 @@ const LangSwitchButton = () => {
 
   const handleLangToggle = () => {
     const newLang = currentLang === EN ? UA : EN;
-    const newPath = pathname.replace(`/${currentLang}`, `/${newLang}`);
+    const newPath = pathname.replace(
+      `/${pathname.split('/')[1]}`,
+      `/${newLang}`
+    );
     replace(`${newPath}?${searchParams}`);
   };
 

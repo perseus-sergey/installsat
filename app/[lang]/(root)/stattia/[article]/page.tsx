@@ -3,7 +3,6 @@ import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
 import dynamic from 'next/dynamic';
 
-import EmptyData from '@/components/errors/EmptyData/EmptyData';
 import { Title } from '@/components/ui/Titles/Title';
 import FillingValidImage from '@/components/ui/Images/FillingValidImage';
 import { ARTICLE_CARD_IMAGES } from '@/models/articles/article.model';
@@ -26,8 +25,8 @@ import { EUrlAdminParam } from '@/models/url/urlAdmin.model';
 import { getELangKey } from '@/libs/utils/getLanguage';
 import { getArticle } from '@/controllers/article.controller';
 import { updateViewCount } from '@/controllers/viewUpdate.controller';
-// import { getCommentsNumber } from '@/controllers/comments.controller';
-// import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
+import { getNewsForSiteMap } from '@/controllers/siteMap.controller';
+
 const TextUnderH1 = dynamic(
   () => import('@/components/TextUnderH1/TextUnderH1')
 );
@@ -83,6 +82,14 @@ export const generateMetadata = async ({
   };
 };
 
+export async function generateStaticParams() {
+  const res = await getNewsForSiteMap();
+
+  return res.map((item) => ({ [EUrlBaseParam.ARTICLE_PARAM]: item.cpu }));
+}
+
+export const dynamicParams = true;
+
 export default async function Page({ params }: IArticleParams) {
   const article = params[ARTICLE_PARAM];
   if (!article) notFound();
@@ -91,7 +98,6 @@ export default async function Page({ params }: IArticleParams) {
 
   const sqlResult = await getArticle(article, lang);
 
-  if (sqlResult instanceof Error) return <EmptyData lang={lang} />;
   if (!sqlResult) notFound();
 
   const {

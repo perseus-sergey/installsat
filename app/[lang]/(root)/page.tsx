@@ -18,7 +18,9 @@ interface IProps {
 
 export const revalidate = 21600; // 3600 * 6 invalidate cache every 6 hours
 
-export default async function Page({ searchParams, params }: IProps) {
+export const dynamicParams = false;
+
+export default async ({ searchParams, params }: IProps) => {
   const lang = getELangKey(params[EUrlBaseParam.LANG]);
 
   const searchInterval = searchParams[EUrlSearchParam.INTERVAL];
@@ -44,4 +46,4 @@ export default async function Page({ searchParams, params }: IProps) {
       </ArticleWrapper>
     </>
   );
-}
+};

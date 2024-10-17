@@ -101,11 +101,7 @@ export const generateMetadata = async ({
   };
 };
 
-export async function generateStaticParams(): Promise<
-  {
-    [SLUG]: string;
-  }[]
-> {
+export async function generateStaticParams() {
   const allCatResponse = await getChannelCatList();
 
   if (allCatResponse instanceof Error) return [{ [SLUG]: '' }];

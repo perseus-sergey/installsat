@@ -44,6 +44,10 @@ export const generateMetadata = ({ params }: IProps): Metadata => {
   };
 };
 
+export async function generateStaticParams() {
+  return Object.values(ELanguage).map((l) => ({ [EUrlBaseParam.LANG]: l }));
+}
+
 export default function Layout({ children, params }: IProps) {
   const lang = getELangKey(params[EUrlBaseParam.LANG]);
 

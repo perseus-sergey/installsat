@@ -8,7 +8,6 @@ import FillingValidImage from '@/components/ui/Images/FillingValidImage';
 import SimilarArticles from '@/components/SimilarArticles/SimilarArticles';
 import { Title } from '@/components/ui/Titles/Title';
 import { getDBOnlineChannel } from '@/controllers/channel.controller';
-// import { getCommentsNumber } from '@/controllers/comments.controller';
 import { cutText } from '@/libs/utils/cutText';
 import {
   CHANNEL_IMAGES,
@@ -17,10 +16,8 @@ import {
   SIMILAR_CHANNELS_TITLE,
 } from '@/models/channels/channel.model';
 import { EDBTableTitles } from '@/models/dbTblNames.model';
-import { Metadata } from 'next';
 import BreadCrumbServer from '@/components/BreadCrumbs/BreadCrumbsServer';
 import { SCHEDULE_META } from '@/models/scheduleTV.model';
-// import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
 import SchedulePage from '@/components/SchedulePage/SchedulePage';
 import { getFormattedDateStrYearFirst, getValidDate } from '@/libs/utils/dates';
 import WeekScheduleTabs from '@/components/tabs/WeekScheduleTabs';
@@ -34,6 +31,7 @@ import ArticleWrapper from '@/components/article/ArticleWrapper';
 import { DEFAULT_META_DATA } from '@/models/defaultMeta.model';
 import { ELanguage } from '@/models/language.model';
 import { EUrlBaseParam, MAIN_URL } from '@/models/url/url.model';
+import { getStartOfWeekDate } from '@/libs/utils/scheduleDates';
 
 const BASE_URL = getEnvVariable('BASE_URL', MAIN_URL);
 
@@ -57,9 +55,7 @@ export interface IPageProps {
 
 export const revalidate = 43200; // 3600 * 12 invalidate cache every 12 hours
 
-export const generateMetadata = async ({
-  params,
-}: IPageProps): Promise<Metadata> => {
+export const generateMetadata = async ({ params }: IPageProps) => {
   const slug = params[EUrlBaseParam.SLUG];
   const url_date = params[EUrlBaseParam.URL_DATE];
   const lang = getELangKey(params[EUrlBaseParam.LANG]);
@@ -96,7 +92,20 @@ export const generateMetadata = async ({
   };
 };
 
-export default async function Page({ params }: IPageProps) {
+export async function generateStaticParams() {
+  const startWeekDate = getStartOfWeekDate(new Date());
+
+  return [...Array(7)].map((_, index) => {
+    const date = new Date(startWeekDate);
+    date.setDate(date.getDate() + index);
+
+    return { [EUrlBaseParam.URL_DATE]: getFormattedDateStrYearFirst(date) };
+  });
+}
+
+export const dynamicParams = true;
+
+export default async ({ params }: IPageProps) => {
   const slug = params[EUrlBaseParam.SLUG];
   const url_date = params[EUrlBaseParam.URL_DATE];
   const lang = getELangKey(params[EUrlBaseParam.LANG]);
@@ -178,7 +187,6 @@ export default async function Page({ params }: IPageProps) {
               urlDate={url_date}
               channelTitle={title}
               filteredSchedules={filteredSchedules}
-              url_date={url_date}
             />
           </Suspense>
         </section>
@@ -226,7 +234,7 @@ export default async function Page({ params }: IPageProps) {
       </Suspense>
     </>
   );
-}
+};
 
 // <CommentBlock
 //   lang={lang}

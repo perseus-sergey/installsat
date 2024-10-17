@@ -50,7 +50,7 @@ export const getChanOneDaySchedule = cache(
       `
       )
       .join(' ');
-    const res = await poolExecute<[IScheduleTVModel[]]>(sql);
+    const res = await poolExecute<[IScheduleTVModel[]]>(sql, [null], true);
 
     return res instanceof Error || !Array.isArray(res) || !res.length
       ? null

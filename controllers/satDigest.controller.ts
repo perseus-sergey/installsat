@@ -69,7 +69,7 @@ export const getSatDigestNews = async ({
     ? res
     : res.map((r) => ({
         ...r,
-        date: getFormattedDateStrYearFirst(r.date),
+        date: getFormattedDateStrYearFirst(r.date, DEFAULT_LANG),
       }));
 };
 

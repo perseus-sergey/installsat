@@ -1,3 +1,5 @@
+import { cache } from 'react';
+
 import { IInputData } from '@/components/admin/FormEditArticle/FormEditChannel';
 import { poolExecute } from '@/libs/db/mysqldb';
 import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
@@ -6,14 +8,14 @@ import {
   TArticleTableModel,
 } from '@/models/articles/articleEdit.model';
 import { IAllNewsModel } from '@/models/articles/articleList.model';
-import {
-  EChannelEditFields,
-  TChannelEditModel,
-} from '@/models/channels/channel.model';
 import { IEditChannelListModel } from '@/models/channels/channelList.model';
 import { EDBTableTitles } from '@/models/dbTblNames.model';
 import { ResultSetHeader } from 'mysql2';
-import { cache } from 'react';
+import { DEFAULT_LANG } from '@/models/language.model';
+import {
+  EChannelEditFields,
+  TChannelEditModel,
+} from '@/models/channels/channelEdit.model';
 
 // export const WRONG_CAT_IDS = '(2,0,11,12,13)';
 const { ARTICLE: TBL_ARTICLE } = EDBTableTitles;
@@ -100,8 +102,8 @@ export const editArticleDB = async (
       articleData.keywords || '',
       articleData.keywords_en || '',
       articleData.text_en || '',
-      getFormattedDateStrYearFirst(articleData.date),
-      getFormattedDateStrYearFirst(),
+      getFormattedDateStrYearFirst(articleData.date, DEFAULT_LANG),
+      getFormattedDateStrYearFirst('', DEFAULT_LANG),
       articleID,
     ]
   );

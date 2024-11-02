@@ -3,6 +3,7 @@ import { SelectorMulti } from '../SatelliteSelector/SelectorMulti';
 import {
   ESelectType,
   IGroupedSatelliteOption,
+  SAT_SELECTOR_CAPTION,
 } from '@/models/reactSelect.model';
 import { ELanguage } from '@/models/language.model';
 
@@ -11,7 +12,7 @@ export default async function SatelliteSelector({
   requestFn,
 }: {
   requestFn: () => Promise<Error | IGroupedSatelliteOption[]>;
-  lang: string;
+  lang: ELanguage;
 }) {
   const groupedSats = await requestFn();
 
@@ -21,9 +22,7 @@ export default async function SatelliteSelector({
       className="z-20 min-w-72"
       searchParamName={EUrlSearchParam.SAT}
       itemList={groupedSats instanceof Error ? [] : groupedSats}
-      caption={
-        lang === ELanguage.UA ? 'Виберіть супутники' : 'Select satellites'
-      }
+      caption={SAT_SELECTOR_CAPTION[lang]}
     />
   );
 }

@@ -1,15 +1,18 @@
-import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
 import dynamic from 'next/dynamic';
+import { Metadata } from 'next';
 
 import { Title } from '@/components/ui/Titles/Title';
 import FillingValidImage from '@/components/ui/Images/FillingValidImage';
-import { ARTICLE_CARD_IMAGES } from '@/models/articles/article.model';
+import {
+  ARTICLE_CARD_IMAGES,
+  BREAD_ARTICLES,
+  getInfoPanelLinkTitle,
+  SIMILAR_ARTICLES_TITLE,
+} from '@/models/articles/article.model';
 import DangerHtml from '@/components/ui/DangerHtml/DangerHtml';
-import BottomInfoPanel, {
-  INFO_PANEL_TITLES,
-} from '@/components/BottomInfoPanel/BottomInfoPanel';
+import BottomInfoPanel from '@/components/BottomInfoPanel/BottomInfoPanel';
 import { EDBTableTitles } from '@/models/dbTblNames.model';
 import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
 import EditLinkButton from '@/components/admin/EditLinkButton/EditLinkButton';
@@ -25,6 +28,7 @@ import { EUrlAdminParam } from '@/models/url/urlAdmin.model';
 import { getELangKey } from '@/libs/utils/getLanguage';
 import { getArticle } from '@/controllers/article.controller';
 import { updateViewCount } from '@/controllers/viewUpdate.controller';
+import { INFO_PANEL_TITLES } from '@/models/ui/infoPanel.model';
 
 const TextUnderH1 = dynamic(
   () => import('@/components/TextUnderH1/TextUnderH1')
@@ -52,6 +56,8 @@ export const generateMetadata = async ({
   const article = params[ARTICLE_PARAM];
   const lang = getELangKey(params[LANG]);
 
+  const { UA, EN, RU, ES, AR, DE, FR, IT } = ELanguage;
+
   const sqlResult = await getArticle(article, lang);
   if (!sqlResult) return DEFAULT_META_DATA[lang];
 
@@ -69,13 +75,19 @@ export const generateMetadata = async ({
       title,
       description,
       url: `/${lang}/${slugPath}`,
-      publishedTime: getFormattedDateStrYearFirst(date),
+      publishedTime: getFormattedDateStrYearFirst(date, lang),
     },
     alternates: {
       canonical: `/${lang}/${slugPath}`,
       languages: {
-        en: `/${ELanguage.EN}/${slugPath}`,
-        uk: `/${ELanguage.UA}/${slugPath}`,
+        en: `/${EN}/${slugPath}`,
+        uk: `/${UA}/${slugPath}`,
+        ru: `/${RU}/${slugPath}`,
+        es: `/${ES}/${slugPath}`,
+        ar: `/${AR}/${slugPath}`,
+        de: `/${DE}/${slugPath}`,
+        fr: `/${FR}/${slugPath}`,
+        it: `/${IT}/${slugPath}`,
       },
     },
   };
@@ -106,7 +118,7 @@ export default async function Page({ params }: IArticleParams) {
 
   const logo = logoDB || DEFAULT_ARTICLE_LOGO_NAME;
 
-  const currDate = getFormattedDateStrYearFirst(date);
+  const currDate = getFormattedDateStrYearFirst(date, lang);
 
   // const numberOfComments = await getCommentsNumber(
   //   EDBTableTitles.COMMENTS_ARTICLE,
@@ -126,13 +138,7 @@ export default async function Page({ params }: IArticleParams) {
       <BreadCrumbServer
         lang={lang}
         breadCrumbList={[
-          {
-            href: EUrlBaseParam.NEWS_AND_ARTICLES,
-            title: {
-              [ELanguage.UA]: 'Новини та статті',
-              [ELanguage.EN]: 'News and articles',
-            },
-          },
+          BREAD_ARTICLES,
           {
             title: cat_name,
             href: `${NEWS_AND_ARTICLES}/${cat_slug}`,
@@ -160,7 +166,9 @@ export default async function Page({ params }: IArticleParams) {
         <div className="article-text">
           <DangerHtml text={text} />
         </div>
+
         <BottomInfoPanel
+          lang={lang}
           items={[
             {
               name: themeTitle[lang],
@@ -168,11 +176,7 @@ export default async function Page({ params }: IArticleParams) {
                 <SeoLink
                   href={`/${lang}/${EUrlBaseParam.NEWS_AND_ARTICLES}/${cat_slug}`}
                   className="border-b border-stone-300 hover:border-white"
-                  title={
-                    lang === ELanguage.UA
-                      ? `Перейти до списку статей категорії "${cat_name}"`
-                      : `Go to the list of articles of the category "${cat_name}"`
-                  }
+                  title={getInfoPanelLinkTitle(cat_name)[lang]}
                 >
                   {cat_name}
                 </SeoLink>
@@ -189,9 +193,7 @@ export default async function Page({ params }: IArticleParams) {
 
       <Suspense>
         <SimilarArticles
-          similarTitle={
-            lang === ELanguage.UA ? 'Схожі статті' : 'Similar articles'
-          }
+          similarTitle={SIMILAR_ARTICLES_TITLE[lang]}
           lang={lang}
           logoSrc={logo}
           articleId={id}

@@ -2,7 +2,6 @@ import {
   MChanTheme,
   getCompressColor,
   ECompressColors,
-  SAT_CHANNEL_LIST_IMAGES,
 } from '@/models/channels/channelList.model';
 import { EUrlBaseParam } from '@/models/url/url.model';
 import FillingValidImage from '../ui/Images/FillingValidImage';
@@ -19,8 +18,18 @@ import {
   isFtaChannel,
 } from '@/controllers/channelList.controller';
 import { ELanguage } from '@/models/language.model';
+import { SAT_CHANNEL_LIST_IMAGES } from '@/models/channels/channelListMeta.model';
+import { FLY_CHANNEL_LIST_MODEL } from '@/models/channels/flyChannelList.model';
 
 const { h2SatListImage, genreImage } = SAT_CHANNEL_LIST_IMAGES;
+
+const {
+  toolTipT2Caption,
+  emptyDataText,
+  beamCaption,
+  getToolTipAPidCaption,
+  getChanDetailLinkALabel,
+} = FLY_CHANNEL_LIST_MODEL;
 
 const borderStyle = { border: '2px groove' };
 const radioIconBg = `bg-[url('/Images/genre/radio.png')] h-4 w-4`;
@@ -94,8 +103,7 @@ const FrequencySegment = ({
                   {`${frequencyChannels[0].sr.toLocaleString('de-DE')}, ${frequencyChannels[0].fec}`}
                 </li>
                 <li className="text-gray-500 text-sm">
-                  {frequencyChannels[0].beam}{' '}
-                  {lang === ELanguage.UA ? 'напр.' : 'beam'}
+                  {frequencyChannels[0].beam} {beamCaption[lang]}
                 </li>
                 <li className="text-xs font-bold">
                   {modeList.length === 1 ? (
@@ -135,13 +143,7 @@ const FrequencySegment = ({
                       <div
                         className={`${t2IconBg} block h-8 w-8 bg-slate-50 rounded-lg p-1 bg-no-repeat bg-center`}
                       />
-                      <div>
-                        DVB-T2 (
-                        {lang === ELanguage.UA
-                          ? 'Цифрове Ефірне ТБ'
-                          : 'Digital Terrestrial TV'}
-                        )
-                      </div>
+                      <div>DVB-T2 ({toolTipT2Caption[lang]})</div>
                     </li>
                   )}
                   {compress || mode[0] ? (
@@ -250,9 +252,7 @@ const FrequencySegment = ({
                 ))}
                 <li>
                   ...
-                  {lang === ELanguage.UA
-                    ? ` ще ${aPidLength - 2}`
-                    : ` ${aPidLength - 2} more`}
+                  {getToolTipAPidCaption(aPidLength)[lang]}
                 </li>
               </Tooltip>
             ) : aPidLength > 1 ? (
@@ -293,11 +293,7 @@ const FrequencySegment = ({
           >
             <div className={`flex items-center gap-2 px-2 sm:justify-between`}>
               <SeoLink
-                title={
-                  lang === ELanguage.UA
-                    ? `Перейти до сторінки з детальним описом каналу "${title}"`
-                    : `Go to the detailed page of channel "${title}"`
-                }
+                title={getChanDetailLinkALabel(title)[lang]}
                 className={`${is_radio === 1 ? 'text-slate-500 text-sm' : 'text-blue-800 font-bold'} text-left flex flex-row items-center gap-2 hover:text-purple-500`}
                 id={slug}
                 href={`/${lang}/${EUrlBaseParam.KANAL}/${slug}`}
@@ -395,85 +391,9 @@ const FlyChannelsTable = async ({
       ))}
     </>
   ) : (
-    <EmptyData
-      lang={lang}
-      description={
-        lang === ELanguage.UA
-          ? 'Зараз канали відсутні. Спробуйте обрати інший супутник, або  налаштувати фільтри.'
-          : 'There are currently no channels. Try to choose another satellite or adjust the filters.'
-      }
-    />
+    <EmptyData lang={lang} description={emptyDataText[lang]} />
   );
 };
-// const FlyChannelsTable = ({
-//   satChannels,
-//   lang,
-//   isSingleSat = false,
-// }: ISatChannelsTableProps) =>
-//   satChannels.length > 0 && satChannels[0].length > 0 ? (
-//     <>
-//       {satChannels.map((sat) => (
-//         <>
-//           {!isSingleSat && (
-//             <h2
-//               id={sat[0][0].sat_slug}
-//               className="font-bold text-base sm:text-2xl text-blue-800 text-center py-2 flex items-center justify-between gap-4"
-//               style={{
-//                 fontFamily: 'Verdana, Geneva, sans-serif',
-//                 textShadow: '1px 1px 1px #ffffff',
-//               }}
-//             >
-//               <GoUpLink lang={lang} />
-//               {sat[0][0].sat_title} - {sat[0][0].sat_position}
-//               <FillingValidImage
-//                 image={{
-//                   ...h2SatListImage,
-//                   src: `${h2SatListImage.path}${sat[0][0].sat_logo}`,
-//                 }}
-//                 defaultImage={h2SatListImage.defaultImage}
-//                 // alternativeImgString={h2SatListImage.alternativeString}
-//                 alt={`${h2SatListImage.alt[lang]} ${sat[0][0].sat_title}`}
-//                 isFillParent
-//               />
-//             </h2>
-//           )}
-//           <table className="w-full max-w-4xl mx-auto text-center border-collapse">
-//             <thead>
-//               <tr
-//                 className="bg-violet-200 hidden sm:table-row"
-//                 style={borderStyle}
-//               >
-//                 <th style={borderStyle}>Frequency / Beam / Mode</th>
-//                 <th style={borderStyle}>Compress.</th>
-//                 <th style={borderStyle}>Sid (v.pid)</th>
-//                 <th style={borderStyle}>A.pid</th>
-//                 <th style={borderStyle}>Code</th>
-//                 <th style={borderStyle}>Title</th>
-//               </tr>
-//             </thead>
-//             <tbody>
-//               {sat.map((freqChannels, idx) => (
-//                 <FrequencySegment
-//                   key={idx}
-//                   frequencyChannels={freqChannels}
-//                   lang={lang}
-//                 />
-//               ))}
-//             </tbody>
-//           </table>
-//         </>
-//       ))}
-//     </>
-//   ) : (
-//     <EmptyData
-//       lang={lang}
-//       description={
-//         lang === ELanguage.UA
-//           ? 'Зараз канали відсутні. Спробуйте обрати інший супутник, або  налаштувати фільтри.'
-//           : 'There are currently no channels. Try to choose another satellite or adjust the filters.'
-//       }
-//     />
-//   );
 
 const HintItemList = ({
   itemList,

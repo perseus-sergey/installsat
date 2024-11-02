@@ -17,6 +17,7 @@ import ArticleWrapper from '@/components/article/ArticleWrapper';
 import {
   ARTICLE_LIST_MODEL,
   ARTICLE_PAGINATION_PARAMS,
+  META_ALL_ARTICLES,
 } from '@/models/articles/articleList.model';
 import { SEARCH_FIELD } from '@/models/ui/searchField.model';
 import { ELanguage } from '@/models/language.model';
@@ -26,26 +27,13 @@ import { getChunkOfNews } from '@/controllers/articleList.controller';
 
 const BASE_URL = process.env.BASE_URL || MAIN_URL;
 
+const { LANG, NEWS_AND_ARTICLES } = EUrlBaseParam;
+
 const { images, articlesCountCaption } = ARTICLE_LIST_MODEL;
 
 const { placeholder, labelTitle } = SEARCH_FIELD;
 
-const META_ALL_ARTICLES = {
-  h1Start: {
-    [ELanguage.UA]: `Останні новини ТБ, статті та огляди на`,
-    [ELanguage.EN]: `Latest TV news, articles and reviews as of`,
-  },
-  title: {
-    [ELanguage.UA]: 'Останні новини та статті про цифрове телебачення',
-    [ELanguage.EN]: 'Latest news and articles about digital television',
-  },
-  description: {
-    [ELanguage.UA]:
-      'Список статей про новини в сфері цифрового телебачення, статей про налаштування обладнання для прийому та перегляду телевізійних та радіо каналів, статей про новини від провайдерів платного телебачення',
-    [ELanguage.EN]:
-      'List of articles about news in the field of digital television, articles about setting up equipment for receiving and viewing tv and radio channels, articles about news from pay TV providers',
-  },
-};
+const { UA, EN, RU, ES, AR, DE, FR, IT } = ELanguage;
 
 export const revalidate = 43200; // 3600 * 12 invalidate cache every 12 hours
 
@@ -55,7 +43,7 @@ interface IProps {
 }
 
 export const generateMetadata = ({ params }: IProps): Metadata => {
-  const lang = getELangKey(params[EUrlBaseParam.LANG]);
+  const lang = getELangKey(params[LANG]);
   const { title, description } = META_ALL_ARTICLES;
 
   return {
@@ -67,21 +55,27 @@ export const generateMetadata = ({ params }: IProps): Metadata => {
       ...DEFAULT_META_DATA.openGraph,
       title: title[lang],
       description: description[lang],
-      url: `/${lang}/${EUrlBaseParam.NEWS_AND_ARTICLES}`,
-      publishedTime: getFormattedDateStrYearFirst(),
+      url: `/${lang}/${NEWS_AND_ARTICLES}`,
+      publishedTime: getFormattedDateStrYearFirst('', lang),
     },
     alternates: {
-      canonical: `/${lang}/${EUrlBaseParam.NEWS_AND_ARTICLES}`,
+      canonical: `/${lang}/${NEWS_AND_ARTICLES}`,
       languages: {
-        en: `/${ELanguage.EN}/${EUrlBaseParam.NEWS_AND_ARTICLES}`,
-        uk: `/${ELanguage.UA}/${EUrlBaseParam.NEWS_AND_ARTICLES}`,
+        en: `/${EN}/${NEWS_AND_ARTICLES}`,
+        uk: `/${UA}/${NEWS_AND_ARTICLES}`,
+        ru: `/${RU}/${NEWS_AND_ARTICLES}`,
+        es: `/${ES}/${NEWS_AND_ARTICLES}`,
+        ar: `/${AR}/${NEWS_AND_ARTICLES}`,
+        de: `/${DE}/${NEWS_AND_ARTICLES}`,
+        fr: `/${FR}/${NEWS_AND_ARTICLES}`,
+        it: `/${IT}/${NEWS_AND_ARTICLES}`,
       },
     },
   };
 };
 
 export default async function Page({ searchParams, params }: IProps) {
-  const lang = getELangKey(params[EUrlBaseParam.LANG]);
+  const lang = getELangKey(params[LANG]);
   const { perPage } = ARTICLE_PAGINATION_PARAMS;
   const { h1Start } = META_ALL_ARTICLES;
 
@@ -103,7 +97,7 @@ export default async function Page({ searchParams, params }: IProps) {
 
   const totalPages = Math.ceil(mapsCount / perPage);
 
-  const currDate = getFormattedDateStrYearFirst();
+  const currDate = getFormattedDateStrYearFirst('', lang);
 
   return (
     <>

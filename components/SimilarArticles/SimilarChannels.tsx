@@ -19,7 +19,7 @@ const SimilarChannels = async ({
   if (similarChannels.length === 0) return null;
 
   return (
-    <SimilarBlock blockTitle={sectionCaption}>
+    <SimilarBlock blockTitle={sectionCaption} lang={lang}>
       {similarChannels.map((chan) => (
         <li key={chan.slug}>
           <SimilarFlyChannel

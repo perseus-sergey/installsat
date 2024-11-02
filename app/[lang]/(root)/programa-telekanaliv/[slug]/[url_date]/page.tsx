@@ -1,23 +1,19 @@
 import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
 
-import BottomInfoPanel, {
-  INFO_PANEL_TITLES,
-} from '@/components/BottomInfoPanel/BottomInfoPanel';
+import BottomInfoPanel from '@/components/BottomInfoPanel/BottomInfoPanel';
 import FillingValidImage from '@/components/ui/Images/FillingValidImage';
 import SimilarArticles from '@/components/SimilarArticles/SimilarArticles';
 import { Title } from '@/components/ui/Titles/Title';
 import { getDBOnlineChannel } from '@/controllers/channel.controller';
 import { cutText } from '@/libs/utils/cutText';
-import {
-  CHANNEL_IMAGES,
-  CHANNEL_RESPONSIBILITIES,
-  SIMILAR_ARTICLE_TITLE,
-  SIMILAR_CHANNELS_TITLE,
-} from '@/models/channels/channel.model';
 import { EDBTableTitles } from '@/models/dbTblNames.model';
 import BreadCrumbServer from '@/components/BreadCrumbs/BreadCrumbsServer';
-import { SCHEDULE_META } from '@/models/scheduleTV.model';
+import {
+  BREAD_TV_SCHEDULE,
+  getChannelScheduleTitle,
+  SCHEDULE_META,
+} from '@/models/scheduleTV.model';
 import SchedulePage from '@/components/SchedulePage/SchedulePage';
 import { getFormattedDateStrYearFirst, getValidDate } from '@/libs/utils/dates';
 import WeekScheduleTabs from '@/components/tabs/WeekScheduleTabs';
@@ -31,6 +27,13 @@ import ArticleWrapper from '@/components/article/ArticleWrapper';
 import { DEFAULT_META_DATA } from '@/models/defaultMeta.model';
 import { ELanguage } from '@/models/language.model';
 import { EUrlBaseParam, MAIN_URL } from '@/models/url/url.model';
+import {
+  CHANNEL_IMAGES,
+  SIMILAR_ARTICLE_TITLE,
+  SIMILAR_CHANNELS_TITLE,
+} from '@/models/channels/metaChannel.model';
+import { CHANNEL_RESPONSIBILITIES } from '@/models/channels/channel.model';
+import { INFO_PANEL_TITLES } from '@/models/ui/infoPanel.model';
 
 const BASE_URL = getEnvVariable('BASE_URL', MAIN_URL);
 
@@ -46,7 +49,7 @@ const {
   // comments: commentsTitle,
 } = INFO_PANEL_TITLES;
 
-const { getKeywords, getTitle, h1Start, descriptionStart } = SCHEDULE_META;
+const { getKeywords, getTitle, descriptionStart } = SCHEDULE_META;
 
 export interface IPageProps {
   params: { [key in EUrlBaseParam]: string };
@@ -55,6 +58,8 @@ export interface IPageProps {
 export const revalidate = 43200; // 3600 * 12 invalidate cache every 12 hours
 
 export const generateMetadata = async ({ params }: IPageProps) => {
+  const { UA, EN, RU, ES, AR, DE, FR, IT } = ELanguage;
+
   const slug = params[EUrlBaseParam.SLUG];
   const url_date = params[EUrlBaseParam.URL_DATE];
   const lang = getELangKey(params[EUrlBaseParam.LANG]);
@@ -79,13 +84,19 @@ export const generateMetadata = async ({ params }: IPageProps) => {
       title: metaTitle,
       description: metaDescription,
       url: `/${lang}/${slugPath}`,
-      publishedTime: getFormattedDateStrYearFirst(),
+      publishedTime: getFormattedDateStrYearFirst('', lang),
     },
     alternates: {
       canonical: `/${lang}/${slugPath}`,
       languages: {
-        en: `/${ELanguage.EN}/${slugPath}`,
-        uk: `/${ELanguage.UA}/${slugPath}`,
+        en: `/${EN}/${slugPath}`,
+        uk: `/${UA}/${slugPath}`,
+        ru: `/${RU}/${slugPath}`,
+        es: `/${ES}/${slugPath}`,
+        ar: `/${AR}/${slugPath}`,
+        de: `/${DE}/${slugPath}`,
+        fr: `/${FR}/${slugPath}`,
+        it: `/${IT}/${slugPath}`,
       },
     },
   };
@@ -131,23 +142,13 @@ export default async ({ params }: IPageProps) => {
     <>
       <BreadCrumbServer
         lang={lang}
-        breadCrumbList={[
-          {
-            href: EUrlBaseParam.CHANNELS_TV_PROGRAM,
-            title: {
-              [ELanguage.UA]: 'Програма каналів',
-              [ELanguage.EN]: 'Channel program',
-            },
-          },
-          `${h1Start[lang]} "${title}"`,
-        ]}
+        breadCrumbList={[BREAD_TV_SCHEDULE, getTitle(title, url_date)[lang]]}
       />
 
       <ArticleWrapper lang={lang}>
         <Title>
           <span className="inline-block">
-            {`${h1Start[lang]} "${title}" ${lang === ELanguage.UA ? 'за ' : 'for '}`}
-            <time dateTime={url_date}>{url_date}</time>
+            {getChannelScheduleTitle(lang, url_date, title)}
           </span>
           <FillingValidImage
             image={{
@@ -192,6 +193,7 @@ export default async ({ params }: IPageProps) => {
         </NoteBlock>
 
         <BottomInfoPanel
+          lang={lang}
           items={[
             { name: viewsTitle[lang], value: view + 1 },
             // { name: commentsTitle[lang], value: numberOfComments },

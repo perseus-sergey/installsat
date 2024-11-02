@@ -1,10 +1,11 @@
+import { Suspense } from 'react';
+
 import type { Metadata } from 'next';
 import SideBar from '@/components/SideBar/SideBar';
 import { META_TRANS_NEWS_LIST } from '@/models/satDigest.model';
 import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
 import { getELangKey } from '@/libs/utils/getLanguage';
 import SideBarServer from '@/components/SideBar/SideBarServer';
-import { Suspense } from 'react';
 import RightAside from '@/components/SideBar/RightAside';
 import { DEFAULT_META_DATA } from '@/models/defaultMeta.model';
 import { ELanguage } from '@/models/language.model';
@@ -22,6 +23,8 @@ interface IProps {
 export const generateMetadata = ({ params }: IProps): Metadata => {
   const lang = getELangKey(params[EUrlBaseParam.LANG]);
 
+  const { UA, EN, RU, ES, AR, DE, FR, IT } = ELanguage;
+
   return {
     metadataBase: new URL(BASE_URL),
     title: metaTitle[lang],
@@ -32,13 +35,19 @@ export const generateMetadata = ({ params }: IProps): Metadata => {
       title: metaTitle[lang],
       description: metaDescription[lang],
       url: `/${lang}`,
-      publishedTime: getFormattedDateStrYearFirst(),
+      publishedTime: getFormattedDateStrYearFirst('', lang),
     },
     alternates: {
       canonical: `/${lang}`,
       languages: {
-        en: `/${ELanguage.EN}`,
-        uk: `/${ELanguage.UA}`,
+        en: `/${EN}`,
+        uk: `/${UA}`,
+        ru: `/${RU}`,
+        es: `/${ES}`,
+        ar: `/${AR}`,
+        de: `/${DE}`,
+        fr: `/${FR}`,
+        it: `/${IT}`,
       },
     },
   };

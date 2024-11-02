@@ -1,5 +1,6 @@
 import { ELanguage } from '@/models/language.model';
 import { getValidDate } from './dates';
+import { MONTH_BY_LANG } from '@/models/scheduleTV.model';
 
 export const getDate = (date: string | Date = new Date(), lang?: string) => {
   const currDate = getValidDate(date);
@@ -23,43 +24,16 @@ export const getStartOfWeekDate = (date: Date) => {
 export const getDayOfMonthStr = (dateStr: string, lang: ELanguage) => {
   const dateObj = new Date(dateStr);
 
-  const months =
-    lang === ELanguage.UA
-      ? [
-          'січня',
-          'лютого',
-          'березня',
-          'квітня',
-          'травня',
-          'червня',
-          'липня',
-          'серпня',
-          'вересня',
-          'жовтня',
-          'листопада',
-          'грудня',
-        ]
-      : [
-          'January',
-          'February',
-          'March',
-          'April',
-          'May',
-          'June',
-          'July',
-          'August',
-          'September',
-          'October',
-          'November',
-          'December',
-        ];
+  const months = MONTH_BY_LANG[lang] || MONTH_BY_LANG[ELanguage.EN]; // Використовуємо англійську як запасний варіант
 
   const day = dateObj.getDate();
   const monthIndex = dateObj.getMonth();
 
-  const result = ELanguage.UA
+  // Форматування дати для мов з різним порядком місяця і дня
+  const isDayFirst = [ELanguage.UA, ELanguage.RU, ELanguage.AR].includes(lang);
+  const result = isDayFirst
     ? `${day} ${months[monthIndex]}`
     : `${months[monthIndex]} ${day}`;
 
   return result;
-}; // 29 липня
+};

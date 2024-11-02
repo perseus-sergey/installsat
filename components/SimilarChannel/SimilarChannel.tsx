@@ -1,9 +1,15 @@
-import { IFlyChannel, SIMILAR_CHANNELS } from '@/models/channels/channel.model';
+import { IFlyChannel } from '@/models/channels/channel.model';
 // import Link from 'next/link';
 import { EUrlBaseParam } from '@/models/url/url.model';
 import { ELanguage } from '@/models/language.model';
 // import { CHANNEL_LIST_ANCHOR_START } from '@/models/channelList.model';
 import SeoLink from '../ui/SeoLink/SeoLink';
+import { SIMILAR_CHANNELS } from '@/models/channels/metaChannel.model';
+import {
+  getSimilarPackageChannelsTitle,
+  getSimilarSatChannelsTitle,
+} from '@/models/channels/channelParams.model';
+import { localeStringMaker } from '@/libs/utils/localeStringMaker';
 
 // interface ISimilarChannelProps {
 //   chanParams: ISimilarChannel;
@@ -120,11 +126,7 @@ export const SimilarFlyChannel = ({
         <SeoLink
           className="text-indigo-700 hover:text-red-500"
           href={`/${lang}/${EUrlBaseParam.PACKAGE_CHANNEL_LIST}/${package_slug}`}
-          title={
-            lang === ELanguage.UA
-              ? `Дивитись параметри каналу "${chanName}" в пакеті "${package_title}"`
-              : `Watch "${chanName}" channel parameters on satellite "${package_title}"`
-          }
+          title={getSimilarPackageChannelsTitle(package_title, chanName)[lang]}
         >
           {package_title}
         </SeoLink>
@@ -137,14 +139,14 @@ export const SimilarFlyChannel = ({
         className="text-indigo-700 hover:text-red-500"
         href={`/${lang}/${EUrlBaseParam.SAT_CHANNEL_LIST}/${sat_slug}`}
         title={
-          lang === ELanguage.UA
-            ? `Дивитись параметри каналу "${chanName}" на супутнику "${sat_title} ${sat_position}"`
-            : `Watch "${chanName}" channel parameters on satellite "${sat_title} ${sat_position}"`
+          getSimilarSatChannelsTitle(`${sat_title} ${sat_position}`, chanName)[
+            lang
+          ]
         }
       >
         {getSatChannelTitle(sat_title, sat_position)[lang]}
       </SeoLink>{' '}
-      {getFrequencyTitle(frequency)[lang]}
+      {getFrequencyTitle(localeStringMaker(frequency))[lang]}
     </>
   );
 };

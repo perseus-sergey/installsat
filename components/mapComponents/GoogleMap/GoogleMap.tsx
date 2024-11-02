@@ -8,10 +8,11 @@ import {
   MapCameraChangedEvent,
   MapMouseEvent,
 } from '@vis.gl/react-google-maps';
+import { Dispatch, SetStateAction } from 'react';
+
 import { Polyline } from '@/components/mapComponents/Polyline';
 import FillingImg from '../../ui/Images/FillingImage';
 import { SAT_FINDER_META_DATA } from '@/models/satFinder.model';
-import { Dispatch, SetStateAction } from 'react';
 import { ELanguage } from '@/models/language.model';
 
 interface IGoogleMapProps {

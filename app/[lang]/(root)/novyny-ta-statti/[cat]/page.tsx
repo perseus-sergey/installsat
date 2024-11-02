@@ -1,21 +1,23 @@
+import { notFound } from 'next/navigation';
+import { Suspense } from 'react';
+import Image from 'next/image';
+
 import { Title } from '@/components/ui/Titles/Title';
 import type { Metadata } from 'next';
 import TextUnderH1 from '@/components/TextUnderH1/TextUnderH1';
 import ArticleList from '@/components/article/ArticleList/ArticleList';
-import { notFound } from 'next/navigation';
 import Pagination from '@/components/ui/Pagination/Pagination';
 import { getELangKey } from '@/libs/utils/getLanguage';
 import { validSearchParam } from '@/libs/utils/validSearchParam';
 import BreadCrumbServer from '@/components/BreadCrumbs/BreadCrumbsServer';
 import Filter from '@/components/ui/Filter/Filter';
 import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
-import { Suspense } from 'react';
-import Image from 'next/image';
 import h1Img from 'public/Images/articles/all_news_64.png';
 import ArticleWrapper from '@/components/article/ArticleWrapper';
 import {
   ARTICLE_LIST_MODEL,
   ARTICLE_PAGINATION_PARAMS,
+  BREAD_NEWS_AND_ARTICLES,
 } from '@/models/articles/articleList.model';
 import { SEARCH_FIELD } from '@/models/ui/searchField.model';
 import { ELanguage } from '@/models/language.model';
@@ -33,14 +35,6 @@ const { images, articlesCountCaption } = ARTICLE_LIST_MODEL;
 
 const { placeholder, labelTitle } = SEARCH_FIELD;
 
-const BREAD_NEWS_AND_ARTICLES = {
-  href: EUrlBaseParam.NEWS_AND_ARTICLES,
-  title: {
-    [ELanguage.UA]: 'Новини та статті',
-    [ELanguage.EN]: 'News and articles',
-  },
-};
-
 export const revalidate = 43200; // 3600 * 12 invalidate cache every 12 hours
 
 export interface IPageParams {
@@ -51,6 +45,8 @@ export interface IPageParams {
 export const generateMetadata = async ({
   params,
 }: IPageParams): Promise<Metadata> => {
+  const { UA, EN, RU, ES, AR, DE, FR, IT } = ELanguage;
+
   const cat = params[EUrlBaseParam.CATEGORY];
   const lang = getELangKey(params[EUrlBaseParam.LANG]);
 
@@ -71,13 +67,19 @@ export const generateMetadata = async ({
       title,
       description,
       url: `/${lang}/${slugPath}`,
-      publishedTime: getFormattedDateStrYearFirst(),
+      publishedTime: getFormattedDateStrYearFirst('', lang),
     },
     alternates: {
       canonical: `/${lang}/${slugPath}`,
       languages: {
-        en: `/${ELanguage.EN}/${slugPath}`,
-        uk: `/${ELanguage.UA}/${slugPath}`,
+        en: `/${EN}/${slugPath}`,
+        uk: `/${UA}/${slugPath}`,
+        ru: `/${RU}/${slugPath}`,
+        es: `/${ES}/${slugPath}`,
+        ar: `/${AR}/${slugPath}`,
+        de: `/${DE}/${slugPath}`,
+        fr: `/${FR}/${slugPath}`,
+        it: `/${IT}/${slugPath}`,
       },
     },
   };

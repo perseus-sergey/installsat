@@ -49,6 +49,7 @@ const SatNewsList = async ({ searchParams, lang }: ISatNewsListProps) => {
       <div key={news[0]}>
         <TitleH2Digest className="!justify-between">
           <FillingValidImage
+            className="hidden sm:block"
             image={{
               ...satLogo,
               src: `${satLogo.path}${news[1].get([...news[1].keys()][0])?.[0].satLogo}`,
@@ -57,7 +58,7 @@ const SatNewsList = async ({ searchParams, lang }: ISatNewsListProps) => {
             alt={`${satLogo.alt[lang]}${news[0]}`}
           />
 
-          <div className="flex flex-wrap gap-2">
+          <div className="block text-center">
             {META_TRANS_NEWS_LIST.h2start[lang]}
             <SatLink
               className="text-rose-500 underline"

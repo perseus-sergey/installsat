@@ -1,7 +1,7 @@
 import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
 import { encrypt } from '@/libs/utils/encrypt';
 import { ISubscribersEmails } from '@/models/ui/comments.model';
-import { ELanguage } from '@/models/language.model';
+import { ELanguage, DEFAULT_LANG } from '@/models/language.model';
 import { EDBTableTitles } from '@/models/dbTblNames.model';
 import { EUrlBaseParam } from '@/models/url/url.model';
 import { EUrlAdminParam } from '@/models/url/urlAdmin.model';
@@ -102,7 +102,7 @@ export const getCommentToAdminEmail = async ({
                   ${subscribers
                     .map(
                       ({ author, date, mail }) => `
-                    <li>${author}: ${mail} (${getFormattedDateStrYearFirst(date)})</li>
+                    <li>${author}: ${mail} (${getFormattedDateStrYearFirst(date, DEFAULT_LANG)})</li>
                   `
                     )
                     .join('')}

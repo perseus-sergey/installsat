@@ -1,11 +1,13 @@
-import { SCHEDULE_LINK } from '@/models/channels/channel.model';
+import Image from 'next/image';
+
 import { ELanguage } from '@/models/language.model';
 import SeoLink from '../ui/SeoLink/SeoLink';
 import scheduleImg from 'public/Images/schedule-icon96.png';
-import Image from 'next/image';
+import { SCHEDULE_LINK } from '@/models/channels/metaChannel.model';
+import { getChannelScheduleLinkTitle } from '@/models/channels/channelParams.model';
 
 interface ITvScheduleLinkProps {
-  title: React.ReactNode;
+  title: string;
   href: string;
   lang: ELanguage;
   isOnlinePage?: boolean;
@@ -36,11 +38,7 @@ const TvScheduleLink = ({
       className="py-2 px-3 font-bold text-white text-center text-xl sm:text-2xl border border-solid border-blue-300 cursor-pointer rounded-md bg-gradient-to-b from-sky-400 to-blue-500 hover:to-blue-600 shadow"
       style={{ textShadow: '0 -1px 1px rgba(0, 0, 0, 0.25)' }}
       href={href}
-      title={
-        lang === ELanguage.UA
-          ? `Дивитись розклад передач каналу "${title}" на сьогодні`
-          : `Watch the program schedule of channel "${title}" for today`
-      }
+      title={getChannelScheduleLinkTitle(title)[lang]}
     >
       {`${isOnlinePage ? onlineChannel[lang] : channel[lang]} "${title}"`}
     </SeoLink>

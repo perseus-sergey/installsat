@@ -1,7 +1,10 @@
-import { EUrlBaseParam } from '../url/url.model';
 import React from 'react';
+
+import { EUrlBaseParam } from '../url/url.model';
 import SeoSVG from '@/components/ui/icons-svg/SeoSVG';
 import { ELanguage, ILang } from '../language.model';
+
+const { UA, EN, RU, ES, AR, DE, FR, IT } = ELanguage;
 
 export interface IFooterMenuItem {
   title: ILang;
@@ -19,12 +22,18 @@ type TFooterColumnTitles = {
   };
 };
 
+const CURRENT_YEAR = new Date().getFullYear();
+
 export const COPYRIGHT_SECTION = {
   title: {
-    [ELanguage.UA]: `Copyright © 2009 - ${new Date().getFullYear()} Copyright in
-    Installsat. В разі копіюванні контенту, посилання на сайт є обов'язковим.`,
-    [ELanguage.EN]: `Copyright © 2009 - ${new Date().getFullYear()} Copyright in
-    Installsat. The link to the site is required when copying content.`,
+    [UA]: `Copyright © 2009 - ${CURRENT_YEAR} Copyright in Installsat. В разі копіюванні контенту, посилання на сайт є обов'язковим.`,
+    [EN]: `Copyright © 2009 - ${CURRENT_YEAR} Copyright in Installsat. The link to the site is required when copying content.`,
+    [RU]: `Copyright © 2009 - ${CURRENT_YEAR} Copyright на Installsat. При копировании контента ссылка на сайт обязательна.`,
+    [ES]: `Copyright © 2009 - ${CURRENT_YEAR} Derechos de autor en Installsat. Se requiere el enlace al sitio al copiar contenido.`,
+    [AR]: `© حقوق النشر 2009 - ${CURRENT_YEAR} حقوق النشر في Installsat. الرابط إلى الموقع مطلوب عند نسخ المحتوى.`,
+    [DE]: `Urheberrecht © 2009 - ${CURRENT_YEAR} Urheberrecht bei Installsat. Ein Link zur Website ist beim Kopieren von Inhalten erforderlich.`,
+    [FR]: `Droits d'auteur © 2009 - ${CURRENT_YEAR} Droits d'auteur sur Installsat. Le lien vers le site est requis lors de la copie de contenu.`,
+    [IT]: `Copyright © 2009 - ${CURRENT_YEAR} Copyright in Installsat. Il link al sito è richiesto quando si copia il contenuto.`,
   },
 };
 
@@ -37,8 +46,14 @@ export enum EFooterColumns {
 export const footerColumnTitles: TFooterColumnTitles = {
   [EFooterColumns.NEWS]: {
     title: {
-      [ELanguage.UA]: 'Новини',
-      [ELanguage.EN]: 'News',
+      [UA]: 'Новини',
+      [EN]: 'News',
+      [RU]: 'Новости',
+      [ES]: 'Noticias',
+      [AR]: 'أخبار',
+      [DE]: 'Nachrichten',
+      [FR]: 'Actualités',
+      [IT]: 'Notizie',
     },
     image: (
       <SeoSVG strokeWidth={0.1}>
@@ -52,8 +67,14 @@ export const footerColumnTitles: TFooterColumnTitles = {
 
   [EFooterColumns.SETTINGS]: {
     title: {
-      [ELanguage.UA]: 'Налаштування',
-      [ELanguage.EN]: 'Settings',
+      [UA]: 'Налаштування',
+      [EN]: 'Settings',
+      [RU]: 'Настройки',
+      [ES]: 'Configuración',
+      [AR]: 'إعدادات',
+      [DE]: 'Einstellungen',
+      [FR]: 'Paramètres',
+      [IT]: 'Impostazioni',
     },
     image: (
       <SeoSVG strokeWidth={0.1}>
@@ -70,8 +91,14 @@ export const footerColumnTitles: TFooterColumnTitles = {
   },
   [EFooterColumns.CHANNEL_LISTS]: {
     title: {
-      [ELanguage.UA]: 'Списки каналів',
-      [ELanguage.EN]: 'Channel lists',
+      [UA]: 'Списки каналів',
+      [EN]: 'Channel lists',
+      [RU]: 'Списки каналов',
+      [ES]: 'Listas de canales',
+      [AR]: 'قوائم القنوات',
+      [DE]: 'Kanallisten',
+      [FR]: 'Listes de chaînes',
+      [IT]: 'Elenchi dei canali',
     },
     image: (
       <SeoSVG strokeWidth={0.1} viewBox="0 0 36 36">
@@ -101,16 +128,28 @@ export const footerMenuList: TFooterMenu = {
   [EFooterColumns.NEWS]: [
     {
       title: {
-        [ELanguage.UA]: 'Супутникові транспондерні новини',
-        [ELanguage.EN]: 'Satellite transponder news',
+        [UA]: 'Супутникові транспондерні новини',
+        [EN]: 'Satellite transponder news',
+        [RU]: 'Новости спутниковых транспондеров',
+        [ES]: 'Noticias de transpondedores satelitales',
+        [AR]: 'أخبار محولات الإشارة الفضائية',
+        [DE]: 'Satellitentransponder-Nachrichten',
+        [FR]: 'Actualités des transpondeurs satellitaires',
+        [IT]: 'Notizie sui transponder satellitari',
       },
       href: '/',
     },
 
     {
       title: {
-        [ELanguage.UA]: 'Новини телевізійного супутникового мовлення',
-        [ELanguage.EN]: 'News of television satellite broadcasting',
+        [UA]: 'Новини телевізійного супутникового мовлення',
+        [EN]: 'News of television satellite broadcasting',
+        [RU]: 'Новости спутникового телевещания',
+        [ES]: 'Noticias de transmisión satelital de televisión',
+        [AR]: 'أخبار البث التلفزيوني الفضائي',
+        [DE]: 'Nachrichten des Satellitenfernsehens',
+        [FR]: 'Actualités de la diffusion satellite',
+        [IT]: 'Notizie sulla trasmissione satellitare',
       },
       href: EUrlBaseParam.NEWS_AND_ARTICLES,
     },
@@ -119,34 +158,67 @@ export const footerMenuList: TFooterMenu = {
   [EFooterColumns.SETTINGS]: [
     {
       title: {
-        [ELanguage.UA]: 'Як встановити супутникову антену',
-        [ELanguage.EN]: 'How to install satellite antenna',
+        [UA]: 'Як встановити супутникову антену',
+        [EN]: 'How to install satellite antenna',
+        [RU]: 'Как установить спутниковую антенну',
+        [ES]: 'Cómo instalar una antena satelital',
+        [AR]: 'كيفية تركيب هوائي فضائي',
+        [DE]: 'Wie installiere ich eine Satellitenantenne',
+        [FR]: 'Comment installer une antenne satellite',
+        [IT]: "Come installare un'antenna satellitare",
       },
       href: `${EUrlBaseParam.ARTICLE}/samostoyatelnaya-ustanovka-sputnikovoi-antenni`,
     },
     {
       title: {
-        [ELanguage.UA]: 'Як визначити напрямок антени',
-        [ELanguage.EN]: 'How to determine the direction of the antenna',
+        [UA]: 'Як визначити напрямок антени',
+        [EN]: 'How to determine the direction of the antenna',
+        [RU]: 'Как определить направление антенны',
+        [ES]: 'Cómo determinar la dirección de la antena',
+        [AR]: 'كيفية تحديد اتجاه الهوائي',
+        [DE]: 'Wie man die Richtung der Antenne bestimmt',
+        [FR]: "Comment déterminer la direction de l'antenne",
+        [IT]: "Come determinare la direzione dell'antenna",
       },
       href: EUrlBaseParam.SAT_FINDER,
     },
     {
       title: {
-        [ELanguage.UA]: 'Карти покриття супутникового сигналу',
-        [ELanguage.EN]: 'Satellite beam coverage maps',
+        [UA]: 'Карти покриття супутникового сигналу',
+        [EN]: 'Satellite beam coverage maps',
+        [RU]: 'Карты покрытия спутникового сигнала',
+        [ES]: 'Mapas de cobertura de haz satelital',
+        [AR]: 'خرائط تغطية حزمة الأقمار الصناعية',
+        [DE]: 'Abdeckungskarten des Satellitensignals',
+        [FR]: 'Cartes de couverture du faisceau satellite',
+        [IT]: 'Mappe di copertura del fascio satellitare',
       },
       href: EUrlBaseParam.SAT_COVERAGE_MAP,
     },
     {
       title: {
-        [ELanguage.UA]: 'Як налаштувати супутниковий приймач',
-        [ELanguage.EN]: 'How to set up satellite receiver',
+        [UA]: 'Як налаштувати супутниковий приймач',
+        [EN]: 'How to set up satellite receiver',
+        [RU]: 'Как настроить спутниковый приемник',
+        [ES]: 'Cómo configurar un receptor satelital',
+        [AR]: 'كيفية إعداد جهاز استقبال الأقمار الصناعية',
+        [DE]: 'Wie man einen Satellitenempfänger einrichtet',
+        [FR]: 'Comment configurer un récepteur satellite',
+        [IT]: 'Come impostare il ricevitore satellitare',
       },
       href: `${EUrlBaseParam.ARTICLE}/kak-sviazati-tuner-s-antennoi`,
     },
     {
-      title: { [ELanguage.UA]: 'Biss Ключі', [ELanguage.EN]: 'Biss Keys' },
+      title: {
+        [UA]: 'Biss Ключі',
+        [EN]: 'Biss Keys',
+        [RU]: 'Ключи Biss',
+        [ES]: 'Claves Biss',
+        [AR]: 'مفاتيح Biss',
+        [DE]: 'Biss-Schlüssel',
+        [FR]: 'Clés Biss',
+        [IT]: 'Chiavi Biss',
+      },
       href: `${EUrlBaseParam.ARTICLE}/key-biss`,
     },
   ],
@@ -154,21 +226,53 @@ export const footerMenuList: TFooterMenu = {
   [EFooterColumns.CHANNEL_LISTS]: [
     {
       title: {
-        [ELanguage.UA]: 'Підбір каналів за параметрами',
-        [ELanguage.EN]: 'Select channels by parameters',
+        [UA]: 'Підбір каналів за параметрами',
+        [EN]: 'Select channels by parameters',
+        [RU]: 'Выбор каналов по параметрам',
+        [ES]: 'Seleccionar canales por parámetros',
+        [AR]: 'اختر القنوات حسب المعايير',
+        [DE]: 'Kanäle nach Parametern auswählen',
+        [FR]: 'Sélectionner les chaînes par paramètres',
+        [IT]: 'Seleziona i canali per parametri',
       },
       href: EUrlBaseParam.SAT_CHANNEL_LIST,
     },
     {
-      title: { [ELanguage.UA]: 'ТБ Онлайн', [ELanguage.EN]: 'Online TV' },
+      title: {
+        [UA]: 'ТБ Онлайн',
+        [EN]: 'Online TV',
+        [RU]: 'Онлайн ТВ',
+        [ES]: 'TV en línea',
+        [AR]: 'التلفزيون عبر الإنترنت',
+        [DE]: 'Online-TV',
+        [FR]: 'TV en ligne',
+        [IT]: 'TV online',
+      },
       href: EUrlBaseParam.ONLINE_CHANNEL_LIST,
     },
     {
       title: {
-        [ELanguage.UA]: 'Розклад передач каналів',
-        [ELanguage.EN]: 'TV schedule',
+        [UA]: 'Розклад передач каналів',
+        [EN]: 'TV schedule',
+        [RU]: 'Расписание передач',
+        [ES]: 'Programación de TV',
+        [AR]: 'جدول البرامج التلفزيونية',
+        [DE]: 'TV-Programm',
+        [FR]: 'Programme TV',
+        [IT]: 'Programmazione TV',
       },
       href: EUrlBaseParam.CHANNELS_TV_PROGRAM,
     },
   ],
 };
+
+export const getFooterLinkAriaLabel = (pageTitle: string) => ({
+  [UA]: `Натисніть, щоб перейти до перегляду сторінки "${pageTitle}"`,
+  [EN]: `Click to go to the view of the "${pageTitle}" page`,
+  [RU]: `Нажмите, чтобы перейти к просмотру страницы "${pageTitle}"`,
+  [ES]: `Haz clic para ir a la vista de la página "${pageTitle}"`,
+  [AR]: `انقر للانتقال إلى عرض الصفحة "${pageTitle}"`,
+  [DE]: `Klicken Sie, um zur Ansicht der Seite "${pageTitle}" zu gelangen`,
+  [FR]: `Cliquez pour accéder à la vue de la page "${pageTitle}"`,
+  [IT]: `Clicca per andare alla visualizzazione della pagina "${pageTitle}"`,
+});

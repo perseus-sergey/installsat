@@ -1,3 +1,5 @@
+import { Suspense } from 'react';
+
 import ArticleWrapper from '@/components/article/ArticleWrapper';
 import FormDigestInterval from '@/components/FormDigestInterval/FormDigestInterval';
 import SatNews from '@/components/SatNews/SatNews';
@@ -9,7 +11,6 @@ import {
 } from '@/models/satDigest.model';
 import { EUrlBaseParam } from '@/models/url/url.model';
 import { EUrlSearchParam, TSearchParams } from '@/models/url/urlSearch.model';
-import { Suspense } from 'react';
 
 interface IProps {
   searchParams: TSearchParams;

@@ -1,6 +1,7 @@
-import BottomInfoPanel, {
-  INFO_PANEL_TITLES,
-} from '@/components/BottomInfoPanel/BottomInfoPanel';
+import { notFound } from 'next/navigation';
+import { Suspense } from 'react';
+
+import BottomInfoPanel from '@/components/BottomInfoPanel/BottomInfoPanel';
 import ChannelOnlineLink from '@/components/ui/buttons/ChannelOnlineLink/ChannelOnlineLink';
 import { FlyChannelParams } from '@/components/ChannelParams/ChannelParams';
 import DangerHtml from '@/components/ui/DangerHtml/DangerHtml';
@@ -9,27 +10,16 @@ import NoteBlock from '@/components/ui/NoteBlock/NoteBlock';
 import { Title } from '@/components/ui/Titles/Title';
 import TvScheduleLink from '@/components/TvScheduleLink/TvScheduleLink';
 import { getDBFlyChannel } from '@/controllers/channel.controller';
-import {
-  CHANNEL_IMAGES,
-  CHANNEL_RESPONSIBILITIES,
-  META_CHANNEL,
-  SIMILAR_CHANNELS_TITLE,
-} from '@/models/channels/channel.model';
 import { EDBTableTitles } from '@/models/dbTblNames.model';
 import { Metadata } from 'next';
 import GrooveLine from '@/components/ui/GrooveLine';
 import BreadCrumbServer from '@/components/BreadCrumbs/BreadCrumbsServer';
 import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
 import EditLinkButton from '@/components/admin/EditLinkButton/EditLinkButton';
-import { notFound } from 'next/navigation';
 import { getELangKey } from '@/libs/utils/getLanguage';
 import TextUnderH1 from '@/components/TextUnderH1/TextUnderH1';
-import {
-  MChanTheme,
-  SAT_CHANNEL_LIST_IMAGES,
-} from '@/models/channels/channelList.model';
+import { MChanTheme } from '@/models/channels/channelList.model';
 import FillingImg from '@/components/ui/Images/FillingImage';
-import { Suspense } from 'react';
 import SimilarChannels from '@/components/SimilarArticles/SimilarChannels';
 import ArticleWrapper from '@/components/article/ArticleWrapper';
 import { ELanguage } from '@/models/language.model';
@@ -37,8 +27,26 @@ import { DEFAULT_META_DATA } from '@/models/defaultMeta.model';
 import { updateViewCount } from '@/controllers/viewUpdate.controller';
 import { EUrlBaseParam, MAIN_URL } from '@/models/url/url.model';
 import { EUrlAdminParam } from '@/models/url/urlAdmin.model';
+import {
+  CHANNEL_IMAGES,
+  META_CHANNEL,
+  SIMILAR_CHANNELS_TITLE,
+} from '@/models/channels/metaChannel.model';
+import { CHANNEL_RESPONSIBILITIES } from '@/models/channels/channel.model';
+import { INFO_PANEL_TITLES } from '@/models/ui/infoPanel.model';
+import { SAT_CHANNEL_LIST_IMAGES } from '@/models/channels/channelListMeta.model';
+import { localeStringMaker } from '@/libs/utils/localeStringMaker';
 
 const BASE_URL = process.env.BASE_URL || MAIN_URL;
+
+const {
+  SLUG,
+  LANG,
+  KANAL,
+  SAT_CHANNEL_LIST,
+  CHANNELS_TV_PROGRAM,
+  ONLINE_CHANNEL_LIST,
+} = EUrlBaseParam;
 
 export const revalidate = 43200; // 3600 * 12 invalidate cache every 12 hours
 
@@ -57,8 +65,10 @@ export interface IChannelProps {
 export const generateMetadata = async ({
   params,
 }: IChannelProps): Promise<Metadata> => {
-  const slug = params[EUrlBaseParam.SLUG];
-  const lang = getELangKey(params[EUrlBaseParam.LANG]);
+  const slug = params[SLUG];
+  const lang = getELangKey(params[LANG]);
+
+  const { UA, EN, RU, ES, AR, DE, FR, IT } = ELanguage;
 
   const flyChannels = await getDBFlyChannel(slug, lang);
   if (!flyChannels) return DEFAULT_META_DATA[lang];
@@ -84,25 +94,31 @@ export const generateMetadata = async ({
     description: chanDescription,
     keywords: keywords || chanDescription,
     alternates: {
-      canonical: `/${lang}/${EUrlBaseParam.KANAL}/${chan_slug}`,
+      canonical: `/${lang}/${KANAL}/${chan_slug}`,
       languages: {
-        en: `/${ELanguage.EN}/${EUrlBaseParam.KANAL}/${chan_slug}`,
-        uk: `/${ELanguage.UA}/${EUrlBaseParam.KANAL}/${chan_slug}`,
+        en: `/${EN}/${KANAL}/${chan_slug}`,
+        uk: `/${UA}/${KANAL}/${chan_slug}`,
+        ru: `/${RU}/${KANAL}/${chan_slug}`,
+        es: `/${ES}/${KANAL}/${chan_slug}`,
+        ar: `/${AR}/${KANAL}/${chan_slug}`,
+        de: `/${DE}/${KANAL}/${chan_slug}`,
+        fr: `/${FR}/${KANAL}/${chan_slug}`,
+        it: `/${IT}/${KANAL}/${chan_slug}`,
       },
     },
     openGraph: {
       ...DEFAULT_META_DATA.openGraph,
       title: metaTitle,
       description: description || metaTitle,
-      url: `/${lang}/${EUrlBaseParam.KANAL}/${chan_slug}`,
-      publishedTime: getFormattedDateStrYearFirst(),
+      url: `/${lang}/${KANAL}/${chan_slug}`,
+      publishedTime: getFormattedDateStrYearFirst('', lang),
     },
   };
 };
 
 export default async function Page({ params }: IChannelProps) {
-  const slug = params[EUrlBaseParam.SLUG];
-  const lang = getELangKey(params[EUrlBaseParam.LANG]);
+  const slug = params[SLUG];
+  const lang = getELangKey(params[LANG]);
 
   const flyChannels = await getDBFlyChannel(slug, lang);
 
@@ -131,7 +147,7 @@ export default async function Page({ params }: IChannelProps) {
   //   chan_slug.split('-').slice(1).join('-')
   // );
 
-  const currentDate = getFormattedDateStrYearFirst();
+  const currentDate = getFormattedDateStrYearFirst('', lang);
 
   updateViewCount(EDBTableTitles.FLY_CHANNELS, `${id}`, view);
 
@@ -147,7 +163,7 @@ export default async function Page({ params }: IChannelProps) {
         lang={lang}
         breadCrumbList={[
           {
-            href: `${EUrlBaseParam.SAT_CHANNEL_LIST}/${sat_slug}`,
+            href: `${SAT_CHANNEL_LIST}/${sat_slug}`,
             title: sat_title,
           },
           `${titleBefore[lang]} "${title}"`,
@@ -198,14 +214,14 @@ export default async function Page({ params }: IChannelProps) {
           <TvScheduleLink
             lang={lang}
             title={title}
-            href={`/${lang}/${EUrlBaseParam.CHANNELS_TV_PROGRAM}/${slug}/${currentDate}`}
+            href={`/${lang}/${CHANNELS_TV_PROGRAM}/${slug}/${currentDate}`}
           />
         ) : null}
 
         {official_broadcast_url && (
           <ChannelOnlineLink
             lang={lang}
-            href={`/${lang}/${EUrlBaseParam.ONLINE_CHANNEL_LIST}/${slug}`}
+            href={`/${lang}/${ONLINE_CHANNEL_LIST}/${slug}`}
             channelName={title}
           />
         )}
@@ -217,10 +233,11 @@ export default async function Page({ params }: IChannelProps) {
         </NoteBlock>
 
         <BottomInfoPanel
+          lang={lang}
           items={[
             {
               name: viewsTitle[lang],
-              value: (view + 1).toLocaleString('en-US'),
+              value: localeStringMaker(view + 1),
             },
           ]}
         />

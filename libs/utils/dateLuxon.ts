@@ -1,5 +1,6 @@
-import { ELanguage } from '@/models/language.model';
 import { DateTime } from 'luxon';
+
+import { ELanguage } from '@/models/language.model';
 
 const getUserTimeZone = () => Intl.DateTimeFormat().resolvedOptions().timeZone;
 
@@ -22,16 +23,34 @@ export const getTodayYesterdayStr = (
     return {
       [ELanguage.UA]: 'сьогодні',
       [ELanguage.EN]: 'today',
+      [ELanguage.RU]: 'сегодня',
+      [ELanguage.ES]: 'hoy',
+      [ELanguage.AR]: 'اليوم',
+      [ELanguage.DE]: 'heute',
+      [ELanguage.FR]: `aujourd'hui`,
+      [ELanguage.IT]: 'oggi',
     };
   } else if (diffDays === 1) {
     return {
       [ELanguage.UA]: 'завтра',
       [ELanguage.EN]: 'tomorrow',
+      [ELanguage.RU]: 'завтра',
+      [ELanguage.ES]: 'mañana',
+      [ELanguage.AR]: 'غدًا',
+      [ELanguage.DE]: 'morgen',
+      [ELanguage.FR]: 'demain',
+      [ELanguage.IT]: 'domani',
     };
   } else if (diffDays === -1) {
     return {
       [ELanguage.UA]: 'вчора',
       [ELanguage.EN]: 'yesterday',
+      [ELanguage.RU]: 'вчера',
+      [ELanguage.ES]: 'ayer',
+      [ELanguage.AR]: 'أمس',
+      [ELanguage.DE]: 'gestern',
+      [ELanguage.FR]: 'hier',
+      [ELanguage.IT]: 'ieri',
     };
   } else {
     return null;

@@ -1,10 +1,13 @@
-import { ELanguage } from '@/models/language.model';
-import styles from '../Accordion/Accordion.module.scss';
-
 import { ReactNode } from 'react';
-import { IAccordionItemOptions } from '@/models/ui/menuAccordion.model';
-import SeoLink from '@/components/ui/SeoLink/SeoLink';
 import Image, { StaticImageData } from 'next/image';
+
+import styles from '../Accordion/Accordion.module.scss';
+import { ELanguage } from '@/models/language.model';
+import {
+  ACCORDION_ARIA_LABELS,
+  IAccordionItemOptions,
+} from '@/models/ui/menuAccordion.model';
+import SeoLink from '@/components/ui/SeoLink/SeoLink';
 
 interface IAccordionMenuItem {
   options: IAccordionItemOptions;
@@ -35,7 +38,7 @@ export const AccordionMenuItem = ({
         />
         <label
           htmlFor={name}
-          className={`${styles.accordionLabel} ${labelStyle} ${gradientStyle} justify-between pr-2 after:content-['⏵']`}
+          className={`${styles.accordionLabel} ${labelStyle} ${gradientStyle} ${lang === ELanguage.AR ? `pl-2 after:content-['⏴']` : `pr-2 after:content-['⏵']`} justify-between`}
         >
           <div className={`${labelStyle} p-2`}>
             {menuIconSrc && (
@@ -54,11 +57,7 @@ export const AccordionMenuItem = ({
   ) : (
     <li className={`${gradientStyle}`} role="menuitem">
       <SeoLink
-        title={
-          lang === ELanguage.UA
-            ? `Перейти до сторінки "${title[lang]}"`
-            : `Go to the view of the "${title[lang]}" page`
-        }
+        title={ACCORDION_ARIA_LABELS.getBaseAL(title[lang])[lang]}
         className={`${labelStyle} p-2`}
         href={`/${lang}${titleHref}` || '#'}
       >

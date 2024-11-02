@@ -1,15 +1,18 @@
 import { EUrlSearchParam } from '@/models/url/urlSearch.model';
 import { SelectorMulti } from '../SatelliteSelector/SelectorMulti';
 import { IStateOption } from '@/models/satDigest.model';
-import { ESelectType } from '@/models/reactSelect.model';
-import { ELanguage } from '@/cron/libs/commons.mjs';
+import {
+  ESelectType,
+  LANGUAGE_SELECTOR_CAPTION,
+} from '@/models/reactSelect.model';
+import { ELanguage } from '@/models/language.model';
 
 export default async function LanguageSelector({
   lang,
   requestFn,
 }: {
   requestFn: () => Promise<IStateOption[]>;
-  lang: string;
+  lang: ELanguage;
 }) {
   const channelsLangList = await requestFn();
 
@@ -20,11 +23,7 @@ export default async function LanguageSelector({
         selectName={ESelectType.SELECT_LANG}
         searchParamName={EUrlSearchParam.LANGUAGE_URL}
         itemList={channelsLangList}
-        caption={
-          lang === ELanguage.UA
-            ? 'Виберіть мову каналу'
-            : 'Choose a channel language'
-        }
+        caption={LANGUAGE_SELECTOR_CAPTION[lang]}
       />
     )
   );

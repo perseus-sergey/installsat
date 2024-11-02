@@ -1,9 +1,11 @@
+import { ELanguage } from '@/models/language.model';
 import BottomInfoPanel, {
   IBottomInfoPanelItem,
 } from '../../BottomInfoPanel/BottomInfoPanel';
 import SeoLink from '@/components/ui/SeoLink/SeoLink';
 
 interface IArticleCardProps {
+  lang: ELanguage;
   articleTitle: React.ReactNode;
   href: string;
   seoCardLinkTitle: string;
@@ -14,6 +16,7 @@ interface IArticleCardProps {
 }
 
 const ArticleCard = ({
+  lang,
   articleDescription,
   articleTitle,
   image,
@@ -38,7 +41,7 @@ const ArticleCard = ({
         {image && image}
       </div>
     </SeoLink>
-    <BottomInfoPanel items={infoPanelItems} />
+    <BottomInfoPanel items={infoPanelItems} lang={lang} />
   </section>
 );
 

@@ -1,9 +1,7 @@
-import {
-  CHANNEL_PARAMS_BLOCK,
-  IChannel,
-} from '@/models/channels/channel.model';
+import { IChannel } from '@/models/channels/channel.model';
 import { TitleH2 } from '../ui/Titles/TitleH2';
 import { ELanguage } from '@/models/language.model';
+import { CHANNEL_PARAMS_BLOCK } from '@/models/channels/channelParams.model';
 
 interface IChannelParamsProps {
   channelDBParams: IChannel;

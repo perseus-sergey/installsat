@@ -1,20 +1,21 @@
 'use client';
 
+import Link from 'next/link';
+import { useEffect } from 'react';
+import { redirect } from 'next/navigation';
 import { useFormState } from 'react-dom';
+
 import {
   authenticateAction,
   createUserAction,
   restProviderLinksAction,
 } from '@/libs/actions/login.action';
 import { SubmitPendingButton } from '../ui/buttons/SubmitPendingBtn';
-import Link from 'next/link';
 import { EUrlBaseParam } from '@/models/url/url.model';
 import { AUTH_PROVIDER_LOGOS, ELoginFormNames } from '@/models/login.model';
 import FieldError from '../comments/FieldError/FieldError';
 import { EMPTY_FORM_STATE } from '@/controllers/toast.controller';
 import { useToastMessage } from '@/libs/hooks/useToastMessage';
-import { useEffect } from 'react';
-import { redirect } from 'next/navigation';
 import { providerMap } from '@/auth';
 import { SatelliteBroadcastIcon } from '../ui/icons-svg/SatelliteBroadcastIcon';
 

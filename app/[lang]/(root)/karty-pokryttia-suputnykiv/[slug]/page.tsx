@@ -1,13 +1,11 @@
 import React from 'react';
-
 import type { Metadata } from 'next';
+
 import { EDBTableTitles } from '@/models/dbTblNames.model';
 import BreadCrumbServer from '@/components/BreadCrumbs/BreadCrumbsServer';
 import { Title } from '@/components/ui/Titles/Title';
 import FillingValidImage from '@/components/ui/Images/FillingValidImage';
-import BottomInfoPanel, {
-  INFO_PANEL_TITLES,
-} from '@/components/BottomInfoPanel/BottomInfoPanel';
+import BottomInfoPanel from '@/components/BottomInfoPanel/BottomInfoPanel';
 import EmptyData from '@/components/errors/EmptyData/EmptyData';
 import BeamMapList from '@/components/BeamMapList/BeamMapList';
 import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
@@ -20,31 +18,27 @@ import ArticleWrapper from '@/components/article/ArticleWrapper';
 import { DEFAULT_META_DATA } from '@/models/defaultMeta.model';
 import { ELanguage } from '@/models/language.model';
 import {
+  BREAD_SAT_COVERAGE_MAP,
   META_SINGLE_SAT_MAP,
   SINGLE_SAT_MAP_DATA,
 } from '@/models/mapCoverage.model';
 import { EUrlBaseParam, MAIN_URL } from '@/models/url/url.model';
 import { getSatMap } from '@/controllers/mapCoverage.controller';
 import { updateViewCount } from '@/controllers/viewUpdate.controller';
+import { INFO_PANEL_TITLES } from '@/models/ui/infoPanel.model';
 
 interface IArticleParams {
   params: { [key in EUrlBaseParam]: string };
 }
 
-const BASE_URL = process.env.BASE_URL || MAIN_URL;
+const { UA, EN, RU, ES, AR, DE, FR, IT } = ELanguage;
 
-const BREAD_SAT_COVERAGE_MAP = {
-  href: EUrlBaseParam.SAT_COVERAGE_MAP,
-  title: {
-    [ELanguage.UA]: 'Мапи покриття супутників',
-    [ELanguage.EN]: 'Satellite coverage maps',
-  },
-};
+const BASE_URL = process.env.BASE_URL || MAIN_URL;
 
 export const revalidate = 604800; // 3600 * 24 * 7 invalidate cache every 7 days
 
 const {
-  similar: { similarStart, similarTitle },
+  similar: { similarStart, similarTitle, similarLinkTitle },
 } = SINGLE_SAT_MAP_DATA;
 
 const { images: singleMapImg } = SINGLE_SAT_MAP_DATA;
@@ -80,13 +74,19 @@ export const generateMetadata = async ({
       title,
       description,
       url: `/${lang}/${slugPath}`,
-      publishedTime: getFormattedDateStrYearFirst(),
+      publishedTime: getFormattedDateStrYearFirst('', lang),
     },
     alternates: {
       canonical: `/${lang}/${slugPath}`,
       languages: {
-        en: `/${ELanguage.EN}/${slugPath}`,
-        uk: `/${ELanguage.UA}/${slugPath}`,
+        en: `/${EN}/${slugPath}`,
+        uk: `/${UA}/${slugPath}`,
+        ru: `/${RU}/${slugPath}`,
+        es: `/${ES}/${slugPath}`,
+        ar: `/${AR}/${slugPath}`,
+        de: `/${DE}/${slugPath}`,
+        fr: `/${FR}/${slugPath}`,
+        it: `/${IT}/${slugPath}`,
       },
     },
   };
@@ -155,6 +155,7 @@ export default async function Page({ params }: IArticleParams) {
           <EmptyData lang={lang} />
         )}
         <BottomInfoPanel
+          lang={lang}
           items={[
             { name: viewsTitle[lang], value: view + 1 },
             // { name: commentsTitle[lang], value: numberOfComments },
@@ -162,11 +163,11 @@ export default async function Page({ params }: IArticleParams) {
         />
       </ArticleWrapper>
 
-      <SimilarBlock blockTitle={similarTitle[lang]}>
+      <SimilarBlock blockTitle={similarTitle[lang]} lang={lang}>
         <li key={0}>
           <SeoLink
             className="text-indigo-700 hover:text-red-500"
-            title={`${lang === ELanguage.UA ? 'Перейти до списку каналів з супутника' : 'Go to related channel list from satellite'} "${sat_title} ${position}"`}
+            title={`${similarLinkTitle[lang]} "${sat_title} ${position}"`}
             href={relatedSatHref}
           >
             {similarStart[lang]} {sat_title} {position}

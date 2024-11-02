@@ -1,16 +1,18 @@
+import React, { Fragment } from 'react';
+
 import {
   COPYRIGHT_SECTION,
   EFooterColumns,
   footerColumnTitles,
   footerMenuList,
+  getFooterLinkAriaLabel,
   IFooterMenuItem,
 } from '@/models/ui/footer.model';
 import { ELanguage } from '@/models/language.model';
-import React, { Fragment } from 'react';
 import SeoLink from '../ui/SeoLink/SeoLink';
 
 const Footer = ({ lang }: { lang: ELanguage }) => (
-  <footer className="text-white">
+  <footer className="text-white" dir={lang === 'ar' ? 'rtl' : 'ltr'}>
     <section
       style={{ textShadow: '#000033 4px 4px 4px' }}
       className="text-center my-2 p-4 border-y border-slate-200 text-sm font-verdana bg-gradient-to-b from-indigo-900 to-sky-400"
@@ -38,11 +40,7 @@ const Footer = ({ lang }: { lang: ELanguage }) => (
                   >
                     <SeoLink
                       href={`/${lang}/${item.href}`}
-                      title={
-                        lang === ELanguage.UA
-                          ? `Натисніть, щоб перейти до перегляду сторінки "${item.title[lang]}"`
-                          : `Click to go to the view of the "${item.title[lang]}" page`
-                      }
+                      title={getFooterLinkAriaLabel(item.title[lang])[lang]}
                     >
                       {item.title[lang]}
                     </SeoLink>

@@ -16,7 +16,8 @@ import { EUrlBaseParam, MAIN_URL } from '@/models/url/url.model';
 import { MetadataRoute } from 'next';
 
 const BASE = process.env.BASE_URL || MAIN_URL;
-const { UA, EN } = ELanguage;
+const { UA, EN, RU, ES, AR, DE, FR, IT } = ELanguage;
+
 const {
   SAT_COVERAGE_MAP,
   NEWS_AND_ARTICLES,
@@ -83,13 +84,19 @@ const getSiteMapItemList = ({
     return {
       url: `${BASE}/${DEFAULT_LANG}/${endPath}`,
       lastModified: cpuIsDate
-        ? getFormattedDateStrYearFirst(item.cpu)
+        ? getFormattedDateStrYearFirst(item.cpu, EN)
         : new Date(),
       changeFrequency,
       alternates: {
         languages: {
           en: `${BASE}/${EN}/${endPath}`,
           uk: `${BASE}/${UA}/${endPath}`,
+          ru: `${BASE}/${RU}/${endPath}`,
+          es: `${BASE}/${ES}/${endPath}`,
+          ar: `${BASE}/${AR}/${endPath}`,
+          de: `${BASE}/${DE}/${endPath}`,
+          fr: `${BASE}/${FR}/${endPath}`,
+          it: `${BASE}/${IT}/${endPath}`,
         },
       },
     };

@@ -1,10 +1,11 @@
 import React, { ReactNode } from 'react';
-import { ELanguage } from '@/models/language.model';
+import { ELanguage, ILang } from '@/models/language.model';
 import TooltipSimple from '../ui/tooltips/TooltipSimple/TooltipSimple';
 import SeoLink from '../ui/SeoLink/SeoLink';
+import { LINKS } from '@/models/ui/breadcrumbs.model';
 
 export interface IBreadCrumbLink {
-  title: { [ELanguage.UA]: string; [ELanguage.EN]: string } | string;
+  title: ILang | string;
   href?: string;
 }
 
@@ -40,25 +41,32 @@ const BreadCrumbServer = ({
       className={`border border-gray-400 rounded-md mt-0.5 mb-0 mx-0 bg-indigo-950${className ? ` ${className}` : ''}`}
       data-testid="BreadCrumb"
     >
-      <ol className="flex flex-wrap gap-3 items-center py-2 px-5 text-cyan-100">
+      <ol
+        dir={lang === ELanguage.AR ? 'rtl' : 'ltr'}
+        className="flex flex-wrap gap-3 items-center py-2 px-5 text-cyan-100"
+      >
+        {/* <ol className="flex flex-wrap gap-3 items-center py-2 px-5 text-cyan-100"> */}
         {hasHomeLink && (
           <li className={`list-none text-white`}>
             <SeoLink
               href={`/${lang}/`}
-              className="hover:underline text-xl"
-              title={
-                lang === ELanguage.UA
-                  ? `Перейти до початкової сторінки`
-                  : `Go to the home page`
-              }
+              className="hover:underline"
+              title={LINKS.homeLink.title[lang]}
             >
-              {homeTitle || lang === ELanguage.UA ? 'На головну' : 'Home'}
+              {homeTitle || LINKS.homeLink.text[lang]}
             </SeoLink>
           </li>
         )}
         {breadCrumbList && breadCrumbList.length > 0 && (
           <>
-            {hasHomeLink && <li className="text-gray-300"> {separator} </li>}
+            {hasHomeLink && (
+              <li
+                className={`text-gray-300 ${lang === ELanguage.AR ? 'rotate-180' : ''}`}
+              >
+                {' '}
+                {separator}{' '}
+              </li>
+            )}
             {breadCrumbList.map(async (item, index) => {
               if (!item) return;
 
@@ -98,11 +106,7 @@ const BreadCrumbServer = ({
                       <SeoLink
                         href={`/${lang}/${item.href}`}
                         className="hover:underline"
-                        title={
-                          lang === ELanguage.UA
-                            ? `Перейти до сторінки "${linkText}"`
-                            : `Go to page "${linkText}"`
-                        }
+                        title={LINKS.linkStartTitle[lang]}
                       >
                         {linkText}
                       </SeoLink>
@@ -110,7 +114,12 @@ const BreadCrumbServer = ({
                       <div>{linkText}</div>
                     )}
                   </li>
-                  <li className="text-gray-300"> {separator} </li>
+                  <li
+                    className={`text-gray-300 ${lang === ELanguage.AR ? 'rotate-180' : ''}`}
+                  >
+                    {' '}
+                    {separator}{' '}
+                  </li>
                 </React.Fragment>
               ) : (
                 <React.Fragment key={index}>
@@ -126,11 +135,7 @@ const BreadCrumbServer = ({
                           <SeoLink
                             href={`/${lang}/${item.href}`}
                             className="hover:underline"
-                            title={
-                              lang === ELanguage.UA
-                                ? `Перейти до сторінки "${truncatedLinkText}"`
-                                : `Go to page "${truncatedLinkText}"`
-                            }
+                            title={LINKS.linkStartTitle[lang]}
                           >
                             {truncatedLinkText}
                           </SeoLink>

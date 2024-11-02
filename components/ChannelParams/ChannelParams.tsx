@@ -1,5 +1,4 @@
 import {
-  CHANNEL_PARAMS_BLOCK,
   DB_ARRAY_SEPARATOR,
   IChannel,
   IFlyChannel,
@@ -10,13 +9,16 @@ import TooltipSimple from '../ui/tooltips/TooltipSimple/TooltipSimple';
 import SeoLink from '../ui/SeoLink/SeoLink';
 import { getLanguageList } from '@/controllers/languageList.controller';
 import { ELanguage } from '@/models/language.model';
+import {
+  CHANNEL_PARAMS_BLOCK,
+  getPolarDescription,
+} from '@/models/channels/channelParams.model';
+import { localeStringMaker } from '@/libs/utils/localeStringMaker';
 
 interface IChannelParamsProps {
   channelDBParams: IChannel;
   lang: ELanguage;
 }
-
-const { UA } = ELanguage;
 
 const {
   getParamsTitle,
@@ -27,23 +29,19 @@ const {
   paramsFrequency,
   paramsFEC,
   paramsEncryption,
+  paramsTypeTitle,
+  paramsLangTitle,
+  paramsT2,
+  paramsBandTitle,
+  paramsFreqDescription,
+  paramsPolarizationTitle,
+  paramsSR,
+  paramsFecTooltip,
+  paramsAPid,
+  paramsVPid,
   getParamsSite,
+  getSatLinkTitle,
 } = CHANNEL_PARAMS_BLOCK;
-
-const getPolarDescription = (polarization: string, lang: ELanguage) => {
-  switch (polarization.toLowerCase()) {
-    case 'h':
-      return lang === UA ? 'Горизонтальна' : 'Horizontal';
-    case 'v':
-      return lang === UA ? 'Вертикальна' : 'Vertical';
-    case 'r':
-      return lang === UA ? 'Права' : 'Right';
-    case 'l':
-      return lang === UA ? 'Ліва' : 'Left';
-    default:
-      return '';
-  }
-};
 
 const ChannelParams = ({
   channelDBParams: { title, url, chan_lang },
@@ -127,7 +125,7 @@ export const FlyChannelParams = ({
         <li className={rowStyle}>
           <Item
             param={is_radio ? 'Radio' : 'TV'}
-            title={lang === ELanguage.UA ? 'Тип' : 'Type'}
+            title={paramsTypeTitle[lang]}
           />
         </li>
 
@@ -135,7 +133,7 @@ export const FlyChannelParams = ({
           <li className={rowStyle}>
             <Item
               param={languages.map((item) => item.label)}
-              title={lang === UA ? 'Мова' : 'Languages'}
+              title={paramsLangTitle[lang]}
             />
           </li>
         )}
@@ -144,19 +142,9 @@ export const FlyChannelParams = ({
           <TooltipSimple
             wrapperTagName="li"
             className={rowStyle}
-            tooltipText={
-              lang === ELanguage.UA
-                ? 'Потік для цифрового ефірного телебачення'
-                : 'For second Generation Terrestrial'
-            }
+            tooltipText={paramsT2.tooltipText[lang]}
           >
-            <Item
-              param={t2_stream}
-              title={
-                lang === ELanguage.UA ? 'Потік для DVB-T2' : 'Stream for DVB-T2'
-              }
-              hasTip
-            />
+            <Item param={t2_stream} title={paramsT2.title[lang]} hasTip />
           </TooltipSimple>
         )}
 
@@ -191,9 +179,7 @@ export const FlyChannelParams = ({
                     className="text-blue-800 hover:text-red-600"
                     href={`/${lang}/${EUrlBaseParam.SAT_CHANNEL_LIST}/${sat_slug}`}
                     title={
-                      lang === ELanguage.UA
-                        ? `Перейти до перегляду списку каналів, що транслюються з супутника "${sat_title} / ${sat_position}"`
-                        : `Go to view the list of channels broadcast from the "${sat_title} / ${sat_position}" satellite`
+                      getSatLinkTitle(`${sat_title} / ${sat_position}`)[lang]
                     }
                   >
                     <strong>
@@ -209,18 +195,15 @@ export const FlyChannelParams = ({
         )}
 
         <li className={rowStyle}>
-          <Item
-            param={isCBand ? 'C' : 'Ku'}
-            title={lang === ELanguage.UA ? 'Діапазон' : 'Band'}
-          />
+          <Item param={isCBand ? 'C' : 'Ku'} title={paramsBandTitle[lang]} />
         </li>
 
         {frequency && (
           <li className={rowStyle}>
             <Item
-              param={frequency.toLocaleString('en-US')}
+              param={localeStringMaker(frequency, 'coma')}
               title={paramsFrequency[lang]}
-              description={lang === ELanguage.UA ? 'ГГц' : 'GHz'}
+              description={paramsFreqDescription[lang]}
             />
           </li>
         )}
@@ -229,7 +212,7 @@ export const FlyChannelParams = ({
           <li className={rowStyle}>
             <Item
               param={polarization}
-              title={lang === UA ? 'Поляризація' : 'Polarization'}
+              title={paramsPolarizationTitle[lang]}
               description={getPolarDescription(polarization, lang)}
             />
           </li>
@@ -238,13 +221,13 @@ export const FlyChannelParams = ({
         {sr && (
           <TooltipSimple
             className={rowStyle}
-            tooltipText={lang === UA ? 'Символьна швидкість' : 'Symbol Rate'}
+            tooltipText={paramsSR.tooltipText[lang]}
             wrapperTagName="li"
           >
             <Item
-              param={sr.toLocaleString('de-DE')}
+              param={localeStringMaker(sr)}
               title="SR"
-              description={lang === UA ? 'с/сек' : 's/sec'}
+              description={paramsSR.description[lang]}
               hasTip
             />
           </TooltipSimple>
@@ -254,11 +237,7 @@ export const FlyChannelParams = ({
           <TooltipSimple
             wrapperTagName="li"
             className={rowStyle}
-            tooltipText={
-              lang === UA
-                ? 'Коефіцієнт корекції помилок'
-                : 'Forward Error Correction'
-            }
+            tooltipText={paramsFecTooltip[lang]}
           >
             <Item param={fec} title={paramsFEC[lang]} hasTip />
           </TooltipSimple>
@@ -270,7 +249,7 @@ export const FlyChannelParams = ({
             tooltipText="Service ID"
             wrapperTagName="li"
           >
-            <Item param={sid} title="SID" hasTip />
+            <Item param={localeStringMaker(sid)} title="SID" hasTip />
           </TooltipSimple>
         )}
 
@@ -278,13 +257,13 @@ export const FlyChannelParams = ({
           <TooltipSimple
             wrapperTagName="li"
             className={rowStyle}
-            tooltipText={
-              lang === UA
-                ? 'Унікальний ідентифікатор потоку відео'
-                : 'Video Packet Identifier'
-            }
+            tooltipText={paramsVPid.tooltip[lang]}
           >
-            <Item param={v_pid} title="Video PId" hasTip />
+            <Item
+              param={localeStringMaker(v_pid)}
+              title={paramsVPid.title[lang]}
+              hasTip
+            />
           </TooltipSimple>
         )}
 
@@ -292,13 +271,9 @@ export const FlyChannelParams = ({
           <TooltipSimple
             wrapperTagName="li"
             className={rowStyle}
-            tooltipText={
-              lang === UA
-                ? 'Унікальний ідентифікатор потоку аудіо'
-                : 'Audio Packet Identifier'
-            }
+            tooltipText={paramsAPid.tooltip[lang]}
           >
-            <Item param={aPidList} title="Audio PId" hasTip />
+            <Item param={aPidList} title={paramsAPid.title[lang]} hasTip />
           </TooltipSimple>
         )}
 

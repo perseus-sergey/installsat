@@ -1,13 +1,28 @@
 import { poolExecute } from '@/libs/db/mysqldb';
 import { WRONG_CAT_IDS } from '@/models/articles/articleList.model';
-import { ISimilarArticleModel } from '@/models/ui/similarArticle.model';
 import { EDBTableTitles } from '@/models/dbTblNames.model';
+import { ELanguage } from '@/models/language.model';
 
-export const getSimilarArticles = async (logo: string, id = -1) => {
+interface ISimilarArticleModel {
+  id: number;
+  title: string;
+  cpu: string;
+  date: Date;
+}
+
+export const getSimilarArticles = async (
+  logo: string,
+  id = -1,
+  lang: ELanguage
+) => {
   const removeId = id > -1 ? `AND id != ${id}` : '';
 
   const sql = `
-    SELECT id, title, title_en, cpu, date
+    SELECT 
+      id, 
+      ${lang === ELanguage.UA ? 'title' : 'title_en'} AS title, 
+      cpu,
+      date
     FROM ${EDBTableTitles.ARTICLE}
     WHERE logo = ?
     ${removeId}

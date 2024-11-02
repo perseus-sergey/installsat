@@ -6,7 +6,10 @@ import {
   getUsefulArticleList,
 } from '@/controllers/sidebar.controller';
 import { AccordionMenuItem } from '../AccordionMenuItem/AccordionMenuItem';
-import { MENU_ACCORDION } from '@/models/ui/menuAccordion.model';
+import {
+  ACCORDION_ARIA_LABELS,
+  MENU_ACCORDION,
+} from '@/models/ui/menuAccordion.model';
 import { ELanguage } from '@/models/language.model';
 import SeoLink from '@/components/ui/SeoLink/SeoLink';
 
@@ -21,6 +24,9 @@ import scheduleIcon from 'public/Images/accordion/calendar.png';
 const { SATELLITES, SAT_FINDER, MAPS, PACKAGES, USEFUL, ONLINE_TV, SCHEDULE } =
   MENU_ACCORDION;
 
+const { getSatelliteAL, getPackageAL, getMapsAL, getArticlesAL } =
+  ACCORDION_ARIA_LABELS;
+
 const textShadow = {
   textShadow: '1px 1px 0 black',
 };
@@ -28,7 +34,7 @@ const textShadow = {
 const Accordion = async ({ lang }: { lang: ELanguage }) => {
   const channelCatListResp = await getChannelCatList(lang);
   const flyChannelSatList = await getFlyChannelSatList();
-  const usefulArticleListResp = await getUsefulArticleList();
+  const usefulArticleListResp = await getUsefulArticleList(lang);
   const maps = await getSatMapsSideBar();
 
   const channelCatList =
@@ -44,19 +50,25 @@ const Accordion = async ({ lang }: { lang: ELanguage }) => {
     'border-b border-stone-300 py-1 px-2 bg-stone-500 hover:bg-slate-500';
 
   return (
-    <nav className="mx-auto py-4 text-white" data-testid="Accordion">
+    <nav
+      dir={lang === ELanguage.AR ? 'rtl' : 'ltr'}
+      className="mx-auto py-4 text-white"
+      data-testid="Accordion"
+    >
       <ul role="menu">
         <AccordionMenuItem
           lang={lang}
           options={SAT_FINDER}
           menuIconSrc={sitFinderIcon}
         />
+
         <AccordionMenuItem
           lang={lang}
           options={SATELLITES}
           menuIconSrc={satelliteIcon}
         >
           <ul
+            dir="ltr"
             role="menu"
             className={`${styles.accordionContent} ${accordContentStyle}`}
             style={textShadow}
@@ -65,9 +77,7 @@ const Accordion = async ({ lang }: { lang: ELanguage }) => {
               <li role="menuitem" key={item.cpu} className={contentItemStyle}>
                 <SeoLink
                   title={
-                    lang === ELanguage.UA
-                      ? `Перейти до перегляду списку каналів з супутника "${item.title} / ${item.position}"`
-                      : `Go to view the list of channels broadcast from the "${item.title} / ${item.position}" satellite`
+                    getSatelliteAL(`${item.title} / ${item.position}`)[lang]
                   }
                   href={`/${lang}${SATELLITES.baseHrefOfList}/${item.cpu}/`}
                   className={contentListStyle}
@@ -79,12 +89,14 @@ const Accordion = async ({ lang }: { lang: ELanguage }) => {
             ))}
           </ul>
         </AccordionMenuItem>
+
         <AccordionMenuItem
           lang={lang}
           options={MAPS}
           menuIconSrc={mapCoverIcon}
         >
           <ul
+            dir="ltr"
             role="menu"
             className={`${styles.accordionContent} ${accordContentStyle}`}
             style={textShadow}
@@ -92,11 +104,7 @@ const Accordion = async ({ lang }: { lang: ELanguage }) => {
             {maps.map((item) => (
               <li role="menuitem" key={item.cpu} className={contentItemStyle}>
                 <SeoLink
-                  title={
-                    lang === ELanguage.UA
-                      ? `Перейти до перегляду мап покриття супутника "${item.title} / ${item.position}"`
-                      : `Go to view the map coverage of the "${item.title} / ${item.position}" satellite`
-                  }
+                  title={getMapsAL(`${item.title} / ${item.position}`)[lang]}
                   href={`/${lang}${MAPS.baseHrefOfList}/${item.cpu}`}
                   className={contentListStyle}
                 >
@@ -107,6 +115,7 @@ const Accordion = async ({ lang }: { lang: ELanguage }) => {
             ))}
           </ul>
         </AccordionMenuItem>
+
         <AccordionMenuItem
           lang={lang}
           options={PACKAGES}
@@ -120,11 +129,7 @@ const Accordion = async ({ lang }: { lang: ELanguage }) => {
             {channelCatList.map((item) => (
               <li role="menuitem" key={item.id} className={contentItemStyle}>
                 <SeoLink
-                  title={
-                    lang === ELanguage.UA
-                      ? `Перейти до перегляду списку каналів пакету "${item.title}"`
-                      : `Go to view the list of channels in the "${item.title}" package`
-                  }
+                  title={getPackageAL(item.title)[lang]}
                   href={`/${lang}${PACKAGES.baseHrefOfList}/${item.cpu}/`}
                   className={contentListStyle}
                 >
@@ -134,6 +139,7 @@ const Accordion = async ({ lang }: { lang: ELanguage }) => {
             ))}
           </ul>
         </AccordionMenuItem>
+
         <AccordionMenuItem
           lang={lang}
           options={USEFUL}
@@ -147,17 +153,11 @@ const Accordion = async ({ lang }: { lang: ELanguage }) => {
             {usefulArticleList.map((item) => (
               <li role="menuitem" key={item.id} className={contentItemStyle}>
                 <SeoLink
-                  title={
-                    lang === ELanguage.UA
-                      ? `Натисніть, щоб читати статтю "${item.title}"`
-                      : `Click to read the "${item.title_en || item.title}" article`
-                  }
+                  title={getArticlesAL(item.title)[lang]}
                   href={`/${lang}${USEFUL.baseHrefOfList}/${item.cpu}/`}
                   className={contentListStyle}
                 >
-                  {lang === ELanguage.UA
-                    ? item.title
-                    : item.title_en || item.title}
+                  {item.title}
                 </SeoLink>
               </li>
             ))}

@@ -4,18 +4,7 @@ import { ReactNode, Suspense, useEffect, useState } from 'react';
 import styles from './TooltipClient.module.scss';
 import BaseButton from '../../buttons/BaseButton/BaseButton';
 import { ELanguage } from '@/models/language.model';
-
-const CAPTIONS = {
-  ariaLabelSmall: {
-    [ELanguage.UA]: 'Натисніть щоб відкрити',
-    [ELanguage.EN]: 'Click to open',
-  },
-  ariaLabelBig: {
-    [ELanguage.UA]: 'Натисніть щоб сховати',
-    [ELanguage.EN]: 'Click to hide',
-  },
-  closeButtonMark: '✕',
-};
+import { TOOLTIP_CAPTIONS } from '@/models/ui/toolTip.model';
 
 interface ITooltipClientProps extends React.HTMLAttributes<HTMLElement> {
   children: ReactNode;
@@ -58,7 +47,7 @@ const TooltipClient = ({
     <>
       <Suspense>
         <BaseButton
-          ariaLabel={CAPTIONS.ariaLabelSmall[lang]}
+          ariaLabel={TOOLTIP_CAPTIONS.ariaLabelSmall[lang]}
           onClick={showPopUp}
           className={className}
           {...attributes}
@@ -70,7 +59,7 @@ const TooltipClient = ({
       {isPopUp && (
         <Suspense>
           <BaseButton
-            ariaLabel={CAPTIONS.ariaLabelBig[lang]}
+            ariaLabel={TOOLTIP_CAPTIONS.ariaLabelBig[lang]}
             onClick={removePopUp}
           >
             <figure
@@ -80,7 +69,9 @@ const TooltipClient = ({
               <figcaption className="p-2 flex justify-between gap-8 items-center">
                 {hintDescription}
                 <span className="w-8 h-8 shrink-0 flex items-center justify-center rounded-full border border-stone-400 bg-red-400">
-                  <span className="text-white">{CAPTIONS.closeButtonMark}</span>
+                  <span className="text-white">
+                    {TOOLTIP_CAPTIONS.closeButtonMark}
+                  </span>
                 </span>
               </figcaption>
             </figure>

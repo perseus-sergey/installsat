@@ -1,65 +1,74 @@
 'use client';
 
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
+
 import FillingImg from '../ui/Images/FillingImage';
 import BaseButton from '../ui/buttons/BaseButton/BaseButton';
-import { useEffect, useState } from 'react';
 import { getELangKey } from '@/libs/utils/getLanguage';
 import { DEFAULT_LANG, ELanguage } from '@/models/language.model';
 
-const { UA, EN } = ELanguage;
-
-const LANG = {
-  [EN]: {
-    title: 'UA',
-    alt: 'Українська',
-    ariaLabel: 'Перемкнути на Українську',
-    imgSrc: '/Images/ukraine_flag_24.png',
-  },
-  [UA]: {
-    title: 'EN',
-    alt: 'English',
-    ariaLabel: 'Switch to English',
-    imgSrc: '/Images/english_flag_24.png',
-  },
-};
+import { LANGUAGE_SELECT } from '@/models/ui/header.model';
 
 const LangSwitchButton = () => {
+  const { replace } = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const { replace } = useRouter();
 
-  const [currentLang, setCurrentLang] = useState(DEFAULT_LANG);
+  const [currentLang, setCurrentLang] = useState<ELanguage>(DEFAULT_LANG);
+  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
-    const lang = getELangKey(pathname.split('/')[1]);
+    const lang = getELangKey(pathname.split('/')[1]) || DEFAULT_LANG;
     setCurrentLang(lang);
-  }, [pathname, searchParams]);
+  }, []);
 
-  const handleLangToggle = () => {
-    const newLang = currentLang === EN ? UA : EN;
-    const newPath = pathname.replace(
-      `/${pathname.split('/')[1]}`,
-      `/${newLang}`
-    );
+  const handleLangToggle = (lang: ELanguage) => {
+    const newPath = pathname.replace(`/${currentLang}`, `/${lang}`);
     replace(`${newPath}?${searchParams}`);
+    setCurrentLang(lang);
+    setIsOpen(false);
   };
 
   return (
-    <BaseButton
-      onClick={handleLangToggle}
-      ariaLabel={LANG[currentLang].ariaLabel}
-      className="flex items-center flex-wrap gap-x-2 text-gray-400 hover:text-gray-300 px-[3vw]"
-    >
-      {LANG[currentLang].title}
-      <FillingImg
-        width={24}
-        height={24}
-        alt={LANG[currentLang].alt}
-        src={LANG[currentLang].imgSrc}
-        isPriority
-      />
-    </BaseButton>
+    <div className="relative">
+      <BaseButton
+        onClick={() => setIsOpen(!isOpen)}
+        ariaLabel={LANGUAGE_SELECT[currentLang].ariaLabel}
+        className="flex items-center gap-2 px-4 py-2 text-gray-400 hover:text-gray-300"
+      >
+        <FillingImg
+          width={24}
+          height={24}
+          alt={LANGUAGE_SELECT[currentLang].alt}
+          src={LANGUAGE_SELECT[currentLang].imgSrc}
+          isPriority
+        />
+        <span>{LANGUAGE_SELECT[currentLang].title}</span>
+      </BaseButton>
+
+      {isOpen && (
+        <ul className="absolute -translate-x-1/3 z-10 bg-white border border-gray-300 rounded-md shadow-lg mt-1">
+          {Object.entries(LANGUAGE_SELECT).map(([langKey, langData]) => (
+            <li key={langKey}>
+              <BaseButton
+                className="flex items-center gap-2 p-2 hover:bg-gray-100 cursor-pointer w-full text-left"
+                onClick={() => handleLangToggle(langKey as ELanguage)}
+                ariaLabel={langData.ariaLabel}
+              >
+                <FillingImg
+                  width={24}
+                  height={24}
+                  src={langData.imgSrc}
+                  alt={langData.alt}
+                />
+                <span>{langData.alt}</span>
+              </BaseButton>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
   );
 };
 

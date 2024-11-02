@@ -460,8 +460,15 @@ const extractParsedData = ($) => {
   let currentFec = '';
   let currentBeam = '';
   let t2_stream = null;
+  let extractParsedDataMessages = [];
+  let rowNumber = -1;
 
-  const channels = [];
+  const addMessage = (paramName, source, rowNumber) =>
+    extractParsedDataMessages.push(
+      `ERROR: cannot extract ${paramName} from "${source}". Row Number: "${rowNumber}"`
+    );
+
+  const parsedChannels = [];
   let capture = false;
 
   $('table[bordercolor="#3366cc"] > tbody > tr').each((_, element) => {
@@ -475,30 +482,67 @@ const extractParsedData = ($) => {
     }
 
     if (capture && $element.find('table').length === 0) {
+      rowNumber = rowNumber += 1;
+
       const tds = $element.find('td');
 
       if (tds.length === 12) {
         t2_stream = null;
 
         const freqPolar = tds.eq(2).find('b').text().trim();
-        const [freq, polar] = freqPolar.split(' ');
-        if (!freq || !polar) return;
+        const [freq, polar] = freqPolar.split(/\s+/);
+        if (!freq || !polar) {
+          addMessage(
+            `freq: (${freq}) or polar: (${polar})`,
+            freqPolar,
+            rowNumber
+          );
+          return;
+        }
         currentFreq = Number(freq.trim());
         currentPolar = polar.trim().toUpperCase();
-        if (!currentFreq || !currentPolar || currentPolar.length > 1) return;
+        if (!currentFreq || !currentPolar || currentPolar.length > 1) {
+          addMessage(
+            `currentFreq: (${currentFreq}) or currentPolar: (${currentPolar})`,
+            `freq: (${freq}) or polar: (${polar})`,
+            rowNumber
+          );
+          return;
+        }
 
         currentMode = extractTextFromElement(tds.eq(2).find('font'), $).join(
           DB_ARRAY_SEPARATOR
         );
         currentBeam = tds.eq(11).text().trim();
-        if (!currentBeam) return;
+        if (!currentBeam) {
+          addMessage(
+            `currentBeam: (${currentBeam})`,
+            `${tds.eq(11).text()}. Frequency: (${currentFreq})`,
+            rowNumber
+          );
+          return;
+        }
 
         const srFec = tds.eq(3).text().trim();
-        const [sr, fec] = srFec.split(' ');
-        if (!sr || !fec) return;
-        currentSr = Number(sr.trim());
-        currentFec = fec.trim();
-        if (!currentSr || !currentFec) return;
+        const [sr, fec] = srFec.split(/\s+/);
+        if (!sr || !fec) {
+          addMessage(
+            `sr: (${sr}) or fec: (${fec})`,
+            `${srFec}. Frequency: (${currentFreq})`,
+            rowNumber
+          );
+          return;
+        }
+        currentSr = Number(sr);
+        currentFec = fec;
+        if (!currentSr || !currentFec) {
+          addMessage(
+            `currentSr: (${currentSr}) or currentFec: (${currentFec})`,
+            `sr: (${sr}) or fec: (${fec}). Frequency: (${currentFreq})`,
+            rowNumber
+          );
+          return;
+        }
 
         const titleData = titleHandler(tds.eq(4));
         if (!titleData) return;
@@ -513,7 +557,7 @@ const extractParsedData = ($) => {
         const { encryption, isBiss } = encryptionHandler(tds.eq(9), $);
 
         // must be with the same sequence as db SELECT without id
-        channels.push({
+        parsedChannels.push({
           frequency: currentFreq,
           polarization: currentPolar,
           mode: currentMode,
@@ -544,7 +588,7 @@ const extractParsedData = ($) => {
         const { encryption, isBiss } = encryptionHandler(tds.eq(5), $);
 
         // must be with the same sequence as db SELECT without id
-        channels.push({
+        parsedChannels.push({
           frequency: currentFreq,
           polarization: currentPolar,
           mode: currentMode,
@@ -570,7 +614,7 @@ const extractParsedData = ($) => {
     }
   });
 
-  return channels;
+  return { parsedChannels, extractParsedDataMessages };
 };
 
 const serializeChannelWithoutId = (channel) => {
@@ -685,6 +729,7 @@ export const parseFlyChannels = async ({
 
   let browser = incomingBrowser;
   let parsedChannels = [];
+  let extractParsedDataMessages = [];
   let filteredDbChannels = [];
   let filteredParsedChannels = [];
   let currTblShouldUpdChannels = [];
@@ -723,7 +768,9 @@ export const parseFlyChannels = async ({
     const html = await getContentFromPuppeteerBrowser(browser, sourceUrl);
     const $ = cheerio.load(html);
 
-    parsedChannels = extractParsedData($);
+    ({ parsedChannels, extractParsedDataMessages } = extractParsedData($));
+
+    parseChannelMessages.push(...extractParsedDataMessages);
 
     ({ filteredDbChannels, filteredParsedChannels } = getFilteredChannelArrays(
       parsedChannels,

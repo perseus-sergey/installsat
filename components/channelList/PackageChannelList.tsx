@@ -1,15 +1,10 @@
 import {
-  ALL_SAT_CHANNEL_LIST_FILTERS,
   CHANNEL_LIST_ANCHOR_START,
   IOnlineChannelListModel,
   IPackageChannelListModel,
-  ONLINE_CHANNEL_TOOLTIP_TITLES,
-  PACKAGE_CHANNEL_LIST_DATA,
-  PACKAGE_CHANNEL_LIST_IMAGES,
 } from '@/models/channels/channelList.model';
 import { TitleH2List } from '../ui/Titles/TitleH2List';
 import GoUpLink from '../ui/GoUpLink/GoUpLink';
-import { CHANNEL_IMAGES } from '@/models/channels/channel.model';
 import ChannelCardTooltip from '../ChannelCardTooltip/ChannelCardTooltip';
 import { ELanguage } from '@/models/language.model';
 import { cutText } from '@/libs/utils/cutText';
@@ -22,6 +17,15 @@ import TooltipSimple from '../ui/tooltips/TooltipSimple/TooltipSimple';
 import Filter from '../ui/Filter/Filter';
 import { EUrlBaseParam } from '@/models/url/url.model';
 import { EUrlSearchParam } from '@/models/url/urlSearch.model';
+import { ONLINE_CHANNEL_TOOLTIP_TITLES } from '@/models/channels/onlineChannelListMeta.model';
+import {
+  getChanDetailLinkAriaLabel,
+  PACKAGE_CHANNEL_LIST_DATA,
+  PACKAGE_CHANNEL_LIST_IMAGES,
+} from '@/models/channels/packageChannelListMeta.model';
+import { ALL_SAT_CHANNEL_LIST_FILTERS } from '@/models/channels/channelListMeta.model';
+import { CHANNEL_IMAGES } from '@/models/channels/metaChannel.model';
+import { localeStringMaker } from '@/libs/utils/localeStringMaker';
 
 const {
   name: tName,
@@ -165,11 +169,7 @@ const PackageChannelList = async ({
                   >
                     <SeoLink
                       href={`/${lang}/${pathToChannelDetails}/${channel.chan_cpu}${todayStr ? `/${todayStr}` : ''}`}
-                      title={
-                        lang === ELanguage.UA
-                          ? `Перейти до перегляду детальних параметрів каналу "${chanTitle}"`
-                          : `Go to view detailed parameters of "${chanTitle}" channel`
-                      }
+                      title={getChanDetailLinkAriaLabel(chanTitle)[lang]}
                     >
                       <ChannelCardTooltip
                         mainImage={{
@@ -185,8 +185,7 @@ const PackageChannelList = async ({
                           'view' in channel
                             ? {
                                 title: tViews[lang],
-                                description:
-                                  channel.view.toLocaleString('en-US'),
+                                description: localeStringMaker(channel.view),
                               }
                             : { title: '', description: '' },
                           {

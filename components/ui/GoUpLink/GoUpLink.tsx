@@ -1,7 +1,22 @@
-import { GO_UP_LINK } from '@/models/channels/channelList.model';
 import TooltipSimple from '../tooltips/TooltipSimple/TooltipSimple';
 import { ELanguage } from '@/models/language.model';
 import SeoLink from '../SeoLink/SeoLink';
+
+const { UA, EN, RU, ES, AR, DE, FR, IT } = ELanguage;
+
+export const GO_UP_LINK = {
+  title: {
+    [UA]: 'Повернутися на початок сторінки',
+    [EN]: 'Return to the top of the page',
+    [RU]: 'Вернуться наверх страницы',
+    [ES]: 'Volver al principio de la página',
+    [AR]: 'العودة إلى أعلى الصفحة',
+    [DE]: 'Zurück nach oben auf der Seite',
+    [FR]: 'Retourner en haut de la page',
+    [IT]: `Torna all'inizio della pagina`,
+  },
+  img: '⇧',
+};
 
 const GoUpLink = ({ lang }: { lang: ELanguage }) => (
   <TooltipSimple tooltipText={GO_UP_LINK.title[lang]}>

@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
+
 import FieldError from '@/components/comments/FieldError/FieldError';
-import { EChannelEditFields } from '@/models/channels/channel.model';
 import { IFormState } from '@/controllers/toast.controller';
 import { IInputData } from '../admin/FormEditArticle/FormEditChannel';
 import Fieldset from '../ui/Fieldset/Fieldset';
+import { EChannelEditFields } from '@/models/channels/channelEdit.model';
 
 interface IProps {
   selectId: EChannelEditFields;

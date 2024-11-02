@@ -1,14 +1,19 @@
+import { ELanguage } from '@/models/language.model';
+
 interface ISimilarArticlesProps {
   blockTitle: string;
   children: React.ReactNode;
+  lang: ELanguage;
 }
 
 const SimilarBlock = async ({
   blockTitle,
   children,
+  lang,
 }: ISimilarArticlesProps) => {
   return (
     <nav
+      dir={lang === 'ar' ? 'rtl' : 'ltr'}
       className="my-1 mx-auto w-full rounded-lg"
       style={{
         border: 'thick inset #cccccc',
@@ -23,7 +28,7 @@ const SimilarBlock = async ({
         {blockTitle}
       </h2>
       <ul
-        className="p-4 pl-12 font-georgia text-xl"
+        className="py-4 px-12 font-georgia text-xl"
         style={{ listStyleImage: 'url(/Images/galka_blue.png)' }}
       >
         {children}

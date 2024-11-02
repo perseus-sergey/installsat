@@ -1,10 +1,12 @@
 'use client';
 
+import Link from 'next/link';
 import { useRef, useState } from 'react';
 import { Editor as CoreEditor } from 'tinymce';
+import { useFormState } from 'react-dom';
+
 import { SubmitPendingButton } from '@/components/ui/buttons/SubmitPendingBtn';
 import { useToastMessage } from '@/libs/hooks/useToastMessage';
-import { useFormState } from 'react-dom';
 import { EMPTY_FORM_STATE } from '@/controllers/toast.controller';
 import {
   editChannelAction,
@@ -14,17 +16,16 @@ import {
 import FieldError from '@/components/comments/FieldError/FieldError';
 import TinyEditor from '@/components/TinyEditor/TinyEditor';
 import FormTextareaItem from './FormTextareaItem';
-import {
-  EChannelEditFields,
-  TChannelEditModel,
-} from '@/models/channels/channel.model';
 import { EUrlBaseParam } from '@/models/url/url.model';
 import CopyClipboard from '@/components/CopyClipboard/CopyClipboard';
 import DependentSelects from '@/components/DependentSelects/DependentSelects';
 import SelectControlled from '@/components/admin/FormEditArticle/SelectControlled';
-import Link from 'next/link';
 import Fieldset from '@/components/ui/Fieldset/Fieldset';
 import CheckboxEditForm from './CheckboxEditForm';
+import {
+  EChannelEditFields,
+  TChannelEditModel,
+} from '@/models/channels/channelEdit.model';
 
 export interface IInputData {
   id: string;

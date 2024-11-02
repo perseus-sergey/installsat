@@ -1,7 +1,7 @@
 import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
 import { encrypt } from '@/libs/utils/encrypt';
 import { ISubscribersEmails } from '@/models/ui/comments.model';
-import { ELanguage } from '@/models/language.model';
+import { DEFAULT_LANG, ELanguage } from '@/models/language.model';
 import { EDBTableTitles } from '@/models/dbTblNames.model';
 import { EUrlBaseParam } from '@/models/url/url.model';
 import { EUrlAdminParam } from '@/models/url/urlAdmin.model';
@@ -22,6 +22,7 @@ import {
   Text,
 } from '@react-email/components';
 import { makeUrlSearchParams } from '@/libs/utils/urlMaker';
+import { USER_COMMENT_MODEL } from '@/models/ui/commentsEmail.model';
 
 const {
   COMMENT_DEL_ARTICLE_ID,
@@ -126,7 +127,8 @@ export const CommentToAdminEmail = async ({
             <ul>
               {subscribers.map(({ author, date, mail }) => (
                 <li key={mail}>
-                  {author}: {mail} ({getFormattedDateStrYearFirst(date)})
+                  {author}: {mail} (
+                  {getFormattedDateStrYearFirst(date, DEFAULT_LANG)})
                 </li>
               ))}
             </ul>
@@ -160,11 +162,26 @@ export const CommentToUserEmail = async ({
   emailKey,
   lang,
 }: IEmailTemplateProps) => {
+  const {
+    preTitle,
+    preCaption,
+    authorCaption,
+    contentCaption,
+    articleLinkTitle,
+    contentCheckWarning,
+    thanks,
+    cencarelly,
+    siteAdmin,
+    notReply,
+    toRespond,
+    unsubscribe,
+    unsubscribeLink,
+    getPreviewText,
+  } = USER_COMMENT_MODEL;
+
   const styledArticleName = `✧${articleName}✧`;
-  const previewText =
-    lang === ELanguage.UA
-      ? `Залишено новий коментар від ${authorName || ''}' на сторінці ${styledArticleName}`
-      : `The new comment from ${authorName || ''}' was left on the page ${styledArticleName}`;
+  const previewText = getPreviewText(styledArticleName, authorName)[lang];
+
   const delCommentSearchParams = makeUrlSearchParams({
     [COMMENT_DEL_AUTHOR_EMAIL]: authorEmail || '',
     [COMMENT_DEL_ARTICLE_ID]: await encrypt(articleId, emailKey),
@@ -173,11 +190,25 @@ export const CommentToUserEmail = async ({
   });
   const removeSubscriptionUrl = `${baseUrl}/${lang}/${EUrlBaseParam.DELETE_COMMENT_SUBSCRIPTION}?${delCommentSearchParams}`;
 
+  const languageMap: { [key in ELanguage]: string } = {
+    [ELanguage.UA]: 'uk',
+    [ELanguage.EN]: 'en',
+    [ELanguage.RU]: 'ru',
+    [ELanguage.ES]: 'es',
+    [ELanguage.AR]: 'ar',
+    [ELanguage.DE]: 'de',
+    [ELanguage.FR]: 'fr',
+    [ELanguage.IT]: 'it',
+  };
+
   return (
-    <Html lang={lang === ELanguage.UA ? 'uk' : 'en'}>
+    <Html
+      lang={languageMap[lang] || 'en'}
+      dir={lang === ELanguage.AR ? 'rtl' : 'ltr'}
+    >
       <Preview>{previewText}</Preview>
       <Head>
-        <title>{`${lang === ELanguage.UA ? 'Новий коментар до сторінки' : 'New comment for page'}: ${styledArticleName}`}</title>
+        <title>{`${preTitle[lang]}: ${styledArticleName}`}</title>
       </Head>
 
       <Body style={main}>
@@ -199,9 +230,7 @@ export const CommentToUserEmail = async ({
           <Section style={{ paddingBottom: '20px' }}>
             <Row>
               <Text style={heading}>
-                {lang === ELanguage.UA
-                  ? 'Додано новий коментар до сторінки:'
-                  : 'New comment added to the page:'}
+                {preCaption[lang]}
                 <br />
                 <Link
                   href={`${baseUrl}${articlePath}`}
@@ -213,15 +242,13 @@ export const CommentToUserEmail = async ({
               </Text>
 
               <Text style={heading}>
-                {lang === ELanguage.UA ? 'Додав:' : 'Author:'}
+                {authorCaption[lang]}
                 <span style={coloredText}> {authorName}</span>
               </Text>
 
               <Hr style={hr} />
 
-              <Text style={heading}>
-                {lang === ELanguage.UA ? 'Зміст:' : 'Content:'}
-              </Text>
+              <Text style={heading}>{contentCaption[lang]}</Text>
               <Text style={review}>
                 <em>{commentText || ''}</em>
               </Text>
@@ -233,9 +260,7 @@ export const CommentToUserEmail = async ({
           <Section style={{ paddingBottom: '20px' }}>
             <Row>
               <Text style={paragraph}>
-                {lang === ELanguage.UA
-                  ? 'Читати повністю коментар на сторінці'
-                  : 'Read the full comment on the page'}
+                {articleLinkTitle[lang]}
                 <Link
                   href={`${baseUrl}${articlePath}`}
                   style={link}
@@ -244,11 +269,7 @@ export const CommentToUserEmail = async ({
                   {articleName}
                 </Link>
               </Text>
-              <Text style={paragraph}>
-                {lang === ELanguage.UA
-                  ? 'Коментар може бути схвалений або вилучений після перевірки модератором.'
-                  : 'A comment can be approved or removed after review by a moderator.'}
-              </Text>
+              <Text style={paragraph}>{contentCheckWarning[lang]}</Text>
             </Row>
           </Section>
 
@@ -257,15 +278,11 @@ export const CommentToUserEmail = async ({
           <Section>
             <Row>
               <Text style={{ ...paragraph, fontWeight: '700' }}>
-                {lang === ELanguage.UA
-                  ? 'Дякуємо за інтерес до нашого сайту'
-                  : 'Thank you for your interest in our site'}
+                {thanks[lang]}
                 <br />
-                {lang === ELanguage.UA ? 'З повагою' : 'Cencarelly'},
+                {cencarelly[lang]},
                 <br />
-                {lang === ELanguage.UA
-                  ? 'Адміністрація сайту'
-                  : 'Site administration'}{' '}
+                {siteAdmin[lang]}{' '}
                 <Link href={`${baseUrl}/${lang}`} target="_blank">
                   <span style={coloredText}>Installsat.TV</span>
                 </Link>
@@ -274,14 +291,9 @@ export const CommentToUserEmail = async ({
               <Hr style={hr} />
 
               <Text style={{ ...paragraph, fontSize: '1rem' }}>
-                {lang === ELanguage.UA
-                  ? 'На це листування не потрібно відповідати, воно було створено автоматично.'
-                  : 'You do not need to reply to this correspondence, it was created automatically.'}
+                {notReply[lang]}
                 <br />
-                {lang === ELanguage.UA
-                  ? 'Для відповіді на коментар, будь ласка, перейдіть на відповідну сторінку сайту'
-                  : 'To respond to a comment, please go to the relevant page of the site'}
-                :{' '}
+                {toRespond[lang]}:{' '}
                 <Link
                   href={`${baseUrl}${articlePath}#${EUrlSearchParam.COMMENT_ID}`}
                   target="_blank"
@@ -290,17 +302,13 @@ export const CommentToUserEmail = async ({
                 </Link>
               </Text>
               <Text style={footer}>
-                {lang === ELanguage.UA
-                  ? 'Щоб відписатися від сповіщень про нові коментарі на цій сторінці, перейдіть за'
-                  : 'To unsubscribe from notifications of new comments on this page, go to'}{' '}
+                {unsubscribe[lang]}{' '}
                 <Link
                   href={removeSubscriptionUrl}
                   target="_blank"
                   style={{ ...reportLink, color: '#267f00' }}
                 >
-                  <span style={coloredText}>
-                    {lang === ELanguage.UA ? 'ПОСИЛАННЯМ' : 'LINK'}
-                  </span>
+                  <span style={coloredText}>{unsubscribeLink[lang]}</span>
                 </Link>
               </Text>
             </Row>

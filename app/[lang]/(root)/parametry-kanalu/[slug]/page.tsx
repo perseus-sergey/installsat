@@ -1,9 +1,8 @@
 import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
+import { Metadata } from 'next';
 
-import BottomInfoPanel, {
-  INFO_PANEL_TITLES,
-} from '@/components/BottomInfoPanel/BottomInfoPanel';
+import BottomInfoPanel from '@/components/BottomInfoPanel/BottomInfoPanel';
 import ChannelOnlineLink from '@/components/ui/buttons/ChannelOnlineLink/ChannelOnlineLink';
 import ChannelParams from '@/components/ChannelParams/ChannelParams';
 import DangerHtml from '@/components/ui/DangerHtml/DangerHtml';
@@ -14,15 +13,7 @@ import { Title } from '@/components/ui/Titles/Title';
 import TvScheduleLink from '@/components/TvScheduleLink/TvScheduleLink';
 import { updateViewCount } from '@/controllers/viewUpdate.controller';
 import { getDBChannel } from '@/controllers/channel.controller';
-import {
-  CHANNEL_IMAGES,
-  CHANNEL_RESPONSIBILITIES,
-  META_CHANNEL,
-  SIMILAR_ARTICLE_TITLE,
-  SIMILAR_CHANNELS_TITLE,
-} from '@/models/channels/channel.model';
 import { EDBTableTitles } from '@/models/dbTblNames.model';
-import { Metadata } from 'next';
 import GrooveLine from '@/components/ui/GrooveLine';
 import BreadCrumbServer from '@/components/BreadCrumbs/BreadCrumbsServer';
 import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
@@ -34,6 +25,16 @@ import { DEFAULT_META_DATA } from '@/models/defaultMeta.model';
 import { DEFAULT_LANG, ELanguage } from '@/models/language.model';
 import { EUrlBaseParam, MAIN_URL } from '@/models/url/url.model';
 import { EUrlAdminParam } from '@/models/url/urlAdmin.model';
+import { localeStringMaker } from '@/libs/utils/localeStringMaker';
+import {
+  CHANNEL_IMAGES,
+  META_CHANNEL,
+  SIMILAR_ARTICLE_TITLE,
+  SIMILAR_CHANNELS_TITLE,
+} from '@/models/channels/metaChannel.model';
+import { INFO_PANEL_TITLES } from '@/models/ui/infoPanel.model';
+import { CHANNEL_RESPONSIBILITIES } from '@/models/channels/channel.model';
+import { BREAD_SAT_CHANNEL_LIST } from '@/models/channels/channelParams.model';
 
 const BASE_URL = process.env.BASE_URL || MAIN_URL;
 
@@ -51,13 +52,18 @@ export interface IChannelProps {
   params: { [key in EUrlBaseParam]: string };
 }
 
+const { SLUG, LANG, ONLINE_CHANNEL_LIST, CHANNEL_PARAMS, CHANNELS_TV_PROGRAM } =
+  EUrlBaseParam;
+
 export const revalidate = 86400; // 3600 * 24 invalidate cache every 1 day
 
 export const generateMetadata = async ({
   params,
 }: IChannelProps): Promise<Metadata> => {
-  const slug = params[EUrlBaseParam.SLUG];
-  const lang = getELangKey(params[EUrlBaseParam.LANG]);
+  const slug = params[SLUG];
+  const lang = getELangKey(params[LANG]);
+
+  const { UA, EN, RU, ES, AR, DE, FR, IT } = ELanguage;
 
   const sqlResult = await getDBChannel(slug, lang);
   if (!sqlResult) return DEFAULT_META_DATA[lang];
@@ -95,25 +101,31 @@ export const generateMetadata = async ({
     description: description || metaTitle,
     keywords: keywordsBefore[lang] + keywords,
     alternates: {
-      canonical: `/${DEFAULT_LANG}/${EUrlBaseParam.CHANNEL_PARAMS}/${addCanonical}`,
+      canonical: `/${DEFAULT_LANG}/${CHANNEL_PARAMS}/${addCanonical}`,
       languages: {
-        en: `/${ELanguage.EN}/${EUrlBaseParam.CHANNEL_PARAMS}/${chan_slug}`,
-        uk: `/${ELanguage.UA}/${EUrlBaseParam.CHANNEL_PARAMS}/${chan_slug}`,
+        en: `/${EN}/${CHANNEL_PARAMS}/${chan_slug}`,
+        uk: `/${UA}/${CHANNEL_PARAMS}/${chan_slug}`,
+        ru: `/${RU}/${CHANNEL_PARAMS}/${chan_slug}`,
+        es: `/${ES}/${CHANNEL_PARAMS}/${chan_slug}`,
+        ar: `/${AR}/${CHANNEL_PARAMS}/${chan_slug}`,
+        de: `/${DE}/${CHANNEL_PARAMS}/${chan_slug}`,
+        fr: `/${FR}/${CHANNEL_PARAMS}/${chan_slug}`,
+        it: `/${IT}/${CHANNEL_PARAMS}/${chan_slug}`,
       },
     },
     openGraph: {
       ...DEFAULT_META_DATA.openGraph,
       title: metaTitle,
       description: description || metaTitle,
-      url: `/${lang}/${EUrlBaseParam.CHANNEL_PARAMS}/${chan_slug}`,
-      publishedTime: getFormattedDateStrYearFirst(),
+      url: `/${lang}/${CHANNEL_PARAMS}/${chan_slug}`,
+      publishedTime: getFormattedDateStrYearFirst('', lang),
     },
   };
 };
 
 export default async function Page({ params }: IChannelProps) {
-  const slug = params[EUrlBaseParam.SLUG];
-  const lang = getELangKey(params[EUrlBaseParam.LANG]);
+  const slug = params[SLUG];
+  const lang = getELangKey(params[LANG]);
 
   const sqlResult = await getDBChannel(slug, lang);
 
@@ -150,7 +162,7 @@ export default async function Page({ params }: IChannelProps) {
   //   `${id}`
   // );
 
-  const currentDate = getFormattedDateStrYearFirst();
+  const currentDate = getFormattedDateStrYearFirst('', lang);
 
   updateViewCount(EDBTableTitles.CHANNELS, `${id}`, view);
 
@@ -165,13 +177,7 @@ export default async function Page({ params }: IChannelProps) {
       <BreadCrumbServer
         lang={lang}
         breadCrumbList={[
-          {
-            href: EUrlBaseParam.SAT_CHANNEL_LIST,
-            title: {
-              [ELanguage.UA]: 'Список каналів супутників',
-              [ELanguage.EN]: 'List of satellite channels',
-            },
-          },
+          BREAD_SAT_CHANNEL_LIST,
           `${titleBefore[lang]} "${title}"`,
         ]}
       />
@@ -199,13 +205,13 @@ export default async function Page({ params }: IChannelProps) {
         <TvScheduleLink
           lang={lang}
           title={title}
-          href={`/${lang}/${EUrlBaseParam.CHANNELS_TV_PROGRAM}/${slug}/${currentDate}`}
+          href={`/${lang}/${CHANNELS_TV_PROGRAM}/${slug}/${currentDate}`}
         />
 
         {tvforsite_net && (
           <ChannelOnlineLink
             lang={lang}
-            href={`/${lang}/${EUrlBaseParam.ONLINE_CHANNEL_LIST}/${slug}`}
+            href={`/${lang}/${ONLINE_CHANNEL_LIST}/${slug}`}
             channelName={title}
           />
         )}
@@ -217,12 +223,13 @@ export default async function Page({ params }: IChannelProps) {
         </NoteBlock>
 
         <BottomInfoPanel
+          lang={lang}
           items={[
             // {
             //   name: packageTitle[lang],
             //   value: (
             //     <Link
-            //       href={`/${lang}/${EUrlBaseParam.PACKAGE_CHANNEL_LIST}/${catLink}`}
+            //       href={`/${lang}/${PACKAGE_CHANNEL_LIST}/${catLink}`}
             //     >
             //       {catTitle}
             //     </Link>
@@ -230,7 +237,7 @@ export default async function Page({ params }: IChannelProps) {
             // },
             {
               name: viewsTitle[lang],
-              value: (view + 1).toLocaleString('en-US'),
+              value: localeStringMaker(view + 1),
             },
             // { name: commentsTitle[lang], value: numberOfComments },
           ]}
@@ -259,7 +266,7 @@ export default async function Page({ params }: IChannelProps) {
 // <CommentBlock
 //   lang={lang}
 //   numberOfComments={numberOfComments}
-//   revalidateUrl={`/${lang}/${EUrlBaseParam.CHANNEL_PARAMS}/${chan_slug}`}
+//   revalidateUrl={`/${lang}/${CHANNEL_PARAMS}/${chan_slug}`}
 //   dbCommentTableName={EDBTableTitles.COMMENTS_CHANNEL}
 //   articleId={`${id}`}
 //   articleName={title}

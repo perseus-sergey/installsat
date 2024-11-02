@@ -1,14 +1,19 @@
-import styles from '../SatNewsList/SatNewsList.module.scss';
+import { decode } from 'html-entities';
 import React from 'react';
+
+import styles from '../SatNewsList/SatNewsList.module.scss';
 import DangerHtml from '../ui/DangerHtml/DangerHtml';
 import {
   getDailyNews,
   setGroupedNewsByDateMap,
 } from '@/controllers/satDigest.controller';
 import EmptyData from '../errors/EmptyData/EmptyData';
-import { META_TRANS_NEWS_SINGLE } from '@/models/satDigest.model';
+import {
+  getDateLinkTitle,
+  getSatLinkTitle,
+  META_TRANS_NEWS_SINGLE,
+} from '@/models/satDigest.model';
 import { ELanguage } from '@/models/language.model';
-import { decode } from 'html-entities';
 import { TitleH2Digest } from '../ui/Titles/TitleH2Digest';
 import { TitleH3Digest } from '../ui/Titles/TitleH3Digest';
 import { createURLWithParams } from '@/libs/utils/urlMaker';
@@ -43,6 +48,7 @@ const DateNewsList = async ({ lang }: { lang: ELanguage }) => {
             className="text-rose-500 underline"
           />
         </TitleH2Digest>
+
         {[...news[1]].map((satNews) => {
           const satTitle = decode(`${satNews[0]} ${satNews[1][0].satPosition}`);
 
@@ -86,7 +92,7 @@ export const DateLink = ({
 
   return (
     <SeoLink
-      title={`${lang === ELanguage.UA ? 'Дивитись всі тпранспондерні новини за ' : 'See all transponder news for '} ${dateInISO}`}
+      title={getDateLinkTitle(dateInISO)[lang]}
       href={`/${lang}/${EUrlBaseParam.TRANSPONDER_NEWS}/${dateInISO}`}
       className={className}
       {...attributes}
@@ -118,7 +124,7 @@ export const SatLink = ({
 
   return (
     <SeoLink
-      title={`${lang === ELanguage.UA ? 'Дивитись всі канали з супутника ' : 'See list of all channels from satellite '} ${satTitle}`}
+      title={getSatLinkTitle(satTitle)[lang]}
       href={satelliteHref}
       className={className}
       {...attributes}

@@ -1,5 +1,5 @@
 import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
-import { SCHEDULE_META } from '@/models/scheduleTV.model';
+import { getTabLinkAriaL, SCHEDULE_META } from '@/models/scheduleTV.model';
 import { ELanguage } from '@/models/language.model';
 import SeoLink from '../ui/SeoLink/SeoLink';
 import { getStartOfWeekDate } from '@/libs/utils/scheduleDates';
@@ -15,22 +15,22 @@ const WeekScheduleTabs = ({
   channelName: string;
   lang: ELanguage;
 }) => {
-  const now = getFormattedDateStrYearFirst();
+  const now = getFormattedDateStrYearFirst('', lang);
   const startDate = getStartOfWeekDate(new Date(currentDate));
 
   const tabs = [...Array(7)].reduce((acc, _, i) => {
     const date = new Date(startDate);
     date.setDate(date.getDate() + i);
-    const dateString = getFormattedDateStrYearFirst(date);
+    const dateString = getFormattedDateStrYearFirst(date, lang);
 
     acc.push(
       <li key={i}>
         {dateString !== currentDate ? (
           <SeoLink
             title={
-              lang === ELanguage.UA
-                ? `Дивитись розклад передач каналу "${channelName}" за ${date.toLocaleDateString('en-CA')}`
-                : `Watch channel schedule for "${channelName}" on ${date.toLocaleDateString('en-CA')}`
+              getTabLinkAriaL(channelName, date.toLocaleDateString('en-CA'))[
+                lang
+              ]
             }
             href={dateString}
             className={`rounded-[2px_15px_0_0] max-w-32 w-fit flex items-center py-1 px-4 text-stone-600 cursor-pointer bg-stone-50 border border-solid border-stone-400 hover:border-orange-200 hover:bg-yellow-100 hover:text-orange-600 transition-transform transform hover:translate-y-px

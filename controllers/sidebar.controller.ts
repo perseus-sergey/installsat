@@ -76,12 +76,11 @@ export const getFlyChannelSatList = async (isFilling = false) => {
 };
 
 export const getLastNewsWidgetList = cache(
-  async () =>
+  async (lang: ELanguage) =>
     await poolExecute<IAllNewsModel[]>(`
     SELECT 
       id, 
-      title, 
-      title_en, 
+      ${lang === ELanguage.UA ? 'title' : 'title_en'} AS title,
       cpu 
     FROM ${TBL_ARTICLE} 
     WHERE cat NOT IN ${WRONG_CAT_IDS} 
@@ -90,9 +89,14 @@ export const getLastNewsWidgetList = cache(
     `)
 );
 
-export const getUsefulArticleList = async () =>
+export const getUsefulArticleList = async (lang: ELanguage) =>
   await poolExecute<IAllNewsModel[]>(`
-  SELECT title, title_en, id, cpu FROM ${TBL_ARTICLE} WHERE cat=4 OR cat=5
+  SELECT 
+    id,
+    ${lang === ELanguage.UA ? 'title' : 'title_en'} AS title,
+    cpu 
+   FROM ${TBL_ARTICLE} 
+   WHERE cat=4 OR cat=5
   `);
 
 export const getSatMapsSideBar = async () => {

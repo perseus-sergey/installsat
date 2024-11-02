@@ -3,13 +3,14 @@ import FillingValidImage from '../../ui/Images/FillingValidImage';
 import { ELanguage } from '@/models/language.model';
 import { EUrlBaseParam } from '@/models/url/url.model';
 import EmptyData from '@/components/errors/EmptyData/EmptyData';
-import { INFO_PANEL_TITLES } from '@/components/BottomInfoPanel/BottomInfoPanel';
 import {
+  getMapCardAriaLabel,
   IAllMapsModel,
   META_ALL_SAT_MAPS_MODEL,
   META_SINGLE_SAT_MAP,
   SINGLE_SAT_MAP_DATA,
 } from '@/models/mapCoverage.model';
+import { INFO_PANEL_TITLES } from '@/models/ui/infoPanel.model';
 
 const { makePostDescription } = META_ALL_SAT_MAPS_MODEL;
 
@@ -41,12 +42,9 @@ const MapList = ({ articleList, lang }: IArticleListProps) =>
         }) => (
           <li key={id}>
             <ArticleCard
+              lang={lang}
               isTitleCentered
-              seoCardLinkTitle={
-                lang === ELanguage.UA
-                  ? `Перейти до перегляду карт покриття супутника "${title}"`
-                  : `Go to view the coverage maps of the "${title}" satellite`
-              }
+              seoCardLinkTitle={getMapCardAriaLabel(title)[lang]}
               articleTitle={
                 <>
                   <div className="bg-[url('/Images/package_network_4729.png')] w-8 h-8 flex-shrink-0" />

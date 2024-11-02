@@ -8,6 +8,7 @@ const WidgetArticleCategories = async ({ lang }: { lang: ELanguage }) => {
 
   return articleCatWidgetList.length > 0 ? (
     <ul
+      dir={lang === 'ar' ? 'rtl' : 'ltr'}
       className="tracking-wide text-stone-200 p-4 rounded border border-solid border-stone-400 my-1 mx-auto overflow-hidden bg-gradient-to-b from-black to-blue-900"
       data-testid="WidgetArticleCategories"
     >

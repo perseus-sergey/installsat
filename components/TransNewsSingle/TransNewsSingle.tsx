@@ -1,11 +1,16 @@
+import { decode } from 'html-entities';
+import { ReactNode } from 'react';
+
 import { Title } from '../ui/Titles/Title';
 import styles from '../SatNewsList/SatNewsList.module.scss';
-import { ReactNode } from 'react';
 import DangerHtmlUl from '../ui/DangerHtml/DangerHtml';
-import { TRANS_NEWS_LIST_IMAGES, TSatDigest } from '@/models/satDigest.model';
+import {
+  EMPTY_DATA_DESCRIPTION,
+  TRANS_NEWS_LIST_IMAGES,
+  TSatDigest,
+} from '@/models/satDigest.model';
 import { getDailyNews } from '@/controllers/satDigest.controller';
 import FillingValidImage from '../ui/Images/FillingValidImage';
-import { decode } from 'html-entities';
 import { TitleH2Digest } from '../ui/Titles/TitleH2Digest';
 import EmptyData from '../errors/EmptyData/EmptyData';
 import { SatLink } from '../DateNewsList/DateNewsList';
@@ -55,14 +60,7 @@ const TransNewsSingle = ({ newsArray, title, lang }: ITransNewsSingleProps) => (
         })}
       </div>
     ) : (
-      <EmptyData
-        lang={lang}
-        description={
-          lang === ELanguage.UA
-            ? 'Немає новин за вказаний період'
-            : 'There are no news for the specified period'
-        }
-      />
+      <EmptyData lang={lang} description={EMPTY_DATA_DESCRIPTION[lang]} />
     )}
   </>
 );

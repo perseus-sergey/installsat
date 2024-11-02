@@ -3,11 +3,6 @@ import { Suspense } from 'react';
 
 import { Title } from '@/components/ui/Titles/Title';
 import { getOnlineChannels } from '@/controllers/channelList.controller';
-import {
-  META_ONLINE_CHANNEL_LIST,
-  ONLINE_CHANNEL_LIST_DATA,
-  ONLINE_CHANNEL_LIST_IMAGES,
-} from '@/models/channels/channelList.model';
 import type { Metadata } from 'next';
 import { EUrlSearchParam, TSearchParams } from '@/models/url/urlSearch.model';
 import { getELangKey } from '@/libs/utils/getLanguage';
@@ -21,6 +16,11 @@ import ArticleWrapper from '@/components/article/ArticleWrapper';
 import { DEFAULT_META_DATA } from '@/models/defaultMeta.model';
 import { ELanguage } from '@/models/language.model';
 import { EUrlBaseParam, MAIN_URL } from '@/models/url/url.model';
+import {
+  META_ONLINE_CHANNEL_LIST,
+  ONLINE_CHANNEL_LIST_DATA,
+  ONLINE_CHANNEL_LIST_IMAGES,
+} from '@/models/channels/onlineChannelListMeta.model';
 
 interface IPageProps {
   params: { [key in EUrlBaseParam]: string };
@@ -43,6 +43,8 @@ export const revalidate = 172800; // 3600 * 48 invalidate cache every 2 days
 export const generateMetadata = ({ params }: IPageProps): Metadata => {
   const lang = getELangKey(params[LANG]);
 
+  const { UA, EN, RU, ES, AR, DE, FR, IT } = ELanguage;
+
   return {
     metadataBase: new URL(BASE_URL),
     title: metaTitle[lang],
@@ -53,13 +55,19 @@ export const generateMetadata = ({ params }: IPageProps): Metadata => {
       title: metaTitle[lang],
       description: metaDescription[lang],
       url: `/${lang}/${ONLINE_CHANNEL_LIST}`,
-      publishedTime: getFormattedDateStrYearFirst(),
+      publishedTime: getFormattedDateStrYearFirst('', lang),
     },
     alternates: {
       canonical: `/${lang}/${ONLINE_CHANNEL_LIST}`,
       languages: {
-        en: `/${ELanguage.EN}/${ONLINE_CHANNEL_LIST}`,
-        uk: `/${ELanguage.UA}/${ONLINE_CHANNEL_LIST}`,
+        en: `/${EN}/${ONLINE_CHANNEL_LIST}`,
+        uk: `/${UA}/${ONLINE_CHANNEL_LIST}`,
+        ru: `/${RU}/${ONLINE_CHANNEL_LIST}`,
+        es: `/${ES}/${ONLINE_CHANNEL_LIST}`,
+        ar: `/${AR}/${ONLINE_CHANNEL_LIST}`,
+        de: `/${DE}/${ONLINE_CHANNEL_LIST}`,
+        fr: `/${FR}/${ONLINE_CHANNEL_LIST}`,
+        it: `/${IT}/${ONLINE_CHANNEL_LIST}`,
       },
     },
   };

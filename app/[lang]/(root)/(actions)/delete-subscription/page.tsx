@@ -36,7 +36,7 @@ export const generateMetadata = ({ params }: IPageParams): Metadata => {
       title,
       description,
       url: `/${lang}/${EUrlBaseParam.DELETE_COMMENT_SUBSCRIPTION}`,
-      publishedTime: getFormattedDateStrYearFirst(),
+      publishedTime: getFormattedDateStrYearFirst('', lang),
     },
   };
 };

@@ -1,24 +1,28 @@
+import { Suspense } from 'react';
+import Image from 'next/image';
+
 import { Title } from '@/components/ui/Titles/Title';
 import { getChannelsWithSchedule } from '@/controllers/channelList.controller';
-import {
-  META_ONLINE_CHANNEL_LIST,
-  ONLINE_CHANNEL_LIST_DATA,
-  ONLINE_CHANNEL_LIST_IMAGES,
-} from '@/models/channels/channelList.model';
 import type { Metadata } from 'next';
 import { EUrlSearchParam, TSearchParams } from '@/models/url/urlSearch.model';
-import { Suspense } from 'react';
 import { getELangKey } from '@/libs/utils/getLanguage';
 import PackageChannelList from '@/components/channelList/PackageChannelList';
 import BreadCrumbServer from '@/components/BreadCrumbs/BreadCrumbsServer';
 import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
-import { SCHEDULE_META } from '@/models/scheduleTV.model';
-import Image from 'next/image';
+import {
+  BREAD_TV_SCHEDULE_LIST,
+  SCHEDULE_META,
+} from '@/models/scheduleTV.model';
 import h1Img from 'public/Images/packages/Popcorn-icon.png';
 import ArticleWrapper from '@/components/article/ArticleWrapper';
 import { DEFAULT_META_DATA } from '@/models/defaultMeta.model';
 import { ELanguage } from '@/models/language.model';
 import { EUrlBaseParam, MAIN_URL } from '@/models/url/url.model';
+import {
+  META_ONLINE_CHANNEL_LIST,
+  ONLINE_CHANNEL_LIST_DATA,
+  ONLINE_CHANNEL_LIST_IMAGES,
+} from '@/models/channels/onlineChannelListMeta.model';
 
 const BASE_URL = process.env.BASE_URL || MAIN_URL;
 
@@ -45,6 +49,8 @@ export const generateMetadata = async ({
 }: IPageProps): Promise<Metadata> => {
   const lang = getELangKey(params[EUrlBaseParam.LANG]);
 
+  const { UA, EN, RU, ES, AR, DE, FR, IT } = ELanguage;
+
   return {
     metadataBase: new URL(BASE_URL),
     title: metaH1[lang],
@@ -55,13 +61,19 @@ export const generateMetadata = async ({
       title: metaH1[lang],
       description: metaDescription[lang],
       url: `/${lang}/${CHANNELS_TV_PROGRAM}`,
-      publishedTime: getFormattedDateStrYearFirst(),
+      publishedTime: getFormattedDateStrYearFirst('', lang),
     },
     alternates: {
       canonical: `/${lang}/${CHANNELS_TV_PROGRAM}`,
       languages: {
-        en: `/${ELanguage.EN}/${CHANNELS_TV_PROGRAM}`,
-        uk: `/${ELanguage.UA}/${CHANNELS_TV_PROGRAM}`,
+        en: `/${EN}/${CHANNELS_TV_PROGRAM}`,
+        uk: `/${UA}/${CHANNELS_TV_PROGRAM}`,
+        ru: `/${RU}/${CHANNELS_TV_PROGRAM}`,
+        es: `/${ES}/${CHANNELS_TV_PROGRAM}`,
+        ar: `/${AR}/${CHANNELS_TV_PROGRAM}`,
+        de: `/${DE}/${CHANNELS_TV_PROGRAM}`,
+        fr: `/${FR}/${CHANNELS_TV_PROGRAM}`,
+        it: `/${IT}/${CHANNELS_TV_PROGRAM}`,
       },
     },
   };
@@ -83,22 +95,13 @@ export default async function Page({ searchParams, params }: IPageProps) {
 
   const getChannelsFn = () => getChannelsWithSchedule(lang, searchQueryChannel);
 
-  const todayStr = getFormattedDateStrYearFirst();
+  const todayStr = getFormattedDateStrYearFirst('', lang);
 
   return (
     <>
       <BreadCrumbServer
         lang={lang}
-        breadCrumbList={[
-          {
-            href: EUrlBaseParam.ONLINE_CHANNEL_LIST,
-            title: {
-              [ELanguage.UA]: 'Список онлайн каналів',
-              [ELanguage.EN]: 'Online channel list',
-            },
-          },
-          metaH1[lang],
-        ]}
+        breadCrumbList={[BREAD_TV_SCHEDULE_LIST, metaH1[lang]]}
       />
 
       <ArticleWrapper lang={lang}>

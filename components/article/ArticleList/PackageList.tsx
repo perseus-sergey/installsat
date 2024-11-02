@@ -3,13 +3,12 @@ import FillingValidImage from '../../ui/Images/FillingValidImage';
 import { EUrlBaseParam } from '@/models/url/url.model';
 import { cutText } from '@/libs/utils/cutText';
 import DangerHtml from '../../ui/DangerHtml/DangerHtml';
-import {
-  IChannelPackagesModel,
-  PACKAGES_IMAGES,
-} from '@/models/channels/channelList.model';
+import { IChannelPackagesModel } from '@/models/channels/channelList.model';
 import EmptyData from '@/components/errors/EmptyData/EmptyData';
 import { ELanguage } from '@/models/language.model';
-import { INFO_PANEL_TITLES } from '@/components/BottomInfoPanel/BottomInfoPanel';
+import { PACKAGES_IMAGES } from '@/models/channels/packageChannelListMeta.model';
+import { INFO_PANEL_TITLES } from '@/models/ui/infoPanel.model';
+import { getPackageListLink } from '@/models/articles/articleList.model';
 
 const { packageImage } = PACKAGES_IMAGES;
 
@@ -39,11 +38,8 @@ const PackageList = ({ packageList, lang }: IProps) =>
           }) => (
             <li key={id}>
               <ArticleCard
-                seoCardLinkTitle={
-                  lang === ELanguage.UA
-                    ? `Перейти до перегляду списку каналів пакету "${title}"`
-                    : `Go to view the list of channels in package "${title}"`
-                }
+                lang={lang}
+                seoCardLinkTitle={getPackageListLink(title)[lang]}
                 isTitleCentered
                 articleTitle={title}
                 image={

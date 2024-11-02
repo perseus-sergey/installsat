@@ -17,6 +17,7 @@ import { EUrlBaseParam } from '@/models/url/url.model';
 import { EUrlSearchParam, TSearchParams } from '@/models/url/urlSearch.model';
 import { getELangKey } from '@/libs/utils/getLanguage';
 import { EDBTableTitles } from '@/models/dbTblNames.model';
+import { DEFAULT_LANG } from '@/models/language.model';
 
 const { BASE_PATH, ARTICLES_EDIT } = EUrlAdminParam;
 
@@ -83,7 +84,7 @@ export default async function Page({ searchParams, params }: IPageParams) {
                   {article.category_title}
                 </td>
                 <td className="border border-slate-400 py-px px-2">
-                  {getFormattedDateStrYearFirst(article.date_upd)}
+                  {getFormattedDateStrYearFirst(article.date_upd, DEFAULT_LANG)}
                 </td>
                 <td className="border border-slate-400 py-px px-2">
                   <Link

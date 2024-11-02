@@ -1,13 +1,9 @@
+import { Suspense } from 'react';
+import Image from 'next/image';
+
 import { Title } from '@/components/ui/Titles/Title';
-import {
-  ALL_SAT_CHANNEL_LIST_FILTERS,
-  ALL_SAT_CHANNEL_LIST_IMAGES,
-  ALL_SAT_CHANNEL_LIST_LINKS,
-  META_ALL_SAT_CHANNEL_LIST,
-} from '@/models/channels/channelList.model';
 import type { Metadata } from 'next';
 import StartArticleSection from '@/components/article/StartArticleSection/StartArticleSection';
-import { Suspense } from 'react';
 import { EUrlSearchParam, TSearchParams } from '@/models/url/urlSearch.model';
 import BreadCrumbServer from '@/components/BreadCrumbs/BreadCrumbsServer';
 import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
@@ -20,7 +16,6 @@ import Fieldset from '@/components/ui/Fieldset/Fieldset';
 import Filter from '@/components/ui/Filter/Filter';
 import ChannelFormatSliders from '@/components/ui/ChannelFormatSliders/ChannelFormatSliders';
 import titleImg from 'public/Images/packages/database.png';
-import Image from 'next/image';
 import NumberOfItems from '@/components/NumberOfItems/NumberOfItems';
 import LanguageSelector from '@/components/CustomSelectors/LanguageSelector';
 import SatelliteSelector from '@/components/CustomSelectors/SatelliteSelector';
@@ -32,6 +27,13 @@ import { DEFAULT_META_DATA } from '@/models/defaultMeta.model';
 import { ELanguage } from '@/models/language.model';
 import { EUrlBaseParam, MAIN_URL } from '@/models/url/url.model';
 import { getELangKey } from '@/libs/utils/getLanguage';
+import {
+  ALL_SAT_CHANNEL_LIST_FILTERS,
+  ALL_SAT_CHANNEL_LIST_IMAGES,
+  ALL_SAT_CHANNEL_LIST_LINKS,
+  META_ALL_SAT_CHANNEL_LIST,
+  START_SECTION_TEXT,
+} from '@/models/channels/channelListMeta.model';
 // import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
 // import { getCommentsNumber } from '@/controllers/comments.controller';
 
@@ -53,12 +55,16 @@ interface IPageProps {
   searchParams?: TSearchParams;
 }
 
+const { LANG, SAT_CHANNEL_LIST } = EUrlBaseParam;
+
 export const revalidate = 21600; // 3600 * 6 invalidate cache every 6 hours
 
 export const generateMetadata = async ({
   params,
 }: IPageProps): Promise<Metadata> => {
-  const lang = getELangKey(params[EUrlBaseParam.LANG]);
+  const lang = getELangKey(params[LANG]);
+
+  const { UA, EN, RU, ES, AR, DE, FR, IT } = ELanguage;
 
   return {
     metadataBase: new URL(BASE_URL),
@@ -69,21 +75,27 @@ export const generateMetadata = async ({
       ...DEFAULT_META_DATA.openGraph,
       title: metaTitle[lang],
       description: metaDescription[lang],
-      url: `/${lang}/${EUrlBaseParam.SAT_CHANNEL_LIST}`,
-      publishedTime: getFormattedDateStrYearFirst(),
+      url: `/${lang}/${SAT_CHANNEL_LIST}`,
+      publishedTime: getFormattedDateStrYearFirst('', lang),
     },
     alternates: {
-      canonical: `/${lang}/${EUrlBaseParam.SAT_CHANNEL_LIST}`,
+      canonical: `/${lang}/${SAT_CHANNEL_LIST}`,
       languages: {
-        en: `/${ELanguage.EN}/${EUrlBaseParam.SAT_CHANNEL_LIST}`,
-        uk: `/${ELanguage.UA}/${EUrlBaseParam.SAT_CHANNEL_LIST}`,
+        en: `/${EN}/${SAT_CHANNEL_LIST}`,
+        uk: `/${UA}/${SAT_CHANNEL_LIST}`,
+        ru: `/${RU}/${SAT_CHANNEL_LIST}`,
+        es: `/${ES}/${SAT_CHANNEL_LIST}`,
+        ar: `/${AR}/${SAT_CHANNEL_LIST}`,
+        de: `/${DE}/${SAT_CHANNEL_LIST}`,
+        fr: `/${FR}/${SAT_CHANNEL_LIST}`,
+        it: `/${IT}/${SAT_CHANNEL_LIST}`,
       },
     },
   };
 };
 
 export default async function Page({ searchParams, params }: IPageProps) {
-  const lang = getELangKey(params[EUrlBaseParam.LANG]);
+  const lang = getELangKey(params[LANG]);
 
   const searchQueryChannel = validSearchParam(
     EUrlSearchParam.CHANNEL,
@@ -174,7 +186,7 @@ export default async function Page({ searchParams, params }: IPageProps) {
 
         <StartArticleSection>
           <p className="text-center">
-            {lang === ELanguage.UA ? 'Всього каналів: ' : 'Total channels: '}
+            {START_SECTION_TEXT[lang]}
             <Suspense>
               <NumberOfItems requestFn={getFlySatChannelsFn} />
             </Suspense>
@@ -192,7 +204,7 @@ export default async function Page({ searchParams, params }: IPageProps) {
 // <CommentBlock
 //   lang={lang}
 //   numberOfComments={numberOfComments}
-//   revalidateUrl={`/${lang}/${EUrlBaseParam.SAT_CHANNEL_LIST}`}
+//   revalidateUrl={`/${lang}/${SAT_CHANNEL_LIST}`}
 //   dbCommentTableName={EDBTableTitles.COMMENTS_PACKAGES}
 //   articleId={CHANNEL_LIST_DB_ID}
 //   articleName={metaTitle[lang]}

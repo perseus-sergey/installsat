@@ -108,7 +108,7 @@ const PaginationComments = ({
                 className="pb-2 font-verdana"
                 style={{ borderTop: '2px groove #777777' }}
               >
-                <span className="text-stone-300 text-sm">{`(${getFormattedDateStrYearFirst(comment.date)})  `}</span>
+                <span className="text-stone-300 text-sm">{`(${getFormattedDateStrYearFirst(comment.date, lang)})  `}</span>
                 <span
                   className="text-stone-300 font-georgia"
                   style={commentTextShadow}

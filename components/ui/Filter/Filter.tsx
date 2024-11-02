@@ -1,13 +1,14 @@
 'use client';
 
 import { usePathname, useRouter } from 'next/navigation';
+
 import { EUrlSearchParam } from '@/models/url/urlSearch.model';
-import { ALL_SAT_CHANNEL_LIST_FILTERS } from '@/models/channels/channelList.model';
 import BaseButton from '../buttons/BaseButton/BaseButton';
 import TooltipSimple from '../tooltips/TooltipSimple/TooltipSimple';
 import useSearch from '@/libs/hooks/useSearch';
 import StyledInputField from '../StyledInputField/StyledInputField';
 import { ELanguage } from '@/models/language.model';
+import { ALL_SAT_CHANNEL_LIST_FILTERS } from '@/models/channels/channelListMeta.model';
 
 const { cancelBtnAriaLabel, searchIconStr } =
   ALL_SAT_CHANNEL_LIST_FILTERS.filterByChannelName;

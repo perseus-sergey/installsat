@@ -1,5 +1,7 @@
 'use server';
 
+import { revalidatePath } from 'next/cache';
+
 import {
   deleteItemFromDbTable,
   editArticleDB,
@@ -16,13 +18,12 @@ import {
   EArticleEditFields,
   editArticleSchema,
 } from '@/models/articles/articleEdit.model';
+import { EDBTableTitles } from '@/models/dbTblNames.model';
+import { ResultSetHeader } from 'mysql2';
 import {
   EChannelEditFields,
   editChannelSchema,
-} from '@/models/channels/channel.model';
-import { EDBTableTitles } from '@/models/dbTblNames.model';
-import { ResultSetHeader } from 'mysql2';
-import { revalidatePath } from 'next/cache';
+} from '@/models/channels/channelEdit.model';
 // import { redirect } from 'next/navigation';
 // import { z } from 'zod';
 

@@ -3,6 +3,7 @@ import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
 import { getStartOfWeekDate } from '@/libs/utils/scheduleDates';
 import { WRONG_CAT_IDS } from '@/models/articles/articleList.model';
 import { EDBTableTitles } from '@/models/dbTblNames.model';
+import { ELanguage } from '@/models/language.model';
 
 const {
   ARTICLE: TBL_ARTICLE,
@@ -81,7 +82,7 @@ export const getChannelsWithScheduleAndWeekDays = async () => {
     .map((_, index) => {
       const date = new Date(startWeekDate);
       date.setDate(date.getDate() + index);
-      const dateStr = getFormattedDateStrYearFirst(date);
+      const dateStr = getFormattedDateStrYearFirst(date, ELanguage.EN);
 
       return res.map((channel) => ({ cpu: `${channel.cpu}/${dateStr}` }));
     })
@@ -107,6 +108,6 @@ export const getTransNewsSiteMap = async () => {
   return res instanceof Error
     ? []
     : res.map((r) => ({
-        cpu: getFormattedDateStrYearFirst(r.date),
+        cpu: getFormattedDateStrYearFirst(r.date, ELanguage.EN),
       }));
 };

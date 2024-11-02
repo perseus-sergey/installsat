@@ -10,8 +10,6 @@ import { EUrlAdminParam } from '@/models/url/urlAdmin.model';
 export const dynamic = 'force-dynamic';
 
 // =================================================================
-// remove decode function from controllers
-// Split all models into smaller models
 // make script to translate all articles
 // add similar trans news links for fly channel page
 // remove tooltip hover for mobiles

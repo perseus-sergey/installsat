@@ -1,7 +1,7 @@
 import styles from './CommentBlock.module.scss';
 import CommentForm from '../CommentForm/CommentForm';
 import { EDBTableTitles } from '@/models/dbTblNames.model';
-import { COMMENTS_MODEL } from '@/models/ui/comments.model';
+import { COMMENTS_BANS_TEXT, COMMENTS_MODEL } from '@/models/ui/comments.model';
 // import { fetchUserLocation } from '@/libs/utils/getUserIP';
 import PaginationComments from '@/components/comments/PaginationComments/PaginationComments';
 import { ELanguage } from '@/models/language.model';
@@ -72,37 +72,54 @@ const CommentBlock = async ({
   );
 };
 
-const BansBlock = ({ lang }: { lang: ELanguage }) => (
-  <>
-    <h3>{lang === ELanguage.UA ? 'Заборонено:' : 'Prohibited:'}</h3>
-    <ol type="1" className="list-decimal pl-8">
-      <li>
-        {lang === ELanguage.UA
-          ? 'Рекламувати інші ресурси'
-          : 'Promote other resources'}
-      </li>
-      <li>
-        {lang === ELanguage.UA
-          ? 'Використовувати нецензурну лексику'
-          : 'Use obscene language'}
-      </li>
-      <li>
-        {lang === ELanguage.UA
-          ? 'Образливо висловлюватися щодо інтересів інших користувачів'
-          : 'To speak offensively about the interests of other users'}
-      </li>
-    </ol>
-    <p>
-      {lang === ELanguage.UA
-        ? 'Подібні коментарі будуть редагуватися або видалятися без попередження.'
-        : 'Such comments will be edited or deleted without notice.'}
-    </p>
-    <p>
-      {lang === ELanguage.UA
-        ? 'Зловмисникам доступ до даного ресурсу буде заблоковано.'
-        : 'Access to this resource will be blocked for intruders.'}
-    </p>
-  </>
-);
+// const BansBlock = ({ lang }: { lang: ELanguage }) => (
+//   <>
+//     <h3>{lang === ELanguage.UA ? 'Заборонено:' : 'Prohibited:'}</h3>
+//     <ol type="1" className="list-decimal pl-8">
+//       <li>
+//         {lang === ELanguage.UA
+//           ? 'Рекламувати інші ресурси'
+//           : 'Promote other resources'}
+//       </li>
+//       <li>
+//         {lang === ELanguage.UA
+//           ? 'Використовувати нецензурну лексику'
+//           : 'Use obscene language'}
+//       </li>
+//       <li>
+//         {lang === ELanguage.UA
+//           ? 'Образливо висловлюватися щодо інтересів інших користувачів'
+//           : 'To speak offensively about the interests of other users'}
+//       </li>
+//     </ol>
+//     <p>
+//       {lang === ELanguage.UA
+//         ? 'Подібні коментарі будуть редагуватися або видалятися без попередження.'
+//         : 'Such comments will be edited or deleted without notice.'}
+//     </p>
+//     <p>
+//       {lang === ELanguage.UA
+//         ? 'Зловмисникам доступ до даного ресурсу буде заблоковано.'
+//         : 'Access to this resource will be blocked for intruders.'}
+//     </p>
+//   </>
+// );
+
+const BansBlock = ({ lang }: { lang: ELanguage }) => {
+  const { title, items, warning, blockMessage } = COMMENTS_BANS_TEXT[lang];
+
+  return (
+    <>
+      <h3>{title}</h3>
+      <ol type="1" className="list-decimal pl-8">
+        {items.map((item, index) => (
+          <li key={index}>{item}</li>
+        ))}
+      </ol>
+      <p>{warning}</p>
+      <p>{blockMessage}</p>
+    </>
+  );
+};
 
 export default CommentBlock;

@@ -1,3 +1,5 @@
+import Image from 'next/image';
+
 import DangerHtml from '@/components/ui/DangerHtml/DangerHtml';
 import SatFinder from '@/components/mapComponents/SatFinder/SatFinder';
 import { Title } from '@/components/ui/Titles/Title';
@@ -6,15 +8,12 @@ import { SAT_FINDER_META_DATA } from '@/models/satFinder.model';
 import { EDBTableTitles } from '@/models/dbTblNames.model';
 import { Metadata } from 'next';
 // import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
-import BottomInfoPanel, {
-  INFO_PANEL_TITLES,
-} from '@/components/BottomInfoPanel/BottomInfoPanel';
+import BottomInfoPanel from '@/components/BottomInfoPanel/BottomInfoPanel';
 // import { getCommentsNumber } from '@/controllers/comments.controller';
 import BreadCrumbServer from '@/components/BreadCrumbs/BreadCrumbsServer';
 import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
 import { getELangKey } from '@/libs/utils/getLanguage';
 import h1Img from 'public/Images/starthere_6100.png';
-import Image from 'next/image';
 import SatelliteSelector from '@/components/CustomSelectors/SatelliteSelector';
 import ArticleWrapper from '@/components/article/ArticleWrapper';
 import { ELanguage } from '@/models/language.model';
@@ -23,12 +22,15 @@ import { EUrlBaseParam, MAIN_URL } from '@/models/url/url.model';
 import { getSatFinderArticle } from '@/controllers/satFinder.controller';
 import { updateViewCount } from '@/controllers/viewUpdate.controller';
 import { EUrlSearchParam } from '@/models/url/urlSearch.model';
+import { INFO_PANEL_TITLES } from '@/models/ui/infoPanel.model';
 
 const BASE_URL = process.env.BASE_URL || MAIN_URL;
 
 export interface IPageProps {
   params: { [key in EUrlBaseParam]: string };
 }
+
+const { LANG, SAT_FINDER } = EUrlBaseParam;
 
 const { views: viewsTitle } = INFO_PANEL_TITLES;
 
@@ -43,7 +45,9 @@ export const revalidate = 604800; // 3600 * 24 * 7 invalidate cache every 7 days
 export const generateMetadata = async ({
   params,
 }: IPageProps): Promise<Metadata> => {
-  const lang = getELangKey(params[EUrlBaseParam.LANG]);
+  const lang = getELangKey(params[LANG]);
+
+  const { UA, EN, RU, ES, AR, DE, FR, IT } = ELanguage;
 
   const { title, description, keywords } = await getSatFinderArticle(lang);
 
@@ -56,21 +60,27 @@ export const generateMetadata = async ({
       ...DEFAULT_META_DATA.openGraph,
       title,
       description,
-      url: `/${lang}/${EUrlBaseParam.SAT_FINDER}`,
-      publishedTime: getFormattedDateStrYearFirst(),
+      url: `/${lang}/${SAT_FINDER}`,
+      publishedTime: getFormattedDateStrYearFirst('', lang),
     },
     alternates: {
-      canonical: `/${lang}/${EUrlBaseParam.SAT_FINDER}`,
+      canonical: `/${lang}/${SAT_FINDER}`,
       languages: {
-        en: `/${ELanguage.EN}/${EUrlBaseParam.SAT_FINDER}`,
-        uk: `/${ELanguage.UA}/${EUrlBaseParam.SAT_FINDER}`,
+        en: `/${EN}/${SAT_FINDER}`,
+        uk: `/${UA}/${SAT_FINDER}`,
+        ru: `/${RU}/${SAT_FINDER}`,
+        es: `/${ES}/${SAT_FINDER}`,
+        ar: `/${AR}/${SAT_FINDER}`,
+        de: `/${DE}/${SAT_FINDER}`,
+        fr: `/${FR}/${SAT_FINDER}`,
+        it: `/${IT}/${SAT_FINDER}`,
       },
     },
   };
 };
 
 export default async function Page({ params }: IPageProps) {
-  const lang = getELangKey(params[EUrlBaseParam.LANG]);
+  const lang = getELangKey(params[LANG]);
 
   const { title, text, view } = await getSatFinderArticle(lang);
 
@@ -86,6 +96,7 @@ export default async function Page({ params }: IPageProps) {
   return (
     <>
       <BreadCrumbServer breadCrumbList={[title]} lang={lang} />
+
       <ArticleWrapper lang={lang}>
         <Title style={{ padding: '4rem 1rem' }}>
           {title}
@@ -109,6 +120,7 @@ export default async function Page({ params }: IPageProps) {
         <DangerHtml text={text} className="article-text" />
 
         <BottomInfoPanel
+          lang={lang}
           items={[{ name: viewsTitle[lang], value: view + 1 }]}
         />
       </ArticleWrapper>
@@ -119,7 +131,7 @@ export default async function Page({ params }: IPageProps) {
 // <CommentBlock
 //   lang={lang}
 //   numberOfComments={numberOfComments}
-//   revalidateUrl={`/${lang}/${EUrlBaseParam.SAT_FINDER}`}
+//   revalidateUrl={`/${lang}/${SAT_FINDER}`}
 //   dbCommentTableName={EDBTableTitles.COMMENTS_ARTICLE}
 //   articleId={dbArticleId}
 //   articleName={title}

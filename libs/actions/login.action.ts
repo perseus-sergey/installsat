@@ -1,5 +1,9 @@
 'use server';
 
+import { AuthError } from 'next-auth';
+import { ZodError, z } from 'zod';
+import bcryptjs from 'bcryptjs';
+
 import { signIn } from '@/auth';
 import { createDbUser, getDbUser } from '@/controllers/login.controller';
 import {
@@ -7,9 +11,6 @@ import {
   fromErrorToFormState,
   toFormState,
 } from '@/controllers/toast.controller';
-import { AuthError } from 'next-auth';
-import { ZodError, z } from 'zod';
-import bcryptjs from 'bcryptjs';
 import { ELoginFormNames } from '@/models/login.model';
 
 const { PASSWORD, NAME, EMAIL } = ELoginFormNames;

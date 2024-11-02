@@ -1,9 +1,7 @@
 import { notFound } from 'next/navigation';
 import { cache, Suspense } from 'react';
 
-import BottomInfoPanel, {
-  INFO_PANEL_TITLES,
-} from '@/components/BottomInfoPanel/BottomInfoPanel';
+import BottomInfoPanel from '@/components/BottomInfoPanel/BottomInfoPanel';
 import DangerHtml from '@/components/ui/DangerHtml/DangerHtml';
 import FillingValidImage from '@/components/ui/Images/FillingValidImage';
 import NoteBlock from '@/components/ui/NoteBlock/NoteBlock';
@@ -12,13 +10,7 @@ import { Title } from '@/components/ui/Titles/Title';
 import TvScheduleLink from '@/components/TvScheduleLink/TvScheduleLink';
 import { updateViewCount } from '@/controllers/viewUpdate.controller';
 import { getDBOnlineChannel } from '@/controllers/channel.controller';
-import {
-  CHANNEL_IMAGES,
-  CHANNEL_RESPONSIBILITIES,
-  META_CHANNEL_ONLINE,
-  SIMILAR_ARTICLE_TITLE,
-  SIMILAR_CHANNELS_TITLE,
-} from '@/models/channels/channel.model';
+import { CHANNEL_RESPONSIBILITIES } from '@/models/channels/channel.model';
 import { EDBTableTitles } from '@/models/dbTblNames.model';
 import { EUrlBaseParam, MAIN_URL } from '@/models/url/url.model';
 import { Metadata } from 'next';
@@ -33,6 +25,16 @@ import ArticleWrapper from '@/components/article/ArticleWrapper';
 import ScheduleShort from '@/components/Schedule/ScheduleShort';
 import { DEFAULT_META_DATA } from '@/models/defaultMeta.model';
 import { ELanguage } from '@/models/language.model';
+import { INFO_PANEL_TITLES } from '@/models/ui/infoPanel.model';
+import {
+  CHANNEL_IMAGES,
+  SIMILAR_ARTICLE_TITLE,
+  SIMILAR_CHANNELS_TITLE,
+} from '@/models/channels/metaChannel.model';
+import {
+  BREAD_ONLINE_CHANNEL_LIST,
+  META_CHANNEL_ONLINE,
+} from '@/models/channels/onlineChannel.model';
 
 const BASE_URL = process.env.BASE_URL || MAIN_URL;
 const { LANG, SLUG, CHANNELS_TV_PROGRAM, ONLINE_CHANNEL_LIST } = EUrlBaseParam;
@@ -64,6 +66,8 @@ export const generateMetadata = async ({
   const slug = params[SLUG];
   const lang = getELangKey(params[LANG]);
 
+  const { UA, EN, RU, ES, AR, DE, FR, IT } = ELanguage;
+
   const sqlResult = await getDBOnlineChannel(slug, lang);
   if (!sqlResult) return DEFAULT_META_DATA[lang];
 
@@ -83,13 +87,19 @@ export const generateMetadata = async ({
       title,
       description,
       url: `/${lang}/${slugPath}`,
-      publishedTime: getFormattedDateStrYearFirst(),
+      publishedTime: getFormattedDateStrYearFirst('', lang),
     },
     alternates: {
       canonical: `/${lang}/${slugPath}`,
       languages: {
-        en: `/${ELanguage.EN}/${slugPath}`,
-        uk: `/${ELanguage.UA}/${slugPath}`,
+        en: `/${EN}/${slugPath}`,
+        uk: `/${UA}/${slugPath}`,
+        ru: `/${RU}/${slugPath}`,
+        es: `/${ES}/${slugPath}`,
+        ar: `/${AR}/${slugPath}`,
+        de: `/${DE}/${slugPath}`,
+        fr: `/${FR}/${slugPath}`,
+        it: `/${IT}/${slugPath}`,
       },
     },
   };
@@ -119,16 +129,7 @@ export default async function Page({ params }: IChannelProps) {
     <>
       <BreadCrumbServer
         lang={lang}
-        breadCrumbList={[
-          {
-            href: EUrlBaseParam.ONLINE_CHANNEL_LIST,
-            title: {
-              [ELanguage.UA]: 'Список онлайн каналів',
-              [ELanguage.EN]: 'Online channel list',
-            },
-          },
-          getH1Cached(title)[lang],
-        ]}
+        breadCrumbList={[BREAD_ONLINE_CHANNEL_LIST, getH1Cached(title)[lang]]}
       />
       <ArticleWrapper lang={lang}>
         <Title>
@@ -161,7 +162,7 @@ export default async function Page({ params }: IChannelProps) {
           isOnlinePage
           lang={lang}
           title={title}
-          href={`/${lang}/${CHANNELS_TV_PROGRAM}/${slug}/${getFormattedDateStrYearFirst()}`}
+          href={`/${lang}/${CHANNELS_TV_PROGRAM}/${slug}/${getFormattedDateStrYearFirst('', lang)}`}
         />
 
         <ChannelOnlineParams lang={lang} channelDBParams={sqlResult} />
@@ -171,6 +172,7 @@ export default async function Page({ params }: IChannelProps) {
         </NoteBlock>
 
         <BottomInfoPanel
+          lang={lang}
           items={[
             {
               name: viewsTitle[lang],

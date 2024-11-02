@@ -1,5 +1,6 @@
-import { ELanguage } from '@/models/language.model';
 import { ReactNode } from 'react';
+import { ELanguage } from '@/models/language.model';
+import { localeStringMaker } from '@/libs/utils/localeStringMaker';
 
 export interface IBottomInfoPanelItem {
   name: string;
@@ -8,17 +9,10 @@ export interface IBottomInfoPanelItem {
 
 interface IBottomInfoPanel {
   items: IBottomInfoPanelItem[];
+  lang: ELanguage;
 }
 
-export const INFO_PANEL_TITLES = {
-  package: { [ELanguage.UA]: 'Пакет', [ELanguage.EN]: 'Package' },
-  theme: { [ELanguage.UA]: 'Тема', [ELanguage.EN]: 'Theme' },
-  views: { [ELanguage.UA]: 'Переглядів', [ELanguage.EN]: 'Views' },
-  date: { [ELanguage.UA]: 'Дата', [ELanguage.EN]: 'Date' },
-  comments: { [ELanguage.UA]: 'Коментарів', [ELanguage.EN]: 'Comments' },
-};
-
-const BottomInfoPanel = ({ items }: IBottomInfoPanel) => {
+const BottomInfoPanel = ({ items, lang }: IBottomInfoPanel) => {
   const filteredItems = items.filter((item) => item.value);
   const lastId = filteredItems.length - 1;
 
@@ -34,14 +28,12 @@ const BottomInfoPanel = ({ items }: IBottomInfoPanel) => {
       {filteredItems.map(({ name, value }, i) => (
         <li key={name}>
           <figure
-            className={`text-center${i !== lastId ? ` border-r border-solid border-stone-300 pr-2` : ''}`}
+            className={`text-center ${i !== lastId ? ` ${lang === ELanguage.AR ? 'border-l pl-2' : 'border-r pr-2'} border-solid border-stone-300` : ''}`}
             key={name}
           >
             <span>{name}: </span>
             <figcaption className="inline-block text-white">
-              {typeof value === 'number'
-                ? value.toLocaleString('en-US')
-                : value}
+              {typeof value === 'number' ? localeStringMaker(value) : value}
             </figcaption>
           </figure>
         </li>

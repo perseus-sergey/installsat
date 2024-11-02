@@ -1,3 +1,5 @@
+import { cache } from 'react';
+
 import { poolExecute } from '@/libs/db/mysqldb';
 import {
   IAllNewsModel,
@@ -5,9 +7,10 @@ import {
 } from '@/models/articles/articleList.model';
 import { ELanguage } from '@/models/language.model';
 import { EDBTableTitles } from '@/models/dbTblNames.model';
-import { cache } from 'react';
 
 const { ARTICLE: TBL_ARTICLE, ARTICLE_CATEGORIES } = EDBTableTitles;
+
+const { UA } = ELanguage;
 
 interface ISingleCatArticlesModel {
   id: number;
@@ -19,8 +22,6 @@ interface ISingleCatArticlesModel {
 
 export const getCurrentCatParams = cache(
   async (catCpu: string, lang: ELanguage) => {
-    const { UA } = ELanguage;
-
     const sql = `
     SELECT id,
       ${lang === UA ? 'title' : 'title_en'} AS title,
@@ -70,11 +71,9 @@ export const getChunkOfNews = async ({
   SELECT 
   U.id,
   U.cat,
-  U.title,
+  ${lang === UA ? 'U.title' : 'U.title_en'} AS title,
+  ${lang === UA ? 'U.description' : 'U.description_en'} AS description,
   U.cpu,
-  U.description,
-  U.title_en,
-  U.description_en,
   U.date,
   U.author,
   U.logo,

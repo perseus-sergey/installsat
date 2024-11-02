@@ -7,9 +7,13 @@ import EmptyData from '@/components/errors/EmptyData/EmptyData';
 import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
 import SeoLink from '@/components/ui/SeoLink/SeoLink';
 import { ELanguage } from '@/models/language.model';
-import { INFO_PANEL_TITLES } from '@/components/BottomInfoPanel/BottomInfoPanel';
-import { ARTICLE_CARD_IMAGES } from '@/models/articles/article.model';
+import {
+  ARTICLE_CARD_IMAGES,
+  getInfoPanelLinkTitle,
+  getSeoCardLinkTitle,
+} from '@/models/articles/article.model';
 import { IAllNewsModel } from '@/models/articles/articleList.model';
+import { INFO_PANEL_TITLES } from '@/models/ui/infoPanel.model';
 
 const { h1Image } = ARTICLE_CARD_IMAGES;
 
@@ -32,11 +36,8 @@ const ArticleList = ({ articleList, lang }: IArticleListProps) =>
         ({
           id,
           title,
-          title_en,
           description,
-          description_en,
           category_title,
-          category_title_en,
           view,
           date,
           // comment_count,
@@ -44,28 +45,17 @@ const ArticleList = ({ articleList, lang }: IArticleListProps) =>
           logo,
           cpu,
         }) => {
-          const titleLang = lang === ELanguage.UA ? title : title_en || title;
-          const descriptionLang =
-            lang === ELanguage.UA ? description : description_en || description;
-          const catTitleLang =
-            lang === ELanguage.UA
-              ? category_title
-              : category_title_en || category_title;
-
-          const currDate = getFormattedDateStrYearFirst(date);
+          const currDate = getFormattedDateStrYearFirst(date, lang);
 
           return (
             <li key={id}>
               <ArticleCard
-                seoCardLinkTitle={
-                  lang === ELanguage.UA
-                    ? `Перейти до перегляду статті "${titleLang}"`
-                    : `Go to the view of the article "${titleLang}"`
-                }
+                lang={lang}
+                seoCardLinkTitle={getSeoCardLinkTitle(title)[lang]}
                 articleTitle={
                   <>
                     <div className="bg-[url('/Images/package_network_4729.png')] w-8 h-8 flex-shrink-0" />
-                    {titleLang}
+                    {title}
                   </>
                 }
                 image={
@@ -75,13 +65,13 @@ const ArticleList = ({ articleList, lang }: IArticleListProps) =>
                       src: `${h1Image.currentImg.path}${logo}`,
                     }}
                     defaultImage={h1Image.defaultImg}
-                    alt={`${h1Image.altStart[lang]} ${titleLang}`}
+                    alt={`${h1Image.altStart[lang]} ${title}`}
                     isFillParent
                   />
                 }
                 articleDescription={
                   <DangerHtml
-                    text={cutText(descriptionLang, 250)}
+                    text={cutText(description, 250)}
                     wrapperTagName="span"
                   />
                 }
@@ -92,14 +82,10 @@ const ArticleList = ({ articleList, lang }: IArticleListProps) =>
                     value: (
                       <SeoLink
                         className="border-b border-stone-300 hover:border-white"
-                        title={`${
-                          lang === ELanguage.UA
-                            ? 'Перейти до перегляду списку статей категорії'
-                            : 'Go to view the list of articles in the category'
-                        } "${catTitleLang}"`}
+                        title={getInfoPanelLinkTitle(category_title)[lang]}
                         href={`/${lang}/${EUrlBaseParam.NEWS_AND_ARTICLES}/${category_cpu}`}
                       >
-                        {catTitleLang}
+                        {category_title}
                       </SeoLink>
                     ),
                   },

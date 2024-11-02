@@ -1,9 +1,11 @@
+import Image from 'next/image';
+
 import styles from './ChannelOnlineLink.module.scss';
-import { ONLINE_CHANNEL_LINK } from '@/models/channels/channel.model';
 import { ELanguage } from '@/models/language.model';
 import SeoLink from '../../SeoLink/SeoLink';
 import onlineImg from 'public/Images/network-wireless_32.png';
-import Image from 'next/image';
+import { ONLINE_CHANNEL_LINK } from '@/models/channels/metaChannel.model';
+import { getChannelOnlineLinkTitle } from '@/models/channels/onlineChannelListMeta.model';
 
 const { imageAlt, getOnlineLinkText } = ONLINE_CHANNEL_LINK;
 
@@ -24,11 +26,7 @@ const ChannelOnlineLink = ({
       style={{ textShadow: '1px 1px 0 #f9f9f9' }}
       data-testid="ChannelOnlineLink"
       href={href}
-      title={
-        lang === ELanguage.UA
-          ? `Перейти до сторінки з онлайн трансляцією каналу "${channelName}"`
-          : `Go to the online broadcasting page of "${channelName}" channel`
-      }
+      title={getChannelOnlineLinkTitle(channelName)[lang]}
     >
       <Image src={onlineImg} alt={imageAlt[lang]} className="flex-shrink-0" />
       {getOnlineLinkText(channelName)[lang]}

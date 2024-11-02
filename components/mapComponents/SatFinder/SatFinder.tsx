@@ -1,19 +1,20 @@
 'use client';
 
-import { SAT_FINDER_META_DATA } from '@/models/satFinder.model';
 import {
   MapCameraChangedEvent,
   MapMouseEvent,
 } from '@vis.gl/react-google-maps';
 import { Suspense, useCallback, useEffect, useState } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import Image from 'next/image';
+
+import { SAT_FINDER_META_DATA } from '@/models/satFinder.model';
 import { EUrlSearchParam } from '@/models/url/urlSearch.model';
 import Fieldset from '../../ui/Fieldset/Fieldset';
 import GoogleMap from '../GoogleMap/GoogleMap';
 import StyledInputField from '../../ui/StyledInputField/StyledInputField';
 import { ELanguage } from '@/models/language.model';
 import BaseButton from '../../ui/buttons/BaseButton/BaseButton';
-import Image from 'next/image';
 import searchBtnImg from 'public/Images/global-search.png';
 
 interface ISatFinderProps {
@@ -159,20 +160,14 @@ const SatFinder = ({
               type="submit"
               id="submitBtn"
             >
-              <Image
-                src={searchBtnImg}
-                alt={
-                  lang === ELanguage.UA
-                    ? 'Схематичне зображення збільшуваного скла поруч із глобусом'
-                    : 'Schematic illustration of a magnifying glass next to a globe'
-                }
-              />
+              <Image src={searchBtnImg} alt={submitButton.imgAlt[lang]} />
             </BaseButton>
           </div>
         </form>
 
         <Suspense>{satelliteSelector}</Suspense>
       </Fieldset>
+
       <GoogleMap
         lang={lang}
         apiKey={apiKey}

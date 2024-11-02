@@ -1,6 +1,7 @@
+import dynamic from 'next/dynamic';
+
 import { ELanguage } from '@/models/language.model';
 import AdBannerWrapper from '../GoogleAdsense/AdBannerWrapper';
-import dynamic from 'next/dynamic';
 
 const AdBanner = dynamic(() => import('@/components/GoogleAdsense/AdBanner'), {
   ssr: false,
@@ -14,7 +15,7 @@ interface IProps extends React.HTMLAttributes<HTMLElement> {
 }
 
 const ArticleWrapper = ({ children, lang, className }: IProps) => (
-  <article className="flex">
+  <article className="flex" dir={lang === ELanguage.AR ? 'rtl' : 'ltr'}>
     <div className="w-0 min-h-[85vh]" />
 
     <div className={`article w-full ${className ? className : ''}`}>

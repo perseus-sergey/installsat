@@ -1,15 +1,16 @@
 'use client';
 
+import React, { useState } from 'react';
+
 // import Video from 'next-video';
 import FakePlayer from '../online/FakePlayer/FakePlayer';
 import BaseButton from '../ui/buttons/BaseButton/BaseButton';
-import React, { useState } from 'react';
+import { IOnlineChannel } from '../../models/channels/channel.model';
+import { ELanguage } from '@/models/language.model';
 import {
-  IOnlineChannel,
   ONLINE_TABS,
   YOUTUBE_PLAYER,
-} from '../../models/channels/channel.model';
-import { ELanguage } from '@/models/language.model';
+} from '@/models/channels/onlineChannel.model';
 
 const {
   width: yWidth,

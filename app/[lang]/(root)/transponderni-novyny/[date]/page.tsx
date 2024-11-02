@@ -24,14 +24,18 @@ interface IPageParams {
   params: { [key in EUrlBaseParam]: string };
 }
 
+const { LANG, TRANSPONDER_NEWS } = EUrlBaseParam;
+
 // export const dynamic = 'force-dynamic';
 export const revalidate = 43200; // 3600 * 12 invalidate cache every 12 hours
 
 export const generateMetadata = async ({ params }: IPageParams) => {
   const { date } = params;
-  const lang = getELangKey(params[EUrlBaseParam.LANG]);
+  const lang = getELangKey(params[LANG]);
 
-  const formattedDate = getCurrDateCached(date);
+  const { UA, EN, RU, ES, AR, DE, FR, IT } = ELanguage;
+
+  const formattedDate = getCurrDateCached(date, lang);
   const title = `${metaTitleStart[lang]} ${formattedDate}`;
   const description = `${metaDescriptionStart[lang]} ${formattedDate}`;
 
@@ -44,21 +48,27 @@ export const generateMetadata = async ({ params }: IPageParams) => {
       ...DEFAULT_META_DATA.openGraph,
       title,
       description,
-      url: `/${lang}/${EUrlBaseParam.TRANSPONDER_NEWS}/${date}`,
+      url: `/${lang}/${TRANSPONDER_NEWS}/${date}`,
       publishedTime: date,
     },
     alternates: {
-      canonical: `/${lang}/${EUrlBaseParam.TRANSPONDER_NEWS}/${date}`,
+      canonical: `/${lang}/${TRANSPONDER_NEWS}/${date}`,
       languages: {
-        en: `/${ELanguage.EN}/${EUrlBaseParam.TRANSPONDER_NEWS}/${date}`,
-        uk: `/${ELanguage.UA}/${EUrlBaseParam.TRANSPONDER_NEWS}/${date}`,
+        en: `/${EN}/${TRANSPONDER_NEWS}/${date}`,
+        uk: `/${UA}/${TRANSPONDER_NEWS}/${date}`,
+        ru: `/${RU}/${TRANSPONDER_NEWS}/${date}`,
+        es: `/${ES}/${TRANSPONDER_NEWS}/${date}`,
+        ar: `/${AR}/${TRANSPONDER_NEWS}/${date}`,
+        de: `/${DE}/${TRANSPONDER_NEWS}/${date}`,
+        fr: `/${FR}/${TRANSPONDER_NEWS}/${date}`,
+        it: `/${IT}/${TRANSPONDER_NEWS}/${date}`,
       },
     },
   };
 };
 
 export default async function Page({ params }: IPageParams) {
-  const lang = getELangKey(params[EUrlBaseParam.LANG]);
+  const lang = getELangKey(params[LANG]);
   const newsArray = await getTransNewsForSingleDay(params.date, lang);
 
   const formattedDate = getDateInISO(params.date);

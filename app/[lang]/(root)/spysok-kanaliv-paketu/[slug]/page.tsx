@@ -1,17 +1,13 @@
+import { Suspense, cache } from 'react';
+
 import { Title } from '@/components/ui/Titles/Title';
 import {
   getPackageChannels,
   getPackageParams,
   getT2Channels,
 } from '@/controllers/channelList.controller';
-import {
-  META_PACKAGE_CHANNEL_LIST,
-  PACKAGE_CHANNEL_LIST_DATA,
-  PACKAGE_CHANNEL_LIST_IMAGES,
-  T2_SLUG,
-} from '@/models/channels/channelList.model';
+import { T2_SLUG } from '@/models/channels/channelList.model';
 import type { Metadata } from 'next';
-import { Suspense, cache } from 'react';
 import { getELangKey } from '@/libs/utils/getLanguage';
 import { validSearchParam } from '@/libs/utils/validSearchParam';
 // import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
@@ -33,6 +29,13 @@ import { ELanguage } from '@/models/language.model';
 import { EUrlBaseParam, MAIN_URL } from '@/models/url/url.model';
 import { EDBTableTitles } from '@/models/dbTblNames.model';
 import { EUrlSearchParam, TSearchParams } from '@/models/url/urlSearch.model';
+import {
+  BREAD_PACKAGE_CHANNEL_LIST,
+  getSimilarPackagesTitle,
+  META_PACKAGE_CHANNEL_LIST,
+  PACKAGE_CHANNEL_LIST_DATA,
+  PACKAGE_CHANNEL_LIST_IMAGES,
+} from '@/models/channels/packageChannelListMeta.model';
 
 const BASE_URL = process.env.BASE_URL || MAIN_URL;
 
@@ -44,14 +47,6 @@ const {
 const { h1Image } = PACKAGE_CHANNEL_LIST_IMAGES;
 
 const { SLUG, LANG, PACKAGE_CHANNEL_LIST, CHANNEL_PARAMS } = EUrlBaseParam;
-
-const BREAD_PACKAGE_CHANNEL_LIST = {
-  href: EUrlBaseParam.PACKAGE_CHANNEL_LIST,
-  title: {
-    [ELanguage.UA]: 'Список пакетів',
-    [ELanguage.EN]: 'List of packages',
-  },
-};
 
 const getH1Cached = cache(getH1);
 
@@ -65,6 +60,8 @@ export const revalidate = 172800; // 3600 * 48 invalidate cache every 2 days
 export const generateMetadata = async ({
   params,
 }: IPageProps): Promise<Metadata> => {
+  const { UA, EN, RU, ES, AR, DE, FR, IT } = ELanguage;
+
   const slug = params[SLUG];
   const lang = getELangKey(params[LANG]);
 
@@ -89,13 +86,19 @@ export const generateMetadata = async ({
       title: `${cat_title}. ${metaTitle[lang]}`,
       description: cat_description,
       url: `/${lang}/${slugPath}`,
-      publishedTime: getFormattedDateStrYearFirst(),
+      publishedTime: getFormattedDateStrYearFirst('', lang),
     },
     alternates: {
       canonical: `/${lang}/${slugPath}`,
       languages: {
-        en: `/${ELanguage.EN}/${slugPath}`,
-        uk: `/${ELanguage.UA}/${slugPath}`,
+        en: `/${EN}/${slugPath}`,
+        uk: `/${UA}/${slugPath}`,
+        ru: `/${RU}/${slugPath}`,
+        es: `/${ES}/${slugPath}`,
+        ar: `/${AR}/${slugPath}`,
+        de: `/${DE}/${slugPath}`,
+        fr: `/${FR}/${slugPath}`,
+        it: `/${IT}/${slugPath}`,
       },
     },
   };
@@ -194,17 +197,13 @@ export default async function Page({ params, searchParams }: IPageProps) {
       </ArticleWrapper>
 
       {similarLinks.length ? (
-        <SimilarBlock blockTitle={similarLinksTitle[lang]}>
+        <SimilarBlock blockTitle={similarLinksTitle[lang]} lang={lang}>
           {similarLinks.map((link) => (
             <li key={link.cpu}>
               <SeoLink
                 className="text-indigo-700 hover:text-red-500"
                 href={`/${lang}/${PACKAGE_CHANNEL_LIST}/${link.cpu}`}
-                title={
-                  lang === ELanguage.UA
-                    ? `Перейти до списку каналів пакету "${link.title}"`
-                    : `Go to the package channels list "${link.title}"`
-                }
+                title={getSimilarPackagesTitle(link.title)[lang]}
               >
                 {beforeLinkText[lang]} {link.title}
               </SeoLink>

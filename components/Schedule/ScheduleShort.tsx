@@ -13,7 +13,7 @@ const {
   exceptGenreIDs,
   exceptHoursBeforeNow,
   exceptRowsLimit,
-  h2Start,
+  getH2,
 } = SCHEDULE_META.scheduleShort;
 
 interface IScheduleShortProps {
@@ -60,9 +60,7 @@ const ScheduleShort = async ({
   return (
     <div>
       <>
-        <TitleH2>
-          {h2Start[lang]} ✧{title}✧
-        </TitleH2>
+        <TitleH2>{getH2(title)[lang]}</TitleH2>
         <div
           style={{
             padding: '20px',

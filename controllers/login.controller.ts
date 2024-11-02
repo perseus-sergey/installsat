@@ -2,6 +2,7 @@
 
 import { poolExecute } from '@/libs/db/mysqldb';
 import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
+import { DEFAULT_LANG } from '@/models/language.model';
 import { IUser } from '@/models/login.model';
 import { cache } from 'react';
 
@@ -21,5 +22,11 @@ export const createDbUser = async (
 ) =>
   await poolExecute(
     `INSERT INTO userlist (email,  password, name, role, registration_date) VALUES (?,?,?,?,?)`,
-    [email, password, name, `${roleNumber}`, getFormattedDateStrYearFirst()]
+    [
+      email,
+      password,
+      name,
+      `${roleNumber}`,
+      getFormattedDateStrYearFirst('', DEFAULT_LANG),
+    ]
   );

@@ -1,6 +1,6 @@
 'use client';
 
-import { FAKE_PLAYER } from '@/models/channels/channel.model';
+import { FAKE_PLAYER } from '@/models/channels/onlineChannel.model';
 import BaseButton from '../../ui/buttons/BaseButton/BaseButton';
 import styles from './FakePlayer.module.scss';
 import { ELanguage } from '@/models/language.model';

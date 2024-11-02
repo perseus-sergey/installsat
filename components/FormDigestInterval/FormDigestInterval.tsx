@@ -1,3 +1,5 @@
+import { Suspense } from 'react';
+
 import {
   TRANS_NEWS_LIST_FILTERS,
   getDigestIntervalOptions,
@@ -6,16 +8,15 @@ import { EUrlSearchParam } from '@/models/url/urlSearch.model';
 import Fieldset from '../ui/Fieldset/Fieldset';
 import { SelectorSingle } from '../SatelliteSelector/SelectorSingle';
 import ResetSearchParamsBtn from './ResetSearchParamsBtn';
-import { Suspense } from 'react';
 import SatelliteSelector from '../CustomSelectors/SatelliteSelector';
 import { getSatsForForm } from '@/controllers/satDigest.controller';
 import { ELanguage } from '@/models/language.model';
-import { ESelectType } from '@/models/reactSelect.model';
+import {
+  ESelectType,
+  INTERVAL_SELECTOR_CAPTION,
+} from '@/models/reactSelect.model';
 
-const {
-  fieldsetTitle,
-  select: { timeIntervalSelect },
-} = TRANS_NEWS_LIST_FILTERS;
+const { fieldsetTitle } = TRANS_NEWS_LIST_FILTERS;
 interface IFormDigestIntervalProps {
   lang: ELanguage;
 }
@@ -40,7 +41,7 @@ const FormDigestInterval = ({ lang }: IFormDigestIntervalProps) => {
               closeMenuOnSelect
               searchParamName={EUrlSearchParam.INTERVAL}
               itemList={digestIntervalOptions}
-              caption={timeIntervalSelect.title[lang]}
+              caption={INTERVAL_SELECTOR_CAPTION[lang]}
             />
           ) : null}
         </div>

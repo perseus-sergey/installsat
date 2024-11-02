@@ -6,6 +6,7 @@ import { ICommentsModel, ISubscribersEmails } from '@/models/ui/comments.model';
 import { EDBTableTitles } from '@/models/dbTblNames.model';
 import { ResultSetHeader } from 'mysql2';
 import { cache } from 'react';
+import { DEFAULT_LANG } from '@/models/language.model';
 
 export const getComments = cache(
   async (
@@ -72,7 +73,7 @@ export const insertComment = async (
       author,
       email,
       text,
-      getFormattedDateStrYearFirst(),
+      getFormattedDateStrYearFirst('', DEFAULT_LANG),
       ip,
       country,
     ]

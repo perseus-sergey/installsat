@@ -4,6 +4,7 @@ import { EUrlBaseParam } from '@/models/url/url.model';
 import { ELanguage } from '@/models/language.model';
 import SimilarBlock from './SimilarBlock';
 import { getSimilarArticles } from '@/controllers/similarArticles.controller';
+import { getSeoCardLinkTitle } from '@/models/articles/article.model';
 
 interface ISimilarArticlesProps {
   similarTitle: string;
@@ -20,26 +21,22 @@ const SimilarArticles = async ({
   lang,
   articleId,
 }: ISimilarArticlesProps) => {
-  const similarArticles = await getSimilarArticles(logoSrc, articleId);
+  const similarArticles = await getSimilarArticles(logoSrc, articleId, lang);
 
   if (similarArticles.length === 0) return null;
 
   return (
-    <SimilarBlock blockTitle={similarTitle}>
+    <SimilarBlock blockTitle={similarTitle} lang={lang}>
       {similarArticles.map((art) => (
         <li key={art.cpu}>
           <SeoLink
             className="text-indigo-700 hover:text-red-500"
             href={`/${lang}/${ARTICLE}/${art.cpu}`}
-            title={
-              lang === ELanguage.UA
-                ? `Перейти до перегляду статті "${art.title}"`
-                : `Go to the view of the article "${art.title_en || art.title}"`
-            }
+            title={getSeoCardLinkTitle(art.title)[lang]}
           >
-            {lang === ELanguage.UA ? art.title : art.title_en || art.title}
+            {art.title}
           </SeoLink>
-          <span>{` (${getFormattedDateStrYearFirst(art.date)})`}</span>
+          <span>{` (${getFormattedDateStrYearFirst(art.date, lang)})`}</span>
         </li>
       ))}
     </SimilarBlock>

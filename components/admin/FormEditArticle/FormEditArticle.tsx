@@ -17,6 +17,7 @@ import {
   IArticleCategory,
   TArticleTableModel,
 } from '@/models/articles/articleEdit.model';
+import { DEFAULT_LANG } from '@/models/language.model';
 
 interface IProps {
   articleId: string;
@@ -41,7 +42,7 @@ const FormEditArticle = ({
       initArticleData[0].description.replace(/"/g, '') || '',
     [EArticleEditFields.author]: initArticleData[0].author || '',
     [EArticleEditFields.date]:
-      getFormattedDateStrYearFirst(initArticleData[0].date) || '',
+      getFormattedDateStrYearFirst(initArticleData[0].date, DEFAULT_LANG) || '',
     [EArticleEditFields.cat]: initArticleData[0].cat || '',
     [EArticleEditFields.folder]: initArticleData[0].folder || '',
     [EArticleEditFields.text]: initArticleData[0].text || '',

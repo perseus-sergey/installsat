@@ -12,9 +12,26 @@ import GoogleAdsense from '@/components/GoogleAdsense/GoogleAdsense';
 
 const Footer = dynamic(() => import('@/components/Footer/Footer'));
 
+const languageMap: { [key in ELanguage]: string } = {
+  [ELanguage.UA]: 'uk',
+  [ELanguage.EN]: 'en',
+  [ELanguage.RU]: 'ru',
+  [ELanguage.ES]: 'es',
+  [ELanguage.AR]: 'ar',
+  [ELanguage.DE]: 'de',
+  [ELanguage.FR]: 'fr',
+  [ELanguage.IT]: 'it',
+};
+
 const GOOGLE_GTM_ID = process.env.GOOGLE_GTM || '';
 const adsenseId = process.env.G_ADSENSE_ID || '';
 const isProductionMode = process.env.NODE_ENV === 'production';
+
+export function generateStaticParams() {
+  return Object.values(ELanguage).map((l) => ({ [EUrlBaseParam.LANG]: l }));
+}
+
+export const dynamicParams = false;
 
 export default ({
   children,
@@ -26,7 +43,7 @@ export default ({
   const lang = getELangKey(params[EUrlBaseParam.LANG]);
 
   return (
-    <html lang={lang === ELanguage.UA ? 'uk' : 'en'} className="!scroll-smooth">
+    <html lang={languageMap[lang] || 'en'} className="!scroll-smooth">
       <body
         suppressHydrationWarning={true}
         className="font-serif text-stone-800 bg-black overflow-x-hidden sm:bg-[url('/Images/black00001.gif')]"

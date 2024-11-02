@@ -64,4 +64,3 @@
 ## DEPLOY
 
 [INSTALLSAT-TV](https://installsat.tv/)
-[INSTALLSAT-FUN](https://installsat.fun/)

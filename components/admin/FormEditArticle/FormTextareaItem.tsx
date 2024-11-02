@@ -3,8 +3,8 @@
 import CopyClipboard from '@/components/CopyClipboard/CopyClipboard';
 import { IFormState } from '@/controllers/toast.controller';
 import FieldError from '@/components/comments/FieldError/FieldError';
-import { EChannelEditFields } from '@/models/channels/channel.model';
 import { EArticleEditFields } from '@/models/articles/articleEdit.model';
+import { EChannelEditFields } from '@/models/channels/channelEdit.model';
 
 interface IFormTextareaItem {
   itemName: EArticleEditFields | EChannelEditFields;

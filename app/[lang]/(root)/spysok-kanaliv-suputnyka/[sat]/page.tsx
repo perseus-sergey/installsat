@@ -2,12 +2,6 @@ import { Suspense } from 'react';
 
 import { Title } from '@/components/ui/Titles/Title';
 import { getFlySatChannels } from '@/controllers/channelList.controller';
-import {
-  ALL_SAT_CHANNEL_LIST_FILTERS,
-  ALL_SAT_CHANNEL_LIST_LINKS,
-  META_SAT_CHANNEL_LIST,
-  SAT_CHANNEL_LIST_IMAGES,
-} from '@/models/channels/channelList.model';
 import type { Metadata } from 'next';
 import StartArticleSection from '@/components/article/StartArticleSection/StartArticleSection';
 import FillingValidImage from '@/components/ui/Images/FillingValidImage';
@@ -31,6 +25,15 @@ import { EUrlBaseParam, MAIN_URL } from '@/models/url/url.model';
 import { TSearchParams } from '@/models/url/urlSearch.model';
 import { makeUrlSearchParams } from '@/libs/utils/urlMaker';
 import { getSatellitesSiteMap } from '@/controllers/siteMap.controller';
+import {
+  ALL_SAT_CHANNEL_LIST_FILTERS,
+  ALL_SAT_CHANNEL_LIST_LINKS,
+  BREAD_SAT_CHANNEL_LIST,
+  getEmptyPageTitle,
+  META_SAT_CHANNEL_LIST,
+  SAT_CHANNEL_LIST_IMAGES,
+  TOTAL_CHANNELS_TITLE,
+} from '@/models/channels/channelListMeta.model';
 
 const BASE_URL = process.env.BASE_URL || MAIN_URL;
 
@@ -47,14 +50,6 @@ const {
 } = ALL_SAT_CHANNEL_LIST_FILTERS;
 const { anchors } = ALL_SAT_CHANNEL_LIST_LINKS;
 
-const BREAD_SAT_CHANNEL_LIST = {
-  href: EUrlBaseParam.SAT_CHANNEL_LIST,
-  title: {
-    [ELanguage.UA]: 'Список каналів супутників',
-    [ELanguage.EN]: 'List of satellite channels',
-  },
-};
-
 interface IPageProps {
   params: { [key in EUrlBaseParam]: string };
   searchParams?: TSearchParams;
@@ -67,6 +62,8 @@ export const generateMetadata = async ({
 }: IPageProps): Promise<Metadata> => {
   const satUrlSlug = params[SATELLITE];
   const lang = getELangKey(params[LANG]);
+
+  const { UA, EN, RU, ES, AR, DE, FR, IT } = ELanguage;
 
   const resFlySatParams = await getFlySatParams(satUrlSlug);
   if (!resFlySatParams) return DEFAULT_META_DATA[lang];
@@ -88,13 +85,19 @@ export const generateMetadata = async ({
       title: fullMetaTitle,
       description,
       url: `/${lang}/${slugPath}`,
-      publishedTime: getFormattedDateStrYearFirst(),
+      publishedTime: getFormattedDateStrYearFirst('', lang),
     },
     alternates: {
       canonical: `/${lang}/${slugPath}`,
       languages: {
-        en: `/${ELanguage.EN}/${slugPath}`,
-        uk: `/${ELanguage.UA}/${slugPath}`,
+        en: `/${EN}/${slugPath}`,
+        uk: `/${UA}/${slugPath}`,
+        ru: `/${RU}/${slugPath}`,
+        es: `/${ES}/${slugPath}`,
+        ar: `/${AR}/${slugPath}`,
+        de: `/${DE}/${slugPath}`,
+        fr: `/${FR}/${slugPath}`,
+        it: `/${IT}/${slugPath}`,
       },
     },
   };
@@ -136,11 +139,7 @@ export default async ({ searchParams, params }: IPageProps) => {
   if (!resFlySatParams)
     return (
       <EmptyPage
-        title={
-          lang === ELanguage.UA
-            ? `Супутник «${urlSatSlug}» не знайдено. Спробуйте вибрати інший із списку супутників.`
-            : `Satellite «${urlSatSlug}» not found. Try selecting another one from the satellite list.`
-        }
+        title={getEmptyPageTitle(urlSatSlug)[lang]}
         breadCrumbList={[BREAD_SAT_CHANNEL_LIST]}
         lang={lang}
       />
@@ -175,10 +174,7 @@ export default async ({ searchParams, params }: IPageProps) => {
         breadCrumbList={[
           {
             href: `${EUrlBaseParam.SAT_CHANNEL_LIST}${lastUpdatedSatsUrlSearchPar ? `?${lastUpdatedSatsUrlSearchPar}` : ''}`,
-            title: {
-              [ELanguage.UA]: 'Список каналів супутників',
-              [ELanguage.EN]: 'List of satellite channels',
-            },
+            title: BREAD_SAT_CHANNEL_LIST.title,
           },
           `${title} - ${position}`,
         ]}
@@ -232,7 +228,7 @@ export default async ({ searchParams, params }: IPageProps) => {
 
         <StartArticleSection>
           <p className="text-center">
-            {lang === ELanguage.UA ? 'Всього каналів: ' : 'Total channels: '}
+            {TOTAL_CHANNELS_TITLE[lang]}
             <Suspense>
               <NumberOfItems requestFn={getFlySatChannelsFn} />
             </Suspense>

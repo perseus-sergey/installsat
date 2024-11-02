@@ -3,7 +3,6 @@
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
-import FillingImg from '../ui/Images/FillingImage';
 import BaseButton from '../ui/buttons/BaseButton/BaseButton';
 import { getELangKey } from '@/libs/utils/getLanguage';
 import { DEFAULT_LANG, ELanguage } from '@/models/language.model';
@@ -37,13 +36,7 @@ const LangSwitchButton = () => {
         ariaLabel={LANGUAGE_SELECT[currentLang].ariaLabel}
         className="flex items-center gap-2 px-4 py-2 text-gray-400 hover:text-gray-300"
       >
-        <FillingImg
-          width={24}
-          height={24}
-          alt={LANGUAGE_SELECT[currentLang].alt}
-          src={LANGUAGE_SELECT[currentLang].imgSrc}
-          isPriority
-        />
+        {LANGUAGE_SELECT[currentLang].icon}
         <span>{LANGUAGE_SELECT[currentLang].title}</span>
       </BaseButton>
 
@@ -56,12 +49,7 @@ const LangSwitchButton = () => {
                 onClick={() => handleLangToggle(langKey as ELanguage)}
                 ariaLabel={langData.ariaLabel}
               >
-                <FillingImg
-                  width={24}
-                  height={24}
-                  src={langData.imgSrc}
-                  alt={langData.alt}
-                />
+                {langData.icon}
                 <span>{langData.alt}</span>
               </BaseButton>
             </li>

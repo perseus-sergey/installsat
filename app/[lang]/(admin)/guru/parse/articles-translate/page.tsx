@@ -57,7 +57,7 @@ const getSatArticlesFromDB = async (quantity: string) => {
   const sql = `
   SELECT id, title_en, text_en, cpu
   FROM ${ARTICLE}
-  WHERE text_ru = ''
+  WHERE text_ru IS NULL
   AND cat NOT IN ${WRONG_CAT_IDS}
   LIMIT ${quantity};
   `;

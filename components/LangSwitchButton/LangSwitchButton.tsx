@@ -1,11 +1,11 @@
 'use client';
 
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import BaseButton from '../ui/buttons/BaseButton/BaseButton';
 import { getELangKey } from '@/libs/utils/getLanguage';
-import { DEFAULT_LANG, ELanguage } from '@/models/language.model';
+import { ELanguage } from '@/models/language.model';
 
 import { LANGUAGE_SELECT } from '@/models/ui/header.model';
 
@@ -14,18 +14,16 @@ const LangSwitchButton = () => {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  const [currentLang, setCurrentLang] = useState<ELanguage>(DEFAULT_LANG);
   const [isOpen, setIsOpen] = useState(false);
 
-  useEffect(() => {
-    const lang = getELangKey(pathname.split('/')[1]) || DEFAULT_LANG;
-    setCurrentLang(lang);
-  }, []);
+  const currentUrlLang = pathname.split('/')[1];
+  const currentLang = getELangKey(currentUrlLang);
 
   const handleLangToggle = (lang: ELanguage) => {
-    const newPath = pathname.replace(`/${currentLang}`, `/${lang}`);
+    const pathSegments = pathname.split('/');
+    pathSegments[1] = lang;
+    const newPath = pathSegments.join('/');
     replace(`${newPath}?${searchParams}`);
-    setCurrentLang(lang);
     setIsOpen(false);
   };
 

@@ -1,7 +1,8 @@
+import { cache } from 'react';
+
 import { poolExecute } from '@/libs/db/mysqldb';
 import { ISatModel } from '@/models/tblSat.model';
 import { NUMBER_OF_LAST_NEWS_WIDGET } from '@/models/ui/widget.model';
-import { cache } from 'react';
 import { EDBTableTitles } from '@/models/dbTblNames.model';
 import { DEFAULT_LANG, ELanguage } from '@/models/language.model';
 import {
@@ -30,10 +31,23 @@ const {
   ARTICLE_CATEGORIES,
 } = EDBTableTitles;
 
+const { UA, EN, RU, ES, AR, DE, FR, IT } = ELanguage;
+
+const langTitle = {
+  [UA]: 'title',
+  [EN]: 'title_en',
+  [RU]: 'title_ru',
+  [ES]: 'title_es',
+  [AR]: 'title_ar',
+  [DE]: 'title_de',
+  [FR]: 'title_fr',
+  [IT]: 'title_it',
+};
+
 export const getArtCatListSideBar = async (lang: ELanguage) => {
   const sql = `
   SELECT
-    ${lang === ELanguage.UA ? 'title' : 'title_en'} AS title,
+    ${langTitle[lang] || langTitle[EN]} AS title,
     cpu
   FROM ${ARTICLE_CATEGORIES} 
   WHERE id NOT IN ${WRONG_CAT_IDS}

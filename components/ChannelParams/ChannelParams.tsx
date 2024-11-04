@@ -121,6 +121,10 @@ export const FlyChannelParams = ({
         {getParamsTitle(title)[lang]}
       </h2>
 
+      <p>a_pid: {a_pid}</p>
+      <p>aPidList: {aPidList}</p>
+      <p>languages: {languages[0].label}</p>
+
       <ul className="font-georgia" role="list">
         <li className={rowStyle}>
           <Item

@@ -198,8 +198,6 @@ export interface IAllNewsModel {
   id: number;
   cat: number;
   title: string;
-  // title_en?: string;
-  // description_en?: string;
   cpu: string;
   description: string;
   date: Date;
@@ -210,6 +208,5 @@ export interface IAllNewsModel {
   comment_count: number | null;
   total_count: number;
   category_title: string;
-  // category_title_en: string;
   category_cpu: string;
 }

@@ -10,8 +10,6 @@ import { EDBTableTitles } from '@/models/dbTblNames.model';
 
 const { ARTICLE: TBL_ARTICLE, ARTICLE_CATEGORIES } = EDBTableTitles;
 
-const { UA } = ELanguage;
-
 interface ISingleCatArticlesModel {
   id: number;
   title: string;
@@ -20,13 +18,26 @@ interface ISingleCatArticlesModel {
   text: string;
 }
 
+const { UA, EN, RU, ES, AR, DE, FR, IT } = ELanguage;
+
+const langAdd = {
+  [UA]: '',
+  [EN]: '_en',
+  [RU]: '_ru',
+  [ES]: '_es',
+  [AR]: '_ar',
+  [DE]: '_de',
+  [FR]: '_fr',
+  [IT]: '_it',
+};
+
 export const getCurrentCatParams = cache(
   async (catCpu: string, lang: ELanguage) => {
     const sql = `
     SELECT id,
-      ${lang === UA ? 'title' : 'title_en'} AS title,
-      ${lang === UA ? 'description' : 'description_en'} AS description,
-      ${lang === UA ? 'text' : 'text_en'} AS text,
+      title${langAdd[lang]} AS title,
+      description${langAdd[lang]} AS description,
+      text${langAdd[lang]} AS text,
       cpu
      FROM ${ARTICLE_CATEGORIES} 
      WHERE cpu = ?
@@ -80,8 +91,7 @@ export const getChunkOfNews = async ({
   U.view,
   C.comment_count,
   T.total_count,
-  C2.title AS category_title,
-  C2.title_en AS category_title_en,
+  C2.title${langAdd[lang]} AS category_title,
   C2.cpu AS category_cpu
 FROM ${TBL_ARTICLE} U
 LEFT JOIN (SELECT post, COUNT(id) AS comment_count FROM tbl_comments GROUP BY post) C ON U.id = C.post

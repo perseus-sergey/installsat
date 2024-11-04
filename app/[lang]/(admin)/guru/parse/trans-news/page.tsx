@@ -1,221 +1,222 @@
 import { Title } from '@/components/ui/Titles/Title';
-import puppeteer, { Browser } from 'puppeteer';
-import * as cheerio from 'cheerio';
-import { DateTime } from 'luxon';
-import { IDbIdAmountModel } from '@/models/admin.model';
-import { sendMail } from '@/libs/mail/sendMail';
-import { renderAsync } from '@react-email/render';
-import { getDbIdAmount } from '@/controllers/schedule.controller';
-import { ParseTransNews } from '@/components/EmailTemplates/parseTransNews.template';
+// import { DateTime } from 'luxon';
+// import { revalidatePath } from 'next/cache';
+
+// import puppeteer, { Browser } from 'puppeteer';
+// import * as cheerio from 'cheerio';
+// import { IDbIdAmountModel } from '@/models/admin.model';
+// import { sendMail } from '@/libs/mail/sendMail';
+// import { renderAsync } from '@react-email/render';
+// import { getDbIdAmount } from '@/controllers/schedule.controller';
 import {
-  EUrlAdminParam,
+  // EUrlAdminParam,
   EUrlSearchParam,
-  killChromeProcesses,
+  // killChromeProcesses,
   validSearchParam,
 } from '@cron/libs/commons.mjs';
-import {
-  getDBSatID,
-  deleteDBOldTransNews,
-  insertDBTransNews,
-  actionTextHandler,
-} from '@cron/libs/parseTransNews.controller.mjs';
-import { revalidatePath } from 'next/cache';
-import { ELanguage } from '@/models/language.model';
+// import {
+//   getDBSatID,
+//   deleteDBOldTransNews,
+//   insertDBTransNews,
+//   actionTextHandler,
+// } from '@cron/libs/parseTransNews.controller.mjs';
+// import { EDBTableTitles, getDbTableLink } from '@/models/dbTblNames.model';
+// import { ELanguage } from '@/models/language.model';
+import { parseTransNews } from '@cron/libs/parseTransNews.controller.mjs';
 import { TSearchParams } from '@/models/url/urlSearch.model';
-import { EDBTableTitles, getDbTableLink } from '@/models/dbTblNames.model';
 
-export interface ITblDigestParse {
-  date: string;
-  update: number | null;
-  channel_title: string;
-  action: string;
-  text: string;
-  text_en: string;
-  sat: string;
-  sat_name: string;
-  sat_slug: string | null;
-  sat_grade: string | null;
-  sat_position: string;
-  frequency_text: string;
-  country: string;
-}
+// export interface ITblDigestParse {
+//   date: string;
+//   update: number | null;
+//   channel_title: string;
+//   action: string;
+//   text: string;
+//   text_en: string;
+//   sat: string;
+//   sat_name: string;
+//   sat_slug: string | null;
+//   sat_grade: string | null;
+//   sat_position: string;
+//   frequency_text: string;
+//   country: string;
+// }
 
-const BASE_URL = process.env.BASE_URL;
-const isProductionMode = process.env.NODE_ENV === 'production';
+// const BASE_URL = process.env.BASE_URL;
+// const isProductionMode = process.env.NODE_ENV === 'production';
 
-const SHOW_ONLY = false;
-const PARSE_URL = 'https://www.flysat.com/en/news';
-const PARSED_UPDATES = 4;
+// const SHOW_ONLY = false;
+// const PARSE_URL = 'https://www.flysat.com/en/news';
+// const PARSED_UPDATES = 4;
 
-const parseChannelPage = async (browser: Browser, url: string) => {
-  const page = await browser.newPage();
-  await page.goto(url, { waitUntil: 'domcontentloaded' });
+// const parseChannelPage = async (browser: Browser, url: string) => {
+//   const page = await browser.newPage();
+//   await page.goto(url, { waitUntil: 'domcontentloaded' });
 
-  const content = await page.content();
-  await page.close();
+//   const content = await page.content();
+//   await page.close();
 
-  return content;
-};
+//   return content;
+// };
 
-const extractParsedData = ($: cheerio.CheerioAPI, updateAmount: number) => {
-  const parsedData: ITblDigestParse[] = [];
-  const extractErrors: string[] = [];
+// const extractParsedData = ($: cheerio.CheerioAPI, updateAmount: number) => {
+//   const parsedData: ITblDigestParse[] = [];
+//   const extractErrors: string[] = [];
 
-  const addMessage = (
-    itemTitle: string,
-    from: string | null,
-    type: 'WARNING' | 'ERROR'
-  ) =>
-    extractErrors.push(
-      `${type}: Cannot extract ${itemTitle} from: «${from || 'CHEERIO HTML'}»`
-    );
+//   const addMessage = (
+//     itemTitle: string,
+//     from: string | null,
+//     type: 'WARNING' | 'ERROR'
+//   ) =>
+//     extractErrors.push(
+//       `${type}: Cannot extract ${itemTitle} from: «${from || 'CHEERIO HTML'}»`
+//     );
 
-  const baslikElements = $('p.baslik');
-  const firstThreeBaslikElements = baslikElements.slice(0, updateAmount);
+//   const baslikElements = $('p.baslik');
+//   const firstThreeBaslikElements = baslikElements.slice(0, updateAmount);
 
-  firstThreeBaslikElements.each((_i, el) => {
-    const dateText = $(el).text(); // Отримуємо текст з елемента <p class="baslik">>
-    const [date, updateText] = dateText.split('/'); // Розділяємо текст на дату і номер оновлення
-    const dt = DateTime.fromFormat(date, 'dd.MM.yyyy', { zone: 'utc' });
-    if (!dt.isValid) {
-      extractErrors.push(`Error extracting DATE from: «${dateText}»`);
+//   firstThreeBaslikElements.each((_i, el) => {
+//     const dateText = $(el).text(); // Отримуємо текст з елемента <p class="baslik">>
+//     const [date, updateText] = dateText.split('/'); // Розділяємо текст на дату і номер оновлення
+//     const dt = DateTime.fromFormat(date, 'dd.MM.yyyy', { zone: 'utc' });
+//     if (!dt.isValid) {
+//       extractErrors.push(`Error extracting DATE from: «${dateText}»`);
 
-      return;
-    }
+//       return;
+//     }
 
-    const update = parseInt(updateText, 10) || null; // Конвертуємо номер оновлення в число
+//     const update = parseInt(updateText, 10) || null; // Конвертуємо номер оновлення в число
 
-    // Збираємо всі наступні елементи <p> до наступного <p class="baslik">
+//     // Збираємо всі наступні елементи <p> до наступного <p class="baslik">
 
-    $(el)
-      .nextUntil('p.baslik')
-      .each((_j, updateEl) => {
-        if ($(updateEl).hasClass('guncellemenormal')) {
-          const channel_title = $(updateEl).find('b').eq(1).text().trim(); // Назва каналу
-          if (!channel_title) {
-            addMessage('CHANNEL NAME', $(updateEl).html(), 'ERROR');
+//     $(el)
+//       .nextUntil('p.baslik')
+//       .each((_j, updateEl) => {
+//         if ($(updateEl).hasClass('guncellemenormal')) {
+//           const channel_title = $(updateEl).find('b').eq(1).text().trim(); // Назва каналу
+//           if (!channel_title) {
+//             addMessage('CHANNEL NAME', $(updateEl).html(), 'ERROR');
 
-            return;
-          }
+//             return;
+//           }
 
-          // Збираємо частоту між дужками, або використовуємо текст після назви каналу
-          let frequency_text = '';
-          const textAfterChanTitle = $(updateEl).text().split(channel_title)[1];
-          const frequencyMatch = textAfterChanTitle.match(/\(([^)]+)\)/);
-          if (frequencyMatch) {
-            frequency_text = `(${frequencyMatch[1].trim()})`;
-          } else {
-            const fallbackMatch = textAfterChanTitle.match(/\(.*\)/);
-            if (fallbackMatch) {
-              frequency_text = fallbackMatch[0];
-            }
-          }
-          if (!frequency_text)
-            addMessage('FREQUENCY TEXT', $(updateEl).html(), 'WARNING');
+//           // Збираємо частоту між дужками, або використовуємо текст після назви каналу
+//           let frequency_text = '';
+//           const textAfterChanTitle = $(updateEl).text().split(channel_title)[1];
+//           const frequencyMatch = textAfterChanTitle.match(/\(([^)]+)\)/);
+//           if (frequencyMatch) {
+//             frequency_text = `(${frequencyMatch[1].trim()})`;
+//           } else {
+//             const fallbackMatch = textAfterChanTitle.match(/\(.*\)/);
+//             if (fallbackMatch) {
+//               frequency_text = fallbackMatch[0];
+//             }
+//           }
+//           if (!frequency_text)
+//             addMessage('FREQUENCY TEXT', $(updateEl).html(), 'WARNING');
 
-          const action = $(updateEl).find('font[color]').last().text().trim(); // Дія (left/on), другий <font>
-          if (!action) {
-            addMessage('ACTION', $(updateEl).html(), 'ERROR');
+//           const action = $(updateEl).find('font[color]').last().text().trim(); // Дія (left/on), другий <font>
+//           if (!action) {
+//             addMessage('ACTION', $(updateEl).html(), 'ERROR');
 
-            return;
-          }
+//             return;
+//           }
 
-          const satNameLink = $(updateEl).find('a');
-          const satHref = satNameLink.attr('href');
-          if (!satHref) addMessage('URL_LINK', $(updateEl).html(), 'WARNING');
+//           const satNameLink = $(updateEl).find('a');
+//           const satHref = satNameLink.attr('href');
+//           if (!satHref) addMessage('URL_LINK', $(updateEl).html(), 'WARNING');
 
-          const slug = satHref ? satHref.split('/').pop() : '';
-          if (!slug) addMessage('SLUG', satHref || '', 'WARNING');
+//           const slug = satHref ? satHref.split('/').pop() : '';
+//           if (!slug) addMessage('SLUG', satHref || '', 'WARNING');
 
-          const fullSatName = satNameLink.text().trim().split('@'); // Назва супутника
-          const satName = fullSatName[0].trim();
-          if (!satName) {
-            addMessage('SATELLITE NAME', $(updateEl).html(), 'ERROR');
+//           const fullSatName = satNameLink.text().trim().split('@'); // Назва супутника
+//           const satName = fullSatName[0].trim();
+//           if (!satName) {
+//             addMessage('SATELLITE NAME', $(updateEl).html(), 'ERROR');
 
-            return;
-          }
-          const satPosition = fullSatName[1].trim();
-          if (!satPosition)
-            addMessage('SATELLITE POSITION', $(updateEl).html(), 'WARNING');
+//             return;
+//           }
+//           const satPosition = fullSatName[1].trim();
+//           if (!satPosition)
+//             addMessage('SATELLITE POSITION', $(updateEl).html(), 'WARNING');
 
-          const [grade, ew] = satPosition.split('° ');
-          if (!grade || !ew) addMessage('GRADE', $(updateEl).html(), 'WARNING');
+//           const [grade, ew] = satPosition.split('° ');
+//           if (!grade || !ew) addMessage('GRADE', $(updateEl).html(), 'WARNING');
 
-          const { ua, en } = actionTextHandler(
-            action,
-            channel_title,
-            frequency_text
-          );
+//           const { ua, en } = actionTextHandler(
+//             action,
+//             channel_title,
+//             frequency_text
+//           );
 
-          // Encode the replaced text to handle HTML entities
-          parsedData.push({
-            date: dt.toISODate(),
-            update,
-            channel_title: channel_title,
-            action: action,
-            text: ua,
-            text_en: en,
-            frequency_text: frequency_text,
-            sat_name: satName,
-            sat_slug: slug || null,
-            sat_grade: ew === 'E' ? grade : `-${grade}`,
-            sat_position: satPosition,
-            sat: '',
-            country: '',
-          });
-        }
-      });
-  });
+//           // Encode the replaced text to handle HTML entities
+//           parsedData.push({
+//             date: dt.toISODate(),
+//             update,
+//             channel_title: channel_title,
+//             action: action,
+//             text: ua,
+//             text_en: en,
+//             frequency_text: frequency_text,
+//             sat_name: satName,
+//             sat_slug: slug || null,
+//             sat_grade: ew === 'E' ? grade : `-${grade}`,
+//             sat_position: satPosition,
+//             sat: '',
+//             country: '',
+//           });
+//         }
+//       });
+//   });
 
-  return { parsedData, extractErrors };
-};
+//   return { parsedData, extractErrors };
+// };
 
-const addSatId = async (parsedData: ITblDigestParse[]) => {
-  const addSatIdErrors: string[] = [];
-  const dataWithSatId: ITblDigestParse[] = [];
+// const addSatId = async (parsedData: ITblDigestParse[]) => {
+//   const addSatIdErrors: string[] = [];
+//   const dataWithSatId: ITblDigestParse[] = [];
 
-  for (const item of parsedData) {
-    const satResult = await getDBSatID(item.sat_slug, item.sat_name);
-    if (typeof satResult === 'string') {
-      addSatIdErrors.push(satResult);
-      dataWithSatId.push({
-        ...item,
-        sat: '0',
-      });
-    } else {
-      if (parseFloat(satResult.grade) !== parseFloat(item.sat_grade || '')) {
-        addSatIdErrors.push(
-          `WARNING: SATELLITE GRADE from DB: «${satResult.grade}» is DIFFERENT from parsed GRADE: «${item.sat_grade}» for satellite slug «${item.sat_slug}» sat. name «${item.sat_name}»`
-        );
-      }
-      dataWithSatId.push({
-        ...item,
-        sat: satResult.id,
-      });
-    }
-  }
+//   for (const item of parsedData) {
+//     const satResult = await getDBSatID(item.sat_slug, item.sat_name);
+//     if (typeof satResult === 'string') {
+//       addSatIdErrors.push(satResult);
+//       dataWithSatId.push({
+//         ...item,
+//         sat: '0',
+//       });
+//     } else {
+//       if (parseFloat(satResult.grade) !== parseFloat(item.sat_grade || '')) {
+//         addSatIdErrors.push(
+//           `WARNING: SATELLITE GRADE from DB: «${satResult.grade}» is DIFFERENT from parsed GRADE: «${item.sat_grade}» for satellite slug «${item.sat_slug}» sat. name «${item.sat_name}»`
+//         );
+//       }
+//       dataWithSatId.push({
+//         ...item,
+//         sat: satResult.id,
+//       });
+//     }
+//   }
 
-  return { dataWithSatId, addSatIdErrors };
-};
+//   return { dataWithSatId, addSatIdErrors };
+// };
 
-const sendReportMail = async (
-  errorMessages: string[],
-  tblItemLength: string
-) => {
-  await sendMail({
-    subject: `Parse transponder news`,
-    body: await renderAsync(
-      <ParseTransNews
-        title="Parse Trans News"
-        pathToMainParsePage={`${BASE_URL}/${ELanguage.EN}/${EUrlAdminParam.BASE_PATH}/${EUrlAdminParam.PARSE}`}
-        dbTableLength={tblItemLength}
-        errorMessages={errorMessages}
-        dbTableHref={getDbTableLink(EDBTableTitles.TRANS_NEWS)}
-        hrefSources={PARSE_URL}
-      />
-    ),
-  });
-};
+// const sendReportMail = async (
+//   errorMessages: string[],
+//   tblItemLength: string
+// ) => {
+//   await sendMail({
+//     subject: `Parse transponder news`,
+//     body: await renderAsync(
+//       <ParseTransNews
+//         title="Parse Trans News"
+//         pathToMainParsePage={`${BASE_URL}/${ELanguage.EN}/${EUrlAdminParam.BASE_PATH}/${EUrlAdminParam.PARSE}`}
+//         dbTableLength={tblItemLength}
+//         errorMessages={errorMessages}
+//         dbTableHref={getDbTableLink(EDBTableTitles.TRANS_NEWS)}
+//         hrefSources={PARSE_URL}
+//       />
+//     ),
+//   });
+// };
 
 export default async function Page({
   searchParams,
@@ -224,73 +225,11 @@ export default async function Page({
 }) {
   const searchQuery = validSearchParam(EUrlSearchParam.INTERVAL, searchParams);
 
-  let browser;
-  const errorMessages: string[] = [];
-  let resDbTableLength: IDbIdAmountModel[] | string = '';
-  let finalData: ITblDigestParse[] = [];
+  const PARSED_UPDATES = 4;
 
-  try {
-    browser = await puppeteer.launch({
-      args: ['--no-sandbox', '--disable-setuid-sandbox'],
-    });
-
-    const html = await parseChannelPage(browser, PARSE_URL);
-    const $ = cheerio.load(html);
-
-    const { parsedData, extractErrors } = extractParsedData(
-      $,
-      parseInt(searchQuery, 10) || PARSED_UPDATES
-    );
-    errorMessages.push(...extractErrors);
-    const dataWithSatIdRes = await addSatId(parsedData);
-    finalData = dataWithSatIdRes.dataWithSatId;
-    errorMessages.push(...dataWithSatIdRes.addSatIdErrors);
-
-    if (!SHOW_ONLY) {
-      const deleteRes = await deleteDBOldTransNews(finalData);
-      errorMessages.push(deleteRes);
-    }
-
-    if (!SHOW_ONLY) {
-      const insertRes = await insertDBTransNews(finalData);
-      errorMessages.push(insertRes);
-    }
-
-    resDbTableLength = await getDbIdAmount(EDBTableTitles.TRANS_NEWS);
-  } catch (error) {
-    errorMessages.push(
-      error instanceof Error
-        ? `ERROR: ${error.message}`
-        : 'Unknown error occurred'
-    );
-  } finally {
-    if (browser) {
-      try {
-        await browser.close();
-      } catch (closeError) {
-        errorMessages.push(
-          closeError instanceof Error
-            ? `ERROR closing browser: ${closeError.message}`
-            : 'Error closing browser'
-        );
-      }
-    }
-    // Закрити всі запущені процеси Chrome після завершення роботи функції
-    if (isProductionMode) {
-      const killRes = killChromeProcesses();
-      errorMessages.push(...killRes);
-    }
-  }
-
-  if (!SHOW_ONLY)
-    await sendReportMail(
-      errorMessages,
-      typeof resDbTableLength === 'string'
-        ? resDbTableLength
-        : resDbTableLength[0].count.toLocaleString('en-US')
-    );
-
-  Object.values(ELanguage).forEach((l) => revalidatePath(`/${l}`));
+  const errorMessages = (await parseTransNews(
+    parseInt(searchQuery, 10) || PARSED_UPDATES
+  )) as string[];
 
   return (
     <>
@@ -305,11 +244,8 @@ export default async function Page({
           </ul>
         </>
       )}
-      <pre>{JSON.stringify(finalData, null, 2)}</pre>
     </>
   );
-
-  // return null;
 }
 
 // =================================================================

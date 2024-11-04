@@ -1,3 +1,6 @@
+import { decode } from 'html-entities';
+import { cache } from 'react';
+
 import { TGroupedNews } from '@/components/SatNews/SatNews';
 import { poolExecute } from '@/libs/db/mysqldb';
 import { ISatModel } from '@/models/tblSat.model';
@@ -7,9 +10,7 @@ import {
   TSatDigest,
 } from '@/models/satDigest.model';
 import { EDBTableTitles } from '@/models/dbTblNames.model';
-import { decode } from 'html-entities';
 import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
-import { cache } from 'react';
 import { DEFAULT_LANG, ELanguage } from '@/models/language.model';
 import {
   IGroupedSatelliteOption,
@@ -17,6 +18,18 @@ import {
 } from '@/models/reactSelect.model';
 
 const { FLY_SATELLITES, TRANS_NEWS } = EDBTableTitles;
+const { UA, EN, RU, ES, AR, DE, FR, IT } = ELanguage;
+
+const langText = {
+  [UA]: 'text',
+  [EN]: 'text_en',
+  [RU]: 'text_ru',
+  [ES]: 'text_es',
+  [AR]: 'text_ar',
+  [DE]: 'text_de',
+  [FR]: 'text_fr',
+  [IT]: 'text_it',
+};
 
 export const getSatDigestNews = async ({
   satellites = undefined,
@@ -52,8 +65,8 @@ export const getSatDigestNews = async ({
       D.id,
       D.date,
       D.sat_slug,
-      ${lang === ELanguage.UA ? 'D.text' : 'D.text_en AS text'},
-      D.sat_name  AS satTitle,
+      D.${langText[lang] || langText[EN]} AS text,
+      D.sat_name AS satTitle,
       D.sat_position AS satPosition,
       D.sat_grade AS satGrade,
       S.logo AS satLogo
@@ -63,6 +76,7 @@ export const getSatDigestNews = async ({
     ${inSatList}
     ORDER BY D.date DESC, satGrade, satTitle
   `;
+
   const res = await poolExecute<TSatDigest[]>(sql);
 
   return res instanceof Error
@@ -195,7 +209,7 @@ export const getTransNewsForSingleDay = async (
     D.id,
     D.date,
     D.sat_slug,
-    ${lang === ELanguage.UA ? 'D.text' : 'D.text_en AS text'},
+    D.${langText[lang] || langText[EN]} AS text,
     D.sat_name  AS satTitle,
     D.sat_position AS satPosition,
     D.sat_grade AS satGrade,

@@ -1,3 +1,4 @@
+import { ResultSetHeader } from 'mysql2';
 import {
   GoogleGenerativeAI,
   HarmBlockThreshold,
@@ -7,7 +8,6 @@ import {
 import { Title } from '@/components/ui/Titles/Title';
 import { sendMail } from '@/libs/mail/sendMail';
 import { poolExecute } from '@/libs/db/mysqldb';
-import { ResultSetHeader } from 'mysql2';
 import { validSearchParam } from '@/libs/utils/validSearchParam';
 import { ELanguage } from '@/cron/libs/commons.mjs';
 import { WRONG_CAT_IDS } from '@/models/articles/articleList.model';
@@ -26,50 +26,38 @@ const { ARTICLE } = EDBTableTitles;
 // const SIMULTANEOUS_GENERATE_LIMIT = 1;
 
 interface IDbArticleDataAbout {
-  title_en: string | null;
-  title_ua: string | null;
-  text_ua: string | null;
-  text_en: string | null;
-  description_en: string | null;
-  description_ua: string | null;
-  keywords_ua: string | null;
-  keywords_en: string | null;
+  title_ru: string | null;
+  text_ru: string | null;
+  description_ru: string | null;
+  keywords_ru: string | null;
 }
 
 interface IGeneratedJson {
-  title_en: string;
-  title_ua: string;
-  text_ua: string;
-  text_en: string;
-  description_en: string;
-  description_ua: string;
-  keywords_ua: string;
-  keywords_en: string;
+  title_ru: string;
+  text_ru: string;
+  description_ru: string;
+  keywords_ru: string;
 }
 
 interface IDbCurrentArticle {
   cpu: string;
-  title: string;
+  title_en: string;
   id: string;
-  text: string;
+  text_en: string;
 }
 
 const emptyArticleDescription: IDbArticleDataAbout = {
-  title_en: null,
-  title_ua: null,
-  text_ua: null,
-  text_en: null,
-  description_en: null,
-  description_ua: null,
-  keywords_ua: null,
-  keywords_en: null,
+  title_ru: null,
+  text_ru: null,
+  description_ru: null,
+  keywords_ru: null,
 };
 
 const getSatArticlesFromDB = async (quantity: string) => {
   const sql = `
-  SELECT id, title, text, cpu
+  SELECT id, title_en, text_en, cpu
   FROM ${ARTICLE}
-  WHERE text_en = ''
+  WHERE text_ru = ''
   AND cat NOT IN ${WRONG_CAT_IDS}
   LIMIT ${quantity};
   `;
@@ -81,42 +69,25 @@ const getSatArticlesFromDB = async (quantity: string) => {
 };
 
 const updateGeneratedDataDB = async (
-  {
-    title_en,
-    title_ua,
-    text_ua,
-    text_en,
-    description_en,
-    description_ua,
-    keywords_ua,
-    keywords_en,
-  }: IDbArticleDataAbout,
+  { title_ru, text_ru, description_ru, keywords_ru }: IDbArticleDataAbout,
   articleId: string
 ) => {
-  if (!title_ua) return new Error('ERROR: Cannot UPDATE DB. title_ua is NULL');
+  if (!title_ru) return new Error('ERROR: Cannot UPDATE DB. title_ru is NULL');
 
   const sql = `
       UPDATE ${ARTICLE}
       SET
-        title_en = ?, 
-        title = ?, 
-        text = ?, 
-        text_en = ?, 
-        description_en = ?, 
-        description = ?, 
-        keywords = ?, 
-        keywords_en = ?
+        title_ru = ?, 
+        text_ru = ?, 
+        description_ru = ?, 
+        keywords_ru = ?
       WHERE id = ? 
     `;
   const res = await poolExecute<ResultSetHeader>(sql, [
-    title_en,
-    title_ua,
-    text_ua,
-    text_en,
-    description_en,
-    description_ua,
-    keywords_ua,
-    keywords_en,
+    title_ru,
+    text_ru,
+    description_ru,
+    keywords_ru,
     articleId,
   ]);
 
@@ -129,7 +100,6 @@ const generateAiText = async (articleTitle: string, currentText: string) => {
     topP: 0.95,
     topK: 64,
     maxOutputTokens: 8192,
-    stopSequences: ['something for everyone'],
     responseMimeType: 'text/plain',
   };
 
@@ -162,40 +132,24 @@ const generateAiText = async (articleTitle: string, currentText: string) => {
       generationConfig,
       safetySettings,
       systemInstruction: `
-    - Translate the article to Ukrainian and English.
-    - Wrap important relevant to article title words in the article in a tag <strong>, but not more than 5% (for each language) from the content of the article.
+    - Translate the article to Russian.
     - Make short description of the article about 150 - 200 characters length for the <meta name=description>.
     - Select relevant search keywords that will be used on the page in the <meta name=keywords>.
 
-    - Articles must be written in Ukrainian and English.
+    - Articles must be written in Russian.
 
-    - Also translate the text of the alt attribute
+    - Also translate the text of the html-alt attribute
 
-    - Use html format with relevant attributes (aria-, alt, title, etc.), but it is allowed to use only tags: <p>, <span>, <e>, <strong>, <b>, <a>, <ul>, <li>, <ol>, <img>, <figure>, <figcaption>, <h2>-<h4>. 
-    - Remove all <br> tags. Do not add newline character (\n) into the text. 
-    - If there are images next to descriptive text on the page, use the following format: for example (instead of:
-    '<a style="float: right; margin: 0 15px 10px 10px;" href="pic_trulli_big.jpg"> <img src="pic_trulli.jpg" alt="Trulli" width="350" height="256"> </a>
-    <p><br><br>Trulli, Puglia, Italy.</p>'
-     use:
-    '<figure style="display: flex; flex-direction: row; gap: 1rem; justify-content: center; align-items: center; flex-wrap : wrap;">
-    <a href="pic_trulli_big.jpg">
-     <img src="pic_trulli.jpg" alt="Trulli" style="width: 350px; height: 256px">
-     </a>
-     <figcaption>Trulli, Puglia, Italy.</figcaption>
-    </figure>'
-    )
-    - if there are links with the [target="_blank"] attribute in the text, be sure to also add the [rel="noopener noreferrer"] attribute
+    - Use html format with relevant attributes (aria-, alt, title, etc.)
+    - It is allowed to use only tags: <p>, <span>, <e>, <strong>, <b>, <a>, <ul>, <li>, <ol>, <img>, <figure>, <figcaption>, <h2>-<h4>. 
+    - Do not add newline character (\n) into the text. 
 
     - Format the response as JSON in the following format:
       {
-        "title_en": [Title in English without html tags],
-        "title_ua": [Title in Ukrainian without html tags],
-        "text_ua": [Text in Ukrainian. Do not add newline character (\n)],
-        "text_en": [Text in English. Do not add newline character (\n)],
-        "description_en": [Description in English (150 - 200 characters maximum)],
-        "description_ua": [Description in Ukrainian (150 - 200 characters maximum)],
-        "keywords_ua": [Keywords in Ukrainian (150 - 200 characters maximum)],
-        "keywords_en": [Keywords in English (150 - 200 characters maximum)]
+        "title_ru": [Title in English without html tags],
+        "text_ru": [Text in English. Do not add newline character (\n)],
+        "description_ru": [Description in English (150 - 200 characters maximum)],
+        "keywords_ru": [Keywords in English (150 - 200 characters maximum)]
       }
 
     - Do not add newline character (\n) into the text.
@@ -226,72 +180,40 @@ const extractDataFromAiJson = (aiObject: IGeneratedJson) => {
   const getErrorStr = (errName: string, value = '') =>
     `ERROR: cannot extract article ${errName}${value ? `: (${value})` : ''} from AI generated descriptions`;
 
-  const title_en = aiObject['title_en'].trim();
-  if (!title_en)
+  const title_ru = aiObject['title_ru'].trim();
+  if (!title_ru)
     return {
       aiDescription: emptyArticleDescription,
-      error: getErrorStr('TITLE_EN'),
+      error: getErrorStr('TITLE_RU'),
     };
 
-  const title_ua = aiObject['title_ua'].trim();
-  if (!title_ua)
+  const description_ru = aiObject['description_ru'].trim();
+  if (!description_ru || description_ru.length < 30)
     return {
       aiDescription: emptyArticleDescription,
-      error: getErrorStr('TITLE_UA'),
+      error: getErrorStr('RU_DESCRIPTION', description_ru),
     };
 
-  const description_en = cutBigText(aiObject['description_en'].trim());
-  if (!description_en || description_en.length < 30)
+  const keywords_ru = cutBigText(aiObject['keywords_ru'].trim());
+  if (!keywords_ru || keywords_ru.length < 30)
     return {
       aiDescription: emptyArticleDescription,
-      error: getErrorStr('EN_DESCRIPTION', description_en),
+      error: getErrorStr('RU_KEYWORDS', keywords_ru),
     };
 
-  const keywords_en = cutBigText(aiObject['keywords_en'].trim());
-  if (!keywords_en || keywords_en.length < 30)
+  const text_ru = aiObject['text_ru'].trim();
+  if (!text_ru || text_ru.length < 100)
     return {
       aiDescription: emptyArticleDescription,
-      error: getErrorStr('EN_KEYWORDS', keywords_en),
-    };
-
-  const description_ua = cutBigText(aiObject['description_ua'].trim());
-  if (!description_ua || description_ua.length < 30)
-    return {
-      aiDescription: emptyArticleDescription,
-      error: getErrorStr('UA_DESCRIPTION', description_ua),
-    };
-
-  const keywords_ua = cutBigText(aiObject['keywords_ua'].trim());
-  if (!keywords_ua || keywords_ua.length < 30)
-    return {
-      aiDescription: emptyArticleDescription,
-      error: getErrorStr('UA_KEYWORDS', keywords_ua),
-    };
-
-  const text_en = aiObject['text_en'].trim();
-  if (!text_en || text_en.length < 100)
-    return {
-      aiDescription: emptyArticleDescription,
-      error: getErrorStr('EN_CONTENT'),
-    };
-
-  const text_ua = aiObject['text_ua'].trim();
-  if (!text_ua || text_ua.length < 100)
-    return {
-      aiDescription: emptyArticleDescription,
-      error: getErrorStr('UA_CONTENT'),
+      error: getErrorStr('RU_CONTENT'),
     };
 
   return {
     aiDescription: {
-      title_en,
-      title_ua,
-      text_ua,
-      text_en,
-      description_en,
-      description_ua,
-      keywords_ua,
-      keywords_en,
+      title_ru,
+      text_ru,
+      description_ru,
+      keywords_ru,
     },
     error: null,
   };
@@ -317,15 +239,15 @@ const generateArticleAbout = async (
 
 const getAiArticleAbout = async (dbArticleData: IDbCurrentArticle) => {
   const generatedDataRes = await generateArticleAbout(
-    dbArticleData.title,
-    dbArticleData.text
+    dbArticleData.title_en,
+    dbArticleData.text_en
   );
 
   return {
     shouldUpdateData: generatedDataRes.aiDescription,
     shouldUpdateMessage:
       generatedDataRes.error ||
-      `SUCCESS: Generated article descriptions for "${dbArticleData.title}" article`,
+      `SUCCESS: Generated article descriptions for "${dbArticleData.title_en}" article`,
   };
 };
 
@@ -344,8 +266,8 @@ const extractAndUpdateData = async (dbArticleData: IDbCurrentArticle) => {
 
   messages.push(
     updateAllChanWithSameTitleRes instanceof Error
-      ? `ERROR: DB UPDATE data for articles with title "${dbArticleData.title}". Error message: ${updateAllChanWithSameTitleRes.message}`
-      : `SUCCESS: Add ${updateAllChanWithSameTitleRes} article descriptions for "${dbArticleData.title}" article(s)`
+      ? `ERROR: DB UPDATE data for articles with title "${dbArticleData.title_en}". Error message: ${updateAllChanWithSameTitleRes.message}`
+      : `SUCCESS: Add ${updateAllChanWithSameTitleRes} article descriptions for "${dbArticleData.title_en}" article(s)`
   );
 
   return { extractAndUpdateMessages: messages };

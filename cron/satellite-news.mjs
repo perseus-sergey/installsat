@@ -22,9 +22,10 @@ import {
 // Parse last articles from specified sites then change them by AI
 // ----------------------------------------------------------------
 
-const IS_LOGGED = true;
-const BASE_URL = process.env.BASE_URL;
+const IS_LOGGED = false;
 const ALLOWED_CONTENT_LENGTH_MIN = 400;
+
+const BASE_URL = process.env.BASE_URL;
 const isProductionMode = process.env.NODE_ENV === 'production';
 const BASE_GURU_PATH = `${BASE_URL}/en/${EUrlAdminParam.BASE_PATH}`;
 const { ARTICLE: ARTICLE_TBL } = EDBTableTitles;

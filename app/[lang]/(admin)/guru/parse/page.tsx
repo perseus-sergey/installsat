@@ -110,6 +110,17 @@ export default async function Page({ params }: IParams) {
       />
 
       <ClientInputWithSubmit
+        buttonTitle="Translate & Update"
+        inputBaseHref={`${BASE_PARSE_HREF}/articles-translate`}
+        fieldSetTitle="Translate all articles"
+        labelHtml="Translate all articles into all languages from Ukrainian"
+        inputId="add-slug-grade"
+        inputDefaultValue={20}
+        inputType="number"
+        searchParamName={EUrlSearchParam.INTERVAL}
+      />
+
+      {/* <ClientInputWithSubmit
         buttonTitle="Translate"
         inputBaseHref={`${BASE_PARSE_HREF}/old-articles-translate`}
         fieldSetTitle="Translate old articles"
@@ -118,7 +129,7 @@ export default async function Page({ params }: IParams) {
         inputDefaultValue={20}
         inputType="number"
         searchParamName={EUrlSearchParam.INTERVAL}
-      />
+      /> */}
 
       <ClientInputWithSubmit
         inputId="vse-tv"
@@ -200,7 +211,7 @@ export default async function Page({ params }: IParams) {
         labelHtml={'Choose the Year or leave empty for current year.'}
       /> */}
 
-      <ClientInputWithSubmit
+      {/* <ClientInputWithSubmit
         inputId="add-all-lang-digest-news"
         buttonTitle="Add All Language Texts for sat digest news"
         inputDefaultValue={0}
@@ -209,9 +220,9 @@ export default async function Page({ params }: IParams) {
         searchParamName={EUrlSearchParam.INTERVAL}
         fieldSetTitle="All Language Texts for Transponder News"
         labelHtml={'Choose the Year or leave empty for current year.'}
-      />
+      /> */}
 
-      <ClientInputWithSubmit
+      {/* <ClientInputWithSubmit
         inputId="add-slug-grade"
         buttonTitle="Add sat_slug & sat_grade for sat digest news"
         inputDefaultValue={0}
@@ -220,7 +231,7 @@ export default async function Page({ params }: IParams) {
         searchParamName={EUrlSearchParam.INTERVAL}
         fieldSetTitle="Trans News Add SAT_GRADE & SAT_SLUG"
         labelHtml={'Choose the Year or leave empty for current year.'}
-      />
+      /> */}
     </>
   );
 }

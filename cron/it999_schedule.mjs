@@ -1,16 +1,17 @@
+import axios from 'axios';
+import { createGunzip } from 'zlib';
+import sax from 'sax';
+
 import {
   EDBTableTitles,
   getDbTableLink,
   EUrlAdminParam,
 } from './libs/commons.mjs';
-import axios from 'axios';
 import { sendMail } from './libs/sendMail.mjs';
 import { getPool, executePoolQuery } from './libs/mysqldb.mjs';
-import { getDbIdAmount } from './libs/parseTransNews.controller.mjs';
 import { clearTable } from './libs/parse.controller.mjs';
 // import fs from 'fs';
-import { createGunzip } from 'zlib';
-import sax from 'sax';
+import { getDbIdAmount } from './libs/utils.mjs';
 
 const isProductionMode = process.env.NODE_ENV === 'production';
 const IS_LOGGED = !isProductionMode;

@@ -1,13 +1,13 @@
 import * as cheerio from 'cheerio';
 import { DateTime } from 'luxon';
+import iconv from 'iconv-lite';
+import memoize from 'lodash.memoize';
+import axios from 'axios';
+
 import {
   getDBVseTvChannels,
   truncateDBVseTv,
 } from './libs/parseVseTv.controller.mjs';
-import { getDbIdAmount } from './libs/parseTransNews.controller.mjs';
-import memoize from 'lodash.memoize';
-import axios from 'axios';
-import iconv from 'iconv-lite';
 import { sendMail } from './libs/sendMail.mjs';
 import { getPool } from './libs/mysqldb.mjs';
 import { insertDBVseTvChannels } from './libs/parseVseTv.controller.mjs';
@@ -19,6 +19,7 @@ import {
   createURLWithParams,
 } from './libs/commons.mjs';
 import '../dotenv-config.mjs';
+import { getDbIdAmount } from './libs/utils.mjs';
 
 const BASE_URL = process.env.BASE_URL;
 const BASE_GURU_PATH = `${BASE_URL}/en/${EUrlAdminParam.BASE_PATH}`;

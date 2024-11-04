@@ -96,17 +96,16 @@ const insertNewSatsToDB = async (newSatellites) => {
 
 const getPathToSat = (url) => url.split('/').slice(-3).join('/');
 
+const isEqualSatParams = (dbSat, parsedSat) =>
+  parsedSat.title === dbSat.title &&
+  getPathToSat(parsedSat.url_link) === getPathToSat(dbSat.url_link) &&
+  parsedSat.slug === dbSat.slug &&
+  parsedSat.position === dbSat.position;
+
 const findDbOverSats = (dbSats, parsedSats) =>
   dbSats.filter(
     (dbSat) =>
-      !parsedSats.some(
-        (parsedSat) =>
-          parsedSat.title === dbSat.title &&
-          getPathToSat(parsedSat.url_link) === getPathToSat(dbSat.url_link) &&
-          parsedSat.slug === dbSat.slug &&
-          parsedSat.position === dbSat.position &&
-          parsedSat.cluster === dbSat.cluster
-      )
+      !parsedSats.some((parsedSat) => isEqualSatParams(dbSat, parsedSat))
   );
 
 const getDayDifference = (startDate) => {
@@ -223,12 +222,8 @@ const extractParsedData = ($, dbSatellites, intervalFromLastUpd) => {
       date_upd,
     };
 
-    const satInDb = dbSatellites.find(
-      (dbSat) =>
-        dbSat.title === parsedSat.title &&
-        new URL(parsedSat.url_link).pathname ===
-          new URL(dbSat.url_link).pathname &&
-        dbSat.position === parsedSat.position
+    const satInDb = dbSatellites.find((dbSat) =>
+      isEqualSatParams(dbSat, parsedSat)
     );
 
     if (!satInDb) {

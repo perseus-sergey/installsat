@@ -142,6 +142,7 @@ export default async function Page({ params }: IParams) {
           </>
         }
       />
+
       <ClientInputWithSubmit
         inputId="it999"
         buttonTitle="Schedule Vipiko"
@@ -164,6 +165,7 @@ export default async function Page({ params }: IParams) {
           </>
         }
       />
+
       <ClientInputWithSubmit
         inputId={EUrlAdminParam.PARSE_SAT_DIGEST}
         buttonTitle="Transponder News"
@@ -186,6 +188,7 @@ export default async function Page({ params }: IParams) {
           </>
         }
       />
+
       {/* <ClientInputWithSubmit
         inputId="add-en-news"
         buttonTitle="Add English Text for sat digest news"
@@ -196,6 +199,18 @@ export default async function Page({ params }: IParams) {
         fieldSetTitle="Transponder News"
         labelHtml={'Choose the Year or leave empty for current year.'}
       /> */}
+
+      <ClientInputWithSubmit
+        inputId="add-all-lang-digest-news"
+        buttonTitle="Add All Language Texts for sat digest news"
+        inputDefaultValue={0}
+        inputType="number"
+        inputBaseHref={`${BASE_PARSE_HREF}/add-all-lang-digest-news`}
+        searchParamName={EUrlSearchParam.INTERVAL}
+        fieldSetTitle="All Language Texts for Transponder News"
+        labelHtml={'Choose the Year or leave empty for current year.'}
+      />
+
       <ClientInputWithSubmit
         inputId="add-slug-grade"
         buttonTitle="Add sat_slug & sat_grade for sat digest news"

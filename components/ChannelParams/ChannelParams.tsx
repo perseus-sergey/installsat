@@ -106,6 +106,7 @@ export const FlyChannelParams = ({
   if (biss && is_biss) encryptions.push(biss);
 
   const languages = getLanguageList(aPidList);
+  console.log('🚀 ~ languages:', JSON.stringify(languages));
   const modeList = mode.split(DB_ARRAY_SEPARATOR);
   const isCBand = frequency < 10700;
 
@@ -121,7 +122,6 @@ export const FlyChannelParams = ({
         {getParamsTitle(title)[lang]}
       </h2>
 
-      <p>a_pid: ({a_pid})</p>
       <p>aPidList: {JSON.stringify(aPidList, null, 2)}</p>
 
       <ul className="font-georgia" role="list">

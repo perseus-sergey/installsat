@@ -81,7 +81,7 @@ const getLanguageString = (aPids) => {
   const langsSet = new Set();
 
   aPids.split(DB_ARRAY_SEPARATOR).forEach((part) => {
-    const parts = part.trim().split(' ');
+    const parts = part.trim().split(/\s+/);
 
     if (parts[1]) {
       const langPart = parts[1].trim().toLowerCase();

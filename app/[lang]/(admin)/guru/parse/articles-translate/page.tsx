@@ -146,10 +146,10 @@ const generateAiText = async (articleTitle: string, currentText: string) => {
 
     - Format the response as JSON in the following format:
       {
-        "title_ru": [Title in English without html tags],
-        "text_ru": [Text in English. Do not add newline character (\n)],
-        "description_ru": [Description in English (150 - 200 characters maximum)],
-        "keywords_ru": [Keywords in English (150 - 200 characters maximum)]
+        "title_ru": [Title in Russian without html tags],
+        "text_ru": [Text in Russian. Do not add newline character (\n)],
+        "description_ru": [Description in Russian (150 - 200 characters maximum)],
+        "keywords_ru": [Keywords in Russian (150 - 200 characters maximum)]
       }
 
     - Do not add newline character (\n) into the text.

@@ -34,11 +34,10 @@ const getDBChannelsAudio = cache(async ({ satGrades, satSlug }: IGradeSlug) => {
 
 export const getLanguageList = (audioPids: string[]) => {
   const langsSet = new Set<string>();
-  console.log('🚀 ~ getLanguageList ~ langsSet:', langsSet);
 
   audioPids.forEach((aPid) => {
     aPid.split(DB_ARRAY_SEPARATOR).forEach((part) => {
-      const parts = part.trim().split(' ');
+      const parts = part.trim().split(/\s+/);
 
       if (parts[1]) {
         const langPart = parts[1].trim().toLowerCase();
@@ -49,8 +48,6 @@ export const getLanguageList = (audioPids: string[]) => {
       }
     });
   });
-
-  console.log('🚀 ~ getLanguageList ~ langsSet:', langsSet);
 
   return Array.from(langsSet)
     .sort()

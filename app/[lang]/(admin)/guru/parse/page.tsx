@@ -112,7 +112,7 @@ export default async function Page({ params }: IParams) {
       <ClientInputWithSubmit
         buttonTitle="Translate & Update"
         inputBaseHref={`${BASE_PARSE_HREF}/articles-translate`}
-        fieldSetTitle="Translate articles into all languages from Ukrainian"
+        fieldSetTitle="Translate articles into all languages from English"
         labelHtml="Choose articles quantity for translations"
         inputId="add-slug-grade"
         inputDefaultValue={20}

@@ -84,6 +84,12 @@ interface IDbCurrentArticle {
   text_en: string;
 }
 
+// SELECT id, title_en, text_en, cpu
+//   FROM tbl_useful
+//   WHERE text_en IS NOT NULL AND text_en != '' AND text_fr IS NULL
+//   AND cat NOT IN (2,0,11,12,13)
+//   LIMIT 5
+
 const emptyArticleDescription: IDbArticleDataAbout = {
   title: null,
   text: null,
@@ -95,7 +101,7 @@ const getSatArticlesFromDB = async (quantity: string, lang: ELanguage) => {
   const sql = `
   SELECT id, title_en, text_en, cpu
   FROM ${ARTICLE}
-  WHERE text${translationParams[lang].suffix} IS NULL
+  WHERE text_en IS NOT NULL AND text_en != '' AND text${translationParams[lang].suffix} IS NULL
   AND cat NOT IN ${WRONG_CAT_IDS}
   LIMIT ${quantity};
   `;
@@ -168,16 +174,7 @@ const generateAiText = async (
     },
   ];
 
-  const prompt = `- Original article title: '${articleTitle}';\n - Original article content:'${currentText}'`;
-
-  try {
-    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
-
-    const model = genAI.getGenerativeModel({
-      model: 'gemini-1.5-flash',
-      generationConfig,
-      safetySettings,
-      systemInstruction: `
+  const systemInstruction = `
     - Translate the article to ${translationParams[lang].translateTo}.
     - Make short description of the article about 150 - 200 characters length for the <meta name=description>.
     - Select relevant search keywords that will be used on the page in the <meta name=keywords>.
@@ -187,8 +184,8 @@ const generateAiText = async (
     - Also translate the text of the html-alt attribute
 
     - Use html format with relevant attributes (aria-, alt, title, etc.)
-    - It is allowed to use only tags: <p>, <span>, <e>, <strong>, <b>, <a>, <ul>, <li>, <ol>, <img>, <figure>, <figcaption>, <h2>-<h4>. 
-    - Do not add newline character (\n) into the text. 
+    - It is allowed to use only tags: <p>, <span>, <e>, <strong>, <b>, <a>, <ul>, <li>, <ol>, <img>, <figure>, <figcaption>, <h2>-<h4>.
+    - Do not add newline character (\n) into the text.
 
     - Format the response as JSON in the following format:
       {
@@ -200,7 +197,19 @@ const generateAiText = async (
 
     - Do not add newline character (\n) into the text.
     - Do not wrap the text in \`\`\`json \`\`\`
-         `,
+         `;
+  console.log('🚀 ~ systemInstruction:', systemInstruction);
+
+  const prompt = `- Original article title: '${articleTitle}';\n - Original article content:'${currentText}'`;
+
+  try {
+    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
+
+    const model = genAI.getGenerativeModel({
+      model: 'gemini-1.5-flash',
+      generationConfig,
+      safetySettings,
+      systemInstruction,
     });
 
     const result = await model.generateContent(prompt);
@@ -217,42 +226,58 @@ const generateAiText = async (
       ? error
       : new Error('Wrong AI generation of JSON parsing');
   }
+
+  // return {
+  //   title: 'title',
+  //   text: 'text',
+  //   description: 'description',
+  //   keywords: 'keywords',
+  // };
 };
 
 const cutBigText = (text: string) =>
   text.length < 231 ? text : cutText(text, 230);
 
-const extractDataFromAiJson = (aiObject: IGeneratedJson) => {
+const extractDataFromAiJson = (aiObject: IGeneratedJson, lang: ELanguage) => {
   const getErrorStr = (errName: string, value = '') =>
     `ERROR: cannot extract article ${errName}${value ? `: (${value})` : ''} from AI generated descriptions`;
 
+  if (!aiObject['title'])
+    return {
+      aiDescription: emptyArticleDescription,
+      error: getErrorStr(
+        `TITLE${translationParams[lang].suffix}`,
+        aiObject['title']
+      ),
+    };
   const title = aiObject['title'].trim();
-  if (!title)
+
+  if (!aiObject['description'] || aiObject['description'].length < 30)
     return {
       aiDescription: emptyArticleDescription,
-      error: getErrorStr('TITLE_RU'),
+      error: getErrorStr(
+        `DESCRIPTION${translationParams[lang].suffix}`,
+        aiObject['description']
+      ),
     };
-
   const description = aiObject['description'].trim();
-  if (!description || description.length < 30)
+
+  if (!aiObject['keywords'] || aiObject['keywords'].length < 30)
     return {
       aiDescription: emptyArticleDescription,
-      error: getErrorStr('RU_DESCRIPTION', description),
+      error: getErrorStr(
+        `KEYWORDS${translationParams[lang].suffix}`,
+        aiObject['keywords']
+      ),
     };
-
   const keywords = cutBigText(aiObject['keywords'].trim());
-  if (!keywords || keywords.length < 30)
-    return {
-      aiDescription: emptyArticleDescription,
-      error: getErrorStr('RU_KEYWORDS', keywords),
-    };
 
-  const text = aiObject['text'].trim();
-  if (!text || text.length < 100)
+  if (!aiObject['text'] || aiObject['text'].length < 100)
     return {
       aiDescription: emptyArticleDescription,
-      error: getErrorStr('RU_CONTENT'),
+      error: getErrorStr(`CONTENT${translationParams[lang].suffix}`),
     };
+  const text = aiObject['text'].trim();
 
   return {
     aiDescription: {
@@ -279,7 +304,7 @@ const generateArticleAbout = async (
     };
   }
 
-  const extractedAiData = extractDataFromAiJson(aiText);
+  const extractedAiData = extractDataFromAiJson(aiText, lang);
 
   return extractedAiData;
 };

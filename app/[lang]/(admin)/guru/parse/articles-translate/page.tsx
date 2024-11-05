@@ -9,13 +9,13 @@ import { Title } from '@/components/ui/Titles/Title';
 import { sendMail } from '@/libs/mail/sendMail';
 import { poolExecute } from '@/libs/db/mysqldb';
 import { validSearchParam } from '@/libs/utils/validSearchParam';
-import { ELanguage } from '@/cron/libs/commons.mjs';
 import { WRONG_CAT_IDS } from '@/models/articles/articleList.model';
 import { EDBTableTitles, getDbTableLink } from '@/models/dbTblNames.model';
 import { cutText } from '@/libs/utils/cutText';
 import { sleep } from '@/libs/utils/sleep';
 import { EUrlAdminParam } from '@/models/url/urlAdmin.model';
 import { EUrlSearchParam, TSearchParams } from '@/models/url/urlSearch.model';
+// import { ELanguage } from '@/models/language.model';
 
 export const dynamic = 'force-dynamic';
 
@@ -23,20 +23,58 @@ const BASE_URL = process.env.BASE_URL;
 
 const { ARTICLE } = EDBTableTitles;
 
+enum ELanguage {
+  // UA = 'ua',
+  // EN = 'en',
+  RU = 'ru',
+  ES = 'es',
+  AR = 'ar',
+  DE = 'de',
+  FR = 'fr',
+  IT = 'it',
+}
+
+const {
+  // UA,
+  //  EN,
+  RU,
+  ES,
+  AR,
+  DE,
+  FR,
+  IT,
+} = ELanguage;
+
+interface ILangParams {
+  suffix: string;
+  translateTo: string;
+}
+
+const translationParams: Record<ELanguage, ILangParams> = {
+  // [UA]: { suffix: '', translateTo: 'Ukrainian' },
+  // [EN]: { suffix: '_en', translateTo: 'English' },
+  [RU]: { suffix: '_ru', translateTo: 'Russian' },
+  [ES]: { suffix: '_es', translateTo: 'Spanish' },
+  [AR]: { suffix: '_ar', translateTo: 'Arabic' },
+  [DE]: { suffix: '_de', translateTo: 'German' },
+  [FR]: { suffix: '_fr', translateTo: 'French' },
+  [IT]: { suffix: '_it', translateTo: 'Italian' },
+};
+
 // const SIMULTANEOUS_GENERATE_LIMIT = 1;
 
 interface IDbArticleDataAbout {
-  title_ru: string | null;
-  text_ru: string | null;
-  description_ru: string | null;
-  keywords_ru: string | null;
+  title: string | null;
+  text: string | null;
+  description: string | null;
+  keywords: string | null;
 }
 
 interface IGeneratedJson {
-  title_ru: string;
-  text_ru: string;
-  description_ru: string;
-  keywords_ru: string;
+  title: string;
+  text: string;
+  description: string;
+  keywords: string;
 }
 
 interface IDbCurrentArticle {
@@ -47,17 +85,17 @@ interface IDbCurrentArticle {
 }
 
 const emptyArticleDescription: IDbArticleDataAbout = {
-  title_ru: null,
-  text_ru: null,
-  description_ru: null,
-  keywords_ru: null,
+  title: null,
+  text: null,
+  description: null,
+  keywords: null,
 };
 
-const getSatArticlesFromDB = async (quantity: string) => {
+const getSatArticlesFromDB = async (quantity: string, lang: ELanguage) => {
   const sql = `
   SELECT id, title_en, text_en, cpu
   FROM ${ARTICLE}
-  WHERE text_ru IS NULL
+  WHERE text${translationParams[lang].suffix} IS NULL
   AND cat NOT IN ${WRONG_CAT_IDS}
   LIMIT ${quantity};
   `;
@@ -69,32 +107,40 @@ const getSatArticlesFromDB = async (quantity: string) => {
 };
 
 const updateGeneratedDataDB = async (
-  { title_ru, text_ru, description_ru, keywords_ru }: IDbArticleDataAbout,
-  articleId: string
+  { title, text, description, keywords }: IDbArticleDataAbout,
+  articleId: string,
+  lang: ELanguage
 ) => {
-  if (!title_ru) return new Error('ERROR: Cannot UPDATE DB. title_ru is NULL');
+  if (!title)
+    return new Error(
+      `ERROR: Cannot UPDATE DB. title${translationParams[lang].suffix} is NULL`
+    );
 
   const sql = `
       UPDATE ${ARTICLE}
       SET
-        title_ru = ?, 
-        text_ru = ?, 
-        description_ru = ?, 
-        keywords_ru = ?
+        title${translationParams[lang].suffix} = ?, 
+        text${translationParams[lang].suffix} = ?, 
+        description${translationParams[lang].suffix} = ?, 
+        keywords${translationParams[lang].suffix} = ?
       WHERE id = ? 
     `;
   const res = await poolExecute<ResultSetHeader>(sql, [
-    title_ru,
-    text_ru,
-    description_ru,
-    keywords_ru,
+    title,
+    text,
+    description,
+    keywords,
     articleId,
   ]);
 
   return res instanceof Error ? res : res.affectedRows;
 };
 
-const generateAiText = async (articleTitle: string, currentText: string) => {
+const generateAiText = async (
+  articleTitle: string,
+  currentText: string,
+  lang: ELanguage
+) => {
   const generationConfig = {
     temperature: 0.5,
     topP: 0.95,
@@ -132,11 +178,11 @@ const generateAiText = async (articleTitle: string, currentText: string) => {
       generationConfig,
       safetySettings,
       systemInstruction: `
-    - Translate the article to Russian.
+    - Translate the article to ${translationParams[lang].translateTo}.
     - Make short description of the article about 150 - 200 characters length for the <meta name=description>.
     - Select relevant search keywords that will be used on the page in the <meta name=keywords>.
 
-    - Articles must be written in Russian.
+    - Articles must be written in ${translationParams[lang].translateTo}.
 
     - Also translate the text of the html-alt attribute
 
@@ -146,10 +192,10 @@ const generateAiText = async (articleTitle: string, currentText: string) => {
 
     - Format the response as JSON in the following format:
       {
-        "title_ru": [Title in Russian without html tags],
-        "text_ru": [Text in Russian. Do not add newline character (\n)],
-        "description_ru": [Description in Russian (150 - 200 characters maximum)],
-        "keywords_ru": [Keywords in Russian (150 - 200 characters maximum)]
+        "title${translationParams[lang].suffix}": [Title in ${translationParams[lang].translateTo} without html tags],
+        "text${translationParams[lang].suffix}": [Text in ${translationParams[lang].translateTo}. Do not add newline character (\n)],
+        "description${translationParams[lang].suffix}": [Description in ${translationParams[lang].translateTo} (150 - 200 characters maximum)],
+        "keywords${translationParams[lang].suffix}": [Keywords in ${translationParams[lang].translateTo} (150 - 200 characters maximum)]
       }
 
     - Do not add newline character (\n) into the text.
@@ -180,29 +226,29 @@ const extractDataFromAiJson = (aiObject: IGeneratedJson) => {
   const getErrorStr = (errName: string, value = '') =>
     `ERROR: cannot extract article ${errName}${value ? `: (${value})` : ''} from AI generated descriptions`;
 
-  const title_ru = aiObject['title_ru'].trim();
-  if (!title_ru)
+  const title = aiObject['title'].trim();
+  if (!title)
     return {
       aiDescription: emptyArticleDescription,
       error: getErrorStr('TITLE_RU'),
     };
 
-  const description_ru = aiObject['description_ru'].trim();
-  if (!description_ru || description_ru.length < 30)
+  const description = aiObject['description'].trim();
+  if (!description || description.length < 30)
     return {
       aiDescription: emptyArticleDescription,
-      error: getErrorStr('RU_DESCRIPTION', description_ru),
+      error: getErrorStr('RU_DESCRIPTION', description),
     };
 
-  const keywords_ru = cutBigText(aiObject['keywords_ru'].trim());
-  if (!keywords_ru || keywords_ru.length < 30)
+  const keywords = cutBigText(aiObject['keywords'].trim());
+  if (!keywords || keywords.length < 30)
     return {
       aiDescription: emptyArticleDescription,
-      error: getErrorStr('RU_KEYWORDS', keywords_ru),
+      error: getErrorStr('RU_KEYWORDS', keywords),
     };
 
-  const text_ru = aiObject['text_ru'].trim();
-  if (!text_ru || text_ru.length < 100)
+  const text = aiObject['text'].trim();
+  if (!text || text.length < 100)
     return {
       aiDescription: emptyArticleDescription,
       error: getErrorStr('RU_CONTENT'),
@@ -210,10 +256,10 @@ const extractDataFromAiJson = (aiObject: IGeneratedJson) => {
 
   return {
     aiDescription: {
-      title_ru,
-      text_ru,
-      description_ru,
-      keywords_ru,
+      title,
+      text,
+      description,
+      keywords,
     },
     error: null,
   };
@@ -221,9 +267,10 @@ const extractDataFromAiJson = (aiObject: IGeneratedJson) => {
 
 const generateArticleAbout = async (
   articleTitle: string,
-  currentText: string
+  currentText: string,
+  lang: ELanguage
 ) => {
-  const aiText = await generateAiText(articleTitle, currentText);
+  const aiText = await generateAiText(articleTitle, currentText, lang);
 
   if (aiText instanceof Error) {
     return {
@@ -237,10 +284,14 @@ const generateArticleAbout = async (
   return extractedAiData;
 };
 
-const getAiArticleAbout = async (dbArticleData: IDbCurrentArticle) => {
+const getAiArticleAbout = async (
+  dbArticleData: IDbCurrentArticle,
+  lang: ELanguage
+) => {
   const generatedDataRes = await generateArticleAbout(
     dbArticleData.title_en,
-    dbArticleData.text_en
+    dbArticleData.text_en,
+    lang
   );
 
   return {
@@ -251,23 +302,29 @@ const getAiArticleAbout = async (dbArticleData: IDbCurrentArticle) => {
   };
 };
 
-const extractAndUpdateData = async (dbArticleData: IDbCurrentArticle) => {
+const extractAndUpdateData = async (
+  dbArticleData: IDbCurrentArticle,
+  lang: ELanguage
+) => {
   const messages = [];
 
-  const { shouldUpdateData, shouldUpdateMessage } =
-    await getAiArticleAbout(dbArticleData);
+  const { shouldUpdateData, shouldUpdateMessage } = await getAiArticleAbout(
+    dbArticleData,
+    lang
+  );
 
   if (shouldUpdateMessage) messages.push(shouldUpdateMessage);
 
-  const updateAllChanWithSameTitleRes = await updateGeneratedDataDB(
+  const updateArticle = await updateGeneratedDataDB(
     shouldUpdateData,
-    dbArticleData.id
+    dbArticleData.id,
+    lang
   );
 
   messages.push(
-    updateAllChanWithSameTitleRes instanceof Error
-      ? `ERROR: DB UPDATE data for articles with title "${dbArticleData.title_en}". Error message: ${updateAllChanWithSameTitleRes.message}`
-      : `SUCCESS: Add ${updateAllChanWithSameTitleRes} article descriptions for "${dbArticleData.title_en}" article(s)`
+    updateArticle instanceof Error
+      ? `ERROR: DB UPDATE data for articles with title "${dbArticleData.title_en}". Error message: ${updateArticle.message}`
+      : `SUCCESS: Add ${updateArticle} article descriptions for "${dbArticleData.title_en}" article(s)`
   );
 
   return { extractAndUpdateMessages: messages };
@@ -276,16 +333,24 @@ const extractAndUpdateData = async (dbArticleData: IDbCurrentArticle) => {
 const addDescriptionForArticles = async (quantity: string) => {
   const messages = [];
 
-  const dbArticlesRes = await getSatArticlesFromDB(quantity);
-  if (typeof dbArticlesRes === 'string') return [dbArticlesRes];
+  for (const lang of Object.keys(translationParams)) {
+    const dbArticlesRes = await getSatArticlesFromDB(
+      quantity,
+      lang as ELanguage
+    );
+    if (typeof dbArticlesRes === 'string') return [dbArticlesRes];
 
-  for (const article of dbArticlesRes) {
-    messages.push(`┌──────────────── "${article.cpu}" ────────────────┐`);
-    const { extractAndUpdateMessages } = await extractAndUpdateData(article);
-    messages.push(...extractAndUpdateMessages);
-    messages.push(`└──────────────────────────┘`);
+    for (const article of dbArticlesRes) {
+      messages.push(`┌──────────────── "${article.cpu}" ────────────────┐`);
+      const { extractAndUpdateMessages } = await extractAndUpdateData(
+        article,
+        lang as ELanguage
+      );
+      messages.push(...extractAndUpdateMessages);
+      messages.push(`└──────────────────────────┘`);
 
-    await sleep(500);
+      await sleep(500);
+    }
   }
 
   return messages;
@@ -302,7 +367,7 @@ const sendReportMail = async (errorMessages: string[], quantity: string) => {
     body: await renderAsync(
       <ParseTransNews
         title={`Generate AI description for "${quantity}" articles`}
-        pathToMainParsePage={`${BASE_URL}/${ELanguage.EN}/${EUrlAdminParam.BASE_PATH}/${EUrlAdminParam.PARSE}`}
+        pathToMainParsePage={`${BASE_URL}/en/${EUrlAdminParam.BASE_PATH}/${EUrlAdminParam.PARSE}`}
         errorMessages={errorMessages}
         dbTableHref={getDbTableLink(EDBTableTitles.ARTICLE)}
         hrefSources=""

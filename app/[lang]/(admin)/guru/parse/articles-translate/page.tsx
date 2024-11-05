@@ -216,7 +216,7 @@ const generateAiText = async (
     const result = await model.generateContent(prompt);
 
     const { response } = result;
-    console.log('🚀 ~ response:', response);
+    console.log('🚀 ~ response:', response.text());
 
     const startIndex = response.text().indexOf('{');
     const endIndex = response.text().lastIndexOf('}') + 1;

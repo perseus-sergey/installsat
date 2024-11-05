@@ -28,10 +28,10 @@ enum ELanguage {
   // EN = 'en',
   RU = 'ru',
   ES = 'es',
-  AR = 'ar',
-  DE = 'de',
-  FR = 'fr',
-  IT = 'it',
+  // AR = 'ar',
+  // DE = 'de',
+  // FR = 'fr',
+  // IT = 'it',
 }
 
 const {
@@ -39,10 +39,10 @@ const {
   //  EN,
   RU,
   ES,
-  AR,
-  DE,
-  FR,
-  IT,
+  // AR,
+  // DE,
+  // FR,
+  // IT,
 } = ELanguage;
 
 interface ILangParams {
@@ -55,10 +55,10 @@ const translationParams: Record<ELanguage, ILangParams> = {
   // [EN]: { suffix: '_en', translateTo: 'English' },
   [RU]: { suffix: '_ru', translateTo: 'Russian' },
   [ES]: { suffix: '_es', translateTo: 'Spanish' },
-  [AR]: { suffix: '_ar', translateTo: 'Arabic' },
-  [DE]: { suffix: '_de', translateTo: 'German' },
-  [FR]: { suffix: '_fr', translateTo: 'French' },
-  [IT]: { suffix: '_it', translateTo: 'Italian' },
+  // [AR]: { suffix: '_ar', translateTo: 'Arabic' },
+  // [DE]: { suffix: '_de', translateTo: 'German' },
+  // [FR]: { suffix: '_fr', translateTo: 'French' },
+  // [IT]: { suffix: '_it', translateTo: 'Italian' },
 };
 
 // const SIMULTANEOUS_GENERATE_LIMIT = 1;

@@ -28,10 +28,10 @@ enum ELanguage {
   // EN = 'en',
   RU = 'ru',
   ES = 'es',
-  // AR = 'ar',
-  // DE = 'de',
-  // FR = 'fr',
-  // IT = 'it',
+  AR = 'ar',
+  DE = 'de',
+  FR = 'fr',
+  IT = 'it',
 }
 
 const {
@@ -39,10 +39,10 @@ const {
   //  EN,
   RU,
   ES,
-  // AR,
-  // DE,
-  // FR,
-  // IT,
+  AR,
+  DE,
+  FR,
+  IT,
 } = ELanguage;
 
 interface ILangParams {
@@ -55,10 +55,10 @@ const translationParams: Record<ELanguage, ILangParams> = {
   // [EN]: { suffix: '_en', translateTo: 'English' },
   [RU]: { suffix: '_ru', translateTo: 'Russian' },
   [ES]: { suffix: '_es', translateTo: 'Spanish' },
-  // [AR]: { suffix: '_ar', translateTo: 'Arabic' },
-  // [DE]: { suffix: '_de', translateTo: 'German' },
-  // [FR]: { suffix: '_fr', translateTo: 'French' },
-  // [IT]: { suffix: '_it', translateTo: 'Italian' },
+  [AR]: { suffix: '_ar', translateTo: 'Arabic' },
+  [DE]: { suffix: '_de', translateTo: 'German' },
+  [FR]: { suffix: '_fr', translateTo: 'French' },
+  [IT]: { suffix: '_it', translateTo: 'Italian' },
 };
 
 // const SIMULTANEOUS_GENERATE_LIMIT = 1;
@@ -189,20 +189,18 @@ const generateAiText = async (
 
     - Format the response as JSON in the following format:
       {
-        "title${translationParams[lang].suffix}": [Title in ${translationParams[lang].translateTo} without html tags],
-        "text${translationParams[lang].suffix}": [Text in ${translationParams[lang].translateTo}. Do not add newline character (\n)],
-        "description${translationParams[lang].suffix}": [Description in ${translationParams[lang].translateTo} (150 - 200 characters maximum)],
-        "keywords${translationParams[lang].suffix}": [Keywords in ${translationParams[lang].translateTo} (150 - 200 characters maximum)]
+        "title": [Title in ${translationParams[lang].translateTo} without html tags],
+        "text": [Text in ${translationParams[lang].translateTo}. Do not add newline character (\n)],
+        "description": [Description in ${translationParams[lang].translateTo} (150 - 200 characters maximum)],
+        "keywords": [Keywords in ${translationParams[lang].translateTo} (150 - 200 characters maximum)]
       }
 
     - Do not add newline character (\n) into the text.
     - Do not wrap the text in \`\`\`json \`\`\`
          `;
-  // console.log('🚀 ~ systemInstruction:', systemInstruction);
 
   const prompt = `- Original article title: '${articleTitle}';\n - Original article content:'${currentText}'`;
 
-  console.log('🚀 ~ articleTitle:', articleTitle);
   try {
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
 
@@ -216,7 +214,6 @@ const generateAiText = async (
     const result = await model.generateContent(prompt);
 
     const { response } = result;
-    console.log('🚀 ~ response:', response.text());
 
     const startIndex = response.text().indexOf('{');
     const endIndex = response.text().lastIndexOf('}') + 1;

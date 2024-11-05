@@ -198,10 +198,11 @@ const generateAiText = async (
     - Do not add newline character (\n) into the text.
     - Do not wrap the text in \`\`\`json \`\`\`
          `;
-  console.log('🚀 ~ systemInstruction:', systemInstruction);
+  // console.log('🚀 ~ systemInstruction:', systemInstruction);
 
   const prompt = `- Original article title: '${articleTitle}';\n - Original article content:'${currentText}'`;
 
+  console.log('🚀 ~ articleTitle:', articleTitle);
   try {
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
 
@@ -215,6 +216,7 @@ const generateAiText = async (
     const result = await model.generateContent(prompt);
 
     const { response } = result;
+    console.log('🚀 ~ response:', response);
 
     const startIndex = response.text().indexOf('{');
     const endIndex = response.text().lastIndexOf('}') + 1;

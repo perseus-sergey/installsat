@@ -109,6 +109,56 @@ export const SOURCE_ARTICLE_PARAMS = [
   },
 ];
 
+// export const getTranslateAiPrompt = (originalText, translateTo) => `
+// - Translate the article to ${translateTo}.
+// - Make short description of the article in ${translateTo} about 150 - 200 characters length for the <meta name=description>.
+// - Select relevant search keywords in ${translateTo} that will be used on the page in the <meta name=keywords>.
+
+// - Articles must be written in ${translateTo}. But write names, surnames, titles and abbreviations in the original language.
+// - Do not escape the html entity.
+// - Do not add newline character (\n) into the text.
+
+// - Use the HTML format like:
+//   <h2 id='title'>Title</h2>
+//   <div id='description'>Description</div>
+//   <div id='keywords'>Keywords</div>
+//   <div id='text'>
+//   <p>Paragraph 1</p>
+//   <p>Paragraph 2</p>
+//   <p>Paragraph N</p>
+//   </div>
+
+// - Do not add newline character (\n) into the text.
+// - Do not wrap the text in \`\`\`json \`\`\`
+// Text of original article:
+// ${originalText}
+// `;
+
+// export const extractTranslatedDataFromAiHTML = ($) => {
+//   const aiTitle = $('#title').text().trim();
+//   if (!aiTitle)
+//     return `ERROR: cannot extract article EN_TITLE from AI article: ${$.html()}`;
+
+//   const aiContent = $('#text').html();
+//   if (!aiContent)
+//     return `ERROR: cannot extract article EN_CONTENT from AI article: ${$.html()}`;
+
+//   const aiDescription = $('#description').text().trim();
+//   if (!aiDescription)
+//     return `ERROR: cannot extract article EN_DESCRIPTION from AI article: ${$.html()}`;
+
+//   const aiKeywords = $('#keywords').text().trim();
+//   if (!aiKeywords)
+//     return `ERROR: cannot extract article EN_KEYWORDS from AI article: ${$.html()}`;
+
+//   return {
+//     aiTitle,
+//     aiContent,
+//     aiDescription,
+//     aiKeywords,
+//   };
+// };
+
 export const getAiPrompt = (originalText) => `
 Write a new article based on the original article so that it is not considered a copy of the original article by search engines.
 Don't change people's quotes.
@@ -150,45 +200,38 @@ ${originalText}
 `;
 
 export const extractAiArticleDataFromAiHTML = ($) => {
+  const getErrorStr = (errName, value = '') =>
+    `ERROR: cannot extract article ${errName}${value ? `: (${value})` : ''} from AI article: ${$.html()}`;
+
   const enAiTitle = $('#title-en').text().trim();
-  if (!enAiTitle)
-    return `ERROR: cannot extract article EN_TITLE from AI article: ${$.html()}`;
+  if (!enAiTitle) return getErrorStr(`EN_TITLE`);
 
   const uaAiTitle = $('#title-ua').text().trim();
-  if (!uaAiTitle)
-    return `ERROR: cannot extract article UA_TITLE from AI article: ${$.html()}`;
+  if (!uaAiTitle) return getErrorStr(`UA_TITLE`);
 
   const enAiContent = $('#text-en').html();
-  if (!enAiContent)
-    return `ERROR: cannot extract article EN_CONTENT from AI article: ${$.html()}`;
+  if (!enAiContent) return getErrorStr(`EN_CONTENT`);
 
   const uaAiContent = $('#text-ua').html();
-  if (!uaAiContent)
-    return `ERROR: cannot extract article UA_CONTENT from AI article: ${$.html()}`;
+  if (!uaAiContent) return getErrorStr(`UA_CONTENT`);
 
   const enAiDescription = $('#description-en').text().trim();
-  if (!enAiDescription)
-    return `ERROR: cannot extract article EN_DESCRIPTION from AI article: ${$.html()}`;
+  if (!enAiDescription) return getErrorStr(`EN_DESCRIPTION`);
 
   const uaAiDescription = $('#description-ua').text().trim();
-  if (!uaAiDescription)
-    return `ERROR: cannot extract article UA_DESCRIPTION from AI article: ${$.html()}`;
+  if (!uaAiDescription) return getErrorStr(`UA_DESCRIPTION`);
 
   const uaAiKeywords = $('#keywords-ua').text().trim();
-  if (!uaAiKeywords)
-    return `ERROR: cannot extract article UA_KEYWORDS from AI article: ${$.html()}`;
+  if (!uaAiKeywords) return getErrorStr(`UA_KEYWORDS`);
 
   const enAiKeywords = $('#keywords-en').text().trim();
-  if (!enAiKeywords)
-    return `ERROR: cannot extract article EN_KEYWORDS from AI article: ${$.html()}`;
+  if (!enAiKeywords) return getErrorStr(`EN_KEYWORDS`);
 
   const aiSlug = $('#slug').text().trim();
-  if (!aiSlug)
-    return `ERROR: cannot extract article SLUG from AI article: ${$.html()}`;
+  if (!aiSlug) return getErrorStr(`SLUG`);
 
   const category = $('#category-number').text().trim();
-  if (!category)
-    return `ERROR: cannot extract article CATEGORY from AI article: ${$.html()}`;
+  if (!category) return getErrorStr(`CATEGORY`);
 
   return {
     enAiTitle,

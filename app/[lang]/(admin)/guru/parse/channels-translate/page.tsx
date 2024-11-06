@@ -4,7 +4,7 @@ import { validSearchParam } from '@/libs/utils/validSearchParam';
 import { EDBTableTitles, getDbTableLink } from '@/models/dbTblNames.model';
 import { EUrlAdminParam } from '@/models/url/urlAdmin.model';
 import { EUrlSearchParam, TSearchParams } from '@/models/url/urlSearch.model';
-import { translateArticles } from '@cron/libs/articleTranslate.controller.mjs';
+import { translateChannels } from '@cron/libs/channelTranslate.controller.mjs';
 
 export const dynamic = 'force-dynamic';
 
@@ -17,13 +17,13 @@ const sendReportMail = async (errorMessages: string[], quantity: string) => {
   );
 
   await sendMail({
-    subject: `Generate AI description for "${quantity}" articles`,
+    subject: `AI translating "${quantity}" OLD channels`,
     body: await renderAsync(
       <ParseTransNews
-        title={`Generate AI description for "${quantity}" articles`}
+        title={`AI translating "${quantity}" OLD channels`}
         pathToMainParsePage={`${BASE_URL}/en/${EUrlAdminParam.BASE_PATH}/${EUrlAdminParam.PARSE}`}
         errorMessages={errorMessages}
-        dbTableHref={getDbTableLink(EDBTableTitles.ARTICLE)}
+        dbTableHref={getDbTableLink(EDBTableTitles.CHANNELS)}
         hrefSources=""
       />
     ),
@@ -37,15 +37,13 @@ export default async function Page({
 }) {
   const quantity = validSearchParam(EUrlSearchParam.INTERVAL, searchParams);
 
-  const messages = await translateArticles(quantity);
+  const messages = await translateChannels(quantity, true);
 
   await sendReportMail(messages, quantity);
 
   return (
     <>
-      <Title>
-        {`Generate description article data for ${quantity} articles`}
-      </Title>
+      <Title>{`AI translating ${quantity} channels`}</Title>
 
       <h2 className="font-bold text-blue-700 text-xl">Messages:</h2>
       <ul>

@@ -5,6 +5,8 @@ import { execSync } from 'child_process';
 export const DEFAULT_ARTICLE_LOGO_NAME = 'zastavka.jpg';
 export const DB_ARRAY_SEPARATOR = ' | ';
 
+export const WRONG_CAT_IDS = '(2,0,11,12,13)';
+
 export const ELanguage = {
   UA: 'ua',
   EN: 'en',

@@ -24,7 +24,6 @@ import {
 
 const IS_LOGGED = false;
 const ALLOWED_CONTENT_LENGTH_MIN = 400;
-const TRANSLATE_NUMBER_ARTICLES = 10;
 
 const BASE_URL = process.env.BASE_URL;
 const isProductionMode = process.env.NODE_ENV === 'production';
@@ -94,7 +93,7 @@ const generateAiText = async (originalText) => {
 };
 
 const extractOriginalArticle = ($, h1Selector, contentSelector) => {
-  const articleTitle = $(h1Selector).text().trim();
+  const articleTitle = $(h1Selector).text();
 
   if (!articleTitle) return 'ERROR: cannot extract article TITLE';
 
@@ -173,7 +172,6 @@ const R_U_N = async () => {
       ],
     });
 
-    // Sources iteration
     for (const source of SOURCE_ARTICLE_PARAMS) {
       const mainPageHtml = await getContentFromPuppeteerBrowser(
         browser,
@@ -181,25 +179,18 @@ const R_U_N = async () => {
       );
       const mainPage$ = cheerio.load(mainPageHtml);
 
-      // Extract main links from source page
       mainLinks = source.extractMainLinks(mainPage$);
       if (mainLinks.length === 0) {
-        addMessage(`Cannot extract main links from ${source.url}`);
-        continue;
+        throw new Error('Cannot extract main links');
       } else if (typeof mainLinks === 'string') {
-        addMessage(mainLinks);
-        continue;
+        throw new Error(mainLinks);
       }
 
-      // Iterate over main links and fetch articles data
       for (const link of mainLinks) {
         const articleSlug = getOriginalArticleSlug(link, lastSlugsInDB);
         if (!articleSlug) continue;
 
-        // get page from source with browser
         const html = await getContentFromPuppeteerBrowser(browser, link);
-
-        // parse original page with cheerio
         const $ = cheerio.load(html);
         const extractArticleResult = extractOriginalArticle(
           $,
@@ -221,12 +212,10 @@ const R_U_N = async () => {
           continue;
         }
 
-        // generate AI article (in English & Ukrainian) from original
         const aiArticleHtml = await generateAiText(
           extractArticleResult.articleContent
         );
 
-        // extract ai-generated html
         const extractedAiData = extractAiArticleDataFromAiHTML(
           cheerio.load(aiArticleHtml)
         );
@@ -243,7 +232,6 @@ const R_U_N = async () => {
           ...extractedAiData,
         };
 
-        // insert ai-generated article to db
         const insertToDbRes = await insertDataToDB(newArticle);
         insertToDbRes instanceof Error
           ? addMessage('ERROR: DB INSERT', insertToDbRes)
@@ -255,13 +243,7 @@ const R_U_N = async () => {
     }
 
     if (newArticles.length === 0)
-      addMessage('ERROR: New Articles Array is empty');
-
-    // translate articles into all another languages
-    const translateMessages = await translateArticles(
-      TRANSLATE_NUMBER_ARTICLES
-    );
-    messages.push(...translateMessages);
+      throw new Error('New Articles Array is empty');
   } catch (error) {
     addMessage(
       'ERROR: failed during processing',

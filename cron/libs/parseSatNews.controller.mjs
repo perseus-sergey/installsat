@@ -109,56 +109,6 @@ export const SOURCE_ARTICLE_PARAMS = [
   },
 ];
 
-// export const getTranslateAiPrompt = (originalText, translateTo) => `
-// - Translate the article to ${translateTo}.
-// - Make short description of the article in ${translateTo} about 150 - 200 characters length for the <meta name=description>.
-// - Select relevant search keywords in ${translateTo} that will be used on the page in the <meta name=keywords>.
-
-// - Articles must be written in ${translateTo}. But write names, surnames, titles and abbreviations in the original language.
-// - Do not escape the html entity.
-// - Do not add newline character (\n) into the text.
-
-// - Use the HTML format like:
-//   <h2 id='title'>Title</h2>
-//   <div id='description'>Description</div>
-//   <div id='keywords'>Keywords</div>
-//   <div id='text'>
-//   <p>Paragraph 1</p>
-//   <p>Paragraph 2</p>
-//   <p>Paragraph N</p>
-//   </div>
-
-// - Do not add newline character (\n) into the text.
-// - Do not wrap the text in \`\`\`json \`\`\`
-// Text of original article:
-// ${originalText}
-// `;
-
-// export const extractTranslatedDataFromAiHTML = ($) => {
-//   const aiTitle = $('#title').text().trim();
-//   if (!aiTitle)
-//     return `ERROR: cannot extract article EN_TITLE from AI article: ${$.html()}`;
-
-//   const aiContent = $('#text').html();
-//   if (!aiContent)
-//     return `ERROR: cannot extract article EN_CONTENT from AI article: ${$.html()}`;
-
-//   const aiDescription = $('#description').text().trim();
-//   if (!aiDescription)
-//     return `ERROR: cannot extract article EN_DESCRIPTION from AI article: ${$.html()}`;
-
-//   const aiKeywords = $('#keywords').text().trim();
-//   if (!aiKeywords)
-//     return `ERROR: cannot extract article EN_KEYWORDS from AI article: ${$.html()}`;
-
-//   return {
-//     aiTitle,
-//     aiContent,
-//     aiDescription,
-//     aiKeywords,
-//   };
-// };
-
 export const getAiPrompt = (originalText) => `
 Write a new article based on the original article so that it is not considered a copy of the original article by search engines.
 Don't change people's quotes.

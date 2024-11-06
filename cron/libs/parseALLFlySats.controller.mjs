@@ -244,6 +244,10 @@ const extractParsedData = ($, dbSatellites, intervalFromLastUpd) => {
   return { allParsedSats, newSats, updatedSats, extractErrors: errors };
 };
 
+// =========================================================================
+// ============================   EXPORT   =================================
+// =========================================================================
+
 export const parseProcess = async (intervalFromLastUpd) => {
   let browser;
   // let finalData = [];

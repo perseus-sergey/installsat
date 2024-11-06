@@ -40,6 +40,8 @@ export default async function Page({ params }: IParams) {
       <Title>Parse Page</Title>
 
       <ClientTwoInputsWithSubmit
+        fieldSetTitle="Generate AI Descriptions to FLY channel"
+        labelHtml="Insert Channel Name & Channel Broadcast Language"
         inputId={EUrlAdminParam.PARSE_FLY_CHANNEL_ABOUT}
         searchParamNames={[
           EUrlSearchParam.CHANNEL,
@@ -47,28 +49,26 @@ export default async function Page({ params }: IParams) {
         ]}
         buttonTitle="Generate"
         inputBaseHref={`${BASE_PARSE_HREF}/${EUrlAdminParam.PARSE_FLY_CHANNEL_ABOUT}`}
-        fieldSetTitle="Generate AI Descriptions to FLY channel"
-        labelHtml="Insert Channel Name & Channel Broadcast Language"
       />
 
       <ClientSelectWithSubmit
+        fieldSetTitle="Generate Channel description for one satellite"
+        labelHtml="Choose Satellite for generate DESCRIPTIONS FOR CHANNELS:"
         selectOptions={flySatOptions}
         inputId={EUrlAdminParam.CHANNEL_ABOUT_ONE_SAT}
         searchParamName={EUrlSearchParam.SAT}
         buttonTitle="generate"
         inputBaseHref={`${BASE_PARSE_HREF}/${EUrlAdminParam.CHANNEL_ABOUT_ONE_SAT}`}
-        fieldSetTitle="Generate Channel description for one satellite"
-        labelHtml="Choose Satellite for generate DESCRIPTIONS FOR CHANNELS:"
       />
 
       <ClientInputWithSubmit
+        fieldSetTitle="Flysat Satellites Table"
         inputId={EUrlAdminParam.PARSE_FLY_SATELLITES}
         inputDefaultValue={2}
         inputType="number"
         searchParamName={EUrlSearchParam.INTERVAL}
         buttonTitle="Parse"
         inputBaseHref={`${BASE_PARSE_HREF}/${EUrlAdminParam.PARSE_FLY_SATELLITES}`}
-        fieldSetTitle="Flysat Satellites Table"
         labelHtml={
           <>
             Parse main{' '}
@@ -86,34 +86,34 @@ export default async function Page({ params }: IParams) {
       />
 
       <ClientSelectWithSubmit
+        fieldSetTitle="Flysat Channels Table"
+        labelHtml="Choose Satellite for parsing CHANNELS:"
         selectOptions={flySatOptions}
         inputId={EUrlAdminParam.PARSE_FLY_CHANNELS}
         searchParamName={EUrlSearchParam.SAT}
         buttonTitle="Parse"
         inputBaseHref={`${BASE_PARSE_HREF}/${EUrlAdminParam.PARSE_FLY_CHANNELS}`}
-        fieldSetTitle="Flysat Channels Table"
-        labelHtml="Choose Satellite for parsing CHANNELS:"
       />
 
       <ClientInputWithSubmit
-        buttonTitle="Parse News"
-        inputBaseHref={`${BASE_PARSE_HREF}/${EUrlAdminParam.PARSE_SAT_NEWS}`}
         fieldSetTitle="Satellite News"
         labelHtml="Parse Satellite News"
+        buttonTitle="Parse News"
+        inputBaseHref={`${BASE_PARSE_HREF}/${EUrlAdminParam.PARSE_SAT_NEWS}`}
       />
 
       <ClientInputWithSubmit
-        buttonTitle="Translate"
-        inputBaseHref={`${BASE_PARSE_HREF}/old-channel-translate`}
         fieldSetTitle="Translate old channels"
         labelHtml="Translate old channels"
+        buttonTitle="Translate"
+        inputBaseHref={`${BASE_PARSE_HREF}/old-channel-translate`}
       />
 
       <ClientInputWithSubmit
-        buttonTitle="Translate & Update"
-        inputBaseHref={`${BASE_PARSE_HREF}/articles-translate`}
         fieldSetTitle="Translate articles into all languages from English"
         labelHtml="Choose articles quantity for translations"
+        buttonTitle="Translate & Update"
+        inputBaseHref={`${BASE_PARSE_HREF}/articles-translate`}
         inputId="add-slug-grade"
         inputDefaultValue={20}
         inputType="number"
@@ -121,10 +121,10 @@ export default async function Page({ params }: IParams) {
       />
 
       {/* <ClientInputWithSubmit
+        labelHtml="Translate old articles"
         buttonTitle="Translate"
         inputBaseHref={`${BASE_PARSE_HREF}/old-articles-translate`}
         fieldSetTitle="Translate old articles"
-        labelHtml="Translate old articles"
         inputId="add-slug-grade"
         inputDefaultValue={20}
         inputType="number"
@@ -132,13 +132,13 @@ export default async function Page({ params }: IParams) {
       /> */}
 
       <ClientInputWithSubmit
-        inputId="vse-tv"
+        fieldSetTitle="Schedule VseTv"
         buttonTitle="Schedule VseTv"
+        inputId="vse-tv"
         inputDefaultValue={VSE_TV_DEFAULT_ID}
         inputType="number"
         inputBaseHref={`${BASE_PARSE_HREF}/${EUrlAdminParam.PARSE_SCHEDULE_VSETV}`}
         searchParamName={EUrlSearchParam.COMMENT_ID}
-        fieldSetTitle="Schedule VseTv"
         labelHtml={
           <>
             Choose channel id for find time traps{' '}
@@ -155,13 +155,13 @@ export default async function Page({ params }: IParams) {
       />
 
       <ClientInputWithSubmit
+        fieldSetTitle="Schedule Vipiko"
         inputId="it999"
         buttonTitle="Schedule Vipiko"
         inputDefaultValue={IT999_DEFAULT_BATCH}
         inputType="number"
         inputBaseHref={`${BASE_PARSE_HREF}/${EUrlAdminParam.PARSE_SCHEDULE_VIPIKO}`}
         searchParamName={EUrlSearchParam.INTERVAL}
-        fieldSetTitle="Schedule Vipiko"
         labelHtml={
           <>
             Set batch size for DB inserting{' '}
@@ -178,13 +178,13 @@ export default async function Page({ params }: IParams) {
       />
 
       <ClientInputWithSubmit
-        inputId={EUrlAdminParam.PARSE_SAT_DIGEST}
+        fieldSetTitle="Transponder News"
         buttonTitle="Transponder News"
+        inputId={EUrlAdminParam.PARSE_SAT_DIGEST}
         inputDefaultValue={4}
         inputType="number"
         inputBaseHref={`${BASE_PARSE_HREF}/${EUrlAdminParam.PARSE_SAT_DIGEST}`}
         searchParamName={EUrlSearchParam.INTERVAL}
-        fieldSetTitle="Transponder News"
         labelHtml={
           <>
             Choose the number of Updates from{' '}
@@ -201,36 +201,36 @@ export default async function Page({ params }: IParams) {
       />
 
       {/* <ClientInputWithSubmit
-        inputId="add-en-news"
+        fieldSetTitle="Transponder News"
+        labelHtml={'Choose the Year or leave empty for current year.'}
         buttonTitle="Add English Text for sat digest news"
+        inputId="add-en-news"
         inputDefaultValue={0}
         inputType="number"
         inputBaseHref={`${BASE_PARSE_HREF}/add-en-news`}
         searchParamName={EUrlSearchParam.INTERVAL}
-        fieldSetTitle="Transponder News"
-        labelHtml={'Choose the Year or leave empty for current year.'}
       /> */}
 
       {/* <ClientInputWithSubmit
-        inputId="add-all-lang-digest-news"
+        fieldSetTitle="All Language Texts for Transponder News"
+        labelHtml={'Choose the Year or leave empty for current year.'}
         buttonTitle="Add All Language Texts for sat digest news"
+        inputId="add-all-lang-digest-news"
         inputDefaultValue={0}
         inputType="number"
         inputBaseHref={`${BASE_PARSE_HREF}/add-all-lang-digest-news`}
         searchParamName={EUrlSearchParam.INTERVAL}
-        fieldSetTitle="All Language Texts for Transponder News"
-        labelHtml={'Choose the Year or leave empty for current year.'}
       /> */}
 
       {/* <ClientInputWithSubmit
-        inputId="add-slug-grade"
+        fieldSetTitle="Trans News Add SAT_GRADE & SAT_SLUG"
+        labelHtml={'Choose the Year or leave empty for current year.'}
         buttonTitle="Add sat_slug & sat_grade for sat digest news"
+        inputId="add-slug-grade"
         inputDefaultValue={0}
         inputType="number"
         inputBaseHref={`${BASE_PARSE_HREF}/add-grade-trans`}
         searchParamName={EUrlSearchParam.INTERVAL}
-        fieldSetTitle="Trans News Add SAT_GRADE & SAT_SLUG"
-        labelHtml={'Choose the Year or leave empty for current year.'}
       /> */}
     </>
   );

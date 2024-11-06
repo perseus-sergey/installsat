@@ -124,6 +124,7 @@ const generateAiText = async (articleTitle, currentText, translateTo) => {
 
   const systemInstruction = `
 - Translate the article to ${translateTo}.
+
 - Make short description of the article in ${translateTo} about 150 - 200 characters length for the <meta name=description>.
 - Select relevant search keywords in ${translateTo} that will be used on the page in the <meta name=keywords>.
 
@@ -134,13 +135,16 @@ const generateAiText = async (articleTitle, currentText, translateTo) => {
 - Do not add newline character (\n) into the text.
 
 - Use the HTML format like:
-  <h2 id='title'>[Title in ${translateTo}]</h2>
-  <div id='description'>[Description in ${translateTo} (150 - 230 characters maximum)]</div>
-  <div id='keywords'>[Keywords in ${translateTo} (150 - 200 characters maximum)]</div>
-  <div id='text'>[Text in ${translateTo}. Do not add newline character (\n)]</div>
-
-- Do not add newline character (\n) into the text.
-- Do not wrap the output in \`\`\`html \`\`\`
+  <h1 id='title'>[Title in ${translateTo}]</h1>
+  <h3 id='description'>[Description in ${translateTo} (150 - 230 characters maximum)]</h3>
+  <h3 id='keywords'>[Keywords in ${translateTo} (150 - 200 characters maximum)]</h3>
+  <article id='text'>
+    <p>[Html formatted content in ${translateTo}.]</p>
+    <p>[Preserve existing HTML tags from the original content and only translate the text inside these tags and alt attributes]</p>
+    <p>[Paragraphs wrapped with the <p> tag, preserving other HTML tags like <strong>, <h2>, etc.]</p>
+    <p>[**Markdown formatting is strictly prohibited.**]</p>
+    <p>[Use <p> for each paragraph and other HTML tags for formatting.]</p>
+  </article>
 `;
 
   const prompt = `- Original article title: '${articleTitle}';\n - Original article content:'${currentText}'`;

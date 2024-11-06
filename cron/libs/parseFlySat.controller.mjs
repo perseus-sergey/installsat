@@ -497,6 +497,7 @@ const extractParsedData = ($) => {
             freqPolar,
             rowNumber
           );
+
           return;
         }
         currentFreq = Number(freq.trim());
@@ -507,6 +508,7 @@ const extractParsedData = ($) => {
             `freq: (${freq}) or polar: (${polar})`,
             rowNumber
           );
+
           return;
         }
 
@@ -520,6 +522,7 @@ const extractParsedData = ($) => {
             `${tds.eq(11).text()}. Frequency: (${currentFreq})`,
             rowNumber
           );
+
           return;
         }
 
@@ -531,6 +534,7 @@ const extractParsedData = ($) => {
             `${srFec}. Frequency: (${currentFreq})`,
             rowNumber
           );
+
           return;
         }
         currentSr = Number(sr);
@@ -541,6 +545,7 @@ const extractParsedData = ($) => {
             `sr: (${sr}) or fec: (${fec}). Frequency: (${currentFreq})`,
             rowNumber
           );
+
           return;
         }
 

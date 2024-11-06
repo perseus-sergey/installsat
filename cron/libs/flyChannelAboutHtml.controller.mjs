@@ -110,7 +110,7 @@ const generateAiText = async ({ channelTitle, language, ifRadio }) => {
 
   const result = await model.generateContent(prompt, generationConfig);
 
-  const response = result.response;
+  const { response } = result;
 
   return response.text();
 };
@@ -219,10 +219,15 @@ export const updateGeneratedDataDB = async (
   return res instanceof Error ? res : res.affectedRows;
 };
 
-export const generateChannelAbout = async ({ channelTitle, language }) => {
+export const generateChannelAbout = async ({
+  channelTitle,
+  language,
+  ifRadio,
+}) => {
   const aiText = await generateAiText({
     channelTitle,
     language,
+    ifRadio,
   });
 
   if (!aiText) {

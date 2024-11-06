@@ -8,6 +8,7 @@ import { parseFlyChannels } from './parseFlySat.controller.mjs';
 import { DateTime } from 'luxon';
 import puppeteer from 'puppeteer';
 import * as cheerio from 'cheerio';
+import { translateChannels } from './channelTranslate.controller.mjs';
 
 const isProductionMode = process.env.NODE_ENV === 'production';
 
@@ -320,7 +321,15 @@ export const parseProcess = async (intervalFromLastUpd) => {
     }
   }
 
-  return { dbSatList, newSatList, overSats, updatedSatList, messages };
+  const translateMessages = await translateChannels(20);
+
+  return {
+    dbSatList,
+    newSatList,
+    overSats,
+    updatedSatList,
+    messages: [...messages, ...translateMessages],
+  };
 };
 
 // interface IParsedSat {

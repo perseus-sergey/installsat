@@ -181,3 +181,18 @@ export const killChromeProcesses = () => {
 
 export const sleep = (ms = 1000) =>
   new Promise((resolve) => setTimeout(resolve, ms));
+
+export const cutBigText = (text, cutLength = 230) => {
+  if (!text) return '';
+
+  let trimmedText = text.trim();
+
+  if (trimmedText.length <= cutLength) return trimmedText;
+
+  trimmedText = text.slice(0, cutLength);
+  const lastSpaceIndex = trimmedText.lastIndexOf(' ');
+
+  return lastSpaceIndex !== -1
+    ? trimmedText.slice(0, lastSpaceIndex)
+    : trimmedText;
+};

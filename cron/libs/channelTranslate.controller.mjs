@@ -46,9 +46,9 @@ const getChannelsFromDB = async (quantity, lang, isOldChannels) => {
   const tblName = isOldChannels ? CHANNELS : FLY_CHANNELS;
 
   const sql = `
-  SELECT title, MAX(text_en) AS text_en
+  SELECT MAX(id) AS id, title, MAX(text_en) AS text_en
   FROM ${tblName}
-  WHERE text${translationParams[lang].suffix} IS NULL
+  WHERE text_en IS NOT NULL AND text_en != '' AND text${translationParams[lang].suffix} IS NULL
   GROUP BY title
   ORDER BY id DESC
   LIMIT ${quantity};

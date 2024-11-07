@@ -1,7 +1,7 @@
 import { poolExecute } from '@/libs/db/mysqldb';
 import { WRONG_CAT_IDS } from '@/models/articles/articleList.model';
 import { EDBTableTitles } from '@/models/dbTblNames.model';
-import { ELanguage } from '@/models/language.model';
+import { ELanguage, langSuffixUaEmpty } from '@/models/language.model';
 
 interface ISimilarArticleModel {
   id: number;
@@ -20,7 +20,7 @@ export const getSimilarArticles = async (
   const sql = `
     SELECT 
       id, 
-      ${lang === ELanguage.UA ? 'title' : 'title_en'} AS title, 
+      title${langSuffixUaEmpty[lang]} AS title,
       cpu,
       date
     FROM ${EDBTableTitles.ARTICLE}

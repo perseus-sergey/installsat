@@ -1,8 +1,9 @@
+import { cache } from 'react';
+
 import { poolExecute } from '@/libs/db/mysqldb';
 import { IArticleModel } from '@/models/articles/article.model';
 import { EDBTableTitles } from '@/models/dbTblNames.model';
-import { cache } from 'react';
-import { ELanguage } from '@/models/language.model';
+import { ELanguage, langSuffixUaEmpty } from '@/models/language.model';
 
 const { ARTICLE: TBL_ARTICLE } = EDBTableTitles;
 
@@ -10,10 +11,10 @@ export const getSatFinderArticle = cache(async (lang: ELanguage) => {
   const sql = `
   SELECT 
     id,
-    ${lang === ELanguage.UA ? 'title' : 'title_en'} AS title,
-    ${lang === ELanguage.UA ? 'description' : 'description_en'} AS description,
-    ${lang === ELanguage.UA ? 'keywords' : 'keywords_en'} AS keywords,
-    ${lang === ELanguage.UA ? 'text' : 'text_en'} AS text,
+    title${langSuffixUaEmpty[lang]} AS title,
+    description${langSuffixUaEmpty[lang]} AS description,
+    keywords${langSuffixUaEmpty[lang]} AS keywords,
+    text${langSuffixUaEmpty[lang]} AS text,
     cpu,
     view,
     logo 

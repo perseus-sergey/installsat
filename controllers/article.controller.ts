@@ -3,7 +3,7 @@ import { cache } from 'react';
 import { poolExecute } from '@/libs/db/mysqldb';
 import { IArticleModel } from '@/models/articles/article.model';
 import { EDBTableTitles } from '@/models/dbTblNames.model';
-import { ELanguage } from '@/models/language.model';
+import { ELanguage, langSuffixUaEmpty } from '@/models/language.model';
 
 const { ARTICLE: TBL_ARTICLE, ARTICLE_CATEGORIES } = EDBTableTitles;
 
@@ -12,17 +12,17 @@ export const getArticle = cache(
     const sql = `
   SELECT
   U.id,
-  ${lang === ELanguage.UA ? 'U.title' : 'U.title_en'} AS title,
-  ${lang === ELanguage.UA ? 'U.description' : 'U.description_en'} AS description,
-  ${lang === ELanguage.UA ? 'U.keywords' : 'U.keywords_en'} AS keywords,
-  ${lang === ELanguage.UA ? 'U.text' : 'U.text_en'} AS text,
+  U.title${langSuffixUaEmpty[lang]} AS title,
+  U.description${langSuffixUaEmpty[lang]} AS description,
+  U.keywords${langSuffixUaEmpty[lang]} AS keywords,
+  U.text${langSuffixUaEmpty[lang]} AS text,
   U.cpu AS slug,
   U.date,
   U.author,
   U.cat AS cat_id,
   U.view,
   U.logo,
-  ${lang === ELanguage.UA ? 'C.title' : 'C.title_en'} AS cat_name,
+  C.title${langSuffixUaEmpty[lang]} AS cat_name,
   C.cpu AS cat_slug,
   C.folder AS cat_folder
 FROM

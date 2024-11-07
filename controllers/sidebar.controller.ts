@@ -4,7 +4,11 @@ import { poolExecute } from '@/libs/db/mysqldb';
 import { ISatModel } from '@/models/tblSat.model';
 import { NUMBER_OF_LAST_NEWS_WIDGET } from '@/models/ui/widget.model';
 import { EDBTableTitles } from '@/models/dbTblNames.model';
-import { DEFAULT_LANG, ELanguage } from '@/models/language.model';
+import {
+  DEFAULT_LANG,
+  ELanguage,
+  langSuffixUaEmpty,
+} from '@/models/language.model';
 import {
   IAllNewsModel,
   WRONG_CAT_IDS,
@@ -33,21 +37,21 @@ const {
 
 const { UA, EN, RU, ES, AR, DE, FR, IT } = ELanguage;
 
-const langTitle = {
-  [UA]: 'title',
-  [EN]: 'title_en',
-  [RU]: 'title_ru',
-  [ES]: 'title_es',
-  [AR]: 'title_ar',
-  [DE]: 'title_de',
-  [FR]: 'title_fr',
-  [IT]: 'title_it',
+const langAdd = {
+  [UA]: '',
+  [EN]: '_en',
+  [RU]: '_ru',
+  [ES]: '_es',
+  [AR]: '_ar',
+  [DE]: '_de',
+  [FR]: '_fr',
+  [IT]: '_it',
 };
 
 export const getArtCatListSideBar = async (lang: ELanguage) => {
   const sql = `
   SELECT
-    ${langTitle[lang] || langTitle[EN]} AS title,
+    title${langAdd[lang]} AS title,
     cpu
   FROM ${ARTICLE_CATEGORIES} 
   WHERE id NOT IN ${WRONG_CAT_IDS}
@@ -59,12 +63,10 @@ export const getArtCatListSideBar = async (lang: ELanguage) => {
 };
 
 export const getChannelCatList = cache(async (lang = DEFAULT_LANG) => {
-  const titleField = lang === ELanguage.UA ? 'title' : 'title_en AS title';
-
   return await poolExecute<IChannelCatsModel[]>(
     `
       SELECT 
-        ${titleField}, 
+        title${langSuffixUaEmpty[lang]} AS title,
         id, 
         parent, 
         cpu 
@@ -94,7 +96,7 @@ export const getLastNewsWidgetList = cache(
     await poolExecute<IAllNewsModel[]>(`
     SELECT 
       id, 
-      ${lang === ELanguage.UA ? 'title' : 'title_en'} AS title,
+      title${langAdd[lang]} AS title,
       cpu 
     FROM ${TBL_ARTICLE} 
     WHERE cat NOT IN ${WRONG_CAT_IDS} 
@@ -107,7 +109,7 @@ export const getUsefulArticleList = async (lang: ELanguage) =>
   await poolExecute<IAllNewsModel[]>(`
   SELECT 
     id,
-    ${lang === ELanguage.UA ? 'title' : 'title_en'} AS title,
+    title${langAdd[lang]} AS title,
     cpu 
    FROM ${TBL_ARTICLE} 
    WHERE cat=4 OR cat=5

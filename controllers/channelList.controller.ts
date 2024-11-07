@@ -6,7 +6,11 @@ import {
   IPackageChannelListModel,
   ISatChannelListModel,
 } from '@/models/channels/channelList.model';
-import { ELanguage } from '@/models/language.model';
+import {
+  ELanguage,
+  langSuffix,
+  langSuffixUaEmpty,
+} from '@/models/language.model';
 import { EDBTableTitles } from '@/models/dbTblNames.model';
 // import { decode } from 'html-entities';
 import { cache } from 'react';
@@ -109,7 +113,7 @@ export const getSatChannels = cache(
    ch.programma,
    ch.encryption,
    ch.biss,
-   ${lang === ELanguage.UA ? 'ch.description' : 'ch.description_en'}  AS description, 
+   ch.description${langSuffixUaEmpty[lang]} AS description,
   sat.title AS sat_title,
   sat.position AS sat_position,
   sat.logo AS sat_logo,
@@ -120,8 +124,8 @@ export const getSatChannels = cache(
   fr.fec,
   be.polar,
   be.title AS beam,
-  ${lang === ELanguage.UA ? 'te.title' : 'te.title_en'}  AS tem, 
-  ${lang === ELanguage.UA ? 'te.description' : 'te.description_en'}  AS genre_description,
+  te.title${langSuffixUaEmpty[lang]} AS tem,
+  te.description${langSuffixUaEmpty[lang]} AS genre_description,
   co.title AS compr,
   la.title AS lan
   FROM ${CHANNELS} AS ch 
@@ -200,34 +204,37 @@ export const getFlySatChannels = cache(
 
     const sql = `
   SELECT 
-   ch.id,
-   ch.title,
-   ch.slug,
-   ch.frequency,
-   ch.sr,
-   ch.fec,
-   ch.polarization,
-   ch.beam,
-   ch.compress,
-   ch.sat_slug,
-   ch.theme_id,
-   ch.logo,
-   ch.encryption,
-   ch.biss,
-   ch.mode,
-   ch.is_radio,
-   ch.languages,
-   ch.sid,
-   ch.v_pid,
-   ch.a_pid,
-   ${lang === ELanguage.UA ? 'ch.description_ua' : 'ch.description_en'} AS description,
-   ch.t2_stream,
+    ch.id,
+    ch.title,
+    ch.slug,
+    ch.frequency,
+    ch.sr,
+    ch.fec,
+    ch.polarization,
+    ch.beam,
+    ch.compress,
+    ch.sat_slug,
+    ch.theme_id,
+    ch.logo,
+    ch.encryption,
+    ch.biss,
+    ch.mode,
+    ch.is_radio,
+    ch.languages,
+    ch.sid,
+    ch.v_pid,
+    ch.a_pid,
+    ch.description${langSuffix[lang]} AS description,
+    ch.t2_stream,
+
     sat.title AS sat_title,
     sat.position AS sat_position,
     sat.logo AS sat_logo,
     sat.grade AS sat_grade,
-    ${lang === ELanguage.UA ? 'te.title' : 'te.title_en'}  AS theme, 
-    ${lang === ELanguage.UA ? 'te.description' : 'te.description_en'}  AS genre_description
+
+    te.title${langSuffixUaEmpty[lang]} AS theme,
+    te.description${langSuffixUaEmpty[lang]} AS genre_description
+
   FROM ${FLY_CHANNELS} AS ch 
   LEFT JOIN ${CHANNEL_THEME} AS te ON ch.theme_id = te.id
   LEFT JOIN ${FLY_SATELLITES} AS sat ON ch.sat_slug = sat.slug 
@@ -303,7 +310,7 @@ export const getOnlineChannels = cache(
     C.cpu AS chan_cpu,
     C.logo AS chan_logo,
     C.encryption,
-    ${lang === ELanguage.UA ? 'C.description' : 'C.description_en'}  AS chan_description,
+    C.description${langSuffixUaEmpty[lang]} AS chan_description,
     C.view,
     C.tema AS genre_id,
     C.compress,
@@ -312,8 +319,9 @@ export const getOnlineChannels = cache(
     CO.title AS compr,
     L.title AS lan,
     C.tvforsite_net,
-    ${lang === ELanguage.UA ? 'T.description' : 'T.description_en'}  AS genre_description,
-    ${lang === ELanguage.UA ? 'T.title' : 'T.title_en'}  AS genre_title
+
+    T.description${langSuffixUaEmpty[lang]} AS genre_description,
+    T.title${langSuffixUaEmpty[lang]} AS genre_title
 
     FROM ${CHANNELS} AS C
     LEFT JOIN ${CHANNEL_COMPRESSION} AS CO ON C.compress = CO.id 
@@ -388,12 +396,12 @@ export const getChannelsWithSchedule = async (
       C.title AS chan_title,
       MAX(C.cpu) AS chan_cpu,
       MAX(C.logo) AS chan_logo,
-      MAX(${lang === ELanguage.UA ? 'C.description' : 'C.description_en'}) AS chan_description,
+      MAX(C.description${langSuffixUaEmpty[lang]}) AS chan_description,
       MAX(C.view) AS view,
       C.tema AS genre_id,
       MAX(L.title) AS lan,
-      ${lang === ELanguage.UA ? 'MAX(T.title)' : 'MAX(T.title_en)'}  AS genre_title,
-      ${lang === ELanguage.UA ? 'MAX(T.description)' : 'MAX(T.description_en)'}  AS genre_description
+      MAX(T.title${langSuffixUaEmpty[lang]}) AS genre_title,
+      MAX(T.description${langSuffixUaEmpty[lang]}) AS genre_description
   FROM 
       ${CHANNELS} AS C
   LEFT JOIN 
@@ -462,14 +470,14 @@ export const getT2Channels = cache(
      C.cpu AS chan_cpu,
      C.logo AS chan_logo,
      C.encryption,
-     ${lang === ELanguage.UA ? 'C.description' : 'C.description_en'}  AS chan_description,
+     C.description${langSuffixUaEmpty[lang]} AS chan_description,
      C.tema AS genre_id,
      C.cat AS cat_id,
 
       CO.title AS compr,
       L.title AS lan,
-      ${lang === ELanguage.UA ? 'T.title' : 'T.title_en'}  AS genre_title,
-      ${lang === ELanguage.UA ? 'T.description' : 'T.description_en'}  AS genre_description,
+      T.title${langSuffixUaEmpty[lang]} AS genre_title,
+      T.description${langSuffixUaEmpty[lang]} AS genre_description,
       cat.logo AS cat_logo,
       cat.title AS cat_title,
       cat.cpu AS cat_slug,
@@ -515,13 +523,13 @@ export const getPackageChannels = cache(
   SELECT 
     cat.id AS cat_id,
     cat.title AS cat_title,
-    ${lang === ELanguage.UA ? 'cat.title' : 'cat.title_en'}  AS cat_title,
+    cat.title${langSuffixUaEmpty[lang]} AS cat_title,
     cat.cpu AS cat_slug,
     cat.logo AS cat_logo, 
     cat.description AS cat_description,
     cat.view AS cat_view,
     subcat.cpu AS genre_slug,
-    ${lang === ELanguage.UA ? 'subcat.title' : 'subcat.title_en'}  AS genre_title,
+    subcat.title${langSuffixUaEmpty[lang]} AS genre_title,
     subcat.h1 AS genre_h1,
     subcat.logo AS genre_logo,
     subcat.description AS genre_description,
@@ -532,7 +540,7 @@ export const getPackageChannels = cache(
     C.title AS chan_title,
     C.cpu AS chan_cpu,
     C.logo AS chan_logo,
-    ${lang === ELanguage.UA ? 'C.description' : 'C.description_en'} AS chan_description,
+    C.description${langSuffixUaEmpty[lang]} AS chan_description,
     la.title AS lan
   FROM 
     ${CHANNEL_CATEGORY} AS cat

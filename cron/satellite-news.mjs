@@ -17,6 +17,7 @@ import {
   extractAiArticleDataFromAiHTML,
   getAiPrompt,
 } from './libs/parseSatNews.controller.mjs';
+import { translateArticles } from './libs/articleTranslate.controller.mjs';
 
 // ----------------------------------------------------------------
 // Parse last articles from specified sites then change them by AI

@@ -103,19 +103,12 @@ export default async function Page({ params }: IParams) {
       />
 
       <ClientInputWithSubmit
-        fieldSetTitle="Translate old channels"
-        labelHtml="Translate old channels"
-        buttonTitle="Translate"
-        inputBaseHref={`${BASE_PARSE_HREF}/old-channel-translate`}
-      />
-
-      <ClientInputWithSubmit
-        fieldSetTitle="Translate articles into all languages from English"
+        fieldSetTitle="Translate ARTICLES into all languages from English"
         labelHtml="Choose articles quantity for translations"
         buttonTitle="Translate & Update"
         inputBaseHref={`${BASE_PARSE_HREF}/articles-translate`}
         inputId="add-slug-grade"
-        inputDefaultValue={20}
+        inputDefaultValue={10}
         inputType="number"
         searchParamName={EUrlSearchParam.INTERVAL}
       />
@@ -221,6 +214,13 @@ export default async function Page({ params }: IParams) {
           </>
         }
       />
+
+      {/* <ClientInputWithSubmit
+        fieldSetTitle="Translate old channels"
+        labelHtml="Translate old channels"
+        buttonTitle="Translate"
+        inputBaseHref={`${BASE_PARSE_HREF}/old-channel-translate`}
+      /> */}
 
       {/* <ClientInputWithSubmit
         fieldSetTitle="Transponder News"

@@ -53,8 +53,7 @@ const ChannelParams = ({
       <ul>
         {chan_lang && (
           <li>
-            {paramsLanguage[lang]}
-            <strong>{chan_lang}</strong>
+            {paramsLanguage[lang]} - <strong>{chan_lang}</strong>
           </li>
         )}
         {url && (

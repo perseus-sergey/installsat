@@ -85,7 +85,7 @@ export const generateMetadata = async ({
     a_pid,
   } = flyChannels;
 
-  const metaTitle = `${titleBefore[lang]} ${title} | ${sat_title} ${frequency} ${polarization}`;
+  const metaTitle = `${titleBefore[lang]} ${title} | ${sat_title} | ${frequency} ${polarization}`;
   const chanDescription = description || `${metaTitle} | ${beam} | ${a_pid}`;
 
   return {

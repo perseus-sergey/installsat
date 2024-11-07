@@ -5,7 +5,11 @@ import {
   IOnlineChannel,
   ISimilarChannel,
 } from '@/models/channels/channel.model';
-import { ELanguage } from '@/models/language.model';
+import {
+  ELanguage,
+  langSuffix,
+  langSuffixUaEmpty,
+} from '@/models/language.model';
 import { EDBTableTitles } from '@/models/dbTblNames.model';
 import { cache } from 'react';
 
@@ -30,11 +34,11 @@ export const getDBFlyChannel = cache(
       SELECT 
         CH.id, 
         CH.title, 
-        CH.slug, 
+        CH.slug,
         CH.logo,
-        ${lang === ELanguage.UA ? 'CH.description_ua' : 'CH.description_en'} AS description, 
-        ${lang === ELanguage.UA ? 'CH.text_ua' : 'CH.text_en'} AS text, 
-        ${lang === ELanguage.UA ? 'CH.keywords_ua' : 'CH.keywords_en'} AS keywords, 
+        CH.description${langSuffix[lang]} AS description,
+        CH.text${langSuffix[lang]} AS text,
+        CH.keywords${langSuffix[lang]} AS keywords,
         CH.official_site_url, 
         CH.view, 
         CH.canonical, 
@@ -59,11 +63,14 @@ export const getDBFlyChannel = cache(
         CH.is_removed,
         CH.languages,
         CH.theme_id,
+
         S.title AS sat_title,
         S.position AS sat_position,
         S.grade AS sat_grade,
-        ${lang === ELanguage.UA ? 'T.title' : 'T.title_en'} AS theme, 
-        ${lang === ELanguage.UA ? 'T.description' : 'T.description_en'} AS genre_description 
+
+        T.title${langSuffixUaEmpty[lang]} AS theme,
+        T.description${langSuffixUaEmpty[lang]} AS genre_description
+
       FROM ${FLY_CHANNELS} AS CH 
       LEFT JOIN ${CHANNEL_THEME} AS T ON CH.theme_id = T.id 
       LEFT JOIN ${FLY_SATELLITES} AS S ON CH.sat_slug = S.slug 
@@ -83,9 +90,9 @@ export const getDBChannel = cache(async (slug: string, lang: ELanguage) => {
     CH.title, 
     CH.cpu AS chan_slug, 
     CH.logo, 
-    ${lang === ELanguage.UA ? 'CH.description' : 'CH.description_en'}  AS description,
-    ${lang === ELanguage.UA ? 'CH.text' : 'CH.text_en'}  AS text,
-    ${lang === ELanguage.UA ? 'CH.keywords' : 'CH.keywords_en'}  AS keywords,
+    CH.description${langSuffixUaEmpty[lang]} AS description,
+    CH.text${langSuffixUaEmpty[lang]} AS text,
+    CH.keywords${langSuffixUaEmpty[lang]} AS keywords,
     CH.cat AS cat_id, 
     CH.url, 
     CH.view, 
@@ -93,20 +100,30 @@ export const getDBChannel = cache(async (slug: string, lang: ELanguage) => {
     CH.vsetv, 
     CH.vipiko, 
     CH.tvforsite_net,
+
     F.freq,
     F.sr,
     F.fec,
+
     B.polar,
+
     S.title AS sat_title,
     S.cpu AS sat_slug,
+
     E.title AS encryption,
-    ${lang === ELanguage.UA ? 'T.title' : 'T.title_en'}  AS genre, 
+
+    T.title${langSuffixUaEmpty[lang]} AS genre,
+
     CO.title AS compression,
-    ${lang === ELanguage.UA ? 'C.title' : 'C.title_en'}  AS cat_title,
+
+    C.title${langSuffixUaEmpty[lang]} AS cat_title,
     C.parent AS cat_parent_id,
     C.cpu AS cat_slug,
-    (SELECT ${lang === ELanguage.UA ? 'title' : 'title_en'} FROM ${CHANNEL_CATEGORY} WHERE id = C.parent LIMIT 1) AS cat_parent_title,
+
+    (SELECT title${langSuffixUaEmpty[lang]} FROM ${CHANNEL_CATEGORY} WHERE id = C.parent LIMIT 1) AS cat_parent_title,
     (SELECT cpu FROM ${CHANNEL_CATEGORY} WHERE id = C.parent LIMIT 1) AS cat_parent_cpu,
+    (SELECT cpu FROM ${CHANNEL_CATEGORY} WHERE id = C.parent LIMIT 1) AS cat_parent_cpu,
+
     L.title AS chan_lang
   FROM 
     ${CHANNELS} AS CH 
@@ -143,11 +160,11 @@ export const getDBOnlineChannel = cache(
     C.id, 
     C.title, 
     C.cpu AS chan_slug, 
-    C.logo, 
-    ${lang === ELanguage.UA ? 'C.description' : 'C.description_en'}  AS description,
-    ${lang === ELanguage.UA ? 'C.text' : 'C.text_en'}  AS text,
-    ${lang === ELanguage.UA ? 'C.keywords' : 'C.keywords_en'}  AS keywords,
-    C.url, 
+    C.logo,
+    C.description${langSuffixUaEmpty[lang]} AS description,
+    C.text${langSuffixUaEmpty[lang]} AS text,
+    C.keywords${langSuffixUaEmpty[lang]} AS keywords,
+    C.url,
     C.view, 
     C.canonical, 
     C.programma, 
@@ -160,9 +177,13 @@ export const getDBOnlineChannel = cache(
     C.telegid_id, 
     C.vsetv, 
     C.tema AS genre_id,
+
     COMP.title as compression,
+
     L.title as chan_lang,
-    COUNT.title as country 
+
+    COUNT.title as country
+
   FROM ${CHANNELS} AS C 
   LEFT JOIN ${CHANNEL_COMPRESSION} AS COMP ON C.compress = COMP.id 
   LEFT JOIN tbl_country AS COUNT ON C.country_id = COUNT.id 
@@ -183,14 +204,14 @@ export const getSimilarChannels = async (logo: string, lang: ELanguage) => {
     C.compress, 
     C.cpu,
     C.cat       AS cat_id,
-    ${lang === ELanguage.UA ? 'CA.title' : 'CA.title_en'} AS cat_title,
+    CA.title${langSuffixUaEmpty[lang]} AS cat_title,
     CA.cpu      AS cat_slug,
     CA.parent   AS cat_parent_id,
     S.title     AS sat_title,
     S.cpu       AS sat_cpu,
     S.position  AS sat_position,
     F.freq      AS freq,
-    (SELECT ${lang === ELanguage.UA ? 'title' : 'title_en'} FROM ${CHANNEL_CATEGORY} WHERE id = CA.parent LIMIT 1) AS cat_parent_title,
+    (SELECT title${langSuffixUaEmpty[lang]} FROM ${CHANNEL_CATEGORY} WHERE id = CA.parent LIMIT 1) AS cat_parent_title,
     (SELECT cpu FROM ${CHANNEL_CATEGORY} WHERE id = CA.parent LIMIT 1) AS cat_parent_cpu
   FROM 
     ${CHANNELS} AS C 

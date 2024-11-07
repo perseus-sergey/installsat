@@ -5,7 +5,7 @@ import {
   IAllNewsModel,
   WRONG_CAT_IDS,
 } from '@/models/articles/articleList.model';
-import { ELanguage } from '@/models/language.model';
+import { ELanguage, langSuffixUaEmpty } from '@/models/language.model';
 import { EDBTableTitles } from '@/models/dbTblNames.model';
 
 const { ARTICLE: TBL_ARTICLE, ARTICLE_CATEGORIES } = EDBTableTitles;
@@ -18,26 +18,13 @@ interface ISingleCatArticlesModel {
   text: string;
 }
 
-const { UA, EN, RU, ES, AR, DE, FR, IT } = ELanguage;
-
-const langAdd = {
-  [UA]: '',
-  [EN]: '_en',
-  [RU]: '_ru',
-  [ES]: '_es',
-  [AR]: '_ar',
-  [DE]: '_de',
-  [FR]: '_fr',
-  [IT]: '_it',
-};
-
 export const getCurrentCatParams = cache(
   async (catCpu: string, lang: ELanguage) => {
     const sql = `
     SELECT id,
-      title${langAdd[lang]} AS title,
-      description${langAdd[lang]} AS description,
-      text${langAdd[lang]} AS text,
+      title${langSuffixUaEmpty[lang]} AS title,
+      description${langSuffixUaEmpty[lang]} AS description,
+      text${langSuffixUaEmpty[lang]} AS text,
       cpu
      FROM ${ARTICLE_CATEGORIES} 
      WHERE cpu = ?
@@ -67,23 +54,17 @@ export const getChunkOfNews = async ({
 }: IChankOfNews) => {
   const catValue = catId ? `=${catId}` : `NOT IN ${WRONG_CAT_IDS}`;
 
-  const getSearchText = (alias = 'U.') => {
-    const uaStr = `${alias}title LIKE "%${searchQuery}%" OR ${alias}description LIKE "%${searchQuery}%"`;
-
-    return searchQuery
-      ? lang === ELanguage.UA
-        ? `AND (${uaStr})`
-        : `AND (${alias}title_en LIKE "%${searchQuery}%" OR ${alias}description_en LIKE "%${searchQuery}%" OR ${uaStr})`
+  const getSearchText = (alias = 'U.') =>
+    searchQuery
+      ? `AND (${alias}title${langSuffixUaEmpty[lang]} LIKE "%${searchQuery}%" OR ${alias}description${langSuffixUaEmpty[lang]} LIKE "%${searchQuery}%")`
       : '';
-  };
-  // const searchText = searchQuery ? `LIKE "%${searchQuery}%"` : '!= ""';
 
   const sql = `
   SELECT 
   U.id,
   U.cat,
-  ${lang === UA ? 'U.title' : 'U.title_en'} AS title,
-  ${lang === UA ? 'U.description' : 'U.description_en'} AS description,
+  U.title${langSuffixUaEmpty[lang]} AS title,
+  U.description${langSuffixUaEmpty[lang]} AS description,
   U.cpu,
   U.date,
   U.author,
@@ -91,7 +72,7 @@ export const getChunkOfNews = async ({
   U.view,
   C.comment_count,
   T.total_count,
-  C2.title${langAdd[lang]} AS category_title,
+  C2.title${langSuffixUaEmpty[lang]} AS category_title,
   C2.cpu AS category_cpu
 FROM ${TBL_ARTICLE} U
 LEFT JOIN (SELECT post, COUNT(id) AS comment_count FROM tbl_comments GROUP BY post) C ON U.id = C.post

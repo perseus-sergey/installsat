@@ -9,15 +9,41 @@ export enum ELanguage {
   IT = 'it',
 }
 
-export const DEFAULT_LANG = ELanguage.EN;
+const { UA, EN, RU, ES, AR, DE, FR, IT } = ELanguage;
+
+// export const langSuffixUaEmpty = {
+//   [UA]: '',
+//   [EN]: '_en',
+//   [RU]: '_ru',
+//   [ES]: '_es',
+//   [AR]: '_ar',
+//   [DE]: '_de',
+//   [FR]: '_fr',
+//   [IT]: '_it',
+// };
+
+export const langSuffixUaEmpty = {
+  [UA]: '',
+  [EN]: '_en',
+  [RU]: '_en',
+  [ES]: '_en',
+  [AR]: '_en',
+  [DE]: '_en',
+  [FR]: '_en',
+  [IT]: '_en',
+};
+
+export const langSuffix = { ...langSuffixUaEmpty, [UA]: '_ua' };
+
+export const DEFAULT_LANG = EN;
 
 export interface ILang {
-  [ELanguage.UA]: string;
-  [ELanguage.EN]: string;
-  [ELanguage.RU]: string;
-  [ELanguage.ES]: string;
-  [ELanguage.AR]: string;
-  [ELanguage.DE]: string;
-  [ELanguage.FR]: string;
-  [ELanguage.IT]: string;
+  [UA]: string;
+  [EN]: string;
+  [RU]: string;
+  [ES]: string;
+  [AR]: string;
+  [DE]: string;
+  [FR]: string;
+  [IT]: string;
 }

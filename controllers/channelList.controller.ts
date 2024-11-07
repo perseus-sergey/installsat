@@ -265,15 +265,15 @@ export const getFlySatChannels = cache(
   // }
 );
 
-export const getChannelPackages = async (): Promise<
-  IChannelPackagesModel[]
-> => {
+export const getChannelPackages = async (
+  lang: ELanguage
+): Promise<IChannelPackagesModel[]> => {
   const sql = `
   SELECT 
     C.id, 
-    C.title, 
+    C.title${langSuffixUaEmpty[lang]} AS title, 
     C.cpu, 
-    C.description, 
+    C.description${langSuffixUaEmpty[lang]} AS description, 
     C.logo, 
     C.view, 
     (SELECT COUNT(id) FROM tbl_comments_packs WHERE post=C.id) AS comment_count
@@ -439,15 +439,16 @@ interface IPackageParams {
   cat_view: number;
 }
 
-export const getPackageParams = cache(async (packageSlug?: string) => {
-  const where = packageSlug ? 'cpu = ?' : 'id = ?';
-  const param = packageSlug || 22;
+export const getPackageParams = cache(
+  async (lang: ELanguage, packageSlug?: string) => {
+    const where = packageSlug ? 'cpu = ?' : 'id = ?';
+    const param = packageSlug || 22;
 
-  const sql = `
+    const sql = `
     SELECT
       id AS cat_id,
       view AS cat_view,
-      title AS cat_title,
+      title${langSuffixUaEmpty[lang]} AS cat_title,
       logo AS cat_logo
     FROM
       ${CHANNEL_CATEGORY}
@@ -455,33 +456,36 @@ export const getPackageParams = cache(async (packageSlug?: string) => {
     LIMIT 1
   `;
 
-  const resp = await poolExecute<IPackageParams[]>(sql, [param]);
+    const resp = await poolExecute<IPackageParams[]>(sql, [param]);
 
-  return resp instanceof Error ? null : resp[0];
-});
+    return resp instanceof Error ? null : resp[0];
+  }
+);
 
 export const getT2Channels = cache(
   async (lang: ELanguage, searchQuery = '') => {
     const searchPart = searchQuery ? `AND C.title LIKE "%${searchQuery}%"` : '';
 
     const sql = `
-    SELECT C.id AS chan_id,
-     C.title AS chan_title,
-     C.cpu AS chan_cpu,
-     C.logo AS chan_logo,
-     C.encryption,
-     C.description${langSuffixUaEmpty[lang]} AS chan_description,
-     C.tema AS genre_id,
-     C.cat AS cat_id,
+    SELECT 
+      C.id AS chan_id,
+      C.title AS chan_title,
+      C.cpu AS chan_cpu,
+      C.logo AS chan_logo,
+      C.encryption,
+      C.description${langSuffixUaEmpty[lang]} AS chan_description,
+      C.tema AS genre_id,
+      C.cat AS cat_id,
 
       CO.title AS compr,
       L.title AS lan,
       T.title${langSuffixUaEmpty[lang]} AS genre_title,
       T.description${langSuffixUaEmpty[lang]} AS genre_description,
+
       cat.logo AS cat_logo,
-      cat.title AS cat_title,
+      cat.title${langSuffixUaEmpty[lang]} AS cat_title,
       cat.cpu AS cat_slug,
-      cat.description AS cat_description,
+      cat.description${langSuffixUaEmpty[lang]} AS cat_description,
       cat.view AS cat_view
     FROM ${CHANNELS} AS C
     LEFT JOIN ${CHANNEL_CATEGORY} AS cat ON C.cat = cat.id 
@@ -522,20 +526,21 @@ export const getPackageChannels = cache(
     const sql = `
   SELECT 
     cat.id AS cat_id,
-    cat.title AS cat_title,
     cat.title${langSuffixUaEmpty[lang]} AS cat_title,
     cat.cpu AS cat_slug,
     cat.logo AS cat_logo, 
-    cat.description AS cat_description,
+    cat.description${langSuffixUaEmpty[lang]} AS cat_description,
     cat.view AS cat_view,
+
     subcat.cpu AS genre_slug,
     subcat.title${langSuffixUaEmpty[lang]} AS genre_title,
-    subcat.h1 AS genre_h1,
+    subcat.h1${langSuffixUaEmpty[lang]} AS genre_h1,
     subcat.logo AS genre_logo,
-    subcat.description AS genre_description,
+    subcat.description${langSuffixUaEmpty[lang]} AS genre_description,
     subcat.price,
     subcat.h1,
     subcat.id AS genre_id,
+
     C.id AS chan_id,
     C.title AS chan_title,
     C.cpu AS chan_cpu,

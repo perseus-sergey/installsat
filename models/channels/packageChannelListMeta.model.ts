@@ -118,12 +118,12 @@ export const PACKAGE_CHANNEL_LIST_DATA = {
     return {
       [UA]: `Вартість пакету ${price} грн/міс`,
       [EN]: `Package price ${price} UAH/month`,
-      [RU]: `Цена пакета ${price} руб./мес`,
-      [ES]: `Precio del paquete ${price} EUR/mes`,
-      [AR]: `سعر الحزمة ${price} ريال/شهر`,
-      [DE]: `Paketpreis ${price} EUR/Monat`,
-      [FR]: `Prix du paquet ${price} EUR/mois`,
-      [IT]: `Prezzo del pacchetto ${price} EUR/mese`,
+      [RU]: `Цена пакета ${price} грн./мес`,
+      [ES]: `Precio del paquete ${price} UAH/mes`,
+      [AR]: `سعر الحزمة ${price} UAH/month`,
+      [DE]: `Paketpreis ${price} UAH/month`,
+      [FR]: `Prix du paquet ${price} UAH/month`,
+      [IT]: `Prezzo del pacchetto ${price} UAH/month`,
     };
   },
   similarLinks: {

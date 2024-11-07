@@ -57,7 +57,7 @@ export const generateMetadata = ({ params }: IPageProps): Metadata => {
 };
 export default async function Page({ params }: IPageProps) {
   const lang = getELangKey(params[LANG]);
-  const packages = await getChannelPackages();
+  const packages = await getChannelPackages(lang);
 
   return (
     <>

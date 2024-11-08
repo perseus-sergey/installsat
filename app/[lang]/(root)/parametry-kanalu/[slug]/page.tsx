@@ -35,6 +35,7 @@ import {
 import { INFO_PANEL_TITLES } from '@/models/ui/infoPanel.model';
 import { CHANNEL_RESPONSIBILITIES } from '@/models/channels/channel.model';
 import { BREAD_SAT_CHANNEL_LIST } from '@/models/channels/channelParams.model';
+import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
 
 const BASE_URL = process.env.BASE_URL || MAIN_URL;
 
@@ -137,7 +138,7 @@ export default async function Page({ params }: IChannelProps) {
     logo,
     text,
     view,
-    // chan_slug,
+    chan_slug,
     cat_id,
     // cat_title,
     // cat_parent_title,
@@ -148,19 +149,6 @@ export default async function Page({ params }: IChannelProps) {
     // sat_title,
     tvforsite_net,
   } = sqlResult;
-
-  // const catLink =
-  //   cat_parent_id > 0
-  //     ? `${cat_parent_cpu}#${CHANNEL_LIST_ANCHOR_START}${cat_id}`
-  //     : cat_slug;
-
-  // const catTitle =
-  //   cat_parent_id > 0 ? `${cat_parent_title} - ${cat_title}` : cat_title;
-
-  // const numberOfComments = await getCommentsNumber(
-  //   EDBTableTitles.COMMENTS_CHANNEL,
-  //   `${id}`
-  // );
 
   const currentDate = getFormattedDateStrYearFirst('', lang);
 
@@ -259,15 +247,16 @@ export default async function Page({ params }: IChannelProps) {
           lang={lang}
         />
       </Suspense>
+
+      <Suspense>
+        <CommentBlock
+          lang={lang}
+          revalidateUrl={`/${lang}/${CHANNEL_PARAMS}/${chan_slug}`}
+          dbCommentTableName={EDBTableTitles.COMMENTS_CHANNEL}
+          articleId={`${id}`}
+          articleName={title}
+        />
+      </Suspense>
     </>
   );
 }
-
-// <CommentBlock
-//   lang={lang}
-//   numberOfComments={numberOfComments}
-//   revalidateUrl={`/${lang}/${CHANNEL_PARAMS}/${chan_slug}`}
-//   dbCommentTableName={EDBTableTitles.COMMENTS_CHANNEL}
-//   articleId={`${id}`}
-//   articleName={title}
-// />

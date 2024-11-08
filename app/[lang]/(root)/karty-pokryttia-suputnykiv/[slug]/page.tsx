@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import type { Metadata } from 'next';
 
 import { EDBTableTitles } from '@/models/dbTblNames.model';
@@ -26,6 +26,7 @@ import { EUrlBaseParam, MAIN_URL } from '@/models/url/url.model';
 import { getSatMap } from '@/controllers/mapCoverage.controller';
 import { updateViewCount } from '@/controllers/viewUpdate.controller';
 import { INFO_PANEL_TITLES } from '@/models/ui/infoPanel.model';
+import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
 
 interface IArticleParams {
   params: { [key in EUrlBaseParam]: string };
@@ -114,11 +115,6 @@ export default async function Page({ params }: IArticleParams) {
 
   const { sat_id, view, sat_title, position, logo, grade } = sqlResult[0];
 
-  // const numberOfComments = await getCommentsNumber(
-  //   EDBTableTitles.COMMENTS_MAPS,
-  //   `${sat_id}`
-  // );
-
   const h1Title = getH1(`${sat_title}, ${position}`)[lang];
 
   const relatedSatHref = `/${lang}/${EUrlBaseParam.SAT_CHANNEL_LIST}?${new URLSearchParams({ [EUrlSearchParam.SAT]: grade })}`;
@@ -174,15 +170,16 @@ export default async function Page({ params }: IArticleParams) {
           </SeoLink>
         </li>
       </SimilarBlock>
+
+      <Suspense>
+        <CommentBlock
+          lang={lang}
+          revalidateUrl={`/${lang}/${EUrlBaseParam.SAT_COVERAGE_MAP}/${slug}`}
+          dbCommentTableName={EDBTableTitles.COMMENTS_MAPS}
+          articleId={`${sat_id}`}
+          articleName={`${metaTitle[lang]} ${sat_title} ${position}`}
+        />
+      </Suspense>
     </>
   );
 }
-
-// <CommentBlock
-//   lang={lang}
-//   numberOfComments={numberOfComments}
-//   revalidateUrl={`/${lang}/${EUrlBaseParam.SAT_COVERAGE_MAP}/${slug}`}
-//   dbCommentTableName={EDBTableTitles.COMMENTS_MAPS}
-//   articleId={`${sat_id}`}
-//   articleName={`${metaTitle[lang]} ${sat_title} ${position}`}
-// />

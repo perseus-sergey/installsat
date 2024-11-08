@@ -8,6 +8,7 @@ import { ELanguage } from '@/models/language.model';
 import { EUrlBaseParam } from '@/models/url/url.model';
 import AdBlockingRecovery from '@/components/GoogleAdsense/AdBlockingRecovery';
 import GoogleAdsense from '@/components/GoogleAdsense/GoogleAdsense';
+import ToastProvider from '@/libs/ToastProvider/ToastProvider';
 // import GoogleComponents from '@/components/GoogleAdsense/GoogleComponents';
 
 const Footer = dynamic(() => import('@/components/Footer/Footer'));
@@ -50,7 +51,7 @@ export default ({
       >
         <Header lang={lang} />
 
-        {children}
+        <ToastProvider>{children}</ToastProvider>
         <Footer lang={lang} />
       </body>
       {isProductionMode && (

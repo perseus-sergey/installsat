@@ -2,11 +2,6 @@ import { ELanguage } from '../language.model';
 import { EUrlBaseParam } from '../url/url.model';
 import { EUrlSearchParam } from '../url/urlSearch.model';
 
-export const CHANNEL_LIST_ANCHOR_START = 'genre-';
-export const ONLINE_CHANNEL_LIST_DB_ID = '16';
-export const CHANNEL_LIST_DB_ID = '4';
-export const T2_SLUG = 't2-efir';
-
 const { UA, EN, RU, ES, AR, DE, FR, IT } = ELanguage;
 
 export const META_SAT_CHANNEL_LIST = {

@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 import Image from 'next/image';
 
 import DangerHtml from '@/components/ui/DangerHtml/DangerHtml';
@@ -7,9 +8,7 @@ import { getSatsForForm } from '@/controllers/satDigest.controller';
 import { SAT_FINDER_META_DATA } from '@/models/satFinder.model';
 import { EDBTableTitles } from '@/models/dbTblNames.model';
 import { Metadata } from 'next';
-// import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
 import BottomInfoPanel from '@/components/BottomInfoPanel/BottomInfoPanel';
-// import { getCommentsNumber } from '@/controllers/comments.controller';
 import BreadCrumbServer from '@/components/BreadCrumbs/BreadCrumbsServer';
 import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
 import { getELangKey } from '@/libs/utils/getLanguage';
@@ -23,6 +22,7 @@ import { getSatFinderArticle } from '@/controllers/satFinder.controller';
 import { updateViewCount } from '@/controllers/viewUpdate.controller';
 import { EUrlSearchParam } from '@/models/url/urlSearch.model';
 import { INFO_PANEL_TITLES } from '@/models/ui/infoPanel.model';
+import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
 
 const BASE_URL = process.env.BASE_URL || MAIN_URL;
 
@@ -86,11 +86,6 @@ export default async function Page({ params }: IPageProps) {
 
   const satsForFormFn = () => getSatsForForm(false, lang);
 
-  // const numberOfComments = await getCommentsNumber(
-  //   EDBTableTitles.COMMENTS_ARTICLE,
-  //   dbArticleId
-  // );
-
   updateViewCount(EDBTableTitles.ARTICLE, dbArticleId, view);
 
   return (
@@ -124,15 +119,16 @@ export default async function Page({ params }: IPageProps) {
           items={[{ name: viewsTitle[lang], value: view + 1 }]}
         />
       </ArticleWrapper>
+
+      <Suspense>
+        <CommentBlock
+          lang={lang}
+          revalidateUrl={`/${lang}/${SAT_FINDER}`}
+          dbCommentTableName={EDBTableTitles.COMMENTS_ARTICLE}
+          articleId={dbArticleId}
+          articleName={title}
+        />
+      </Suspense>
     </>
   );
 }
-
-// <CommentBlock
-//   lang={lang}
-//   numberOfComments={numberOfComments}
-//   revalidateUrl={`/${lang}/${SAT_FINDER}`}
-//   dbCommentTableName={EDBTableTitles.COMMENTS_ARTICLE}
-//   articleId={dbArticleId}
-//   articleName={title}
-// />

@@ -34,6 +34,8 @@ import {
   SAT_CHANNEL_LIST_IMAGES,
   TOTAL_CHANNELS_TITLE,
 } from '@/models/channels/channelListMeta.model';
+import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
+import { EDBTableTitles } from '@/models/dbTblNames.model';
 
 const BASE_URL = process.env.BASE_URL || MAIN_URL;
 
@@ -145,8 +147,7 @@ export default async ({ searchParams, params }: IPageProps) => {
       />
     );
 
-  const { slug, title, logo, position, grade } = resFlySatParams;
-  // const { id, slug, title, logo, position, grade } = resFlySatParams;
+  const { id, slug, title, logo, position, grade } = resFlySatParams;
 
   const getFlySatChannelsFn = () =>
     getFlySatChannels(
@@ -243,15 +244,16 @@ export default async ({ searchParams, params }: IPageProps) => {
           />
         </Suspense>
       </ArticleWrapper>
+
+      <Suspense>
+        <CommentBlock
+          lang={lang}
+          revalidateUrl={`/${lang}/${SAT_CHANNEL_LIST}/${slug}`}
+          dbCommentTableName={EDBTableTitles.COMMENTS_SATELLITE}
+          articleId={id}
+          articleName={`${metaTitle[lang]} ${title} - ${position}`}
+        />
+      </Suspense>
     </>
   );
 };
-
-// <CommentBlock
-//   lang={lang}
-//   numberOfComments={numberOfComments}
-//   revalidateUrl={`/${lang}/${SAT_CHANNEL_LIST}/${slug}`}
-//   dbCommentTableName={EDBTableTitles.COMMENTS_SATELLITE}
-//   articleId={id}
-//   articleName={`${metaTitle[lang]} ${title} - ${position}`}
-// />

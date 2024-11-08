@@ -1,7 +1,8 @@
 'use client';
 
-import { SubmitPendingButton } from '@/components/ui/buttons/SubmitPendingBtn';
 import { useFormState } from 'react-dom';
+
+import { SubmitPendingButton } from '@/components/ui/buttons/SubmitPendingBtn';
 import { COMMENTS_MODEL, ECommentFormNames } from '@/models/ui/comments.model';
 // import FieldError from '../FieldError/FieldError';
 import { useToastMessage } from '@/libs/hooks/useToastMessage';
@@ -12,7 +13,7 @@ import { EMPTY_FORM_STATE } from '@/controllers/toast.controller';
 import { addCommentAction } from '@/libs/actions/comments.action';
 import FieldError from '../FieldError/FieldError';
 import { ELanguage } from '@/models/language.model';
-// import { useCommentSendEmail } from '@/libs/hooks/useCommentSendEmail';
+import { useCommentSendEmail } from '@/libs/hooks/useCommentSendEmail';
 
 const { AUTHOR, EMAIL, TEXT } = ECommentFormNames;
 const { authorEmail, authorName, commentText, submit } =
@@ -33,10 +34,10 @@ const CommentForm = ({
   revalidateUrl,
   dbCommentTableName,
   articleId,
-  // articleName,
+  articleName,
   // userLocation,
-  // baseUrl,
-  // emailKey,
+  baseUrl,
+  emailKey,
   lang,
 }: ICommentProps) => {
   const sendCommentHandler = addCommentAction.bind(
@@ -58,17 +59,17 @@ const CommentForm = ({
 
   const noScriptFallback = useToastMessage(formState);
 
-  // useCommentSendEmail(
-  //   formState,
-  //   articleName,
-  //   revalidateUrl,
-  //   dbCommentTableName,
-  //   articleId,
-  //   // userLocation,
-  //   baseUrl,
-  //   emailKey,
-  //   lang
-  // );
+  useCommentSendEmail(
+    formState,
+    articleName,
+    revalidateUrl,
+    dbCommentTableName,
+    articleId,
+    // userLocation,
+    baseUrl,
+    emailKey,
+    lang
+  );
 
   const formRef = useFormReset(formState);
 

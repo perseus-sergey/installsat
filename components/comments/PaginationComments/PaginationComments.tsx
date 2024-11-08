@@ -1,13 +1,14 @@
 'use client';
 
+import { useEffect, useState } from 'react';
+import Image from 'next/image';
+
 import { EDBTableTitles } from '@/models/dbTblNames.model';
 import TooltipSimple from '../../ui/tooltips/TooltipSimple/TooltipSimple';
-import { useEffect, useState } from 'react';
 import BaseButton from '../../ui/buttons/BaseButton/BaseButton';
 import { getComments } from '@/controllers/comments.controller';
 import { COMMENTS_MODEL, ICommentsModel } from '@/models/ui/comments.model';
 import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
-import Image from 'next/image';
 import commentTitleImg from 'public/Images/mail_post_to_5295.png';
 import { getPageNumbers } from '@/controllers/pagination.controller';
 import { ARTICLE_PAGINATION_PARAMS } from '@/models/articles/articleList.model';

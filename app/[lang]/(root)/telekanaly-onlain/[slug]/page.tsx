@@ -35,6 +35,7 @@ import {
   BREAD_ONLINE_CHANNEL_LIST,
   META_CHANNEL_ONLINE,
 } from '@/models/channels/onlineChannel.model';
+import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
 
 const BASE_URL = process.env.BASE_URL || MAIN_URL;
 const { LANG, SLUG, CHANNELS_TV_PROGRAM, ONLINE_CHANNEL_LIST } = EUrlBaseParam;
@@ -115,13 +116,7 @@ export default async function Page({ params }: IChannelProps) {
 
   if (!sqlResult) notFound();
 
-  const { id, title, logo, text, view } = sqlResult;
-  // const { id, title, logo, text, view, chan_slug } = sqlResult;
-
-  // const numberOfComments = await getCommentsNumber(
-  //   EDBTableTitles.COMMENTS_CHANNEL,
-  //   `${id}`
-  // );
+  const { id, title, logo, text, view, chan_slug } = sqlResult;
 
   updateViewCount(EDBTableTitles.CHANNELS, `${id}`, view);
 
@@ -198,15 +193,16 @@ export default async function Page({ params }: IChannelProps) {
           lang={lang}
         />
       </Suspense>
+
+      <Suspense>
+        <CommentBlock
+          lang={lang}
+          revalidateUrl={`/${lang}/${ONLINE_CHANNEL_LIST}/${chan_slug}`}
+          dbCommentTableName={EDBTableTitles.COMMENTS_CHANNEL}
+          articleId={`${id}`}
+          articleName={title}
+        />
+      </Suspense>
     </>
   );
 }
-
-// <CommentBlock
-//   lang={lang}
-//   numberOfComments={numberOfComments}
-//   revalidateUrl={`/${lang}/${ONLINE_CHANNEL_LIST}/${chan_slug}`}
-//   dbCommentTableName={EDBTableTitles.COMMENTS_CHANNEL}
-//   articleId={`${id}`}
-//   articleName={title}
-// />

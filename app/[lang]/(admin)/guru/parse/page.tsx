@@ -107,7 +107,7 @@ export default async function Page({ params }: IParams) {
         labelHtml="Choose articles quantity for translations"
         buttonTitle="Translate & Update"
         inputBaseHref={`${BASE_PARSE_HREF}/articles-translate`}
-        inputId="add-slug-grade"
+        inputId="articles-translate"
         inputDefaultValue={10}
         inputType="number"
         searchParamName={EUrlSearchParam.INTERVAL}
@@ -117,8 +117,8 @@ export default async function Page({ params }: IParams) {
         fieldSetTitle="Translate OLD CHANNELS into all languages from English"
         labelHtml="Choose channels quantity for translations"
         buttonTitle="Translate & Update"
-        inputBaseHref={`${BASE_PARSE_HREF}/articles-translate`}
-        inputId="add-slug-grade"
+        inputBaseHref={`${BASE_PARSE_HREF}/channels-translate`}
+        inputId="channels-translate"
         inputDefaultValue={10}
         inputType="number"
         searchParamName={EUrlSearchParam.INTERVAL}
@@ -129,7 +129,7 @@ export default async function Page({ params }: IParams) {
         labelHtml="Choose channels quantity for translations"
         buttonTitle="Translate & Update"
         inputBaseHref={`${BASE_PARSE_HREF}/channels-fly-translate`}
-        inputId="add-slug-grade"
+        inputId="channels-fly-translate"
         inputDefaultValue={10}
         inputType="number"
         searchParamName={EUrlSearchParam.INTERVAL}
@@ -140,7 +140,7 @@ export default async function Page({ params }: IParams) {
         buttonTitle="Translate"
         inputBaseHref={`${BASE_PARSE_HREF}/old-articles-translate`}
         fieldSetTitle="Translate old articles"
-        inputId="add-slug-grade"
+        inputId="old-articles-translate"
         inputDefaultValue={20}
         inputType="number"
         searchParamName={EUrlSearchParam.INTERVAL}

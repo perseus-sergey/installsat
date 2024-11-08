@@ -7,6 +7,7 @@ import PaginationComments from '@/components/comments/PaginationComments/Paginat
 import { ELanguage } from '@/models/language.model';
 import { EUrlSearchParam } from '@/models/url/urlSearch.model';
 import { MAIN_URL } from '@/models/url/url.model';
+import { getCommentsNumber } from '@/controllers/comments.controller';
 
 const {
   commentForm,
@@ -18,7 +19,6 @@ interface IProps {
   dbCommentTableName: EDBTableTitles;
   articleId: string | number;
   articleName: string;
-  numberOfComments: number;
   lang: ELanguage;
 }
 
@@ -27,10 +27,13 @@ const CommentBlock = async ({
   dbCommentTableName,
   articleId,
   articleName,
-  numberOfComments,
   lang,
 }: IProps) => {
   // const userLocation = await fetchUserLocation();
+  const numberOfComments = await getCommentsNumber(
+    dbCommentTableName,
+    `${articleId}`
+  );
 
   return (
     <section
@@ -60,6 +63,7 @@ const CommentBlock = async ({
       <div className="p-2" style={{ textShadow: '1px 1px 0px black' }}>
         <BansBlock lang={lang} />
       </div>
+
       <PaginationComments
         lang={lang}
         numberOfComments={numberOfComments}
@@ -71,39 +75,6 @@ const CommentBlock = async ({
     </section>
   );
 };
-
-// const BansBlock = ({ lang }: { lang: ELanguage }) => (
-//   <>
-//     <h3>{lang === ELanguage.UA ? 'Заборонено:' : 'Prohibited:'}</h3>
-//     <ol type="1" className="list-decimal pl-8">
-//       <li>
-//         {lang === ELanguage.UA
-//           ? 'Рекламувати інші ресурси'
-//           : 'Promote other resources'}
-//       </li>
-//       <li>
-//         {lang === ELanguage.UA
-//           ? 'Використовувати нецензурну лексику'
-//           : 'Use obscene language'}
-//       </li>
-//       <li>
-//         {lang === ELanguage.UA
-//           ? 'Образливо висловлюватися щодо інтересів інших користувачів'
-//           : 'To speak offensively about the interests of other users'}
-//       </li>
-//     </ol>
-//     <p>
-//       {lang === ELanguage.UA
-//         ? 'Подібні коментарі будуть редагуватися або видалятися без попередження.'
-//         : 'Such comments will be edited or deleted without notice.'}
-//     </p>
-//     <p>
-//       {lang === ELanguage.UA
-//         ? 'Зловмисникам доступ до даного ресурсу буде заблоковано.'
-//         : 'Access to this resource will be blocked for intruders.'}
-//     </p>
-//   </>
-// );
 
 const BansBlock = ({ lang }: { lang: ELanguage }) => {
   const { title, items, warning, blockMessage } = COMMENTS_BANS_TEXT[lang];

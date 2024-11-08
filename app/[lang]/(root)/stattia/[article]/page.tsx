@@ -29,6 +29,7 @@ import { getELangKey } from '@/libs/utils/getLanguage';
 import { getArticle } from '@/controllers/article.controller';
 import { updateViewCount } from '@/controllers/viewUpdate.controller';
 import { INFO_PANEL_TITLES } from '@/models/ui/infoPanel.model';
+import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
 
 const TextUnderH1 = dynamic(
   () => import('@/components/TextUnderH1/TextUnderH1')
@@ -111,7 +112,7 @@ export default async function Page({ params }: IArticleParams) {
     logo: logoDB,
     view,
     title,
-    // slug,
+    slug,
     cat_slug,
     cat_name,
   } = sqlResult;
@@ -119,11 +120,6 @@ export default async function Page({ params }: IArticleParams) {
   const logo = logoDB || DEFAULT_ARTICLE_LOGO_NAME;
 
   const currDate = getFormattedDateStrYearFirst(date, lang);
-
-  // const numberOfComments = await getCommentsNumber(
-  //   EDBTableTitles.COMMENTS_ARTICLE,
-  //   `${id}`
-  // );
 
   updateViewCount(EDBTableTitles.ARTICLE, `${id}`, view);
 
@@ -199,15 +195,16 @@ export default async function Page({ params }: IArticleParams) {
           articleId={id}
         />
       </Suspense>
+
+      <Suspense>
+        <CommentBlock
+          lang={lang}
+          revalidateUrl={`/${lang}/${ARTICLE}/${slug}`}
+          dbCommentTableName={EDBTableTitles.COMMENTS_ARTICLE}
+          articleId={`${id}`}
+          articleName={title}
+        />
+      </Suspense>
     </>
   );
 }
-
-// <CommentBlock
-//   lang={lang}
-//   numberOfComments={numberOfComments}
-//   revalidateUrl={`/${lang}/${ARTICLE}/${slug}`}
-//   dbCommentTableName={EDBTableTitles.COMMENTS_ARTICLE}
-//   articleId={`${id}`}
-//   articleName={title}
-// />

@@ -34,8 +34,9 @@ import {
   META_ALL_SAT_CHANNEL_LIST,
   START_SECTION_TEXT,
 } from '@/models/channels/channelListMeta.model';
-// import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
-// import { getCommentsNumber } from '@/controllers/comments.controller';
+import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
+import { EDBTableTitles } from '@/models/dbTblNames.model';
+import { CHANNEL_LIST_DB_ID } from '@/models/channels/channelList.model';
 
 const BASE_URL = process.env.BASE_URL || MAIN_URL;
 
@@ -197,15 +198,16 @@ export default async function Page({ searchParams, params }: IPageProps) {
           <FlyChannelsTable lang={lang} requestFn={getFlySatChannelsFn} />
         </Suspense>
       </ArticleWrapper>
+
+      <Suspense>
+        <CommentBlock
+          lang={lang}
+          revalidateUrl={`/${lang}/${SAT_CHANNEL_LIST}`}
+          dbCommentTableName={EDBTableTitles.COMMENTS_PACKAGES}
+          articleId={CHANNEL_LIST_DB_ID}
+          articleName={metaTitle[lang]}
+        />
+      </Suspense>
     </>
   );
 }
-
-// <CommentBlock
-//   lang={lang}
-//   numberOfComments={numberOfComments}
-//   revalidateUrl={`/${lang}/${SAT_CHANNEL_LIST}`}
-//   dbCommentTableName={EDBTableTitles.COMMENTS_PACKAGES}
-//   articleId={CHANNEL_LIST_DB_ID}
-//   articleName={metaTitle[lang]}
-// />

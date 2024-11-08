@@ -21,6 +21,9 @@ import {
   ONLINE_CHANNEL_LIST_DATA,
   ONLINE_CHANNEL_LIST_IMAGES,
 } from '@/models/channels/onlineChannelListMeta.model';
+import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
+import { EDBTableTitles } from '@/models/dbTblNames.model';
+import { ONLINE_CHANNEL_LIST_DB_ID } from '@/models/channels/channelList.model';
 
 interface IPageProps {
   params: { [key in EUrlBaseParam]: string };
@@ -83,11 +86,6 @@ export default async function Page({ params, searchParams }: IPageProps) {
 
   const getChannelsFn = () => getOnlineChannels(lang, searchQueryChannel);
 
-  // const numberOfComments = await getCommentsNumber(
-  //   EDBTableTitles.COMMENTS_GENRE,
-  //   ONLINE_CHANNEL_LIST_DB_ID
-  // );
-
   return (
     <>
       <BreadCrumbServer breadCrumbList={[metaH1[lang]]} lang={lang} />
@@ -112,15 +110,16 @@ export default async function Page({ params, searchParams }: IPageProps) {
 
         <OnlineChannelListAfterText lang={lang} />
       </ArticleWrapper>
+
+      <Suspense>
+        <CommentBlock
+          lang={lang}
+          revalidateUrl={`/${lang}/${ONLINE_CHANNEL_LIST}`}
+          dbCommentTableName={EDBTableTitles.COMMENTS_GENRE}
+          articleId={ONLINE_CHANNEL_LIST_DB_ID}
+          articleName={metaTitle[lang]}
+        />
+      </Suspense>
     </>
   );
 }
-
-// <CommentBlock
-//   lang={lang}
-//   numberOfComments={numberOfComments}
-//   revalidateUrl={`/${lang}/${ONLINE_CHANNEL_LIST}`}
-//   dbCommentTableName={EDBTableTitles.COMMENTS_GENRE}
-//   articleId={ONLINE_CHANNEL_LIST_DB_ID}
-//   articleName={metaTitle[lang]}
-// />

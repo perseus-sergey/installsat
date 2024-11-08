@@ -4,8 +4,12 @@ import { EDBTableTitles } from '@/models/dbTblNames.model';
 import { IFormState } from '@/controllers/toast.controller';
 import { EMAIL_DATA } from '@/models/ui/comments.model';
 import { ELanguage } from '@/models/language.model';
-// import { getCommentToAdminEmail, getCommentToUserEmail } from '@/components/EmailTemplates/CommentEmailSimple.template ';
-// import { IUserLocation } from '@/models/userLocation.model';
+import { getArticleSubscribers } from '@/controllers/comments.controller';
+import {
+  getCommentToAdminEmail,
+  getCommentToUserEmail,
+} from '@/components/EmailTemplates/CommentEmailSimple.template';
+import { sendMail } from '../mail/sendMail';
 
 export const useCommentSendEmail = (
   formState: IFormState,
@@ -24,15 +28,6 @@ export const useCommentSendEmail = (
   useEffect(() => {
     const sendEmails = async () => {
       try {
-        // const { renderAsync } = await import('@react-email/render');
-        const { getArticleSubscribers } = await import(
-          '@/controllers/comments.controller'
-        );
-        const { getCommentToAdminEmail, getCommentToUserEmail } = await import(
-          '@/components/EmailTemplates/CommentEmailSimple.template'
-        );
-        const { sendMail } = await import('../mail/sendMail');
-
         const subscribersResult = await getArticleSubscribers(
           tblCommentName,
           `${articleId}`

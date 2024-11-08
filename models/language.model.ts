@@ -22,17 +22,6 @@ export const langSuffixUaEmpty = {
   [IT]: '_it',
 };
 
-// export const langSuffixUaEmpty = {
-//   [UA]: '',
-//   [EN]: '_en',
-//   [RU]: '_en',
-//   [ES]: '_en',
-//   [AR]: '_en',
-//   [DE]: '_en',
-//   [FR]: '_en',
-//   [IT]: '_en',
-// };
-
 export const langSuffix = { ...langSuffixUaEmpty, [UA]: '_ua' };
 
 export const DEFAULT_LANG = EN;

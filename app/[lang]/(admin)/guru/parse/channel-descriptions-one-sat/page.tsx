@@ -10,24 +10,17 @@ import { EUrlAdminParam } from '@/models/url/urlAdmin.model';
 export const dynamic = 'force-dynamic';
 
 // =================================================================
-// make script to translate all articles
 // add similar trans news links for fly channel page
-// remove tooltip hover for mobiles
-// fix back/forward
 // fix comments
-// fix parse channel exists description ai generating
 // sat finder - not internet error handling
-// Set indexes in DB
 //
 // Check comment user location in production (if successful, clean up the comments form //code comments)
 // Add separate tbl_comments for fly satellites
-// Renew tbl_chan_categ by adding english language
-// Mobile Accordion Lazy loading
+// add comment block to fly channels with separate db tbl (fly_comments_channel))
 // Parse biss from lugasat (Or satsat.info) by sat grade & frequency & title
 // Find approximate grades from search params for spysok-kanaliv-suputnyka
 // add color description to channel filters
 // improve similar channels & similar articles blocks
-// add comment block to fly channels with separate db tbl (fly_comments_channel))
 // add json-ld
 // Add cluster choice
 // add image generator

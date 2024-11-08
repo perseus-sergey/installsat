@@ -116,7 +116,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   return [
     getSiteMapItem({ changeFrequency: 'daily' }),
-    getSiteMapItem({ startPath: SAT_COVERAGE_MAP, changeFrequency: 'monthly' }),
+    getSiteMapItem({ startPath: SAT_COVERAGE_MAP, changeFrequency: 'daily' }),
+    // getSiteMapItem({ startPath: SAT_COVERAGE_MAP, changeFrequency: 'monthly' }),
     ...getSiteMapItemList({
       startPath: SAT_COVERAGE_MAP,
       itemList: satMapList,
@@ -126,17 +127,20 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...getSiteMapItemList({
       startPath: NEWS_AND_ARTICLES,
       itemList: articleCatList,
-      changeFrequency: 'yearly',
+      changeFrequency: 'daily',
+      // changeFrequency: 'yearly',
     }),
     ...getSiteMapItemList({
       startPath: ARTICLE,
       itemList: articleList,
-      changeFrequency: 'weekly',
+      changeFrequency: 'daily',
+      // changeFrequency: 'weekly',
     }),
     ...getSiteMapItemList({
       startPath: CHANNEL_PARAMS,
       itemList: channelList,
-      changeFrequency: 'weekly',
+      changeFrequency: 'daily',
+      // changeFrequency: 'weekly',
     }),
     ...getSiteMapItemList({
       startPath: KANAL,
@@ -146,7 +150,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
     getSiteMapItem({
       startPath: CHANNELS_TV_PROGRAM,
-      changeFrequency: 'monthly',
+      changeFrequency: 'daily',
+      // changeFrequency: 'monthly',
     }),
     ...getSiteMapItemList({
       startPath: CHANNELS_TV_PROGRAM,
@@ -154,30 +159,37 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: 'daily',
     }),
 
-    getSiteMapItem({ startPath: SAT_FINDER, changeFrequency: 'yearly' }),
+    getSiteMapItem({ startPath: SAT_FINDER, changeFrequency: 'daily' }),
+    // getSiteMapItem({ startPath: SAT_FINDER, changeFrequency: 'yearly' }),
     getSiteMapItem({
       startPath: PACKAGE_CHANNEL_LIST,
-      changeFrequency: 'monthly',
+      changeFrequency: 'daily',
+      // changeFrequency: 'monthly',
     }),
     ...getSiteMapItemList({
       startPath: PACKAGE_CHANNEL_LIST,
       itemList: packagesList,
-      changeFrequency: 'monthly',
+      changeFrequency: 'daily',
+      // changeFrequency: 'monthly',
     }),
-    getSiteMapItem({ startPath: SAT_CHANNEL_LIST, changeFrequency: 'weekly' }),
+    // getSiteMapItem({ startPath: SAT_CHANNEL_LIST, changeFrequency: 'weekly' }),
+    getSiteMapItem({ startPath: SAT_CHANNEL_LIST, changeFrequency: 'daily' }),
     ...getSiteMapItemList({
       startPath: SAT_CHANNEL_LIST,
       itemList: satellitesList,
-      changeFrequency: 'weekly',
+      changeFrequency: 'daily',
+      // changeFrequency: 'weekly',
     }),
     getSiteMapItem({
       startPath: ONLINE_CHANNEL_LIST,
-      changeFrequency: 'monthly',
+      changeFrequency: 'daily',
+      // changeFrequency: 'monthly',
     }),
     ...getSiteMapItemList({
       startPath: ONLINE_CHANNEL_LIST,
       itemList: onlineChannelList,
-      changeFrequency: 'monthly',
+      changeFrequency: 'daily',
+      // changeFrequency: 'monthly',
     }),
     ...getSiteMapItemList({
       startPath: TRANSPONDER_NEWS,

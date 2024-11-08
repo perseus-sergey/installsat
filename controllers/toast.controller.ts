@@ -18,7 +18,7 @@ export const EMPTY_FORM_STATE: IFormState = {
 };
 
 export const fromErrorToFormState = (error: unknown): IFormState => {
-  console.log('🚀 ~ fromErrorToFormState ~ error:', error);
+  // console.log('🚀 ~ fromErrorToFormState ~ error:', error);
   let message = '';
 
   if (error instanceof AuthError) {

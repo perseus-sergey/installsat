@@ -156,6 +156,18 @@ export const COMMENTS_MODEL = {
         },
       },
     },
+
+    forbiddenCommentMsg: {
+      [UA]: 'Коментар містить заборонений контент',
+      [EN]: 'Comment contains forbidden content',
+      [RU]: 'Комментарий содержит запрещённый контент',
+      [ES]: 'El comentario contiene contenido prohibido',
+      [AR]: 'التعليق يحتوي على محتوى محظور',
+      [DE]: 'Der Kommentar enthält verbotenen Inhalt',
+      [FR]: 'Le commentaire contient un contenu interdit',
+      [IT]: 'Il commento contiene contenuti vietati',
+    },
+
     authorEmail: {
       placeholder: 'your@email.com',
       ariaLabel: {

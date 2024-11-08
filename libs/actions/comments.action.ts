@@ -37,6 +37,18 @@ const getCommentSchema = async (lang: ELanguage) => {
   });
 };
 
+const forbiddenContent = (text: string) => {
+  const htmlTagRegex = /<\/?[^>]+(>|$)/g;
+  const urlRegex = /(https?:\/\/[^\s]+)/g;
+  const forbiddenWords = ['iframe'];
+
+  return (
+    htmlTagRegex.test(text) ||
+    urlRegex.test(text) ||
+    forbiddenWords.some((word) => text.includes(word))
+  );
+};
+
 export const addCommentAction = async (
   lang: ELanguage,
   articleId: string | number,
@@ -71,6 +83,16 @@ export const addCommentAction = async (
       [EMAIL]: formData.get(EMAIL),
       [TEXT]: formData.get(TEXT),
     });
+
+    if (forbiddenContent(validFormData[TEXT])) {
+      const {
+        COMMENTS_MODEL: {
+          commentForm: { forbiddenCommentMsg },
+        },
+      } = await import('@/models/ui/comments.model');
+
+      return toFormState('ERROR', forbiddenCommentMsg[lang]);
+    }
 
     res = await insertComment(
       dbTableName,

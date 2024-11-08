@@ -53,7 +53,7 @@ const getArticlesFromDB = async (quantity, lang) => {
   SELECT id, title_en, text_en, cpu
   FROM ${ARTICLE}
   WHERE text_en IS NOT NULL AND text_en != '' AND text${translationParams[lang].suffix} IS NULL
-  AND cat NOT IN ${WRONG_CAT_IDS}
+  AND cat NOT IN (2,0,11,12)
   ORDER BY id DESC
   LIMIT ${quantity};
   `;

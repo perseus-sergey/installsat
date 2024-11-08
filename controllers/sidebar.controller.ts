@@ -35,23 +35,10 @@ const {
   ARTICLE_CATEGORIES,
 } = EDBTableTitles;
 
-const { UA, EN, RU, ES, AR, DE, FR, IT } = ELanguage;
-
-const langAdd = {
-  [UA]: '',
-  [EN]: '_en',
-  [RU]: '_ru',
-  [ES]: '_es',
-  [AR]: '_ar',
-  [DE]: '_de',
-  [FR]: '_fr',
-  [IT]: '_it',
-};
-
 export const getArtCatListSideBar = async (lang: ELanguage) => {
   const sql = `
   SELECT
-    title${langAdd[lang]} AS title,
+    title${langSuffixUaEmpty[lang]} AS title,
     cpu
   FROM ${ARTICLE_CATEGORIES} 
   WHERE id NOT IN ${WRONG_CAT_IDS}
@@ -96,7 +83,7 @@ export const getLastNewsWidgetList = cache(
     await poolExecute<IAllNewsModel[]>(`
     SELECT 
       id, 
-      title${langAdd[lang]} AS title,
+      COALESCE(title${langSuffixUaEmpty[lang]}, title_en) AS title,
       cpu 
     FROM ${TBL_ARTICLE} 
     WHERE cat NOT IN ${WRONG_CAT_IDS} 
@@ -109,7 +96,7 @@ export const getUsefulArticleList = async (lang: ELanguage) =>
   await poolExecute<IAllNewsModel[]>(`
   SELECT 
     id,
-    title${langAdd[lang]} AS title,
+    COALESCE(title${langSuffixUaEmpty[lang]}, title_en) AS title,
     cpu 
    FROM ${TBL_ARTICLE} 
    WHERE cat=4 OR cat=5

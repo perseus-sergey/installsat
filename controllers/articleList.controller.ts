@@ -63,8 +63,8 @@ export const getChunkOfNews = async ({
   SELECT 
   U.id,
   U.cat,
-  U.title${langSuffixUaEmpty[lang]} AS title,
-  U.description${langSuffixUaEmpty[lang]} AS description,
+  COALESCE(U.title${langSuffixUaEmpty[lang]}, U.title_en) AS title,
+  COALESCE(U.description${langSuffixUaEmpty[lang]}, U.description_en) AS description,
   U.cpu,
   U.date,
   U.author,

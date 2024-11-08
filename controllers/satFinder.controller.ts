@@ -11,10 +11,10 @@ export const getSatFinderArticle = cache(async (lang: ELanguage) => {
   const sql = `
   SELECT 
     id,
-    title${langSuffixUaEmpty[lang]} AS title,
-    description${langSuffixUaEmpty[lang]} AS description,
-    keywords${langSuffixUaEmpty[lang]} AS keywords,
-    text${langSuffixUaEmpty[lang]} AS text,
+    COALESCE(title${langSuffixUaEmpty[lang]}, title_en) AS title,
+    COALESCE(description${langSuffixUaEmpty[lang]}, description_en) AS description,
+    COALESCE(keywords${langSuffixUaEmpty[lang]}, keywords_en) AS keywords,
+    COALESCE(text${langSuffixUaEmpty[lang]}, text_en) AS text,
     cpu,
     view,
     logo 

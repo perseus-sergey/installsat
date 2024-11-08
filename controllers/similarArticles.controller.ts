@@ -20,7 +20,7 @@ export const getSimilarArticles = async (
   const sql = `
     SELECT 
       id, 
-      title${langSuffixUaEmpty[lang]} AS title,
+      COALESCE(title${langSuffixUaEmpty[lang]}, title_en) AS title,
       cpu,
       date
     FROM ${EDBTableTitles.ARTICLE}

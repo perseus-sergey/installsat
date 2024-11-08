@@ -12,10 +12,10 @@ export const getArticle = cache(
     const sql = `
   SELECT
   U.id,
-  U.title${langSuffixUaEmpty[lang]} AS title,
-  U.description${langSuffixUaEmpty[lang]} AS description,
-  U.keywords${langSuffixUaEmpty[lang]} AS keywords,
-  U.text${langSuffixUaEmpty[lang]} AS text,
+  COALESCE(U.title${langSuffixUaEmpty[lang]}, U.title_en) AS title,
+  COALESCE(U.description${langSuffixUaEmpty[lang]}, U.description_en) AS description,
+  COALESCE(U.keywords${langSuffixUaEmpty[lang]}, U.keywords_en) AS keywords,
+  COALESCE(U.text${langSuffixUaEmpty[lang]}, U.text_en) AS text,
   U.cpu AS slug,
   U.date,
   U.author,

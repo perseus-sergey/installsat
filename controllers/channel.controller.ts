@@ -36,9 +36,10 @@ export const getDBFlyChannel = cache(
         CH.title, 
         CH.slug,
         CH.logo,
-        CH.description${langSuffix[lang]} AS description,
-        CH.text${langSuffix[lang]} AS text,
-        CH.keywords${langSuffix[lang]} AS keywords,
+        COALESCE(CH.description${langSuffix[lang]}, CH.description_en) AS description,
+        COALESCE(CH.keywords${langSuffix[lang]}, CH.keywords_en) AS keywords,
+        COALESCE(CH.text${langSuffix[lang]}, CH.text_en) AS text,
+
         CH.official_site_url, 
         CH.view, 
         CH.canonical, 
@@ -90,9 +91,9 @@ export const getDBChannel = cache(async (slug: string, lang: ELanguage) => {
     CH.title, 
     CH.cpu AS chan_slug, 
     CH.logo, 
-    CH.description${langSuffixUaEmpty[lang]} AS description,
-    CH.text${langSuffixUaEmpty[lang]} AS text,
-    CH.keywords${langSuffixUaEmpty[lang]} AS keywords,
+    COALESCE(CH.description${langSuffixUaEmpty[lang]}, CH.description_en) AS description,
+    COALESCE(CH.keywords${langSuffixUaEmpty[lang]}, CH.keywords_en) AS keywords,
+    COALESCE(CH.text${langSuffixUaEmpty[lang]}, CH.text_en) AS text,
     CH.cat AS cat_id, 
     CH.url, 
     CH.view, 
@@ -124,7 +125,7 @@ export const getDBChannel = cache(async (slug: string, lang: ELanguage) => {
     (SELECT cpu FROM ${CHANNEL_CATEGORY} WHERE id = C.parent LIMIT 1) AS cat_parent_cpu,
     (SELECT cpu FROM ${CHANNEL_CATEGORY} WHERE id = C.parent LIMIT 1) AS cat_parent_cpu,
 
-    L.title AS chan_lang
+    L.title${langSuffixUaEmpty[lang]} AS chan_lang
   FROM 
     ${CHANNELS} AS CH 
   LEFT JOIN 
@@ -161,9 +162,9 @@ export const getDBOnlineChannel = cache(
     C.title, 
     C.cpu AS chan_slug, 
     C.logo,
-    C.description${langSuffixUaEmpty[lang]} AS description,
-    C.text${langSuffixUaEmpty[lang]} AS text,
-    C.keywords${langSuffixUaEmpty[lang]} AS keywords,
+    COALESCE(C.description${langSuffixUaEmpty[lang]}, C.description_en) AS description,
+    COALESCE(C.keywords${langSuffixUaEmpty[lang]}, C.keywords_en) AS keywords,
+    COALESCE(C.text${langSuffixUaEmpty[lang]}, C.text_en) AS text,
     C.url,
     C.view, 
     C.canonical, 
@@ -180,7 +181,7 @@ export const getDBOnlineChannel = cache(
 
     COMP.title as compression,
 
-    L.title as chan_lang,
+    L.title${langSuffixUaEmpty[lang]} as chan_lang,
 
     COUNT.title as country
 

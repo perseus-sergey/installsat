@@ -113,7 +113,7 @@ export const getSatChannels = cache(
    ch.programma,
    ch.encryption,
    ch.biss,
-   ch.description${langSuffixUaEmpty[lang]} AS description,
+   COALESCE(ch.description${langSuffixUaEmpty[lang]}, ch.description_en) AS description,
   sat.title AS sat_title,
   sat.position AS sat_position,
   sat.logo AS sat_logo,
@@ -127,7 +127,7 @@ export const getSatChannels = cache(
   te.title${langSuffixUaEmpty[lang]} AS tem,
   te.description${langSuffixUaEmpty[lang]} AS genre_description,
   co.title AS compr,
-  la.title AS lan
+  la.title${langSuffixUaEmpty[lang]} AS lan
   FROM ${CHANNELS} AS ch 
   LEFT JOIN ${CHANNEL_THEME} 		  AS te	 ON ch.tema 		  = te.id
   LEFT JOIN ${CHANNEL_ENCRYPTION}	AS en	 ON ch.encryption	= en.id  
@@ -224,7 +224,7 @@ export const getFlySatChannels = cache(
     ch.sid,
     ch.v_pid,
     ch.a_pid,
-    ch.description${langSuffix[lang]} AS description,
+    COALESCE(ch.description${langSuffix[lang]}, ch.description_en) AS description,
     ch.t2_stream,
 
     sat.title AS sat_title,
@@ -270,11 +270,11 @@ export const getChannelPackages = async (
 ): Promise<IChannelPackagesModel[]> => {
   const sql = `
   SELECT 
-    C.id, 
-    C.title${langSuffixUaEmpty[lang]} AS title, 
-    C.cpu, 
-    C.description${langSuffixUaEmpty[lang]} AS description, 
-    C.logo, 
+    C.id,
+    C.cpu,
+    COALESCE(C.title${langSuffixUaEmpty[lang]}, C.title_en) AS title,
+    COALESCE(C.description${langSuffixUaEmpty[lang]}, C.description_en) AS description,
+    C.logo,
     C.view, 
     (SELECT COUNT(id) FROM tbl_comments_packs WHERE post=C.id) AS comment_count
   FROM 
@@ -310,14 +310,14 @@ export const getOnlineChannels = cache(
     C.cpu AS chan_cpu,
     C.logo AS chan_logo,
     C.encryption,
-    C.description${langSuffixUaEmpty[lang]} AS chan_description,
+    COALESCE(C.description${langSuffixUaEmpty[lang]}, C.description_en) AS chan_description,
     C.view,
     C.tema AS genre_id,
     C.compress,
     C.potok,
 
     CO.title AS compr,
-    L.title AS lan,
+    L.title${langSuffixUaEmpty[lang]} AS lan,
     C.tvforsite_net,
 
     T.description${langSuffixUaEmpty[lang]} AS genre_description,
@@ -396,10 +396,10 @@ export const getChannelsWithSchedule = async (
       C.title AS chan_title,
       MAX(C.cpu) AS chan_cpu,
       MAX(C.logo) AS chan_logo,
-      MAX(C.description${langSuffixUaEmpty[lang]}) AS chan_description,
+      MAX(COALESCE(C.description${langSuffixUaEmpty[lang]}, C.description_en)) AS chan_description,
       MAX(C.view) AS view,
       C.tema AS genre_id,
-      MAX(L.title) AS lan,
+      MAX(L.title${langSuffixUaEmpty[lang]}) AS lan,
       MAX(T.title${langSuffixUaEmpty[lang]}) AS genre_title,
       MAX(T.description${langSuffixUaEmpty[lang]}) AS genre_description
   FROM 
@@ -473,12 +473,12 @@ export const getT2Channels = cache(
       C.cpu AS chan_cpu,
       C.logo AS chan_logo,
       C.encryption,
-      C.description${langSuffixUaEmpty[lang]} AS chan_description,
+      COALESCE(C.description${langSuffixUaEmpty[lang]}, C.description_en) AS chan_description,
       C.tema AS genre_id,
       C.cat AS cat_id,
 
       CO.title AS compr,
-      L.title AS lan,
+      L.title${langSuffixUaEmpty[lang]} AS lan,
       T.title${langSuffixUaEmpty[lang]} AS genre_title,
       T.description${langSuffixUaEmpty[lang]} AS genre_description,
 
@@ -545,8 +545,8 @@ export const getPackageChannels = cache(
     C.title AS chan_title,
     C.cpu AS chan_cpu,
     C.logo AS chan_logo,
-    C.description${langSuffixUaEmpty[lang]} AS chan_description,
-    la.title AS lan
+    COALESCE(C.description${langSuffixUaEmpty[lang]}, C.description_en) AS chan_description,
+    la.title${langSuffixUaEmpty[lang]} AS lan
   FROM 
     ${CHANNEL_CATEGORY} AS cat
   JOIN 

@@ -11,27 +11,27 @@ export enum ELanguage {
 
 const { UA, EN, RU, ES, AR, DE, FR, IT } = ELanguage;
 
-// export const langSuffixUaEmpty = {
-//   [UA]: '',
-//   [EN]: '_en',
-//   [RU]: '_ru',
-//   [ES]: '_es',
-//   [AR]: '_ar',
-//   [DE]: '_de',
-//   [FR]: '_fr',
-//   [IT]: '_it',
-// };
-
 export const langSuffixUaEmpty = {
   [UA]: '',
   [EN]: '_en',
-  [RU]: '_en',
-  [ES]: '_en',
-  [AR]: '_en',
-  [DE]: '_en',
-  [FR]: '_en',
-  [IT]: '_en',
+  [RU]: '_ru',
+  [ES]: '_es',
+  [AR]: '_ar',
+  [DE]: '_de',
+  [FR]: '_fr',
+  [IT]: '_it',
 };
+
+// export const langSuffixUaEmpty = {
+//   [UA]: '',
+//   [EN]: '_en',
+//   [RU]: '_en',
+//   [ES]: '_en',
+//   [AR]: '_en',
+//   [DE]: '_en',
+//   [FR]: '_en',
+//   [IT]: '_en',
+// };
 
 export const langSuffix = { ...langSuffixUaEmpty, [UA]: '_ua' };
 

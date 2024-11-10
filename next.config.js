@@ -205,6 +205,13 @@ const nextConfig = {
       },
     ];
   },
+
+  experimental: {
+    serverComponentsExternalPackages: [
+      'puppeteer-extra',
+      'puppeteer-extra-plugin-stealth',
+    ],
+  },
 };
 
 const withBundleAnalyzer = require('@next/bundle-analyzer')({

@@ -13,6 +13,7 @@ import { EUrlAdminParam } from '@/models/url/urlAdmin.model';
 import { EDBTableTitles, getDbTableLink } from '@/models/dbTblNames.model';
 import { ResultSetHeader } from 'mysql2';
 import { sleep } from '@/libs/utils/sleep';
+import { getContentFromPuppeteerBrowser } from '@/controllers/parse.controller';
 
 export const dynamic = 'force-dynamic';
 
@@ -124,14 +125,22 @@ async function processChannelLogo(channelName: string, satName: string) {
       ];
     }
 
-    browser = await puppeteer.launch();
+    browser = await puppeteer.launch({
+      args: [
+        '--no-sandbox',
+        '--disable-setuid-sandbox',
+        '--disable-dev-shm-usage',
+        '--disable-gpu',
+      ],
+      headless: true, // Запуск без графічного інтерфейсу
+    });
     const page = await browser.newPage();
     const searchUrl = `https://www.google.com/search?q=site:lyngsat.com/tvchannels+${encodeURIComponent(removeTimeFromChannelName(channelName))}+${satName}`;
-    await page.goto(searchUrl);
+
+    const content = await getContentFromPuppeteerBrowser(browser, searchUrl);
 
     messages.push(searchUrl);
 
-    const content = await page.content();
     const $ = cheerio.load(content);
     const lyngsatLink = $('a[href^="https://www.lyngsat.com/"]')
       .first()

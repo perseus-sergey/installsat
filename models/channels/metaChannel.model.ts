@@ -63,6 +63,7 @@ export const CHANNEL_IMAGES = {
   channelLogo: {
     big: {
       path: '/Images/channelsOptimized/',
+      pathFly: '/Images/channel_logo/',
       height: 99,
       width: 132,
       defaultImage: {

@@ -103,6 +103,17 @@ export default async function Page({ params }: IParams) {
       />
 
       <ClientInputWithSubmit
+        fieldSetTitle="Load LOGOS from LyngSat"
+        labelHtml="Choose channels quantity"
+        buttonTitle="Load"
+        inputBaseHref={`${BASE_PARSE_HREF}/lyngsat-get-img`}
+        inputId="lyngsat-get-img"
+        inputDefaultValue={10}
+        inputType="number"
+        searchParamName={EUrlSearchParam.INTERVAL}
+      />
+
+      <ClientInputWithSubmit
         fieldSetTitle="Translate ARTICLES into all languages from English"
         labelHtml="Choose articles quantity for translations"
         buttonTitle="Translate & Update"

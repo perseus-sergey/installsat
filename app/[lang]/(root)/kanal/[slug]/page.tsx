@@ -176,7 +176,7 @@ export default async function Page({ params }: IChannelProps) {
             <FillingValidImage
               image={{
                 ...bigLogo,
-                src: `${bigLogo.path}${logo}`,
+                src: `${bigLogo.pathFly}${logo}`,
               }}
               defaultImage={bigLogo.defaultImage}
               alt={`${bigLogo.alt[lang]} "${title}"`}

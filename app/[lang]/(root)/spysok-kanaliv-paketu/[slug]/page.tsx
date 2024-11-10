@@ -10,8 +10,6 @@ import { T2_SLUG } from '@/models/channels/channelList.model';
 import type { Metadata } from 'next';
 import { getELangKey } from '@/libs/utils/getLanguage';
 import { validSearchParam } from '@/libs/utils/validSearchParam';
-// import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
-// import { getCommentsNumber } from '@/controllers/comments.controller';
 import PackageChannelList from '@/components/channelList/PackageChannelList';
 import FillingValidImage from '@/components/ui/Images/FillingValidImage';
 import { getChannelCatList } from '@/controllers/sidebar.controller';

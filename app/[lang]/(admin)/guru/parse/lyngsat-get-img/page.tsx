@@ -1,4 +1,5 @@
-import puppeteer from 'puppeteer';
+import puppeteer from 'puppeteer-extra';
+import StealthPlugin from 'puppeteer-extra-plugin-stealth';
 import * as cheerio from 'cheerio';
 import { promises as fs } from 'fs';
 import path from 'path';
@@ -127,6 +128,8 @@ async function processChannelLogo(channelName: string, satName: string) {
         `SUCCESS: Using existing logo for "${channelName}": ${existingDbLogo}`,
       ];
     }
+
+    puppeteer.use(StealthPlugin());
 
     browser = await puppeteer.launch({
       args: [

@@ -13,7 +13,8 @@ import { EUrlAdminParam } from '@/models/url/urlAdmin.model';
 import { EDBTableTitles, getDbTableLink } from '@/models/dbTblNames.model';
 import { ResultSetHeader } from 'mysql2';
 import { sleep } from '@/libs/utils/sleep';
-import { getContentFromPuppeteerBrowser } from '@/controllers/parse.controller';
+import { killChromeProcesses } from '@/cron/libs/commons.mjs';
+// import { getContentFromPuppeteerBrowser } from '@/controllers/parse.controller';
 
 export const dynamic = 'force-dynamic';
 
@@ -27,6 +28,8 @@ export const dynamic = 'force-dynamic';
 const { FLY_CHANNELS } = EDBTableTitles;
 
 const BASE_URL = process.env.BASE_URL;
+
+const isProductionMode = process.env.NODE_ENV === 'production';
 
 const imageDir = path.join(process.cwd(), 'public', 'Images', 'channel_logo');
 
@@ -134,10 +137,28 @@ async function processChannelLogo(channelName: string, satName: string) {
       ],
       headless: true, // Запуск без графічного інтерфейсу
     });
-    const page = await browser.newPage();
+    // const page = await browser.newPage();
     const searchUrl = `https://www.google.com/search?q=site:lyngsat.com/tvchannels+${encodeURIComponent(removeTimeFromChannelName(channelName))}+${satName}`;
 
-    const content = await getContentFromPuppeteerBrowser(browser, searchUrl);
+    // const content = await getContentFromPuppeteerBrowser(browser, searchUrl);
+    const page = await browser.newPage();
+
+    await page.setUserAgent(
+      'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36'
+    );
+
+    const googleResponse = await page.goto(searchUrl, {
+      waitUntil: 'domcontentloaded',
+    });
+
+    if (!googleResponse || !googleResponse.ok())
+      return [
+        `Error loading Google search page for: ${searchUrl}. Status: ${googleResponse?.status()} ${googleResponse?.statusText()}`,
+      ];
+
+    await sleep();
+
+    const content = await page.content();
 
     messages.push(searchUrl);
 
@@ -192,7 +213,19 @@ async function processChannelLogo(channelName: string, satName: string) {
 
     return messages;
   } finally {
-    if (browser) await browser.close();
+    if (browser) {
+      try {
+        await browser.close();
+      } catch (closeError) {
+        messages.push(
+          `ERROR: closing browser. Message: ${(closeError as Error).message}`
+        );
+      }
+    }
+    if (isProductionMode) {
+      const killRes = killChromeProcesses();
+      messages.push(...killRes);
+    }
   }
 
   return messages;
@@ -211,7 +244,7 @@ const getChannelsLogo = async (batchSize: string) => {
     messages.push(...res);
     messages.push(`└──────────── "${channel.sat_slug}" ──────────────┘`);
 
-    sleep(500);
+    await sleep();
   }
 
   return messages;

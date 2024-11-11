@@ -259,6 +259,8 @@ async function processChannelLogo(
 
     await sleep(10000);
 
+    if (!isConsentBtnClicked) isConsentBtnClicked = await consentBtnClick(page);
+
     const searchInputSelector = '#gsc-i-id1';
 
     await page.waitForSelector(searchInputSelector, { timeout: 20000 });

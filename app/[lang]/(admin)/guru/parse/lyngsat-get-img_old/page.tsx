@@ -234,10 +234,6 @@ async function processChannelLogo(
   let isConsentBtnClicked = false;
 
   page = await browser.newPage(); // Create a new page for each channel
-  // Set User-Agent
-  await page.setUserAgent(
-    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36'
-  );
 
   try {
     const existingDbLogo = await getDbExistingLogo(normalizedChannelName);
@@ -257,9 +253,9 @@ async function processChannelLogo(
 
     isConsentBtnClicked = await consentBtnClick(page);
 
-    await sleep(10000);
-
     const searchInputSelector = '#gsc-i-id1';
+
+    await takeScreenshot(channelName, page);
 
     await page.waitForSelector(searchInputSelector, { timeout: 20000 });
 

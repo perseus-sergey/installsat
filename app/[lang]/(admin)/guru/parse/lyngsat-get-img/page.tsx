@@ -109,12 +109,12 @@ async function saveLogoToFile(logoFileName: string, buffer: Buffer) {
 }
 
 // ------------ Take a screenshot
-// const takeScreenshot = async (title: string, page: Page) => {
-//   await page.screenshot({
-//     path: `search-results-${title.replace(/[^a-zA-Z0-9]/g, '-')}-${Date.now()}.png`,
-//     fullPage: true,
-//   });
-// };
+const takeScreenshot = async (title: string, page: Page) => {
+  await page.screenshot({
+    path: `search-results-${title.replace(/[^a-zA-Z0-9]/g, '-')}-${Date.now()}.png`,
+    fullPage: true,
+  });
+};
 
 const removeTimeFromChannelName = (channelName: string): string =>
   channelName.replace(/\s*\(\+\d+h\)/gi, '');
@@ -233,6 +233,8 @@ async function processChannelLogo(
   const searchUrl = 'https://www.lyngsat.com/search.html';
   let isConsentBtnClicked = false;
 
+  page = await browser.newPage(); // Create a new page for each channel
+
   try {
     const existingDbLogo = await getDbExistingLogo(normalizedChannelName);
 
@@ -243,8 +245,6 @@ async function processChannelLogo(
         `SUCCESS: Using existing logo for "${channelName}": ${existingDbLogo}`,
       ];
     }
-
-    page = await browser.newPage(); // Create a new page for each channel
 
     await page.goto(searchUrl, {
       waitUntil: 'domcontentloaded',
@@ -345,6 +345,9 @@ async function processChannelLogo(
     }
   } catch (error) {
     const err = error as Error;
+    if (err.name === 'TimeoutError') {
+      takeScreenshot(channelName, page);
+    }
     messages.push(
       err.name === 'TimeoutError'
         ? `ERROR Puppeteer: Navigation timeout exceeded. ${err.message}`

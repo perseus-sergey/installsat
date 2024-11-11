@@ -1,3 +1,4 @@
+import { ResultSetHeader } from 'mysql2';
 import puppeteer from 'puppeteer-extra';
 import StealthPlugin from 'puppeteer-extra-plugin-stealth';
 import * as cheerio from 'cheerio';
@@ -12,9 +13,9 @@ import { sendMail } from '@/libs/mail/sendMail';
 import { ELanguage } from '@/models/language.model';
 import { EUrlAdminParam } from '@/models/url/urlAdmin.model';
 import { EDBTableTitles, getDbTableLink } from '@/models/dbTblNames.model';
-import { ResultSetHeader } from 'mysql2';
 import { sleep } from '@/libs/utils/sleep';
 import { killChromeProcesses } from '@/cron/libs/commons.mjs';
+import { Browser, Page } from 'puppeteer';
 // import { getContentFromPuppeteerBrowser } from '@/controllers/parse.controller';
 
 export const dynamic = 'force-dynamic';
@@ -34,17 +35,19 @@ const isProductionMode = process.env.NODE_ENV === 'production';
 
 const imageDir = path.join(process.cwd(), 'public', 'Images', 'channel_logo');
 
+puppeteer.use(StealthPlugin());
+
 const getChannelsWithoutLogo = async (limit: string) => {
   const sql = `
-      SELECT title, MAX(sat_slug) as sat_slug
+      SELECT title, MAX(sat_slug) as sat_slug, MAX(is_radio) as is_radio
       FROM ${FLY_CHANNELS} 
       WHERE logo IS NULL AND LENGTH(title) > 1
       GROUP BY title
       LIMIT ?
     `;
-  const res = await poolExecute<{ title: string; sat_slug: string }[]>(sql, [
-    limit,
-  ]);
+  const res = await poolExecute<
+    { title: string; sat_slug: string; is_radio: 0 | 1 }[]
+  >(sql, [limit]);
 
   return res instanceof Error
     ? res
@@ -88,7 +91,7 @@ const updateLogoInDB = async (
   if (res instanceof Error) throw res;
   if (res.affectedRows === 0)
     throw new Error(
-      `ERROR DB UPDATE: Affected rows = ${res.affectedRows}. For SQL: "${sql}"`
+      `ERROR DB UPDATE: Affected rows = ${res.affectedRows}. For SQL: "${sql}". ${isExistLogo ? 'Channel' : 'Normalized'} name: "${channelName}"`
     );
 
   return `SUCCESS DB UPDATE: ${res.affectedRows} rows affected for channels with ${isExistLogo ? 'original' : 'normalized'} name: "${channelName}"`;
@@ -105,18 +108,130 @@ async function saveLogoToFile(logoFileName: string, buffer: Buffer) {
   }
 }
 
+// ------------ Take a screenshot
+// const takeScreenshot = async (title: string, page: Page) => {
+//   await page.screenshot({
+//     path: `search-results-${title.replace(/[^a-zA-Z0-9]/g, '-')}-${Date.now()}.png`,
+//     fullPage: true,
+//   });
+// };
+
 const removeTimeFromChannelName = (channelName: string): string =>
   channelName.replace(/\s*\(\+\d+h\)/gi, '');
 
 const normalizeChannelName = (channelName: string): string =>
   removeTimeFromChannelName(channelName).replace(/\s/g, '').toLowerCase();
 
+const removeParenthesesContent = (str: string) =>
+  str.replace(/\s*\([^)]*\)\s*$/, '').trim();
+
+const consentBtnClick = async (page: Page) => {
+  // Check for the consent button and click it if it exists
+  const consentButton = await page.$('.fc-cta-consent'); // Select the consent button
+
+  if (consentButton) {
+    try {
+      await consentButton.click();
+      await page.waitForFunction(
+        () => !document.querySelector('.fc-cta-consent'),
+        { timeout: 5000 }
+      ); // Wait for the consent button to disappear
+
+      return true;
+    } catch (error) {
+      throw new Error(
+        `Error during consent button clicked: ${(error as Error).message}`
+      );
+    }
+  }
+
+  return false;
+};
+
+const searchLogoLink = async (
+  inputSelector: string,
+  channelName: string,
+  isRadio: boolean,
+  page: Page
+) => {
+  try {
+    await page.$eval(
+      inputSelector,
+      (el) => ((el as HTMLInputElement).value = '')
+    );
+    // Type the channel name into the search box
+    await page.type(inputSelector, channelName);
+    await page.keyboard.press('Enter');
+
+    await sleep(2000); // Give Google search some time
+
+    await page.waitForSelector('.gsc-resultsRoot', { timeout: 5000 });
+
+    const content = await page.content();
+    const $ = cheerio.load(content);
+    const link = $(
+      `.gsc-results a[href*="lyngsat.com/${isRadio ? 'radiochannels' : 'tvchannels'}/"]`
+    )
+      .first()
+      .attr('href');
+
+    return link;
+  } catch (error) {
+    throw new Error(`Error during logo search: ${(error as Error).message}`);
+  }
+};
+// const searchLogoLink = async (
+//   inputSelector: string,
+//   channelName: string,
+//   isRadio: boolean,
+//   page: Page
+// ) => {
+//   try {
+//     // Clear the search input before typing
+//     await page.evaluate((inputSelector) => {
+//       const inputElement = document.querySelector(inputSelector);
+//       if (inputElement && inputElement instanceof HTMLInputElement) {
+//         inputElement.value = '';
+//       }
+//     }, inputSelector); // Clear input
+
+//     await page.focus(inputSelector);
+
+//     // Type the channel name into the search box
+//     await page.type(inputSelector, `${channelName}`, { delay: 100 }); // Add a small delay to simulate typing
+
+//     await page.keyboard.press('Enter');
+
+//     await sleep(2000); // Give Google search some time
+
+//     // Wait for results using a more robust approach
+//     await page.waitForSelector('.gsc-resultsRoot a[href*="lyngsat.com/"]', {
+//       timeout: 10000,
+//     });
+
+//     // Extract the link - improved selector
+//     const linkElement = await page.waitForSelector(
+//       `.gsc-results a[href*="lyngsat.com/${isRadio ? 'radiochannels' : 'tvchannels'}/"]`
+//     );
+//     const link = await linkElement?.evaluate((el) => el.href);
+
+//     return link;
+//   } catch (error) {
+//     throw new Error(`Error during logo search: ${(error as Error).message}`);
+//   }
+// };
 // ========================= PROCESS ===================================
 
-async function processChannelLogo(channelName: string, satName: string) {
+async function processChannelLogo(
+  channelName: string,
+  isRadio: boolean,
+  browser: Browser
+) {
   const messages = [];
-  let browser;
+  let page;
   const normalizedChannelName = normalizeChannelName(channelName);
+  const searchUrl = 'https://www.lyngsat.com/search.html';
+  let isConsentBtnClicked = false;
 
   try {
     const existingDbLogo = await getDbExistingLogo(normalizedChannelName);
@@ -129,48 +244,64 @@ async function processChannelLogo(channelName: string, satName: string) {
       ];
     }
 
-    puppeteer.use(StealthPlugin());
+    page = await browser.newPage(); // Create a new page for each channel
 
-    browser = await puppeteer.launch({
-      args: [
-        '--no-sandbox',
-        '--disable-setuid-sandbox',
-        '--disable-dev-shm-usage',
-        '--disable-gpu',
-      ],
-      headless: true, // Запуск без графічного інтерфейсу
+    await page.goto(searchUrl, {
+      waitUntil: 'domcontentloaded',
+      timeout: 30000,
     });
-    // const page = await browser.newPage();
-    const searchUrl = `https://www.google.com/search?q=site:lyngsat.com/tvchannels+${encodeURIComponent(removeTimeFromChannelName(channelName))}+${satName}`;
 
-    // const content = await getContentFromPuppeteerBrowser(browser, searchUrl);
-    const page = await browser.newPage();
+    const searchInputSelector = '#gsc-i-id1';
 
-    await page.setUserAgent(
-      'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36'
+    await page.waitForSelector(searchInputSelector, { timeout: 5000 });
+
+    isConsentBtnClicked = await consentBtnClick(page);
+
+    // // Type the channel name into the search box
+    // await page.type('#gsc-i-id1', `channel ${channelName}`);
+    // await page.keyboard.press('Enter');
+
+    // await sleep(2000); // Give Google search some time
+
+    // await page.waitForSelector('.gsc-resultsRoot', { timeout: 5000 });
+
+    // const content = await page.content();
+    // const $ = cheerio.load(content);
+    // const lyngsatLink = $(
+    //   `.gsc-results a[href*="lyngsat.com/${isRadio ? 'radiochannels' : 'tvchannels'}/"]`
+    // )
+    //   .first()
+    //   .attr('href');
+
+    let lyngsatLink = await searchLogoLink(
+      searchInputSelector,
+      channelName,
+      isRadio,
+      page
     );
 
-    const googleResponse = await page.goto(searchUrl, {
-      waitUntil: 'domcontentloaded',
-    });
+    if (!lyngsatLink) {
+      if (!isConsentBtnClicked)
+        isConsentBtnClicked = await consentBtnClick(page);
 
-    if (!googleResponse || !googleResponse.ok())
+      lyngsatLink = await searchLogoLink(
+        searchInputSelector,
+        // '7777777777',
+        removeParenthesesContent(channelName),
+        isRadio,
+        page
+      );
+    }
+
+    if (!lyngsatLink) {
+      // takeScreenshot(channelName, page);
+
       return [
-        `Error loading Google search page for: ${searchUrl}. Status: ${googleResponse?.status()} ${googleResponse?.statusText()}`,
+        `LyngSat link not found for: "channel ${channelName}" AND "channel ${removeParenthesesContent(channelName)}"`,
       ];
+    }
 
-    await sleep();
-
-    const content = await page.content();
-
-    messages.push(searchUrl);
-
-    const $ = cheerio.load(content);
-    const lyngsatLink = $('a[href^="https://www.lyngsat.com/"]')
-      .first()
-      .attr('href');
-
-    if (!lyngsatLink) return [`LyngSat link not found for: ${searchUrl}`];
+    messages.push(lyngsatLink);
 
     await page.goto(lyngsatLink);
     const channelPageContent = await page.content();
@@ -212,9 +343,51 @@ async function processChannelLogo(channelName: string, satName: string) {
       return [`Error downloading logo from image page: ${fullLogoUrl}`];
     }
   } catch (error) {
-    messages.push(`ERROR: ${(error as Error).message}`);
+    const err = error as Error;
+    messages.push(
+      err.name === 'TimeoutError'
+        ? `ERROR Puppeteer: Navigation timeout exceeded. ${err.message}`
+        : `ERROR: ${err.message}`
+    );
 
     return messages;
+  } finally {
+    if (page) await page.close();
+  }
+
+  return messages;
+}
+
+const getChannelsLogo = async (batchSize: string) => {
+  const messages = [];
+  let browser;
+
+  try {
+    browser = await puppeteer.launch({
+      args: [
+        '--no-sandbox',
+        '--disable-setuid-sandbox',
+        '--disable-dev-shm-usage',
+        '--disable-gpu',
+      ],
+      headless: true, // Запуск без графічного інтерфейсу
+    });
+
+    const channels = await getChannelsWithoutLogo(batchSize);
+    if (channels instanceof Error) return [`ERROR: ${channels.message}`];
+
+    for (const channel of channels) {
+      messages.push(`┌──────────────── "${channel.title}" ────────────────┐`);
+      const res = await processChannelLogo(
+        channel.title,
+        channel.is_radio === 0 ? false : true,
+        browser
+      ); // Pass browser instance
+      messages.push(...res);
+      messages.push(`└──────────── "${channel.sat_slug}" ──────────────┘`);
+    }
+  } catch (error) {
+    messages.push(`ERROR: ${(error as Error).message}`);
   } finally {
     if (browser) {
       try {
@@ -229,25 +402,6 @@ async function processChannelLogo(channelName: string, satName: string) {
       const killRes = killChromeProcesses();
       messages.push(...killRes);
     }
-  }
-
-  return messages;
-}
-
-const getChannelsLogo = async (batchSize: string) => {
-  const messages = [];
-
-  const channels = await getChannelsWithoutLogo(batchSize);
-
-  if (channels instanceof Error) return [`ERROR: ${channels.message}`];
-
-  for (const channel of channels) {
-    messages.push(`┌──────────────── "${channel.title}" ────────────────┐`);
-    const res = await processChannelLogo(channel.title, channel.sat_slug);
-    messages.push(...res);
-    messages.push(`└──────────── "${channel.sat_slug}" ──────────────┘`);
-
-    await sleep();
   }
 
   return messages;
@@ -273,11 +427,7 @@ const sendReportMail = async (errorMessages: string[], quantity: string) => {
   });
 };
 
-export default async function Page({
-  searchParams,
-}: {
-  searchParams?: TSearchParams;
-}) {
+export default async ({ searchParams }: { searchParams?: TSearchParams }) => {
   const quantity = validSearchParam(EUrlSearchParam.INTERVAL, searchParams);
 
   const messages = await getChannelsLogo(quantity);
@@ -296,4 +446,4 @@ export default async function Page({
       </ul>
     </>
   );
-}
+};

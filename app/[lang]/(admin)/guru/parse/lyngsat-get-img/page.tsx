@@ -255,7 +255,9 @@ async function processChannelLogo(
 
     const searchInputSelector = '#gsc-i-id1';
 
-    await page.waitForSelector(searchInputSelector, { timeout: 5000 });
+    await takeScreenshot(channelName, page);
+
+    await page.waitForSelector(searchInputSelector, { timeout: 20000 });
 
     if (!isConsentBtnClicked) isConsentBtnClicked = await consentBtnClick(page);
 
@@ -346,7 +348,7 @@ async function processChannelLogo(
   } catch (error) {
     const err = error as Error;
     if (err.name === 'TimeoutError') {
-      takeScreenshot(channelName, page);
+      await takeScreenshot(channelName, page);
     }
     messages.push(
       err.name === 'TimeoutError'

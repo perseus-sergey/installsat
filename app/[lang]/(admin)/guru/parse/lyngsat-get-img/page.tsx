@@ -251,11 +251,13 @@ async function processChannelLogo(
       timeout: 30000,
     });
 
+    isConsentBtnClicked = await consentBtnClick(page);
+
     const searchInputSelector = '#gsc-i-id1';
 
     await page.waitForSelector(searchInputSelector, { timeout: 5000 });
 
-    isConsentBtnClicked = await consentBtnClick(page);
+    if (!isConsentBtnClicked) isConsentBtnClicked = await consentBtnClick(page);
 
     // // Type the channel name into the search box
     // await page.type('#gsc-i-id1', `channel ${channelName}`);
@@ -286,7 +288,6 @@ async function processChannelLogo(
 
       lyngsatLink = await searchLogoLink(
         searchInputSelector,
-        // '7777777777',
         removeParenthesesContent(channelName),
         isRadio,
         page

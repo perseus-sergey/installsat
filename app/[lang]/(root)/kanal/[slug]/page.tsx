@@ -174,6 +174,7 @@ export default async function Page({ params }: IChannelProps) {
           {`${titleBefore[lang]} ≪${title}≫`}
           {logo && (
             <FillingValidImage
+              className="bg-white px-2 py-1 shadow"
               image={{
                 ...bigLogo,
                 src: `${bigLogo.pathFly}${logo}`,

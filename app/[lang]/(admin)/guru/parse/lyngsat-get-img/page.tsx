@@ -1,4 +1,3 @@
-import { ResultSetHeader } from 'mysql2';
 import puppeteer from 'puppeteer-extra';
 import StealthPlugin from 'puppeteer-extra-plugin-stealth';
 import * as cheerio from 'cheerio';
@@ -13,6 +12,7 @@ import { sendMail } from '@/libs/mail/sendMail';
 import { ELanguage } from '@/models/language.model';
 import { EUrlAdminParam } from '@/models/url/urlAdmin.model';
 import { EDBTableTitles, getDbTableLink } from '@/models/dbTblNames.model';
+import { ResultSetHeader } from 'mysql2';
 import { sleep } from '@/libs/utils/sleep';
 import { killChromeProcesses } from '@/cron/libs/commons.mjs';
 import { Browser, Page } from 'puppeteer';
@@ -30,6 +30,8 @@ export const dynamic = 'force-dynamic';
 const { FLY_CHANNELS } = EDBTableTitles;
 
 const BASE_URL = process.env.BASE_URL;
+
+const NO_LOGO_TITLE = 'no-logo.png';
 
 const isProductionMode = process.env.NODE_ENV === 'production';
 
@@ -109,12 +111,12 @@ async function saveLogoToFile(logoFileName: string, buffer: Buffer) {
 }
 
 // ------------ Take a screenshot
-const takeScreenshot = async (title: string, page: Page) => {
-  await page.screenshot({
-    path: `search-results-${title.replace(/[^a-zA-Z0-9]/g, '-')}-${Date.now()}.png`,
-    fullPage: true,
-  });
-};
+// const takeScreenshot = async (title: string, page: Page) => {
+//   await page.screenshot({
+//     path: `search-results-${title.replace(/[^a-zA-Z0-9]/g, '-')}-${Date.now()}.png`,
+//     fullPage: true,
+//   });
+// };
 
 const removeTimeFromChannelName = (channelName: string): string =>
   channelName.replace(/\s*\(\+\d+h\)/gi, '');
@@ -125,119 +127,64 @@ const normalizeChannelName = (channelName: string): string =>
 const removeParenthesesContent = (str: string) =>
   str.replace(/\s*\([^)]*\)\s*$/, '').trim();
 
-const consentBtnClick = async (page: Page) => {
-  // Check for the consent button and click it if it exists
-  const consentButton = await page.$('.fc-cta-consent'); // Select the consent button
+const getLinkToPageWithLogo = async ({
+  satName,
+  channelName,
+  isRadio,
+  shouldBracketsRemoved,
+  page,
+}: {
+  satName?: string;
+  channelName: string;
+  isRadio: boolean;
+  shouldBracketsRemoved: boolean;
+  page: Page;
+}) => {
+  // `https://www.google.com/search?q=site:lyngsat.com/tvchannels+${encodeURIComponent(removeTimeFromChannelName(channelName))}+${satName}`;
+  const googleUrl = `https://www.google.com/search?q=site:`;
+  const lyngsatStartHref = `lyngsat.com/${isRadio ? 'radiochannels' : 'tvchannels'}`;
+  const searchUrl = `https://www.google.com/search?q=site:lyngsat.com/tvchannels+${encodeURIComponent(removeTimeFromChannelName(channelName))}+${satName}`;
+  const channelTitleWithoutTime = removeTimeFromChannelName(channelName);
+  const channelTitle = shouldBracketsRemoved
+    ? encodeURIComponent(removeParenthesesContent(channelTitleWithoutTime))
+    : encodeURIComponent(channelTitleWithoutTime);
+  const satelliteTitle = satName ? `+${satName}` : '';
+  const fullSearchUrl = `${googleUrl}${lyngsatStartHref}+${channelTitle}${satelliteTitle}`;
 
-  if (consentButton) {
-    try {
-      await consentButton.click();
-      await page.waitForFunction(
-        () => !document.querySelector('.fc-cta-consent'),
-        { timeout: 5000 }
-      ); // Wait for the consent button to disappear
-
-      return true;
-    } catch (error) {
-      throw new Error(
-        `Error during consent button clicked: ${(error as Error).message}`
-      );
-    }
-  }
-
-  return false;
-};
-
-const searchLogoLink = async (
-  inputSelector: string,
-  channelName: string,
-  isRadio: boolean,
-  page: Page
-) => {
   try {
-    await page.$eval(
-      inputSelector,
-      (el) => ((el as HTMLInputElement).value = '')
-    );
-    // Type the channel name into the search box
-    await page.type(inputSelector, channelName);
-    await page.keyboard.press('Enter');
+    const googleResponse = await page.goto(fullSearchUrl, {
+      waitUntil: 'domcontentloaded',
+      timeout: 30000,
+    });
 
-    await sleep(2000); // Give Google search some time
+    if (!googleResponse || !googleResponse.ok())
+      throw new Error(
+        `Error loading Google search page for: ${searchUrl}. Status: ${googleResponse?.status()} ${googleResponse?.statusText()}`
+      );
 
-    await page.waitForSelector('.gsc-resultsRoot', { timeout: 5000 });
+    await sleep();
 
     const content = await page.content();
-    const $ = cheerio.load(content);
-    const link = $(
-      `.gsc-results a[href*="lyngsat.com/${isRadio ? 'radiochannels' : 'tvchannels'}/"]`
-    )
-      .first()
-      .attr('href');
 
-    return link;
+    const $ = cheerio.load(content);
+    const link = $('a[href^="https://www.lyngsat.com/"]').first().attr('href');
+
+    return { link, message: fullSearchUrl };
   } catch (error) {
     throw new Error(`Error during logo search: ${(error as Error).message}`);
   }
 };
-// const searchLogoLink = async (
-//   inputSelector: string,
-//   channelName: string,
-//   isRadio: boolean,
-//   page: Page
-// ) => {
-//   try {
-//     // Clear the search input before typing
-//     await page.evaluate((inputSelector) => {
-//       const inputElement = document.querySelector(inputSelector);
-//       if (inputElement && inputElement instanceof HTMLInputElement) {
-//         inputElement.value = '';
-//       }
-//     }, inputSelector); // Clear input
-
-//     await page.focus(inputSelector);
-
-//     // Type the channel name into the search box
-//     await page.type(inputSelector, `${channelName}`, { delay: 100 }); // Add a small delay to simulate typing
-
-//     await page.keyboard.press('Enter');
-
-//     await sleep(2000); // Give Google search some time
-
-//     // Wait for results using a more robust approach
-//     await page.waitForSelector('.gsc-resultsRoot a[href*="lyngsat.com/"]', {
-//       timeout: 10000,
-//     });
-
-//     // Extract the link - improved selector
-//     const linkElement = await page.waitForSelector(
-//       `.gsc-results a[href*="lyngsat.com/${isRadio ? 'radiochannels' : 'tvchannels'}/"]`
-//     );
-//     const link = await linkElement?.evaluate((el) => el.href);
-
-//     return link;
-//   } catch (error) {
-//     throw new Error(`Error during logo search: ${(error as Error).message}`);
-//   }
-// };
 // ========================= PROCESS ===================================
 
 async function processChannelLogo(
   channelName: string,
+  satName: string,
   isRadio: boolean,
   browser: Browser
 ) {
   const messages = [];
   let page;
   const normalizedChannelName = normalizeChannelName(channelName);
-  const searchUrl = 'https://www.lyngsat.com/search.html';
-  let isConsentBtnClicked = false;
-
-  page = await browser.newPage(); // Create a new page for each channel
-  // Set User-Agent
-  await page.setUserAgent(
-    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36'
-  );
 
   try {
     const existingDbLogo = await getDbExistingLogo(normalizedChannelName);
@@ -250,67 +197,52 @@ async function processChannelLogo(
       ];
     }
 
-    await page.goto(searchUrl, {
-      waitUntil: 'domcontentloaded',
-      timeout: 30000,
-    });
+    page = await browser.newPage(); // Create a new page for each channel
 
-    isConsentBtnClicked = await consentBtnClick(page);
-
-    await sleep(10000);
-
-    if (!isConsentBtnClicked) isConsentBtnClicked = await consentBtnClick(page);
-
-    const searchInputSelector = '#gsc-i-id1';
-
-    await page.waitForSelector(searchInputSelector, { timeout: 20000 });
-
-    if (!isConsentBtnClicked) isConsentBtnClicked = await consentBtnClick(page);
-
-    // // Type the channel name into the search box
-    // await page.type('#gsc-i-id1', `channel ${channelName}`);
-    // await page.keyboard.press('Enter');
-
-    // await sleep(2000); // Give Google search some time
-
-    // await page.waitForSelector('.gsc-resultsRoot', { timeout: 5000 });
-
-    // const content = await page.content();
-    // const $ = cheerio.load(content);
-    // const lyngsatLink = $(
-    //   `.gsc-results a[href*="lyngsat.com/${isRadio ? 'radiochannels' : 'tvchannels'}/"]`
-    // )
-    //   .first()
-    //   .attr('href');
-
-    let lyngsatLink = await searchLogoLink(
-      searchInputSelector,
-      channelName,
-      isRadio,
-      page
+    await page.setUserAgent(
+      'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36'
     );
 
-    if (!lyngsatLink) {
-      if (!isConsentBtnClicked)
-        isConsentBtnClicked = await consentBtnClick(page);
+    const googleResponse = await getLinkToPageWithLogo({
+      channelName,
+      isRadio,
+      shouldBracketsRemoved: true,
+      page,
+    });
 
-      lyngsatLink = await searchLogoLink(
-        searchInputSelector,
-        removeParenthesesContent(channelName),
+    messages.push(googleResponse.message);
+
+    let lyngsatLink = googleResponse.link;
+
+    if (!lyngsatLink) {
+      const googleSecondResponse = await getLinkToPageWithLogo({
+        satName,
+        channelName,
         isRadio,
-        page
-      );
+        shouldBracketsRemoved: false,
+        page,
+      });
+      messages.push(googleSecondResponse.message);
+      lyngsatLink = googleSecondResponse.link;
     }
 
     if (!lyngsatLink) {
-      // takeScreenshot(channelName, page);
+      await sleep(2000);
 
-      return [
-        `LyngSat link not found for: "channel ${channelName}" AND "channel ${removeParenthesesContent(channelName)}"`,
-      ];
+      const updateDbMessage = await updateLogoInDB(
+        normalizedChannelName,
+        NO_LOGO_TITLE,
+        false
+      );
+      messages.push(updateDbMessage);
+      messages.push('LyngSat link not found!');
+
+      return messages;
     }
 
-    messages.push(lyngsatLink);
+    messages.push(`Extracted link: ${lyngsatLink}`);
+
+    await sleep(2000);
 
     await page.goto(lyngsatLink);
     const channelPageContent = await page.content();
@@ -319,19 +251,37 @@ async function processChannelLogo(
       'table[width="700"] > tbody > tr > td:first-child img[src^="/logo/"]'
     ).first();
 
-    if (!logoImg) return [`Logo not found on page: ${lyngsatLink}`];
+    if (!logoImg) {
+      messages.push(`Logo not found on page: ${lyngsatLink}`);
+
+      return messages;
+    }
 
     const logoUrl = logoImg.attr('src');
 
-    if (!logoUrl)
-      return [
-        `Can not extract logo URL from: ${logoImg.html}. Page: ${lyngsatLink}`,
-      ];
+    if (!logoUrl) {
+      messages.push(
+        `Can not extract logo URL from: ${logoImg.html()}. Page: ${lyngsatLink}`
+      );
+
+      const updateDbMessage = await updateLogoInDB(
+        normalizedChannelName,
+        NO_LOGO_TITLE,
+        false
+      );
+      messages.push(updateDbMessage);
+
+      return messages;
+    }
 
     const fullLogoUrl = `https://www.lyngsat.com${logoUrl}`;
     const response = await page.goto(fullLogoUrl);
 
-    if (!response) return [`Bad response for image page: ${fullLogoUrl}`];
+    if (!response) {
+      messages.push(`Bad response for image page: ${fullLogoUrl}`);
+
+      return messages;
+    }
 
     const buffer = await response.buffer();
 
@@ -349,18 +299,12 @@ async function processChannelLogo(
       );
       messages.push(updateDbMessage);
     } else {
-      return [`Error downloading logo from image page: ${fullLogoUrl}`];
+      messages.push(`Error downloading logo from image page: ${fullLogoUrl}`);
+
+      return messages;
     }
   } catch (error) {
-    const err = error as Error;
-    if (err.name === 'TimeoutError') {
-      await takeScreenshot(channelName, page);
-    }
-    messages.push(
-      err.name === 'TimeoutError'
-        ? `ERROR Puppeteer: Navigation timeout exceeded. ${err.message}`
-        : `ERROR: ${err.message}`
-    );
+    messages.push(`ERROR: ${(error as Error).message}`);
 
     return messages;
   } finally {
@@ -392,11 +336,14 @@ const getChannelsLogo = async (batchSize: string) => {
       messages.push(`┌──────────────── "${channel.title}" ────────────────┐`);
       const res = await processChannelLogo(
         channel.title,
+        channel.sat_slug,
         channel.is_radio === 0 ? false : true,
         browser
       ); // Pass browser instance
       messages.push(...res);
       messages.push(`└──────────── "${channel.sat_slug}" ──────────────┘`);
+
+      await sleep(5000);
     }
   } catch (error) {
     messages.push(`ERROR: ${(error as Error).message}`);

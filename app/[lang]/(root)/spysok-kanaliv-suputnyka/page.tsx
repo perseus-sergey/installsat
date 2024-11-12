@@ -1,5 +1,6 @@
 import { Suspense } from 'react';
 import Image from 'next/image';
+import dynamic from 'next/dynamic';
 
 import { Title } from '@/components/ui/Titles/Title';
 import type { Metadata } from 'next';
@@ -17,8 +18,6 @@ import Filter from '@/components/ui/Filter/Filter';
 import ChannelFormatSliders from '@/components/ui/ChannelFormatSliders/ChannelFormatSliders';
 import titleImg from 'public/Images/packages/database.png';
 import NumberOfItems from '@/components/NumberOfItems/NumberOfItems';
-import LanguageSelector from '@/components/CustomSelectors/LanguageSelector';
-import SatelliteSelector from '@/components/CustomSelectors/SatelliteSelector';
 import { getSatsForForm } from '@/controllers/satDigest.controller';
 import { getFlySatChannels } from '@/controllers/channelList.controller';
 import { getChannelsLangList } from '@/controllers/languageList.controller';
@@ -37,6 +36,16 @@ import {
 import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
 import { EDBTableTitles } from '@/models/dbTblNames.model';
 import { CHANNEL_LIST_DB_ID } from '@/models/channels/channelList.model';
+
+const LanguageSelector = dynamic(
+  () => import('@/components/CustomSelectors/LanguageSelector'),
+  { ssr: false }
+);
+
+const SatelliteSelector = dynamic(
+  () => import('@/components/CustomSelectors/SatelliteSelector'),
+  { ssr: false }
+);
 
 const BASE_URL = process.env.BASE_URL || MAIN_URL;
 

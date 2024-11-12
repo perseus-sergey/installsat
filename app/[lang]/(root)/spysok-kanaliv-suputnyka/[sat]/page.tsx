@@ -1,3 +1,4 @@
+import dynamic from 'next/dynamic';
 import { Suspense } from 'react';
 
 import { Title } from '@/components/ui/Titles/Title';
@@ -17,7 +18,7 @@ import { getFlySatParams } from '@/controllers/satDigest.controller';
 import { EUrlSearchParam } from '@/models/url/urlSearch.model';
 import NumberOfItems from '@/components/NumberOfItems/NumberOfItems';
 import { getChannelsLangList } from '@/controllers/languageList.controller';
-import LanguageSelector from '@/components/CustomSelectors/LanguageSelector';
+// import LanguageSelector from '@/components/CustomSelectors/LanguageSelector';
 import ArticleWrapper from '@/components/article/ArticleWrapper';
 import { DEFAULT_META_DATA } from '@/models/defaultMeta.model';
 import { ELanguage } from '@/models/language.model';
@@ -36,6 +37,11 @@ import {
 } from '@/models/channels/channelListMeta.model';
 import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
 import { EDBTableTitles } from '@/models/dbTblNames.model';
+
+const LanguageSelector = dynamic(
+  () => import('@/components/CustomSelectors/LanguageSelector'),
+  { ssr: false }
+);
 
 const BASE_URL = process.env.BASE_URL || MAIN_URL;
 

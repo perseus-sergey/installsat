@@ -1,3 +1,4 @@
+import dynamic from 'next/dynamic';
 import { Suspense } from 'react';
 import Image from 'next/image';
 
@@ -13,7 +14,6 @@ import BreadCrumbServer from '@/components/BreadCrumbs/BreadCrumbsServer';
 import { getFormattedDateStrYearFirst } from '@/libs/utils/dates';
 import { getELangKey } from '@/libs/utils/getLanguage';
 import h1Img from 'public/Images/starthere_6100.png';
-import SatelliteSelector from '@/components/CustomSelectors/SatelliteSelector';
 import ArticleWrapper from '@/components/article/ArticleWrapper';
 import { ELanguage } from '@/models/language.model';
 import { DEFAULT_META_DATA } from '@/models/defaultMeta.model';
@@ -23,6 +23,11 @@ import { updateViewCount } from '@/controllers/viewUpdate.controller';
 import { EUrlSearchParam } from '@/models/url/urlSearch.model';
 import { INFO_PANEL_TITLES } from '@/models/ui/infoPanel.model';
 import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
+
+const SatelliteSelector = dynamic(
+  () => import('@/components/CustomSelectors/SatelliteSelector'),
+  { ssr: false }
+);
 
 const BASE_URL = process.env.BASE_URL || MAIN_URL;
 

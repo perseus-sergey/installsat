@@ -1,4 +1,5 @@
 import { Suspense } from 'react';
+import dynamic from 'next/dynamic';
 
 import {
   TRANS_NEWS_LIST_FILTERS,
@@ -8,13 +9,17 @@ import { EUrlSearchParam } from '@/models/url/urlSearch.model';
 import Fieldset from '../ui/Fieldset/Fieldset';
 import { SelectorSingle } from '../SatelliteSelector/SelectorSingle';
 import ResetSearchParamsBtn from './ResetSearchParamsBtn';
-import SatelliteSelector from '../CustomSelectors/SatelliteSelector';
 import { getSatsForForm } from '@/controllers/satDigest.controller';
 import { ELanguage } from '@/models/language.model';
 import {
   ESelectType,
   INTERVAL_SELECTOR_CAPTION,
 } from '@/models/reactSelect.model';
+
+const SatelliteSelector = dynamic(
+  () => import('@/components/CustomSelectors/SatelliteSelector'),
+  { ssr: false }
+);
 
 const { fieldsetTitle } = TRANS_NEWS_LIST_FILTERS;
 interface IFormDigestIntervalProps {

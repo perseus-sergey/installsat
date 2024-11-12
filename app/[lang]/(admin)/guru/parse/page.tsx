@@ -124,7 +124,7 @@ export default async function Page({ params }: IParams) {
         searchParamName={EUrlSearchParam.INTERVAL}
       />
 
-      <ClientInputWithSubmit
+      {/* <ClientInputWithSubmit
         fieldSetTitle="Translate OLD CHANNELS into all languages from English"
         labelHtml="Choose channels quantity for translations"
         buttonTitle="Translate & Update"
@@ -133,7 +133,7 @@ export default async function Page({ params }: IParams) {
         inputDefaultValue={10}
         inputType="number"
         searchParamName={EUrlSearchParam.INTERVAL}
-      />
+      /> */}
 
       <ClientInputWithSubmit
         fieldSetTitle="Translate FLY CHANNELS into all languages from English"

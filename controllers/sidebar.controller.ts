@@ -100,6 +100,7 @@ export const getUsefulArticleList = async (lang: ELanguage) =>
     cpu 
    FROM ${TBL_ARTICLE} 
    WHERE cat=4 OR cat=5
+   LIMIT 10
   `);
 
 export const getSatMapsSideBar = async () => {

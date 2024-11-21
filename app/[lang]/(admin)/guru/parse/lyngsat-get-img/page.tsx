@@ -406,3 +406,34 @@ export default async ({ searchParams }: { searchParams?: TSearchParams }) => {
     </>
   );
 };
+
+// async function syncLogos() {
+//   const localConnection = await mysql2.createConnection(localDbConfig);
+//   const remoteConnection = await mysql2.createConnection(remoteDbConfig);
+
+//   try {
+//     const [rows] = await localConnection.execute(
+//       'SELECT normalized_name, logo FROM channels WHERE logo IS NOT NULL'
+//     );
+
+//     for (const row of rows) {
+//       try {
+//         await remoteConnection.execute(
+//           'UPDATE channels SET logo = ? WHERE normalized_name = ?',
+//           [row.logo, row.normalized_name]
+//         );
+//         console.log(`Updated logo for ${row.normalized_name} to ${row.logo}`);
+//       } catch (error) {
+//         console.error(
+//           `Error updating remote database for ${row.normalized_name}:`,
+//           error
+//         );
+//       }
+//     }
+//   } finally {
+//     localConnection.end();
+//     remoteConnection.end();
+//   }
+// }
+
+// syncLogos();

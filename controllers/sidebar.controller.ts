@@ -100,6 +100,7 @@ export const getUsefulArticleList = async (lang: ELanguage) =>
     cpu 
    FROM ${TBL_ARTICLE} 
    WHERE cat=4 OR cat=5
+   ORDER BY id ASC
    LIMIT 10
   `);
 
@@ -107,7 +108,7 @@ export const getSatMapsSideBar = async () => {
   const sql = `
     SELECT DISTINCT s.title, s.cpu, s.position, s.grade
     FROM tbl_chan_beam AS b
-    LEFT JOIN tbl_chan_sat AS s ON b.sat = s.id
+    INNER JOIN tbl_chan_sat AS s ON b.sat = s.id
     WHERE b.map_img != ''
     ORDER BY s.grade;
   `;

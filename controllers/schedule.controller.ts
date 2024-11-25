@@ -22,7 +22,7 @@ export const getDBChannelScheduleShort = async (
 `;
 
   const res = await poolExecute<IScheduleTVModel[]>(sql, [
-    `${chanelId}`,
+    chanelId,
     `${hourInterval}`,
     `${rowsLimit}`,
   ]);

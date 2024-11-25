@@ -25,6 +25,22 @@ const SIMULTANEOUS_GENERATE_LIMIT = 50;
 // }
 
 const getSatChannelsFromDB = async (currentSatSlug) => {
+  const titleDescriptionKeywords = Object.values(langSuffix)
+    .map(
+      (langSuffix) =>
+        `(SELECT MAX(text${langSuffix}) 
+     FROM ${FLY_CHANNELS} 
+     WHERE title = F.title) as text${langSuffix},
+     (SELECT MAX(description${langSuffix}) 
+     FROM ${FLY_CHANNELS} 
+     WHERE title = F.title) as description${langSuffix},
+     (SELECT MAX(keywords${langSuffix}) 
+     FROM ${FLY_CHANNELS} 
+     WHERE title = F.title) as keywords${langSuffix},
+     `
+    )
+    .join(' ');
+
   const sql = `
     SELECT 
     F.title, 
@@ -32,21 +48,7 @@ const getSatChannelsFromDB = async (currentSatSlug) => {
     (SELECT GROUP_CONCAT(a_pid SEPARATOR '${DB_ARRAY_SEPARATOR}')
      FROM ${FLY_CHANNELS} 
      WHERE title = F.title) as a_pid,
-    (SELECT MAX(text_en) 
-     FROM ${FLY_CHANNELS} 
-     WHERE title = F.title) as text_en,
-    (SELECT MAX(description_en) 
-     FROM ${FLY_CHANNELS} 
-     WHERE title = F.title) as description_en,
-    (SELECT MAX(description_ua) 
-     FROM ${FLY_CHANNELS} 
-     WHERE title = F.title) as description_ua,
-    (SELECT MAX(keywords_ua) 
-     FROM ${FLY_CHANNELS} 
-     WHERE title = F.title) as keywords_ua,
-    (SELECT MAX(keywords_en) 
-     FROM ${FLY_CHANNELS} 
-     WHERE title = F.title) as keywords_en,
+    ${titleDescriptionKeywords}
     (SELECT MAX(official_site_url)
      FROM ${FLY_CHANNELS} 
      WHERE title = F.title) as official_site_url,
@@ -107,7 +109,31 @@ const getAiChannelAbout = async (dbChannelData) => {
   });
 
   return {
-    shouldUpdateData: generatedDataRes.aiDescription,
+    shouldUpdateData: {
+      ...generatedDataRes.aiDescription,
+      ruText: null,
+      esText: null,
+      arText: null,
+      deText: null,
+      frText: null,
+      itText: null,
+
+      ruDescription: null,
+      esDescription: null,
+      arDescription: null,
+      deDescription: null,
+      frDescription: null,
+      itDescription: null,
+
+      ruKeywords: null,
+      esKeywords: null,
+      arKeywords: null,
+      deKeywords: null,
+      frKeywords: null,
+      itKeywords: null,
+
+      logo: null,
+    },
     shouldUpdateMessage:
       generatedDataRes.error ||
       `SUCCESS: Generated channel descriptions for "${JSON.stringify(dbChannelData, null, 2)}" channel`,
@@ -115,6 +141,17 @@ const getAiChannelAbout = async (dbChannelData) => {
     langString,
   };
 };
+
+// const ELanguage = {
+//   UA: 'ua',
+//   EN: 'en',
+//   RU: 'ru',
+//   ES: 'es',
+//   AR: 'ar',
+//   DE: 'de',
+//   FR: 'fr',
+//   IT: 'it',
+// };
 
 const getShouldUpdateData = async (dbChannelData) => {
   return dbChannelData.text_ua &&
@@ -126,12 +163,34 @@ const getShouldUpdateData = async (dbChannelData) => {
         shouldUpdateData: {
           uaText: dbChannelData.text_ua,
           enText: dbChannelData.text_en,
+          ruText: dbChannelData.text_ru,
+          esText: dbChannelData.text_es,
+          arText: dbChannelData.text_ar,
+          deText: dbChannelData.text_de,
+          frText: dbChannelData.text_fr,
+          itText: dbChannelData.text_it,
+
           enDescription: dbChannelData.description_en,
           uaDescription: dbChannelData.description_ua,
+          ruDescription: dbChannelData.description_ru,
+          esDescription: dbChannelData.description_es,
+          arDescription: dbChannelData.description_ar,
+          deDescription: dbChannelData.description_de,
+          frDescription: dbChannelData.description_fr,
+          itDescription: dbChannelData.description_it,
+
           uaKeywords: dbChannelData.keywords_ua,
           enKeywords: dbChannelData.keywords_en,
+          ruKeywords: dbChannelData.keywords_ru,
+          esKeywords: dbChannelData.keywords_es,
+          arKeywords: dbChannelData.keywords_ar,
+          deKeywords: dbChannelData.keywords_de,
+          frKeywords: dbChannelData.keywords_fr,
+          itKeywords: dbChannelData.keywords_it,
+
           siteUrl: dbChannelData.official_site_url,
           genreId: dbChannelData.theme_id,
+          logo: dbChannelData.logo,
         },
         shouldUpdateMessage: null,
         langString: '',

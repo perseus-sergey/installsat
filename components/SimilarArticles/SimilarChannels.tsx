@@ -20,8 +20,8 @@ const SimilarChannels = async ({
 
   return (
     <SimilarBlock blockTitle={sectionCaption} lang={lang}>
-      {similarChannels.map((chan) => (
-        <li key={chan.slug}>
+      {similarChannels.map((chan, idx) => (
+        <li key={idx}>
           <SimilarFlyChannel
             lang={lang}
             chanParams={chan}

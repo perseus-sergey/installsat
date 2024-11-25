@@ -127,7 +127,7 @@ const generateAiText = async (articleTitle: string, currentText: string) => {
   const generationConfig = {
     temperature: 0.5,
     topP: 0.95,
-    topK: 64,
+    topK: 40,
     maxOutputTokens: 8192,
     stopSequences: ['something for everyone'],
     responseMimeType: 'text/plain',

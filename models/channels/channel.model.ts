@@ -36,16 +36,22 @@ export interface IChannel {
 
 export type TDbBoolean = 0 | 1;
 
-export interface IFlyChannel {
+export interface ISimilarFlyChannel {
+  frequency: number;
+  sat_title: string;
+  sat_slug: string;
+  sat_position: number;
+  package_id: number;
+  package_title: string;
+  package_slug: string;
+}
+
+export interface IFlyChannel extends ISimilarFlyChannel {
   id: number;
   title: string;
   slug: string;
-  sat_title: string;
-  sat_position: string;
   sat_logo: string;
-  sat_slug: string;
   sat_grade: number;
-  frequency: number;
   theme_id?: number;
   logo?: string;
   encryption: string | null;
@@ -77,23 +83,7 @@ export interface IFlyChannel {
   vipiko: number;
   view: number;
   is_removed: TDbBoolean;
-  package_id: number;
-  package_title: string;
-  package_slug: string;
 }
-
-// export interface ISimilarFlyChannel {
-//   id: number;
-//   compress: number;
-//   frequency: number;
-//   encryption: string;
-//   biss: string;
-//   mode: string;
-//   slug: string;
-//   sat_title: string;
-//   sat_slug: string;
-//   sat_position: number;
-// }
 
 export interface IOnlineChannel extends IChannel {
   vsetv: number;

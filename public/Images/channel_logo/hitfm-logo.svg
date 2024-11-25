@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="134px" height="81px" viewBox="0 0 134 120" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->
+    <title>Hitfm_logocolor_no_fm</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="-165.955757%" y1="-157.622812%" x2="122.356145%" y2="119.557029%" id="linearGradient-1">
+            <stop stop-color="#55519E" offset="0%"></stop>
+            <stop stop-color="#1F1D51" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="-82.942937%" y1="-140.589806%" x2="94.9226656%" y2="113.043689%" id="linearGradient-2">
+            <stop stop-color="#55519E" offset="0%"></stop>
+            <stop stop-color="#1F1D51" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="-17.4763636%" y1="30.1559701%" x2="303.464545%" y2="153.430597%" id="linearGradient-3">
+            <stop stop-color="#1F1D51" offset="0%"></stop>
+            <stop stop-color="#55519E" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="-48.9474747%" y1="41.0557769%" x2="163.686869%" y2="80.298008%" id="linearGradient-4">
+            <stop stop-color="#1F1D51" offset="0%"></stop>
+            <stop stop-color="#55519E" offset="100%"></stop>
+        </linearGradient>
+        <radialGradient cx="52.7038733%" cy="43.296128%" fx="52.7038733%" fy="43.296128%" r="105.935127%" gradientTransform="translate(0.527039,0.432961),scale(0.598610,1.000000),rotate(54.733588),translate(-0.527039,-0.432961)" id="radialGradient-5">
+            <stop stop-color="#1A1396" offset="0%"></stop>
+            <stop stop-color="#191471" offset="42.1282456%"></stop>
+            <stop stop-color="#0A054C" offset="100%"></stop>
+        </radialGradient>
+        <linearGradient x1="4.36562074%" y1="28.5594692%" x2="100%" y2="50%" id="linearGradient-6">
+            <stop stop-color="#2F198D" offset="0%"></stop>
+            <stop stop-color="#43379C" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="87.2583664%" y1="100%" x2="8.10751618%" y2="0%" id="linearGradient-7">
+            <stop stop-color="#0F0656" offset="0%"></stop>
+            <stop stop-color="#1A1573" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="14.750017%" y1="-13.2082672%" x2="95.6087841%" y2="87.0973179%" id="linearGradient-8">
+            <stop stop-color="#1B1676" offset="0%"></stop>
+            <stop stop-color="#201C51" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="0%" y1="25.245136%" x2="100%" y2="83.4820631%" id="linearGradient-9">
+            <stop stop-color="#2C198F" offset="0%"></stop>
+            <stop stop-color="#42379C" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="90.7056344%" y1="45.0950869%" x2="13.9147783%" y2="62.4050209%" id="linearGradient-10">
+            <stop stop-color="#F82964" offset="0%"></stop>
+            <stop stop-color="#F60038" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Hit-index" transform="translate(-252.000000, -38.000000)">
+            <g id="header" transform="translate(200.000000, 23.000000)">
+                <g id="left-menu">
+                    <g id="Hitfm_logocolor_no_fm" transform="translate(52.000000, 15.000000)">
+                        <g id="XMLID_417_" transform="translate(55.000000, 13.000000)" fill-rule="nonzero">
+                            <polygon id="XMLID_419_" fill="url(#linearGradient-1)" points="34.76 1.44893545 69.9632154 21.009564 78.3691114 19.5606286 43.165896 0"></polygon>
+                            <polygon id="XMLID_418_" fill="url(#linearGradient-2)" points="0 51.2142954 37.2905855 67.9885096 70.6885078 62.805779 35.4852924 45.0284556"></polygon>
+                        </g>
+                        <g id="XMLID_399_">
+                            <g id="XMLID_412_" transform="translate(13.406623, 14.423792)" fill="url(#linearGradient-3)" fill-rule="nonzero">
+                                <polygon id="XMLID_414_" points="6.31228485 4.04975693 0.167582784 0.499285102 4.4130133 7.9330855"></polygon>
+                            </g>
+                            <polygon id="XMLID_406_" fill="url(#linearGradient-4)" fill-rule="nonzero" points="48.7107291 8.76522734 48.7107291 22.6897341 54.240961 12.0383186"></polygon>
+                            <polygon id="XMLID_405_" fill="url(#radialGradient-5)" fill-rule="nonzero" points="98.7621205 0 98.7621205 12.2047469 90.4388422 13.6471261 90.4388422 37.7792393 77.8701334 39.9982842 77.8701334 15.866171 69.5468552 17.3085502 69.5468552 6.82356305 67.3124181 5.54761224 67.3124181 5.54761224 67.3124181 41.8844724 55.5816232 43.9370889 55.5816232 30.0680583 47.6493715 45.323992 36.9799342 47.2101802 36.9799342 12.3156992 34.9689408 11.2061767 24.6905301 30.5118673 35.583411 47.4320846 22.7353976 49.7066057 17.819636 41.6625679 12.9597353 51.3708893 0.167582784 53.6454104 0.223443711 53.6454104 37.0916561 70.8430083 47.8169543 69.0677724 50.6658616 63.7975407 57.6484776 67.3480126 62.5642392 66.4603946 92.2263919 79.8856162 125.296061 74.7263369 125.296061 57.9725479 121.665101 56.1418359 125.296061 55.4761224 125.296061 33.1747212 133.619339 31.732342 133.619339 20.0823563"></polygon>
+                            <g id="XMLID_400_" transform="translate(55.302319, 40.497569)" fill="#F82964" fill-rule="nonzero">
+                                <polygon id="XMLID_404_" points="0.502748351 23.0225908 35.639272 16.8647412 35.639272 0.110952245 0.502748351 6.26880183"></polygon>
+                            </g>
+                            <polygon id="Path-2" fill="url(#linearGradient-6)" points="91.1362847 13.6100576 125.222474 33.080628 125.222474 55.4532008 122.176358 56.0751669 125.222474 58.0681129 125.222474 74.290807 91.1362847 57.2989988"></polygon>
+                        </g>
+                        <g id="XMLID_397_" transform="translate(0.000000, 11.000000)"></g>
+                        <g id="XMLID_394_">
+                            <polygon id="XMLID_396_" fill="url(#linearGradient-7)" fill-rule="nonzero" points="89.9440104 14.0548954 125.414554 33.518443 133.807537 32.305656 99.1744707 12.3783271"></polygon>
+                            <polygon id="XMLID_395_" fill="url(#linearGradient-8)" fill-rule="nonzero" points="56.1410688 64.1553722 93.1867282 80.9857076 125.755571 75.4501488 91.3400412 57.9488366"></polygon>
+                            <polygon id="Path-3" fill="url(#linearGradient-9)" points="98.7356942 0.111289794 133.81672 20.494764 133.81672 32.2428728 98.7356942 12.3628125"></polygon>
+                            <path d="M98.7621205,0.114735212 L98.7621205,12.4345831 L90.4388422,13.8905651 L90.4388422,38.2502643 L77.8701334,40.4902366 L77.8701334,16.1305374 L69.5468552,17.5865194 L69.5468552,5.26667159 L77.8701334,3.81068957 L90.4388422,1.57071723 L98.7621205,0.114735212 Z M55.5816232,44.4661875 L55.5816232,30.4663604 L47.6493715,45.8661702 L36.9799342,47.7701467 L36.9799342,11.0346004 L48.7107291,8.96262595 L48.7107291,23.0184524 L56.6429809,7.56264323 L67.3124181,5.71466606 L67.3124181,42.3942131 L55.5816232,44.4661875 Z M35.3895969,11.2021371 L25.1688927,30.6191696 L36.0006172,48.4209951 L22.4411113,50.708634 L18.3365742,42.6182038 L12.7203329,52.3825162 L0,54.670155 L10.7761772,33.0184007 L0.555473052,17.2281127 L13.3313532,14.9404738 L17.5529484,22.4171473 L22.669264,13.4339799 L35.3895969,11.2021371 Z" id="Combined-Shape" fill="url(#linearGradient-10)" fill-rule="nonzero"></path>
+                        </g>
+                        <g id="Ресурс-7" transform="translate(66.000000, 48.000000)" fill="#1C1885" fill-rule="nonzero">
+                            <polygon id="Shape" points="0.0710510511 2.54721088 5.05555556 1.57142857 5.05555556 3.78040816 1.74348348 4.37904762 1.77627628 5.76190476 4.7166967 5.16326531 4.7166967 7.07292517 1.74348348 7.70748299 1.77627628 10.7006803 0 11"></polygon>
+                            <polygon id="Shape" points="12.9044898 0 13 8.21858117 11.18 8.55176689 11.2755102 3.87547604 9.75265306 7.34177664 8.16081633 4.49508458 8.16081633 9.06031352 6.5 9.42857143 6.53714286 1.20414489 8.26163265 0.876804535 9.81632653 3.94562041 11.2118367 0.257195997"></polygon>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

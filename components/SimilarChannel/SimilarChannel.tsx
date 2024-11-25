@@ -1,4 +1,4 @@
-import { IFlyChannel } from '@/models/channels/channel.model';
+import { ISimilarFlyChannel } from '@/models/channels/channel.model';
 // import Link from 'next/link';
 import { EUrlBaseParam } from '@/models/url/url.model';
 import { ELanguage } from '@/models/language.model';
@@ -18,7 +18,7 @@ import { localeStringMaker } from '@/libs/utils/localeStringMaker';
 // }
 
 interface ISimilarFlyChannelProps {
-  chanParams: IFlyChannel;
+  chanParams: ISimilarFlyChannel;
   lang: ELanguage;
   chanName: string;
 }

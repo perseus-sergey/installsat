@@ -20,15 +20,15 @@ const { FLY_CHANNELS } = EDBTableTitles;
 
 const findChannelInDb = async (channelTitle: string) => {
   const sql = `
-      SELECT id FROM ${FLY_CHANNELS} WHERE title = ? LIMIT 1
+      SELECT logo FROM ${FLY_CHANNELS} WHERE title = ? LIMIT 1
     `;
-  const res = await poolExecute<{ id: number }[]>(sql, [channelTitle]);
+  const res = await poolExecute<{ logo: string | null }[]>(sql, [channelTitle]);
 
   return res instanceof Error
     ? res
     : res.length === 0
       ? new Error(`ERROR: Channel "${channelTitle}" not found in database`)
-      : res;
+      : res[0];
 };
 
 export default async function Page({
@@ -55,18 +55,45 @@ export default async function Page({
     );
   }
 
-  const checkChanInDb = await findChannelInDb(urlChannelTitle);
-  if (checkChanInDb instanceof Error)
+  const chanLogoFromDB = await findChannelInDb(urlChannelTitle);
+  if (chanLogoFromDB instanceof Error)
     return (
-      <p className="text-xl text-red-500 font-bold">{checkChanInDb.message}</p>
+      <p className="text-xl text-red-500 font-bold">{chanLogoFromDB.message}</p>
     );
 
-  const { aiDescription: generatedData, error: aiGeneratedError } =
-    await generateChannelAbout({
+  const { aiDescription, error: aiGeneratedError } = await generateChannelAbout(
+    {
       channelTitle: urlChannelTitle,
       language: urlLanguage,
       ifRadio: null,
-    });
+    }
+  );
+
+  const generatedData = {
+    ...aiDescription,
+    ruText: null,
+    esText: null,
+    arText: null,
+    deText: null,
+    frText: null,
+    itText: null,
+
+    ruDescription: null,
+    esDescription: null,
+    arDescription: null,
+    deDescription: null,
+    frDescription: null,
+    itDescription: null,
+
+    ruKeywords: null,
+    esKeywords: null,
+    arKeywords: null,
+    deKeywords: null,
+    frKeywords: null,
+    itKeywords: null,
+
+    logo: chanLogoFromDB,
+  };
 
   const insertToDbRes = await updateGeneratedDataDB(
     generatedData,

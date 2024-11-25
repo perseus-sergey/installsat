@@ -4,6 +4,7 @@ import {
   IFlyChannel,
   IOnlineChannel,
   ISimilarChannel,
+  ISimilarFlyChannel,
 } from '@/models/channels/channel.model';
 import {
   ELanguage,
@@ -242,13 +243,7 @@ export const getSimilarChannels = async (logo: string, lang: ELanguage) => {
 export const getSimilarFlyChannels = async (title: string) => {
   const sql = `
   SELECT  
-    C.id, 
-    C.compress, 
     C.frequency, 
-    C.encryption,
-    C.biss,
-    C.mode,
-    C.slug,
     C.package_id,
     P.title     AS package_title,
     P.slug      AS package_slug,
@@ -264,12 +259,13 @@ export const getSimilarFlyChannels = async (title: string) => {
   WHERE 
     C.title = ?
   AND
-    C.is_removed != 1
+    C.is_removed = 0
   ORDER BY 
     S.grade
+  LIMIT 70
   `;
 
-  const res = await poolExecute<IFlyChannel[]>(sql, [title]);
+  const res = await poolExecute<ISimilarFlyChannel[]>(sql, [title]);
 
   return res instanceof Error ? [] : res;
 };

@@ -4,6 +4,7 @@ import {
   DB_ARRAY_SEPARATOR,
   getContentFromPuppeteerBrowser,
   killChromeProcesses,
+  langSuffix,
 } from './commons.mjs';
 import { extractAndUpdateData } from './generateChanAboutForOneSat.controller.mjs';
 import puppeteer from 'puppeteer';
@@ -212,20 +213,23 @@ const setFreeChannelCount = async (currentSatSlug) => {
 
 const getAboutOfChannelsFromDB = async (channelTitles) => {
   const placeholders = new Array(channelTitles.length).fill('?').join(', ');
+  const textDescriptionKeywords = Object.values(langSuffix)
+    .map(
+      (langSuffix) =>
+        `MAX(text${langSuffix}) AS text${langSuffix}, MAX(description${langSuffix}) AS description${langSuffix}, MAX(keywords${langSuffix}) AS keywords${langSuffix},`
+    )
+    .join(' ');
+
   const sql = `
     SELECT 
         title, 
         MAX(is_radio) AS is_radio,
+        MAX(logo) AS logo,
         GROUP_CONCAT(a_pid SEPARATOR '${DB_ARRAY_SEPARATOR}') AS a_pid,
-        MAX(text_en) AS text_en,
-        MAX(text_ua) AS text_ua,
-        MAX(description_en) AS description_en,
-        MAX(description_ua) AS description_ua,
-        MAX(keywords_ua) AS keywords_ua,
-        MAX(keywords_en) AS keywords_en,
+        ${textDescriptionKeywords}
         MAX(official_site_url) AS official_site_url,
         MAX(theme_id) AS theme_id
-    FROM 
+    FROM
         ${FLY_CHANNELS}
     WHERE 
         title IN (${placeholders})
@@ -233,7 +237,12 @@ const getAboutOfChannelsFromDB = async (channelTitles) => {
         AND (description_en IS NULL OR description_en = '')
     GROUP BY 
         title
-  `;
+        `;
+
+  // AND theme_id != 0
+  // AND theme_id IS NOT NULL
+  // AND description_en IS NOT NULL
+  // AND description_en != ''
 
   const res = await executePoolQuery(sql, [...channelTitles]);
 
@@ -338,6 +347,9 @@ const insertTblChannels = async (currentSatSlug, parsedNewChannels) => {
     )
     VALUES ${placeholders.join(', ')};
   `;
+  // ----------------------------------------------------------------
+  // Past all new channels
+  // ----------------------------------------------------------------
   const res = await executePoolQuery(sql, validValues);
 
   res instanceof Error
@@ -352,7 +364,7 @@ const insertTblChannels = async (currentSatSlug, parsedNewChannels) => {
 
   // ----------------------------------------------------------------
   // Find all newly inserted channels (with empty descriptions)
-  // .. and create the new objects from group of same channels by sql query
+  // і завдяки використанню функцій MAX() в sql запиті шукаємо можливі існуючи дані для таких title
   // ----------------------------------------------------------------
   const dbChannelsRes = await getAboutOfChannelsFromDB(channelTitles);
   if (typeof dbChannelsRes === 'string')

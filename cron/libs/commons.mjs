@@ -10,7 +10,28 @@ export const WRONG_CAT_IDS = '(2,0,11,12,13)';
 export const ELanguage = {
   UA: 'ua',
   EN: 'en',
+  RU: 'ru',
+  ES: 'es',
+  AR: 'ar',
+  DE: 'de',
+  FR: 'fr',
+  IT: 'it',
 };
+
+const { UA, EN, RU, ES, AR, DE, FR, IT } = ELanguage;
+
+export const langSuffixUaEmpty = {
+  [UA]: '',
+  [EN]: '_en',
+  [RU]: '_ru',
+  [ES]: '_es',
+  [AR]: '_ar',
+  [DE]: '_de',
+  [FR]: '_fr',
+  [IT]: '_it',
+};
+
+export const langSuffix = { ...langSuffixUaEmpty, [UA]: '_ua' };
 
 export const EUrlBaseParam = {
   BASE_PATH: '/',

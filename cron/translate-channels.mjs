@@ -2,6 +2,7 @@ import { translateChannels } from './libs/channelTranslate.controller.mjs';
 import { sendMail } from './libs/sendMail.mjs';
 
 // =================================================================
+// trans news (main page) reduce number of days to 14 and add limit to sql request 70*days
 // logs rotation
 // =================================================================
 

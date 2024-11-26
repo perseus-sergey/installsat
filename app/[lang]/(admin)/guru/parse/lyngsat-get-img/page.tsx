@@ -7,7 +7,6 @@ import path from 'path';
 import { Title } from '@/components/ui/Titles/Title';
 import { EUrlSearchParam, TSearchParams } from '@/models/url/urlSearch.model';
 import { validSearchParam } from '@/libs/utils/validSearchParam';
-import { poolExecute } from '@/libs/db/mysqldb';
 import { sendMail } from '@/libs/mail/sendMail';
 import { ELanguage } from '@/models/language.model';
 import { EUrlAdminParam } from '@/models/url/urlAdmin.model';
@@ -16,6 +15,7 @@ import { ResultSetHeader } from 'mysql2';
 import { sleep } from '@/libs/utils/sleep';
 import { killChromeProcesses } from '@/cron/libs/commons.mjs';
 import { Browser, Page } from 'puppeteer';
+import { poolExecuteRemote } from '@/libs/db/mysqldbRemote';
 // import { getContentFromPuppeteerBrowser } from '@/controllers/parse.controller';
 
 export const dynamic = 'force-dynamic';
@@ -47,7 +47,7 @@ const getChannelsWithoutLogo = async (limit: string) => {
       GROUP BY title
       LIMIT ?
     `;
-  const res = await poolExecute<
+  const res = await poolExecuteRemote<
     { title: string; sat_slug: string; is_radio: 0 | 1 }[]
   >(sql, [limit]);
 
@@ -66,7 +66,7 @@ const getDbExistingLogo = async (normalizedChannelName: string) => {
       AND logo IS NOT NULL
       LIMIT 1
     `;
-  const res = await poolExecute<{ logo: string }[]>(sql, [
+  const res = await poolExecuteRemote<{ logo: string }[]>(sql, [
     normalizedChannelName,
   ]);
 
@@ -88,7 +88,10 @@ const updateLogoInDB = async (
       SET logo = ?
       WHERE ${isExistLogo ? 'title' : 'normalized_name'} = ? 
     `;
-  const res = await poolExecute<ResultSetHeader>(sql, [logo, channelName]);
+  const res = await poolExecuteRemote<ResultSetHeader>(sql, [
+    logo,
+    channelName,
+  ]);
 
   if (res instanceof Error) throw res;
   if (res.affectedRows === 0)
@@ -122,7 +125,10 @@ const removeTimeFromChannelName = (channelName: string): string =>
   channelName.replace(/\s*\(\+\d+h\)/gi, '');
 
 const normalizeChannelName = (channelName: string): string =>
-  removeTimeFromChannelName(channelName).replace(/\s/g, '').toLowerCase();
+  removeTimeFromChannelName(channelName)
+    .replace(/[<>:"/\\|?*]+/g, '_') // Заміна заборонених символів на "_"
+    .replace(/\s/g, '') // Видалення пробілів
+    .toLowerCase();
 
 const removeParenthesesContent = (str: string) =>
   str.replace(/\s*\([^)]*\)\s*$/, '').trim();

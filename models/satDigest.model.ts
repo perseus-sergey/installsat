@@ -3,7 +3,7 @@ import { ELanguage } from './language.model';
 
 const { UA, EN, RU, ES, AR, DE, FR, IT } = ELanguage;
 
-export const LAST_NEWS_INTERVAL = 30;
+export const LAST_NEWS_INTERVAL = 14;
 export const META_TRANS_NEWS_LIST = {
   getH1(interval: number) {
     let addStr;
@@ -35,14 +35,14 @@ export const META_TRANS_NEWS_LIST = {
     }
 
     return {
-      [UA]: `Транспондерні новини популярних супутників ${addStr[UA]}`,
-      [EN]: `Transponder news of popular satellites ${addStr[EN]}`,
-      [RU]: `Транспондерные новости популярных спутников ${addStr[RU]}`,
-      [ES]: `Noticias de transpondedores de satélites populares ${addStr[ES]}`,
+      [UA]: `Транспондерні новини ${addStr[UA]}`,
+      [EN]: `Transponder news ${addStr[EN]}`,
+      [RU]: `Транспондерные новости ${addStr[RU]}`,
+      [ES]: `Noticias de transpondedores ${addStr[ES]}`,
       [AR]: `أخبار الترانسندر للأقمار الصناعية الشهيرة ${addStr[AR]}`,
       [DE]: `Transpondernachrichten beliebter Satelliten ${addStr[DE]}`,
-      [FR]: `Actualités des transpondeurs de satellites populaires ${addStr[FR]}`,
-      [IT]: `Notizie sui transponder dei satelliti popolari ${addStr[IT]}`,
+      [FR]: `Actualités des transpondeurs ${addStr[FR]}`,
+      [IT]: `Notizie sui transponder ${addStr[IT]}`,
     };
   },
   metaTitle: {

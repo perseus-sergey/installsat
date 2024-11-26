@@ -43,6 +43,7 @@ export const getSatDigestNews = async ({
   const timeInterval = interval || LAST_NEWS_INTERVAL;
   const currentYear = new Date().getFullYear();
   let tblDigest = TRANS_NEWS as string;
+  const limit = timeInterval > 180 ? '' : `LIMIT ${timeInterval * 50}`;
 
   const where =
     timeInterval > 180
@@ -75,6 +76,7 @@ export const getSatDigestNews = async ({
     ${where}
     ${inSatList}
     ORDER BY D.date DESC, satGrade, satTitle
+    ${limit}
   `;
 
   const res = await poolExecute<TSatDigest[]>(sql);

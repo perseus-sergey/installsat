@@ -5,35 +5,41 @@ import { EUrlSearchParam } from '../url/urlSearch.model';
 const { UA, EN, RU, ES, AR, DE, FR, IT } = ELanguage;
 
 export const META_SAT_CHANNEL_LIST = {
-  h1Start: {
-    [UA]: `Список каналів з супутника`,
-    [EN]: `List of channels from satellite`,
-    [RU]: `Список каналов со спутника`,
-    [ES]: `Lista de canales desde el satélite`,
-    [AR]: `قائمة القنوات من القمر الصناعي`,
-    [DE]: `Liste der Kanäle vom Satelliten`,
-    [FR]: `Liste des chaînes par satellite`,
-    [IT]: `Elenco dei canali dal satellite`,
+  getH1Start(satTitle: string) {
+    return {
+      [UA]: `Таблиця частот каналів з супутника ${satTitle}`,
+      [EN]: `Channel Frequency Table from ${satTitle} Satellite`,
+      [RU]: `Таблица частот каналов со спутника ${satTitle}`,
+      [ES]: `Tabla de frecuencias de canales del satélite ${satTitle}`,
+      [AR]: `جدول ترددات القنوات من قمر ${satTitle} الصناعي`,
+      [DE]: `Kanalfrequenztabelle vom ${satTitle}-Satelliten`,
+      [FR]: `Tableau des fréquences des chaînes du satellite ${satTitle}`,
+      [IT]: `Tabella delle frequenze dei canali dal satellite ${satTitle}`,
+    };
   },
-  metaTitle: {
-    [UA]: 'Список каналів супутника',
-    [EN]: 'List of satellite channels',
-    [RU]: 'Список спутниковых каналов',
-    [ES]: 'Lista de canales de satélite',
-    [AR]: 'قائمة قنوات القمر الصناعي',
-    [DE]: 'Liste der Satellitenkanäle',
-    [FR]: 'Liste des chaînes satellite',
-    [IT]: 'Elenco dei canali satellitari',
+  getMetaTitle(satTitle: string) {
+    return {
+      [UA]: `Частоти і канали супутника ${satTitle}`,
+      [EN]: `Frequencies and Channels of ${satTitle} Satellite`,
+      [RU]: `Частоты и каналы спутника ${satTitle}`,
+      [ES]: `Frecuencias y Canales del Satélite ${satTitle}`,
+      [AR]: `ترددات وقنوات قمر ${satTitle} الصناعي`,
+      [DE]: `Frequenzen und Kanäle des ${satTitle}-Satelliten`,
+      [FR]: `Fréquences et Canaux du Satellite ${satTitle}`,
+      [IT]: `Frequenze e Canali del Satellite ${satTitle}`,
+    };
   },
-  metaDescription: {
-    [UA]: 'Список телевізійних і радіо каналів, які ведуть мовлення з супутника',
-    [EN]: 'List of television and radio channels that broadcast from the satellite',
-    [RU]: 'Список телевизионных и радиоканалов, которые ведут вещание со спутника',
-    [ES]: 'Lista de canales de televisión y radio que emiten desde el satélite',
-    [AR]: 'قائمة القنوات التلفزيونية والإذاعية التي تبث من القمر الصناعي',
-    [DE]: 'Liste der Fernseh- und Radiosender, die vom Satelliten aus senden',
-    [FR]: 'Liste des chaînes de télévision et de radio diffusées par satellite',
-    [IT]: 'Elenco dei canali televisivi e radiofonici trasmessi dal satellite',
+  getMetaDescription(satTitle: string) {
+    return {
+      [UA]: `Список частот телевізійних і радіо каналів, які ведуть мовлення з супутника ${satTitle}`,
+      [EN]: `List of TV and radio channel frequencies broadcasting from the ${satTitle} satellite`,
+      [RU]: `Список частот телевизионных и радиоканалов, вещающих со спутника ${satTitle}`,
+      [ES]: `Lista de frecuencias de canales de TV y radio que transmiten desde el satélite ${satTitle}`,
+      [AR]: `قائمة ترددات قنوات التلفزيون والراديو التي تبث من قمر ${satTitle} الصناعي`,
+      [DE]: `Liste der Frequenzen von TV- und Radiosendern, die vom ${satTitle}-Satelliten senden`,
+      [FR]: `Liste des fréquences des chaînes TV et radio diffusées depuis le satellite ${satTitle}`,
+      [IT]: `Elenco delle frequenze dei canali TV e radio trasmessi dal satellite ${satTitle}`,
+    };
   },
 };
 

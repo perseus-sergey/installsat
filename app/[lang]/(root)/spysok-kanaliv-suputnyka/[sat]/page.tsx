@@ -47,7 +47,7 @@ const BASE_URL = process.env.BASE_URL || MAIN_URL;
 
 const { SATELLITE, LANG, SAT_CHANNEL_LIST } = EUrlBaseParam;
 
-const { h1Start, metaDescription, metaTitle } = META_SAT_CHANNEL_LIST;
+const { getH1Start, getMetaDescription, getMetaTitle } = META_SAT_CHANNEL_LIST;
 
 const { h1SatImage } = SAT_CHANNEL_LIST_IMAGES;
 
@@ -79,8 +79,8 @@ export const generateMetadata = async ({
   const { title, position, slug } = resFlySatParams;
 
   const satTitle = `${title} - ${position}`;
-  const fullMetaTitle = `${metaTitle[lang]} ${satTitle}`;
-  const description = `${metaDescription[lang]} ${satTitle}`;
+  const fullMetaTitle = getMetaTitle(satTitle)[lang];
+  const description = getMetaDescription(satTitle)[lang];
   const slugPath = `${SAT_CHANNEL_LIST}/${slug}`;
 
   return {
@@ -188,7 +188,7 @@ export default async ({ searchParams, params }: IPageProps) => {
       />
       <ArticleWrapper lang={lang}>
         <Title>
-          {h1Start[lang]} «{title} - {position}»
+          {getH1Start(`«${title} - ${position}»`)[lang]}
           <FillingValidImage
             className="hidden sm:block"
             image={{
@@ -257,7 +257,7 @@ export default async ({ searchParams, params }: IPageProps) => {
           revalidateUrl={`/${lang}/${SAT_CHANNEL_LIST}/${slug}`}
           dbCommentTableName={EDBTableTitles.COMMENTS_SATELLITE}
           articleId={id}
-          articleName={`${metaTitle[lang]} ${title} - ${position}`}
+          articleName={getMetaTitle(`${title} - ${position}`)[lang]}
         />
       </Suspense>
     </>

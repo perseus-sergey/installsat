@@ -324,13 +324,15 @@ export const getOnlineChannels = cache(
     T.title${langSuffixUaEmpty[lang]} AS genre_title
 
     FROM ${CHANNELS} AS C
-    LEFT JOIN ${CHANNEL_COMPRESSION} AS CO ON C.compress = CO.id 
-    LEFT JOIN ${TBL_LANGUAGE} AS L ON C.lang = L.id
-    LEFT JOIN 
+    INNER JOIN ${CHANNEL_COMPRESSION} AS CO ON C.compress = CO.id 
+    INNER JOIN ${TBL_LANGUAGE} AS L ON C.lang = L.id
+    INNER JOIN 
           ${CHANNEL_THEME} AS T ON C.tema = T.id 
-    WHERE ((C.compress = 5 AND C.tema != 15 AND C.potok LIKE "%youtu%") OR 
-          (C.compress != 5 AND C.tema != 15 AND C.tvforsite_net != '' AND C.cat != 23))
-          ${searchPart}
+    WHERE C.tema != 15 AND (
+    (C.compress = 5 AND C.potok LIKE "//www.youtube%") OR 
+    (C.compress != 5 AND C.tvforsite_net != '' AND C.cat != 23)
+    ) 
+    ${searchPart}
     ORDER BY C.tema, C.tvforsite_net DESC
   `;
     const resp = await poolExecute<IOnlineChannelListModel[]>(sql, [

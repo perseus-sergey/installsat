@@ -5,26 +5,53 @@ import { cache } from 'react';
 
 export const satMapListSql = `
   SELECT 
-    MAX(b.id) AS beam_id,
-    s.id,
-    s.title,
-    s.description,
-    s.cpu,
-    s.logo,
-    s.view,
-    s.position,
-    MAX(C.comment_count) AS comment_count
-  FROM tbl_chan_beam AS b
-  LEFT JOIN tbl_chan_sat AS s ON b.sat = s.id
-  LEFT JOIN (
-      SELECT post, COUNT(id) AS comment_count 
-      FROM tbl_comments_maps 
-      GROUP BY post
-  ) AS C ON s.id = C.post
-  WHERE b.map_img != ''
-  GROUP BY s.id, s.title, s.description, s.cpu, s.logo, s.view, s.position, s.grade
-  ORDER BY s.grade;
+    MAX_B.beam_id,
+    S.id,
+    S.title,
+    S.description,
+    S.cpu,
+    S.logo,
+    S.view,
+    S.position,
+    IFNULL(C.comment_count, 0) AS comment_count
+FROM 
+    (SELECT 
+         sat, MAX(id) AS beam_id 
+     FROM tbl_chan_beam 
+     WHERE map_img != '' 
+     GROUP BY sat) AS MAX_B
+JOIN tbl_chan_sat AS S ON MAX_B.sat = S.id
+LEFT JOIN (
+    SELECT 
+        post, COUNT(*) AS comment_count
+    FROM tbl_comments_maps
+    GROUP BY post
+) AS C ON S.id = C.post
+ORDER BY S.grade;
 `;
+
+// export const satMapListSql = `
+//   SELECT
+//     MAX(b.id) AS beam_id,
+//     s.id,
+//     s.title,
+//     s.description,
+//     s.cpu,
+//     s.logo,
+//     s.view,
+//     s.position,
+//     MAX(C.comment_count) AS comment_count
+//   FROM tbl_chan_beam AS b
+//   LEFT JOIN tbl_chan_sat AS s ON b.sat = s.id
+//   LEFT JOIN (
+//       SELECT post, COUNT(id) AS comment_count
+//       FROM tbl_comments_maps
+//       GROUP BY post
+//   ) AS C ON s.id = C.post
+//   WHERE b.map_img != ''
+//   GROUP BY s.id, s.title, s.description, s.cpu, s.logo, s.view, s.position, s.grade
+//   ORDER BY s.grade;
+// `;
 
 export const getSatMapList = cache(async () => {
   const res = await poolExecute<IAllMapsModel[]>(satMapListSql);

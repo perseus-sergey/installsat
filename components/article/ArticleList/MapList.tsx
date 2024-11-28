@@ -18,10 +18,7 @@ const { metaTitle } = META_SINGLE_SAT_MAP;
 
 const { h1Image } = SINGLE_SAT_MAP_DATA.images;
 
-const {
-  views: viewsTitle,
-  // comments: commentsTitle
-} = INFO_PANEL_TITLES;
+const { views: viewsTitle, comments: commentsTitle } = INFO_PANEL_TITLES;
 
 interface IArticleListProps {
   articleList: IAllMapsModel[];
@@ -31,15 +28,7 @@ const MapList = ({ articleList, lang }: IArticleListProps) =>
   articleList.length > 0 ? (
     <ul data-testid="ArticleList">
       {articleList.map(
-        ({
-          id,
-          title,
-          description,
-          view,
-          // comment_count,
-          logo,
-          cpu,
-        }) => (
+        ({ id, title, description, view, comment_count, logo, cpu }) => (
           <li key={id}>
             <ArticleCard
               lang={lang}
@@ -68,7 +57,7 @@ const MapList = ({ articleList, lang }: IArticleListProps) =>
               href={`/${lang}/${EUrlBaseParam.SAT_COVERAGE_MAP}/${cpu}`}
               infoPanelItems={[
                 { name: viewsTitle[lang], value: view },
-                // { name: commentsTitle[lang], value: comment_count },
+                { name: commentsTitle[lang], value: comment_count },
               ]}
             />
           </li>

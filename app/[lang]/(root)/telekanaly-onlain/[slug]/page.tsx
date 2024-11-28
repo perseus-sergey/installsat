@@ -1,5 +1,6 @@
 import { notFound } from 'next/navigation';
 import { cache, Suspense } from 'react';
+import { Metadata } from 'next';
 
 import BottomInfoPanel from '@/components/BottomInfoPanel/BottomInfoPanel';
 import DangerHtml from '@/components/ui/DangerHtml/DangerHtml';
@@ -13,7 +14,6 @@ import { getDBOnlineChannel } from '@/controllers/channel.controller';
 import { CHANNEL_RESPONSIBILITIES } from '@/models/channels/channel.model';
 import { EDBTableTitles } from '@/models/dbTblNames.model';
 import { EUrlBaseParam, MAIN_URL } from '@/models/url/url.model';
-import { Metadata } from 'next';
 import ChannelOnlineParams from '@/components/ChannelParams/ChannelOnlineParams';
 import OnlinePlayerTabs from '@/components/tabs/OnlinePlayerTabs';
 import GrooveLine from '@/components/ui/GrooveLine';

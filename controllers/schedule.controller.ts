@@ -16,16 +16,12 @@ export const getDBChannelScheduleShort = async (
     SELECT *
     FROM ${dbTableName}
     WHERE chan_id = ?
-    AND start >= NOW() - INTERVAL ? HOUR AND end <= NOW() + INTERVAL 20 HOUR
+    AND start BETWEEN NOW() - INTERVAL ${hourInterval} HOUR AND NOW() + INTERVAL 20 HOUR
     ORDER BY start
-    LIMIT ?
+    LIMIT ${rowsLimit}
 `;
 
-  const res = await poolExecute<IScheduleTVModel[]>(sql, [
-    chanelId,
-    `${hourInterval}`,
-    `${rowsLimit}`,
-  ]);
+  const res = await poolExecute<IScheduleTVModel[]>(sql, [chanelId]);
 
   return res instanceof Error || !res.length ? null : res;
 };

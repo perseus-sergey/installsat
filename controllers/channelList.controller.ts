@@ -648,3 +648,6 @@ export const isFtaChannel = cache((codes: string[]) => {
 
   return false;
 });
+// =================================================================
+// update next js and dependencies
+// =================================================================

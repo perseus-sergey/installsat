@@ -169,7 +169,7 @@ const getLinkToPageWithLogo = async ({
         `Error loading Google search page for: ${searchUrl}. Status: ${googleResponse?.status()} ${googleResponse?.statusText()}`
       );
 
-    // await sleep();
+    await sleep();
 
     const content = await page.content();
 
@@ -222,7 +222,7 @@ async function processChannelLogo(
     let lyngsatLink = googleResponse.link;
 
     if (!lyngsatLink) {
-      await sleep(2000);
+      await sleep(5000);
 
       const googleSecondResponse = await getLinkToPageWithLogo({
         satName,

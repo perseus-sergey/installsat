@@ -171,7 +171,7 @@ export default async function Page({ params }: IArticleParams) {
 
         {isFileExists(imgPath) && (
           <Image
-            className="my-4 sm:border-2 border-white sm:shadow-md rounded"
+            className="my-4 mx-auto sm:border-2 border-white sm:shadow-md rounded"
             src={imgPath}
             alt={articleBigImg.getAlt(title)[lang]}
             width={articleBigImg.params.width}

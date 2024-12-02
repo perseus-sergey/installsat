@@ -67,8 +67,10 @@ export const ARTICLE_CARD_IMAGES = {
   articleBigImg: {
     params: {
       path: '/Images/News/Article/',
-      width: 1015,
-      height: 580,
+      // width: 1015,
+      // height: 580,
+      width: 800,
+      height: 600,
     },
     getAlt(title: string) {
       return {

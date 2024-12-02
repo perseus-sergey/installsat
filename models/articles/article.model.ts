@@ -63,6 +63,26 @@ export const ARTICLE_CARD_IMAGES = {
       [IT]: `Logo per l'articolo:`,
     },
   },
+
+  articleBigImg: {
+    params: {
+      path: '/Images/News/Article/',
+      width: 1015,
+      height: 580,
+    },
+    getAlt(title: string) {
+      return {
+        [UA]: `Ілюстрація до статті "${title}"`,
+        [EN]: `Illustration for the article "${title}"`,
+        [RU]: `Иллюстрация к статье "${title}"`,
+        [ES]: `Ilustración para el artículo "${title}"`,
+        [AR]: `رسم توضيحي للمقال "${title}"`,
+        [DE]: `Illustration für den Artikel "${title}"`,
+        [FR]: `Illustration pour l'article "${title}"`,
+        [IT]: `Illustrazione per l'articolo "${title}"`,
+      };
+    },
+  },
 };
 
 export const SIMILAR_ARTICLES_TITLE = {

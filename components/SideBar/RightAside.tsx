@@ -3,7 +3,6 @@ import { Suspense } from 'react';
 
 import { ELanguage } from '@/models/language.model';
 import AdBannerWrapper from '../GoogleAdsense/AdBannerWrapper';
-import SitePartners from './SitePartners';
 
 const WidgetLastNews = dynamic(
   () => import('@/components/WidgetLastNews/WidgetLastNews')
@@ -21,7 +20,7 @@ const RightAside = ({ lang }: { lang: ELanguage }) => {
         <WidgetLastNews lang={lang} />
       </Suspense>
 
-      <SitePartners lang={lang} />
+      {/* <SitePartners lang={lang} /> */}
 
       <AdBannerWrapper
         lang={lang}

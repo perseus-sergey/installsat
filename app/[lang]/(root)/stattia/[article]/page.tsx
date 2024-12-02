@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
 import dynamic from 'next/dynamic';
+import Image from 'next/image';
 import { Metadata } from 'next';
 
 import { Title } from '@/components/ui/Titles/Title';
@@ -22,7 +23,10 @@ import SeoLink from '@/components/ui/SeoLink/SeoLink';
 import ArticleWrapper from '@/components/article/ArticleWrapper';
 import { ELanguage } from '@/models/language.model';
 import { DEFAULT_META_DATA } from '@/models/defaultMeta.model';
-import { DEFAULT_ARTICLE_LOGO_NAME } from '@/models/ui/image.model';
+import {
+  DEFAULT_ARTICLE_LOGO_NAME,
+  IMG_PROPERTIES,
+} from '@/models/ui/image.model';
 import { EUrlBaseParam, MAIN_URL } from '@/models/url/url.model';
 import { EUrlAdminParam } from '@/models/url/urlAdmin.model';
 import { getELangKey } from '@/libs/utils/getLanguage';
@@ -30,12 +34,16 @@ import { getArticle } from '@/controllers/article.controller';
 import { updateViewCount } from '@/controllers/viewUpdate.controller';
 import { INFO_PANEL_TITLES } from '@/models/ui/infoPanel.model';
 import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
+import { isFileExists } from '@/libs/utils/imagePathValidate';
 
 const TextUnderH1 = dynamic(
   () => import('@/components/TextUnderH1/TextUnderH1')
 );
 
-const { currentImg, defaultImg, altStart } = ARTICLE_CARD_IMAGES.h1Image;
+const {
+  h1Image: { currentImg, defaultImg, altStart },
+  articleBigImg,
+} = ARTICLE_CARD_IMAGES;
 
 const BASE_URL = process.env.BASE_URL || MAIN_URL;
 const { ARTICLE_PARAM, ARTICLE, LANG, NEWS_AND_ARTICLES } = EUrlBaseParam;
@@ -121,6 +129,8 @@ export default async function Page({ params }: IArticleParams) {
 
   const currDate = getFormattedDateStrYearFirst(date, lang);
 
+  const imgPath = `${articleBigImg.params.path}${slug}.jpg`;
+
   updateViewCount(EDBTableTitles.ARTICLE, `${id}`, view);
 
   return (
@@ -158,6 +168,18 @@ export default async function Page({ params }: IArticleParams) {
         </Title>
 
         {description && <TextUnderH1>{description}</TextUnderH1>}
+
+        {isFileExists(imgPath) && (
+          <Image
+            className="my-4 sm:border-2 border-white sm:shadow-md rounded"
+            src={imgPath}
+            alt={articleBigImg.getAlt(title)[lang]}
+            width={articleBigImg.params.width}
+            height={articleBigImg.params.height}
+            placeholder="blur"
+            blurDataURL={IMG_PROPERTIES.defaultImgBlur}
+          />
+        )}
 
         <div className="article-text">
           <DangerHtml text={text} />

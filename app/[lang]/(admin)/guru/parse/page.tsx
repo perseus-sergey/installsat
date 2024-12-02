@@ -1,3 +1,5 @@
+import Link from 'next/link';
+
 import ClientInputWithSubmit, {
   ClientSelectWithSubmit,
   ClientTwoInputsWithSubmit,
@@ -9,7 +11,23 @@ import { EDBTableTitles } from '@/models/dbTblNames.model';
 import { EUrlBaseParam } from '@/models/url/url.model';
 import { EUrlAdminParam } from '@/models/url/urlAdmin.model';
 import { EUrlSearchParam } from '@/models/url/urlSearch.model';
-import Link from 'next/link';
+
+// =================================================================
+// add similar trans news links for fly channel page
+// fix comments get country by user-ip
+// sat finder - not internet error handling
+//
+// Check comment user location in production (if successful, clean up the comments form //code comments)
+// Add separate tbl_comments for fly satellites
+// add comment block to fly channels with separate db tbl (fly_comments_channel))
+// Parse biss from lugasat (Or satsat.info) by sat grade & frequency & title
+// Find approximate grades from search params for spysok-kanaliv-suputnyka
+// add color description to channel filters
+// improve similar channels & similar articles blocks
+// add json-ld
+// Add cluster choice
+// add image generator
+// =================================================================
 
 const { FLY_SATELLITES } = EDBTableTitles;
 

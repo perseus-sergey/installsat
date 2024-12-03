@@ -8,7 +8,6 @@ import path from 'path';
 import { Title } from '@/components/ui/Titles/Title';
 import { EUrlSearchParam, TSearchParams } from '@/models/url/urlSearch.model';
 import { validSearchParam } from '@/libs/utils/validSearchParam';
-import { poolExecute } from '@/libs/db/mysqldb';
 import { sendMail } from '@/libs/mail/sendMail';
 import { ELanguage } from '@/models/language.model';
 import { EUrlAdminParam } from '@/models/url/urlAdmin.model';
@@ -16,6 +15,7 @@ import { EDBTableTitles, getDbTableLink } from '@/models/dbTblNames.model';
 import { sleep } from '@/libs/utils/sleep';
 import { killChromeProcesses } from '@/cron/libs/commons.mjs';
 import { Browser, Page } from 'puppeteer';
+import { poolExecuteRemote } from '@/libs/db/mysqldbRemote';
 // import { getContentFromPuppeteerBrowser } from '@/controllers/parse.controller';
 
 export const dynamic = 'force-dynamic';
@@ -45,7 +45,7 @@ const getChannelsWithoutLogo = async (limit: string) => {
       GROUP BY title
       LIMIT ?
     `;
-  const res = await poolExecute<
+  const res = await poolExecuteRemote<
     { title: string; sat_slug: string; is_radio: 0 | 1 }[]
   >(sql, [limit]);
 
@@ -64,7 +64,7 @@ const getDbExistingLogo = async (normalizedChannelName: string) => {
       AND logo IS NOT NULL
       LIMIT 1
     `;
-  const res = await poolExecute<{ logo: string }[]>(sql, [
+  const res = await poolExecuteRemote<{ logo: string }[]>(sql, [
     normalizedChannelName,
   ]);
 
@@ -86,7 +86,10 @@ const updateLogoInDB = async (
       SET logo = ?
       WHERE ${isExistLogo ? 'title' : 'normalized_name'} = ? 
     `;
-  const res = await poolExecute<ResultSetHeader>(sql, [logo, channelName]);
+  const res = await poolExecuteRemote<ResultSetHeader>(sql, [
+    logo,
+    channelName,
+  ]);
 
   if (res instanceof Error) throw res;
   if (res.affectedRows === 0)
@@ -109,18 +112,21 @@ async function saveLogoToFile(logoFileName: string, buffer: Buffer) {
 }
 
 // ------------ Take a screenshot
-const takeScreenshot = async (title: string, page: Page) => {
-  await page.screenshot({
-    path: `search-results-${title.replace(/[^a-zA-Z0-9]/g, '-')}-${Date.now()}.png`,
-    fullPage: true,
-  });
-};
+// const takeScreenshot = async (title: string, page: Page) => {
+//   await page.screenshot({
+//     path: `search-results-${title.replace(/[^a-zA-Z0-9]/g, '-')}-${Date.now()}.png`,
+//     fullPage: true,
+//   });
+// };
 
 const removeTimeFromChannelName = (channelName: string): string =>
   channelName.replace(/\s*\(\+\d+h\)/gi, '');
 
 const normalizeChannelName = (channelName: string): string =>
-  removeTimeFromChannelName(channelName).replace(/\s/g, '').toLowerCase();
+  removeTimeFromChannelName(channelName)
+    .replace(/[<>:"/\\|?*]+/g, '_') // Заміна заборонених символів на "_"
+    .replace(/\s/g, '') // Видалення пробілів
+    .toLowerCase();
 
 const removeParenthesesContent = (str: string) =>
   str.replace(/\s*\([^)]*\)\s*$/, '').trim();
@@ -233,8 +239,6 @@ async function processChannelLogo(
   const searchUrl = 'https://www.lyngsat.com/search.html';
   let isConsentBtnClicked = false;
 
-  page = await browser.newPage(); // Create a new page for each channel
-
   try {
     const existingDbLogo = await getDbExistingLogo(normalizedChannelName);
 
@@ -246,6 +250,12 @@ async function processChannelLogo(
       ];
     }
 
+    page = await browser.newPage(); // Create a new page for each channel
+
+    await page.setUserAgent(
+      'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36'
+    );
+
     await page.goto(searchUrl, {
       waitUntil: 'domcontentloaded',
       timeout: 30000,
@@ -255,7 +265,7 @@ async function processChannelLogo(
 
     const searchInputSelector = '#gsc-i-id1';
 
-    await takeScreenshot(channelName, page);
+    // await takeScreenshot(channelName, page);
 
     await page.waitForSelector(searchInputSelector, { timeout: 20000 });
 
@@ -348,7 +358,7 @@ async function processChannelLogo(
   } catch (error) {
     const err = error as Error;
     if (err.name === 'TimeoutError') {
-      await takeScreenshot(channelName, page);
+      // await takeScreenshot(channelName, page);
     }
     messages.push(
       err.name === 'TimeoutError'
@@ -434,7 +444,8 @@ const sendReportMail = async (errorMessages: string[], quantity: string) => {
 };
 
 export default async ({ searchParams }: { searchParams?: TSearchParams }) => {
-  const quantity = validSearchParam(EUrlSearchParam.INTERVAL, searchParams);
+  const quantity =
+    validSearchParam(EUrlSearchParam.INTERVAL, searchParams) || `${10}`;
 
   const messages = await getChannelsLogo(quantity);
 
@@ -442,7 +453,7 @@ export default async ({ searchParams }: { searchParams?: TSearchParams }) => {
 
   return (
     <>
-      <Title>{`Load and save ${quantity} logos from LyngSat`}</Title>
+      <Title>{`Load and save ${quantity} logos DIRECT from LyngSat`}</Title>
 
       <h2 className="font-bold text-blue-700 text-xl">Messages:</h2>
       <ul>

@@ -189,6 +189,21 @@ export const TRANS_NEWS_LIST_IMAGES = {
     },
   },
 };
+
+export const TRANS_NEWS_CAROUSEL_IMAGE = {
+  imgTitle: 'transponder-news.jpg',
+  alt: {
+    [UA]: `Зображення супутника на орбіті Землі, що передає сигнали, з підсвіченими містами на планеті, символізуючи глобальну зв'язок і новини транспондерів.`,
+    [EN]: `An image of a satellite in Earth's orbit transmitting signals, with illuminated cities below, symbolizing global connectivity and transponder news.`,
+    [RU]: `Изображение спутника на орбите Земли, передающего сигналы, с подсвеченными городами внизу, символизируя глобальную связь и новости транспондеров.`,
+    [ES]: `Imagen de un satélite en órbita terrestre transmitiendo señales, con ciudades iluminadas debajo, simbolizando la conectividad global y noticias de transpondedores.`,
+    [AR]: `صورة لقمر صناعي في مدار الأرض ينقل إشارات مع مدن مضيئة أدناه، مما يرمز إلى الاتصال العالمي وأخبار الترددات.`,
+    [DE]: `Ein Bild eines Satelliten in der Erdumlaufbahn, der Signale überträgt, mit beleuchteten Städten darunter, symbolisiert globale Konnektivität und Transponder-Nachrichten.`,
+    [FR]: `Une image d'un satellite en orbite terrestre transmettant des signaux, avec des villes illuminées en dessous, symbolisant la connectivité globale et les nouvelles des transpondeurs.`,
+    [IT]: `Immagine di un satellite in orbita terrestre che trasmette segnali, con città illuminate sotto, a simboleggiare la connettività globale e le notizie sui transponder.`,
+  },
+};
+
 export const META_TRANS_NEWS_SINGLE = {
   metaH1start: {
     [UA]: 'Транспондерні новини за',

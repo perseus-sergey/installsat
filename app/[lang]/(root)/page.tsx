@@ -11,6 +11,7 @@ import {
 } from '@/models/satDigest.model';
 import { EUrlBaseParam } from '@/models/url/url.model';
 import { EUrlSearchParam, TSearchParams } from '@/models/url/urlSearch.model';
+import ArticleKeenCarousel from '@/components/ArticleKeenCarousel';
 
 interface IProps {
   searchParams: TSearchParams;
@@ -33,6 +34,12 @@ export default async ({ searchParams, params }: IProps) => {
   return (
     <>
       <ArticleWrapper lang={lang}>
+        <div className="h-[200px] sm:h-[400px]">
+          <Suspense>
+            <ArticleKeenCarousel lang={lang} sleepTime={5000} />
+          </Suspense>
+        </div>
+
         <Title>{META_TRANS_NEWS_LIST.getH1(intervalDays)[lang]}</Title>
 
         <nav>

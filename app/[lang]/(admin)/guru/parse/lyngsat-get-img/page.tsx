@@ -405,7 +405,7 @@ export default async ({ searchParams }: { searchParams?: TSearchParams }) => {
 
   return (
     <>
-      <Title>{`Load and save ${quantity} logos from LyngSat`}</Title>
+      <Title>{`Load and save ${quantity} logos from LyngSat WITH GOOGLE SEARCH`}</Title>
 
       <h2 className="font-bold text-blue-700 text-xl">Messages:</h2>
       <ul>

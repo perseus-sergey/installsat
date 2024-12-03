@@ -13,6 +13,7 @@ import { EUrlAdminParam } from '@/models/url/urlAdmin.model';
 import { EUrlSearchParam } from '@/models/url/urlSearch.model';
 
 // =================================================================
+// make carousel with article images for main page
 // add similar trans news links for fly channel page
 // fix comments get country by user-ip
 // sat finder - not internet error handling

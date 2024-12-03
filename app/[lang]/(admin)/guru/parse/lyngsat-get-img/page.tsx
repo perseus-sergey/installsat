@@ -169,7 +169,7 @@ const getLinkToPageWithLogo = async ({
         `Error loading Google search page for: ${searchUrl}. Status: ${googleResponse?.status()} ${googleResponse?.statusText()}`
       );
 
-    await sleep();
+    // await sleep();
 
     const content = await page.content();
 
@@ -222,7 +222,7 @@ async function processChannelLogo(
     let lyngsatLink = googleResponse.link;
 
     if (!lyngsatLink) {
-      await sleep(5000);
+      await sleep();
 
       const googleSecondResponse = await getLinkToPageWithLogo({
         satName,
@@ -251,7 +251,7 @@ async function processChannelLogo(
 
     messages.push(`Extracted link: ${lyngsatLink}`);
 
-    await sleep(2000);
+    await sleep();
 
     await page.goto(lyngsatLink);
     const channelPageContent = await page.content();
@@ -284,7 +284,7 @@ async function processChannelLogo(
     }
 
     const fullLogoUrl = `https://www.lyngsat.com${logoUrl}`;
-    await sleep();
+    // await sleep();
     const response = await page.goto(fullLogoUrl);
 
     if (!response) {
@@ -353,7 +353,7 @@ const getChannelsLogo = async (batchSize: string) => {
       messages.push(...res);
       messages.push(`└──────────── "${channel.sat_slug}" ──────────────┘`);
 
-      await sleep(5000);
+      await sleep(2000);
     }
   } catch (error) {
     messages.push(`ERROR: ${(error as Error).message}`);

@@ -58,6 +58,7 @@
 - [html-entities](https://www.npmjs.com/package/html-entities) - HTML entities library
 - [dotenv](https://www.npmjs.com/package/dotenv) - Loads from a .env file into process.env
 - Google AI Studio [Gemini](https://aistudio.google.com/app/prompts/)
+- Slider, Carousel [keen-slider](https://keen-slider.io/)
 
 ---
 

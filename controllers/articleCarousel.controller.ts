@@ -26,17 +26,24 @@ export const getArticlesForCarousel = async ({
 FROM ${EDBTableTitles.ARTICLE}
 ORDER BY 
   date DESC, id DESC
-LIMIT ${quantity}
+LIMIT ${quantity * 8}
 `;
   const res = await poolExecute<IArticleCarousel[]>(sql);
 
   if (res instanceof Error) return [];
 
-  const existImages = res.filter((article) =>
-    isFileExists(
-      `${ARTICLE_CARD_IMAGES.articleBigImg.params.path}${article.cpu}.jpg`
-    )
-  );
+  const existImages = res.reduce((acc: IArticleCarousel[], article) => {
+    if (
+      acc.length < quantity &&
+      isFileExists(
+        `${ARTICLE_CARD_IMAGES.articleBigImg.params.path}${article.cpu}.jpg`
+      )
+    ) {
+      acc.push(article);
+    }
+
+    return acc;
+  }, []);
 
   return existImages;
 };

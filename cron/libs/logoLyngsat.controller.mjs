@@ -8,6 +8,14 @@ import path from 'path';
 import { EDBTableTitles, killChromeProcesses, sleep } from './commons.mjs';
 import { poolExecuteRemote } from './remoteMysqldb.mjs';
 
+// =================================================================
+// Використовую віддалену бд на сервері з Локального!!! скрипту.
+// з моєі бд дістаю канал у якого поле logo is null
+// скрипт шукає логотип цього каналу на сайті lyngsat.com. На lyngsat.com існує тільки система пошуку від google search
+// логотип завантажується в папку на моєму сайті Images
+// в мою бд для каналів з такою ж назвою як і поточний записується назва цього логотипу наприклад ('channel1-logo.png')
+// =================================================================
+
 const isProductionMode = process.env.NODE_ENV === 'production';
 
 const { FLY_CHANNELS } = EDBTableTitles;

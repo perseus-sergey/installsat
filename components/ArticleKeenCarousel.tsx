@@ -93,10 +93,7 @@ const ArticleKeenCarousel = ({
 
   useEffect(() => {
     const setItems = async () => {
-      const news = await getArticlesForCarousel({
-        quantity: quantity,
-        lang: lang,
-      });
+      const news = await getArticlesForCarousel({ quantity, lang });
 
       setArticles(news);
     };

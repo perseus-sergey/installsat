@@ -116,6 +116,7 @@ export default async function Page({ params }: IArticleParams) {
     id,
     text,
     description,
+    keywords,
     date,
     logo: logoDB,
     view,
@@ -131,7 +132,46 @@ export default async function Page({ params }: IArticleParams) {
 
   const imgPath = `${articleBigImg.params.path}${slug}.jpg`;
 
+  const isImgExists = isFileExists(imgPath);
+
   updateViewCount(EDBTableTitles.ARTICLE, `${id}`, view);
+
+  const jsonLd = {
+    '@context': 'https://schema.org/',
+    '@type': 'Article',
+    headline: title,
+    ...(isImgExists && {
+      // Only include if imageUrl exists
+      image: {
+        '@type': 'ImageObject',
+        url: `${BASE_URL}/${imgPath}`,
+      },
+    }),
+    author: {
+      '@type': 'Person',
+      name: 'Installsat', // Author's name
+    },
+    datePublished: currDate,
+    dateModified: currDate,
+    description: description,
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': `https://installsat.tv/ua/articles/${slug}`,
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: 'Installsat.tv', // Your website name
+      url: BASE_URL, // Your website URL
+      logo: {
+        // Optional: Your website logo URL
+        '@type': 'ImageObject',
+        url: `${BASE_URL}/Images/InstallsatOrig_400.png`,
+      },
+    },
+    keywords: keywords,
+    articleSection: cat_name, // e.g., "Satellite News", "Equipment Setup"
+    articleBody: description, //  The main text content (might be too long for search engines; consider using a summary)
+  };
 
   return (
     <>
@@ -169,7 +209,7 @@ export default async function Page({ params }: IArticleParams) {
 
         {description && <TextUnderH1>{description}</TextUnderH1>}
 
-        {isFileExists(imgPath) && (
+        {isImgExists && (
           <Image
             className="my-4 mx-auto sm:border-2 border-white sm:shadow-md rounded"
             src={imgPath}
@@ -227,6 +267,11 @@ export default async function Page({ params }: IArticleParams) {
           articleName={title}
         />
       </Suspense>
+
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
     </>
   );
 }

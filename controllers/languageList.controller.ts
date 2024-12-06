@@ -32,7 +32,12 @@ const getDBChannelsAudio = cache(async ({ satGrades, satSlug }: IGradeSlug) => {
   return resp instanceof Error || resp.length === 0 ? [] : resp;
 });
 
-export const getLanguageList = (audioPids: string[]) => {
+export interface ILanguageObjects {
+  value: string;
+  label: string;
+}
+
+export const getLanguageList = (audioPids: string[]): ILanguageObjects[] => {
   const langsSet = new Set<string>();
 
   const addToSet = (value: string) => {

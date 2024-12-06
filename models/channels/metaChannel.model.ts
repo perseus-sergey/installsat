@@ -59,6 +59,8 @@ export const META_CHANNEL = {
   },
 };
 
+export const NOT_FOUND_CHANNEL_LOGO = 'no-logo.png';
+
 export const CHANNEL_IMAGES = {
   channelLogo: {
     big: {

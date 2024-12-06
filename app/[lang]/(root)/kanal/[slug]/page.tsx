@@ -30,12 +30,17 @@ import { EUrlAdminParam } from '@/models/url/urlAdmin.model';
 import {
   CHANNEL_IMAGES,
   META_CHANNEL,
+  NOT_FOUND_CHANNEL_LOGO,
   SIMILAR_CHANNELS_TITLE,
 } from '@/models/channels/metaChannel.model';
-import { CHANNEL_RESPONSIBILITIES } from '@/models/channels/channel.model';
+import {
+  CHANNEL_RESPONSIBILITIES,
+  DB_ARRAY_SEPARATOR,
+} from '@/models/channels/channel.model';
 import { INFO_PANEL_TITLES } from '@/models/ui/infoPanel.model';
 import { SAT_CHANNEL_LIST_IMAGES } from '@/models/channels/channelListMeta.model';
 import { localeStringMaker } from '@/libs/utils/localeStringMaker';
+import { getLanguageList } from '@/controllers/languageList.controller';
 
 const BASE_URL = process.env.BASE_URL || MAIN_URL;
 
@@ -139,6 +144,18 @@ export default async function Page({ params }: IChannelProps) {
     official_broadcast_url,
     vsetv,
     vipiko,
+    is_radio,
+    description,
+    beam,
+    a_pid,
+    frequency,
+    polarization,
+    compress,
+    sat_position,
+    sr,
+    fec,
+    sid,
+    v_pid,
   } = flyChannels;
 
   const genreImgSrc = theme_id ? MChanTheme.get(theme_id) : theme_id;
@@ -150,6 +167,59 @@ export default async function Page({ params }: IChannelProps) {
   const currentDate = getFormattedDateStrYearFirst('', lang);
 
   updateViewCount(EDBTableTitles.FLY_CHANNELS, `${id}`, view);
+
+  const metaTitle = `${titleBefore[lang]} ${title} | ${sat_title} | ${frequency} ${polarization}`;
+  const chanDescription = description || `${metaTitle} | ${beam} | ${a_pid}`;
+  const chanLogoUrl =
+    !logo || logo === NOT_FOUND_CHANNEL_LOGO
+      ? null
+      : `${BASE_URL}/${bigLogo.pathFly}${logo}`;
+
+  const aPidList = !a_pid ? [] : a_pid.split(DB_ARRAY_SEPARATOR);
+  const languageObjects = getLanguageList(aPidList);
+
+  const jsonLd = {
+    '@context': 'https://schema.org/',
+    '@type': is_radio ? 'RadioStation' : 'TVStation',
+    name: title,
+    description: chanDescription,
+    ...(chanLogoUrl && {
+      // Only include if logo exists
+      image: {
+        '@type': 'ImageObject',
+        url: chanLogoUrl,
+      },
+    }),
+    genre: theme, // e.g., "Entertainment", "News", etc.
+
+    broadcastService: {
+      '@type': 'BroadcastService',
+      inLanguage: languageObjects.map((track) => track.value),
+      broadcastLocation: {
+        '@type': 'Place',
+        name: `${sat_title} / ${sat_position}`,
+      },
+    },
+
+    audio: languageObjects.map((track) => ({
+      '@type': 'AudioObject',
+      name: track.label,
+      inLanguage: track.value,
+    })),
+
+    //Technical details of broadcasting the channel
+    broadcastFrequency: {
+      '@type': 'BroadcastFrequencySpecification',
+      frequency: localeStringMaker(frequency), // GHz
+      modulation: compress,
+      polarization,
+      symbolRate: sr,
+      fec,
+      serviceId: sid,
+      videoPid: v_pid,
+      audioPid: aPidList,
+    },
+  };
 
   return (
     <>
@@ -227,7 +297,12 @@ export default async function Page({ params }: IChannelProps) {
           />
         )}
 
-        <FlyChannelParams channelDBParams={flyChannels} lang={lang} />
+        <FlyChannelParams
+          channelDBParams={flyChannels}
+          lang={lang}
+          languageObjects={languageObjects}
+          aPidList={aPidList}
+        />
 
         <NoteBlock noteTitle={noteTitle[lang]}>
           {getResponsibilityText(title)[lang]}
@@ -251,6 +326,11 @@ export default async function Page({ params }: IChannelProps) {
           sectionCaption={`${SIMILAR_CHANNELS_TITLE[lang]} "${title}"`}
         />
       </Suspense>
+
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
     </>
   );
 }

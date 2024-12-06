@@ -7,7 +7,7 @@ import { EUrlBaseParam } from '@/models/url/url.model';
 import { TitleH2 } from '../ui/Titles/TitleH2';
 import TooltipSimple from '../ui/tooltips/TooltipSimple/TooltipSimple';
 import SeoLink from '../ui/SeoLink/SeoLink';
-import { getLanguageList } from '@/controllers/languageList.controller';
+import { ILanguageObjects } from '@/controllers/languageList.controller';
 import { ELanguage } from '@/models/language.model';
 import {
   CHANNEL_PARAMS_BLOCK,
@@ -68,6 +68,8 @@ const ChannelParams = ({
 
 interface IFlyChannelParamsProps {
   channelDBParams: IFlyChannel;
+  languageObjects: ILanguageObjects[];
+  aPidList: string[];
   lang: ELanguage;
 }
 
@@ -84,7 +86,6 @@ export const FlyChannelParams = ({
     sr,
     official_broadcast_url,
     official_site_url,
-    a_pid,
     encryption,
     is_biss,
     biss,
@@ -95,16 +96,16 @@ export const FlyChannelParams = ({
     is_radio,
     t2_stream,
   },
+  languageObjects,
+  aPidList,
   lang,
 }: IFlyChannelParamsProps) => {
   const rowStyle =
     'flex items-center gap-2 sm:gap-4 bg-slate-100 shadow-md rounded py-2 sm:px-4 px-1 mb-2 bg-gradient-to-b from-blue-100/70 via-blue-300/30 to-blue-200/90 from-50% via-45% to-100% ';
 
-  const aPidList = !a_pid ? [] : a_pid.split(DB_ARRAY_SEPARATOR);
   const encryptions = !encryption ? [] : encryption.split(DB_ARRAY_SEPARATOR);
   if (biss && is_biss) encryptions.push(biss);
 
-  const languages = getLanguageList(aPidList);
   const modeList = mode.split(DB_ARRAY_SEPARATOR);
   const isCBand = frequency < 10700;
 
@@ -130,10 +131,10 @@ export const FlyChannelParams = ({
           />
         </li>
 
-        {languages.length > 0 && (
+        {languageObjects.length > 0 && (
           <li className={rowStyle}>
             <Item
-              param={languages.map((item) => item.label)}
+              param={languageObjects.map((item) => item.label)}
               title={paramsLangTitle[lang]}
             />
           </li>

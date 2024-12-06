@@ -156,7 +156,7 @@ export default async function Page({ params }: IArticleParams) {
     description: description,
     mainEntityOfPage: {
       '@type': 'WebPage',
-      '@id': `https://installsat.tv/ua/articles/${slug}`,
+      '@id': `${BASE_URL}/${lang}/${ARTICLE}/${slug}`,
     },
     publisher: {
       '@type': 'Organization',

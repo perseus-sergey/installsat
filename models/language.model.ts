@@ -36,3 +36,14 @@ export interface ILang {
   [FR]: string;
   [IT]: string;
 }
+
+export const languageMap: { [key in ELanguage]: string } = {
+  [ELanguage.UA]: 'uk',
+  [ELanguage.EN]: 'en',
+  [ELanguage.RU]: 'ru',
+  [ELanguage.ES]: 'es',
+  [ELanguage.AR]: 'ar',
+  [ELanguage.DE]: 'de',
+  [ELanguage.FR]: 'fr',
+  [ELanguage.IT]: 'it',
+};

@@ -78,7 +78,7 @@ export interface IFlyChannel extends ISimilarFlyChannel {
   a_pid: string;
   is_biss: TDbBoolean;
   t2_stream: string | null;
-  date_updated: Date;
+  date_updated: Date | null;
   vsetv: number;
   vipiko: number;
   view: number;

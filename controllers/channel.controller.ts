@@ -65,6 +65,7 @@ export const getDBFlyChannel = cache(
         CH.is_removed,
         CH.languages,
         CH.theme_id,
+        CH.date_updated,
 
         S.title AS sat_title,
         S.position AS sat_position,

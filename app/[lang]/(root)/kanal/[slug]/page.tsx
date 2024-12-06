@@ -41,6 +41,8 @@ import { INFO_PANEL_TITLES } from '@/models/ui/infoPanel.model';
 import { SAT_CHANNEL_LIST_IMAGES } from '@/models/channels/channelListMeta.model';
 import { localeStringMaker } from '@/libs/utils/localeStringMaker';
 import { getLanguageList } from '@/controllers/languageList.controller';
+import { CHANNEL_PARAMS_BLOCK } from '@/models/channels/channelParams.model';
+import { generateJsonLd } from '@/libs/jsonLd/generateJsonLd';
 
 const BASE_URL = process.env.BASE_URL || MAIN_URL;
 
@@ -52,6 +54,25 @@ const {
   CHANNELS_TV_PROGRAM,
   ONLINE_CHANNEL_LIST,
 } = EUrlBaseParam;
+
+const {
+  getParamsTitle,
+  paramsFormat,
+  paramsStandard,
+  paramsSatellite,
+  paramsFrequency,
+  paramsFEC,
+  paramsEncryption,
+  paramsTypeTitle,
+  paramsLangTitle,
+  paramsT2,
+  paramsBandTitle,
+  paramsFreqDescription,
+  paramsPolarizationTitle,
+  paramsSR,
+  paramsAPid,
+  paramsVPid,
+} = CHANNEL_PARAMS_BLOCK;
 
 export const revalidate = 43200; // 3600 * 12 invalidate cache every 12 hours
 
@@ -88,6 +109,7 @@ export const generateMetadata = async ({
     polarization,
     beam,
     a_pid,
+    date_updated,
   } = flyChannels;
 
   const metaTitle = `${titleBefore[lang]} ${title} | ${sat_title} | ${frequency} ${polarization}`;
@@ -116,7 +138,7 @@ export const generateMetadata = async ({
       title: metaTitle,
       description: description || metaTitle,
       url: `/${lang}/${KANAL}/${chan_slug}`,
-      publishedTime: getFormattedDateStrYearFirst('', lang),
+      publishedTime: getFormattedDateStrYearFirst(date_updated || '', lang),
     },
   };
 };
@@ -146,7 +168,6 @@ export default async function Page({ params }: IChannelProps) {
     vipiko,
     is_radio,
     description,
-    beam,
     a_pid,
     frequency,
     polarization,
@@ -156,6 +177,13 @@ export default async function Page({ params }: IChannelProps) {
     fec,
     sid,
     v_pid,
+    date_updated,
+    keywords,
+    t2_stream,
+    encryption,
+    biss,
+    is_biss,
+    mode,
   } = flyChannels;
 
   const genreImgSrc = theme_id ? MChanTheme.get(theme_id) : theme_id;
@@ -168,58 +196,47 @@ export default async function Page({ params }: IChannelProps) {
 
   updateViewCount(EDBTableTitles.FLY_CHANNELS, `${id}`, view);
 
-  const metaTitle = `${titleBefore[lang]} ${title} | ${sat_title} | ${frequency} ${polarization}`;
-  const chanDescription = description || `${metaTitle} | ${beam} | ${a_pid}`;
-  const chanLogoUrl =
-    !logo || logo === NOT_FOUND_CHANNEL_LOGO
-      ? null
-      : `${BASE_URL}/${bigLogo.pathFly}${logo}`;
-
   const aPidList = !a_pid ? [] : a_pid.split(DB_ARRAY_SEPARATOR);
   const languageObjects = getLanguageList(aPidList);
+  const encryptions = !encryption ? [] : encryption.split(DB_ARRAY_SEPARATOR);
+  if (biss && is_biss) encryptions.push(biss);
+  const modeList = mode.split(DB_ARRAY_SEPARATOR);
 
-  const jsonLd = {
-    '@context': 'https://schema.org/',
-    '@type': is_radio ? 'RadioStation' : 'TVStation',
-    name: title,
-    description: chanDescription,
-    ...(chanLogoUrl && {
-      // Only include if logo exists
-      image: {
-        '@type': 'ImageObject',
-        url: chanLogoUrl,
-      },
-    }),
-    genre: theme, // e.g., "Entertainment", "News", etc.
+  const channelLdBody = `
+    <h2>${getParamsTitle(title)[lang]}</h2>
+    <dl>
+    <dt>${paramsTypeTitle[lang]}:</dt><dd>${is_radio ? 'Radio' : 'TV'}</dd>
+    ${languageObjects.length > 0 ? `<dt>${paramsLangTitle[lang]}:</dt><dd>${languageObjects.map((item) => item.label).join(', ')}</dd>` : ''}
+    ${t2_stream ? `<dt>${paramsT2.title[lang]}:</dt><dd>${t2_stream}</dd>` : ''}
+    ${encryptions.length > 0 ? `<dt>${paramsEncryption[lang]}:</dt><dd>${encryptions.join(', ')}</dd>` : ''}
+    ${compress ? `<dt>${paramsFormat[lang]}:</dt><dd>${compress}</dd>` : ''}
+   <dt>${paramsStandard[lang]}:</dt><dd>${modeList.length > 1 ? modeList.join(', ') : modeList[0]}</dd>
+    ${sat_title ? `<dt>${paramsSatellite[lang]}:</dt><dd>${sat_title} / ${sat_position}</dd>` : ''}
+   <dt>${paramsBandTitle[lang]}:</dt><dd>${frequency < 10700 ? 'C' : 'Ku'}</dd>
+    ${frequency ? `<dt>${paramsFrequency[lang]}:</dt><dd>${localeStringMaker(frequency, 'coma')} ${paramsFreqDescription[lang]}</dd>` : ''}
+    ${polarization ? `<dt>${paramsPolarizationTitle[lang]}:</dt><dd>${polarization}</dd>` : ''}
+    ${sr ? `<dt>SR:</dt><dd>${localeStringMaker(sr)} ${paramsSR.description[lang]}</dd>` : ''}
+    ${fec ? `<dt>${paramsFEC[lang]}:</dt><dd>${fec}</dd>` : ''}
+    ${sid ? `<dt>SID:</dt><dd>${localeStringMaker(sid)}</dd>` : ''}
+    ${v_pid ? `<dt>${paramsVPid.title[lang]}:</dt><dd>${localeStringMaker(v_pid)}</dd>` : ''}
+    ${aPidList.length > 0 ? `<dt>${paramsAPid.title[lang]}:</dt><dd>${aPidList.map((a) => `'${a.replace(/\s+/g, ' ')}'`).join(', ')}</dd>` : ''}
+    </dl>
+    `;
 
-    broadcastService: {
-      '@type': 'BroadcastService',
-      inLanguage: languageObjects.map((track) => track.value),
-      broadcastLocation: {
-        '@type': 'Place',
-        name: `${sat_title} / ${sat_position}`,
-      },
-    },
-
-    audio: languageObjects.map((track) => ({
-      '@type': 'AudioObject',
-      name: track.label,
-      inLanguage: track.value,
-    })),
-
-    //Technical details of broadcasting the channel
-    broadcastFrequency: {
-      '@type': 'BroadcastFrequencySpecification',
-      frequency: localeStringMaker(frequency), // GHz
-      modulation: compress,
-      polarization,
-      symbolRate: sr,
-      fec,
-      serviceId: sid,
-      videoPid: v_pid,
-      audioPid: aPidList,
-    },
-  };
+  const jsonLd = generateJsonLd({
+    lang,
+    title,
+    description: description || channelLdBody,
+    datePublished: date_updated,
+    relativeImgPath:
+      !logo || logo === NOT_FOUND_CHANNEL_LOGO
+        ? undefined
+        : `${bigLogo.pathFly}${logo}`,
+    relativePagePath: `/${KANAL}/${slug}`,
+    keywords: keywords || description || channelLdBody,
+    articleBody: `${text ? `${text} ` : ''}${channelLdBody}`,
+    genre: theme,
+  });
 
   return (
     <>

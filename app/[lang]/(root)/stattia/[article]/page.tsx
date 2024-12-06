@@ -35,6 +35,7 @@ import { updateViewCount } from '@/controllers/viewUpdate.controller';
 import { INFO_PANEL_TITLES } from '@/models/ui/infoPanel.model';
 import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
 import { isFileExists } from '@/libs/utils/imagePathValidate';
+import { generateJsonLd } from '@/libs/jsonLd/generateJsonLd';
 
 const TextUnderH1 = dynamic(
   () => import('@/components/TextUnderH1/TextUnderH1')
@@ -136,42 +137,17 @@ export default async function Page({ params }: IArticleParams) {
 
   updateViewCount(EDBTableTitles.ARTICLE, `${id}`, view);
 
-  const jsonLd = {
-    '@context': 'https://schema.org/',
-    '@type': 'Article',
-    headline: title,
-    ...(isImgExists && {
-      // Only include if imageUrl exists
-      image: {
-        '@type': 'ImageObject',
-        url: `${BASE_URL}/${imgPath}`,
-      },
-    }),
-    author: {
-      '@type': 'Person',
-      name: 'Installsat', // Author's name
-    },
-    datePublished: currDate,
-    dateModified: currDate,
+  const jsonLd = generateJsonLd({
+    lang,
+    title,
     description: description,
-    mainEntityOfPage: {
-      '@type': 'WebPage',
-      '@id': `${BASE_URL}/${lang}/${ARTICLE}/${slug}`,
-    },
-    publisher: {
-      '@type': 'Organization',
-      name: 'Installsat.tv', // Your website name
-      url: BASE_URL, // Your website URL
-      logo: {
-        // Optional: Your website logo URL
-        '@type': 'ImageObject',
-        url: `${BASE_URL}/Images/InstallsatOrig_400.png`,
-      },
-    },
+    datePublished: date,
+    relativeImgPath: isImgExists ? imgPath : undefined,
+    relativePagePath: `/${ARTICLE}/${slug}`,
     keywords: keywords,
+    articleBody: text,
     articleSection: cat_name, // e.g., "Satellite News", "Equipment Setup"
-    articleBody: description, //  The main text content (might be too long for search engines; consider using a summary)
-  };
+  });
 
   return (
     <>

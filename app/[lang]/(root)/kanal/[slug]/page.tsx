@@ -41,7 +41,12 @@ import { INFO_PANEL_TITLES } from '@/models/ui/infoPanel.model';
 import { SAT_CHANNEL_LIST_IMAGES } from '@/models/channels/channelListMeta.model';
 import { localeStringMaker } from '@/libs/utils/localeStringMaker';
 import { getLanguageList } from '@/controllers/languageList.controller';
-import { CHANNEL_PARAMS_BLOCK } from '@/models/channels/channelParams.model';
+import {
+  CHANNEL_PARAMS_BLOCK,
+  getDefaultChannelDescription,
+  getDefaultChannelKeywords,
+  getPolarDescription,
+} from '@/models/channels/channelParams.model';
 import { generateJsonLd } from '@/libs/jsonLd/generateJsonLd';
 
 const BASE_URL = process.env.BASE_URL || MAIN_URL;
@@ -107,19 +112,71 @@ export const generateMetadata = async ({
     sat_title,
     frequency,
     polarization,
-    beam,
     a_pid,
     date_updated,
+    is_radio,
+    sat_position,
+    compress,
+    t2_stream,
+    v_pid,
+    mode,
+    encryption,
+    sr,
+    fec,
+    sid,
   } = flyChannels;
 
   const metaTitle = `${titleBefore[lang]} ${title} | ${sat_title} | ${frequency} ${polarization}`;
-  const chanDescription = description || `${metaTitle} | ${beam} | ${a_pid}`;
+
+  const aPidList = !a_pid ? [] : a_pid.split(DB_ARRAY_SEPARATOR);
+  const encryptions = !encryption
+    ? ''
+    : encryption.split(DB_ARRAY_SEPARATOR).join(', ');
+  const modeList = mode.split(DB_ARRAY_SEPARATOR).join(', ');
+
+  const chanDescription =
+    description ||
+    getDefaultChannelDescription({
+      lang,
+      title,
+      is_radio,
+      sat_title,
+      sat_position,
+      frequency,
+      polarization,
+      t2_stream,
+      encryptions,
+      compress,
+      modeList,
+      v_pid,
+      aPidList,
+      sr,
+      fec,
+      sid,
+    });
 
   return {
     metadataBase: new URL(BASE_URL),
     title: metaTitle,
     description: chanDescription,
-    keywords: keywords || chanDescription,
+    keywords:
+      keywords ||
+      getDefaultChannelKeywords({
+        lang,
+        title,
+        is_radio,
+        sat_title,
+        sat_position,
+        frequency,
+        polarization,
+        t2_stream,
+        encryptions: !encryption
+          ? ''
+          : encryption.split(DB_ARRAY_SEPARATOR).join(', '),
+        compress,
+        modeList: mode.split(DB_ARRAY_SEPARATOR).join(', '),
+        v_pid,
+      }),
     alternates: {
       canonical: `/${lang}/${KANAL}/${chan_slug}`,
       languages: {
@@ -136,7 +193,7 @@ export const generateMetadata = async ({
     openGraph: {
       ...DEFAULT_META_DATA.openGraph,
       title: metaTitle,
-      description: description || metaTitle,
+      description: chanDescription,
       url: `/${lang}/${KANAL}/${chan_slug}`,
       publishedTime: getFormattedDateStrYearFirst(date_updated || '', lang),
     },
@@ -181,8 +238,6 @@ export default async function Page({ params }: IChannelProps) {
     keywords,
     t2_stream,
     encryption,
-    biss,
-    is_biss,
     mode,
   } = flyChannels;
 
@@ -198,23 +253,24 @@ export default async function Page({ params }: IChannelProps) {
 
   const aPidList = !a_pid ? [] : a_pid.split(DB_ARRAY_SEPARATOR);
   const languageObjects = getLanguageList(aPidList);
-  const encryptions = !encryption ? [] : encryption.split(DB_ARRAY_SEPARATOR);
-  if (biss && is_biss) encryptions.push(biss);
-  const modeList = mode.split(DB_ARRAY_SEPARATOR);
+  const encryptions = !encryption
+    ? ''
+    : encryption.split(DB_ARRAY_SEPARATOR).join(', ');
+  const modeList = mode.split(DB_ARRAY_SEPARATOR).join(', ');
 
-  const channelLdBody = `
+  const channelLdParamsWithHtml = `
     <h2>${getParamsTitle(title)[lang]}</h2>
     <dl>
     <dt>${paramsTypeTitle[lang]}:</dt><dd>${is_radio ? 'Radio' : 'TV'}</dd>
     ${languageObjects.length > 0 ? `<dt>${paramsLangTitle[lang]}:</dt><dd>${languageObjects.map((item) => item.label).join(', ')}</dd>` : ''}
     ${t2_stream ? `<dt>${paramsT2.title[lang]}:</dt><dd>${t2_stream}</dd>` : ''}
-    ${encryptions.length > 0 ? `<dt>${paramsEncryption[lang]}:</dt><dd>${encryptions.join(', ')}</dd>` : ''}
+    ${encryptions ? `<dt>${paramsEncryption[lang]}:</dt><dd>${encryptions}</dd>` : ''}
     ${compress ? `<dt>${paramsFormat[lang]}:</dt><dd>${compress}</dd>` : ''}
-   <dt>${paramsStandard[lang]}:</dt><dd>${modeList.length > 1 ? modeList.join(', ') : modeList[0]}</dd>
+    ${modeList ? `<dt>${paramsStandard[lang]}:</dt><dd>${modeList}</dd>` : ''}
     ${sat_title ? `<dt>${paramsSatellite[lang]}:</dt><dd>${sat_title} / ${sat_position}</dd>` : ''}
    <dt>${paramsBandTitle[lang]}:</dt><dd>${frequency < 10700 ? 'C' : 'Ku'}</dd>
-    ${frequency ? `<dt>${paramsFrequency[lang]}:</dt><dd>${localeStringMaker(frequency, 'coma')} ${paramsFreqDescription[lang]}</dd>` : ''}
-    ${polarization ? `<dt>${paramsPolarizationTitle[lang]}:</dt><dd>${polarization}</dd>` : ''}
+    ${frequency ? `<dt>${paramsFrequency[lang]}:</dt><dd>${localeStringMaker(frequency)} ${paramsFreqDescription[lang]}</dd>` : ''}
+    ${polarization ? `<dt>${paramsPolarizationTitle[lang]}:</dt><dd>${getPolarDescription(polarization, lang)}</dd>` : ''}
     ${sr ? `<dt>SR:</dt><dd>${localeStringMaker(sr)} ${paramsSR.description[lang]}</dd>` : ''}
     ${fec ? `<dt>${paramsFEC[lang]}:</dt><dd>${fec}</dd>` : ''}
     ${sid ? `<dt>SID:</dt><dd>${localeStringMaker(sid)}</dd>` : ''}
@@ -226,15 +282,49 @@ export default async function Page({ params }: IChannelProps) {
   const jsonLd = generateJsonLd({
     lang,
     title,
-    description: description || channelLdBody,
+    description:
+      description ||
+      getDefaultChannelDescription({
+        lang,
+        title,
+        is_radio,
+        sat_title,
+        sat_position,
+        frequency,
+        polarization,
+        t2_stream,
+        encryptions,
+        compress,
+        modeList,
+        v_pid,
+        aPidList,
+        sr,
+        fec,
+        sid,
+      }),
     datePublished: date_updated,
     relativeImgPath:
       !logo || logo === NOT_FOUND_CHANNEL_LOGO
         ? undefined
         : `${bigLogo.pathFly}${logo}`,
     relativePagePath: `/${KANAL}/${slug}`,
-    keywords: keywords || description || channelLdBody,
-    articleBody: `${text ? `${text} ` : ''}${channelLdBody}`,
+    keywords:
+      keywords ||
+      getDefaultChannelKeywords({
+        lang,
+        title,
+        is_radio,
+        sat_title,
+        sat_position,
+        frequency,
+        polarization,
+        t2_stream,
+        encryptions,
+        compress,
+        modeList,
+        v_pid,
+      }),
+    articleBody: `${text ? `${text} ` : ''}${channelLdParamsWithHtml}`,
     genre: theme,
   });
 

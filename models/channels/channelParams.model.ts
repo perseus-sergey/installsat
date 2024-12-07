@@ -1,5 +1,8 @@
+import { localeStringMaker } from '@/libs/utils/localeStringMaker';
 import { ELanguage } from '../language.model';
 import { EUrlBaseParam } from '../url/url.model';
+import { TDbBoolean } from './channel.model';
+import { getLanguageList } from '@/controllers/languageList.controller';
 
 const { UA, EN, RU, ES, AR, DE, FR, IT } = ELanguage;
 
@@ -372,4 +375,91 @@ export const BREAD_SAT_CHANNEL_LIST = {
     [FR]: 'Liste des chaînes satellites',
     [IT]: 'Elenco dei canali satellitari',
   },
+};
+
+export const getDefaultChannelKeywords = ({
+  lang,
+  title,
+  is_radio,
+  sat_title,
+  sat_position,
+  frequency,
+  polarization,
+  t2_stream,
+  encryptions,
+  compress,
+  modeList,
+  v_pid,
+}: {
+  title: string;
+  lang: ELanguage;
+  is_radio: TDbBoolean;
+  sat_title: string;
+  sat_position: number;
+  frequency: number;
+  polarization: string;
+  t2_stream: string | null;
+  encryptions: string;
+  compress: string;
+  modeList: string;
+  v_pid: number | null;
+}) => {
+  return `${CHANNEL_PARAMS_BLOCK.getParamsTitle(title)[lang]}, ${is_radio ? 'Radio' : 'TV'}, ${sat_title ? `${CHANNEL_PARAMS_BLOCK.paramsSatellite[lang]}, ${sat_title} / ${sat_position}` : ''}, ${CHANNEL_PARAMS_BLOCK.paramsBandTitle[lang]}, ${frequency < 10700 ? 'C' : 'Ku'}, ${CHANNEL_PARAMS_BLOCK.paramsFrequency[lang]}, ${localeStringMaker(frequency)} ${CHANNEL_PARAMS_BLOCK.paramsFreqDescription[lang]}, ${polarization ? `${CHANNEL_PARAMS_BLOCK.paramsPolarizationTitle[lang]}, ${getPolarDescription(polarization, lang)}` : ''}, ${t2_stream ? `${CHANNEL_PARAMS_BLOCK.paramsT2.title[lang]}, ${t2_stream}` : ''}, ${encryptions ? `${CHANNEL_PARAMS_BLOCK.paramsEncryption[lang]}, ${encryptions}` : ''}, ${compress ? `${CHANNEL_PARAMS_BLOCK.paramsFormat[lang]}, ${compress}` : ''}, ${CHANNEL_PARAMS_BLOCK.paramsStandard[lang]}, ${modeList || ''}, ${CHANNEL_PARAMS_BLOCK.paramsSR.tooltipText[lang]}, ${CHANNEL_PARAMS_BLOCK.paramsFecTooltip[lang]}, ${v_pid ? CHANNEL_PARAMS_BLOCK.paramsVPid.title[lang] : ''}, ${CHANNEL_PARAMS_BLOCK.paramsAPid.title[lang]}`;
+};
+
+export const getDefaultChannelDescription = ({
+  lang,
+  title,
+  is_radio,
+  sat_title,
+  sat_position,
+  frequency,
+  polarization,
+  t2_stream,
+  encryptions,
+  compress,
+  modeList,
+  v_pid,
+  aPidList,
+  sr,
+  fec,
+  sid,
+}: {
+  title: string;
+  lang: ELanguage;
+  is_radio: TDbBoolean;
+  sat_title: string;
+  sat_position: number;
+  frequency: number;
+  polarization: string;
+  t2_stream: string | null;
+  encryptions: string;
+  compress: string;
+  modeList: string;
+  v_pid: number | null;
+  aPidList: string[];
+  sr: number;
+  fec: string;
+  sid: number | null;
+}) => {
+  const languageObjects = getLanguageList(aPidList);
+
+  return `
+    ${CHANNEL_PARAMS_BLOCK.getParamsTitle(title)[lang]}
+    ${CHANNEL_PARAMS_BLOCK.paramsTypeTitle[lang]}: ${is_radio ? 'Radio' : 'TV'}
+    ${languageObjects.length > 0 ? `${CHANNEL_PARAMS_BLOCK.paramsLangTitle[lang]}: ${languageObjects.map((item) => item.label).join(', ')}` : ''}
+    ${t2_stream ? `${CHANNEL_PARAMS_BLOCK.paramsT2.title[lang]}: ${t2_stream}` : ''}
+    ${encryptions ? `${CHANNEL_PARAMS_BLOCK.paramsEncryption[lang]}: ${encryptions}` : ''}
+    ${compress ? `${CHANNEL_PARAMS_BLOCK.paramsFormat[lang]}: ${compress}` : ''}
+    ${modeList ? `${CHANNEL_PARAMS_BLOCK.paramsStandard[lang]}: ${modeList} ` : ''}
+    ${sat_title ? `${CHANNEL_PARAMS_BLOCK.paramsSatellite[lang]}: ${sat_title} / ${sat_position}` : ''}
+    ${CHANNEL_PARAMS_BLOCK.paramsBandTitle[lang]}: ${frequency < 10700 ? 'C' : 'Ku'}
+    ${frequency ? `${CHANNEL_PARAMS_BLOCK.paramsFrequency[lang]}: ${localeStringMaker(frequency)} ${CHANNEL_PARAMS_BLOCK.paramsFreqDescription[lang]}` : ''}
+    ${polarization ? `${CHANNEL_PARAMS_BLOCK.paramsPolarizationTitle[lang]}: ${getPolarDescription(polarization, lang)}` : ''}
+    ${sr ? `SR: ${localeStringMaker(sr)} ${CHANNEL_PARAMS_BLOCK.paramsSR.description[lang]}` : ''}
+    ${fec ? `${CHANNEL_PARAMS_BLOCK.paramsFEC[lang]}: ${fec}` : ''}
+    ${sid ? `SID: ${localeStringMaker(sid)}` : ''}
+    ${v_pid ? `${CHANNEL_PARAMS_BLOCK.paramsVPid.title[lang]}: ${localeStringMaker(v_pid)}` : ''}
+    ${aPidList.length > 0 ? `${CHANNEL_PARAMS_BLOCK.paramsAPid.title[lang]}: ${aPidList.map((a) => `'${a.replace(/\s+/g, ' ')}'`).join(', ')}` : ''}
+    `;
 };

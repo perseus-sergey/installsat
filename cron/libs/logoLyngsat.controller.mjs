@@ -22,18 +22,6 @@ const { FLY_CHANNELS } = EDBTableTitles;
 
 const NO_LOGO_TITLE = 'no-logo.png';
 
-// const imageDir = path.join(process.cwd(), 'public', 'Images', 'channel_logo');
-const imageDir = path.join(
-  process.cwd(),
-  'Documents',
-  'sait',
-  'NextJs',
-  'installsat',
-  'public',
-  'Images',
-  'channel_logo'
-);
-
 puppeteer.use(StealthPlugin());
 
 const getChannelsWithoutLogo = async (limit) => {
@@ -88,7 +76,20 @@ const updateLogoInDB = async (channelName, logo, isExistLogo = true) => {
   return `SUCCESS DB UPDATE: ${res.affectedRows} rows affected for channels with ${isExistLogo ? 'original' : 'normalized'} name: "${channelName}"`;
 };
 
-async function saveLogoToFile(logoFileName, buffer) {
+async function saveLogoToFile(logoFileName, buffer, isCron) {
+  const imageDir = isCron
+    ? path.join(
+        process.cwd(),
+        'Documents',
+        'sait',
+        'NextJs',
+        'installsat',
+        'public',
+        'Images',
+        'channel_logo'
+      )
+    : path.join(process.cwd(), 'public', 'Images', 'channel_logo');
+
   try {
     const filePath = path.join(imageDir, logoFileName);
     await fs.writeFile(filePath, buffer);
@@ -162,7 +163,13 @@ const getLinkToPageWithLogo = async ({
 };
 // ========================= PROCESS ===================================
 
-async function processChannelLogo(channelName, satName, isRadio, browser) {
+async function processChannelLogo(
+  channelName,
+  satName,
+  isRadio,
+  browser,
+  isCron
+) {
   const messages = [];
   let page;
   const normalizedChannelName = normalizeChannelName(channelName);
@@ -277,7 +284,7 @@ async function processChannelLogo(channelName, satName, isRadio, browser) {
       const fileExtension = path.extname(logoUrl).toLowerCase();
       const fileName = `${normalizedChannelName}-logo${fileExtension}`;
 
-      const saveToFileMessage = await saveLogoToFile(fileName, buffer);
+      const saveToFileMessage = await saveLogoToFile(fileName, buffer, isCron);
       messages.push(saveToFileMessage);
 
       const updateDbMessage = await updateLogoInDB(
@@ -302,7 +309,7 @@ async function processChannelLogo(channelName, satName, isRadio, browser) {
   return messages;
 }
 
-const getChannelsLogo = async (quantity) => {
+const getChannelsLogo = async (quantity, isCron) => {
   const messages = [];
   let browser;
 
@@ -327,7 +334,8 @@ const getChannelsLogo = async (quantity) => {
         channel.title,
         channel.sat_slug,
         channel.is_radio === 0 ? false : true,
-        browser
+        browser,
+        isCron
       ); // Pass browser instance
       messages.push(...res);
       messages.push(`└──────────── "${channel.sat_slug}" ──────────────┘`);
@@ -373,8 +381,8 @@ const sendReportMail = async (messages, quantity) => {
   });
 };
 
-export const getLyngsatLogos = async (quantity) => {
-  const messages = await getChannelsLogo(quantity);
+export const getLyngsatLogos = async (quantity, isCron = false) => {
+  const messages = await getChannelsLogo(quantity, isCron);
 
   // await sendReportMail(messages, quantity);
 

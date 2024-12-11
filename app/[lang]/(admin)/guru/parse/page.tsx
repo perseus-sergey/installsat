@@ -14,6 +14,7 @@ import { EUrlSearchParam } from '@/models/url/urlSearch.model';
 
 // =================================================================
 // BEAM COVERAGE MAP WITH JSON-LD
+// sitemap for images
 // make carousel with article images when adv is not shown
 // add similar trans news links for fly channel page
 // fix comments get country by user-ip

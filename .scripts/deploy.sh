@@ -25,6 +25,6 @@ echo "Creating Production Build..."
 yarn build
 
 echo "PM2 Reload"
-pm2 reload 0
+pm2 reload installsat
 
 echo "Deployment Finished!"

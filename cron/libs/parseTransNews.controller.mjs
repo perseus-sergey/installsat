@@ -654,7 +654,7 @@ export const parseTransNews = async (parsedUpdates) => {
       }
     }
     if (isProductionMode) {
-      const killRes = killChromeProcesses();
+      const killRes = killChromeProcesses(isProductionMode);
       errorMessages.push(...killRes);
     }
   }

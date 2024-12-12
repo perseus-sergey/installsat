@@ -136,7 +136,7 @@ export default async function Page() {
       }
     }
     if (isProductionMode) {
-      const killRes = killChromeProcesses();
+      const killRes = killChromeProcesses(isProductionMode);
       messages = [...messages, ...killRes];
     }
   }

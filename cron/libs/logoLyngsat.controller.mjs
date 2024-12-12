@@ -1,7 +1,7 @@
 import puppeteer from 'puppeteer-extra';
 import StealthPlugin from 'puppeteer-extra-plugin-stealth';
 import * as cheerio from 'cheerio';
-import { sendMail } from './sendMail.mjs';
+// import { sendMail } from './sendMail.mjs';
 import { promises as fs } from 'fs';
 import path from 'path';
 
@@ -353,7 +353,7 @@ const getChannelsLogo = async (quantity, isCron) => {
       }
     }
     if (isProductionMode) {
-      const killRes = killChromeProcesses();
+      const killRes = killChromeProcesses(isProductionMode);
       messages.push(...killRes);
     }
   }
@@ -361,25 +361,25 @@ const getChannelsLogo = async (quantity, isCron) => {
   return messages;
 };
 
-const sendReportMail = async (messages, quantity) => {
-  const printMessages = messages.length
-    ? `<p style="color: blue; font-size: 20px; padding: 10px 0">Messages:</p><ul style="padding-bottom: 10px">${messages.map((msg) => `<li>${msg}</li>`).join('')}</ul>`
-    : '';
+// const sendReportMail = async (messages, quantity) => {
+//   const printMessages = messages.length
+//     ? `<p style="color: blue; font-size: 20px; padding: 10px 0">Messages:</p><ul style="padding-bottom: 10px">${messages.map((msg) => `<li>${msg}</li>`).join('')}</ul>`
+//     : '';
 
-  await sendMail({
-    title: 'Parse Logo from Lyngsat',
-    subject: `Parse Logo from Lyngsat`,
-    body: `
-    <p style="font-size: 20px;">Load and save
-      <span style="color: green;"> ${quantity}</span>
-      Logos from Lyngsat
-    </p>
-    <hr />
-    
-      ${printMessages}
-    `,
-  });
-};
+//   await sendMail({
+//     title: 'Parse Logo from Lyngsat',
+//     subject: `Parse Logo from Lyngsat`,
+//     body: `
+//     <p style="font-size: 20px;">Load and save
+//       <span style="color: green;"> ${quantity}</span>
+//       Logos from Lyngsat
+//     </p>
+//     <hr />
+
+//       ${printMessages}
+//     `,
+//   });
+// };
 
 export const getLyngsatLogos = async (quantity, isCron = false) => {
   const messages = await getChannelsLogo(quantity, isCron);

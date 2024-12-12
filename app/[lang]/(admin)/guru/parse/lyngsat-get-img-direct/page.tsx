@@ -419,7 +419,7 @@ const getChannelsLogo = async (batchSize: string) => {
       }
     }
     if (isProductionMode) {
-      const killRes = killChromeProcesses();
+      const killRes = killChromeProcesses(isProductionMode);
       messages.push(...killRes);
     }
   }

@@ -164,17 +164,20 @@ export const getContentFromPuppeteerBrowser = async (browser, url) => {
   return content;
 };
 
-export const killChromeProcesses = () => {
+export const killChromeProcesses = (isProduction = true) => {
   const messages = [];
+  const chromeProcessPath = isProduction ? 'chrome' : 'puppeteer/chrome';
 
   try {
     // Перевіряємо, чи є активні процеси Chrome
-    const activeChromeProcesses = execSync('pgrep -f chrome', { stdio: 'pipe' })
+    const activeChromeProcesses = execSync(`pgrep -f "${chromeProcessPath}"`, {
+      stdio: 'pipe',
+    })
       .toString()
       .trim();
 
     if (activeChromeProcesses) {
-      execSync('pkill -f chrome');
+      execSync(`pkill -f "${chromeProcessPath}"`);
       messages.push('SUCCESS: Chrome processes killed successfully.');
     } else {
       messages.push('WARNING: No active Chrome processes to kill.');
@@ -199,6 +202,8 @@ export const killChromeProcesses = () => {
 
   return messages;
 };
+
+import { execSync } from 'child_process';
 
 export const sleep = (ms = 1000) =>
   new Promise((resolve) => setTimeout(resolve, ms));

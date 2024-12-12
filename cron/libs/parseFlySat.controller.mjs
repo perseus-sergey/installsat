@@ -858,7 +858,7 @@ export const parseFlyChannels = async ({
       }
     }
     if (isProductionMode) {
-      killChromeProcesses();
+      killChromeProcesses(isProductionMode);
       // messages = [...messages, ...killRes];
     }
   }

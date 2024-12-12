@@ -316,7 +316,7 @@ export const parseProcess = async (intervalFromLastUpd) => {
       }
     }
     if (isProductionMode) {
-      const killRes = killChromeProcesses();
+      const killRes = killChromeProcesses(isProductionMode);
       messages.push(...killRes);
     }
   }

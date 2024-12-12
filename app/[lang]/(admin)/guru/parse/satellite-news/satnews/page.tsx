@@ -186,7 +186,7 @@ export default async function Page() {
     }
     // Закрити всі запущені процеси Chrome після завершення роботи функції
     if (isProductionMode) {
-      const killRes = killChromeProcesses();
+      const killRes = killChromeProcesses(isProductionMode);
       messages = [...messages, ...killRes];
     }
   }

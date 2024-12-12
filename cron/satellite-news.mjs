@@ -293,7 +293,7 @@ const R_U_N = async () => {
       }
     }
     if (isProductionMode) {
-      const killRes = killChromeProcesses();
+      const killRes = killChromeProcesses(isProductionMode);
       messages = [...messages, ...killRes];
     }
   }

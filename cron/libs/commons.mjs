@@ -203,8 +203,6 @@ export const killChromeProcesses = (isProduction = true) => {
   return messages;
 };
 
-import { execSync } from 'child_process';
-
 export const sleep = (ms = 1000) =>
   new Promise((resolve) => setTimeout(resolve, ms));
 

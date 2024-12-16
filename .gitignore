@@ -9,6 +9,13 @@
 # testing
 /coverage
 
+# locale
+local-scripts/
+
+# images
+public/Images/channel_logo/
+public/Images/News/
+
 # generate-react-cli
 /templates
 

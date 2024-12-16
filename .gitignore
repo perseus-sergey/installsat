@@ -14,7 +14,7 @@ local-scripts/
 
 # images
 public/Images/channel_logo/
-public/Images/News/
+public/Images/News/Article/
 
 # generate-react-cli
 /templates

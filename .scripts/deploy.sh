@@ -31,7 +31,7 @@ echo "Checking CPU load..."
 uptime
 
 echo "Creating Production Build..."
-yarn build
+yarn build --verbose
 
 echo "PM2 Reload"
 pm2 reload "installsat"

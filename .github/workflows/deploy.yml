@@ -21,6 +21,6 @@ jobs:
           port: ${{ secrets.PORT }}
           key: ${{ secrets.SSHKEY }}
           script: |
-            chmod +x ./.scripts/deploy.sh
             cd ~/installsat
+            chmod +x ./.scripts/deploy.sh
             ./.scripts/deploy.sh

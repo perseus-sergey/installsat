@@ -18,8 +18,17 @@ echo "Restarting MySQL..."
 sudo systemctl restart mysql
 echo "MySQL restarted!"
 
-echo "Installing Dependencies..."
-yarn install
+# echo "Installing Dependencies..."
+# yarn install
+
+echo "Installing dependencies with frozen lockfile..."
+yarn install --frozen-lockfile
+
+echo "Checking available memory..."
+free -m
+
+echo "Checking CPU load..."
+uptime
 
 echo "Creating Production Build..."
 yarn build

@@ -20,7 +20,7 @@ jobs:
           username: ${{ secrets.USERNAME }}
           port: ${{ secrets.PORT }}
           key: ${{ secrets.SSHKEY }}
-          timeout: 900
+          timeout: 15m
           script: |
             cd ~/installsat
             chmod +x ./.scripts/deploy.sh

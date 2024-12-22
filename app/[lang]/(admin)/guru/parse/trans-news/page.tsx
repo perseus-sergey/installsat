@@ -10,11 +10,22 @@ export default async function Page({
 }) {
   const searchQuery = validSearchParam(EUrlSearchParam.INTERVAL, searchParams);
 
-  const PARSED_UPDATES = 4;
+  if (!searchQuery)
+    return (
+      <p className="text-2xl text-red-500">
+        ERROR: Choose the correct interval
+      </p>
+    );
+
+  // const PARSED_UPDATES = 4;
 
   const errorMessages = (await parseTransNews(
-    parseInt(searchQuery, 10) || PARSED_UPDATES
+    parseInt(searchQuery, 10)
   )) as string[];
+
+  // const errorMessages = (await parseTransNews(
+  //   parseInt(searchQuery, 10) || PARSED_UPDATES
+  // )) as string[];
 
   return (
     <>

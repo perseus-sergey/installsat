@@ -261,6 +261,8 @@ export default async function Page({
     searchParams
   );
 
+  if (!trapsChannelId) return <p>ERROR: Add Trap channel vsetv id</p>;
+
   let dbInsertedStrings: string[] = [];
   const errorChannels: IVseTvErrorChannel[] = [];
   const errorMessages: string[] = [];

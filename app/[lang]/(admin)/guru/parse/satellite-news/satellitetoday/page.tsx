@@ -1,6 +1,3 @@
-import { Title } from '@/components/ui/Titles/Title';
-// import { GoogleGenerativeAI } from '@google/generative-ai';
-import * as React from 'react';
 import puppeteer, { Browser } from 'puppeteer';
 import * as cheerio from 'cheerio';
 import { getContentFromPuppeteerBrowser } from '@/controllers/parse.controller';
@@ -184,55 +181,53 @@ export default async function Page() {
     }
   }
 
-  return (
-    <>
-      <Title>Welcome to NewsCast Page</Title>
-      <h2>Links:</h2>
-      {Array.isArray(mainLinks) && mainLinks.length > 0 && (
-        <ul>
-          {mainLinks.map((link, i) => (
-            <li key={i}>{link}</li>
-          ))}
-        </ul>
-      )}
-      {messages.length > 0 && (
-        <>
-          <h2>Messages:</h2>
-          <ul>
-            {messages.map((message, i) => (
-              <li key={i}>{message}</li>
-            ))}
-          </ul>
-        </>
-      )}
-      {newArticles.length > 0 && (
-        <>
-          <h2 className="text-center text-green-600 text-xl">New Articles:</h2>
-          {newArticles.map((article) => (
-            <React.Fragment key={article.originalTitle}>
-              <h3 className="text-center text-blue-700 text-xl border-b">
-                {article.originalTitle}
-              </h3>
-              <p>
-                <b>Original Slug: </b>
-                {article.originalSlug}
-              </p>
-              <p>
-                <b>Original HTML: </b>
-                {article.originalText}
-              </p>
-              <p>
-                <b>Date: </b>
-                {article.date.toLocaleDateString('en-CA')}
-              </p>
-            </React.Fragment>
-          ))}
-        </>
-      )}
+  // return (
+  //   <>
+  //     <Title>Welcome to NewsCast Page</Title>
+  //     <h2>Links:</h2>
+  //     {Array.isArray(mainLinks) && mainLinks.length > 0 && (
+  //       <ul>
+  //         {mainLinks.map((link, i) => (
+  //           <li key={i}>{link}</li>
+  //         ))}
+  //       </ul>
+  //     )}
+  //     {messages.length > 0 && (
+  //       <>
+  //         <h2>Messages:</h2>
+  //         <ul>
+  //           {messages.map((message, i) => (
+  //             <li key={i}>{message}</li>
+  //           ))}
+  //         </ul>
+  //       </>
+  //     )}
+  //     {newArticles.length > 0 && (
+  //       <>
+  //         <h2 className="text-center text-green-600 text-xl">New Articles:</h2>
+  //         {newArticles.map((article) => (
+  //           <React.Fragment key={article.originalTitle}>
+  //             <h3 className="text-center text-blue-700 text-xl border-b">
+  //               {article.originalTitle}
+  //             </h3>
+  //             <p>
+  //               <b>Original Slug: </b>
+  //               {article.originalSlug}
+  //             </p>
+  //             <p>
+  //               <b>Original HTML: </b>
+  //               {article.originalText}
+  //             </p>
+  //             <p>
+  //               <b>Date: </b>
+  //               {article.date.toLocaleDateString('en-CA')}
+  //             </p>
+  //           </React.Fragment>
+  //         ))}
+  //       </>
+  //     )}
 
-      {/* {response} */}
-      {/* <DangerHtml text={aiText} /> */}
-    </>
-  );
-  // return null;
+  //   </>
+  // );
+  return null;
 }

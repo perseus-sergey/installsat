@@ -282,6 +282,8 @@ const R_U_N = async () => {
   } finally {
     if (browser) {
       try {
+        const pages = await browser.pages();
+        await Promise.all(pages.map((page) => page.close())); // Закрити всі відкриті сторінки
         await browser.close();
       } catch (closeError) {
         addMessage(
@@ -290,11 +292,12 @@ const R_U_N = async () => {
             ? closeError
             : new Error('Error closing browser')
         );
+      } finally {
+        if (isProductionMode) {
+          const killRes = killChromeProcesses(isProductionMode);
+          messages = [...messages, ...killRes];
+        }
       }
-    }
-    if (isProductionMode) {
-      const killRes = killChromeProcesses(isProductionMode);
-      messages = [...messages, ...killRes];
     }
   }
 

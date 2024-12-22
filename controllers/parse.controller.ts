@@ -7,21 +7,27 @@ export const getContentFromPuppeteerBrowser = async (
   browser: Browser,
   url: string
 ) => {
-  const page = await browser.newPage();
+  let page;
 
-  await page.setUserAgent(
-    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36'
-  );
+  try {
+    page = await browser.newPage();
 
-  await page.goto(url, { waitUntil: 'domcontentloaded' });
+    await page.setUserAgent(
+      'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36'
+    );
 
-  await sleep();
+    await page.goto(url, { waitUntil: 'domcontentloaded' });
 
-  const content = await page.content();
+    await sleep();
 
-  await page.close();
+    const content = await page.content();
 
-  return content;
+    return content;
+  } catch (error) {
+    throw error;
+  } finally {
+    if (page) await page.close();
+  }
 };
 
 export const clearTable = async (tableName: EDBTableTitles) => {

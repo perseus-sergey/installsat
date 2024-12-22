@@ -644,6 +644,8 @@ export const parseTransNews = async (parsedUpdates) => {
   } finally {
     if (browser) {
       try {
+        const pages = await browser.pages();
+        await Promise.all(pages.map((page) => page.close())); // Закрити всі відкриті сторінки
         await browser.close();
       } catch (closeError) {
         errorMessages.push(
@@ -651,11 +653,12 @@ export const parseTransNews = async (parsedUpdates) => {
             ? `ERROR closing browser: ${closeError.message}`
             : 'Error closing browser'
         );
+      } finally {
+        if (isProductionMode) {
+          const killRes = killChromeProcesses(isProductionMode);
+          errorMessages.push(...killRes);
+        }
       }
-    }
-    if (isProductionMode) {
-      const killRes = killChromeProcesses(isProductionMode);
-      errorMessages.push(...killRes);
     }
   }
 

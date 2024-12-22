@@ -305,6 +305,8 @@ export const parseProcess = async (intervalFromLastUpd) => {
   } finally {
     if (browser) {
       try {
+        const pages = await browser.pages();
+        await Promise.all(pages.map((page) => page.close())); // Закрити всі відкриті сторінки
         await browser.close();
       } catch (closeError) {
         addMessage(
@@ -313,11 +315,12 @@ export const parseProcess = async (intervalFromLastUpd) => {
             ? closeError
             : new Error('Error closing browser')
         );
+      } finally {
+        if (isProductionMode) {
+          const killRes = killChromeProcesses(isProductionMode);
+          messages.push(...killRes);
+        }
       }
-    }
-    if (isProductionMode) {
-      const killRes = killChromeProcesses(isProductionMode);
-      messages.push(...killRes);
     }
   }
 

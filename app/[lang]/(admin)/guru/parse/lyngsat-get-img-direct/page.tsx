@@ -411,16 +411,19 @@ const getChannelsLogo = async (batchSize: string) => {
   } finally {
     if (browser) {
       try {
+        const pages = await browser.pages();
+        await Promise.all(pages.map((page) => page.close())); // Закрити всі відкриті сторінки
         await browser.close();
       } catch (closeError) {
         messages.push(
           `ERROR: closing browser. Message: ${(closeError as Error).message}`
         );
+      } finally {
+        if (isProductionMode) {
+          const killRes = killChromeProcesses(isProductionMode);
+          messages.push(...killRes);
+        }
       }
-    }
-    if (isProductionMode) {
-      const killRes = killChromeProcesses(isProductionMode);
-      messages.push(...killRes);
     }
   }
 

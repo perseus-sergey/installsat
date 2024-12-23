@@ -1,6 +1,5 @@
 import memoize from 'lodash.memoize';
 import { DateTime } from 'luxon';
-import puppeteer from 'puppeteer';
 import * as cheerio from 'cheerio';
 import { sendMail } from './sendMail.mjs';
 
@@ -12,6 +11,11 @@ import {
   killChromeProcesses,
 } from './commons.mjs';
 import { getDbIdAmount } from './utils.mjs';
+
+import puppeteer from 'puppeteer-extra';
+import StealthPlugin from 'puppeteer-extra-plugin-stealth';
+
+puppeteer.use(StealthPlugin());
 
 const pool = getPool();
 
@@ -422,6 +426,10 @@ const actionTextHandler = (text, chanTitle, frequency) => {
 
 const parseChannelPage = async (browser, url) => {
   const page = await browser.newPage();
+  await page.setUserAgent(
+    'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36'
+  );
+
   await page.goto(url, { waitUntil: 'domcontentloaded' });
 
   const content = await page.content();
@@ -614,7 +622,12 @@ export const parseTransNews = async (parsedUpdates) => {
 
   try {
     const browser = await puppeteer.launch({
-      args: ['--no-sandbox', '--disable-setuid-sandbox'],
+      args: [
+        '--no-sandbox',
+        '--disable-setuid-sandbox',
+        '--disable-dev-shm-usage',
+        '--disable-gpu',
+      ],
     });
 
     const html = await parseChannelPage(browser, PARSE_URL);

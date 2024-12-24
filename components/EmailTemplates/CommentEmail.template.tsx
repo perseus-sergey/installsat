@@ -190,7 +190,7 @@ export const CommentToUserEmail = async ({
   });
   const removeSubscriptionUrl = `${baseUrl}/${lang}/${EUrlBaseParam.DELETE_COMMENT_SUBSCRIPTION}?${delCommentSearchParams}`;
 
-  const languageMap: { [key in ELanguage]: string } = {
+  const languageMap: { [_key in ELanguage]: string } = {
     [ELanguage.UA]: 'uk',
     [ELanguage.EN]: 'en',
     [ELanguage.RU]: 'ru',

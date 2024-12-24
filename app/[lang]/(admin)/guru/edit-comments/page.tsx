@@ -18,7 +18,7 @@ const { BASE_PATH, EDIT_COMMENT } = EUrlAdminParam;
 const emailKey = process.env.MAIL_ENCRYPT_KEY || '';
 
 export interface IPageParams {
-  params: { [key in EUrlAdminParam | EUrlBaseParam]: string };
+  params: { [_key in EUrlAdminParam | EUrlBaseParam]: string };
   searchParams?: TSearchParams;
 }
 

@@ -22,7 +22,7 @@ export default async function Page({
   params,
 }: {
   searchParams?: TSearchParams;
-  params: { [key in EUrlAdminParam | EUrlBaseParam]: string };
+  params: { [_key in EUrlAdminParam | EUrlBaseParam]: string };
 }) {
   const lang = getELangKey(params[EUrlBaseParam.LANG]);
   const searchQuery = validSearchParam(EUrlSearchParam.ARTICLE, searchParams);

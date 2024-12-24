@@ -13,7 +13,7 @@ import { EUrlBaseParam } from '@/models/url/url.model';
 import { EUrlSearchParam } from '@/models/url/urlSearch.model';
 
 interface IParams {
-  params: { [key in EUrlAdminParam | EUrlBaseParam]: string };
+  params: { [_key in EUrlAdminParam | EUrlBaseParam]: string };
 }
 
 const Page = async ({ params }: IParams) => {

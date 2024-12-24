@@ -35,7 +35,7 @@ import { EUrlSearchParam } from '@/models/url/urlSearch.model';
 const { FLY_SATELLITES } = EDBTableTitles;
 
 interface IParams {
-  params: { [key in EUrlAdminParam | EUrlBaseParam]: string };
+  params: { [_key in EUrlAdminParam | EUrlBaseParam]: string };
 }
 
 export default async function Page({ params }: IParams) {

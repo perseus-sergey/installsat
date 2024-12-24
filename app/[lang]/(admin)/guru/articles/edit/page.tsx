@@ -31,7 +31,7 @@ const PAGINATION = {
 };
 
 export interface IPageParams {
-  params: { [key in EUrlAdminParam | EUrlBaseParam]: string };
+  params: { [_key in EUrlAdminParam | EUrlBaseParam]: string };
   searchParams?: TSearchParams;
 }
 

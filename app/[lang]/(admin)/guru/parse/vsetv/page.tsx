@@ -245,7 +245,7 @@ export default async function Page({
   searchParams,
   params,
 }: {
-  params: { [key in EUrlAdminParam | EUrlBaseParam]: string };
+  params: { [_key in EUrlAdminParam | EUrlBaseParam]: string };
   searchParams?: TSearchParams;
 }) {
   const lang = getELangKey(params[EUrlBaseParam.LANG]);

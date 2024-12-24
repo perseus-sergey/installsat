@@ -1,6 +1,7 @@
 import { Title } from '@/components/ui/Titles/Title';
 import { EUrlSearchParam, validSearchParam } from '@cron/libs/commons.mjs';
-import { parseTransNews } from '@cron/libs/parseTransNews.controller.mjs';
+import { parseTransNewsForum } from '@cron/libs/parseTransNewsForum.controller.mjs';
+// import { parseTransNews } from '@cron/libs/parseTransNews.controller.mjs';
 import { TSearchParams } from '@/models/url/urlSearch.model';
 
 export default async function Page({
@@ -19,7 +20,7 @@ export default async function Page({
 
   // const PARSED_UPDATES = 4;
 
-  const errorMessages = (await parseTransNews(
+  const errorMessages = (await parseTransNewsForum(
     parseInt(searchQuery, 10)
   )) as string[];
 

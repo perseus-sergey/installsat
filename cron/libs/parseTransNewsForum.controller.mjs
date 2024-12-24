@@ -25,7 +25,8 @@ const BASE_GURU_PATH = `${BASE_URL}/en/${EUrlAdminParam.BASE_PATH}`;
 const isProductionMode = process.env.NODE_ENV === 'production';
 const { TRANS_NEWS } = EDBTableTitles;
 
-const PARSE_URL = 'https://www.flysat.com/en/news';
+const PARSE_DOMAIN = 'https://www.satsupreme.com';
+const PARSE_MAIN_URL = `${PARSE_DOMAIN}/forumdisplay.php/59-Channel-and-Transponders-Updates`;
 // const PARSED_UPDATES = 4;
 
 const getDBSatID = memoize(async (satSlug, satName) => {
@@ -425,37 +426,80 @@ const actionTextHandler = (text, chanTitle, frequency) => {
   };
 };
 
-const parseChannelPage = async (browser, url) => {
-  const page = await browser.newPage();
-  await page.setUserAgent(
-    'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36'
-  );
+const getPreLastPageUrl = (url) => {
+  return url.replace(/page(\d+)/, (_, pageNumber) => {
+    const newPageNumber = parseInt(pageNumber, 10) - 1; // Зменшуємо число на 1
 
-  await page.goto(url, { waitUntil: 'domcontentloaded' });
+    return `page${newPageNumber}`;
+  });
+};
 
-  await sleep(5000);
+const extractLastPageUrl = ($) => {
+  const linkText = 'Flysat Daily Updates';
 
-  const content = await page.content();
-  await page.close();
+  // Знаходимо потрібний <li>
+  const li = $(`li:contains("${linkText}")`);
+  if (!li.length) {
+    return {
+      lastPageUrl: null,
+      mainPageError: `Error extracting main page <li> with text: «${linkText}»`,
+    };
+  }
 
-  return content;
+  // Витягуємо останній елемент пагінації
+  const paginationBlock = li.find('.pagination dd');
+  const lastPageLinkElement = paginationBlock.find('a').last(); // Останній <a> елемент
+
+  if (!lastPageLinkElement.length) {
+    return {
+      lastPageUrl: null,
+      mainPageError: `Error extracting pagination block from: «${li.html()}»`,
+    };
+  }
+
+  const pageNumber = lastPageLinkElement.text().trim(); // Номер останньої сторінки
+  const pageLink = lastPageLinkElement.attr('href'); // Посилання на останню сторінку
+
+  if (!pageNumber || !pageLink) {
+    return {
+      lastPageUrl: null,
+      mainPageError: `Error extracting pageNumber || pageLink from: «${li.html()}»`,
+    };
+  }
+
+  return {
+    lastPageUrl: pageLink,
+    mainPageError: null,
+  };
 };
 
 const extractParsedData = ($, updateAmount) => {
   const parsedData = [];
   const extractErrors = [];
+  let remainUpdates = 0;
 
   const addMessage = (itemTitle, from, type) =>
     extractErrors.push(
       `${type}: Cannot extract ${itemTitle} from: «${from || 'CHEERIO HTML'}»`
     );
 
-  const baslikElements = $('p.baslik');
-  const firstThreeBaslikElements = baslikElements.slice(0, updateAmount);
+  const updateElements = $('.postrow');
+  if (updateAmount > updateElements.length)
+    remainUpdates = updateAmount - updateElements.length;
 
-  firstThreeBaslikElements.each((_i, el) => {
-    const dateText = $(el).text(); // Отримуємо текст з елемента <p class="baslik">>
-    const [date, updateText] = dateText.split('/'); // Розділяємо текст на дату і номер оновлення
+  const lastElements = updateElements.slice(updateAmount * -1);
+
+  lastElements.each((_i, updateEl) => {
+    const dateText = $(updateEl)
+      .find('blockquote font[color="#3F3F3F"]')
+      .text();
+    if (!dateText.includes('/')) {
+      extractErrors.push(`Error: Invalid DATE format in: «${dateText}»`);
+
+      return;
+    }
+
+    const [date, updateText] = dateText.split('/');
     const dt = DateTime.fromFormat(date, 'dd.MM.yyyy', { zone: 'utc' });
     if (!dt.isValid) {
       extractErrors.push(`Error extracting DATE from: «${dateText}»`);
@@ -463,97 +507,93 @@ const extractParsedData = ($, updateAmount) => {
       return;
     }
 
-    const update = parseInt(updateText, 10) || null; // Конвертуємо номер оновлення в число
+    const update = parseInt(updateText, 10) || null;
 
-    // Збираємо всі наступні елементи <p> до наступного <p class="baslik">
+    $(updateEl)
+      .find('font[color="#000000"] i')
+      .each((_j, newsRowEl) => {
+        const channel_title = $(newsRowEl).find('b').eq(1).text().trim();
+        if (!channel_title) {
+          addMessage('CHANNEL NAME', $(newsRowEl).html(), 'ERROR');
 
-    $(el)
-      .nextUntil('p.baslik')
-      .each((_j, updateEl) => {
-        if ($(updateEl).hasClass('guncellemenormal')) {
-          const channel_title = $(updateEl).find('b').eq(1).text().trim(); // Назва каналу
-          if (!channel_title) {
-            addMessage('CHANNEL NAME', $(updateEl).html(), 'ERROR');
-
-            return;
-          }
-
-          // Збираємо частоту між дужками, або використовуємо текст після назви каналу
-          let frequency_text = '';
-          const textAfterChanTitle = $(updateEl).text().split(channel_title)[1];
-          const frequencyMatch = textAfterChanTitle.match(/\(([^)]+)\)/);
-          if (frequencyMatch) {
-            frequency_text = `(${frequencyMatch[1].trim()})`;
-          } else {
-            const fallbackMatch = textAfterChanTitle.match(/\(.*\)/);
-            if (fallbackMatch) {
-              frequency_text = fallbackMatch[0];
-            }
-          }
-          if (!frequency_text)
-            addMessage('FREQUENCY TEXT', $(updateEl).html(), 'WARNING');
-
-          const action = $(updateEl).find('font[color]').last().text().trim(); // Дія (left/on), другий <font>
-          if (!action) {
-            addMessage('ACTION', $(updateEl).html(), 'ERROR');
-
-            return;
-          }
-
-          const satNameLink = $(updateEl).find('a');
-          const satHref = satNameLink.attr('href');
-          if (!satHref) addMessage('URL_LINK', $(updateEl).html(), 'WARNING');
-
-          const slug = satHref ? satHref.split('/').pop() : '';
-          if (!slug) addMessage('SLUG', satHref || '', 'WARNING');
-
-          const fullSatName = satNameLink.text().trim().split('@'); // Назва супутника
-          const satName = fullSatName[0].trim();
-          if (!satName) {
-            addMessage('SATELLITE NAME', $(updateEl).html(), 'ERROR');
-
-            return;
-          }
-          const satPosition = fullSatName[1].trim();
-          if (!satPosition)
-            addMessage('SATELLITE POSITION', $(updateEl).html(), 'WARNING');
-
-          const [grade, ew] = satPosition.split('° ');
-          if (!grade || !ew) addMessage('GRADE', $(updateEl).html(), 'WARNING');
-
-          const { ua, en, ru, es, ar, de, fr, it } = actionTextHandler(
-            action,
-            channel_title,
-            frequency_text
-          );
-
-          // Encode the replaced text to handle HTML entities
-          parsedData.push({
-            date: dt.toISODate(),
-            update,
-            channel_title: channel_title,
-            action: action,
-            text: ua,
-            text_en: en,
-            text_ru: ru,
-            text_es: es,
-            text_ar: ar,
-            text_de: de,
-            text_fr: fr,
-            text_it: it,
-            frequency_text: frequency_text,
-            sat_name: satName,
-            sat_slug: slug || null,
-            sat_grade: ew === 'E' ? grade : `-${grade}`,
-            sat_position: satPosition,
-            sat: '',
-            country: '',
-          });
+          return;
         }
+
+        let frequency_text = '';
+        const textAfterChanTitle = $(newsRowEl).text().split(channel_title)[1];
+        const frequencyMatch =
+          textAfterChanTitle.match(/\(([^)]+)\)/) ||
+          textAfterChanTitle.match(/\(.*\)/);
+        frequency_text = frequencyMatch ? frequencyMatch[0].trim() : '';
+        if (!frequency_text) {
+          addMessage('FREQUENCY TEXT', $(newsRowEl).html(), 'WARNING');
+        }
+
+        const action = $(newsRowEl).find('font[color]').last().text().trim();
+        if (!action) {
+          addMessage('ACTION', $(newsRowEl).html(), 'ERROR');
+
+          return;
+        }
+
+        const satNameLink = $(newsRowEl).find('a');
+        const satHref = satNameLink.attr('href');
+        if (!satHref) addMessage('URL_LINK', $(newsRowEl).html(), 'WARNING');
+
+        const slug = satHref ? satHref.split('/').pop() : null;
+        if (!slug) addMessage('SLUG', satHref || '', 'WARNING');
+
+        const fullSatName = satNameLink.text().trim().split('@');
+        const satName = fullSatName[0]?.trim() || '';
+        if (!satName) {
+          addMessage('SATELLITE NAME', $(newsRowEl).html(), 'ERROR');
+
+          return;
+        }
+
+        const satPosition = fullSatName[1]?.trim() || '';
+        if (!satPosition) {
+          addMessage('SATELLITE POSITION', $(newsRowEl).html(), 'WARNING');
+        }
+
+        if (!satPosition.includes('°')) {
+          addMessage('GRADE', $(newsRowEl).html(), 'WARNING');
+        }
+
+        const [grade, ew] = satPosition.split('° ');
+        const sat_grade = ew === 'E' ? grade : `-${grade}`;
+
+        const { ua, en, ru, es, ar, de, fr, it } = actionTextHandler(
+          action,
+          channel_title,
+          frequency_text
+        );
+
+        parsedData.push({
+          date: dt.toISODate(),
+          update,
+          channel_title,
+          action,
+          text: ua,
+          text_en: en,
+          text_ru: ru,
+          text_es: es,
+          text_ar: ar,
+          text_de: de,
+          text_fr: fr,
+          text_it: it,
+          frequency_text,
+          sat_name: satName,
+          sat_slug: slug || null,
+          sat_grade,
+          sat_position: satPosition,
+          sat: '',
+          country: '',
+        });
       });
   });
 
-  return { parsedData, extractErrors };
+  return { parsedData, extractErrors, remainUpdates };
 };
 
 const addSatId = async (parsedData) => {
@@ -609,7 +649,7 @@ const sendReportMail = async (errorMessages, tblItemLength) => {
       </a>
     </p>
     <p>
-      <a style="color: #267f00; font-size: 20px; padding: 10px 0" target="_blank" href="${PARSE_URL}" >
+      <a style="color: #267f00; font-size: 20px; padding: 10px 0" target="_blank" href="${PARSE_MAIN_URL}" >
       Source page
       </a>
     </p>
@@ -617,9 +657,10 @@ const sendReportMail = async (errorMessages, tblItemLength) => {
   });
 };
 
-export const parseTransNews = async (parsedUpdates) => {
+export const parseTransNewsForum = async (parsedUpdates) => {
   let browser;
   const errorMessages = [];
+  let prevPageParsedData = [];
   let resDbTableLength = '';
   let finalData = [];
 
@@ -633,13 +674,67 @@ export const parseTransNews = async (parsedUpdates) => {
       ],
     });
 
-    const html = await parseChannelPage(browser, PARSE_URL);
-    const $ = cheerio.load(html);
+    const page = await browser.newPage();
+    await page.setUserAgent(
+      'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36'
+    );
 
-    const { parsedData, extractErrors } = extractParsedData($, parsedUpdates);
+    await page.goto(PARSE_MAIN_URL, { waitUntil: 'domcontentloaded' });
+
+    const mainPageHtml = await page.content();
+
+    const main_$ = cheerio.load(mainPageHtml);
+    const { lastPageUrl, mainPageError } = extractLastPageUrl(main_$);
+    // const { lastPageUrl, lastPageNumber, mainPageError } =
+    //   extractLastPageUrl(main_$);
+    if (mainPageError) throw new Error(mainPageError);
+
+    await sleep(3000);
+
+    const lastPageFullUrl = `${PARSE_DOMAIN}/${lastPageUrl}`;
+
+    errorMessages.push(`Scraping last page ${lastPageFullUrl}`);
+
+    await page.goto(lastPageFullUrl, {
+      waitUntil: 'domcontentloaded',
+    });
+
+    const lastPageHtml = await page.content();
+
+    const lastPageHtml_$ = cheerio.load(lastPageHtml);
+
+    const { parsedData, extractErrors, remainUpdates } = extractParsedData(
+      lastPageHtml_$,
+      parsedUpdates
+    );
     errorMessages.push(...extractErrors);
 
-    const dataWithSatIdRes = await addSatId(parsedData);
+    // якщо на останній сторінці не достатньо новин парсимо попередню
+    if (remainUpdates > 0) {
+      const previousPageFullUrl = `${PARSE_DOMAIN}/${getPreLastPageUrl(lastPageUrl)}`;
+      errorMessages.push(`Scraping last page ${previousPageFullUrl}`);
+
+      await sleep();
+
+      await page.goto(previousPageFullUrl, {
+        waitUntil: 'domcontentloaded',
+      });
+
+      const prevPageHtml = await page.content();
+
+      const prevPageHtml_$ = cheerio.load(prevPageHtml);
+
+      const { parsedData: prevPageParsed, extractErrors: errorsPrevPage } =
+        extractParsedData(prevPageHtml_$, parsedUpdates);
+      errorMessages.push(...errorsPrevPage);
+
+      prevPageParsedData = prevPageParsed;
+    }
+
+    const dataWithSatIdRes = await addSatId([
+      ...prevPageParsedData,
+      ...parsedData,
+    ]);
 
     finalData = dataWithSatIdRes.dataWithSatId;
     errorMessages.push(...dataWithSatIdRes.addSatIdErrors);

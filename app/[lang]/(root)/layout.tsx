@@ -17,7 +17,7 @@ const { metaDescription, metaKeywords, metaTitle } = META_TRANS_NEWS_LIST;
 
 interface IProps {
   children?: React.ReactNode;
-  params: { [key in EUrlBaseParam]: string };
+  params: { [_key in EUrlBaseParam]: string };
 }
 
 export const generateMetadata = ({ params }: IProps): Metadata => {

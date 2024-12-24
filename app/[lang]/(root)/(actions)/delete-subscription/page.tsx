@@ -19,7 +19,7 @@ const {
   h1,
 } = DELETE_SUBSCRIPTION_PAGE;
 export interface IPageParams {
-  params: { [key in EUrlBaseParam]: string };
+  params: { [_key in EUrlBaseParam]: string };
   searchParams?: TSearchParams;
 }
 

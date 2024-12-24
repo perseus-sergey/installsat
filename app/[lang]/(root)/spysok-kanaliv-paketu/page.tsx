@@ -14,7 +14,7 @@ import { META_PACKAGES } from '@/models/channels/packageChannelListMeta.model';
 const BASE_URL = process.env.BASE_URL || MAIN_URL;
 
 export interface IPageProps {
-  params: { [key in EUrlBaseParam]: string };
+  params: { [_key in EUrlBaseParam]: string };
 }
 
 const { metaDescription, metaH1, metaKeywords, metaTitle } = META_PACKAGES;

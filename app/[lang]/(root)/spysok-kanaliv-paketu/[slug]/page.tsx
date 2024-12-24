@@ -49,7 +49,7 @@ const { SLUG, LANG, PACKAGE_CHANNEL_LIST, CHANNEL_PARAMS } = EUrlBaseParam;
 const getH1Cached = cache(getH1);
 
 interface IPageProps {
-  params: { [key in EUrlBaseParam]: string };
+  params: { [_key in EUrlBaseParam]: string };
   searchParams?: TSearchParams;
 }
 

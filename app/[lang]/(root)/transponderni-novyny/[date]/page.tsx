@@ -21,7 +21,7 @@ const { metaDescriptionStart, metaH1start, metaKeywordsStart, metaTitleStart } =
 const getCurrDateCached = cache(getFormattedDateStrYearFirst);
 
 interface IPageParams {
-  params: { [key in EUrlBaseParam]: string };
+  params: { [_key in EUrlBaseParam]: string };
 }
 
 const { LANG, TRANSPONDER_NEWS } = EUrlBaseParam;

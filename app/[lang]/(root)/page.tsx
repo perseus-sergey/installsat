@@ -15,7 +15,7 @@ import ArticleKeenCarousel from '@/components/ArticleKeenCarousel';
 
 interface IProps {
   searchParams: TSearchParams;
-  params: { [key in EUrlBaseParam]: string };
+  params: { [_key in EUrlBaseParam]: string };
 }
 
 export const revalidate = 21600; // 3600 * 6 invalidate cache every 6 hours

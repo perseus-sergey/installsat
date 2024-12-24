@@ -29,7 +29,7 @@ import { INFO_PANEL_TITLES } from '@/models/ui/infoPanel.model';
 import CommentBlock from '@/components/comments/CommentBlock/CommentBlock';
 
 interface IArticleParams {
-  params: { [key in EUrlBaseParam]: string };
+  params: { [_key in EUrlBaseParam]: string };
 }
 
 const { UA, EN, RU, ES, AR, DE, FR, IT } = ELanguage;

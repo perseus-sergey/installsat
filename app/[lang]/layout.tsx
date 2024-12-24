@@ -28,7 +28,7 @@ export default ({
   params,
 }: {
   children: React.ReactNode;
-  params: { [key in EUrlBaseParam]: string };
+  params: { [_key in EUrlBaseParam]: string };
 }) => {
   const lang = getELangKey(params[EUrlBaseParam.LANG]);
 

@@ -50,7 +50,7 @@ const { views: viewsTitle } = INFO_PANEL_TITLES;
 const { noteTitle, getResponsibilityText } = CHANNEL_RESPONSIBILITIES;
 
 export interface IChannelProps {
-  params: { [key in EUrlBaseParam]: string };
+  params: { [_key in EUrlBaseParam]: string };
 }
 
 const { SLUG, LANG, ONLINE_CHANNEL_LIST, CHANNEL_PARAMS, CHANNELS_TV_PROGRAM } =

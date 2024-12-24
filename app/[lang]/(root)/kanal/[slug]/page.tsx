@@ -90,7 +90,7 @@ const {
 } = CHANNEL_IMAGES;
 
 export interface IChannelProps {
-  params: { [key in EUrlBaseParam]: string };
+  params: { [_key in EUrlBaseParam]: string };
 }
 
 export const generateMetadata = async ({

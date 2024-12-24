@@ -59,7 +59,7 @@ const {
 const { anchors } = ALL_SAT_CHANNEL_LIST_LINKS;
 
 interface IPageProps {
-  params: { [key in EUrlBaseParam]: string };
+  params: { [_key in EUrlBaseParam]: string };
   searchParams?: TSearchParams;
 }
 

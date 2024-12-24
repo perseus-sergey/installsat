@@ -24,7 +24,7 @@ const {
 } = META_ALL_SAT_MAPS_MODEL;
 
 interface IProps {
-  params: { [key in EUrlBaseParam]: string };
+  params: { [_key in EUrlBaseParam]: string };
 }
 
 const { LANG, SAT_COVERAGE_MAP } = EUrlBaseParam;

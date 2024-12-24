@@ -52,7 +52,7 @@ const {
 const { getKeywords, getTitle, descriptionStart } = SCHEDULE_META;
 
 export interface IPageProps {
-  params: { [key in EUrlBaseParam]: string };
+  params: { [_key in EUrlBaseParam]: string };
 }
 
 export const revalidate = 43200; // 3600 * 12 invalidate cache every 12 hours

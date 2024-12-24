@@ -32,7 +32,7 @@ const SatelliteSelector = dynamic(
 const BASE_URL = process.env.BASE_URL || MAIN_URL;
 
 export interface IPageProps {
-  params: { [key in EUrlBaseParam]: string };
+  params: { [_key in EUrlBaseParam]: string };
 }
 
 const { LANG, SAT_FINDER } = EUrlBaseParam;

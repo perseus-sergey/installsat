@@ -61,7 +61,7 @@ const { anchors } = ALL_SAT_CHANNEL_LIST_LINKS;
 const { h1FlyImageAlt } = ALL_SAT_CHANNEL_LIST_IMAGES;
 
 interface IPageProps {
-  params: { [key in EUrlBaseParam]: string };
+  params: { [_key in EUrlBaseParam]: string };
   searchParams?: TSearchParams;
 }
 

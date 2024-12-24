@@ -26,7 +26,7 @@ import { EDBTableTitles } from '@/models/dbTblNames.model';
 import { ONLINE_CHANNEL_LIST_DB_ID } from '@/models/channels/channelList.model';
 
 interface IPageProps {
-  params: { [key in EUrlBaseParam]: string };
+  params: { [_key in EUrlBaseParam]: string };
   searchParams?: TSearchParams;
 }
 

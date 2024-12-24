@@ -56,7 +56,7 @@ const { getDescription, getH1, getKeywords, getTitle } = META_CHANNEL_ONLINE;
 const getH1Cached = cache(getH1);
 
 export interface IChannelProps {
-  params: { [key in EUrlBaseParam]: string };
+  params: { [_key in EUrlBaseParam]: string };
 }
 
 export const revalidate = 172800; // 3600 * 48 invalidate cache every 2 days

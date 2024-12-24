@@ -38,7 +38,7 @@ const { UA, EN, RU, ES, AR, DE, FR, IT } = ELanguage;
 export const revalidate = 43200; // 3600 * 12 invalidate cache every 12 hours
 
 interface IProps {
-  params: { [key in EUrlBaseParam]: string };
+  params: { [_key in EUrlBaseParam]: string };
   searchParams: TSearchParams;
 }
 

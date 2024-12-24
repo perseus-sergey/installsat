@@ -38,7 +38,7 @@ const {
 const { CHANNELS_TV_PROGRAM } = EUrlBaseParam;
 
 interface IPageProps {
-  params: { [key in EUrlBaseParam]: string };
+  params: { [_key in EUrlBaseParam]: string };
   searchParams?: TSearchParams;
 }
 

@@ -739,13 +739,13 @@ export const parseTransNewsForum = async (parsedUpdates) => {
     finalData = dataWithSatIdRes.dataWithSatId;
     errorMessages.push(...dataWithSatIdRes.addSatIdErrors);
 
+    if (finalData.length === 0) throw new Error(`ERROR: Scraped data is empty`);
+
     const deleteRes = await deleteDBOldTransNews(finalData);
     errorMessages.push(deleteRes);
 
     const insertRes = await insertDBTransNews(finalData);
     errorMessages.push(insertRes);
-
-    resDbTableLength = await getDbIdAmount(TRANS_NEWS);
   } catch (error) {
     errorMessages.push(
       error instanceof Error
@@ -772,6 +772,8 @@ export const parseTransNewsForum = async (parsedUpdates) => {
       }
     }
   }
+
+  resDbTableLength = await getDbIdAmount(TRANS_NEWS);
 
   await sendReportMail(
     errorMessages,

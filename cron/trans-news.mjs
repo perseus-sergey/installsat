@@ -2,7 +2,7 @@
 import { parseTransNewsForum } from './libs/parseTransNewsForum.controller.mjs';
 
 const R_U_N = async () => {
-  const PARSED_UPDATES = 11;
+  const PARSED_UPDATES = 6;
 
   parseTransNewsForum(PARSED_UPDATES);
   // parseTransNews(PARSED_UPDATES);

@@ -9,7 +9,7 @@ export const fetchUserLocation = cache(
   async (): Promise<IUserLocation | null> => {
     const ip = getUserIP();
     try {
-      const response = await fetch(`http://ip-api.com/json/${ip}`);
+      const response = await fetch(`http://ip-api.com/json/${ip}`); // or try https://ipapi.co
       if (!response.ok) return null;
 
       return response.json();

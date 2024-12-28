@@ -168,20 +168,15 @@ export const killChromeProcesses = (isProduction = true) => {
   const messages = [];
   const chromeProcessPath = isProduction ? 'chrome' : 'puppeteer/chrome';
 
-  try {
-    // Перевіряємо, чи є активні процеси Chrome
-    const activeChromeProcesses = execSync(`pgrep -f "${chromeProcessPath}"`, {
-      stdio: 'pipe',
-    })
-      .toString()
-      .trim();
+  const command = isProduction
+    ? `pkill -f "chrome"` // Target headless Chrome specifically in production
+    : `pgrep -f "puppeteer/chrome" | xargs -r kill -9`; // Force kill processes on non-production
 
-    if (activeChromeProcesses) {
-      execSync(`pkill -f "${chromeProcessPath}"`);
-      messages.push('SUCCESS: Chrome processes killed successfully.');
-    } else {
-      messages.push('WARNING: No active Chrome processes to kill.');
-    }
+  try {
+    execSync(command, { stdio: 'pipe' }); // Виконуємо команду
+    messages.push(
+      `SUCCESS: Chrome processes (matching "${chromeProcessPath}") killed successfully.`
+    );
   } catch (error) {
     // Перевіряємо, чи error є об'єктом і чи має поле 'code'
     if (typeof error === 'object' && error !== null && 'code' in error) {

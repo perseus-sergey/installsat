@@ -490,106 +490,112 @@ const extractParsedData = ($, updateAmount) => {
   const lastElements = updateElements.slice(updateAmount * -1);
 
   lastElements.each((_i, updateEl) => {
-    const dateText = $(updateEl)
-      .find('blockquote font[color="#3F3F3F"]')
-      .text();
-    if (!dateText.includes('/')) {
-      extractErrors.push(`Error: Invalid DATE format in: «${dateText}»`);
-
-      return;
-    }
-
-    const [date, updateText] = dateText.split('/');
-    const dt = DateTime.fromFormat(date, 'dd.MM.yyyy', { zone: 'utc' });
-    if (!dt.isValid) {
-      extractErrors.push(`Error extracting DATE from: «${dateText}»`);
-
-      return;
-    }
-
-    const update = parseInt(updateText, 10) || null;
+    let dt, update;
 
     $(updateEl)
-      .find('font[color="#000000"] i')
-      .each((_j, newsRowEl) => {
-        const channel_title = $(newsRowEl).find('b').eq(1).text().trim();
-        if (!channel_title) {
-          addMessage('CHANNEL NAME', $(newsRowEl).html(), 'ERROR');
+      .find('blockquote>font')
+      .each((index, newsRowEl) => {
+        if (index === 0) {
+          const dateText = $(newsRowEl).text().trim();
+          // Перший елемент — це дата
+          if (!dateText.includes('/')) {
+            extractErrors.push(`Error: Invalid DATE format in: «${dateText}»`);
 
-          return;
+            return;
+          }
+
+          const [date, updateText] = dateText.split('/');
+          dt = DateTime.fromFormat(date, 'dd.MM.yyyy', { zone: 'utc' });
+          if (!dt.isValid) {
+            extractErrors.push(`Error extracting DATE from: «${dateText}»`);
+
+            return;
+          }
+
+          update = parseInt(updateText, 10) || null;
+        } else {
+          // Усі інші елементи
+          const channel_title = $(newsRowEl).find('b').eq(1).text().trim();
+          if (!channel_title) {
+            addMessage('CHANNEL NAME', $(newsRowEl).html(), 'ERROR');
+
+            return;
+          }
+
+          let frequency_text = '';
+          const textAfterChanTitle = $(newsRowEl)
+            .text()
+            .split(channel_title)[1];
+          const frequencyMatch =
+            textAfterChanTitle.match(/\(([^)]+)\)/) ||
+            textAfterChanTitle.match(/\(.*\)/);
+          frequency_text = frequencyMatch ? frequencyMatch[0].trim() : '';
+          if (!frequency_text) {
+            addMessage('FREQUENCY TEXT', $(newsRowEl).html(), 'WARNING');
+          }
+
+          const action = $(newsRowEl).find('font[color]').last().text().trim();
+          if (!action) {
+            addMessage('ACTION', $(newsRowEl).html(), 'ERROR');
+
+            return;
+          }
+
+          const satNameLink = $(newsRowEl).find('a');
+          const satHref = satNameLink.attr('href');
+          if (!satHref) addMessage('URL_LINK', $(newsRowEl).html(), 'WARNING');
+
+          const slug = satHref ? satHref.split('/').pop() : null;
+          if (!slug) addMessage('SLUG', satHref || '', 'WARNING');
+
+          const fullSatName = satNameLink.text().trim().split('@');
+          const satName = fullSatName[0]?.trim() || '';
+          if (!satName) {
+            addMessage('SATELLITE NAME', $(newsRowEl).html(), 'ERROR');
+
+            return;
+          }
+
+          const satPosition = fullSatName[1]?.trim() || '';
+          if (!satPosition) {
+            addMessage('SATELLITE POSITION', $(newsRowEl).html(), 'WARNING');
+          }
+
+          if (!satPosition.includes('°')) {
+            addMessage('GRADE', $(newsRowEl).html(), 'WARNING');
+          }
+
+          const [grade, ew] = satPosition.split('° ');
+          const sat_grade = ew === 'E' ? grade : `-${grade}`;
+
+          const { ua, en, ru, es, ar, de, fr, it } = actionTextHandler(
+            action,
+            channel_title,
+            frequency_text
+          );
+
+          parsedData.push({
+            date: dt.toISODate(),
+            update,
+            channel_title,
+            action,
+            text: ua,
+            text_en: en,
+            text_ru: ru,
+            text_es: es,
+            text_ar: ar,
+            text_de: de,
+            text_fr: fr,
+            text_it: it,
+            frequency_text,
+            sat_name: satName,
+            sat_slug: slug || null,
+            sat_grade,
+            sat_position: satPosition,
+            sat: '',
+            country: '',
+          });
         }
-
-        let frequency_text = '';
-        const textAfterChanTitle = $(newsRowEl).text().split(channel_title)[1];
-        const frequencyMatch =
-          textAfterChanTitle.match(/\(([^)]+)\)/) ||
-          textAfterChanTitle.match(/\(.*\)/);
-        frequency_text = frequencyMatch ? frequencyMatch[0].trim() : '';
-        if (!frequency_text) {
-          addMessage('FREQUENCY TEXT', $(newsRowEl).html(), 'WARNING');
-        }
-
-        const action = $(newsRowEl).find('font[color]').last().text().trim();
-        if (!action) {
-          addMessage('ACTION', $(newsRowEl).html(), 'ERROR');
-
-          return;
-        }
-
-        const satNameLink = $(newsRowEl).find('a');
-        const satHref = satNameLink.attr('href');
-        if (!satHref) addMessage('URL_LINK', $(newsRowEl).html(), 'WARNING');
-
-        const slug = satHref ? satHref.split('/').pop() : null;
-        if (!slug) addMessage('SLUG', satHref || '', 'WARNING');
-
-        const fullSatName = satNameLink.text().trim().split('@');
-        const satName = fullSatName[0]?.trim() || '';
-        if (!satName) {
-          addMessage('SATELLITE NAME', $(newsRowEl).html(), 'ERROR');
-
-          return;
-        }
-
-        const satPosition = fullSatName[1]?.trim() || '';
-        if (!satPosition) {
-          addMessage('SATELLITE POSITION', $(newsRowEl).html(), 'WARNING');
-        }
-
-        if (!satPosition.includes('°')) {
-          addMessage('GRADE', $(newsRowEl).html(), 'WARNING');
-        }
-
-        const [grade, ew] = satPosition.split('° ');
-        const sat_grade = ew === 'E' ? grade : `-${grade}`;
-
-        const { ua, en, ru, es, ar, de, fr, it } = actionTextHandler(
-          action,
-          channel_title,
-          frequency_text
-        );
-
-        parsedData.push({
-          date: dt.toISODate(),
-          update,
-          channel_title,
-          action,
-          text: ua,
-          text_en: en,
-          text_ru: ru,
-          text_es: es,
-          text_ar: ar,
-          text_de: de,
-          text_fr: fr,
-          text_it: it,
-          frequency_text,
-          sat_name: satName,
-          sat_slug: slug || null,
-          sat_grade,
-          sat_position: satPosition,
-          sat: '',
-          country: '',
-        });
       });
   });
 
@@ -739,7 +745,7 @@ export const parseTransNewsForum = async (parsedUpdates) => {
     finalData = dataWithSatIdRes.dataWithSatId;
     errorMessages.push(...dataWithSatIdRes.addSatIdErrors);
 
-    if (finalData.length === 0) throw new Error(`ERROR: Scraped data is empty`);
+    if (finalData.length === 0) throw new Error(`Scraped data is empty`);
 
     const deleteRes = await deleteDBOldTransNews(finalData);
     errorMessages.push(deleteRes);
@@ -758,6 +764,8 @@ export const parseTransNewsForum = async (parsedUpdates) => {
         const pages = await browser.pages();
         await Promise.all(pages.map((page) => page.close())); // Закрити всі відкриті сторінки
         await browser.close();
+
+        await sleep(3000);
       } catch (closeError) {
         errorMessages.push(
           closeError instanceof Error

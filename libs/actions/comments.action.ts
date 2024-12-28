@@ -52,8 +52,6 @@ const forbiddenContent = (text: string) => {
 export const addCommentAction = async (
   lang: ELanguage,
   articleId: string | number,
-  // userIp: string,
-  // userCountryCode: string,
   revalidateUrl: string,
   dbTableName: EDBTableTitles,
   _formState: IFormState,

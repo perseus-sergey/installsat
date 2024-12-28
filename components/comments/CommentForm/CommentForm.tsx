@@ -35,7 +35,6 @@ const CommentForm = ({
   dbCommentTableName,
   articleId,
   articleName,
-  // userLocation,
   baseUrl,
   emailKey,
   lang,
@@ -44,10 +43,6 @@ const CommentForm = ({
     null,
     lang,
     articleId,
-    // userLocation && userLocation.status === 'success' ? userLocation.query : '',
-    // userLocation && userLocation.status === 'success'
-    //   ? userLocation.countryCode
-    //   : '',
     revalidateUrl,
     dbCommentTableName
   );

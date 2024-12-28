@@ -493,7 +493,7 @@ const extractParsedData = ($, updateAmount) => {
     let dt, update;
 
     $(updateEl)
-      .find('blockquote>font')
+      .find('blockquote font:not(font font)')
       .each((index, newsRowEl) => {
         if (index === 0) {
           const dateText = $(newsRowEl).text().trim();

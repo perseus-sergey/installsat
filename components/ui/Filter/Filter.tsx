@@ -46,6 +46,7 @@ export default function Filter({
   return (
     <div className="flex p-4 items-center flex-wrap gap-4 justify-center sm:justify-between">
       <StyledInputField
+        type="search"
         idName={idName}
         handleOnChange={handleSearchDebounced}
         cancelClick={cancelClickHandler}

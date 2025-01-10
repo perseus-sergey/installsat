@@ -8,8 +8,6 @@ export default ({ ariaLabel, children, className, ...attributes }: IProps) => (
     aria-label={ariaLabel}
     title={ariaLabel}
     className={className}
-    type="button"
-    role="button"
     {...attributes}
   >
     {children && children}

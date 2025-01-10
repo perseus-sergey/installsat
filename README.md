@@ -41,7 +41,7 @@
   > - [NextJs - Authentication](https://nextjs.org/docs/app/building-your-application/authentication)
 - bcrypt.js - [NPM](https://www.npmjs.com/package/bcryptjs)
   > - yarn add bcryptjs @types/bcryptjs
-- WYSIWYG editor - [TinyMCE](https://www.npmjs.com/package/bcryptjs)
+- WYSIWYG editor - [TinyMCE](https://www.tiny.cloud/)
   > - [For React](https://www.tiny.cloud/my-account/integrate/#react)
 - Web Scrapping - [Puppeteer](https://pptr.dev/)
   > - [Troubleshooting](https://pptr.dev/troubleshooting)

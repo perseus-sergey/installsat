@@ -1,12 +1,13 @@
 import { Title } from '@/components/ui/Titles/Title';
 import Link from 'next/link';
 import { validSearchParam } from '@/libs/utils/validSearchParam';
-import { EUrlAdminParam, EUrlBaseParam } from '@/cron/libs/commons.mjs';
+import { EUrlAdminParam } from '@/cron/libs/commons.mjs';
+// import { EUrlAdminParam, EUrlBaseParam } from '@/cron/libs/commons.mjs';
 import { sendMail } from '@/libs/mail/sendMail';
 import { renderAsync } from '@react-email/render';
 import { ParseTransNews } from '@/components/EmailTemplates/parseTransNews.template';
 import { parseProcess } from '@/cron/libs/parseALLFlySats.controller.mjs';
-import { revalidatePath } from 'next/cache';
+// import { revalidatePath } from 'next/cache';
 import { ELanguage } from '@/models/language.model';
 import { EDBTableTitles, getDbTableLink } from '@/models/dbTblNames.model';
 import { EUrlSearchParam, TSearchParams } from '@/models/url/urlSearch.model';
@@ -77,18 +78,20 @@ export default async function Page({
     );
   }
 
+  // =================================================================
   // const { dbSatList, newSatList, overSats, updatedSatList, messages } =
   //   await parseProcess(intervalFromLastUpd);
 
   // await sleep(1000);
+  // =================================================================
 
   await sendReportMail(messages);
 
-  Object.values(ELanguage).forEach((l) =>
-    updatedSatList.forEach((sat) =>
-      revalidatePath(`/${l}/${EUrlBaseParam.SAT_CHANNEL_LIST}/${sat.slug}`)
-    )
-  );
+  // Object.values(ELanguage).forEach((l) =>
+  //   updatedSatList.forEach((sat) =>
+  //     revalidatePath(`/${l}/${EUrlBaseParam.SAT_CHANNEL_LIST}/${sat.slug}`)
+  //   )
+  // );
 
   return (
     <>

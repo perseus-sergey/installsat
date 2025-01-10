@@ -3,10 +3,14 @@ import {
   EDBTableTitles,
   getContentFromPuppeteerBrowser,
   killChromeProcesses,
+  sleep,
 } from './commons.mjs';
 import { parseFlyChannels } from './parseFlySat.controller.mjs';
 import { DateTime } from 'luxon';
-import puppeteer from 'puppeteer';
+// import puppeteer from 'puppeteer';
+import puppeteer from 'puppeteer-extra';
+import StealthPlugin from 'puppeteer-extra-plugin-stealth';
+
 import * as cheerio from 'cheerio';
 import { translateChannels } from './channelTranslate.controller.mjs';
 
@@ -260,7 +264,7 @@ export const parseProcess = async (intervalFromLastUpd) => {
   try {
     dbSatList = await getDataFromDB();
 
-    browser = await puppeteer.launch({
+    browser = await puppeteer.use(StealthPlugin()).launch({
       args: [
         '--no-sandbox',
         '--disable-setuid-sandbox',
@@ -270,10 +274,23 @@ export const parseProcess = async (intervalFromLastUpd) => {
       headless: true, // Запуск без графічного інтерфейсу
     });
 
-    const html = await getContentFromPuppeteerBrowser(
-      browser,
-      PARSE_LIST_OF_SATELLITES_URL
-    );
+    const page = await browser.newPage();
+    await page.goto(PARSE_LIST_OF_SATELLITES_URL, {
+      waitUntil: 'domcontentloaded',
+    });
+
+    await sleep(15000);
+
+    const html = await page.content();
+
+    // await page.waitForSelector(
+    //   'img[src="https://flysat.com/images/flysat.gif"]'
+    // );
+
+    // const html = await getContentFromPuppeteerBrowser(
+    //   browser,
+    //   PARSE_LIST_OF_SATELLITES_URL
+    // );
     const $ = cheerio.load(html);
 
     const { allParsedSats, newSats, updatedSats, extractErrors } =
@@ -324,14 +341,15 @@ export const parseProcess = async (intervalFromLastUpd) => {
     }
   }
 
-  const translateMessages = await translateChannels(20);
+  // const translateMessages = await translateChannels(20);
 
   return {
     dbSatList,
     newSatList,
     overSats,
     updatedSatList,
-    messages: [...messages, ...translateMessages],
+    messages,
+    // messages: [...messages, ...translateMessages],
   };
 };
 

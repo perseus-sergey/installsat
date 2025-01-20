@@ -23,7 +23,7 @@ const makeMailHtml = (title, body) => `
 export async function sendMail({ to = undefined, subject, title, body }) {
   const MAIN_EMAIL = process.env.MAIN_EMAIL;
   const MAIL_SMTP_PASS = process.env.MAIL_SMTP_PASS;
-  const SMTP_HOST = 'smtp.hostinger.com';
+  const SMTP_HOST = process.env.MAIL_SMTP_HOST;
   const SMTP_PORT = 465;
 
   const transport = nodemailer.createTransport({

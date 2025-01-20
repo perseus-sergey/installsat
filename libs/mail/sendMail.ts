@@ -9,7 +9,7 @@ interface IProps {
 export async function sendMail({ to, subject, body }: IProps) {
   const MAIN_EMAIL = process.env.MAIN_EMAIL;
   const MAIL_SMTP_PASS = process.env.MAIL_SMTP_PASS;
-  const SMTP_HOST = 'smtp.zoho.eu';
+  const SMTP_HOST = process.env.MAIL_SMTP_HOST;
   const SMTP_PORT = 465;
 
   const nodemailer = await import('nodemailer');

@@ -22,7 +22,6 @@ const makeMailHtml = (title, body) => `
 
 export async function sendMail({ to = undefined, subject, title, body }) {
   const MAIN_EMAIL = process.env.MAIN_EMAIL;
-  const MAIL_SMTP = process.env.MAIL_SMTP;
   const MAIL_SMTP_PASS = process.env.MAIL_SMTP_PASS;
   const SMTP_HOST = 'smtp.hostinger.com';
   const SMTP_PORT = 465;
@@ -32,7 +31,7 @@ export async function sendMail({ to = undefined, subject, title, body }) {
     port: SMTP_PORT,
     secure: true, // true для порту 465, false для інших портів
     auth: {
-      user: MAIL_SMTP,
+      user: MAIN_EMAIL,
       pass: MAIL_SMTP_PASS,
     },
   });
@@ -40,7 +39,7 @@ export async function sendMail({ to = undefined, subject, title, body }) {
   // const transport = nodemailer.createTransport({
   //   service: 'gmail',
   //   auth: {
-  //     user: MAIL_SMTP,
+  //     user: MAIN_EMAIL,
   //     pass: MAIL_SMTP_PASS,
   //   },
   // });
@@ -55,7 +54,7 @@ export async function sendMail({ to = undefined, subject, title, body }) {
 
   try {
     await transport.sendMail({
-      from: `Installsat <${MAIL_SMTP}>`,
+      from: `Installsat <${MAIN_EMAIL}>`,
       to: to || MAIN_EMAIL,
       subject,
       html: makeMailHtml(title, body),

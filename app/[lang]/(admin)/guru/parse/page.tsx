@@ -29,7 +29,6 @@ import { EUrlSearchParam } from '@/models/url/urlSearch.model';
 // improve similar channels & similar articles blocks
 // add json-ld
 // Add cluster choice
-// add image generator
 // =================================================================
 
 const { FLY_SATELLITES } = EDBTableTitles;
@@ -121,6 +120,13 @@ export default async function Page({ params }: IParams) {
         labelHtml="Parse Satellite News"
         buttonTitle="Parse News"
         inputBaseHref={`${BASE_PARSE_HREF}/${EUrlAdminParam.PARSE_SAT_NEWS}`}
+      />
+
+      <ClientInputWithSubmit
+        fieldSetTitle="Check Email"
+        labelHtml="Check Email"
+        buttonTitle="Check Email"
+        inputBaseHref={`${BASE_PARSE_HREF}/check-mail`}
       />
 
       <ClientInputWithSubmit

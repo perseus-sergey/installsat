@@ -8,16 +8,16 @@ import {
 } from './commons.mjs';
 import { parseFlyChannels } from './parseFlySat.controller.mjs';
 import { DateTime } from 'luxon';
-import puppeteer from 'puppeteer';
-// import puppeteer from 'puppeteer-extra';
-// import StealthPlugin from 'puppeteer-extra-plugin-stealth';
+// import puppeteer from 'puppeteer';
+import puppeteer from 'puppeteer-extra';
+import StealthPlugin from 'puppeteer-extra-plugin-stealth';
 
 import * as cheerio from 'cheerio';
 import { translateChannels } from './channelTranslate.controller.mjs';
 import axios from 'axios';
 
 const isProductionMode = process.env.NODE_ENV === 'production';
-const clientKey = process.env.CAPSOLVER;
+const clientKey = process.env.CAPSOLVER === 'production';
 
 const IS_LOGGED = !isProductionMode;
 const PARSE_LIST_OF_SATELLITES_URL = 'https://flysat.com/en/satellitelist';
@@ -277,19 +277,12 @@ export const parseProcess = async (intervalFromLastUpd) => {
     //   headless: true, // Запуск без графічного інтерфейсу
     // });
 
-    // browser = await puppeteer.use(StealthPlugin()).launch({ headless: false });
-
     // const page = await browser.newPage();
-    // await page.setUserAgent(
-    //   'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36'
-    // );
     // await page.goto(PARSE_LIST_OF_SATELLITES_URL, {
-    //   waitUntil: 'networkidle0',
-    //   timeout: 60000,
+    //   waitUntil: 'domcontentloaded',
     // });
 
-    // // await sleep(15000);
-    // await sleep(120000);
+    // await sleep(15000);
 
     // await takeScreenshot('fly-main', page);
 
@@ -326,7 +319,6 @@ export const parseProcess = async (intervalFromLastUpd) => {
 
     // finalData = allParsedSats;
   } catch (error) {
-    console.log('🚀 ~ parseProcess ~ error:', error);
     addMessage(
       'ERROR: failed during satellites page parsing',
       error instanceof Error
@@ -377,19 +369,19 @@ export const parseProcess = async (intervalFromLastUpd) => {
 //   date_upd: string,
 // }
 
-const websiteKey = '0x4AAAAAAADnPIDROrmt1Wwj'; // Replace with the website key provided by CapSolver
+const websiteKey = 'your-website-key-here'; // Replace with the website key provided by CapSolver
 
 async function createTask() {
   console.log('🚀 ~ createTask ~ createTask');
   const response = await axios.post(
-    'https://api.capsolver.com/createTask',
-    // 'https://api-stable.capsolver.com/createTask',
+    // 'https://api.capsolver.com/createTask',
+    'https://api-stable.capsolver.com/createTask',
     {
       clientKey,
       task: {
         type: 'AntiTurnstileTaskProxyLess',
         websiteURL: PARSE_LIST_OF_SATELLITES_URL,
-        websiteKey: websiteKey,
+        // websiteKey: websiteKey,
       },
     },
     {
@@ -408,6 +400,7 @@ async function getTaskResult(taskId) {
   let response;
 
   while (true) {
+    console.log('🚀 ~ getTaskResult ~ while');
     response = await axios.post(
       'https://api.capsolver.com/getTaskResult',
       // 'https://api-stable.capsolver.com/getTaskResult',

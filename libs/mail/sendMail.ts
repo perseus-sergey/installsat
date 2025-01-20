@@ -8,9 +8,8 @@ interface IProps {
 
 export async function sendMail({ to, subject, body }: IProps) {
   const MAIN_EMAIL = process.env.MAIN_EMAIL;
-  const MAIL_SMTP = process.env.MAIL_SMTP;
   const MAIL_SMTP_PASS = process.env.MAIL_SMTP_PASS;
-  const SMTP_HOST = 'smtp.hostinger.com';
+  const SMTP_HOST = 'smtp.zoho.eu';
   const SMTP_PORT = 465;
 
   const nodemailer = await import('nodemailer');
@@ -20,7 +19,7 @@ export async function sendMail({ to, subject, body }: IProps) {
     port: SMTP_PORT,
     secure: true, // true для порту 465, false для інших портів
     auth: {
-      user: MAIL_SMTP,
+      user: MAIN_EMAIL,
       pass: MAIL_SMTP_PASS,
     },
   });
@@ -28,7 +27,7 @@ export async function sendMail({ to, subject, body }: IProps) {
   // const transport = nodemailer.createTransport({
   //   service: 'gmail',
   //   auth: {
-  //     user: MAIL_SMTP,
+  //     user: MAIN_EMAIL,
   //     pass: MAIL_SMTP_PASS,
   //   },
   // });
@@ -43,12 +42,12 @@ export async function sendMail({ to, subject, body }: IProps) {
 
   try {
     await transport.sendMail({
-      from: `Installsat <${MAIL_SMTP}>`,
+      from: `Installsat <${MAIN_EMAIL}>`,
       to: to || MAIN_EMAIL,
       subject,
       html: body,
     });
   } catch (error) {
-    console.error(error);
+    console.error('Failed to send email:', error);
   }
 }

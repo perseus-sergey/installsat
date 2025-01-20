@@ -164,6 +164,14 @@ export const getContentFromPuppeteerBrowser = async (browser, url) => {
   return content;
 };
 
+// ------------ Take a screenshot
+export const takeScreenshot = async (title, page) => {
+  await page.screenshot({
+    path: `${title.replace(/[^a-zA-Z0-9]/g, '-')}-${Date.now()}.png`,
+    fullPage: true,
+  });
+};
+
 export const killChromeProcesses = (isProduction = true) => {
   const messages = [];
   const chromeProcessPath = isProduction ? 'chrome' : 'puppeteer/chrome';

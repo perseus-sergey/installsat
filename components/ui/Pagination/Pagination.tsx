@@ -54,7 +54,12 @@ const Pagination = ({
 
   return (
     totalPages > 1 && (
-      <nav className="flex justify-center py-4" data-testid="Pagination">
+      <nav
+        className="flex justify-center py-4"
+        data-testid="Pagination"
+        role="navigation"
+        aria-label="pagination"
+      >
         <ul
           className={`shadow-[0px_3px_5px_rgba(0,0,0,0.25)] w-fit p-0 sm:p-2 bg-white/60 flex justify-center items-center border`}
         >

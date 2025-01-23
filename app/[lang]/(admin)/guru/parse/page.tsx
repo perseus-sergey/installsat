@@ -123,13 +123,6 @@ export default async function Page({ params }: IParams) {
       />
 
       <ClientInputWithSubmit
-        fieldSetTitle="Check Email"
-        labelHtml="Check Email"
-        buttonTitle="Check Email"
-        inputBaseHref={`${BASE_PARSE_HREF}/check-mail`}
-      />
-
-      <ClientInputWithSubmit
         fieldSetTitle="Load LOGOS from LyngSat"
         labelHtml="Choose channels quantity"
         buttonTitle="Load"

@@ -30,7 +30,9 @@ export default async function Page({
 
   return (
     <>
-      <Title>Parse FlySat</Title>
+      <Title>
+        Parse FlySat Transponder news from https://www.satsupreme.com
+      </Title>
       {errorMessages.length > 0 && (
         <>
           <h2 className="font-bold text-blue-700 text-xl">Messages:</h2>

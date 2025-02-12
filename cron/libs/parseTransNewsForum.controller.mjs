@@ -483,7 +483,7 @@ const extractParsedData = ($, updateAmount) => {
       `${type}: Cannot extract ${itemTitle} from: «${from || 'CHEERIO HTML'}»`
     );
 
-  const updateElements = $('.postrow');
+  const updateElements = $('.postcontent.restore');
   if (updateAmount > updateElements.length)
     remainUpdates = updateAmount - updateElements.length;
 
@@ -491,116 +491,83 @@ const extractParsedData = ($, updateAmount) => {
 
   lastElements.each((_i, updateEl) => {
     let dt = null;
-    let update = null;
-    let foundDate = false;
+    let update = undefined;
+    let updateNewsCount = 0;
 
-    $(updateEl)
-      .find('blockquote font:not(font font)')
-      .each((_index, newsRowEl) => {
-        const rowText = $(newsRowEl).text().trim();
+    const nodes = $(updateEl).contents(); // Отримуємо всі дочірні вузли (текстові, <br>, <i>, <b> тощо)
 
-        if (!foundDate) {
-          // Пошук рядка з датою та оновленням
-          const dateMatch = rowText.match(/^(\d{2}\.\d{2}\.\d{4})\/(.+)$/);
-          if (dateMatch) {
-            const date = dateMatch[1];
-            const updateText = dateMatch[2];
+    nodes.each((_index, node) => {
+      const cleanText = $(node).text().trim();
+      if (!cleanText) return;
 
-            dt = DateTime.fromFormat(date, 'dd.MM.yyyy', { zone: 'utc' });
+      // Перевіряємо, чи це заголовок оновлення (дата + номер оновлення)
+      const updateMatch = cleanText.match(/^(\d{2}\.\d{2}\.\d{4})\/(\d+).+$/);
+      if (updateMatch) {
+        dt = DateTime.fromFormat(updateMatch[1], 'dd.MM.yyyy', { zone: 'utc' });
+        update = parseInt(updateMatch[2], 10) || null;
 
-            if (!dt.isValid) {
-              extractErrors.push(`Error extracting DATE from: «${rowText}»`);
+        return;
+      }
 
-              return false;
-            }
+      // Перевіряємо, чи це рядок новини (час → канал → частота → дія → супутник)
+      const newsMatch = cleanText.match(
+        /^(\d{2}:\d{2} CET)\s+(.+?)\s+\((.*?)\)\s+(on|left|back on)\s+(.+?)$/
+      );
 
-            update = parseInt(updateText, 10) || null;
-            foundDate = true;
-          }
+      if (!newsMatch) return;
 
-          return; // Пропускаємо інші рядки до знаходження дати
-        }
+      const [, _time, channel_title, frequency_text, action, satInfo] =
+        newsMatch;
 
-        // Обробка кожного новинного елементу після знаходження дати
-        const channel_title = $(newsRowEl).find('b').eq(1).text().trim();
-        if (!channel_title) {
-          addMessage('CHANNEL NAME', $(newsRowEl).html(), 'ERROR');
+      // Витягуємо дані про супутник
+      const satNameMatch = satInfo.match(/(.+?) @ ([\d.]+° [EW])/);
+      if (!satNameMatch) {
+        addMessage('SATELLITE INFO', cleanText, 'ERROR');
 
-          return;
-        }
+        return;
+      }
 
-        let frequency_text = '';
-        const textAfterChanTitle = $(newsRowEl).text().split(channel_title)[1];
-        const frequencyMatch =
-          textAfterChanTitle.match(/\(([^)]+)\)/) ||
-          textAfterChanTitle.match(/\(.*\)/);
-        frequency_text = frequencyMatch ? frequencyMatch[0].trim() : '';
-        if (!frequency_text) {
-          addMessage('FREQUENCY TEXT', $(newsRowEl).html(), 'WARNING');
-        }
+      const [, satName, satPosition] = satNameMatch;
+      const [grade, ew] = satPosition.split('° ');
+      const sat_grade = ew === 'E' ? grade : `-${grade}`;
 
-        const action = $(newsRowEl).find('font[color]').last().text().trim();
-        if (!action) {
-          addMessage('ACTION', $(newsRowEl).html(), 'ERROR');
+      const slugMatch = $(node).find('a').attr('href');
+      const slug = slugMatch ? slugMatch.split('/').pop() : null;
 
-          return;
-        }
+      const { ua, en, ru, es, ar, de, fr, it } = actionTextHandler(
+        action,
+        channel_title,
+        frequency_text
+      );
 
-        const satNameLink = $(newsRowEl).find('a');
-        const satHref = satNameLink.attr('href');
-        if (!satHref) addMessage('URL_LINK', $(newsRowEl).html(), 'WARNING');
-
-        const slug = satHref ? satHref.split('/').pop() : null;
-        if (!slug) addMessage('SLUG', satHref || '', 'WARNING');
-
-        const fullSatName = satNameLink.text().trim().split('@');
-        const satName = fullSatName[0]?.trim() || '';
-        if (!satName) {
-          addMessage('SATELLITE NAME', $(newsRowEl).html(), 'ERROR');
-
-          return;
-        }
-
-        const satPosition = fullSatName[1]?.trim() || '';
-        if (!satPosition) {
-          addMessage('SATELLITE POSITION', $(newsRowEl).html(), 'WARNING');
-        }
-
-        if (!satPosition.includes('°')) {
-          addMessage('GRADE', $(newsRowEl).html(), 'WARNING');
-        }
-
-        const [grade, ew] = satPosition.split('° ');
-        const sat_grade = ew === 'E' ? grade : `-${grade}`;
-
-        const { ua, en, ru, es, ar, de, fr, it } = actionTextHandler(
-          action,
-          channel_title,
-          frequency_text
-        );
-
-        parsedData.push({
-          date: dt.toISODate(),
-          update,
-          channel_title,
-          action,
-          text: ua,
-          text_en: en,
-          text_ru: ru,
-          text_es: es,
-          text_ar: ar,
-          text_de: de,
-          text_fr: fr,
-          text_it: it,
-          frequency_text,
-          sat_name: satName,
-          sat_slug: slug || null,
-          sat_grade,
-          sat_position: satPosition,
-          sat: '',
-          country: '',
-        });
+      parsedData.push({
+        date: dt ? dt.toISODate() : null,
+        update,
+        channel_title,
+        action,
+        text: ua,
+        text_en: en,
+        text_ru: ru,
+        text_es: es,
+        text_ar: ar,
+        text_de: de,
+        text_fr: fr,
+        text_it: it,
+        frequency_text,
+        sat_name: satName.trim(),
+        sat_slug: slug || null,
+        sat_grade,
+        sat_position: satPosition,
+        sat: '',
+        country: '',
       });
+
+      updateNewsCount += 1;
+    });
+
+    if (update !== undefined && updateNewsCount === 0) {
+      extractErrors.push(`ERROR!!! extracting NEWS from update ${update}`);
+    }
   });
 
   return { parsedData, extractErrors, remainUpdates };

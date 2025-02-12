@@ -490,6 +490,10 @@ const extractParsedData = ($, updateAmount) => {
   const lastElements = updateElements.slice(updateAmount * -1);
 
   lastElements.each((_i, updateEl) => {
+    // console.log(
+    //   '🚀 ~ lastElements.each ~ updateEl:',
+    //   $(updateEl).text().trim()
+    // );
     let dt = null;
     let update = null;
     let foundDate = false;
@@ -500,12 +504,9 @@ const extractParsedData = ($, updateAmount) => {
         const rowText = $(newsRowEl).text().trim();
 
         if (!foundDate) {
-          // Пошук рядка з датою та оновленням
-          const dateMatch = rowText.match(/^(\d{2}\.\d{2}\.\d{4})\/(.+)$/);
-          if (dateMatch) {
-            const date = dateMatch[1];
-            const updateText = dateMatch[2];
-
+          // Пошук рядка з датою
+          if (rowText.includes('/')) {
+            const [date, updateText] = rowText.split('/');
             dt = DateTime.fromFormat(date, 'dd.MM.yyyy', { zone: 'utc' });
 
             if (!dt.isValid) {
@@ -515,13 +516,13 @@ const extractParsedData = ($, updateAmount) => {
             }
 
             update = parseInt(updateText, 10) || null;
-            foundDate = true;
+            foundDate = true; // Позначаємо, що дата знайдена
           }
 
           return; // Пропускаємо інші рядки до знаходження дати
         }
 
-        // Обробка кожного новинного елементу після знаходження дати
+        // Усі інші елементи
         const channel_title = $(newsRowEl).find('b').eq(1).text().trim();
         if (!channel_title) {
           addMessage('CHANNEL NAME', $(newsRowEl).html(), 'ERROR');

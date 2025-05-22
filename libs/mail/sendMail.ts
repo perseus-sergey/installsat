@@ -35,7 +35,7 @@ export async function sendMail({ to, subject, body }: IProps) {
   try {
     await transport.verify();
   } catch (error) {
-    console.error({ error });
+    console.error(`Mail Transport Error: ${error}`);
 
     return;
   }

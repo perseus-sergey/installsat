@@ -423,7 +423,7 @@ async function getTaskResult(taskId) {
     );
 
     if (response.data.status === 'ready') {
-      return response.data.solution;
+      return response.data.solution.token;
     }
 
     console.log('Status not ready, checking again in 5 seconds...');
@@ -432,10 +432,15 @@ async function getTaskResult(taskId) {
 }
 
 async function getPageContent() {
-  const taskId = await createTask();
-  const result = await getTaskResult(taskId);
-  console.log('🚀 ~ getPageContent ~ result:', result);
-  let solution = result.token;
+  // const taskId = await createTask();
+  // const token = await getTaskResult(taskId);
+  const token = await capsolver(
+    websiteKey,
+    PARSE_LIST_OF_SATELLITES_URL,
+    process.env.CAPSOLVER
+  );
+  console.log('🚀 ~ getPageContent ~ token:', token);
+  let solution = token;
 
   const browser = await puppeteer.launch({ headless: false });
   const page = await browser.newPage();
@@ -453,3 +458,54 @@ async function getPageContent() {
 
 // Hello! I am trying to get the page content using the method provided in your article https://www.capsolver.com/blog/Cloudflare/solve-cloudflare-with-puppeteer. But when I run the createTask function, I get an error: xiosError: Request failed with status code 400.
 // In addition, I can't find the site-key on the target site-key.
+
+async function capsolver(websiteKey, websiteURL, clientKey) {
+  const payload = {
+    clientKey,
+    task: {
+      type: 'AntiTurnstileTaskProxyLess',
+      websiteKey,
+      websiteURL,
+      metadata: {
+        action: '', // optional
+      },
+    },
+  };
+
+  try {
+    const res = await axios.post(
+      'https://api.capsolver.com/createTask',
+      payload
+    );
+    const { taskId } = res.data;
+
+    if (!taskId) {
+      console.log('Failed to create task:', res.data);
+
+      return;
+    }
+    console.log('Got taskId:', taskId);
+
+    while (true) {
+      await new Promise((resolve) => setTimeout(resolve, 1000)); // Delay for 1 second
+
+      const resp = await axios.post('https://api.capsolver.com/getTaskResult', {
+        clientKey,
+        taskId,
+      });
+
+      const status = resp.data.status;
+
+      if (status === 'ready') {
+        return resp.data.solution.token;
+      }
+      if (status === 'failed' || resp.data.errorId) {
+        console.log('Solve failed! response:', resp.data);
+
+        return;
+      }
+    }
+  } catch (error) {
+    console.error('Error:', error);
+  }
+}

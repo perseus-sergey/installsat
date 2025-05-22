@@ -435,18 +435,25 @@ const getPreLastPageUrl = (url) => {
 };
 
 const extractLastPageUrl = ($) => {
-  const linkText = 'Flysat Daily Updates';
+  const possibleTexts = ['Flysat Daily Updates', 'Flysat Updates Daily'];
+  let li = null;
+  let foundText = null;
 
-  // Знаходимо потрібний <li>
-  const li = $(`li:contains("${linkText}")`);
-  if (!li.length) {
+  for (const text of possibleTexts) {
+    li = $(`li:contains("${text}")`);
+    if (li.length) {
+      foundText = text;
+      break;
+    }
+  }
+
+  if (!li || !li.length) {
     return {
       lastPageUrl: null,
-      mainPageError: `Error extracting main page <li> with text: «${linkText}»`,
+      mainPageError: `Error extracting main page <li> with any of texts: ${possibleTexts.join(', ')}`,
     };
   }
 
-  // Витягуємо останній елемент пагінації
   const paginationBlock = li.find('.pagination dd');
   const lastPageLinkElement = paginationBlock.find('a').last(); // Останній <a> елемент
 

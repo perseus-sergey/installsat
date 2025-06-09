@@ -15,14 +15,15 @@ echo "New changes copied to server!"
 
 # Restart MySQL to clear any hanging connections
 echo "Restarting MySQL..."
-sudo systemctl restart mysql
+sudo /usr/bin/systemctl restart mysql
 echo "MySQL restarted!"
 
 echo "Installing Dependencies..."
-yarn install
+pnpm install
 
+# Якщо ви хочете бути впевненими, що використовується lock-файл:
 # echo "Installing dependencies with frozen lockfile..."
-# yarn install --frozen-lockfile
+# pnpm install --frozen-lockfile # Аналог yarn install --frozen-lockfile
 
 echo "Checking available memory..."
 free -m
@@ -31,7 +32,7 @@ echo "Checking CPU load..."
 uptime
 
 echo "Creating Production Build..."
-yarn build
+pnpm build
 
 echo "PM2 Reload"
 pm2 reload "installsat"

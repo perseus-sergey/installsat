@@ -47,3 +47,14 @@ next-env.d.ts
 
 # tv schedule file
 edem.xml
+
+# Yarn
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+.pnp.*
+yarn.lock
+.yarnrc.yml

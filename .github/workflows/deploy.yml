@@ -4,24 +4,29 @@ name: Deploy
 # pull request events on the main branch
 on:
   push:
-    branches: ['main']
+    branches: ['main'] # Або ваша основна гілка
   pull_request:
-    branches: ['main']
+    branches: ['main'] # Або ваша основна гілка
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
+
       - name: Deploy to Server
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.HOST }}
+          host: ${{ secrets.HOST }} # IP-адреса вашого сервера
           username: ${{ secrets.USERNAME }}
-          port: ${{ secrets.PORT }}
-          key: ${{ secrets.SSHKEY }}
-          timeout: 15m
+          port: ${{ secrets.PORT }} # Зазвичай 22, якщо не змінювали
+          key: ${{ secrets.SSHKEY }} # Ваш приватний SSH-ключ для new_user
+          timeout: 15m # Час очікування
+          # Використовуємо 'script_stop: true' щоб зупинити виконання при помилці
+          # Якщо ви використовуєте `set -e` в скрипті, це може бути не обов'язково, але не завадить
+          script_stop: true
           script: |
-            cd ~/installsat
+            cd /var/www/installsat.tv
             chmod +x ./.scripts/deploy.sh
             ./.scripts/deploy.sh

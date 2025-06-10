@@ -23,9 +23,6 @@ jobs:
           port: ${{ secrets.PORT }} # Зазвичай 22, якщо не змінювали
           key: ${{ secrets.SSHKEY }} # Ваш приватний SSH-ключ для new_user
           timeout: 15m # Час очікування
-          # Використовуємо 'script_stop: true' щоб зупинити виконання при помилці
-          # Якщо ви використовуєте `set -e` в скрипті, це може бути не обов'язково, але не завадить
-          script_stop: true
           script: |
             cd /var/www/installsat.tv
             chmod +x ./.scripts/deploy.sh

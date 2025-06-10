@@ -23,7 +23,7 @@ pnpm install
 
 # Якщо ви хочете бути впевненими, що використовується lock-файл:
 # echo "Installing dependencies with frozen lockfile..."
-# pnpm install --frozen-lockfile # Аналог yarn install --frozen-lockfile
+# pnpm install --frozen-lockfile
 
 echo "Checking available memory..."
 free -m

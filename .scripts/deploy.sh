@@ -1,6 +1,22 @@
 #!/bin/bash
 set -e
 
+# Завантаження NVM, якщо воно встановлено для користувача
+export NVM_DIR="$HOME/.nvm"
+if [ -s "$NVM_DIR/nvm.sh" ]; then
+  . "$NVM_DIR/nvm.sh" # Завантажуємо nvm
+  # Якщо ви хочете використовувати версію Node.js з файлу .nvmrc в корені проекту:
+  if [ -f ".nvmrc" ] && [ -s "$NVM_DIR/nvm.sh" ]; then
+    nvm use # Активує версію з .nvmrc
+  fi
+  # Або якщо ви хочете активувати версію за замовчуванням:
+  # nvm use default
+else
+  echo "NVM not found, pnpm might not be available."
+  # Тут можна додати перевірку наявності pnpm іншими шляхами або вийти з помилкою
+  # exit 1
+fi
+
 echo "Deployment started..."
 
 # Reset any local changes

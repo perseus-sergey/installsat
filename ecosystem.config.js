@@ -4,8 +4,6 @@ module.exports = {
       name: 'installsat', // Те саме ім'я, що ви хочете використовувати
       script: 'pnpm',
       args: 'start', // Команда, яку передати pnpm (тобто "pnpm start")
-      // Якщо ваш скрипт "start" не приймає порт або ви хочете його перевизначити:
-      // args : "start -- -p 3000",
       // Або якщо ви запускаєте next start напряму:
       // script : "npx",
       // args   : "next start -p 3000",

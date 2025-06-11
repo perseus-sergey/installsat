@@ -1,21 +1,50 @@
 #!/bin/bash
 set -e
 
-# Завантаження NVM, якщо воно встановлено для користувача
-export NVM_DIR="$HOME/.nvm"
+echo "--- DIAGNOSTICS START ---"
+echo "Running as user: $(whoami)"
+echo "HOME directory: $HOME"
+echo "NVM_DIR: $NVM_DIR" # Перевірка, чи NVM_DIR встановлено перед нашим блоком
+# --- ПОЧАТОК ЗМІН (БЛОК NVM) ---
+export NVM_DIR="$HOME/.nvm" # Перевизначаємо для певності
+echo "NVM_DIR is now: $NVM_DIR"
 if [ -s "$NVM_DIR/nvm.sh" ]; then
+  echo "nvm.sh found at $NVM_DIR/nvm.sh. Sourcing it..."
   . "$NVM_DIR/nvm.sh" # Завантажуємо nvm
-  # Якщо ви хочете використовувати версію Node.js з файлу .nvmrc в корені проекту:
+  echo "Sourced nvm.sh. Current PATH: $PATH"
   if [ -f ".nvmrc" ] && [ -s "$NVM_DIR/nvm.sh" ]; then
+    echo "Found .nvmrc. Running nvm use..."
     nvm use # Активує версію з .nvmrc
+    echo "nvm use finished. Current Node version: $(node -v)"
+    echo "Current npm version: $(npm -v)"
+    echo "Location of node: $(which node)"
+    echo "Location of pnpm (after nvm use): $(which pnpm || echo 'pnpm still not found')"
+  else
+    echo ".nvmrc not found or nvm.sh not sourced properly. Trying nvm use default..."
+    nvm use default
+    echo "nvm use default finished. Current Node version: $(node -v)"
+    echo "Current npm version: $(npm -v)"
+    echo "Location of node: $(which node)"
+    echo "Location of pnpm (after nvm use default): $(which pnpm || echo 'pnpm still not found')"
   fi
-  # Або якщо ви хочете активувати версію за замовчуванням:
-  # nvm use default
 else
-  echo "NVM not found, pnpm might not be available."
-  # Тут можна додати перевірку наявності pnpm іншими шляхами або вийти з помилкою
-  # exit 1
+  echo "nvm.sh NOT found at $NVM_DIR/nvm.sh."
+  echo "pnpm will likely not be available."
+  # Спробуємо знайти pnpm за допомогою corepack, якщо node є в PATH
+  if command -v node &> /dev/null && command -v corepack &> /dev/null; then
+    echo "Node and corepack found. Enabling corepack for pnpm..."
+    corepack enable pnpm
+    corepack prepare pnpm@latest --activate # Переконайтеся, що це не вимагає інтерактивності
+    echo "Location of pnpm (after corepack prepare): $(which pnpm || echo 'pnpm still not found after corepack')"
+  else
+      echo "Node or corepack not found directly in PATH."
+  fi
 fi
+echo "Final PATH: $PATH"
+echo "Attempting to run pnpm --version:"
+pnpm --version || echo "pnpm --version FAILED"
+echo "--- DIAGNOSTICS END ---"
+# --- КІНЕЦЬ ЗМІН (БЛОК NVM) ---
 
 echo "Deployment started..."
 

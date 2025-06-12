@@ -10,19 +10,25 @@ SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" &> /dev/null && pwd)
 # Якщо скрипт в cron/libs/.scripts, то корінь проекту на 3 рівні вище
 PROJECT_DIR=$(dirname "$(dirname "$(dirname "$SCRIPT_DIR")")")
 
-# Завантаження NVM, якщо воно встановлено для користувача, від імені якого запускається cron
-# Це важливо, щоб cron знав, де знаходиться потрібна версія Node.js і pnpm
+# Завантаження NVM
 export NVM_DIR="$HOME/.nvm"
-if [ -s "$NVM_DIR/nvm.sh" ]; then
-  . "$NVM_DIR/nvm.sh" --no-use # Завантажуємо nvm, але не активуємо версію одразу
-  # Якщо у вас є файл .nvmrc в корені проекту, nvm автоматично його підхопить при cd
-  # Або можна вказати версію явно: nvm use default (або конкретну версію)
-fi
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # Завантажити nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion" # Завантажити nvm bash_completion
 
-# RANDOM_DELAY_SECONDS=$(( (RANDOM % 90) * 60 )) # Затримка в секундах
-# echo "Sleeping for ${RANDOM_DELAY_SECONDS} seconds..."
-# sleep ${RANDOM_DELAY_SECONDS}
-# Примітка: $[RANDOM % 90]m може не працювати у всіх шелах. Краще так:
+# Активувати потрібну версію Node.js (це також оновить PATH)
+if [ -f "$PROJECT_DIR/.nvmrc" ]; then
+  echo "Using Node version from .nvmrc" >> /tmp/satellite-news.log
+  (cd "$PROJECT_DIR" && nvm use) # Запустити в підшелі з переходом в директорію проекту
+else
+  echo "Using default Node version" >> /tmp/satellite-news.log
+  nvm use default # Або конкретна версія: nvm use lts/iron, nvm use 20, тощо
+fi
+# Перевірка шляхів після активації NVM (для відладки)
+# echo "PATH after NVM: $PATH" >> /tmp/satellite-news.log
+# echo "Node version: $(node -v)" >> /tmp/satellite-news.log
+# echo "pnpm path: $(which pnpm)" >> /tmp/satellite-news.log
+
+# ... (Випадкова затримка) ...
 sleep "$((RANDOM % 3600))" # 60 хвилин
 
 cd "$PROJECT_DIR"

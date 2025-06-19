@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# sleep $[RANDOM % 60]m
-# yarn ts-node cron/trans-news.mjs > /dev/null 2>&1
+# 0 3,17 * * * /var/www/installsat.tv/cron/libs/.scripts/trans-news.sh > /dev/null 2>&1
+# */10 * * * * /var/www/installsat.tv/cron/libs/.scripts/trans-news.sh > /dev/null 2>&1
 
 SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" &> /dev/null && pwd)
 # Якщо скрипт в cron/libs/.scripts, то корінь проекту на 3 рівні вище

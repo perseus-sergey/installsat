@@ -1,11 +1,14 @@
 // import { parseTransNews } from './libs/parseTransNews.controller.mjs';
-// import { parseTransNewsForum } from './libs/parseTransNewsForum.controller.mjs';
-import { parseTransNewsForum } from './libs/parseTransNewsForumSatUniverse.controller.mjs';
+import { parseTransNewsForum } from './libs/parseTransNewsForum.controller.mjs';
+import { parseTransNewsForum as parseTransNewsForumSatUniverse } from './libs/parseTransNewsForumSatUniverse.controller.mjs';
 
 const R_U_N = async () => {
   const PARSED_UPDATES = 6;
 
+  parseTransNewsForumSatUniverse(PARSED_UPDATES);
+
   parseTransNewsForum(PARSED_UPDATES);
+
   // parseTransNews(PARSED_UPDATES);
 };
 

@@ -437,14 +437,10 @@ const getPreLastPageUrl = (url) => {
 const extractLastPageUrl = ($) => {
   const possibleTexts = ['Flysat Daily Updates', 'Flysat Updates Daily'];
   let li = null;
-  let foundText = null;
 
   for (const text of possibleTexts) {
     li = $(`li:contains("${text}")`);
-    if (li.length) {
-      foundText = text;
-      break;
-    }
+    if (li.length) break;
   }
 
   if (!li || !li.length) {

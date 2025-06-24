@@ -50,7 +50,7 @@ uptime
 echo "Creating Production Build..."
 pnpm build
 
-echo "Керування PM2 процесом за допомогою ecosystem.config.js..."
+echo "PM2 reloading installsat..."
 # pm2 startOrReload автоматично запустить, якщо не існує, або перезавантажить, якщо існує
 pm2 reload installsat
 

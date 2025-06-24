@@ -1,5 +1,6 @@
 // import { parseTransNews } from './libs/parseTransNews.controller.mjs';
-import { parseTransNewsForum } from './libs/parseTransNewsForum.controller.mjs';
+// import { parseTransNewsForum } from './libs/parseTransNewsForum.controller.mjs';
+import { parseTransNewsForum } from './libs/parseTransNewsForumSatUniverse.controller.mjs';
 
 const R_U_N = async () => {
   const PARSED_UPDATES = 6;

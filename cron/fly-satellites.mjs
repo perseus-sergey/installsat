@@ -11,6 +11,9 @@ const INTERVAL_FROM_LAST_UPDATE = 2;
 const BASE_URL = process.env.BASE_URL;
 const BASE_GURU_PATH = `${BASE_URL}/en/${EUrlAdminParam.BASE_PATH}`;
 
+const PARSE_LIST_OF_SATELLITES_URL = 'https://flysat.com/en/satellitelist';
+const { FLY_SATELLITES } = EDBTableTitles;
+
 const sendReportMail = async (messages, newSatList, overSats) => {
   const reportMessages = messages.length
     ? `<p style="color: blue; font-size: 20px; padding: 10px 0">Messages:</p><ul style="padding-bottom: 10px">${messages.map((msg) => `<li>${msg}</li>`).join('')}</ul>`
@@ -50,9 +53,6 @@ const sendReportMail = async (messages, newSatList, overSats) => {
     `,
   });
 };
-
-const PARSE_LIST_OF_SATELLITES_URL = 'https://flysat.com/en/satellitelist';
-const { FLY_SATELLITES } = EDBTableTitles;
 
 const R_U_N = async () => {
   let messages = [];

@@ -1,6 +1,7 @@
 import { Title } from '@/components/ui/Titles/Title';
 import { EUrlSearchParam, validSearchParam } from '@cron/libs/commons.mjs';
-import { parseTransNewsForum } from '@cron/libs/parseTransNewsForum.controller.mjs';
+// import { parseTransNewsForum } from '@cron/libs/parseTransNewsForum.controller.mjs';
+import { parseTransNewsForum } from '@cron/libs/parseTransNewsForumSatUniverse.controller.mjs';
 // import { parseTransNews } from '@cron/libs/parseTransNews.controller.mjs';
 import { TSearchParams } from '@/models/url/urlSearch.model';
 

@@ -4,7 +4,8 @@ import {
   getDbTableLink,
   EUrlAdminParam,
 } from './libs/commons.mjs';
-import { parseProcess } from './libs/parseALLFlySats.controller.mjs';
+import { parseProcess } from './libs/parseALLFlySats_without_capsolver.controller.mjs';
+// import { parseProcess } from './libs/parseALLFlySats.controller.mjs';
 
 const INTERVAL_FROM_LAST_UPDATE = 2;
 

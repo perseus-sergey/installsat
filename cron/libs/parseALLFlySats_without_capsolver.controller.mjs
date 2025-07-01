@@ -12,7 +12,7 @@ const isProductionMode = process.env.NODE_ENV === 'production';
 
 const IS_LOGGED = !isProductionMode;
 const PARSE_LIST_OF_SATELLITES_URL = 'https://flysat.com/en/satellitelist';
-const { FLY_SATELLITES } = EDBTableTitles;
+const { FLY_SATELLITES, FLY_CHANNELS } = EDBTableTitles;
 
 let messages = [];
 

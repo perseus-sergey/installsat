@@ -230,6 +230,7 @@ export default async function Page({ params }: IChannelProps) {
     polarization,
     compress,
     sat_position,
+    sat_works,
     sr,
     fec,
     sid,
@@ -378,7 +379,7 @@ export default async function Page({ params }: IChannelProps) {
 
         {text ? (
           <div className="article-text">
-            {is_removed === 1 && (
+            {(is_removed === 1 || sat_works !== 1) && (
               <h2 style={{ color: '#ff0000' }}>{preText[lang]}</h2>
             )}
             <>

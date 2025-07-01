@@ -18,7 +18,7 @@ const isProductionMode = process.env.NODE_ENV === 'production';
 
 const IS_LOGGED = !isProductionMode;
 const { FLY_CHANNELS, FLY_SATELLITES } = EDBTableTitles;
-const dateNow = new Date().toLocaleDateString('en-CA');
+const dateNow = new Date().toISOString().split('T')[0];
 
 const getSatChannelsFromDB = async (currentSatSlug, title = undefined) => {
   const where = title

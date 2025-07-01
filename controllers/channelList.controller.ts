@@ -231,6 +231,7 @@ export const getFlySatChannels = cache(
     sat.position AS sat_position,
     sat.logo AS sat_logo,
     sat.grade AS sat_grade,
+    sat.works AS sat_works,
 
     te.title${langSuffixUaEmpty[lang]} AS theme,
     te.description${langSuffixUaEmpty[lang]} AS genre_description

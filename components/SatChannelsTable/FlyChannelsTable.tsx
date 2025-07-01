@@ -334,6 +334,9 @@ const FlyChannelsTable = async ({
 }: ISatChannelsTableProps) => {
   const satChannelsRes = await requestFn();
 
+  if (satChannelsRes[0] && satChannelsRes[0].sat_works !== 1)
+    return <EmptyData lang={lang} description={emptyDataText[lang]} />;
+
   const satChannels = getFlyGroupedChannelsAllSat([satChannelsRes]);
 
   return satChannels.length > 0 && satChannels[0].length > 0 ? (

@@ -54,7 +54,7 @@ export const getPackagesSiteMap = async () => {
 };
 
 export const getSatellitesSiteMap = async () => {
-  const sql = `SELECT slug AS cpu FROM ${FLY_SATELLITES}`;
+  const sql = `SELECT slug AS cpu FROM ${FLY_SATELLITES} WHERE works = 1`;
 
   const res = await poolExecute<{ cpu: string }[]>(sql);
 

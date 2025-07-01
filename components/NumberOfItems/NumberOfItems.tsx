@@ -7,5 +7,8 @@ export default async function NumberOfItems({
 }) {
   const satChannelsRes = await requestFn();
 
-  return satChannelsRes instanceof Error ? 0 : satChannelsRes.length;
+  return satChannelsRes instanceof Error ||
+    (satChannelsRes[0] && satChannelsRes[0].sat_works !== 1)
+    ? 0
+    : satChannelsRes.length;
 }

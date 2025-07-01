@@ -66,12 +66,12 @@ export const getChannelCatList = cache(async (lang = DEFAULT_LANG) => {
   );
 });
 
-export const getFlyChannelSatList = async (isFilling = false) => {
+export const getFlyChannelSatList = async () => {
   const res = await poolExecute<ISatModel[]>(`
   SELECT title, position, slug AS cpu
   FROM ${FLY_SATELLITES}
   WHERE all_count > 0 
-  ${isFilling ? 'AND fill = 1' : ''}
+  AND works = 1
   ORDER BY grade
   `);
 

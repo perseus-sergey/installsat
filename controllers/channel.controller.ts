@@ -70,6 +70,7 @@ export const getDBFlyChannel = cache(
         S.title AS sat_title,
         S.position AS sat_position,
         S.grade AS sat_grade,
+        S.works AS sat_works,
 
         T.title${langSuffixUaEmpty[lang]} AS theme,
         T.description${langSuffixUaEmpty[lang]} AS genre_description
@@ -261,6 +262,8 @@ export const getSimilarFlyChannels = async (title: string) => {
     C.title = ?
   AND
     C.is_removed = 0
+  AND
+    S.works = 1
   ORDER BY 
     S.grade
   LIMIT 70

@@ -56,41 +56,92 @@ const setSatDateUpd = async (currentSatSlug, dateUpd) => {
   }
 };
 
-const insertNewSatsToDB = async (newSatellites) => {
-  const dataLength = newSatellites.length;
-  if (dataLength === 0)
-    throw new Error(`ERROR: DB insert empty NEW SATELLITE LIST`);
+const updateChannelsOnNonWorkingSatellites = async () => {
+  // Отримуємо поточну дату в форматі YYYY-MM-DD
+  const dateNow = new Date().toISOString().split('T')[0];
 
-  const placeholders = newSatellites
-    .map(() => '(?, ?, ?, ?, ?, ?, ?)')
-    .join(', ');
+  addMessage(`DOCS: Marking channels as removed on non-working satellites...`);
 
   const sql = `
-    INSERT INTO ${FLY_SATELLITES} (cluster, title, url_link, slug, position, grade, date_upd)
-    VALUES ${placeholders}
+    UPDATE ${FLY_CHANNELS} AS ch
+    JOIN ${FLY_SATELLITES} AS sat ON ch.sat_slug = sat.slug
+    SET 
+      ch.is_removed = 1, 
+      ch.date_updated = ?
+    WHERE sat.works != 1;
   `;
 
-  // Flatten the array of values
-  const values = newSatellites.flatMap((item) => [
-    item.cluster,
-    item.title,
-    item.url_link,
-    item.slug,
-    item.position,
-    item.grade,
-    item.date_upd.toISOString().split('T')[0],
-  ]);
+  try {
+    const res = await executePoolQuery(sql, [dateNow]);
 
-  const res = await executePoolQuery(sql, values);
-
-  if (res instanceof Error) {
+    if (res instanceof Error) {
+      addMessage(
+        `ERROR: Failed to update channels on non-working satellites.`,
+        res
+      );
+    } else {
+      addMessage(
+        `SUCCESS: Marked ${res.affectedRows} channels as removed on non-working satellites.`
+      );
+    }
+  } catch (err) {
     addMessage(
-      `ERROR: during INSERT ${newSatellites.length} new satellites to DB`,
-      res
+      `FATAL ERROR: An exception occurred while updating channels.`,
+      err
     );
-  } else {
-    addMessage(`SUCCESS: "SET INSERT ${res.affectedRows} new satellites to DB`);
   }
+};
+
+const insertNewSatsToDB = async (newSatellites) => {
+  const dataLength = newSatellites.length;
+  if (dataLength === 0) {
+    throw new Error(`ERROR: DB insert empty NEW SATELLITE LIST`);
+  }
+
+  // SQL-запит тепер для одного запису. Він буде перевикористовуватися в циклі.
+  const sql = `
+    INSERT INTO ${FLY_SATELLITES} (cluster, title, url_link, slug, position, grade, date_upd)
+    VALUES (?, ?, ?, ?, ?, ?, ?)
+  `;
+
+  let successCount = 0;
+  let errorCount = 0;
+
+  console.log(`Starting to insert ${dataLength} satellites one by one...`);
+
+  // Використовуємо цикл for...of, оскільки він добре працює з async/await
+  for (const satellite of newSatellites) {
+    // Формуємо масив значень для одного конкретного супутника
+    const values = [
+      satellite.cluster,
+      satellite.title,
+      satellite.url_link,
+      satellite.slug,
+      satellite.position,
+      satellite.grade,
+      satellite.date_upd.toISOString().split('T')[0],
+    ];
+
+    // Виконуємо запит для поточного супутника
+    const res = await executePoolQuery(sql, values);
+
+    // Перевіряємо результат
+    if (res instanceof Error) {
+      errorCount++;
+      // Логуємо помилку для конкретного елемента
+      addMessage(
+        `ERROR: Failed to insert satellite "${satellite.title || satellite.slug}".`,
+        res
+      );
+    } else {
+      successCount++;
+    }
+  }
+
+  // Після завершення циклу виводимо підсумкове повідомлення
+  addMessage(
+    `SUCCESS: Satellite insertion process finished. Inserted: ${successCount}, Failed: ${errorCount}.`
+  );
 };
 
 const getPathToSat = (url) => url.split('/').slice(-3).join('/');
@@ -255,6 +306,9 @@ export const parseProcess = async (intervalFromLastUpd) => {
   let newSatList = [];
   let updatedSatList = [];
 
+  // Звільняємо канали на не працюючих супутниках
+  await updateChannelsOnNonWorkingSatellites();
+
   try {
     dbSatList = await getDataFromDB();
 
@@ -273,7 +327,7 @@ export const parseProcess = async (intervalFromLastUpd) => {
       waitUntil: 'domcontentloaded',
     });
 
-    await sleep(15000);
+    await sleep(5000);
 
     const html = await page.content();
 

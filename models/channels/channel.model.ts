@@ -41,6 +41,7 @@ export interface ISimilarFlyChannel {
   sat_title: string;
   sat_slug: string;
   sat_position: number;
+  sat_works: TDbBoolean;
   package_id: number;
   package_title: string;
   package_slug: string;

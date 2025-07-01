@@ -26,6 +26,7 @@ const getDBChannelsAudio = cache(async ({ satGrades, satSlug }: IGradeSlug) => {
     LEFT JOIN ${FLY_SATELLITES} AS sat ON ch.sat_slug = sat.slug 
     WHERE ${where}
     AND ch.is_removed != 1
+    AND sat.works = 1
   `;
   const resp = await poolExecute<{ a_pid: string }[]>(sql);
 

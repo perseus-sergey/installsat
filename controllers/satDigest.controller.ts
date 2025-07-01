@@ -145,7 +145,8 @@ export const getSatsForForm = async (
   const satResult = await poolExecute<ISatModel[]>(`
   SELECT title, position, id, slug AS cpu, logo, all_count, free_count, grade
   FROM ${FLY_SATELLITES}
-  ${isChannelCount ? 'WHERE all_count > 0' : ''}
+  WHERE works = 1
+  ${isChannelCount ? 'AND all_count > 0' : ''}
   ORDER BY grade
 `);
 

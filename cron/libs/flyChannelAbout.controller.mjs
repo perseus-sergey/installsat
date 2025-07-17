@@ -43,12 +43,12 @@ const generateAiText = async ({ channelTitle, language, ifRadio }) => {
         : 'TV';
 
   const generationConfig = {
-    temperature: 0.5,
-    topP: 0.95,
+    temperature: 0.2, // Строгіше та менш креативно
+    topP: 0.9,
     topK: 40,
     maxOutputTokens: 4000,
-    stopSequences: ['something for everyone'],
     responseMimeType: 'text/plain',
+    stopSequences: ['something for everyone'],
   };
 
   const safetySettings = [
@@ -70,9 +70,62 @@ const generateAiText = async ({ channelTitle, language, ifRadio }) => {
     },
   ];
 
-  // Channel name: "Gamma Cinema 5", Probable broadcast language: العربية (Arabic)
-
   const prompt = `Channel name: "${channelTitle}"${language ? `, Probable broadcast or translate language: ${language}` : ''}`;
+
+  const systemInstruction = `
+You are an expert data annotator and TV metadata researcher.
+
+If you do not have sufficient, reliable, or verifiable data about the channel "${channelTitle}", DO NOT generate content. 
+If such data is unavailable, return "NULL" for all fields, and set "reliable-rate" to a number between 0 and 3.
+
+Strictly avoid any speculative, assumptive, or vague language. Do NOT use phrases like "probably", "might", "it is assumed", "perhaps", or "could be". Only generate factual content when confident.
+
+Do not hallucinate or invent any information about this ${tvRadio} channel's country, content, audience, programs, or format.
+
+Do NOT guess based on the name alone. Do NOT fabricate a plausible-sounding description. Do NOT fill required fields if uncertain.
+
+Do not provide any links unless you are certain they point to the official site. Leave the field empty otherwise.
+
+Always use the original channel name as-is (without translation or declension), surrounded by Unicode curly quotes (« »).
+
+All content must be neutral, informative, and written in third person — suitable for an encyclopedia.
+
+If reliable information **is available**, return structured JSON in the following format:
+
+{
+  "reliable-rate": [number from 0 to 10],
+  "category-number": [number 1–14],
+  "text-ua": [string or "NULL"],
+  "text-en": [string or "NULL"],
+  "description-en": [string or "NULL"],
+  "description-ua": [string or "NULL"],
+  "keywords-ua": [string or "NULL"],
+  "keywords-en": [string or "NULL"],
+  "site-url": [string or ""]
+}
+
+Field explanations:
+- "reliable-rate": your confidence level (RYRI score).
+- "description-*": If RYRI < ${RELIABLE_THRESHOLD}, set to "NULL". Else, generate concise meta descriptions (50–200 characters).
+- "keywords-*": If RYRI < ${RELIABLE_THRESHOLD}, set to "NULL". Else, comma-separated SEO keywords (50–200 characters).
+- "text-*": If RYRI < ${RELIABLE_THRESHOLD}, set to "NULL". Else, write up to 10 <p> paragraphs with important <strong> tags, no newlines.
+- "site-url": If unsure about an official website, set to "".
+- "category-number": Choose from:
+  1. Public channels broadcasting shows/news
+  2. News/business
+  3. Movies
+  4. Sports
+  5. Entertainment/music
+  6. For kids
+  7. Adults/XXX
+  8. Music
+  9. Education/science/history
+  10. Humor/entertainment
+  11. Leisure/sports/hobbies
+  12. Religious/spiritual
+  13. TV sales/shopping
+  14. Fashion
+`;
 
   try {
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
@@ -81,80 +134,22 @@ const generateAiText = async ({ channelTitle, language, ifRadio }) => {
       model: 'gemini-1.5-flash',
       generationConfig,
       safetySettings,
-      systemInstruction: `
-  What do you know about this ${tvRadio} channel?
-  The name of the channel is written as a transcription of the original name, so determine the country of origin of the channel yourself.
-  
-  Ensure all generated text is presented in a neutral, descriptive tone suitable for an encyclopedia or informative website entry.
-  Always use the original channel's name without translation, without declination and enclose it in Unicode curly quotes (« »).
-  The content should be written in the third person, without direct appeals to the reader. 
-  Avoid promotional language or calls to action, and focus on providing factual and descriptive content about the channel, its programs, and its significance. The tone should be entirely neutral and informative.
-  
-  RYRI - Rating of your reliable information about this channel (Number from 0 to 10).
-  
-  Format the response as JSON in the following format:
-  {
-    "reliable-rate": [number],
-    "category-number": [number],
-    "text-ua": [string],
-    "text-en": [string],
-    "description-en": [string],
-    "description-ua": [string],
-    "keywords-ua": [string],
-    "keywords-en": [string]
-    "site-url": [string]
-  }
-  
-  where:
-  
-  - 'reliable-rate' - RYRI.
-  
-  - 'description-en', 'description-ua' - If RYRI < ${RELIABLE_THRESHOLD}, insert "NULL", otherwise Provide a concise description (in English and Ukrainian) for this channel, suitable for a meta description tag for SEO, from 50 to 200 characters in each language.
-  
-  - 'keywords-en', 'keywords-ua' - If RYRI < ${RELIABLE_THRESHOLD}, insert "NULL", otherwise List relevant keywords (in English and Ukrainian) for this channel, separated by commas, suitable for a meta keywords tag for SEO, from 50 to 200 characters in each language.
-  
-  - 'text-en', 'text-ua' - If RYRI < ${RELIABLE_THRESHOLD}, insert "NULL", otherwise write up to 10 paragraphs (<p>) for each languages (English and Ukrainian) that provide a descriptive overview of the channel. 
-    - e.g., '<p>[Paragraph 1]</p><p>[Paragraph 2]</p><p>[Paragraph N]</p>'
-   - Do not add newline character (\n).
-    - Wrap relevant and important keywords or phrases in <strong> tags to optimize for SEO, ensuring it enhances the readability and value of the content without appearing excessive or spammy.
-    - The text must be unique and not plagiarized.
-    - Do not insert any links into the content.
-    - If the channel is Russian or Belarusian news, write about it in a skeptical style.
-  
-  - 'site-url' - Include the URL of the official site for this channel. If you are not sure about the existence of such a site, leave the field blank ("").
-  
-  - 'category-number' - Choose a category number that best describes the channel from the following list:
-     - 1 - Public channels broadcasting popular shows, programs, movies and news
-     - 2 - News and business channels
-     - 3 - Movies
-     - 4 - Sport
-     - 5 - Leisure, entertainment, popular talk shows, movies, music
-     - 6 - For Kids
-     - 7 - XXX, Adults
-     - 8 - Music
-     - 9 - Educational content, science, nature, history 
-     - 10 - Entertainment, Humor
-     - 11 - Leisure, Sports, Entertainment. About hobbies, non-traditional sports
-     - 12 - Religious and spiritual channels offering content related to various beliefs and spiritual practices
-     - 13 - TV Sales, shopping channels and infomercial networks 
-     - 14 - Fashion
-     `,
+      systemInstruction,
     });
 
     const result = await model.generateContent(prompt);
-
     const { response } = result;
 
-    const startIndex = response.text().indexOf('{');
-    const endIndex = response.text().lastIndexOf('}') + 1;
-
-    const cleanResult = response.text().slice(startIndex, endIndex);
+    const rawText = response.text();
+    const startIndex = rawText.indexOf('{');
+    const endIndex = rawText.lastIndexOf('}') + 1;
+    const cleanResult = rawText.slice(startIndex, endIndex);
 
     return JSON.parse(cleanResult);
   } catch (error) {
     return error instanceof Error
       ? error
-      : new Error('Wrong AI generation of JSON parsing');
+      : new Error('AI JSON response failed to parse');
   }
 };
 

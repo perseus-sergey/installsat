@@ -15,7 +15,19 @@ const BASE_GURU_PATH = `${BASE_URL}/en/${EUrlAdminParam.BASE_PATH}`;
 const PARSE_LIST_OF_SATELLITES_URL = 'https://flysat.com/en/satellitelist';
 const { FLY_SATELLITES } = EDBTableTitles;
 
-const sendReportMail = async (messages, newSatList, overSats) => {
+const sendReportMail = async (
+  messages,
+  newSatList,
+  overSats,
+  allParsedSatList,
+  dbSatList
+) => {
+  // ========= DEBUG =========
+  const allDbList = `<p style="color: blue; font-size: 20px; padding: 10px 0">All Sats in my DB:</p><ul style="padding-bottom: 10px">${dbSatList.map((sat) => `<li>${sat.title} ${sat.position}</li>`).join('')}</ul>`;
+
+  const allParsedList = `<p style="color: blue; font-size: 20px; padding: 10px 0">All Sats in FLYSAT:</p><ul style="padding-bottom: 10px">${allParsedSatList.map((sat) => `<li>${sat.title} ${sat.position}</li>`).join('')}</ul>`;
+
+  // ========= DEBUG =========
   const reportMessages = messages.length
     ? `<p style="color: blue; font-size: 20px; padding: 10px 0">Messages:</p><ul style="padding-bottom: 10px">${messages.map((msg) => `<li>${msg}</li>`).join('')}</ul>`
     : '';
@@ -32,6 +44,9 @@ const sendReportMail = async (messages, newSatList, overSats) => {
     title: 'Parse Fly Satellites Report',
     subject: `Parse Fly Satellites`,
     body: `
+    ${allDbList}
+    ${allParsedList}
+    <hr />
       ${newSats}
       ${overSatList}
       ${reportMessages}
@@ -60,9 +75,8 @@ const R_U_N = async () => {
   let newSatList = [];
   let overSats = [];
   try {
-    ({ messages, newSatList, overSats } = await parseProcess(
-      INTERVAL_FROM_LAST_UPDATE
-    ));
+    ({ messages, newSatList, overSats, allParsedSatList, dbSatList } =
+      await parseProcess(INTERVAL_FROM_LAST_UPDATE));
   } catch (error) {
     messages.push(
       error instanceof Error
@@ -71,7 +85,13 @@ const R_U_N = async () => {
     );
   }
 
-  await sendReportMail(messages, newSatList, overSats);
+  await sendReportMail(
+    messages,
+    newSatList,
+    overSats,
+    allParsedSatList,
+    dbSatList
+  );
 };
 
 R_U_N();

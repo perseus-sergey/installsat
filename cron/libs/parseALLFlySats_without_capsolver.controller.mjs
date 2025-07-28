@@ -24,7 +24,7 @@ const addMessage = (message, error = undefined) => {
 
 const getDataFromDB = async () => {
   const sql = `
-    SELECT cluster, title, url_link, slug, position, grade, date_upd FROM ${FLY_SATELLITES}
+    SELECT cluster, title, url_link, slug, position, grade, date_upd, works FROM ${FLY_SATELLITES}
   `;
   const res = await executePoolQuery(sql);
   if (res instanceof Error) {
@@ -301,6 +301,7 @@ const extractParsedData = ($, dbSatellites, intervalFromLastUpd) => {
 export const parseProcess = async (intervalFromLastUpd) => {
   let browser;
   // let finalData = [];
+  let allParsedSatList = [];
   let overSats = [];
   let dbSatList = [];
   let newSatList = [];
@@ -343,11 +344,12 @@ export const parseProcess = async (intervalFromLastUpd) => {
 
     const { allParsedSats, newSats, updatedSats, extractErrors } =
       extractParsedData($, dbSatList, intervalFromLastUpd);
+
     extractErrors.forEach((er) => addMessage(er));
 
     updatedSatList = updatedSats;
     newSatList = newSats;
-    overSats = findDbOverSats(dbSatList, allParsedSats);
+    allParsedSatList = allParsedSats;
 
     if (newSats.length) await insertNewSatsToDB(newSats);
 
@@ -360,6 +362,13 @@ export const parseProcess = async (intervalFromLastUpd) => {
     // await parseSatellitesChannels(allParsedSats);
 
     // finalData = allParsedSats;
+
+    // overSats = findDbOverSats(dbSatList, allParsedSats);
+    // порівнюємо тільки робочі супутники з бази даних
+    overSats = findDbOverSats(
+      dbSatList.filter((sat) => sat.works === 1),
+      allParsedSats
+    );
   } catch (error) {
     addMessage(
       'ERROR: failed during satellites page parsing',
@@ -392,6 +401,7 @@ export const parseProcess = async (intervalFromLastUpd) => {
   // const translateMessages = await translateChannels(20);
 
   return {
+    allParsedSatList,
     dbSatList,
     newSatList,
     overSats,

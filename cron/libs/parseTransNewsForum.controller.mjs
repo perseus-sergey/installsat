@@ -167,6 +167,17 @@ const actionTextHandler = (text, chanTitle, frequency) => {
       it: "<span class='add_chan'>nuovo SR (velocità di simbolo)</span>",
     },
     {
+      regex: /\bnew FEC\b/giu,
+      ua: "<span class='add_chan'>новий FEC (коефіцієнт виправлення помилок)</span>",
+      en: "<span class='add_chan'>new FEC (forward error correction)</span>",
+      ru: "<span class='add_chan'>новый FEC (коррекция ошибок)</span>",
+      es: "<span class='add_chan'>nuevo FEC (corrección de errores hacia adelante)</span>",
+      ar: "<span class='add_chan'>FEC جديد (تصحيح الخطأ الأمامي)</span>",
+      de: "<span class='add_chan'>neuer FEC (Vorwärtsfehlerkorrektur)</span>",
+      fr: "<span class='add_chan'>nouveau FEC (correction d'erreurs directe)</span>",
+      it: "<span class='add_chan'>nuovo FEC (correzione degli errori in avanti)</span>",
+    },
+    {
       regex: /(?:\b\w*\b\s)*encrypted(?:\b\w*\b\s)*/giu,
       ua: "<span class='left_chan'>закодовано на </span>",
       en: "<span class='left_chan'>encrypted on </span>",
@@ -289,6 +300,18 @@ const actionTextHandler = (text, chanTitle, frequency) => {
       fr: "<span class='left_chan'>a cessé de diffuser</span> sur ",
       it: "<span class='left_chan'>ha smesso di trasmettere</span> su ",
     },
+    {
+      regex: /\bstopped programs\b/giu,
+      ua: "<span class='remove_chan'>призупинив мовлення</span>",
+      en: "<span class='remove_chan'>stopped broadcasting</span>",
+      ru: "<span class='remove_chan'>прекратил вещание</span>",
+      es: "<span class='remove_chan'>detuvo la transmisión</span>",
+      ar: "<span class='remove_chan'>أوقف البث</span>",
+      de: "<span class='remove_chan'>Sendung gestoppt</span>",
+      fr: "<span class='remove_chan'>a interrompu la diffusion</span>",
+      it: "<span class='remove_chan'>ha interrotto la trasmissione</span>",
+    },
+
     {
       regex: / package /giu,
       ua: ' пакет ',
@@ -513,11 +536,16 @@ const extractParsedData = ($, updateAmount) => {
       }
 
       // Перевіряємо, чи це рядок новини (час → канал → частота → дія → супутник)
-      const newsMatch = cleanText.match(
-        /^(\d{2}:\d{2} CET)\s+(.+?)\s+\((.*?)\)\s+(on|left|back on)\s+(.+?)$/
-      );
+      const newsRegex =
+        /^(\d{2}:\d{2} CET)\s+(.+?)\s+\((.*?)\)\s+(on|left|back on|FTA now|FTA|Encrypted|Encrypted now|encrypted again|new SR|new FEC|stopped programs)\s+(.+?)$/i;
 
-      if (!newsMatch) return;
+      const newsMatch = cleanText.match(newsRegex);
+
+      if (!newsMatch) {
+        extractErrors.push(`UNKNOWN ACTION in line: «${cleanText}»`);
+
+        return;
+      }
 
       const [, _time, channel_title, frequency_text, action, satInfo] =
         newsMatch;
@@ -569,7 +597,9 @@ const extractParsedData = ($, updateAmount) => {
     });
 
     if (update !== undefined && updateNewsCount === 0) {
-      extractErrors.push(`ERROR!!! extracting NEWS from update ${update}`);
+      extractErrors.push(
+        `ERROR!!! extracting NEWS from update ${update}. Content: «${$(updateEl).html()}»`
+      );
     }
   });
 

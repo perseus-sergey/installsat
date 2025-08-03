@@ -1,8 +1,11 @@
 import * as cheerio from 'cheerio';
 import { DateTime } from 'luxon';
-import iconv from 'iconv-lite';
 import memoize from 'lodash.memoize';
-import axios from 'axios';
+
+import puppeteer from 'puppeteer-extra';
+import StealthPlugin from 'puppeteer-extra-plugin-stealth';
+
+puppeteer.use(StealthPlugin());
 
 import {
   getDBVseTvChannels,
@@ -102,6 +105,7 @@ const getFullDate = (year, month, dayStr, timeStr) => {
 }; // Output: Date object representing '2024-07-14 07:25:00';
 
 const parseChannelPage = async (
+  browser,
   channel,
   trapChannelId,
   zero = undefined,
@@ -109,19 +113,34 @@ const parseChannelPage = async (
 ) => {
   if ((!zero || !five || zero === five) && `${channel.vsetv}` !== trapChannelId)
     throw new Error(
-      `Error parsing channel «${channel.title}»(${channel.vsetv} - Traps are not defined: zero = «${zero}»; five = «${five}»`
+      `Error parsing channel «${channel.title}»(${channel.vsetv}) - Traps are not defined: zero = «${zero}»; five = «${five}»`
     );
-  const res = await axios.get(getParseURL(channel.vsetv), {
-    responseType: 'arraybuffer',
-  });
 
-  const decodedData = iconv.decode(Buffer.from(res.data), 'windows-1251');
+  const page = await browser.newPage();
+  try {
+    await page.setUserAgent(
+      'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0 Safari/537.36'
+    );
 
-  const replacedHtml = decodedData
-    .replace(new RegExp(`<img src="/pic/${five || ''}\\.gif">`, 'g'), '5')
-    .replace(new RegExp(`<img src="/pic/${zero || ''}\\.gif">`, 'g'), '0');
+    const url = getParseURL(channel.vsetv);
 
-  return cheerio.load(replacedHtml);
+    console.log(`➡️ Opening URL: ${url}`);
+
+    await page.goto(url, {
+      waitUntil: 'networkidle2',
+      timeout: 20000,
+    });
+
+    const content = await page.content();
+
+    const replacedHtml = content
+      .replace(new RegExp(`<img src="/pic/${five || ''}\\.gif">`, 'g'), '5')
+      .replace(new RegExp(`<img src="/pic/${zero || ''}\\.gif">`, 'g'), '0');
+
+    return cheerio.load(replacedHtml);
+  } finally {
+    await page.close();
+  }
 };
 
 const extractParsedData = ($, channel) => {
@@ -259,13 +278,28 @@ const R_U_N = async () => {
   const errorChannels = [];
   const errorMessages = [];
   let resDbTableLength = '';
+
   const trapChannel = TRAP_CHANNEL;
   const pool = getPool();
 
+  const browser = await puppeteer.launch({
+    args: [
+      '--no-sandbox',
+      '--disable-setuid-sandbox',
+      '--disable-dev-shm-usage',
+      '--disable-gpu',
+    ],
+  });
+
   try {
-    const { zero, five } = catchTraps(
-      await parseChannelPage(trapChannel, trapChannel.vsetv)
+    // Отримуємо пастки
+    const trap$ = await parseChannelPage(
+      browser,
+      trapChannel,
+      trapChannel.vsetv
     );
+    const { zero, five } = catchTraps(trap$);
+
     if (!zero || !five || zero === five)
       throw new Error(
         `Traps are not defined: zero = «${zero}»; five = «${five}»`
@@ -278,12 +312,14 @@ const R_U_N = async () => {
     for (const channel of channels) {
       try {
         const $ = await parseChannelPage(
+          browser,
           channel,
           trapChannel.vsetv,
           zero,
           five
         );
         const channelParsedData = extractParsedData($, channel);
+
         if (typeof channelParsedData === 'string') {
           errorChannels.push({
             ...channel,
@@ -298,22 +334,25 @@ const R_U_N = async () => {
           continue;
         }
 
-        dbInsertedStrings = [
-          ...dbInsertedStrings,
+        dbInsertedStrings.push(
           ...channelParsedData.map(
             (chan) =>
-              `(${pool.escape(chan.startTime)}, ${pool.escape(chan.endTime)}, ${pool.escape(chan.channelVseTvId)}, ${pool.escape(chan.title.replace(/'/g, "''"))})`
-          ),
-        ];
+              `(${pool.escape(chan.startTime)}, ${pool.escape(chan.endTime)}, ${pool.escape(chan.channelVseTvId)}, ${pool.escape(
+                chan.title.replace(/'/g, "''")
+              )})`
+          )
+        );
       } catch (err) {
         errorMessages.push(
-          `Error processing channel «${channel.title}»(${channel.vsetv}): ${err instanceof Error ? err.message : 'Unknown error occurred'}`
+          `Error processing channel «${channel.title}»(${channel.vsetv}): ${
+            err instanceof Error ? err.message : 'Unknown error'
+          }`
         );
       }
     }
 
     const insertMessages = await insertDataInBatches(dbInsertedStrings);
-    insertMessages && errorMessages.push(...insertMessages);
+    if (insertMessages) errorMessages.push(...insertMessages);
 
     resDbTableLength = await getDbIdAmount(TV_SCHEDULE_VSE_TV);
   } catch (error) {
@@ -322,6 +361,8 @@ const R_U_N = async () => {
         ? `Error during parsing: ${error.message}`
         : 'Unknown error occurred'
     );
+  } finally {
+    await browser.close(); // 👈 ОБОВ’ЯЗКОВО
   }
 
   sendReportMail({

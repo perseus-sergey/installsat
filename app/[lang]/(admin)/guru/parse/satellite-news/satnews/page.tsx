@@ -39,7 +39,7 @@ const addMessage = (message: string, error?: Error) => {
 // const generateAiText = async (originalText: string) => {
 //   const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
 
-//   const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+//   const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
 
 //   const prompt = `
 //   Write a new article based on the original article so that it is not considered a copy of the original article by search engines.

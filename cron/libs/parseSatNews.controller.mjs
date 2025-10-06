@@ -209,6 +209,6 @@ export const extractAiArticleDataFromAiHTML = ($) => {
     uaAiKeywords,
     enAiKeywords,
     aiSlug,
-    category,
+    categoryStr,
   };
 };

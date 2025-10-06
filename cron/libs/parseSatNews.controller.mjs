@@ -129,7 +129,7 @@ Use the HTML format like:
 <h3 id='description-en'>Description</h3>
 <h4 id='keywords-en'>Keywords</h4>
 <h5 id='slug'>slug-for-article</h5>
-<h6 id='category-number'>10</h6>
+<h6 id='category-number'>category-number</h6>
 <div id='text-en'>
 <p>Paragraph 1</p> 
 <p>Paragraph 2</p> 
@@ -180,8 +180,24 @@ export const extractAiArticleDataFromAiHTML = ($) => {
   const aiSlug = $('#slug').text().trim();
   if (!aiSlug) return getErrorStr(`SLUG`);
 
-  const category = $('#category-number').text().trim();
-  if (!category) return getErrorStr(`CATEGORY`);
+  const categoryStr = $('#category-number').text().trim();
+  if (!categoryStr) {
+    // Помилка: елемент відсутній або порожній
+    return getErrorStr('CATEGORY');
+  }
+
+  // Перетворюємо рядок на ціле число
+  const category = parseInt(categoryStr, 10);
+
+  // Перевіряємо, чи є результат дійсним числом
+  if (isNaN(category)) {
+    return getErrorStr('CATEGORY_NOT_A_NUMBER', categoryStr);
+  }
+
+  // Перевіряємо, чи знаходиться число в допустимому діапазоні (1-19)
+  if (category < 1 || category > 19) {
+    return getErrorStr('CATEGORY_OUT_OF_RANGE', category);
+  }
 
   return {
     enAiTitle,

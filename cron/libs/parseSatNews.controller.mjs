@@ -180,23 +180,23 @@ export const extractAiArticleDataFromAiHTML = ($) => {
   const aiSlug = $('#slug').text().trim();
   if (!aiSlug) return getErrorStr(`SLUG`);
 
-  const categoryStr = $('#category-number').text().trim();
-  if (!categoryStr) {
+  const category = $('#category-number').text().trim();
+  if (!category) {
     // Помилка: елемент відсутній або порожній
     return getErrorStr('CATEGORY');
   }
 
   // Перетворюємо рядок на ціле число
-  const category = parseInt(categoryStr, 10);
+  const categoryNum = parseInt(category, 10);
 
   // Перевіряємо, чи є результат дійсним числом
-  if (isNaN(category)) {
-    return getErrorStr('CATEGORY_NOT_A_NUMBER', categoryStr);
+  if (isNaN(categoryNum)) {
+    return getErrorStr('CATEGORY_NOT_A_NUMBER', category);
   }
 
   // Перевіряємо, чи знаходиться число в допустимому діапазоні (1-19)
-  if (category < 1 || category > 19) {
-    return getErrorStr('CATEGORY_OUT_OF_RANGE', category);
+  if (categoryNum < 1 || categoryNum > 19) {
+    return getErrorStr('CATEGORY_OUT_OF_RANGE', categoryNum);
   }
 
   return {
@@ -209,6 +209,6 @@ export const extractAiArticleDataFromAiHTML = ($) => {
     uaAiKeywords,
     enAiKeywords,
     aiSlug,
-    categoryStr,
+    category,
   };
 };
